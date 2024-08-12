@@ -1,0 +1,213 @@
+{
+  "projects": [
+    {
+      "id": "effe",
+      "name": "Kingmatériaux",
+      "boards": [
+        {
+          "id": 1723482025245,
+          "title": "Tableau par défaut",
+          "tasks": [
+            {
+              "text": "ffdwfdw",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "iuhiuh",
+              "responses": [],
+              "id": 1723493057268,
+              "boardId": 1723482025245,
+              "projectId": "effe",
+              "descriptionFiles": []
+            },
+            {
+              "text": "iohiho",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "<i>trytfytfytfrtxtrxrtxtrx</i>",
+              "responses": [
+                {
+                  "id": 1723495522096,
+                  "text": "[object Object]",
+                  "date": "12/08/2024 22:45:22",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723495556828,
+                  "text": "zeqezq",
+                  "date": "12/08/2024 22:45:56",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723495574484,
+                  "text": "jkbjkbkjb",
+                  "date": "12/08/2024 22:46:14",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723495578675,
+                  "text": "kjbkjbkjbkjbkj",
+                  "date": "12/08/2024 22:46:18",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723495755683,
+                  "text": "tyf",
+                  "date": "12/08/2024 22:49:15",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723496146779,
+                  "text": "ytfytfytf",
+                  "date": "12/08/2024 22:55:46",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723496291005,
+                  "text": "zeqzeq",
+                  "date": "12/08/2024 22:58:11",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723496294177,
+                  "text": "ezea",
+                  "date": "12/08/2024 22:58:14",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723496344711,
+                  "text": "ytf",
+                  "date": "12/08/2024 22:59:04",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723496464603,
+                  "text": "<ul><li>trd</li></ul>",
+                  "date": "12/08/2024 23:01:04",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": 1723496512179,
+                  "text": "trdrtd",
+                  "date": "12/08/2024 23:01:52",
+                  "author_id": "da78",
+                  "files": []
+                }
+              ],
+              "id": 1723493468306,
+              "boardId": 1723482025245,
+              "projectId": "effe",
+              "descriptionFiles": []
+            }
+          ]
+        }
+      ],
+      "userId": "da78"
+    },
+    {
+      "id": "be64",
+      "name": "iubui",
+      "boards": [
+        {
+          "id": 1723482718815,
+          "title": "Tableau par défaut",
+          "tasks": []
+        },
+        {
+          "id": 1723492534243,
+          "title": "Nouveau tableau",
+          "tasks": [
+            {
+              "text": "iuhiuhi",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "",
+              "responses": [],
+              "id": 1723482720503
+            },
+            {
+              "text": "ytfyfyfytf",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "",
+              "responses": [],
+              "id": 1723492545006
+            },
+            {
+              "text": "tyfytftyf",
+              "status": "testing",
+              "priority": "high",
+              "deadline": "",
+              "assignedTo": "bb4a",
+              "description": "",
+              "responses": [],
+              "id": 1723492538060
+            },
+            {
+              "text": "tffytfytf",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "",
+              "responses": [],
+              "id": 1723492536823
+            }
+          ]
+        },
+        {
+          "id": 1723492534814,
+          "title": "Nouveau tableau",
+          "tasks": []
+        }
+      ],
+      "userId": "da78"
+    }
+  ],
+  "users": [
+    {
+      "id": "da78",
+      "name": "Aurélien",
+      "email": "aurelien@akdigital.fr",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM0OTYyNjgsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyMzQ5NjI2OCwiZXhwIjoxNzIzNDk5ODY4LCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhdXJlbGllbkBha2RpZ2l0YWwuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.FLhqIJ-vXWrmdEkWS1KPtU0TPrbmJDz45Z6JSI-xr72kbJI7A7Ne2UwQ6KzugNDryTOj0LqMZW0pGNTwg3FL5dpsi0w8DiHug33kd-vHhBef7phYU2BrE_xdmUJbBLJyTCBlCLBVH-AdDQYOU1FHNqohWc-d6wbfRcETpoJxmEpyvV7zIWjU5f8vnoyPYVlbkXM_Nhszp2JJV8bSuR70VJyzM1zp43jSUk_AT7dtiCFBdqtaVVuEQdfKAL1d3AHWHqI1VzAWpDwtLMB8gJMSjBvJRSBMmmBj3XWgd_NObDQ6WH0Fe5OElasJ0OSuOeYbJkDJFVLjmdfXBlmgBcDoFg",
+      "profile_picture": "portrait-aurelien-kohler-développeur-wordpress-fr.jpg"
+    },
+    {
+      "id": "cfe5",
+      "name": "Cédric",
+      "email": "cmatina@agci.fr",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM0NzkyMjgsInVzZXJfaWQiOiJRVWIzZnZJYVlzUGNMUVlNQ25mdVFEZXU5ZXEyIiwic3ViIjoiUVViM2Z2SWFZc1BjTFFZTUNuZnVRRGV1OWVxMiIsImlhdCI6MTcyMzQ3OTIyOCwiZXhwIjoxNzIzNDgyODI4LCJlbWFpbCI6ImNtYXRpbmFAYWdjaS5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJjbWF0aW5hQGFnY2kuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.AYo2rsH8_LdqYZtF8li1gDKVspApU_GWkpjacr5xRaANlnE0ih3dAB5RzOP9Z_MVBXNtP8FmalpHpWkKHNhUEDzvYFA2Ep-xCQfaInLJoWpE7z_oNEVbY0pEvsmPOppsGLUpGISnFlFSzCobz5K6GUd5GlbOdkXIlnTcZML3zC8UQE_d6cxF4AD6PYFL1w6SEBUMlXiN7ZlcfnCU6rbQdqYUvTARugk4dYixumOiTWMRgLNoXaMe13GlKXQVdZDK5HIiRtngkBW3DDwZRaB8jtTC_7BLSoy6wv8NU8fyj6qSO_asyipQ9NYcyHV1M7P3x5TdUVl4zCBGzhE_kPTUeA",
+      "profile_picture": "cmatina.jpeg"
+    },
+    {
+      "id": "bb4a",
+      "name": "Hugo",
+      "email": "rovelli.hugo@gmail.com ",
+      "authToken": ""
+    },
+    {
+      "id": "b14a",
+      "name": "Marc Royer",
+      "email": "marc@studiokrack.fr",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM0NzkxOTQsInVzZXJfaWQiOiJSZW1WV1JCaFpOVWRvWWQ2N0w2YzUyQWdCcXYyIiwic3ViIjoiUmVtVldSQmhaTlVkb1lkNjdMNmM1MkFnQnF2MiIsImlhdCI6MTcyMzQ3OTE5NCwiZXhwIjoxNzIzNDgyNzk0LCJlbWFpbCI6Im1hcmNAc3R1ZGlva3JhY2suZnIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibWFyY0BzdHVkaW9rcmFjay5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.bWo-4ulnCrUGqwoadXAbK_KoDIofmJ3t4X7Ie5_lO4CqAYodaDnb1Wmh4kcoAlEdT7xqFcFDNRKU6x04vQ-sma6pTlQm9fsjwbEY_TYzFu6xZ2RcALZqlKJq6SZfQRLhACECN_Vh5J2wMzV40bGKDQS4qV_bqwu129h7Qy9asfQXmKUwl1OLtJ3BSXXy8sYXl0_d04HrfhdPjzA8cSdjYy0jsYhshL-Vnu_4vJgGSVMclZESWpkfrLuXmbV03NnifaGKz_I-ck7J9zGhuvP1j2T5RQ0t_CWrskT4OuVExgCaYayCeYWI0eEVAef60245T4_kk4dK0l4eSgbQcRURdQ",
+      "profile_picture": "marc.png"
+    }
+  ]
+}
