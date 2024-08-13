@@ -11,7 +11,7 @@ const TaskList = ({
   boardId,
 }) => {
   return (
-    <ul>
+    <ul className="task-list">
       {tasks.map((task, index) => (
         <Draggable
           key={task.id.toString()}

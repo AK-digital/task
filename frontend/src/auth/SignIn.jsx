@@ -3,11 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import Cookies from "js-cookie";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import "../assets/css/signin.css";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "http://localhost:5001/api";
 
 function SignIn() {
   const { setCurrentUser } = useAuth();
@@ -31,36 +30,50 @@ function SignIn() {
       Cookies.set("authToken", token, { expires: 7 });
 
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}/users?email=${user.email}`
+        const response = await fetch(
+          `${API_BASE_URL}/users/by-email?email=${user.email}`
         );
-        let dbUser;
-        if (response.data.length > 0) {
-          dbUser = response.data[0];
-          await axios.put(`${API_BASE_URL}/users/${dbUser.id}`, {
-            ...dbUser,
-            authToken: token,
-          });
-        } else {
-          dbUser = {
-            id: user.uid,
-            name: user.displayName || email.split("@")[0],
-            email: user.email,
-            authToken: token,
-            profile_picture: user.photoURL || "",
-          };
-          await axios.post(`${API_BASE_URL}/users`, dbUser);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const userData = await response.json();
 
-        setCurrentUser(dbUser);
+        if (userData.length > 0) {
+          const dbUser = userData[0];
+
+          // Vérifier si l'email de l'utilisateur authentifié correspond à celui de la base de données
+          if (dbUser.email === user.email) {
+            // Mettre à jour le token dans la base de données
+            await fetch(`${API_BASE_URL}/users/${dbUser.id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                authToken: token,
+              }),
+            });
+
+            setCurrentUser({
+              ...dbUser,
+              authToken: token,
+            });
+
+            navigate("/");
+          } else {
+            setError("Erreur d'authentification : l'email ne correspond pas.");
+            Cookies.remove("authToken");
+          }
+        } else {
+          setError("Utilisateur non trouvé dans la base de données.");
+          Cookies.remove("authToken");
+        }
       } catch (dbError) {
         console.error(
-          "Erreur lors de la mise à jour du token dans la base de données:",
+          "Erreur lors de la vérification de l'utilisateur dans la base de données:",
           dbError
         );
+        setError("Erreur lors de la connexion. Veuillez réessayer.");
+        Cookies.remove("authToken");
       }
-
-      navigate("/");
     } catch (error) {
       console.error("Erreur lors de la connexion:", error);
       setError("Email ou mot de passe incorrect");
@@ -87,7 +100,7 @@ function SignIn() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Mot de passe"
-            autoComplete="current-password"
+            autoComplete="password"
           />
           {error && <p className="error-message">{error}</p>}
           <button type="submit">Se connecter</button>

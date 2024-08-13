@@ -1,126 +1,347 @@
 {
   "projects": [
     {
-      "id": "effe",
-      "name": "Kingmatériaux",
+      "id": "f37f2749-e52c-492f-8895-6465eb3f0266",
+      "name": "täsk, a better monday (démo)",
       "boards": [
         {
-          "id": 1723482025245,
-          "title": "Tableau par défaut",
+          "id": "3b33f449-3033-4da4-b322-a8606cea6cd5",
+          "title": "UX / UI",
           "tasks": [
             {
-              "text": "iohiho",
-              "status": "completed",
-              "priority": "low",
-              "deadline": "",
-              "assignedTo": "da78",
-              "description": "<i>trytfytfytfrtxtrxrtxtrx</i>",
-              "responses": [
-                {
-                  "id": 1723501122765,
-                  "text": "ghcghc",
-                  "date": "13/08/2024 00:18:42",
-                  "author_id": "da78",
-                  "files": []
-                }
-              ],
-              "id": 1723493468306,
-              "boardId": 1723482025245,
-              "projectId": "effe",
-              "descriptionFiles": []
-            }
-          ]
-        },
-        {
-          "id": 1723498828195,
-          "title": "Nouveau tableau",
-          "tasks": [
+              "text": " Réaliser des tests d'utilisabilité sur l'interface actuelle",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-11-01",
+              "assignedTo": "b10c",
+              "description": "",
+              "responses": [],
+              "id": "649bf066-3a82-41c8-b2d1-6a35e1ee34b0",
+              "createdAt": "13/08/2024 20:44:22",
+              "createdBy": "da78"
+            },
             {
-              "text": "ffdwfdw",
+              "text": "Créer des wireframes pour de nouvelles fonctionnalités",
               "status": "idle",
               "priority": "low",
-              "deadline": "2024-08-15",
-              "assignedTo": "cfe5",
-              "description": "iuhiuh",
+              "deadline": "2024-08-18",
+              "assignedTo": "b10c",
+              "description": "",
               "responses": [],
-              "id": 1723493057268,
-              "boardId": 1723482025245,
-              "projectId": "effe",
-              "descriptionFiles": []
+              "id": "b41d6ece-4603-41ce-8309-eed265d05096",
+              "createdAt": "13/08/2024 20:44:24",
+              "createdBy": "da78"
+            },
+            {
+              "text": " Concevoir un système de design cohérent (couleurs, typographie, composants)",
+              "status": "idle",
+              "priority": "low",
+              "deadline": "2024-08-14",
+              "assignedTo": "b10c",
+              "description": "",
+              "responses": [],
+              "id": "904be9ea-2bc6-4bf2-ba21-a2a7678b6ee1",
+              "createdAt": "13/08/2024 20:44:25",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Améliorer l'accessibilité de l'application (contraste, navigation au clavier, etc.)",
+              "status": "processing",
+              "priority": "high",
+              "deadline": "2024-09-12",
+              "assignedTo": "b10c",
+              "description": "",
+              "responses": [],
+              "id": "b96d5496-a93d-40e4-91b7-a977a271ab10",
+              "createdAt": "13/08/2024 21:02:57",
+              "createdBy": "da78"
+            },
+            {
+              "text": " Créer des maquettes pour une future app mobile",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-09-15",
+              "assignedTo": "b10c",
+              "description": "",
+              "responses": [],
+              "id": "fc8188e0-4cd2-42ff-83a2-88270a06e884",
+              "createdAt": "13/08/2024 21:03:02",
+              "createdBy": "da78"
             }
-          ]
+          ],
+          "titleColor": "#dfd66e"
         },
         {
-          "id": 1723498829376,
-          "title": "Nouveau tableau",
-          "tasks": []
-        }
-      ],
-      "userId": "da78"
-    },
-    {
-      "id": "be64",
-      "name": "iubui",
-      "boards": [
-        {
-          "id": 1723482718815,
-          "title": "Tableau par défaut",
-          "tasks": []
-        },
-        {
-          "id": 1723492534243,
-          "title": "Nouveau tableau",
+          "id": "d08d0919-e5fd-4886-948c-048ae39ce692",
+          "title": "Frontend",
           "tasks": [
             {
-              "text": "ytfyfyfytf",
+              "text": "Ajouter des animations pour améliorer le retour visuel des actions",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-08-16",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "d3139a7a-0fb7-4a17-90dd-5034bfd5874f",
+              "createdAt": "13/08/2024 20:43:18",
+              "createdBy": "da78"
+            },
+            {
+              "text": " Implémenter un système de thèmes (mode sombre/clair)",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-09-03",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "3394e7b3-5191-4692-a7a6-f663e067a8fd",
+              "createdAt": "13/08/2024 20:43:22",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Implémenter un système de recherche avancé pour les tâches et projets",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-09-08",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "21788cf2-b318-4e92-8e99-203ead111b73",
+              "createdAt": "13/08/2024 21:03:39",
+              "createdBy": "da78"
+            },
+            {
+              "text": " Ajouter des raccourcis clavier pour les actions courantes",
+              "status": "idle",
+              "priority": "low",
+              "deadline": "2024-09-27",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "9d24e859-d001-4bc2-9376-c216017319a1",
+              "createdAt": "13/08/2024 21:03:40",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Créer un POC pour faire tester aux frérots",
+              "status": "completed",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "bca3978c-5167-46a5-b9a5-73b65baf74f6",
+              "createdAt": "13/08/2024 21:31:25",
+              "createdBy": "da78"
+            }
+          ],
+          "titleColor": "#d7aefb"
+        },
+        {
+          "id": "4c64e4be-9eb5-4277-97df-405fd894d131",
+          "title": "Backend",
+          "tasks": [
+            {
+              "text": " Implémenter un système de gestion des rôles et permissions",
               "status": "idle",
               "priority": "medium",
               "deadline": "",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "49780740-fa02-46e5-ae31-a12d291291a3",
+              "createdAt": "13/08/2024 20:57:20",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Optimiser les requêtes à la base de données pour améliorer les performances",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "41f98e4e-16b1-428b-8c2a-d9253092c463",
+              "createdAt": "13/08/2024 21:04:03",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Mettre en place un système de logging et de monitoring",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "db7f4c1a-5cfa-47bb-a5ca-572dd3adddae",
+              "createdAt": "13/08/2024 21:04:06",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Développer une API RESTful complète pour faciliter l'intégration future",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "92bd7002-b040-4b47-811d-eb68b6fd43bb",
+              "createdAt": "13/08/2024 21:04:09",
+              "createdBy": "da78"
+            },
+            {
+              "text": " Implémenter un système de webhooks pour les intégrations externes",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "eb4c1d9a-34b0-4bae-af50-860b0b11b936",
+              "createdAt": "13/08/2024 21:04:12",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Mettre en place un système de gestion des erreurs et exceptions",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "7c940eb0-3bad-4c2b-a5bf-1d0e144da891",
+              "createdAt": "13/08/2024 21:04:15",
+              "createdBy": "da78"
+            }
+          ],
+          "titleColor": "#fdcfe8"
+        },
+        {
+          "id": "e83fba89-b940-4c93-82fc-15aff9268674",
+          "title": "Data & DB",
+          "tasks": [
+            {
+              "text": "Concevoir un schéma de base de données pour les nouvelles fonctionnalités",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-09-28",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "5c1350fe-755c-443f-a7ee-93e34e849a55",
+              "createdAt": "13/08/2024 20:55:43",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Optimiser les index de la base de données pour améliorer les performances",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-10-23",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "d68f4a24-48c0-423f-aa24-c98201072f87",
+              "createdAt": "13/08/2024 21:04:28",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Mettre en place un système de sauvegarde et de restauration des données",
+              "status": "idle",
+              "priority": "low",
+              "deadline": "2024-09-06",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "53df3aa4-f0f9-49cc-8267-69fe5b23e95c",
+              "createdAt": "13/08/2024 21:04:32",
+              "createdBy": "da78"
+            },
+            {
+              "text": " Implémenter un système de migration de données pour les mises à jour futures",
+              "status": "idle",
+              "priority": "low",
+              "deadline": "2024-09-01",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "363c6e2c-ad04-4057-a768-8ef0d2c0474e",
+              "createdAt": "13/08/2024 21:04:35",
+              "createdBy": "da78"
+            },
+            {
+              "text": "Développer un système d'export/import de données pour les utilisateurs",
+              "status": "idle",
+              "priority": "low",
+              "deadline": "2024-09-10",
+              "assignedTo": "tc4a",
+              "description": "",
+              "responses": [],
+              "id": "981ff7c5-cd0b-474d-b032-3bfae55aba6d",
+              "createdAt": "13/08/2024 21:04:38",
+              "createdBy": "da78"
+            }
+          ],
+          "titleColor": "#70e578"
+        },
+        {
+          "id": "22969259-08a1-4703-9976-efc8a3ef6fda",
+          "title": "Stratégie de développement",
+          "tasks": [
+            {
+              "text": "Créer un build Open Source pour self-hosted",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "da78",
+              "description": "",
+              "responses": [],
+              "id": "f81f2484-1ba0-4199-bd9e-8361c0208eb3",
+              "createdAt": "13/08/2024 21:07:05",
+              "createdBy": "da78"
+            }
+          ],
+          "titleColor": "#e08a9f"
+        },
+        {
+          "id": "d295a62e-0318-43fa-a354-5583f8727b5a",
+          "title": "Marketing / SEO",
+          "tasks": [
+            {
+              "text": "Créer une landing page pour faire connaitre le projet",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-09-20",
               "assignedTo": "b14a",
               "description": "",
               "responses": [],
-              "id": 1723492545006
+              "id": "b7804111-aecf-4734-aa75-9e443d599174",
+              "createdAt": "13/08/2024 21:33:12",
+              "createdBy": "da78"
             },
             {
-              "text": "tyfytftyf",
-              "status": "testing",
-              "priority": "high",
-              "deadline": "",
+              "text": "Créer un cocon sémantique pour augmenter le trafic ",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "2024-09-15",
               "assignedTo": "cfe5",
               "description": "",
               "responses": [],
-              "id": 1723492538060
-            },
-            {
-              "text": "tffytfytf",
-              "status": "idle",
-              "priority": "medium",
-              "deadline": "",
-              "assignedTo": "",
-              "description": "",
-              "responses": [],
-              "id": 1723492536823
+              "id": "222b71aa-a5b8-442b-b451-4407b10630d3",
+              "createdAt": "13/08/2024 21:33:29",
+              "createdBy": "da78"
             }
-          ]
-        },
-        {
-          "id": 1723492534814,
-          "title": "Nouveau tableau",
-          "tasks": [
-            {
-              "text": "iuhiuhi",
-              "status": "idle",
-              "priority": "medium",
-              "deadline": "",
-              "assignedTo": "",
-              "description": "",
-              "responses": [],
-              "id": 1723482720503
-            }
-          ]
+          ],
+          "titleColor": "#aecbfa"
         }
       ],
-      "userId": "da78"
+      "userId": "da78",
+      "guestUsers": [
+        "cfe5",
+        "tc4a",
+        "b14a",
+        "b10c"
+      ]
     }
   ],
   "users": [
@@ -128,28 +349,42 @@
       "id": "da78",
       "name": "Aurélien",
       "email": "aurelien@akdigital.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1Mzc1OTAsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyMzUzNzU5MCwiZXhwIjoxNzIzNTQxMTkwLCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhdXJlbGllbkBha2RpZ2l0YWwuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.PGmZ8uxZHu6Jh2pSzHrD_W83sDORu5kJ2m7ENOPc0ZU-l3fkQMNG687o_IfkSzUzPBunaCGLkGp5-RfKYwVdAJNUe0kx5G561CpSkSJuQLIyZvltRogSEKuSyKXelM7sY2LWgXpYy0K--4Ti4SKcTJ58W7tiDREHhNVFzxfLOp4Ae3fAyFXlib2syzKO_2Uh31KL9TKePwgNAKd3bfgf99JAcU51Me8-0M4hV4P052035iDhf46PcV1hEMLk8PdooY4QTAESYv_VxUjBqoZ1tezhMfPp-FFkGHEPqY_mIRpCv85-1zLbbQ3Bdj-V41rlw66IJrIVfgQOHdy5skwBlQ",
-      "profile_picture": "aurelien.jpg"
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1NzY1NjcsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyMzU3NjU2NywiZXhwIjoxNzIzNTgwMTY3LCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhdXJlbGllbkBha2RpZ2l0YWwuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.R_oaevzIDwySB7wxgPZ1wZXCSw_Di3hcJdXkICYKSx2tYKj8WwViGfprepCxO6Oeerb1dXXypDMan-nTNTaYcpqqF5VLoonAAZrXddjwDRoukh0J_7kCNAmciblFqwQwDhzR1X-tPRMHugrDRbhQfImGuEVOlUsl38qCr7qiEduYSckuW24lO94ojg2t04URmVy0AWJ0nzV9m2dx3Bt1weraiDbQT1gXnHExEcswdbwP6q910NMMUQ0JFHv5l8OThgV92k9CX-XXZdJyjf-aBctgwY09c_CUqdJlO7lIWwPO6EwvjHLldu_C2kQYQzFsBVXJUkWzutSI9Ezqbo3jlA",
+      "profilePicture": "aurelien.jpg",
+      "currentProjectId": "f37f2749-e52c-492f-8895-6465eb3f0266"
     },
     {
       "id": "cfe5",
       "name": "Cédric",
       "email": "cmatina@agci.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM0NzkyMjgsInVzZXJfaWQiOiJRVWIzZnZJYVlzUGNMUVlNQ25mdVFEZXU5ZXEyIiwic3ViIjoiUVViM2Z2SWFZc1BjTFFZTUNuZnVRRGV1OWVxMiIsImlhdCI6MTcyMzQ3OTIyOCwiZXhwIjoxNzIzNDgyODI4LCJlbWFpbCI6ImNtYXRpbmFAYWdjaS5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJjbWF0aW5hQGFnY2kuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.AYo2rsH8_LdqYZtF8li1gDKVspApU_GWkpjacr5xRaANlnE0ih3dAB5RzOP9Z_MVBXNtP8FmalpHpWkKHNhUEDzvYFA2Ep-xCQfaInLJoWpE7z_oNEVbY0pEvsmPOppsGLUpGISnFlFSzCobz5K6GUd5GlbOdkXIlnTcZML3zC8UQE_d6cxF4AD6PYFL1w6SEBUMlXiN7ZlcfnCU6rbQdqYUvTARugk4dYixumOiTWMRgLNoXaMe13GlKXQVdZDK5HIiRtngkBW3DDwZRaB8jtTC_7BLSoy6wv8NU8fyj6qSO_asyipQ9NYcyHV1M7P3x5TdUVl4zCBGzhE_kPTUeA",
-      "profile_picture": "cmatina.jpeg"
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1NzIzNTQsInVzZXJfaWQiOiJRVWIzZnZJYVlzUGNMUVlNQ25mdVFEZXU5ZXEyIiwic3ViIjoiUVViM2Z2SWFZc1BjTFFZTUNuZnVRRGV1OWVxMiIsImlhdCI6MTcyMzU3MjM1NCwiZXhwIjoxNzIzNTc1OTU0LCJlbWFpbCI6ImNtYXRpbmFAYWdjaS5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJjbWF0aW5hQGFnY2kuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.J09sVhrNlbumlXju8MHd7rumhXS9flHKQtZrYz8y12m-km3ekMsUqEHz3kehooiSp4mey_Eb_b6M6z77XDp4dd2hDkJ7UzIv5tpWKIs9_PQkCFTG-eSkLaboOxODyWqF_LQEKxyO3x1KybvO9QAJZAHhH7DXNTh1IRneLzxyPGySL_8PaG39IzGltQDTbGSd8i7QWtzh1OLdK9GFaEsCeuiNWt9yvtxdCDURTmjG_hMZ8nFdSakNVffZ8VKRVnpsPN4RgllsfcNJ5AE7D0G9Jh0KCFw_jW3cypdo2OzX8xfa--mkMxXGF7Koag5ZrUKJOxrG6kPV_iWBhYhLwQifhA",
+      "profilePicture": "cmatina.jpeg",
+      "currentProjectId": "b85cde49-7634-47dc-87f2-d384a728a82a"
     },
     {
-      "id": "bb4a",
+      "id": "tc4a",
       "name": "Hugo",
       "email": "rovelli.hugo@gmail.com ",
-      "authToken": ""
+      "authToken": "",
+      "profilePicture": "hugo.jpeg"
     },
     {
       "id": "b14a",
-      "name": "Marc Royer",
+      "name": "Marc",
       "email": "marc@studiokrack.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM0NzkxOTQsInVzZXJfaWQiOiJSZW1WV1JCaFpOVWRvWWQ2N0w2YzUyQWdCcXYyIiwic3ViIjoiUmVtVldSQmhaTlVkb1lkNjdMNmM1MkFnQnF2MiIsImlhdCI6MTcyMzQ3OTE5NCwiZXhwIjoxNzIzNDgyNzk0LCJlbWFpbCI6Im1hcmNAc3R1ZGlva3JhY2suZnIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibWFyY0BzdHVkaW9rcmFjay5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.bWo-4ulnCrUGqwoadXAbK_KoDIofmJ3t4X7Ie5_lO4CqAYodaDnb1Wmh4kcoAlEdT7xqFcFDNRKU6x04vQ-sma6pTlQm9fsjwbEY_TYzFu6xZ2RcALZqlKJq6SZfQRLhACECN_Vh5J2wMzV40bGKDQS4qV_bqwu129h7Qy9asfQXmKUwl1OLtJ3BSXXy8sYXl0_d04HrfhdPjzA8cSdjYy0jsYhshL-Vnu_4vJgGSVMclZESWpkfrLuXmbV03NnifaGKz_I-ck7J9zGhuvP1j2T5RQ0t_CWrskT4OuVExgCaYayCeYWI0eEVAef60245T4_kk4dK0l4eSgbQcRURdQ",
-      "profile_picture": "marc.png"
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1NzM3NjIsInVzZXJfaWQiOiJSZW1WV1JCaFpOVWRvWWQ2N0w2YzUyQWdCcXYyIiwic3ViIjoiUmVtVldSQmhaTlVkb1lkNjdMNmM1MkFnQnF2MiIsImlhdCI6MTcyMzU3Mzc2MiwiZXhwIjoxNzIzNTc3MzYyLCJlbWFpbCI6Im1hcmNAc3R1ZGlva3JhY2suZnIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibWFyY0BzdHVkaW9rcmFjay5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.hvFx1RAF7FY_OtMij3rfXoYOc0ifF7YTXiFNjzpyy81hGvTFGg_z_FdovFWwj27d9K3rl1R8Y4TX9nHP31R66GQ6rjGlxTDrc9leHayxsyH2M6sUi9xFXowETcDX27dWjCiJsl0ADs26HLx6D-55dtYRPB0ceTDjK-iMGwQfLJwdwFcTC-RV7o_sIVNXPBQx8sO-fzYujhqvYEljXgA8AUW2c6xMh4Jf1Opb4vnVfowJC0xIlbR9qI796DNurMlE2u42UDRumHAAXBGuK5daRsEmLorUbfPvm3Udf5NBz7sfR9kNLdjrp3cXOHZ0q3kW7RYQ-62MOAe4g0KYtEmZ4Q",
+      "profilePicture": "marc.png",
+      "currentProjectId": "86f17c93-18b3-4ead-a0a7-dc270232a4b6"
+    },
+    {
+      "id": "b10c",
+      "name": "Philippe",
+      "email": "phi.de.chiree@gmail.com",
+      "authToken": "",
+      "profilePicture": "philippe.png"
     }
+  ],
+  "upload": [
+    {}
   ]
 }

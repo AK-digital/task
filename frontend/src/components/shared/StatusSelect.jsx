@@ -2,11 +2,11 @@ import React from "react";
 import Select from "react-select";
 
 const options_status = [
-  { value: "idle", label: "À faire", color: "#2b79a0" }, // Light purple for "À faire" (to-do)
-  { value: "processing", label: "En cours", color: "#474fa2" }, // Darker purple for "En cours" (in progress)
-  { value: "testing", label: "A tester", color: "#9e6080" }, // Slightly darker purple for "A tester" (testing)
-  { value: "completed", label: "Terminée", color: "#588967" }, // Steel blue for "Terminée" (completed)
-  { value: "blocked", label: "Bloquée", color: "#864f35" }, // Saddle brown for "Bloquée" (blocked)
+  { value: "idle", label: "À faire", color: "#3e86aa" },
+  { value: "processing", label: "En cours", color: "#535aaa" },
+  { value: "testing", label: "A tester", color: "#9e9a60" },
+  { value: "completed", label: "Terminée", color: "#588967" },
+  { value: "blocked", label: "Bloquée", color: "#864f35" },
 ];
 
 function StatusSelect({ value = "idle", onChange, className }) {

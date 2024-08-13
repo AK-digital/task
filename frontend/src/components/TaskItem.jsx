@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import StatusSelect from "./shared/StatusSelect";
 import PrioritySelect from "./shared/PrioritySelect";
 import UserSelect from "./shared/UserSelect";
@@ -18,11 +18,35 @@ function TaskItem({
   users,
   boardId,
 }) {
+  const [taskText, setTaskText] = useState(task.text);
+
   const handleEdit = (updatedTask) => {
     if (typeof onEditTask === "function") {
       onEditTask(task.id, updatedTask);
     } else {
       console.error("onEditTask is not a function");
+    }
+  };
+
+  const handleTextChange = (e) => {
+    setTaskText(e.target.value);
+  };
+
+  const handleTextSave = () => {
+    if (taskText !== task.text) {
+      handleEdit({ ...task, text: taskText });
+    }
+  };
+
+  const handleTextBlur = () => {
+    handleTextSave();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Empêche le saut de ligne dans l'input
+      handleTextSave();
+      e.target.blur(); // Retire le focus de l'input
     }
   };
 
@@ -46,8 +70,10 @@ function TaskItem({
       </span>
       <input
         type="text"
-        value={task.text}
-        onChange={(e) => handleEdit({ ...task, text: e.target.value })}
+        value={taskText}
+        onChange={handleTextChange}
+        onBlur={handleTextBlur}
+        onKeyDown={handleKeyDown}
         placeholder="Tâche existante"
       />
       <button onClick={handleOpenDetails}>

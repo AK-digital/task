@@ -5,7 +5,7 @@ function UserSelect({ users, value = "", onChange, className }) {
   const options_users = users.map((user) => ({
     value: user.id,
     label: user.name,
-    profilePicture: user.profile_picture || "default-profile-pic.svg",
+    profilePicture: user.profilePicture || "default-profile-pic.svg",
   }));
 
   const selectedUser = options_users.find((option) => option.value === value);
@@ -13,7 +13,6 @@ function UserSelect({ users, value = "", onChange, className }) {
   const customStyles = {
     control: (baseStyles, state) => ({
       ...baseStyles,
-      width: "250px",
       backgroundColor: "var(--third-background-color) !important",
       borderColor: state.isFocused
         ? "var(--accent-color) !important"
@@ -24,7 +23,6 @@ function UserSelect({ users, value = "", onChange, className }) {
     }),
     singleValue: (baseStyles, { data }) => ({
       ...baseStyles,
-      width: "250px",
       color: "white !important",
     }),
     menu: (baseStyles) => ({
@@ -55,7 +53,8 @@ function UserSelect({ users, value = "", onChange, className }) {
       options={options_users}
       className={`select-user ${className}`}
       classNamePrefix="select-user"
-      formatOptionLabel={formatOptionLabel} // Ajoute l'option formatée
+      formatOptionLabel={formatOptionLabel}
+      placeholder="Responsable"
       styles={customStyles}
     />
   );

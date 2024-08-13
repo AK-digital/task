@@ -5,17 +5,20 @@
   width: 50vw;
   height: calc(100vh - var(--header-height));
   background-color: #1d1e37;
-  padding: 24px;
+  padding: 24px 24px 64px 24px;
   box-sizing: border-box;
   overflow-y: auto;
   box-shadow: -4px 10px 10px 0px rgba(0, 0, 0, 0.15);
   z-index: 97;
-  transform: translateX(-100%);
-  transition: transform 1s ease;
+}
+
+.task-details {
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(100%); /* initially hidden to the right */
 }
 
 .task-details.open {
-  transform: translateX(0%);
+  transform: translateX(0); /* slide in from the right when open */
 }
 
 .task-details h3 {
@@ -34,6 +37,12 @@
   padding: 16px;
   border-radius: 4px;
   margin-bottom: 24px;
+}
+
+.task-description-header {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .task-details .task-description,
@@ -151,6 +160,7 @@
 }
 
 .description-text {
+  margin-bottom: 8px;
   min-height: 20px;
 }
 

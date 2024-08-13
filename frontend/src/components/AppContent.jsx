@@ -3,6 +3,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import Header from "./Header";
 import Board from "./Board";
 import TaskDetails from "./TaskDetails";
+import InviteUsersDialog from "./shared/InviteUsersDialog";
 import { useProjectContext } from "../context/ProjectContext";
 
 function AppContent() {
@@ -11,6 +12,7 @@ function AppContent() {
     currentUser,
     projects,
     currentProject,
+    setCurrentProject,
     editingTask,
     handleProjectChange,
     isCreatingProject,
@@ -30,26 +32,46 @@ function AppContent() {
     handleCloseTaskDetails,
     handleSaveTask,
     handleMoveTask,
+    handleUpdateBoardTitleColor,
     handleUpdateProjectTitle,
     handleEditResponse,
     handleDeleteResponse,
     handleDeleteProject,
     handleUploadFiles,
+    isLoading,
+    handleInviteUser,
+    handleRevokeUser,
   } = useProjectContext();
 
   const [isEditingProjectTitle, setIsEditingProjectTitle] = useState(false);
   const [newProjectTitle, setNewProjectTitle] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (currentProject && currentProject.boards) {
+    if (currentUser && currentUser.currentProjectId && projects.length > 0) {
+      const userProject = projects.find(
+        (project) => project.id === currentUser.currentProjectId
+      );
+      if (userProject) {
+        setCurrentProject(userProject);
+      }
+    }
+  }, [currentUser, projects, setCurrentProject]);
+
+  useEffect(() => {
+    if (currentProject) {
       setNewProjectTitle(currentProject.name);
-      setIsLoading(false);
     }
   }, [currentProject]);
 
+  useEffect(() => {
+    if (currentProject && projects.includes(currentProject)) {
+      // Assurez-vous que le projet actuel est bien dans la liste des projets
+      handleProjectChange({ target: { value: currentProject.id } });
+    }
+  }, [projects, currentProject, handleProjectChange]);
+
   const onDragEnd = (result) => {
-    console.log(result);
     if (!result.destination) return;
 
     const { source, destination } = result;
@@ -92,6 +114,11 @@ function AppContent() {
     return <div>Chargement...</div>;
   }
 
+  // Trouver le propriétaire du projet
+  const projectOwner = currentProject
+    ? users.find((user) => user.id === currentProject.userId)
+    : null;
+
   return (
     <div className="app">
       <Header
@@ -132,18 +159,47 @@ function AppContent() {
                   {currentProject.name}
                 </h2>
               )}
-              <div className="project-actions">
-                <a href="#" className="project-settings">
-                  Inviter un utilisateur
-                </a>
-                <span className="separator">|</span>
-                <a
-                  className="delete-project-btn"
-                  onClick={handleDeleteProjectClick}
-                >
-                  Supprimer le projet
-                </a>
+              <div className="project-users">
+                {currentProject.guestUsers?.map((guestId) => {
+                  const guest = users.find((user) => user.id === guestId);
+                  return guest ? (
+                    <img
+                      key={guest.id}
+                      src={`/src/assets/img/${guest.profilePicture}`}
+                      alt={guest.name}
+                      title={guest.name}
+                      className="guest-avatar"
+                    />
+                  ) : null;
+                })}
+                {projectOwner && (
+                  <img
+                    src={`/src/assets/img/${projectOwner.profilePicture}`}
+                    alt={projectOwner.name}
+                    title={`Propriétaire : ${projectOwner.name}`}
+                    className="owner-avatar"
+                  />
+                )}
               </div>
+              {/* Afficher les actions seulement pour le propriétaire */}
+              {currentUser && currentProject.userId === currentUser.id && (
+                <div className="project-actions">
+                  <a
+                    href="#"
+                    className="project-settings"
+                    onClick={() => setIsInviteDialogOpen(true)}
+                  >
+                    Gérer les invités
+                  </a>
+                  <span className="separator">|</span>
+                  <a
+                    className="delete-project-btn"
+                    onClick={handleDeleteProjectClick}
+                  >
+                    Supprimer le projet
+                  </a>
+                </div>
+              )}
             </div>
             <DragDropContext onDragEnd={onDragEnd}>
               <div className="boards-container">
@@ -169,6 +225,13 @@ function AppContent() {
                     }
                     onDeleteBoard={(boardId) =>
                       handleDeleteBoard(currentProject.id, boardId)
+                    }
+                    onUpdateColor={(color) =>
+                      handleUpdateBoardTitleColor(
+                        currentProject.id,
+                        board.id,
+                        color
+                      )
                     }
                     users={users || []}
                   />
@@ -235,6 +298,15 @@ function AppContent() {
           />
         )}
       </main>
+      <InviteUsersDialog
+        isOpen={isInviteDialogOpen}
+        onClose={() => setIsInviteDialogOpen(false)}
+        users={users}
+        currentUser={currentUser}
+        currentProject={currentProject}
+        onInviteUser={handleInviteUser}
+        onRevokeUser={handleRevokeUser}
+      />
     </div>
   );
 }

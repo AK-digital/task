@@ -1,0 +1,47 @@
+.time-log {
+  position: relative;
+  margin-left: 10px;
+}
+
+.time-log-dropdown-btn {
+  background-color: var(--third-background-color);
+  border: 1px solid var(--border-color);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.time-log-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--primary-background-color);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  z-index: 10;
+}
+
+.time-log-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+}
+
+.time-log-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.time-log-input {
+  display: flex;
+  gap: 5px;
+}
+
+.time-log-input input {
+  width: 60px;
+}
+
+.time-log-date {
+  font-size: 0.85em;
+  color: var(--text-muted-color);
+}

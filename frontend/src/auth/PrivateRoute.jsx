@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import axios from "axios";
+
+const API_BASE_URL = "http://localhost:5001/api";
 
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -18,12 +19,18 @@ const PrivateRoute = ({ children }) => {
       }
 
       try {
-        const response = await axios.get(`/api/users`);
-        if (!response.status === 200 || response.data === null) {
+        const response = await fetch(`${API_BASE_URL}/users`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const users = await response.json();
+
+        if (!users) {
+          setIsAuthenticated(false);
+          setIsLoading(false);
           return;
         }
 
-        const users = response.data;
         const user = users.find((user) => user.authToken === authToken);
 
         if (user) {

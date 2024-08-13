@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import SignOut from "../auth/SignOut";
 import defaultProfilePic from "../assets/img/default-profile-pic.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 function Header({
   projects = [],
@@ -18,8 +20,8 @@ function Header({
   const [profilePicture, setProfilePicture] = useState(defaultProfilePic);
 
   useEffect(() => {
-    if (currentUser && currentUser.profile_picture) {
-      import(`../assets/img/${currentUser.profile_picture}`)
+    if (currentUser && currentUser.profilePicture) {
+      import(`../assets/img/${currentUser.profilePicture}`)
         .then((module) => {
           setProfilePicture(module.default);
         })
@@ -45,10 +47,12 @@ function Header({
       "&:hover": {
         borderColor: "var(--accent-color)",
       },
+      maxWidth: "280px",
     }),
     menu: (provided) => ({
       ...provided,
       backgroundColor: "var(--third-background-color)",
+      width: "fit-content",
     }),
     option: (provided, state) => ({
       ...provided,

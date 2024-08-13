@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import TaskList from "./TaskList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import StatusSelect from "./shared/StatusSelect";
-import PrioritySelect from "./shared/PrioritySelect";
-import UserSelect from "./shared/UserSelect";
 import { Droppable } from "react-beautiful-dnd";
-import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
 
 function Board({
   board,
@@ -30,22 +25,20 @@ function Board({
     assignedTo: "",
   });
 
-  const [titleColor, setTitleColor] = useState(board.color || "#ffffff");
+  const [titleColor, setTitleColor] = useState(board.titleColor || "#ffffff");
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [colorPickerPosition, setColorPickerPosition] = useState({
-    x: 0,
-    y: 0,
-  });
-  const [colors, setColors] = useState(getRandomColors(8));
-
-  function getRandomColors(count) {
-    const colors = [];
-    for (let i = 0; i < count; i++) {
-      const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-      colors.push(color);
-    }
-    return colors;
-  }
+  const colors = [
+    "#ffffff",
+    "#bb928f",
+    "#c19e34",
+    "#dfd66e",
+    "#70e578",
+    "#a7ffeb",
+    "#aecbfa",
+    "#d7aefb",
+    "#fdcfe8",
+    "#e08a9f",
+  ];
 
   const handleTitleSubmit = () => {
     onUpdateTitle(board.id, newTitle);
@@ -80,21 +73,9 @@ function Board({
 
   const handleColorChange = (color) => {
     setTitleColor(color);
-    onUpdateColor(board.id, color); // Sauvegarde la couleur dans la base de données
-    setShowColorPicker(false); // Close the tooltip after color change
+    onUpdateColor(color);
+    setShowColorPicker(false);
   };
-
-  useEffect(() => {
-    const handleMouseUp = () => {
-      setShowColorPicker(false);
-    };
-
-    document.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, []);
 
   return (
     <Droppable droppableId={board.id.toString()}>
@@ -103,13 +84,12 @@ function Board({
           className="board"
           ref={provided.innerRef}
           {...provided.droppableProps}
+          style={{
+            borderLeft: titleColor ? `2px solid ${titleColor}` : "none",
+          }}
         >
           <div className="board-header">
-            <div
-              className="board-title-wrapper"
-              onMouseEnter={() => setShowColorPicker(true)}
-              onMouseLeave={() => setShowColorPicker(false)}
-            >
+            <div className="board-title-wrapper">
               {isEditingTitle ? (
                 <input
                   type="text"
@@ -118,7 +98,6 @@ function Board({
                   onBlur={handleTitleSubmit}
                   onKeyDown={(e) => e.key === "Enter" && handleTitleSubmit()}
                   autoFocus
-                  style={{ paddingRight: "30px" }}
                 />
               ) : (
                 <h3
@@ -128,42 +107,34 @@ function Board({
                   <span style={{ color: titleColor }}>{board.title}</span>
                 </h3>
               )}
-              {/* Color Circle affiché seulement au survol */}
-              {showColorPicker && (
-                <div className="color-picker-container">
-                  <span
-                    data-tooltip-id={`color-tooltip-${board.id}`}
-                    className="color-circle"
-                    style={{ backgroundColor: titleColor }}
-                    id={`color-circle-${board.id}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setColorPickerPosition({ x: e.clientX, y: e.clientY });
-                      setShowColorPicker(true);
-                    }}
-                  ></span>
-                  <Tooltip
-                    id={`color-tooltip-${board.id}`}
-                    clickable
-                    style={{ backgroundColor: "#2c2e4a" }}
-                  >
-                    <div className="color-picker">
-                      {colors.map((color, index) => (
-                        <div
-                          key={index}
-                          className="color-option"
-                          style={{ backgroundColor: color }}
-                          onClick={() => handleColorChange(color)} // Mise à jour de la couleur
-                        ></div>
-                      ))}
-                    </div>
-                  </Tooltip>
-                </div>
-              )}
+              <div
+                className="color-picker-container"
+                onMouseEnter={() => setShowColorPicker(true)}
+                onMouseLeave={() => setShowColorPicker(false)}
+              >
+                <span
+                  className="color-circle"
+                  style={{ backgroundColor: titleColor }}
+                ></span>
+                {showColorPicker && (
+                  <div className="color-picker">
+                    {colors.map((color, index) => (
+                      <div
+                        key={index}
+                        className="color-option"
+                        style={{ backgroundColor: color }}
+                        onClick={() => handleColorChange(color)}
+                      ></div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-            <button onClick={handleDeleteBoard} className="delete-btn">
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
+            <div className="delete-icon-wrapper">
+              <button onClick={handleDeleteBoard} className="delete-btn">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
           </div>
 
           <TaskList
@@ -186,29 +157,6 @@ function Board({
               onChange={(e) => handleNewTaskChange("text", e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAddNewTask()}
               placeholder="Nouvelle tâche"
-            />
-            <StatusSelect
-              value={newTask.status}
-              onChange={(status) => handleNewTaskChange("status", status)}
-              className="select select-status"
-            />
-            <PrioritySelect
-              value={newTask.priority}
-              onChange={(priority) => handleNewTaskChange("priority", priority)}
-              className="select select-priority"
-            />
-            <input
-              type="date"
-              value={newTask.deadline}
-              onChange={(e) => handleNewTaskChange("deadline", e.target.value)}
-            />
-            <UserSelect
-              users={users}
-              value={newTask.assignedTo}
-              onChange={(assignedTo) =>
-                handleNewTaskChange("assignedTo", assignedTo)
-              }
-              className="select select-user"
             />
             {newTask.text.trim() !== "" && (
               <button onClick={handleAddNewTask}>Ajouter</button>

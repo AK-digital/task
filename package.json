@@ -7,6 +7,10 @@
         "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\""
     },
     "devDependencies": {
+        "@types/uuid": "^10.0.0",
         "concurrently": "^6.5.1"
+    },
+    "dependencies": {
+        "uuid": "^10.0.0"
     }
 }

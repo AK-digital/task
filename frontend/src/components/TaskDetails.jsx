@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import RichTextEditor from "./shared/RichTextEditor.jsx";
@@ -22,11 +28,7 @@ const TaskDetails = ({
   const [editingResponseId, setEditingResponseId] = useState(null);
   const [showIcons, setShowIcons] = useState(null);
   const taskDetailsRef = useRef(null);
-
-  if (!task || !task.id || !task.projectId || !task.boardId) {
-    console.error("Task information is incomplete", task);
-    return null; // ou affichez un message d'erreur
-  }
+  const descriptionEditorRef = useRef(null); // Référence pour l'éditeur de description
 
   useEffect(() => {
     if (task) {
@@ -48,62 +50,54 @@ const TaskDetails = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  if (!task) return null;
-
-  const handleSaveDescription = async (newDescription, files) => {
-    const sanitizedHtml = DOMPurify.sanitize(newDescription);
-    let uploadedFiles = [];
-    if (files.length > 0) {
-      uploadedFiles = await onUploadFiles(
-        files,
-        currentUser,
-        { id: task.projectId },
-        task.boardId,
-        task.id
-      );
+  // Gestion de l'état d'édition de la description lors de l'ouverture de la fenêtre
+  useEffect(() => {
+    if (!editedTask.description) {
+      setIsEditingDescription(true);
     }
-    const updatedTask = {
-      ...task,
-      description: sanitizedHtml,
-      descriptionFiles: uploadedFiles,
-    };
-    setEditedTask(updatedTask);
-    onSave(updatedTask);
-    setIsEditingDescription(false);
-  };
+  }, [editedTask.description]);
 
-  const handleAddResponse = async (responseText, files) => {
-    console.log("handleAddResponse called with:", {
-      responseText,
-      files,
-      currentUser,
-      editedTask,
-    });
-    if (responseText.trim() !== "" && currentUser) {
-      const sanitizedHtml = DOMPurify.sanitize(responseText);
+  // Positionner le curseur dans l'éditeur de description lors du passage en mode édition
+  useEffect(() => {
+    if (isEditingDescription && descriptionEditorRef.current) {
+      descriptionEditorRef.current.focusEditor();
+    }
+  }, [isEditingDescription]);
+
+  const handleSaveDescription = useCallback(
+    async (newDescription, files) => {
+      const sanitizedHtml = DOMPurify.sanitize(newDescription);
       let uploadedFiles = [];
-      if (files && files.length > 0) {
-        if (
-          !editedTask ||
-          !editedTask.projectId ||
-          !editedTask.boardId ||
-          !editedTask.id
-        ) {
-          console.error("Task information is incomplete", editedTask);
-          return;
-        }
-        try {
+      try {
+        if (files.length > 0) {
           uploadedFiles = await onUploadFiles(
             files,
             currentUser,
-            { id: editedTask.projectId },
-            editedTask.boardId,
-            editedTask.id
+            { id: task.projectId },
+            task.boardId,
+            task.id
           );
-        } catch (error) {
-          console.error("Erreur lors de l'upload des fichiers:", error);
         }
+        const updatedTask = {
+          ...task,
+          description: sanitizedHtml,
+          descriptionFiles: uploadedFiles,
+        };
+        setEditedTask(updatedTask);
+        onSave(updatedTask);
+        setIsEditingDescription(false);
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde de la description:", error);
       }
+    },
+    [task, currentUser, onUploadFiles, onSave]
+  );
+
+  const handleAddResponse = useCallback(
+    async (responseText, uploadedFiles) => {
+      if (responseText.trim() === "" || !currentUser || !task) return;
+
+      const sanitizedHtml = DOMPurify.sanitize(responseText);
       const newResponse = {
         id: Date.now(),
         text: sanitizedHtml,
@@ -112,56 +106,82 @@ const TaskDetails = ({
         files: uploadedFiles,
       };
 
-      // Validation avant d'ajouter la réponse
-      if (!editedTask.id || !newResponse.text) {
-        console.error(
-          "Impossible d'ajouter la réponse : informations manquantes",
-          { editedTask, newResponse }
-        );
-        return;
-      }
-
-      onAddResponse(editedTask.id, newResponse);
+      onAddResponse(task.id, newResponse);
       setLocalResponses((prevResponses) => [...prevResponses, newResponse]);
-    }
-  };
+    },
+    [task, currentUser, onAddResponse]
+  );
 
-  const handleEditResponse = async (responseId, newText, newFiles) => {
-    const sanitizedHtml = DOMPurify.sanitize(newText);
-    let uploadedFiles = [];
-    if (newFiles.length > 0) {
-      uploadedFiles = await onUploadFiles(newFiles);
-    }
-    const updatedResponse = {
-      ...localResponses.find((response) => response.id === responseId),
-      text: sanitizedHtml,
-      files: uploadedFiles,
-    };
-    onEditResponse(editedTask.id, responseId, updatedResponse);
-    setLocalResponses((prevResponses) =>
-      prevResponses.map((response) =>
-        response.id === responseId ? updatedResponse : response
-      )
-    );
-    setEditingResponseId(null);
-  };
+  const handleDeleteResponse = useCallback(
+    (responseId) => {
+      onDeleteResponse(task.id, responseId);
+      setLocalResponses((prevResponses) =>
+        prevResponses.filter((response) => response.id !== responseId)
+      );
+    },
+    [task, onDeleteResponse]
+  );
 
-  const handleDeleteResponse = (responseId) => {
-    onDeleteResponse(editedTask.id, responseId);
-    setLocalResponses((prevResponses) =>
-      prevResponses.filter((response) => response.id !== responseId)
-    );
-  };
-
-  const getAuthorInfo = (authorId) => {
-    const author = users.find((user) => user.id === authorId);
-    return (
-      author || {
-        name: "Utilisateur inconnu",
-        profile_picture: "default-profile-pic.svg",
+  const handleUploadFiles = useCallback(
+    async (files) => {
+      if (!files || files.length === 0 || !currentUser || !task) {
+        return [];
       }
-    );
-  };
+
+      try {
+        const uploadedFiles = await onUploadFiles({
+          files,
+          currentUser,
+          currentProject: { id: task.projectId },
+          boardId: task.boardId,
+          taskId: task.id,
+        });
+        return uploadedFiles;
+      } catch (error) {
+        console.error("Erreur lors de l'upload des fichiers:", error);
+        return [];
+      }
+    },
+    [currentUser, task, onUploadFiles]
+  );
+
+  const handleEditResponse = useCallback(
+    async (responseId, newText, newFiles) => {
+      const sanitizedHtml = DOMPurify.sanitize(newText);
+      let uploadedFiles = [];
+      if (newFiles && newFiles.length > 0) {
+        uploadedFiles = await handleUploadFiles(newFiles);
+      }
+      const updatedResponse = {
+        id: responseId,
+        text: sanitizedHtml,
+        files: uploadedFiles,
+      };
+      onEditResponse(task.id, responseId, updatedResponse);
+      setLocalResponses((prevResponses) =>
+        prevResponses.map((response) =>
+          response.id === responseId ? updatedResponse : response
+        )
+      );
+      setEditingResponseId(null);
+    },
+    [task, handleUploadFiles, onEditResponse]
+  );
+
+  const getAuthorInfo = useMemo(
+    () => (authorId) => {
+      const author = users.find((user) => user.id === authorId);
+      return (
+        author || {
+          name: "Utilisateur inconnu",
+          profilePicture: "default-profile-pic.svg",
+        }
+      );
+    },
+    [users]
+  );
+
+  const taskAuthor = getAuthorInfo(editedTask.createdBy);
 
   return (
     <div ref={taskDetailsRef} className={`task-details ${task ? "open" : ""}`}>
@@ -169,11 +189,21 @@ const TaskDetails = ({
         &#x2715;
       </button>
       <div className="task-title">{editedTask.text}</div>
-
       <h3>Description</h3>
       <div className="task-description">
+        <div className="task-description-header">
+          <img
+            src={`/src/assets/img/${taskAuthor.profilePicture}`}
+            alt={taskAuthor.name}
+            className="author-avatar"
+          />
+          <span className="author-name">{taskAuthor.name}</span>
+          <span className="response-date">{editedTask.createdAt}</span>
+        </div>
+
         {isEditingDescription ? (
           <RichTextEditor
+            ref={descriptionEditorRef} // Attacher la référence à l'éditeur
             initialValue={editedTask.description || ""}
             initialFiles={editedTask.descriptionFiles || []}
             onSave={handleSaveDescription}
@@ -238,7 +268,7 @@ const TaskDetails = ({
               >
                 <div className="response-header">
                   <img
-                    src={`/src/assets/img/${author.profile_picture}`}
+                    src={`/src/assets/img/${author.profilePicture}`}
                     alt={author.name}
                     className="author-avatar"
                   />
@@ -255,6 +285,7 @@ const TaskDetails = ({
                     onCancel={() => setEditingResponseId(null)}
                     placeholder="Modifier la réponse"
                     saveButtonText="Enregistrer les modifications"
+                    onUploadFiles={handleUploadFiles}
                   />
                 ) : (
                   <div className="response-text-container">
@@ -306,6 +337,7 @@ const TaskDetails = ({
           onCancel={() => {}}
           placeholder="Ajouter une nouvelle réponse"
           saveButtonText="Ajouter une réponse"
+          onUploadFiles={handleUploadFiles}
         />
       </div>
     </div>

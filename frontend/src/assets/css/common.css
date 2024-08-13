@@ -18,7 +18,7 @@
   --header-height: 50px;
 
   font-family: "Instrument Sans", Arial, sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   color-scheme: light dark;
   line-height: 1.5;
   font-weight: 400;
@@ -36,15 +36,17 @@
 
 ::-webkit-scrollbar-track {
   background: var(--primary-background-color);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--secondary-background-color);
+  background-color: #3f449b;
+
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-background-hover-color);
+  background: var(--accent-color);
 }
 
 @media (prefers-color-scheme: light) {
@@ -66,7 +68,7 @@ body {
 main {
   padding: 32px;
   margin-top: calc(var(--header-height));
-  height: calc(100% - var(--header-height));
+  min-height: calc(100% - var(--header-height));
   box-sizing: border-box;
 }
 
@@ -98,13 +100,25 @@ li.task-item,
   display: flex;
   align-items: center;
   background-color: var(--secondary-background-color);
-  padding: 4px 10px;
   border-radius: 5px;
   transition: all 0.3s ease;
   gap: 8px;
 }
+
+li.task-item input[type="text"],
+.add-task-form input[type="text"] {
+  width: 100%;
+  max-width: 30vw;
+}
+
 li.task-item {
+  position: relative;
+  padding: 4px 44px 4px 10px;
   cursor: pointer;
+}
+
+.add-task-form {
+  padding: 0 10px;
 }
 
 a {
@@ -132,11 +146,6 @@ li.task-item:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-li.task-item input[type="text"],
-.add-task-form input[type="text"] {
-  width: 360px;
-}
-
 input[type="text"],
 input[type="date"] {
   height: 20px;
@@ -148,7 +157,7 @@ select {
   padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 15px;
   background-color: var(--third-background-color);
   color: var(--text-color);
   font-family: "Instrument Sans", Arial, sans-serif;
@@ -174,7 +183,7 @@ select:focus {
 }
 
 .select > div {
-  width: 120px;
+  width: 140px;
 }
 
 .select > div > div > div {
@@ -182,7 +191,7 @@ select:focus {
 }
 
 .select-user > div {
-  width: 200px;
+  width: 160px;
 }
 
 .select-status__menu,
@@ -280,11 +289,25 @@ button:focus-visible {
   box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
+.hidden {
+  display: none;
+}
+
 .project-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.project-header input[type="text"] {
+  background-color: transparent;
+  font-size: 1.4rem;
+  color: var(--text-color);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-weight: 600;
 }
 
 .project-title {
@@ -320,13 +343,6 @@ button:focus-visible {
   color: var(--pale-red);
   border: none;
   cursor: pointer;
-}
-
-.task-list {
-  margin: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
 }
 
 .add-task-form .plus-icon {
@@ -380,8 +396,25 @@ button:focus-visible {
   margin-left: auto;
 }
 
+.task-item .delete-btn {
+  position: absolute;
+  right: 16px;
+}
+
 .delete-board-btn:hover {
   color: #ff4d4d;
+}
+
+/* Par défaut, cache l'icône de suppression */
+.task-item .delete-btn,
+.board .delete-icon-wrapper {
+  display: none;
+}
+
+/* Affiche l'icône de suppression au survol de la tâche */
+.task-item:hover .delete-btn,
+.board:hover .delete-icon-wrapper {
+  display: inline-block;
 }
 
 .board-header {
@@ -392,11 +425,11 @@ button:focus-visible {
   background-color: var(--secondary-background-color);
   border-bottom: 1px solid var(--border-color);
   border-radius: 5px 5px 0 0;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .board-title {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -410,39 +443,57 @@ button:focus-visible {
   align-items: center;
 }
 
+.color-picker-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
 .color-circle {
+  display: inline-block;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  display: inline-block;
   cursor: pointer;
   position: relative;
+  left: 8px;
 }
 
 .color-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  padding: 10px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   position: absolute;
+  left: 28px;
+  top: -8px;
+  background-color: var(--secondary-background-color);
+  border: 1px solid var(--border-color);
+  padding: 5px;
+  z-index: 8880;
+  border-radius: 5px;
+  margin-left: 0;
 }
 
 .color-option {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
+  margin: 2px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.color-picker-container:hover .color-picker {
+  display: flex;
+}
+
+.color-picker {
+  display: none;
 }
 
 .board {
   min-width: 300px;
   background-color: var(--secondary-background-color);
-  border-radius: 5px;
-  padding: 10px;
+  border-radius: 8px;
+  padding: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin-bottom: 24px;
 }
@@ -450,6 +501,44 @@ button:focus-visible {
 .add-board {
   margin-top: 4px;
   margin-bottom: 32px;
+}
+
+.task-list {
+  margin-top: 0;
+  overflow: auto;
+}
+
+.project-users {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-right: auto;
+  margin-left: 32px;
+}
+
+.project-users img,
+.invite-users-dialog img {
+  height: 32px;
+  width: 32px;
+  background-color: var(--secondary-background-color);
+  border-radius: 50%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  display: block;
+}
+
+.project-users img {
+  margin-left: -15px;
+}
+
+.project-users img.owner-avatar {
+  border: 2px solid #5720a4;
+}
+
+.invite-users-dialog .user-item-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 @-webkit-keyframes fadeIn {

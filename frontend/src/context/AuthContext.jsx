@@ -2,11 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../auth/firebaseConfig";
 import Cookies from "js-cookie";
-import axios from "axios";
-
 
 const AuthContext = createContext();
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "http://localhost:5001/api";
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -19,18 +17,21 @@ export const AuthProvider = ({ children }) => {
         Cookies.set("authToken", token, { expires: 7 });
 
         if (!currentUser) {
-          // Ajoutez cette condition
           try {
-            const response = await axios.get(
+            const response = await fetch(
               `${API_BASE_URL}/users?email=${user.email}`
             );
-            const userData = response.data.find((u) => u.email === user.email);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            const userData = data.find((u) => u.email === user.email);
 
             if (userData) {
               setCurrentUser({
                 ...user,
                 name: userData.name,
-                profile_picture: userData.profile_picture,
+                profilePicture: userData.profilePicture,
               });
             } else {
               setCurrentUser(user);

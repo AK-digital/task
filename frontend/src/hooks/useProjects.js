@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import DOMPurify from 'dompurify';
+import { v4 as uuid } from 'uuid';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = "http://localhost:5001/api";
 
 function useProjects() {
     const [projects, setProjects] = useState([]);
@@ -13,103 +14,146 @@ function useProjects() {
     const [currentUser, setCurrentUser] = useState(null);
     const [isCreatingProject, setIsCreatingProject] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
-    const fetchProjects = useCallback(async () => {
-        if (!currentUser) return;
-
-        try {
-            const response = await axios.get(`${API_BASE_URL}/projects?userId=${currentUser.id}`);
-            const fetchedProjects = response.data;
-            setProjects(fetchedProjects);
-            if (fetchedProjects.length > 0) {
-                setCurrentProject(fetchedProjects[0]);
-            } else {
-                setCurrentProject(null);
-            }
-            console.log("Projects fetched:", fetchedProjects);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des projets:', error);
-            setProjects([]);
-            setCurrentProject(null);
+    const fetchData = async (url, options = {}) => {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    }, [currentUser]);
-
-    useEffect(() => {
-        if (currentUser) {
-            fetchProjects();
-        }
-    }, [currentUser, fetchProjects]);
-
-    useEffect(() => {
-        fetchUsers();
-        fetchCurrentUser();
-    }, []);
-
-    /**
-     * USERS FUNCTIONS
-     */
-
-    const fetchUsers = async () => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/users`);
-            setUsers(response.data);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des utilisateurs:', error);
-        }
+        return response.json();
     };
 
-    const fetchCurrentUser = async () => {
+    const fetchCurrentUser = useCallback(async () => {
         const token = Cookies.get("authToken");
         if (token) {
             try {
-                const response = await axios.get(`${API_BASE_URL}/users`);
-                const user = response.data.find(u => u.authToken === token);
+                const users = await fetchData(`${API_BASE_URL}/users`);
+                const user = users.find(u => u.authToken === token);
                 if (user) {
                     setCurrentUser(user);
+                    return user;
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération de l\'utilisateur courant: ', error);
             }
         }
+        return null;
+    }, []);
+
+    const fetchProjects = useCallback(async (user) => {
+        try {
+            // Récupérer tous les projets
+            const allProjects = await fetchData(`${API_BASE_URL}/projects`);
+
+            // Filtrer les projets possédés par l'utilisateur
+            const ownedProjects = allProjects.filter(project => project.userId === user.id);
+
+            // Filtrer les projets où l'utilisateur est invité
+            const invitedProjects = allProjects.filter(project =>
+                project.guestUsers && project.guestUsers.includes(user.id)
+            );
+
+            // Combiner les projets possédés et invités
+            const combinedProjects = [...ownedProjects, ...invitedProjects];
+            setProjects(combinedProjects);
+
+            // Définir le projet actuel basé sur currentProjectId de l'utilisateur
+            if (user.currentProjectId) {
+                const currentProject = combinedProjects.find(project => project.id === user.currentProjectId);
+                if (currentProject) {
+                    setCurrentProject(currentProject);
+                } else if (combinedProjects.length > 0) {
+                    // Si le currentProjectId n'existe pas, on prend le premier projet
+                    setCurrentProject(combinedProjects[0]);
+                }
+            } else if (combinedProjects.length > 0) {
+                // Si pas de currentProjectId, on prend le premier projet
+                setCurrentProject(combinedProjects[0]);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des projets:', error);
+        }
+    }, []);
+
+    useEffect(() => {
+        const initializeData = async () => {
+            setIsLoading(true);
+            const user = await fetchCurrentUser();
+            if (user) {
+                await fetchProjects(user);
+                await fetchUsers();
+            }
+            setIsLoading(false);
+        };
+
+        initializeData();
+    }, [fetchCurrentUser, fetchProjects]);
+
+    const fetchUsers = async () => {
+        try {
+            const data = await fetchData(`${API_BASE_URL}/users`);
+            setUsers(data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des utilisateurs:', error);
+        }
     };
 
-    /**
-     * PROJECTS FUNCTIONS
-        */
-
-    const handleProjectChange = (e) => {
+    const handleProjectChange = async (e) => {
         const projectId = e.target.value;
-        const selectedProject = projects.find(p => p.id.toString() === projectId);
+        const selectedProject = projects.find(p => p.id === projectId);
         setCurrentProject(selectedProject);
-    };
 
-    const handleCreateProjectClick = () => {
-        setIsCreatingProject(true);
+        if (currentUser) {
+            try {
+                await fetchData(`${API_BASE_URL}/users/${currentUser.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentProjectId: projectId })
+                });
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour du projet actuel:', error);
+            }
+        }
     };
 
     const handleCreateProject = async () => {
         if (newProjectName.trim() && currentUser) {
             try {
                 const newProject = {
+                    id: uuid().toString(),
                     name: newProjectName.trim(),
                     boards: [
                         {
-                            id: Date.now(),
+                            id: uuid().toString(),
                             title: "Tableau par défaut",
-                            tasks: []
-                        }
+                            tasks: [],
+                        },
                     ],
-                    userId: currentUser.id
+                    userId: currentUser.id,
                 };
-                const response = await axios.post(`${API_BASE_URL}/projects`, newProject);
-                setProjects(prevProjects => [...prevProjects, response.data]);
-                setCurrentProject(response.data);
+                console.log(newProject);
+                const data = await fetchData(`${API_BASE_URL}/projects`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newProject),
+                });
+
+                // Ajouter le nouveau projet à la liste et le sélectionner
+                setProjects((prevProjects) => [...prevProjects, data]);
+                setCurrentProject(data); // Sélection du projet nouvellement créé
+
                 setNewProjectName('');
                 setIsCreatingProject(false);
             } catch (error) {
                 console.error('Erreur lors de la création du projet:', error);
             }
         }
+    };
+
+
+    const handleCreateProjectClick = () => {
+        setIsCreatingProject(true);
     };
 
     const handleCancelCreateProject = () => {
@@ -139,12 +183,9 @@ function useProjects() {
             setProjects(prevProjects => {
                 const updatedProjects = prevProjects.filter(project => project.id !== projectId);
 
-                // Si le projet supprimé était le projet courant
                 if (currentProject && currentProject.id === projectId) {
-                    // Trouver l'index du projet supprimé
                     const deletedIndex = prevProjects.findIndex(p => p.id === projectId);
 
-                    // Sélectionner le prochain projet, ou le précédent s'il n'y a pas de suivant, ou null s'il n'y a plus de projets
                     if (updatedProjects.length > 0) {
                         const nextProjectIndex = deletedIndex < updatedProjects.length ? deletedIndex : deletedIndex - 1;
                         setCurrentProject(updatedProjects[nextProjectIndex]);
@@ -161,17 +202,14 @@ function useProjects() {
         }
     };
 
-
     /*
-        * BOARD FUNCTIONS
-        */
-
-
+    * BOARD FUNCTIONS
+    */
     const handleAddBoard = async (projectId, title) => {
         try {
             const project = projects.find(p => p.id.toString() === projectId.toString());
             const newBoard = {
-                id: Date.now(),
+                id: uuid().toString(),
                 title,
                 tasks: []
             };
@@ -234,13 +272,14 @@ function useProjects() {
     };
 
     const handleAddTask = async (projectId, boardId, newTask) => {
+
         if (currentProject) {
             try {
                 const updatedProject = {
                     ...currentProject,
                     boards: currentProject.boards.map(board =>
                         board.id === boardId
-                            ? { ...board, tasks: [...(board.tasks || []), { ...newTask, id: Date.now() }] }
+                            ? { ...board, tasks: [...(board.tasks || []), { ...newTask, id: uuid().toString(), createdAt: new Date().toLocaleString(), createdBy: currentUser.id }] }
                             : board
                     )
                 };
@@ -315,6 +354,24 @@ function useProjects() {
         }
     };
 
+    const handleUpdateBoardTitleColor = async (projectId, boardId, newColor) => {
+
+        try {
+            const project = projects.find(p => p.id === projectId);
+            const updatedProject = {
+                ...project,
+                boards: project.boards.map(b => b.id === boardId ? { ...b, titleColor: newColor } : b)
+            };
+            const response = await axios.put(`${API_BASE_URL}/projects/${projectId}`, updatedProject);
+
+            setProjects(prevProjects => prevProjects.map(p => p.id === projectId ? response.data : p));
+            setCurrentProject(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour de la couleur du tableau:', error);
+
+        }
+    };
+
     const handleDeleteTask = async (projectId, boardId, taskId) => {
         if (currentProject && currentProject.id === projectId) {
             try {
@@ -338,10 +395,6 @@ function useProjects() {
     };
 
     const handleAddResponse = async (taskId, responseText, files) => {
-        console.log(taskId);
-        console.log(responseText);
-        console.log(currentProject);
-        console.log(editingTask.boardId);
         if (responseText && responseText.text.trim() !== "" && currentUser) {
             const sanitizedHtml = DOMPurify.sanitize(responseText.text);
             let uploadedFiles = [];
@@ -359,7 +412,7 @@ function useProjects() {
                 }
             }
             const newResponse = {
-                id: Date.now(),
+                id: uuid().toString(),
                 text: sanitizedHtml,
                 date: new Date().toLocaleString(),
                 author_id: currentUser.id,
@@ -407,58 +460,88 @@ function useProjects() {
         }
     };
 
-    const handleEditResponse = async (taskId, responseId, newText, files) => {
-        if (currentProject) {
-            try {
-                let uploadedFiles = [];
-                if (files && files.length > 0) {
-                    const board = currentProject.boards.find(board =>
-                        board.tasks.some(task => task.id === taskId)
-                    );
-                    if (!board) {
-                        throw new Error('Board not found for the task');
+    const handleEditResponse = async (taskId, responseId, updatedResponse) => {
+        if (!currentProject) {
+            console.error('Aucun projet courant');
+            return;
+        }
+
+        try {
+            const updatedProject = JSON.parse(JSON.stringify(currentProject));
+            let taskFound = false;
+            let uploadedFiles = updatedResponse.files || [];
+
+            updatedProject.boards.forEach(board => {
+                board.tasks.forEach(task => {
+                    if (task.id === taskId) {
+                        task.responses = task.responses.map(response =>
+                            response.id === responseId
+                                ? { ...response, ...updatedResponse }
+                                : response
+                        );
+                        taskFound = true;
                     }
-
-                    uploadedFiles = await handleUploadFiles(files, currentUser, currentProject, board.id, taskId);
-                }
-
-                const updatedProject = JSON.parse(JSON.stringify(currentProject));
-                let taskFound = false;
-                updatedProject.boards.forEach(board => {
-                    board.tasks.forEach(task => {
-                        if (task.id === taskId) {
-                            task.responses = task.responses.map(response =>
-                                response.id === responseId
-                                    ? { ...response, text: newText, files: [...(response.files || []), ...uploadedFiles] }
-                                    : response
-                            );
-                            taskFound = true;
-                        }
-                    });
                 });
+            });
 
-                if (!taskFound) {
-                    console.error('Task not found:', taskId);
-                    return;
-                }
-
-                const response = await axios.put(`${API_BASE_URL}/projects/${updatedProject.id}`, updatedProject);
-                setProjects(prevProjects => prevProjects.map(p => p.id === updatedProject.id ? response.data : p));
-                setCurrentProject(response.data);
-
-                setEditingTask(prevTask => ({
-                    ...prevTask,
-                    responses: prevTask.responses.map(response =>
-                        response.id === responseId
-                            ? { ...response, text: newText, files: [...(response.files || []), ...uploadedFiles] }
-                            : response
-                    )
-                }));
-            } catch (error) {
-                console.error('Erreur lors de la modification de la réponse:', error);
+            if (!taskFound) {
+                console.error('Task not found:', taskId);
+                return;
             }
+
+            const response = await axios.put(`${API_BASE_URL}/projects/${updatedProject.id}`, updatedProject);
+            setProjects(prevProjects => prevProjects.map(p => p.id === updatedProject.id ? response.data : p));
+            setCurrentProject(response.data);
+
+            setEditingTask(prevTask => ({
+                ...prevTask,
+                responses: prevTask.responses.map(response =>
+                    response.id === responseId
+                        ? { ...response, ...updatedResponse }
+                        : response
+                )
+            }));
+
+            console.log('Réponse modifiée avec succès');
+        } catch (error) {
+            console.error('Erreur lors de la modification de la réponse:', error);
         }
     };
+
+    const handleUploadFiles = useCallback(async ({ files, currentUser, currentProject, boardId, taskId }) => {
+        console.log('Début de l\'upload avec:', { files, currentUser, currentProject, boardId, taskId });
+
+        if (!files || files.length === 0) {
+            console.log('Aucun fichier à uploader');
+            return [];
+        }
+
+        if (!currentUser || !currentProject || !boardId || !taskId) {
+            console.error('Informations manquantes pour l\'upload', { currentUser, currentProject, boardId, taskId });
+            return [];
+        }
+
+        try {
+            const formData = new FormData();
+            files.forEach((file) => formData.append('files', file));
+            formData.append('userId', currentUser.id);
+            formData.append('projectId', currentProject.id);
+            formData.append('boardId', boardId);
+            formData.append('taskId', taskId);
+
+            const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            console.log('Réponse du serveur:', response.data);
+
+            // La réponse du serveur devrait maintenant contenir toutes les informations nécessaires
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de l'upload des fichiers:", error);
+            return [];
+        }
+    }, []);
 
     const handleDeleteResponse = async (taskId, responseId) => {
         if (currentProject) {
@@ -494,32 +577,33 @@ function useProjects() {
         }
     };
 
-    const handleUploadFiles = async (files, currentUser, currentProject, boardId, taskId) => {
-        console.log("handleUploadFiles called with:", { files, currentUser, currentProject, boardId, taskId });
+    const handleInviteUser = async (projectId, userId) => {
         try {
-            if (!currentUser) throw new Error('User is undefined');
-            if (!currentProject || !currentProject.id) throw new Error('Project or Project ID is undefined');
-            if (!boardId) throw new Error('Board ID is undefined');
-            if (!taskId) throw new Error('Task ID is undefined');
-
-            const formData = new FormData();
-            files.forEach(file => formData.append('files', file));
-            formData.append('userId', currentUser.id);
-            formData.append('projectId', currentProject.id);
-            formData.append('boardId', boardId);
-            formData.append('taskId', taskId);
-
-            const response = await axios.post(`http://localhost:5000/api/upload`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
-            console.log("Fichiers uploadés:", response.data);
-            return response.data;
+            const updatedProject = {
+                ...currentProject,
+                guestUsers: [...(currentProject.guestUsers || []), userId]
+            };
+            const response = await axios.put(`${API_BASE_URL}/projects/${projectId}`, updatedProject);
+            setProjects(prevProjects => prevProjects.map(p => p.id === projectId ? response.data : p));
+            setCurrentProject(response.data);
+            console.log(`Utilisateur ${userId} ajouté au projet ${projectId}`);
         } catch (error) {
-            console.error('Erreur lors de l\'upload des fichiers:', error);
-            throw error;
+            console.error('Erreur lors de l\'invitation de l\'utilisateur:', error);
+        }
+    };
+
+    const handleRevokeUser = async (projectId, userId) => {
+        try {
+            const updatedProject = {
+                ...currentProject,
+                guestUsers: currentProject.guestUsers.filter(id => id !== userId)
+            };
+            const response = await axios.put(`${API_BASE_URL}/projects/${projectId}`, updatedProject);
+            setProjects(prevProjects => prevProjects.map(p => p.id === projectId ? response.data : p));
+            setCurrentProject(response.data);
+            console.log(`Utilisateur ${userId} retiré du projet ${projectId}`);
+        } catch (error) {
+            console.error('Erreur lors de la révocation de l\'utilisateur:', error);
         }
     };
 
@@ -544,6 +628,7 @@ function useProjects() {
         setEditingTask,
         handleAddBoard,
         handleUpdateBoardTitle,
+        handleUpdateBoardTitleColor,
         handleDeleteBoard,
         handleMoveTask,
         handleSaveTask,
@@ -551,8 +636,12 @@ function useProjects() {
         handleEditResponse,
         handleDeleteResponse,
         handleUploadFiles,
+        setCurrentProject,
         currentUser,
         users,
+        handleInviteUser,
+        handleRevokeUser,
+        isLoading,
     };
 }
 
