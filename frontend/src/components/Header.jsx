@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import SignOut from "../auth/SignOut";
-import defaultProfilePic from "../assets/img/default-profile-pic.svg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import defaultProfilePic from "/assets/img/default-profile-pic.svg";
 
 function Header({
   projects = [],
@@ -21,14 +19,7 @@ function Header({
 
   useEffect(() => {
     if (currentUser && currentUser.profilePicture) {
-      import(`../assets/img/${currentUser.profilePicture}`)
-        .then((module) => {
-          setProfilePicture(module.default);
-        })
-        .catch((error) => {
-          console.error("Error loading profile picture:", error);
-          setProfilePicture(defaultProfilePic);
-        });
+      setProfilePicture(`/assets/img/${currentUser.profilePicture}`);
     } else {
       setProfilePicture(defaultProfilePic);
     }

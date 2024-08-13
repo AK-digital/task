@@ -48,12 +48,14 @@ function AppContent() {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (currentUser && currentUser.currentProjectId && projects.length > 0) {
+    if (currentUser && projects.length > 0) {
       const userProject = projects.find(
         (project) => project.id === currentUser.currentProjectId
       );
       if (userProject) {
         setCurrentProject(userProject);
+      } else if (projects.length > 0) {
+        setCurrentProject(projects[0]); // Choisir le premier projet si aucun projet par défaut n'est trouvé
       }
     }
   }, [currentUser, projects, setCurrentProject]);
@@ -165,7 +167,7 @@ function AppContent() {
                   return guest ? (
                     <img
                       key={guest.id}
-                      src={`/src/assets/img/${guest.profilePicture}`}
+                      src={`/assets/img/${guest.profilePicture}`}
                       alt={guest.name}
                       title={guest.name}
                       className="guest-avatar"
@@ -174,7 +176,7 @@ function AppContent() {
                 })}
                 {projectOwner && (
                   <img
-                    src={`/src/assets/img/${projectOwner.profilePicture}`}
+                    src={`/assets/img/${projectOwner.profilePicture}`}
                     alt={projectOwner.name}
                     title={`Propriétaire : ${projectOwner.name}`}
                     className="owner-avatar"

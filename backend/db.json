@@ -15,10 +15,26 @@
               "deadline": "2024-11-01",
               "assignedTo": "b10c",
               "description": "",
-              "responses": [],
+              "responses": [
+                {
+                  "id": "32732296-81da-4aa7-ae30-47f2e3124594",
+                  "text": "<strike>b bn hbhjb</strike>",
+                  "date": "14/08/2024 00:44:14",
+                  "author_id": "b14a",
+                  "files": []
+                },
+                {
+                  "id": "bcfc54c8-a64f-46e0-885e-df7e679e06f5",
+                  "text": "uihiuhiu<div><br></div>",
+                  "date": "14/08/2024 00:44:36",
+                  "author_id": "da78",
+                  "files": []
+                }
+              ],
               "id": "649bf066-3a82-41c8-b2d1-6a35e1ee34b0",
               "createdAt": "13/08/2024 20:44:22",
-              "createdBy": "da78"
+              "createdBy": "da78",
+              "boardId": "3b33f449-3033-4da4-b322-a8606cea6cd5"
             },
             {
               "text": "Créer des wireframes pour de nouvelles fonctionnalités",
@@ -349,7 +365,7 @@
       "id": "da78",
       "name": "Aurélien",
       "email": "aurelien@akdigital.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1NzY1NjcsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyMzU3NjU2NywiZXhwIjoxNzIzNTgwMTY3LCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhdXJlbGllbkBha2RpZ2l0YWwuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.R_oaevzIDwySB7wxgPZ1wZXCSw_Di3hcJdXkICYKSx2tYKj8WwViGfprepCxO6Oeerb1dXXypDMan-nTNTaYcpqqF5VLoonAAZrXddjwDRoukh0J_7kCNAmciblFqwQwDhzR1X-tPRMHugrDRbhQfImGuEVOlUsl38qCr7qiEduYSckuW24lO94ojg2t04URmVy0AWJ0nzV9m2dx3Bt1weraiDbQT1gXnHExEcswdbwP6q910NMMUQ0JFHv5l8OThgV92k9CX-XXZdJyjf-aBctgwY09c_CUqdJlO7lIWwPO6EwvjHLldu_C2kQYQzFsBVXJUkWzutSI9Ezqbo3jlA",
+      "authToken": "",
       "profilePicture": "aurelien.jpg",
       "currentProjectId": "f37f2749-e52c-492f-8895-6465eb3f0266"
     },
@@ -357,9 +373,9 @@
       "id": "cfe5",
       "name": "Cédric",
       "email": "cmatina@agci.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1NzIzNTQsInVzZXJfaWQiOiJRVWIzZnZJYVlzUGNMUVlNQ25mdVFEZXU5ZXEyIiwic3ViIjoiUVViM2Z2SWFZc1BjTFFZTUNuZnVRRGV1OWVxMiIsImlhdCI6MTcyMzU3MjM1NCwiZXhwIjoxNzIzNTc1OTU0LCJlbWFpbCI6ImNtYXRpbmFAYWdjaS5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJjbWF0aW5hQGFnY2kuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.J09sVhrNlbumlXju8MHd7rumhXS9flHKQtZrYz8y12m-km3ekMsUqEHz3kehooiSp4mey_Eb_b6M6z77XDp4dd2hDkJ7UzIv5tpWKIs9_PQkCFTG-eSkLaboOxODyWqF_LQEKxyO3x1KybvO9QAJZAHhH7DXNTh1IRneLzxyPGySL_8PaG39IzGltQDTbGSd8i7QWtzh1OLdK9GFaEsCeuiNWt9yvtxdCDURTmjG_hMZ8nFdSakNVffZ8VKRVnpsPN4RgllsfcNJ5AE7D0G9Jh0KCFw_jW3cypdo2OzX8xfa--mkMxXGF7Koag5ZrUKJOxrG6kPV_iWBhYhLwQifhA",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ0MjY5YTE3MzBlNTA3MTllNmIxNjA2ZTQyYzNhYjMyYjEyODA0NDkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1ODk2MDUsInVzZXJfaWQiOiJRVWIzZnZJYVlzUGNMUVlNQ25mdVFEZXU5ZXEyIiwic3ViIjoiUVViM2Z2SWFZc1BjTFFZTUNuZnVRRGV1OWVxMiIsImlhdCI6MTcyMzU4OTYwNSwiZXhwIjoxNzIzNTkzMjA1LCJlbWFpbCI6ImNtYXRpbmFAYWdjaS5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJjbWF0aW5hQGFnY2kuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.KNVCXzLRVXSJ59SjcDzxCLOFlUFXKRgwqWOYJz80ph4av_AP0VN_k-ydBDxdNBIKJ8pW1dnaZwseQrXcrlYEyqG_OX7aPuNe_3GWq0l1r15GETcXn7Jf9chznfuc04kCfs4u1dX4U4K3plk5ekVDoYk6Zra090uB6JnaYFP7lnNXNExLbAccF9DwgIshVjC9uegJzjecH8wa4NBdLuWSNcLIZy4E5q1uZDYR5zuREhGedEtdudNPyy3WhzB70_YaUuKNoswAPkrXY5HxIy6rNaeYuo2wwSCsx2db7CKhLZwLWfYaXmDfiSgQy5_PhdYocVQZ6xSOallE3wHFFdC8WA",
       "profilePicture": "cmatina.jpeg",
-      "currentProjectId": "b85cde49-7634-47dc-87f2-d384a728a82a"
+      "currentProjectId": "f37f2749-e52c-492f-8895-6465eb3f0266"
     },
     {
       "id": "tc4a",
@@ -372,9 +388,9 @@
       "id": "b14a",
       "name": "Marc",
       "email": "marc@studiokrack.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1NzM3NjIsInVzZXJfaWQiOiJSZW1WV1JCaFpOVWRvWWQ2N0w2YzUyQWdCcXYyIiwic3ViIjoiUmVtVldSQmhaTlVkb1lkNjdMNmM1MkFnQnF2MiIsImlhdCI6MTcyMzU3Mzc2MiwiZXhwIjoxNzIzNTc3MzYyLCJlbWFpbCI6Im1hcmNAc3R1ZGlva3JhY2suZnIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibWFyY0BzdHVkaW9rcmFjay5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.hvFx1RAF7FY_OtMij3rfXoYOc0ifF7YTXiFNjzpyy81hGvTFGg_z_FdovFWwj27d9K3rl1R8Y4TX9nHP31R66GQ6rjGlxTDrc9leHayxsyH2M6sUi9xFXowETcDX27dWjCiJsl0ADs26HLx6D-55dtYRPB0ceTDjK-iMGwQfLJwdwFcTC-RV7o_sIVNXPBQx8sO-fzYujhqvYEljXgA8AUW2c6xMh4Jf1Opb4vnVfowJC0xIlbR9qI796DNurMlE2u42UDRumHAAXBGuK5daRsEmLorUbfPvm3Udf5NBz7sfR9kNLdjrp3cXOHZ0q3kW7RYQ-62MOAe4g0KYtEmZ4Q",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ0MjY5YTE3MzBlNTA3MTllNmIxNjA2ZTQyYzNhYjMyYjEyODA0NDkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1ODk0MDYsInVzZXJfaWQiOiJSZW1WV1JCaFpOVWRvWWQ2N0w2YzUyQWdCcXYyIiwic3ViIjoiUmVtVldSQmhaTlVkb1lkNjdMNmM1MkFnQnF2MiIsImlhdCI6MTcyMzU4OTQwNiwiZXhwIjoxNzIzNTkzMDA2LCJlbWFpbCI6Im1hcmNAc3R1ZGlva3JhY2suZnIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibWFyY0BzdHVkaW9rcmFjay5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Q_KdMWkZoNdDFd7mo5LMnTIT-CQdPLkMsa7hzR1pPXwEwgv5et72FcXEQbEt3_6Y3kaNAOkLKpAmZg_NYLKWj8H8IRXwwf2mBC_4Jg35v7qQYjxFbsA0xkCJ7ZbwKwy4kugapqqOoO-TmyzrJFw6gdYTTXmkK0LHSrEpH4lmjTVrB0rq05eqmRs2Lj4oszYksacNXzAhecGulnoHe18bXxn8r5U36IixdWv-XMirkIIN2w1Bza7JJIhrqLEdV907lkxSBtDoZQLatOBITX7x9k2D2n_lMllSDmsKnw3ET6NeMct8WstJOK5r351daTvaIr7hBWNkWoKDxkma7AwC0w",
       "profilePicture": "marc.png",
-      "currentProjectId": "86f17c93-18b3-4ead-a0a7-dc270232a4b6"
+      "currentProjectId": "f37f2749-e52c-492f-8895-6465eb3f0266"
     },
     {
       "id": "b10c",
@@ -382,6 +398,13 @@
       "email": "phi.de.chiree@gmail.com",
       "authToken": "",
       "profilePicture": "philippe.png"
+    },
+    {
+      "id": "b85cde49-7634-47dc-87f2-d384a728a82a",
+      "name": "Invité",
+      "email": "taskguest@akdigital.fr",
+      "authToken": "",
+      "profilePicture": ""
     }
   ],
   "upload": [

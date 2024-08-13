@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { useAuth } from "../context/AuthContext";
 import "../assets/css/signin.css";
 
-const API_BASE_URL = "http://localhost:5001/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function SignIn() {
   const { setCurrentUser } = useAuth();

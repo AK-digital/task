@@ -1,10 +1,9 @@
 {
-  "name": "backend",
+  "name": "task-backend",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "json-server": "json-server --watch db.json --port 5000"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,13 +13,13 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "fs-extra": "^11.2.0",
-    "json-server": "^1.0.0-beta.1",
     "multer": "^1.4.5-lts.1",
     "path": "^0.12.7",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/uuid": "^10.0.0",
+    "cross-env": "^7.0.3",
     "json-server": "^0.17.0",
     "nodemon": "^3.1.4"
   }

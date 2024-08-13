@@ -5,10 +5,33 @@ const fs = require('fs-extra');
 const cors = require('cors');
 
 const app = express();
-const port = 5001;
+const port = process.env.PORT || 3000; // Utilise le port fourni par l'environnement ou 3000 par défaut
+
+// Middleware CORS
+const corsOptions = {
+    origin: function (origin, callback) {
+        const allowedOrigins = ['https://task.akdigital.fr', 'http://localhost:5173'];
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Servir les fichiers statiques du frontend
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'public')));
+}
 
 // Chemin vers le fichier db.json
-const dbPath = path.join(__dirname, 'db.json');
+const dbPath = process.env.DB_PATH || path.join(__dirname, 'db.json');
 
 // Fonction pour lire db.json
 function readDb() {
@@ -18,7 +41,6 @@ function readDb() {
 function writeDb(data) {
     fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 }
-
 
 // Fonction pour écrire dans db.json
 function writeDb(data) {
@@ -43,19 +65,8 @@ const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024 } // 50 MB
 });
 
-app.use(cors({
-    origin: 'http://localhost:5173', // URL du client Vite.js
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type']
-}));
-
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.get('/api/test', (req, res) => {
-    res.json({ message: 'Test route works!' });
-});
 
 // Exemple de route GET pour récupérer toutes les données d'une ressource
 app.get('/api/:resource', (req, res) => {
@@ -215,14 +226,20 @@ app.post('/api/upload', upload.array('files'), (req, res) => {
 });
 
 
-
-
 // Gestion des erreurs
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
 
+// Pour toutes les autres requêtes, renvoyer index.html du frontend
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Pour toutes les autres requêtes, renvoyer index.html du frontend
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running on port ${port} in ${process.env.NODE_ENV || 'development'} mode`);
 });

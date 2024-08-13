@@ -193,7 +193,7 @@ const TaskDetails = ({
       <div className="task-description">
         <div className="task-description-header">
           <img
-            src={`/src/assets/img/${taskAuthor.profilePicture}`}
+            src={`/public/assets/img/${taskAuthor.profilePicture}`}
             alt={taskAuthor.name}
             className="author-avatar"
           />
@@ -268,7 +268,7 @@ const TaskDetails = ({
               >
                 <div className="response-header">
                   <img
-                    src={`/src/assets/img/${author.profilePicture}`}
+                    src={`/public/assets/img/${author.profilePicture}`}
                     alt={author.name}
                     className="author-avatar"
                   />

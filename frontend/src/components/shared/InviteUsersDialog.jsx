@@ -51,7 +51,7 @@ const InviteUsersDialog = ({
             <li key={user.id} className="user-item">
               <div className="user-item-profile">
                 <img
-                  src={`/src/assets/img/${user.profilePicture}`}
+                  src={`/public/assets/img/${user.profilePicture}`}
                   className="guest-avatar"
                 />
                 <span>{user.name}</span>

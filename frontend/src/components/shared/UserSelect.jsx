@@ -36,7 +36,7 @@ function UserSelect({ users, value = "", onChange, className }) {
     <div style={{ display: "flex", alignItems: "center" }}>
       {profilePicture && (
         <img
-          src={`/src/assets/img/${profilePicture}`}
+          src={`/public/assets/img/${profilePicture}`}
           alt={label}
           style={{ width: 20, height: 20, borderRadius: "50%" }}
         />

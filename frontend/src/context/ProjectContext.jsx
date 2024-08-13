@@ -1,12 +1,15 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useProjects from "../hooks/useProjects"; // Assurez-vous que le chemin est correct
+import useProjects from "../hooks/useProjects";
 import Cookies from "js-cookie";
+import { useAuth } from "./AuthContext";
 
 const ProjectContext = createContext();
 
 export const ProjectProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const { currentUser } = useAuth();
+  // console.log(currentUser);
+
   const navigate = useNavigate();
   const projectsData = useProjects();
 
@@ -23,7 +26,6 @@ export const ProjectProvider = ({ children }) => {
     <ProjectContext.Provider
       value={{
         currentUser,
-        setCurrentUser,
         ...projectsData,
       }}
     >
