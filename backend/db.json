@@ -9,100 +9,17 @@
           "title": "Tableau par défaut",
           "tasks": [
             {
-              "text": "ffdwfdw",
-              "status": "idle",
-              "priority": "medium",
-              "deadline": "",
-              "assignedTo": "",
-              "description": "iuhiuh",
-              "responses": [],
-              "id": 1723493057268,
-              "boardId": 1723482025245,
-              "projectId": "effe",
-              "descriptionFiles": []
-            },
-            {
               "text": "iohiho",
-              "status": "idle",
-              "priority": "medium",
+              "status": "completed",
+              "priority": "low",
               "deadline": "",
-              "assignedTo": "",
+              "assignedTo": "da78",
               "description": "<i>trytfytfytfrtxtrxrtxtrx</i>",
               "responses": [
                 {
-                  "id": 1723495522096,
-                  "text": "[object Object]",
-                  "date": "12/08/2024 22:45:22",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723495556828,
-                  "text": "zeqezq",
-                  "date": "12/08/2024 22:45:56",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723495574484,
-                  "text": "jkbjkbkjb",
-                  "date": "12/08/2024 22:46:14",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723495578675,
-                  "text": "kjbkjbkjbkjbkj",
-                  "date": "12/08/2024 22:46:18",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723495755683,
-                  "text": "tyf",
-                  "date": "12/08/2024 22:49:15",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723496146779,
-                  "text": "ytfytfytf",
-                  "date": "12/08/2024 22:55:46",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723496291005,
-                  "text": "zeqzeq",
-                  "date": "12/08/2024 22:58:11",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723496294177,
-                  "text": "ezea",
-                  "date": "12/08/2024 22:58:14",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723496344711,
-                  "text": "ytf",
-                  "date": "12/08/2024 22:59:04",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723496464603,
-                  "text": "<ul><li>trd</li></ul>",
-                  "date": "12/08/2024 23:01:04",
-                  "author_id": "da78",
-                  "files": []
-                },
-                {
-                  "id": 1723496512179,
-                  "text": "trdrtd",
-                  "date": "12/08/2024 23:01:52",
+                  "id": 1723501122765,
+                  "text": "ghcghc",
+                  "date": "13/08/2024 00:18:42",
                   "author_id": "da78",
                   "files": []
                 }
@@ -113,6 +30,30 @@
               "descriptionFiles": []
             }
           ]
+        },
+        {
+          "id": 1723498828195,
+          "title": "Nouveau tableau",
+          "tasks": [
+            {
+              "text": "ffdwfdw",
+              "status": "idle",
+              "priority": "low",
+              "deadline": "2024-08-15",
+              "assignedTo": "cfe5",
+              "description": "iuhiuh",
+              "responses": [],
+              "id": 1723493057268,
+              "boardId": 1723482025245,
+              "projectId": "effe",
+              "descriptionFiles": []
+            }
+          ]
+        },
+        {
+          "id": 1723498829376,
+          "title": "Nouveau tableau",
+          "tasks": []
         }
       ],
       "userId": "da78"
@@ -131,21 +72,11 @@
           "title": "Nouveau tableau",
           "tasks": [
             {
-              "text": "iuhiuhi",
-              "status": "idle",
-              "priority": "medium",
-              "deadline": "",
-              "assignedTo": "",
-              "description": "",
-              "responses": [],
-              "id": 1723482720503
-            },
-            {
               "text": "ytfyfyfytf",
               "status": "idle",
               "priority": "medium",
               "deadline": "",
-              "assignedTo": "",
+              "assignedTo": "b14a",
               "description": "",
               "responses": [],
               "id": 1723492545006
@@ -155,7 +86,7 @@
               "status": "testing",
               "priority": "high",
               "deadline": "",
-              "assignedTo": "bb4a",
+              "assignedTo": "cfe5",
               "description": "",
               "responses": [],
               "id": 1723492538060
@@ -175,7 +106,18 @@
         {
           "id": 1723492534814,
           "title": "Nouveau tableau",
-          "tasks": []
+          "tasks": [
+            {
+              "text": "iuhiuhi",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "",
+              "responses": [],
+              "id": 1723482720503
+            }
+          ]
         }
       ],
       "userId": "da78"
@@ -186,8 +128,8 @@
       "id": "da78",
       "name": "Aurélien",
       "email": "aurelien@akdigital.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM0OTYyNjgsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyMzQ5NjI2OCwiZXhwIjoxNzIzNDk5ODY4LCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhdXJlbGllbkBha2RpZ2l0YWwuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.FLhqIJ-vXWrmdEkWS1KPtU0TPrbmJDz45Z6JSI-xr72kbJI7A7Ne2UwQ6KzugNDryTOj0LqMZW0pGNTwg3FL5dpsi0w8DiHug33kd-vHhBef7phYU2BrE_xdmUJbBLJyTCBlCLBVH-AdDQYOU1FHNqohWc-d6wbfRcETpoJxmEpyvV7zIWjU5f8vnoyPYVlbkXM_Nhszp2JJV8bSuR70VJyzM1zp43jSUk_AT7dtiCFBdqtaVVuEQdfKAL1d3AHWHqI1VzAWpDwtLMB8gJMSjBvJRSBMmmBj3XWgd_NObDQ6WH0Fe5OElasJ0OSuOeYbJkDJFVLjmdfXBlmgBcDoFg",
-      "profile_picture": "portrait-aurelien-kohler-développeur-wordpress-fr.jpg"
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlMzcxNzMwZWY4NmViYTI5YTUyMTJkOWI5NmYzNjc1NTA0ZjYyYmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1Mzc1OTAsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyMzUzNzU5MCwiZXhwIjoxNzIzNTQxMTkwLCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhdXJlbGllbkBha2RpZ2l0YWwuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.PGmZ8uxZHu6Jh2pSzHrD_W83sDORu5kJ2m7ENOPc0ZU-l3fkQMNG687o_IfkSzUzPBunaCGLkGp5-RfKYwVdAJNUe0kx5G561CpSkSJuQLIyZvltRogSEKuSyKXelM7sY2LWgXpYy0K--4Ti4SKcTJ58W7tiDREHhNVFzxfLOp4Ae3fAyFXlib2syzKO_2Uh31KL9TKePwgNAKd3bfgf99JAcU51Me8-0M4hV4P052035iDhf46PcV1hEMLk8PdooY4QTAESYv_VxUjBqoZ1tezhMfPp-FFkGHEPqY_mIRpCv85-1zLbbQ3Bdj-V41rlw66IJrIVfgQOHdy5skwBlQ",
+      "profile_picture": "aurelien.jpg"
     },
     {
       "id": "cfe5",

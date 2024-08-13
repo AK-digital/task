@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Header from "./Header";
 import Board from "./Board";
@@ -38,11 +38,18 @@ function AppContent() {
   } = useProjectContext();
 
   const [isEditingProjectTitle, setIsEditingProjectTitle] = useState(false);
-  const [newProjectTitle, setNewProjectTitle] = useState(
-    currentProject?.name || ""
-  );
+  const [newProjectTitle, setNewProjectTitle] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (currentProject && currentProject.boards) {
+      setNewProjectTitle(currentProject.name);
+      setIsLoading(false);
+    }
+  }, [currentProject]);
 
   const onDragEnd = (result) => {
+    console.log(result);
     if (!result.destination) return;
 
     const { source, destination } = result;
@@ -80,6 +87,10 @@ function AppContent() {
       }
     }
   };
+
+  if (isLoading) {
+    return <div>Chargement...</div>;
+  }
 
   return (
     <div className="app">

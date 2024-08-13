@@ -2,11 +2,11 @@ import React from "react";
 import Select from "react-select";
 
 const options_status = [
-  { value: "idle", label: "À faire", color: "#f0ad4e" },
-  { value: "processing", label: "En cours", color: "#5bc0de" },
-  { value: "testing", label: "A tester", color: "#f7e358" },
-  { value: "completed", label: "Terminée", color: "#5cb85c" },
-  { value: "blocked", label: "Bloquée", color: "#d9534f" },
+  { value: "idle", label: "À faire", color: "#2b79a0" }, // Light purple for "À faire" (to-do)
+  { value: "processing", label: "En cours", color: "#474fa2" }, // Darker purple for "En cours" (in progress)
+  { value: "testing", label: "A tester", color: "#9e6080" }, // Slightly darker purple for "A tester" (testing)
+  { value: "completed", label: "Terminée", color: "#588967" }, // Steel blue for "Terminée" (completed)
+  { value: "blocked", label: "Bloquée", color: "#864f35" }, // Saddle brown for "Bloquée" (blocked)
 ];
 
 function StatusSelect({ value = "idle", onChange, className }) {
@@ -17,15 +17,15 @@ function StatusSelect({ value = "idle", onChange, className }) {
   const customStyles = {
     option: (baseStyles, state) => ({
       ...baseStyles,
-      backgroundColor: `${state.data.color}80 !important`,
+      backgroundColor: `${state.data.color} !important`,
       color: "white !important",
       ":hover": {
-        backgroundColor: `${state.data.color} !important`,
+        backgroundColor: `${state.data.color}90 !important`,
       },
     }),
     control: (baseStyles, state) => ({
       ...baseStyles,
-      backgroundColor: `${state.selectProps.value.color}80 !important`,
+      backgroundColor: `${state.selectProps.value.color} !important`,
       borderColor: state.isFocused
         ? "var(--accent-color) !important"
         : "var(--border-color) !important",

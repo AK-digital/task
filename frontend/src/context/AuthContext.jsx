@@ -4,6 +4,7 @@ import { auth } from "../auth/firebaseConfig";
 import Cookies from "js-cookie";
 import axios from "axios";
 
+
 const AuthContext = createContext();
 const API_BASE_URL = "http://localhost:5000/api";
 

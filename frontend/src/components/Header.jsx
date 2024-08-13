@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import SignOut from "../auth/SignOut";
+import defaultProfilePic from "../assets/img/default-profile-pic.svg";
 
 function Header({
   projects = [],
@@ -14,6 +15,23 @@ function Header({
   handleCancelCreateProject,
   currentUser,
 }) {
+  const [profilePicture, setProfilePicture] = useState(defaultProfilePic);
+
+  useEffect(() => {
+    if (currentUser && currentUser.profile_picture) {
+      import(`../assets/img/${currentUser.profile_picture}`)
+        .then((module) => {
+          setProfilePicture(module.default);
+        })
+        .catch((error) => {
+          console.error("Error loading profile picture:", error);
+          setProfilePicture(defaultProfilePic);
+        });
+    } else {
+      setProfilePicture(defaultProfilePic);
+    }
+  }, [currentUser]);
+
   const projectOptions = projects.map((project) => ({
     value: project.id,
     label: project.name,
@@ -88,15 +106,7 @@ function Header({
       )}
       <div className="user-profile">
         <span>{currentUser ? currentUser.name : "Utilisateur"}</span>
-        <img
-          src={
-            currentUser && currentUser.profile_picture
-              ? `/src/assets/img/${currentUser.profile_picture}`
-              : "/src/assets/img/default-profile-pic.svg"
-          }
-          alt="Profile"
-          className="profile-picture"
-        />
+        <img src={profilePicture} alt="Profile" className="profile-picture" />
         <SignOut />
       </div>
     </header>

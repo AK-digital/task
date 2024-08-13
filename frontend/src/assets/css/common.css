@@ -132,8 +132,9 @@ li.task-item:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-li.task-item input[type="text"] {
-  width: 400px;
+li.task-item input[type="text"],
+.add-task-form input[type="text"] {
+  width: 360px;
 }
 
 input[type="text"],
@@ -172,16 +173,16 @@ select:focus {
   background-color: var(--input-background-color);
 }
 
-/* Styles pour StatusSelect */
 .select > div {
-  border: 1px solid var(--border-color) !important;
-  border-radius: 4px;
-  background-color: var(--third-background-color) !important;
-  font-family: "Instrument Sans", Arial, sans-serif;
-  width: 150px;
+  width: 120px;
 }
+
 .select > div > div > div {
   color: white !important;
+}
+
+.select-user > div {
+  width: 200px;
 }
 
 .select-status__menu,

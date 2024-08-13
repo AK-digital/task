@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
   faGripVertical,
-  faComment,
+  faUpRightAndDownLeftFromCenter,
 } from "@fortawesome/free-solid-svg-icons";
 
 function TaskItem({
@@ -52,7 +52,7 @@ function TaskItem({
       />
       <button onClick={handleOpenDetails}>
         Éditer
-        <FontAwesomeIcon icon={faComment} />
+        <FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
       </button>
       <StatusSelect
         value={task.status}

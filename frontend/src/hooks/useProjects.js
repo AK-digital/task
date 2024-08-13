@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import DOMPurify from 'dompurify';
@@ -14,11 +14,31 @@ function useProjects() {
     const [isCreatingProject, setIsCreatingProject] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
 
+    const fetchProjects = useCallback(async () => {
+        if (!currentUser) return;
+
+        try {
+            const response = await axios.get(`${API_BASE_URL}/projects?userId=${currentUser.id}`);
+            const fetchedProjects = response.data;
+            setProjects(fetchedProjects);
+            if (fetchedProjects.length > 0) {
+                setCurrentProject(fetchedProjects[0]);
+            } else {
+                setCurrentProject(null);
+            }
+            console.log("Projects fetched:", fetchedProjects);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des projets:', error);
+            setProjects([]);
+            setCurrentProject(null);
+        }
+    }, [currentUser]);
+
     useEffect(() => {
         if (currentUser) {
             fetchProjects();
         }
-    }, [currentUser]);
+    }, [currentUser, fetchProjects]);
 
     useEffect(() => {
         fetchUsers();
@@ -55,20 +75,7 @@ function useProjects() {
 
     /**
      * PROJECTS FUNCTIONS
-     */
-    const fetchProjects = async () => {
-        if (!currentUser) return;
-
-        try {
-            const response = await axios.get(`${API_BASE_URL}/projects?userId=${currentUser.id}`);
-            setProjects(response.data);
-            if (response.data.length > 0) {
-                setCurrentProject(response.data[0]);
-            }
-        } catch (error) {
-            console.error('Erreur lors de la récupération des projets:', error);
-        }
-    };
+        */
 
     const handleProjectChange = (e) => {
         const projectId = e.target.value;
