@@ -1,72 +1,45 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useEffect,
   useCallback,
 } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../auth/firebaseConfig";
+import axios from "axios";
 import Cookies from "js-cookie";
-
-const AuthContext = createContext();
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+const AuthContext = createContext();
+
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  const reloadUserData = useCallback(async (user) => {
-    if (user) {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/users?email=${user.email}`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        const userData = data.find((u) => u.email === user.email);
+  const fetchCurrentUser = useCallback(async () => {
+    const token = Cookies.get("authToken");
+    if (!token) return null;
 
-        if (userData) {
-          setCurrentUser({
-            ...user,
-            name: userData.name,
-            profilePicture: userData.profilePicture,
-          });
-        } else {
-          setCurrentUser(user);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+    try {
+      const { data } = await axios.get(`${API_BASE_URL}/users`);
+      const user = data.find((u) => u.authToken === token);
+      if (user) {
         setCurrentUser(user);
       }
-    } else {
-      setCurrentUser(null);
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération de l'utilisateur courant:",
+        error
+      );
     }
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        Cookies.set("authToken", token, { expires: 7 });
-        await reloadUserData(user);
-      } else {
-        Cookies.remove("authToken");
-        setCurrentUser(null);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, [reloadUserData]);
+    fetchCurrentUser();
+  }, [fetchCurrentUser]);
 
   return (
-    <AuthContext.Provider
-      value={{ currentUser, setCurrentUser, loading, reloadUserData }}
-    >
-      {!loading && children}
+    <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
+      {children}
     </AuthContext.Provider>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import TaskItem from "./TaskItem";
 
 const TaskList = ({
@@ -8,10 +8,11 @@ const TaskList = ({
   onDeleteTask,
   handleOpenTaskDetails,
   users,
+  isDragging,
   boardId,
 }) => {
   return (
-    <ul className="task-list">
+    <ul className={`task-list  ${isDragging ? "dragging" : ""}`}>
       {tasks.map((task, index) => (
         <Draggable
           key={task.id.toString()}
@@ -20,12 +21,16 @@ const TaskList = ({
         >
           {(provided) => (
             <TaskItem
+              key={task.id}
               task={task}
-              onEditTask={onEditTask}
+              onEditTask={(taskId, updatedTask) =>
+                onEditTask(boardId, taskId, updatedTask)
+              }
               onDeleteTask={onDeleteTask}
-              handleOpenTaskDetails={() => handleOpenTaskDetails(task, boardId)}
+              handleOpenTaskDetails={handleOpenTaskDetails}
               provided={provided}
               users={users}
+              boardId={boardId}
             />
           )}
         </Draggable>

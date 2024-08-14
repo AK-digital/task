@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TaskList from "./TaskList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable } from "@hello-pangea/dnd";
 
 function Board({
   board,
@@ -12,6 +12,7 @@ function Board({
   onEditTask,
   onDeleteTask,
   handleOpenTaskDetails,
+  isDragging,
   users,
   onUpdateColor,
 }) {
@@ -27,6 +28,7 @@ function Board({
 
   const [titleColor, setTitleColor] = useState(board.titleColor || "#ffffff");
   const [showColorPicker, setShowColorPicker] = useState(false);
+
   const colors = [
     "#ffffff",
     "#bb928f",
@@ -139,16 +141,16 @@ function Board({
 
           <TaskList
             tasks={board.tasks}
-            onEditTask={(taskId, updatedTask) =>
+            onEditTask={(boardId, taskId, updatedTask) =>
               onEditTask(board.id, taskId, updatedTask)
             }
             onDeleteTask={(taskId) => onDeleteTask(board.id, taskId)}
-            handleOpenTaskDetails={(task) =>
-              handleOpenTaskDetails(task, board.id)
-            }
+            handleOpenTaskDetails={handleOpenTaskDetails}
             users={users}
+            isDragging={isDragging}
             boardId={board.id}
           />
+          {provided.placeholder}
           <div className="add-task-form">
             <span className="plus-icon">+</span>
             <input
@@ -162,7 +164,6 @@ function Board({
               <button onClick={handleAddNewTask}>Ajouter</button>
             )}
           </div>
-          {provided.placeholder}
         </div>
       )}
     </Droppable>

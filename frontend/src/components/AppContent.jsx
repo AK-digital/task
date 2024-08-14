@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
 import Header from "./Header";
 import Board from "./Board";
 import TaskDetails from "./TaskDetails";
@@ -46,6 +46,7 @@ function AppContent() {
   const [isEditingProjectTitle, setIsEditingProjectTitle] = useState(false);
   const [newProjectTitle, setNewProjectTitle] = useState("");
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     if (currentUser && projects.length > 0) {
@@ -84,6 +85,11 @@ function AppContent() {
       source.index,
       destination.index
     );
+    setIsDragging(false);
+  };
+
+  const onDragStart = () => {
+    setIsDragging(true);
   };
 
   const handleCreateProjectWithUser = () => {
@@ -203,7 +209,7 @@ function AppContent() {
                 </div>
               )}
             </div>
-            <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
               <div className="boards-container">
                 {currentProject.boards.map((board, index) => (
                   <Board
@@ -220,7 +226,14 @@ function AppContent() {
                     onAddTask={(boardId, task) =>
                       handleAddTask(currentProject.id, boardId, task)
                     }
-                    onEditTask={handleEditTask}
+                    onEditTask={(boardId, taskId, updatedTask) =>
+                      handleEditTask(
+                        currentProject.id,
+                        boardId,
+                        taskId,
+                        updatedTask
+                      )
+                    }
                     handleOpenTaskDetails={handleOpenTaskDetails}
                     onDeleteTask={(boardId, taskId) =>
                       handleDeleteTask(currentProject.id, boardId, taskId)
@@ -235,6 +248,7 @@ function AppContent() {
                         color
                       )
                     }
+                    isDragging={isDragging}
                     users={users || []}
                   />
                 ))}

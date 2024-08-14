@@ -9,6 +9,18 @@
           "title": "UX / UI",
           "tasks": [
             {
+              "text": "Améliorer l'accessibilité de l'application (contraste, navigation au clavier, etc.)",
+              "status": "processing",
+              "priority": "high",
+              "deadline": "2024-09-12",
+              "assignedTo": "b10c",
+              "description": "",
+              "responses": [],
+              "id": "b96d5496-a93d-40e4-91b7-a977a271ab10",
+              "createdAt": "13/08/2024 21:02:57",
+              "createdBy": "da78"
+            },
+            {
               "text": " Réaliser des tests d'utilisabilité sur l'interface actuelle",
               "status": "idle",
               "priority": "medium",
@@ -27,6 +39,13 @@
                   "id": "bcfc54c8-a64f-46e0-885e-df7e679e06f5",
                   "text": "uihiuhiu<div><br></div>",
                   "date": "14/08/2024 00:44:36",
+                  "author_id": "da78",
+                  "files": []
+                },
+                {
+                  "id": "d3494351-2c4e-48cd-8d58-6a14dad6a08a",
+                  "text": "gfdfgd<div>bbub</div>",
+                  "date": "14/08/2024 01:05:51",
                   "author_id": "da78",
                   "files": []
                 }
@@ -58,18 +77,6 @@
               "responses": [],
               "id": "904be9ea-2bc6-4bf2-ba21-a2a7678b6ee1",
               "createdAt": "13/08/2024 20:44:25",
-              "createdBy": "da78"
-            },
-            {
-              "text": "Améliorer l'accessibilité de l'application (contraste, navigation au clavier, etc.)",
-              "status": "processing",
-              "priority": "high",
-              "deadline": "2024-09-12",
-              "assignedTo": "b10c",
-              "description": "",
-              "responses": [],
-              "id": "b96d5496-a93d-40e4-91b7-a977a271ab10",
-              "createdAt": "13/08/2024 21:02:57",
               "createdBy": "da78"
             },
             {
@@ -358,6 +365,55 @@
         "b14a",
         "b10c"
       ]
+    },
+    {
+      "id": "ebb4baa3-e15c-41b6-a69d-d40447524b02",
+      "name": "ghvhgvghv",
+      "boards": [
+        {
+          "id": "b73ed5c6-7622-4f33-95cb-d1a2530c22e6",
+          "title": "Tableau par défaut",
+          "tasks": [
+            {
+              "text": "hgvhgvhgv",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "",
+              "responses": [],
+              "id": "d91f9783-a4f0-4be3-955b-b92af35c118d",
+              "createdAt": "14/08/2024 02:23:47",
+              "createdBy": "da78"
+            },
+            {
+              "text": "jvhvlv",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "",
+              "responses": [],
+              "id": "0cc4f744-0199-4412-b9bd-8299224755b3",
+              "createdAt": "14/08/2024 02:23:48",
+              "createdBy": "da78"
+            },
+            {
+              "text": "lvhljvh",
+              "status": "idle",
+              "priority": "medium",
+              "deadline": "",
+              "assignedTo": "",
+              "description": "",
+              "responses": [],
+              "id": "6ae50edf-3113-464e-bd25-6acfa02e6b62",
+              "createdAt": "14/08/2024 02:23:50",
+              "createdBy": "da78"
+            }
+          ]
+        }
+      ],
+      "userId": "da78"
     }
   ],
   "users": [
@@ -365,9 +421,9 @@
       "id": "da78",
       "name": "Aurélien",
       "email": "aurelien@akdigital.fr",
-      "authToken": "",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ0MjY5YTE3MzBlNTA3MTllNmIxNjA2ZTQyYzNhYjMyYjEyODA0NDkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MjM1OTAzNDIsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyMzU5MDM0MiwiZXhwIjoxNzIzNTkzOTQyLCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhdXJlbGllbkBha2RpZ2l0YWwuZnIiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.ipL3V-Fd7K_vYdEp9Rydc1DzCHGUtI7RvkxZIC4pfW8exh7NG8EYGJXFSFqZIBRVar4v-9wS32sDZdw0Yf8-KOS9MrHKC4Ko9VqRnYgkcVeUW0RzNAh5j3wzy4hkyeWc2RpZzOARX-b5CkGWusInuXmpmQLFH7LlFOS1TQt9OWdLjvtOUITd_ffqdYVh2zgFv-zGssHR2y0EZXv5qpzhw0YLXKnodgnUaWx7xmphjmwBhCfHGZwOzynsQny1b28c2ouPvJ2hLPX6vo7DHIOVtliqANFOoF7NCUaIuQIxUNplrxTQkHpyl_30P3cOyXtRSsfskzD5IaGGYBRFIoQOZQ",
       "profilePicture": "aurelien.jpg",
-      "currentProjectId": "f37f2749-e52c-492f-8895-6465eb3f0266"
+      "currentProjectId": "ebb4baa3-e15c-41b6-a69d-d40447524b02"
     },
     {
       "id": "cfe5",

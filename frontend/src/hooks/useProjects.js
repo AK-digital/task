@@ -1,57 +1,40 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import DOMPurify from 'dompurify';
 import { v4 as uuid } from 'uuid';
+import DOMPurify from 'dompurify';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
-console.log(API_BASE_URL);
-
 
 const api = axios.create({
     baseURL: API_BASE_URL,
 });
 
 function useProjects() {
+    const { currentUser } = useAuth();  // Use currentUser from AuthContext
     const [projects, setProjects] = useState([]);
     const [currentProject, setCurrentProject] = useState(null);
     const [editingTask, setEditingTask] = useState(null);
     const [users, setUsers] = useState([]);
-    const [currentUser, setCurrentUser] = useState(null);
     const [isCreatingProject, setIsCreatingProject] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    const fetchCurrentUser = useCallback(async () => {
-        const token = Cookies.get("authToken");
-        if (!token) return null;
+    const fetchProjects = useCallback(async () => {
+        if (!currentUser) return;
 
-        try {
-            const { data } = await api.get('/users');
-            const user = data.find(u => u.authToken === token);
-            if (user) {
-                setCurrentUser(user);
-                return user;
-            }
-        } catch (error) {
-            console.error('Erreur lors de la récupération de l\'utilisateur courant:', error);
-        }
-        return null;
-    }, []);
-
-    const fetchProjects = useCallback(async (user) => {
         try {
             const { data: allProjects } = await api.get('/projects');
-            const ownedProjects = allProjects.filter(project => project.userId === user.id);
+            const ownedProjects = allProjects.filter(project => project.userId === currentUser.id);
             const invitedProjects = allProjects.filter(project =>
-                project.guestUsers && project.guestUsers.includes(user.id)
+                project.guestUsers && project.guestUsers.includes(currentUser.id)
             );
             const combinedProjects = [...ownedProjects, ...invitedProjects];
 
             setProjects(combinedProjects);
 
-            if (user.currentProjectId) {
-                const currentProject = combinedProjects.find(project => project.id === user.currentProjectId);
+            if (currentUser.currentProjectId) {
+                const currentProject = combinedProjects.find(project => project.id === currentUser.currentProjectId);
                 setCurrentProject(currentProject || combinedProjects[0]);
             } else if (combinedProjects.length > 0) {
                 setCurrentProject(combinedProjects[0]);
@@ -59,7 +42,7 @@ function useProjects() {
         } catch (error) {
             console.error('Erreur lors de la récupération des projets:', error);
         }
-    }, []);
+    }, [currentUser]);
 
     const fetchUsers = async () => {
         try {
@@ -73,16 +56,15 @@ function useProjects() {
     useEffect(() => {
         const initializeData = async () => {
             setIsLoading(true);
-            const user = await fetchCurrentUser();
-            if (user) {
-                await fetchProjects(user);
+            if (currentUser) {
+                await fetchProjects();
                 await fetchUsers();
             }
             setIsLoading(false);
         };
 
         initializeData();
-    }, [fetchCurrentUser, fetchProjects]);
+    }, [currentUser, fetchProjects]);
 
     const handleProjectChange = async (e) => {
         const projectId = e.target.value;
@@ -211,8 +193,9 @@ function useProjects() {
         }
     };
 
-    const handleEditTask = async (boardId, taskId, updatedTask) => {
-        if (currentProject) {
+    const handleEditTask = async (projectId, boardId, taskId, updatedTask) => {
+        console.log('handleEditTask called with:', { projectId, boardId, taskId, updatedTask });
+        if (currentProject && currentProject.id === projectId) {
             try {
                 const updatedProject = {
                     ...currentProject,
@@ -227,12 +210,14 @@ function useProjects() {
                             : board
                     )
                 };
-                const { data } = await api.put(`/projects/${currentProject.id}`, updatedProject);
-                setProjects(prev => prev.map(project => project.id === currentProject.id ? data : project));
+                const { data } = await api.put(`/projects/${projectId}`, updatedProject);
+                setProjects(prev => prev.map(project => project.id === projectId ? data : project));
                 setCurrentProject(data);
             } catch (error) {
                 console.error('Erreur lors de la mise à jour de la tâche:', error);
             }
+        } else {
+            console.error('Project not found or mismatch:', projectId, currentProject?.id);
         }
     };
 
@@ -498,7 +483,6 @@ function useProjects() {
         currentProject,
         editingTask,
         users,
-        currentUser,
         isCreatingProject,
         newProjectName,
         isLoading,

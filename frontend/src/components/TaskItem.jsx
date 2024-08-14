@@ -20,9 +20,9 @@ function TaskItem({
 }) {
   const [taskText, setTaskText] = useState(task.text);
 
-  const handleEdit = (updatedTask) => {
+  const handleEdit = (updatedFields) => {
     if (typeof onEditTask === "function") {
-      onEditTask(task.id, updatedTask);
+      onEditTask(task.id, { ...task, ...updatedFields });
     } else {
       console.error("onEditTask is not a function");
     }

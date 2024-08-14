@@ -8,7 +8,6 @@ const ProjectContext = createContext();
 
 export const ProjectProvider = ({ children }) => {
   const { currentUser } = useAuth();
-  // console.log(currentUser);
 
   const navigate = useNavigate();
   const projectsData = useProjects();
