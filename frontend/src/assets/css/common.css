@@ -15,7 +15,7 @@
   --border-color: #3a3d5c;
   --input-background-color: #272643;
   --pale-red: #c36767;
-  --header-height: 50px;
+  --header-height: 58px;
 
   font-family: "Instrument Sans", Arial, sans-serif;
   font-size: 15px;
@@ -66,10 +66,16 @@ body {
 }
 
 main {
-  padding: 32px;
+  padding: 42px 5vw;
   margin-top: calc(var(--header-height));
   min-height: calc(100% - var(--header-height));
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 42px 24px;
+  }
 }
 
 h1,
@@ -102,7 +108,7 @@ li.task-item,
   background-color: var(--secondary-background-color);
   border-radius: 5px;
   transition: all 0.3s ease;
-  gap: 8px;
+  gap: 10px;
 }
 
 li.task-item input[type="text"],
@@ -240,6 +246,11 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+button.edit-btn {
+  background-color: #ffffff12;
+  color: var(--text-color);
+}
+
 .grad-handle {
   cursor: -webkit-grab;
   cursor: grab;
@@ -282,8 +293,8 @@ button:focus-visible {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 32px;
-  padding-right: 32px;
+  padding-left: 5vw;
+  padding-right: 5vw;
   height: var(--header-height);
   background-color: var(--secondary-background-color);
   box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.25);
@@ -297,7 +308,7 @@ button:focus-visible {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 
 .project-header input[type="text"] {
@@ -328,10 +339,10 @@ button:focus-visible {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100%;
+  height: calc(100vh - 186px);
   font-size: 1.2em;
   color: var(--text-color-muted);
-  margin-top: -70px;
+  margin-top: -120px;
 }
 
 .no-project-content input[type="text"] {
@@ -493,9 +504,9 @@ button:focus-visible {
   min-width: 300px;
   background-color: var(--secondary-background-color);
   border-radius: 8px;
-  padding: 12px;
+  padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  margin-bottom: 24px;
+  margin-bottom: 48px;
 }
 
 .add-board {

@@ -90,6 +90,11 @@ function Header({
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
                 placeholder="Nom du projet"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onCreateProject();
+                  }
+                }}
               />
               <button onClick={onCreateProject}>Créer</button>
               <button onClick={handleCancelCreateProject}>Annuler</button>

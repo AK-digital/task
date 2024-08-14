@@ -76,7 +76,7 @@ function TaskItem({
         onKeyDown={handleKeyDown}
         placeholder="Tâche existante"
       />
-      <button onClick={handleOpenDetails}>
+      <button className="edit-btn" onClick={handleOpenDetails}>
         Éditer
         <FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
       </button>

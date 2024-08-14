@@ -30,6 +30,7 @@
 .task-details .task-title {
   font-size: 1.3rem;
   margin-bottom: 14px;
+  width: calc(100% - 40px);
 }
 
 .task-details .task-description {

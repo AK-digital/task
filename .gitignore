@@ -7,3 +7,5 @@
 /frontend/dist
 /.history
 /backend.zip
+/backend/db.json
+/backend/public
