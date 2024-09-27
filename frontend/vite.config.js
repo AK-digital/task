@@ -35,9 +35,17 @@ export default defineConfig(({ command, mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:5001',
+          target: 'http://localhost:3000',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
+        },
+        '/upload': {
+          target: 'http://localhost:3000',
+          changeOrigin: true
+        },
+        '/upload': {
+          target: 'http://localhost:3000',
+          changeOrigin: true
         }
       }
     }

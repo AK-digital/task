@@ -5,35 +5,28 @@ const fs = require('fs-extra');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3000; // Utilise le port fourni par l'environnement ou 3000 par défaut
+const port = process.env.PORT || 3000;
 
-// Middleware CORS
+// Configuration CORS
 const corsOptions = {
-    origin: function (origin, callback) {
-        const allowedOrigins = ['https://task.akdigital.fr', 'http://localhost:5173'];
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    optionsSuccessStatus: 200
+    origin: ['https://task.akdigital.fr', 'http://localhost:5173'],
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 };
-
 app.use(cors(corsOptions));
 
+// Middleware pour parser le JSON et les données de formulaire
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Servir les fichiers statiques du frontend
+// Servir les fichiers statiques
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'public')));
 }
 
-// Chemin vers le fichier db.json
+// Configuration de la base de données
 const dbPath = process.env.DB_PATH || path.join(__dirname, 'db.json');
 
-// Fonction pour lire db.json
 function readDb() {
     return JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 }
@@ -42,12 +35,11 @@ function writeDb(data) {
     fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 }
 
-// Fonction pour écrire dans db.json
-function writeDb(data) {
-    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
 }
-
-// Configuration de multer pour l'upload de fichiers
+// Configuration de Multer pour l'upload de fichiers
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const { userId, projectId, boardId, taskId } = req.body;
@@ -56,19 +48,17 @@ const storage = multer.diskStorage({
         cb(null, dir);
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
 
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 } // 50 MB
-});
+const upload = multer({ storage: storage });
 
+// Servir les fichiers uploadés
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
-// Exemple de route GET pour récupérer toutes les données d'une ressource
+// Routes API génériques
 app.get('/api/:resource', (req, res) => {
     const db = readDb();
     const resource = req.params.resource;
@@ -79,46 +69,36 @@ app.get('/api/:resource', (req, res) => {
     }
 });
 
-// Exemple de route POST pour ajouter une nouvelle entrée à une ressource
 app.post('/api/:resource', (req, res) => {
     const db = readDb();
     const resource = req.params.resource;
     if (!db[resource]) {
         db[resource] = [];
     }
-
     const newItem = { ...req.body };
     db[resource].push(newItem);
     writeDb(db);
     res.status(201).json(newItem);
 });
 
-
-// Route GET pour obtenir un utilisateur par son token
+// Routes spécifiques pour les utilisateurs
 app.get('/api/users', (req, res) => {
     const { authToken } = req.query;
-
     if (!authToken) {
         return res.status(400).json({ error: 'Token d\'authentification manquant' });
     }
-
     const db = readDb();
     const users = db.users.filter(user => user.authToken === authToken);
-
     res.json(users);
 });
 
-// Route GET pour récupérer un utilisateur par email
 app.get('/api/users/by-email', (req, res) => {
     const { email } = req.query;
-
     if (!email) {
         return res.status(400).json({ error: 'Email manquant.' });
     }
-
     const db = readDb();
     const user = db.users.find(u => u.email === email);
-
     if (user) {
         res.json([user]);
     } else {
@@ -126,7 +106,6 @@ app.get('/api/users/by-email', (req, res) => {
     }
 });
 
-// Route PUT pour mettre à jour un utilisateur
 app.put('/api/users/:id', (req, res) => {
     const db = readDb();
     const { id } = req.params;
@@ -140,91 +119,84 @@ app.put('/api/users/:id', (req, res) => {
     }
 });
 
-// Route PATCH pour mettre à jour un utilisateur
 app.patch('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const updates = req.body;
-
     const db = readDb();
     const userIndex = db.users.findIndex(user => user.id === id);
-
     if (userIndex === -1) {
         return res.status(404).json({ error: 'Utilisateur non trouvé' });
     }
-
-    // Mise à jour des champs spécifiés
     db.users[userIndex] = { ...db.users[userIndex], ...updates };
-
     writeDb(db);
-
     res.json(db.users[userIndex]);
 });
 
-// Route POST pour créer un nouvel utilisateur
-app.post('/api/users', (req, res) => {
-    const db = readDb();
-    if (!db.users) {
-        db.users = [];
-    }
-    const newUser = req.body;
-    db.users.push(newUser);
-    writeDb(db);
-    res.status(201).json(newUser);
-});
-
+// Routes pour les projets
 app.put('/api/projects/:id', (req, res) => {
     const { id } = req.params;
     const updatedProject = req.body;
-
-    const dbPath = path.join(__dirname, 'db.json');
-    const db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-
-    const projectIndex = db.projects.findIndex(project => project.id.toString() === id);
-
+    const db = readDb();
+    const projectIndex = db.projects.findIndex(project => project.id === id);
     if (projectIndex === -1) {
         return res.status(404).json({ error: 'Project not found' });
     }
-
     db.projects[projectIndex] = { ...db.projects[projectIndex], ...updatedProject };
-    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
-
+    writeDb(db);
     res.json(db.projects[projectIndex]);
 });
 
 app.delete('/api/projects/:id', (req, res) => {
     const { id } = req.params;
-
-    const dbPath = path.join(__dirname, 'db.json');
-    const db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-
-    const projectIndex = db.projects.findIndex(project => project.id.toString() === id);
-
+    const db = readDb();
+    const projectIndex = db.projects.findIndex(project => project.id === id);
     if (projectIndex === -1) {
         return res.status(404).json({ error: 'Project not found' });
     }
-
     db.projects.splice(projectIndex, 1);
-    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
-
+    writeDb(db);
     res.json({ message: 'Project deleted' });
 });
 
 // Route pour l'upload de fichiers
-app.post('/api/upload', upload.array('files'), (req, res) => {
-    console.log('Requête d\'upload reçue:', req.body);
-    console.log('Fichiers reçus:', req.files);
-    const files = req.files.map(file => ({
-        id: Date.now(), // ou utilisez un ID unique
-        name: file.originalname,
-        size: file.size,
-        type: file.mimetype,
-        url: `/uploads/${req.body.userId}/${req.body.projectId}/${req.body.boardId}/${req.body.taskId}/${file.filename}`
-    }));
+app.post('/upload', upload.array('files'), (req, res) => {
+    try {
+        console.log('Requête d\'upload reçue');
+        console.log('Corps de la requête:', req.body);
+        console.log('Fichiers reçus:', req.files);
 
+        if (!req.files || req.files.length === 0) {
+            console.log('Aucun fichier reçu');
+            return res.status(400).json({ error: 'Aucun fichier n\'a été uploadé.' });
+        }
 
-    res.json(files);
+        const files = req.files.map(file => {
+            return {
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                name: file.originalname,
+                size: file.size,
+                type: file.mimetype,
+                url: `/uploads/${req.body.userId}/${req.body.projectId}/${req.body.boardId}/${req.body.taskId}/${file.filename}`
+            };
+        });
+
+        console.log('Fichiers traités:', files);
+
+        // Ajout des informations des fichiers à db.json
+        const db = readDb();
+        if (!db.upload) {
+            db.upload = [];
+        }
+        db.upload.push(...files);
+        writeDb(db);
+
+        console.log('Réponse envoyée:', files);
+        return res.status(201).json(files);
+    } catch (error) {
+        console.error('Erreur lors de l\'upload:', error);
+        return res.status(500).json({ error: 'Une erreur est survenue lors de l\'upload' });
+    }
 });
-
 
 // Gestion des erreurs
 app.use((err, req, res, next) => {
@@ -232,14 +204,12 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-// Pour toutes les autres requêtes, renvoyer index.html du frontend
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Pour toutes les autres requêtes, renvoyer index.html du frontend
+// Route catch-all pour le frontend
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Démarrage du serveur
 app.listen(port, () => {
     console.log(`Server running on port ${port} in ${process.env.NODE_ENV || 'development'} mode`);
 });

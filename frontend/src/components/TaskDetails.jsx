@@ -28,7 +28,7 @@ const TaskDetails = ({
   const [editingResponseId, setEditingResponseId] = useState(null);
   const [showIcons, setShowIcons] = useState(null);
   const taskDetailsRef = useRef(null);
-  const descriptionEditorRef = useRef(null); // Référence pour l'éditeur de description
+  const descriptionEditorRef = useRef(null);
 
   useEffect(() => {
     if (task) {
@@ -50,77 +50,17 @@ const TaskDetails = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  // Gestion de l'état d'édition de la description lors de l'ouverture de la fenêtre
   useEffect(() => {
     if (!editedTask.description) {
       setIsEditingDescription(true);
     }
   }, [editedTask.description]);
 
-  // Positionner le curseur dans l'éditeur de description lors du passage en mode édition
   useEffect(() => {
     if (isEditingDescription && descriptionEditorRef.current) {
       descriptionEditorRef.current.focusEditor();
     }
   }, [isEditingDescription]);
-
-  const handleSaveDescription = useCallback(
-    async (newDescription, files) => {
-      const sanitizedHtml = DOMPurify.sanitize(newDescription);
-      let uploadedFiles = [];
-      try {
-        if (files.length > 0) {
-          uploadedFiles = await onUploadFiles(
-            files,
-            currentUser,
-            { id: task.projectId },
-            task.boardId,
-            task.id
-          );
-        }
-        const updatedTask = {
-          ...task,
-          description: sanitizedHtml,
-          descriptionFiles: uploadedFiles,
-        };
-        setEditedTask(updatedTask);
-        onSave(updatedTask);
-        setIsEditingDescription(false);
-      } catch (error) {
-        console.error("Erreur lors de la sauvegarde de la description:", error);
-      }
-    },
-    [task, currentUser, onUploadFiles, onSave]
-  );
-
-  const handleAddResponse = useCallback(
-    async (responseText, uploadedFiles) => {
-      if (responseText.trim() === "" || !currentUser || !task) return;
-
-      const sanitizedHtml = DOMPurify.sanitize(responseText);
-      const newResponse = {
-        id: Date.now(),
-        text: sanitizedHtml,
-        date: new Date().toLocaleString(),
-        author_id: currentUser.id,
-        files: uploadedFiles,
-      };
-
-      onAddResponse(task.id, newResponse);
-      setLocalResponses((prevResponses) => [...prevResponses, newResponse]);
-    },
-    [task, currentUser, onAddResponse]
-  );
-
-  const handleDeleteResponse = useCallback(
-    (responseId) => {
-      onDeleteResponse(task.id, responseId);
-      setLocalResponses((prevResponses) =>
-        prevResponses.filter((response) => response.id !== responseId)
-      );
-    },
-    [task, onDeleteResponse]
-  );
 
   const handleUploadFiles = useCallback(
     async (files) => {
@@ -136,13 +76,70 @@ const TaskDetails = ({
           boardId: task.boardId,
           taskId: task.id,
         });
-        return uploadedFiles;
+        return Array.isArray(uploadedFiles) ? uploadedFiles : [];
       } catch (error) {
         console.error("Erreur lors de l'upload des fichiers:", error);
         return [];
       }
     },
     [currentUser, task, onUploadFiles]
+  );
+
+  const handleSaveDescription = useCallback(
+    async (newDescription, files) => {
+      const sanitizedHtml = DOMPurify.sanitize(newDescription);
+      let uploadedFiles = [];
+      try {
+        if (files && files.length > 0) {
+          uploadedFiles = await handleUploadFiles(files);
+        }
+        const updatedTask = {
+          ...task,
+          description: sanitizedHtml,
+          descriptionFiles: uploadedFiles,
+        };
+        setEditedTask(updatedTask);
+        onSave(updatedTask);
+        setIsEditingDescription(false);
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde de la description:", error);
+      }
+    },
+    [task, onSave, handleUploadFiles]
+  );
+
+  const handleAddResponse = useCallback(
+    async (responseText, uploadedFiles) => {
+      if (responseText.trim() === "" || !currentUser || !task) return;
+
+      const sanitizedHtml = DOMPurify.sanitize(responseText);
+      let files = [];
+      if (uploadedFiles && uploadedFiles.length > 0) {
+        files = await handleUploadFiles(uploadedFiles);
+      }
+
+      const newResponse = {
+        id: Date.now(),
+        text: sanitizedHtml,
+        date: new Date().toLocaleString(),
+        author_id: currentUser.id,
+        files: files,
+      };
+
+      onAddResponse(task.id, newResponse);
+      setLocalResponses((prevResponses) => [...prevResponses, newResponse]);
+    },
+    [task, currentUser, onAddResponse, handleUploadFiles]
+  );
+
+  const handleDeleteResponse = useCallback(
+    (responseId) => {
+      onDeleteResponse(task.id, responseId);
+      setLocalResponses((prevResponses) =>
+        prevResponses.filter((response) => response.id !== responseId)
+      );
+    },
+    [task, onDeleteResponse]
   );
 
   const handleEditResponse = useCallback(
@@ -160,7 +157,9 @@ const TaskDetails = ({
       onEditResponse(task.id, responseId, updatedResponse);
       setLocalResponses((prevResponses) =>
         prevResponses.map((response) =>
-          response.id === responseId ? updatedResponse : response
+          response.id === responseId
+            ? { ...response, ...updatedResponse }
+            : response
         )
       );
       setEditingResponseId(null);

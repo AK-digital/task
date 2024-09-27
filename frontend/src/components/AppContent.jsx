@@ -250,6 +250,7 @@ function AppContent() {
                     }
                     isDragging={isDragging}
                     users={users || []}
+                    onUploadFiles={handleUploadFiles}
                   />
                 ))}
               </div>

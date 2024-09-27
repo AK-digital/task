@@ -6,12 +6,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-const api = axios.create({
-    baseURL: API_BASE_URL,
-});
-
 function useProjects() {
-    const { currentUser } = useAuth();  // Use currentUser from AuthContext
+    const { currentUser } = useAuth();
     const [projects, setProjects] = useState([]);
     const [currentProject, setCurrentProject] = useState(null);
     const [editingTask, setEditingTask] = useState(null);
@@ -19,6 +15,10 @@ function useProjects() {
     const [isCreatingProject, setIsCreatingProject] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+
+    const api = axios.create({
+        baseURL: API_BASE_URL,
+    });
 
     const fetchProjects = useCallback(async () => {
         if (!currentUser) return;
@@ -326,29 +326,55 @@ function useProjects() {
     };
 
     const handleUploadFiles = useCallback(async ({ files, currentUser, currentProject, boardId, taskId }) => {
-        if (!files || files.length === 0 || !currentUser || !currentProject || !boardId || !taskId) {
+        if (!files || files.length === 0) {
+            console.error('Aucun fichier à uploader');
+            return [];
+        }
+
+        if (!currentUser || !currentProject || !boardId || !taskId) {
             console.error('Informations manquantes pour l\'upload');
             return [];
         }
 
         try {
             const formData = new FormData();
-            files.forEach((file) => formData.append('files', file));
+            files.forEach((file, index) => {
+                formData.append(`files`, file);
+                console.log(`Ajout du fichier ${index + 1}:`, file.name);
+            });
+
             formData.append('userId', currentUser.id);
             formData.append('projectId', currentProject.id);
             formData.append('boardId', boardId);
             formData.append('taskId', taskId);
 
-            const { data } = await api.post('/upload', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            console.log('FormData envoyé:', Object.fromEntries(formData));
+
+            console.log('Début de l\'upload...');
+            const response = await api.post('/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    console.log(`Progression de l'upload: ${percentCompleted}%`);
+                }
             });
 
-            return data;
+            console.log('Réponse du serveur complète:', response);
+            console.log('Données de la réponse:', response.data);
+
+            if (response.status === 201 && Array.isArray(response.data)) {
+                return response.data;
+            } else {
+                console.error('Réponse inattendue du serveur:', response.data);
+                return [];
+            }
+
         } catch (error) {
             console.error("Erreur lors de l'upload des fichiers:", error);
+            console.error("Détails de l'erreur:", error.response ? error.response : error);
             return [];
         }
-    }, []);
+    }, [api]);
 
     const handleInviteUser = async (projectId, userId) => {
         try {

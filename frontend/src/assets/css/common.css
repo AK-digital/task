@@ -123,6 +123,11 @@ li.task-item {
   cursor: pointer;
 }
 
+li.task-item:hover {
+  background-color: var(--primary-background-hover-color);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
 .add-task-form {
   padding: 0 10px;
 }
@@ -140,16 +145,6 @@ a:hover {
   color: var(--text-color-muted);
   cursor: -webkit-grab;
   cursor: grab;
-}
-
-li.task-item {
-  border: 1px solid #2b2d47;
-  margin-bottom: 8px;
-}
-
-li.task-item:hover {
-  background-color: var(--primary-background-hover-color);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 input[type="text"],

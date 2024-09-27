@@ -47,20 +47,21 @@ const RichTextEditor = ({
       if (newFiles.length > 0 && onUploadFiles) {
         try {
           const uploadedFiles = await onUploadFiles(newFiles);
-
-          // Vérifier si uploadedFiles est un tableau ou un objet unique
-          const filesToAdd = Array.isArray(uploadedFiles)
-            ? uploadedFiles
-            : [uploadedFiles];
-
-          setFiles((prevFiles) => [
-            ...prevFiles,
-            ...filesToAdd.map((file) => ({
-              id: file.id,
-              name: file.name || `File ${file.id}`,
-              // Ajoutez d'autres propriétés si nécessaire
-            })),
-          ]);
+          if (Array.isArray(uploadedFiles)) {
+            setFiles((prevFiles) => [
+              ...prevFiles,
+              ...uploadedFiles.map((file) => ({
+                id: file.id,
+                name: file.name || `File ${file.id}`,
+                url: file.url,
+              })),
+            ]);
+          } else {
+            console.error(
+              "La réponse de l'upload n'est pas un tableau:",
+              uploadedFiles
+            );
+          }
         } catch (error) {
           console.error("Erreur lors de l'upload des fichiers:", error);
         }
@@ -98,7 +99,7 @@ const RichTextEditor = ({
           <ul>
             {files.map((file, index) => (
               <li className="attached-file" key={file.id || index}>
-                {file.name || `File ${file.id}`}
+                {file.name}
                 <button onClick={() => removeFile(index)}>Supprimer</button>
               </li>
             ))}
