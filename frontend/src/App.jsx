@@ -13,6 +13,8 @@ import PrivateRoute from "./auth/PrivateRoute.jsx";
 import AppContent from "./components/AppContent.jsx";
 import FontLoader from "./FontLoader.jsx";
 import "./assets/css/common.css";
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+
 
 function App() {
   return (

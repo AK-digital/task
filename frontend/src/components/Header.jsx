@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import SignOut from "../auth/SignOut";
 import defaultProfilePic from "/assets/img/default-profile-pic.svg";
+import api from "../services/api";
 
 function Header({
   projects = [],
@@ -65,6 +66,28 @@ function Header({
     }),
   };
 
+  const handleTestEmail = async () => {
+    try {
+      console.log('Envoi de la requête de test d\'email...');
+      const response = await api.post("/test-email");
+      console.log('Réponse complète du serveur:', response);
+      console.log('Statut de la réponse:', response.status);
+      console.log('Données de la réponse:', response.data);
+      if (response.data && response.data.message) {
+        alert(response.data.message);
+      } else {
+        alert(`Réponse reçue avec statut ${response.status}, mais sans message.`);
+      }
+    } catch (error) {
+      console.error("Erreur détaillée lors de l'envoi de l'email de test:", error);
+      if (error.response) {
+        console.log('Données de l\'erreur:', error.response.data);
+        console.log('Statut de l\'erreur:', error.response.status);
+      }
+      alert(error.response?.data?.error || "Erreur lors de l'envoi de l'email de test");
+    }
+  };
+
   return (
     <header className="app-header">
       <h1>täsk</h1>
@@ -108,6 +131,9 @@ function Header({
         <span>{currentUser ? currentUser.name : "Utilisateur"}</span>
         <img src={profilePicture} alt="Profile" className="profile-picture" />
         <SignOut />
+        <button onClick={handleTestEmail} className="test-email-btn">
+          Test Email
+        </button>
       </div>
     </header>
   );

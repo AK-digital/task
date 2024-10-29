@@ -3,15 +3,18 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs-extra');
 const cors = require('cors');
+const { sendTaskAssignmentEmail } = require('./emailService');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Configuration CORS
 const corsOptions = {
-    origin: ['https://task.akdigital.fr', 'http://localhost:5173'],
+    origin: ['https://task.akdigital.fr', 'http://localhost:5173', 'http://localhost:3000'],
     optionsSuccessStatus: 200,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 };
 app.use(cors(corsOptions));
 
@@ -198,10 +201,39 @@ app.post('/upload', upload.array('files'), (req, res) => {
     }
 });
 
+app.post('/api/notify-task-assignment', async (req, res) => {
+    const { recipientEmail, taskDetails } = req.body;
+    try {
+        await sendTaskAssignmentEmail(recipientEmail, taskDetails);
+        res.status(200).json({ message: 'Email de notification envoyé avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de l\'envoi de l\'email de notification:', error);
+        res.status(500).json({ error: 'Erreur lors de l\'envoi de l\'email de notification' });
+    }
+});
+
+app.post('/api/test-email', async (req, res) => {
+    console.log('Requête de test d\'email reçue');
+    try {
+        const testTaskDetails = {
+            text: "Ceci est un email de test",
+            priority: "Haute",
+            deadline: new Date().toISOString().split('T')[0]
+        };
+        console.log('Envoi de l\'email de test...');
+        await sendTaskAssignmentEmail("test@example.com", testTaskDetails);
+        console.log('Email de test envoyé avec succès');
+        res.status(200).json({ message: 'Email de test envoyé avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de l\'envoi de l\'email de test:', error);
+        res.status(500).json({ error: 'Erreur lors de l\'envoi de l\'email de test' });
+    }
+});
+
 // Gestion des erreurs
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+    console.error('Erreur globale :', err);
+    res.status(500).json({ error: 'Une erreur est survenue', details: err.message });
 });
 
 // Route catch-all pour le frontend

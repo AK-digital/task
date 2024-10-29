@@ -213,6 +213,20 @@ function useProjects() {
                 const { data } = await api.put(`/projects/${projectId}`, updatedProject);
                 setProjects(prev => prev.map(project => project.id === projectId ? data : project));
                 setCurrentProject(data);
+
+                const previousTask = currentProject.boards
+                    .find(board => board.id === boardId)
+                    .tasks.find(task => task.id === taskId);
+
+                if (previousTask.assignedTo !== updatedTask.assignedTo) {
+                    const assignedUser = users.find(user => user.id === updatedTask.assignedTo);
+                    if (assignedUser) {
+                        await api.post('/notify-task-assignment', {
+                            recipientEmail: assignedUser.email,
+                            taskDetails: updatedTask
+                        });
+                    }
+                }
             } catch (error) {
                 console.error('Erreur lors de la mise à jour de la tâche:', error);
             }
