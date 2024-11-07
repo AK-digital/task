@@ -508,14 +508,47 @@
         }
       ],
       "userId": "da78"
-    }
+    },
+    {
+      "id": "55d3ae69-3f3a-42d8-858e-25d55e40f7ec",
+      "name": "Test technique",
+      "boards": [
+        {
+          "id": "8881bd4e-3258-44f0-a9cd-3b1e4726c4e0",
+          "title": "Tableau par défaut",
+          "tasks": [
+            {
+              "text": "Notification d'assignement de tâche",
+              "status": "idle",
+              "priority": "urgent",
+              "deadline": "2024-11-01",
+              "assignedTo": "da78",
+              "description": "@Aurélien",
+              "responses": [],
+              "id": "eba663a0-07f1-471f-8cdd-0ac4396f082c",
+              "createdAt": "30/10/2024 16:35:20",
+              "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a",
+              "boardId": "8881bd4e-3258-44f0-a9cd-3b1e4726c4e0",
+              "projectId": "55d3ae69-3f3a-42d8-858e-25d55e40f7ec",
+              "descriptionFiles": []
+            }
+          ]
+        }
+      ],
+      "userId": "b85cde49-7634-47dc-87f2-d384a728a82a",
+      "guestUsers": [
+        "b14a",
+        "da78"
+      ]
+    },
+    {}
   ],
   "users": [
     {
       "id": "da78",
       "name": "Aurélien",
       "email": "aurelien@akdigital.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhkNzU2OWQyODJkNWM1Mzk5MmNiYWZjZWI2NjBlYmQ0Y2E1OTMxM2EiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3Mjc4MDM5MzMsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyNzgwMzkzMywiZXhwIjoxNzI3ODA3NTMzLCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImF1cmVsaWVuQGFrZGlnaXRhbC5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.dsoIJhgiUGZ9QWCmOvsXgRbe1FjkPZorBge_fQD5BlrESpx_JjeYGSoYs361QFp0Nz0MwRSPEpwPieh34QsBk4suHdVfmP4chBuxJdhzJeIVelUEnSV37lpddAwyplx7mauR5bd698sgLdlU8wRvhU3gVH-W1DVkIie7xuK70iGd33qYQWtYuMmUEU9pLlglM_-o6gHEBJj_vsHVy3STp0_6W7nLGV5vkeKJ-TUhHBx6DI7XkAOzlStu8O8Df2heddfonm_eJyJyZeR4Sn9yDaeu3KGsMZB3K_tNvwczV041ijzDq1rBkdAKIdL9tR2CF_JaSssmA7SyrSYdTUGFew",
+      "authToken": "",
       "profilePicture": "aurelien.jpg",
       "currentProjectId": "d61cf24f-2896-408d-a584-5385decdda5c"
     },
@@ -550,13 +583,39 @@
       "profilePicture": "philippe.png"
     },
     {
+      "id": "acaQwuVXOmSFObpuwhm8S90f7BF3",
+      "name": "Nicolas",
+      "email": "nicolas.tombal01@gmail.com",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImI4Y2FjOTViNGE1YWNkZTBiOTY1NzJkZWU4YzhjOTVlZWU0OGNjY2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MzA4MTczMjEsInVzZXJfaWQiOiJhY2FRd3VWWE9tU0ZPYnB1d2htOFM5MGY3QkYzIiwic3ViIjoiYWNhUXd1VlhPbVNGT2JwdXdobThTOTBmN0JGMyIsImlhdCI6MTczMDgxNzMyMSwiZXhwIjoxNzMwODIwOTIxLCJlbWFpbCI6Im5pY29sYXMudG9tYmFsMDFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbIm5pY29sYXMudG9tYmFsMDFAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.N8ftEt9nd8ytENxbgqxbDEQkRfrENCcm3PvscN_eFIAavxgObhy0knr6WsBsi77vi4ErtFiaB5Di2rrHv_ZpYGIzb4zJiPT_XdECq4SHI1WIP5FpvKu7-wf1hooWedb-qBHZTv6E1e-J3PNSRoBp_ZnCrd61n48-rzPpmwF2X4-7vtYPMnpYIs0oJ4Q-GBl3kKgTLfS0R27XDa2fmTSrt7cKCyuqB-3SuuUHy4WcjbODXeKP9Z3EwPend8AxJqLovVPFD_83LQJYX6XKNBxaWsotzvEjXkFqu0jV_65geQyYCUU4dgcpPFz6Flyolf4MgBeqLdMxWRrLgothtWjhbQ",
+      "profilePicture": "",
+      "currentProjectId": "f457df2f-9000-4e4a-9314-314d8287dc4b"
+    },
+    {
+      "id": "b0eMxgqOzgggbOvPoth0mfCFu8C3",
+      "name": "Rémy",
+      "email": "remyguest@gmail.com",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImI4Y2FjOTViNGE1YWNkZTBiOTY1NzJkZWU4YzhjOTVlZWU0OGNjY2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MzA4MTc0OTQsInVzZXJfaWQiOiJiMGVNeGdxT3pnZ2diT3ZQb3RoMG1mQ0Z1OEMzIiwic3ViIjoiYjBlTXhncU96Z2dnYk92UG90aDBtZkNGdThDMyIsImlhdCI6MTczMDgxNzQ5NCwiZXhwIjoxNzMwODIxMDk0LCJlbWFpbCI6InJlbXlndWVzdEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsicmVteWd1ZXN0QGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.nbmhgizlvW8XRDo5anbN-MoBG5WwwGmhL0JZ821eqVkMU2UXLta9oVEZUZxWftUNH3LgglMeP5gF9zV1ApXcix5MsjyygZQA9HVhYdf3ll6P6ilkQC5cwOcYQqgj5QeCrWvmemCkZNsalZSqHz3Saa18_6WfqIoNKXcPm6ASKHyPR96D2bEGukQMoe-hOkigS0hDn-KR4zoOQsKhl3epS_GD6a_8eQ6qJT78XgJGrID5jj7xMXjTV-qC8q25ChEQz9V9rZSaaj7EagnL59G4R_gtnln7WCrtTzfbOFX0_2QitYh9bx8IdIC1fPUfD8F9RbkaUoddyv6jOXreWR9Tlw",
+      "profilePicture": "",
+      "currentProjectId": "f457df2f-9000-4e4a-9314-314d8287dc4b"
+    },
+    {
+      "id": "13Ysc9XfIgRu7RFlgpogHC5SCAC2",
+      "name": "Hyalin",
+      "email": "nicogamer64@gmail.com",
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImI4Y2FjOTViNGE1YWNkZTBiOTY1NzJkZWU4YzhjOTVlZWU0OGNjY2QiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MzA4MTczMzcsInVzZXJfaWQiOiIxM1lzYzlYZklnUnU3UkZsZ3BvZ0hDNVNDQUMyIiwic3ViIjoiMTNZc2M5WGZJZ1J1N1JGbGdwb2dIQzVTQ0FDMiIsImlhdCI6MTczMDgxNzMzNywiZXhwIjoxNzMwODIwOTM3LCJlbWFpbCI6Im5pY29nYW1lcjY0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJuaWNvZ2FtZXI2NEBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.VUNTb4DYKgnm1zsnGvw6osil9QSDfQZnHUUX-_OoIalQJi6vnUW9LkT8KCAxZ7LBgzdQlj_0Lw2vcUi7RMbdzlLTbZr20SDwRDVo8ueTVB0Cx48moSW-kOUe7zosvuQKFNAxNx84X6QfX4gO457byo33X79WugkpYgpPUylCsZe7kHwY8wwqIO9DghZlxUiyIl6cDExYbtMKIwSutDpHerYURqOnZ2fjP_vWBaAjvHnE38WpbQcXMh-4b5snor09A1ovOebKB5r85F_zur8zdSPHhLxQKzrGPMRFwTFuDj17cY-Ns5ynoZWSh5eeB11v65vZKctnS50bp9xd6p6Fng",
+      "profilePicture": "",
+      "currentProjectId": "f457df2f-9000-4e4a-9314-314d8287dc4b"
+    },
+    {
       "id": "b85cde49-7634-47dc-87f2-d384a728a82a",
       "name": "Invité",
       "email": "taskguest@akdigital.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZjYzNmY2I2NDAzMjc2MGVlYjljMjZmNzdkNDA3YTY5NGM1MmIwZTMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3Mjc0NTk3NjIsInVzZXJfaWQiOiI5b0N6NjBWZHdKUkZIRkdhZEc5RVZ2U2lqcVkyIiwic3ViIjoiOW9DejYwVmR3SlJGSEZHYWRHOUVWdlNpanFZMiIsImlhdCI6MTcyNzQ1OTc2MiwiZXhwIjoxNzI3NDYzMzYyLCJlbWFpbCI6InRhc2tndWVzdEBha2RpZ2l0YWwuZnIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsidGFza2d1ZXN0QGFrZGlnaXRhbC5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.aWSsxmW0sZ5pf_GHhULdIeDCc-keL9rPU2RzdhSHdwwT3xjDbyJQTLWZ5iH1TXhG1AHR9l1fJuvYdjxgxfNYNiWZOAHYYbcGVnUg3L79iKsvRbnTQsxM8A0VCZ3S1QzgVwp0yNlzRmytdOiMteHJybhfNBWK0RaxXwRnV8KXKWBkrudOlQ7PY7-XfFpvG7HNnjsSUerwMwehdRYSMD3G3I9928UIzj1ogsqJDeaPd4FUaY-Z4YspCHtDUcwTE0SBXcpna518EwQKYkYHd05la2kg6siTkKHcCjawwjuA6b2n-1XVPXhm9ORZoIpVhyXkSaaZjhrRkTKELYK1C0kAwg",
-      "profilePicture": ""
+      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU2YWMzNTcyNzY3ZGUyNjE0ZmM1MTA4NjMzMDg3YTQ5MjMzMDNkM2IiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3MzAzODQ1NDYsInVzZXJfaWQiOiJkZ1ZiN0xyelp3WlRld2lUYmYwQ1k5dTYzcjYzIiwic3ViIjoiZGdWYjdMcnpad1pUZXdpVGJmMENZOXU2M3I2MyIsImlhdCI6MTczMDM4NDU0NiwiZXhwIjoxNzMwMzg4MTQ2LCJlbWFpbCI6InJlbXlndWVzdEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsicmVteWd1ZXN0QGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.M3BmdNJkb_WE9M9kRoiolDCHX9Ztcs843hnUxxxEHjZPMxgeYREpL3LcbRlRCe7yGSWuPh4B1dh4chqGLpxe2a3-FM_fdxQSauoYTRCEcv2ZjVA_7qOOkdldU5grqTiIiR-aSp44v8OmWeJVoK8sfy0TS3LEDJ0t0KEeSO7xsTMtOV1tKGDE6xcTz-QwHMQNO78AihUmYrWCtb9plzl9e2yg6WYN73eZO-aJjZpJbfyBJRyUD-DJuWOiRRzodN1lOwp73cYuA_72lwtPuMY58lGf0yICt6sHBRywdzZPlbyqUNSvKfO3bvpnL09OdTXLx5yCy4KwEVhduUe5j_2aWQ",
+      "profilePicture": "",
+      "currentProjectId": "55d3ae69-3f3a-42d8-858e-25d55e40f7ec"
     }
   ],
+  "notifications": [],
   "upload": [
     {},
     {},
@@ -779,9 +838,186 @@
         "createdAt": "01/10/2024 19:32:59",
         "createdBy": "da78"
       }
+    },
+    {
+      "recipientEmail": "taskguest@akdigital.fr",
+      "taskDetails": {
+        "text": "Notifier les users par email",
+        "status": "idle",
+        "priority": "medium",
+        "deadline": "",
+        "assignedTo": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "description": "yaaa",
+        "responses": [],
+        "id": "cc37de20-39e8-401c-8755-9adfdf3bec7b",
+        "createdAt": "30/10/2024 11:41:26",
+        "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "boardId": "87c670d1-0031-4913-b21a-9ce7f47ce280",
+        "projectId": "778b5e69-9621-4da1-b73a-fb9d4e28cb44",
+        "descriptionFiles": []
+      }
+    },
+    {
+      "recipientEmail": "aurelien@akdigital.fr",
+      "taskDetails": {
+        "text": "Notifier les users par email",
+        "status": "idle",
+        "priority": "medium",
+        "deadline": "",
+        "assignedTo": "da78",
+        "description": "yaaa",
+        "responses": [],
+        "id": "cc37de20-39e8-401c-8755-9adfdf3bec7b",
+        "createdAt": "30/10/2024 11:41:26",
+        "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "boardId": "87c670d1-0031-4913-b21a-9ce7f47ce280",
+        "projectId": "778b5e69-9621-4da1-b73a-fb9d4e28cb44",
+        "descriptionFiles": []
+      }
+    },
+    {
+      "recipientEmail": "taskguest@akdigital.fr",
+      "taskDetails": {
+        "text": "Notifier les users par email",
+        "status": "idle",
+        "priority": "medium",
+        "deadline": "",
+        "assignedTo": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "description": "yaaa",
+        "responses": [],
+        "id": "cc37de20-39e8-401c-8755-9adfdf3bec7b",
+        "createdAt": "30/10/2024 11:41:26",
+        "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "boardId": "87c670d1-0031-4913-b21a-9ce7f47ce280",
+        "projectId": "778b5e69-9621-4da1-b73a-fb9d4e28cb44",
+        "descriptionFiles": []
+      }
+    },
+    {
+      "recipientEmail": "aurelien@akdigital.fr",
+      "taskDetails": {
+        "text": "Notifier les users par email",
+        "status": "idle",
+        "priority": "medium",
+        "deadline": "",
+        "assignedTo": "da78",
+        "description": "yaaa",
+        "responses": [],
+        "id": "cc37de20-39e8-401c-8755-9adfdf3bec7b",
+        "createdAt": "30/10/2024 11:41:26",
+        "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "boardId": "87c670d1-0031-4913-b21a-9ce7f47ce280",
+        "projectId": "778b5e69-9621-4da1-b73a-fb9d4e28cb44",
+        "descriptionFiles": []
+      }
+    },
+    {
+      "recipientEmail": "taskguest@akdigital.fr",
+      "taskDetails": {
+        "text": "Notifier les users par email",
+        "status": "idle",
+        "priority": "medium",
+        "deadline": "",
+        "assignedTo": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "description": "yaaa",
+        "responses": [],
+        "id": "cc37de20-39e8-401c-8755-9adfdf3bec7b",
+        "createdAt": "30/10/2024 11:41:26",
+        "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "boardId": "87c670d1-0031-4913-b21a-9ce7f47ce280",
+        "projectId": "778b5e69-9621-4da1-b73a-fb9d4e28cb44",
+        "descriptionFiles": []
+      }
+    },
+    {
+      "recipientEmail": "aurelien@akdigital.fr",
+      "taskDetails": {
+        "id": "778b5e69-9621-4da1-b73a-fb9d4e28cb44",
+        "name": "Test technique",
+        "boards": [
+          {
+            "id": "87c670d1-0031-4913-b21a-9ce7f47ce280",
+            "title": "Tableau par défaut",
+            "tasks": [
+              {
+                "text": "Notification par email",
+                "status": "idle",
+                "priority": "medium",
+                "deadline": "",
+                "assignedTo": "",
+                "description": "",
+                "responses": [],
+                "id": "0daf2144-75cf-489e-951e-353a21f9ea9e",
+                "createdAt": "30/10/2024 14:40:26",
+                "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a"
+              }
+            ],
+            "titleColor": "#e08a9f"
+          }
+        ],
+        "userId": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "guestUsers": []
+      }
+    },
+    {
+      "recipientEmail": "aurelien@akdigital.fr",
+      "taskDetails": {
+        "id": "778b5e69-9621-4da1-b73a-fb9d4e28cb44",
+        "name": "Test technique",
+        "boards": [
+          {
+            "id": "87c670d1-0031-4913-b21a-9ce7f47ce280",
+            "title": "Tableau par défaut",
+            "tasks": [
+              {
+                "text": "Notification par email",
+                "status": "idle",
+                "priority": "medium",
+                "deadline": "",
+                "assignedTo": "",
+                "description": "",
+                "responses": [],
+                "id": "0daf2144-75cf-489e-951e-353a21f9ea9e",
+                "createdAt": "30/10/2024 14:40:26",
+                "createdBy": "b85cde49-7634-47dc-87f2-d384a728a82a"
+              }
+            ],
+            "titleColor": "#e08a9f"
+          }
+        ],
+        "userId": "b85cde49-7634-47dc-87f2-d384a728a82a",
+        "guestUsers": []
+      }
+    },
+    {
+      "recipientEmail": "nicogamer64@gmail.com",
+      "taskDetails": {
+        "text": "la tâche de test",
+        "priority": "high",
+        "deadline": "2024-09-12"
+      }
     }
   ],
   "test-email": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
     {},
     {},
     {},

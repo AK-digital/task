@@ -5,56 +5,56 @@ import Cookies from "js-cookie";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const PrivateRoute = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const verifyToken = async () => {
-      const authToken = Cookies.get("authToken");
+	useEffect(() => {
+		const verifyToken = async () => {
+			const authToken = Cookies.get("authToken");
 
-      if (!authToken) {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        return;
-      }
+			if (!authToken) {
+				setIsAuthenticated(false);
+				setIsLoading(false);
+				return;
+			}
 
-      try {
-        const response = await fetch(`${API_BASE_URL}/users`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const users = await response.json();
+			try {
+				const response = await fetch(`${API_BASE_URL}/users`);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const users = await response.json();
 
-        if (!users) {
-          setIsAuthenticated(false);
-          setIsLoading(false);
-          return;
-        }
+				if (!users) {
+					setIsAuthenticated(false);
+					setIsLoading(false);
+					return;
+				}
 
-        const user = users.find((user) => user.authToken === authToken);
+				const user = users.find((user) => user.authToken === authToken);
 
-        if (user) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-          Cookies.remove("authToken");
-        }
-      } catch (error) {
-        console.error("Error verifying token:", error);
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+				if (user) {
+					setIsAuthenticated(true);
+				} else {
+					setIsAuthenticated(false);
+					Cookies.remove("authToken");
+				}
+			} catch (error) {
+				console.error("Error verifying token:", error);
+				setIsAuthenticated(false);
+			} finally {
+				setIsLoading(false);
+			}
+		};
 
-    verifyToken();
-  }, []);
+		verifyToken();
+	}, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Or any loading component
-  }
+	if (isLoading) {
+		return <div>Loading...</div>; // Or any loading component
+	}
 
-  return isAuthenticated ? children : <Navigate to="/signin" />;
+	return isAuthenticated ? children : <Navigate to="/signin" />;
 };
 
 export default PrivateRoute;
