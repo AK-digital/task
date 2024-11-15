@@ -95,17 +95,20 @@ app.get('/api/users', (req, res) => {
     res.json(users);
 });
 
-app.get('/api/users/by-email', (req, res) => {
-    const { email } = req.query;
-    if (!email) {
-        return res.status(400).json({ error: 'Email manquant.' });
-    }
-    const db = readDb();
-    const user = db.users.find(u => u.email === email);
-    if (user) {
-        res.json([user]);
-    } else {
-        res.status(404).json({ error: 'Utilisateur non trouvé.' });
+app.get('/api/users/by-email', async (req, res) => {
+    try {
+        const email = req.query.email;
+        const db = await readDb();
+        const user = db.users.find(u => u.email === email);
+
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Erreur lors de la recherche de l\'utilisateur:', error);
+        res.status(500).json({ message: 'Erreur serveur' });
     }
 });
 
@@ -227,6 +230,54 @@ app.post('/api/test-email', async (req, res) => {
     } catch (error) {
         console.error('Erreur lors de l\'envoi de l\'email de test:', error);
         res.status(500).json({ error: 'Erreur lors de l\'envoi de l\'email de test' });
+    }
+});
+
+// Ajouter ces routes dans server.js
+app.get('/users', async (req, res) => {
+    try {
+        const db = await readDb();
+        const { email } = req.query;
+
+        if (email) {
+            const user = db.users.find(u => u.email === email);
+            res.json(user ? [user] : []);
+        } else {
+            res.json(db.users);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/users', async (req, res) => {
+    try {
+        const db = await readDb();
+        const newUser = req.body;
+        db.users.push(newUser);
+        await writeDb(db);
+        res.status(201).json(newUser);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.patch('/users/:id', async (req, res) => {
+    try {
+        const db = await readDb();
+        const { id } = req.params;
+        const updates = req.body;
+
+        const userIndex = db.users.findIndex(u => u.id === id);
+        if (userIndex === -1) {
+            return res.status(404).json({ error: 'Utilisateur non trouvé' });
+        }
+
+        db.users[userIndex] = { ...db.users[userIndex], ...updates };
+        await writeDb(db);
+        res.json(db.users[userIndex]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 

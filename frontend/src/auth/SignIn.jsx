@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { auth, googleProvider, githubProvider } from "./firebaseConfig";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 import Cookies from "js-cookie";
 import { useAuth } from "../context/AuthContext";
 import "../assets/css/signin.css";
+import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -80,6 +83,49 @@ function SignIn() {
     }
   };
 
+  const handleSSOSignIn = async (provider) => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const token = await user.getIdToken();
+      Cookies.set("authToken", token, { expires: 7 });
+
+      try {
+        // Vérifier si l'utilisateur existe
+        const response = await axios.get(`${API_BASE_URL}/users`, {
+          params: { email: user.email }
+        });
+
+        if (!response.data || response.data.length === 0) {
+          // Créer un nouvel utilisateur
+          const newUser = {
+            id: user.uid,
+            email: user.email,
+            name: user.displayName || 'Utilisateur',
+            profilePicture: user.photoURL || "default-profile-pic.svg",
+            authToken: token
+          };
+          await axios.post(`${API_BASE_URL}/users`, newUser);
+        } else {
+          // Mettre à jour le token
+          const existingUser = response.data[0];
+          await axios.patch(`${API_BASE_URL}/users/${existingUser.id}`, {
+            authToken: token,
+            name: user.displayName || existingUser.name,
+            profilePicture: user.photoURL || existingUser.profilePicture
+          });
+        }
+        navigate("/");
+      } catch (error) {
+        console.error("Erreur lors de la vérification/création de l'utilisateur:", error);
+        setError("Erreur lors de la connexion. Veuillez réessayer.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion SSO:", error);
+      setError(error.message);
+    }
+  };
+
   return (
     <div className="signin-container">
       <h1>täsk</h1>
@@ -105,6 +151,20 @@ function SignIn() {
           {error && <p className="error-message">{error}</p>}
           <button type="submit">Se connecter</button>
         </form>
+        <div className="sso-buttons">
+          <button 
+            className="google-signin"
+            onClick={() => handleSSOSignIn(googleProvider)}
+          >
+            <FontAwesomeIcon icon={faGoogle} /> Se connecter avec Google
+          </button>
+          <button 
+            className="github-signin"
+            onClick={() => handleSSOSignIn(githubProvider)}
+          >
+            <FontAwesomeIcon icon={faGithub} /> Se connecter avec GitHub
+          </button>
+        </div>
         <p className="signup-link">
           Pas encore de compte ? <Link to="/signup">S'inscrire</Link>
         </p>

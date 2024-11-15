@@ -75,3 +75,34 @@
 .signup-link a:hover {
   text-decoration: underline;
 }
+
+.sso-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.google-signin,
+.github-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--third-background-color);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.google-signin:hover,
+.github-signin:hover {
+  background: var(--primary-background-color);
+}
+
+.google-signin svg,
+.github-signin svg {
+  font-size: 18px;
+}

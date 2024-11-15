@@ -513,11 +513,11 @@
   "users": [
     {
       "id": "da78",
-      "name": "Aurélien",
+      "name": "Aurélien Kohler",
       "email": "aurelien@akdigital.fr",
-      "authToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhkNzU2OWQyODJkNWM1Mzk5MmNiYWZjZWI2NjBlYmQ0Y2E1OTMxM2EiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdGFzay0yYTdkOSIsImF1ZCI6InRhc2stMmE3ZDkiLCJhdXRoX3RpbWUiOjE3Mjc4MDM5MzMsInVzZXJfaWQiOiIzRUNyNWZUS2l0VFhpN1J5T3FXUk1UbEgxQWoxIiwic3ViIjoiM0VDcjVmVEtpdFRYaTdSeU9xV1JNVGxIMUFqMSIsImlhdCI6MTcyNzgwMzkzMywiZXhwIjoxNzI3ODA3NTMzLCJlbWFpbCI6ImF1cmVsaWVuQGFrZGlnaXRhbC5mciIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImF1cmVsaWVuQGFrZGlnaXRhbC5mciJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.dsoIJhgiUGZ9QWCmOvsXgRbe1FjkPZorBge_fQD5BlrESpx_JjeYGSoYs361QFp0Nz0MwRSPEpwPieh34QsBk4suHdVfmP4chBuxJdhzJeIVelUEnSV37lpddAwyplx7mauR5bd698sgLdlU8wRvhU3gVH-W1DVkIie7xuK70iGd33qYQWtYuMmUEU9pLlglM_-o6gHEBJj_vsHVy3STp0_6W7nLGV5vkeKJ-TUhHBx6DI7XkAOzlStu8O8Df2heddfonm_eJyJyZeR4Sn9yDaeu3KGsMZB3K_tNvwczV041ijzDq1rBkdAKIdL9tR2CF_JaSssmA7SyrSYdTUGFew",
-      "profilePicture": "aurelien.jpg",
-      "currentProjectId": "d61cf24f-2896-408d-a584-5385decdda5c"
+      "authToken": "",
+      "profilePicture": "https://lh3.googleusercontent.com/a/ACg8ocJ58ak5KOLS3toM-VpIal9nrM-Xzhc9zb7oTGD7rxftTPgvnlXvgA=s96-c",
+      "currentProjectId": "f37f2749-e52c-492f-8895-6465eb3f0266"
     },
     {
       "id": "cfe5",
@@ -782,6 +782,7 @@
     }
   ],
   "test-email": [
+    {},
     {},
     {},
     {},
