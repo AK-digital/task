@@ -1,9 +1,11 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs-extra');
-const cors = require('cors');
-const { sendTaskAssignmentEmail } = require('./emailService');
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs-extra");
+const cors = require("cors");
+
+const mailRouter = require("./routes/mail.routes");
+const { randomUUID } = require("crypto");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,8 +21,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Middleware pour parser le JSON et les données de formulaire
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Servir les fichiers statiques
 if (process.env.NODE_ENV === 'production') {
@@ -28,7 +30,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Configuration de la base de données
-const dbPath = process.env.DB_PATH || path.join(__dirname, 'db.json');
+const dbPath = process.env.DB_PATH || path.join(__dirname, "db.json");
 
 function readDb() {
     return JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -38,7 +40,7 @@ function writeDb(data) {
     fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 }
 
-const uploadsDir = path.join(__dirname, 'uploads');
+const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -59,7 +61,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Servir les fichiers uploadés
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes API génériques
 app.get('/api/:resource', (req, res) => {
