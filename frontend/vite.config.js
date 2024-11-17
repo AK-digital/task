@@ -8,7 +8,8 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [react()],
     define: {
-      'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL)
+      'import.meta.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
+      'import.meta.env.VITE_FIREBASE_CONFIG': JSON.stringify(process.env.VITE_FIREBASE_CONFIG)
     },
     resolve: {
       alias: {

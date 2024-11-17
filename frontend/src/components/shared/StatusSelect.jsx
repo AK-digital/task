@@ -1,7 +1,10 @@
+// src/components/shared/StatusSelect.jsx
 import React from "react";
 import Select from "react-select";
+import { useSelector } from "react-redux";
 
-const options_status = [
+// Configuration des options de statut
+const STATUS_OPTIONS = [
   { value: "idle", label: "À faire", color: "#3e86aa" },
   { value: "processing", label: "En cours", color: "#535aaa" },
   { value: "testing", label: "A tester", color: "#9e9a60" },
@@ -10,9 +13,11 @@ const options_status = [
 ];
 
 function StatusSelect({ value = "idle", onChange, className }) {
-  const selectedStatus =
-    options_status.find((option) => option.value === value) ||
-    options_status[0];
+  const theme = useSelector(state => state.ui?.theme) || 'light'; // Si vous implémentez un thème
+
+  const selectedStatus = STATUS_OPTIONS.find(
+    (option) => option.value === value
+  ) || STATUS_OPTIONS[0];
 
   const customStyles = {
     option: (baseStyles, state) => ({
@@ -33,7 +38,7 @@ function StatusSelect({ value = "idle", onChange, className }) {
         ? `0 0 0 1px var(--accent-color) !important`
         : "none !important",
     }),
-    singleValue: (baseStyles, { data }) => ({
+    singleValue: (baseStyles) => ({
       ...baseStyles,
       color: "white !important",
     }),
@@ -56,7 +61,7 @@ function StatusSelect({ value = "idle", onChange, className }) {
       menuPortalTarget={document.body}
       value={selectedStatus}
       onChange={(selectedOption) => onChange(selectedOption?.value || "idle")}
-      options={options_status}
+      options={STATUS_OPTIONS}
       className={`select-status ${className}`}
       classNamePrefix="select-status"
       styles={customStyles}
@@ -64,4 +69,4 @@ function StatusSelect({ value = "idle", onChange, className }) {
   );
 }
 
-export default StatusSelect;
+export default StatusSelect; 

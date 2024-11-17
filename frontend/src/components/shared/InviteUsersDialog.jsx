@@ -1,90 +1,157 @@
-import React, { useState, useEffect, useRef } from "react";
-import "../../assets/css/invite-users-dialog.css";
-import api from "../../services/api";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useModal } from '../../hooks/useModal';
+import Modal from './Modal';
+import { LoadingButton } from './LoadingSpinner';
+import {
+    inviteUser,
+    revokeUser,
+    selectCurrentProject
+} from '../../store/slices/projectSlice';
+import { selectCurrentUser } from '../../store/slices/authSlice';
+import { projectsApi } from '../../services/api/projects';
 
-const InviteUsersDialog = ({
-	isOpen,
-	onClose,
-	users,
-	currentProject,
-	currentUser,
-	onInviteUser,
-	onRevokeUser,
-}) => {
-	const [projectUsers, setProjectUsers] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const dialogRef = useRef(null);
+const InviteUsersDialog = () => {
+    const appDispatch = useAppDispatch();
+    const dispatch = useDispatch();
+    const { hideModal } = useModal();
 
-	useEffect(() => {
-		if (currentProject && currentProject.guestUsers) {
-			setProjectUsers(currentProject.guestUsers);
-		}
-	}, [currentProject]);
+    const currentUser = useSelector(selectCurrentUser);
+    const currentProject = useSelector(selectCurrentProject);
+    const users = useSelector(state => state.projects.users);
+    const isOpen = useSelector(state => state.ui.isInviteDialogOpen);
 
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (dialogRef.current && !dialogRef.current.contains(event.target)) {
-				onClose();
-			}
-		};
+    const [isLoading, setIsLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
-		if (isOpen) {
-			document.addEventListener("mousedown", handleClickOutside);
-		}
+    useEffect(() => {
+        if (currentProject?.guestUsers) {
+            setSelectedUsers(currentProject.guestUsers);
+        }
+    }, [currentProject?.guestUsers]);
 
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [isOpen, onClose]);
+    const handleInviteUser = async (userId) => {
+        try {
+            setIsLoading(true);
+            const user = users.find(u => u.id === userId);
 
-	if (!isOpen) return null;
+            await appDispatch(
+                inviteUser({
+                    projectId: currentProject.id,
+                    userId
+                }),
+                {
+                    successMessage: `${user.name} a été invité au projet`,
+                    errorMessage: "Erreur lors de l'invitation"
+                }
+            );
 
-	const filteredUsers = users.filter((user) => user.id !== currentUser.id);
+            // Envoyer l'email d'invitation
+            if (user.email) {
+                await projectsApi.inviteUserToProject(
+                    currentProject.id,
+                    user.email,
+                    {
+                        projectName: currentProject.name,
+                        invitedBy: currentUser.name
+                    }
+                );
+            }
+        } catch (error) {
+            console.error("Erreur lors de l'invitation:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-	return (
-		<div className="invite-users-dialog-overlay">
-			<div className="invite-users-dialog" ref={dialogRef}>
-				<button className="close-button" onClick={onClose}>
-					&times;
-				</button>
-				<h2>Gestions des invités</h2>
-				<ul className="user-list">
-					{filteredUsers.map((user) => (
-						<li key={user.id} className="user-item">
-							<div className="user-item-profile">
-								<img
-									src={`/public/assets/img/${user.profilePicture}`}
-									className="guest-avatar"
-								/>
-								<span>{user.name}</span>
-							</div>
-							{projectUsers.includes(user.id) ? (
-								<button
-									onClick={() => onRevokeUser(currentProject.id, user.id)}>
-									Révoquer
-								</button>
-							) : (
-								<button
-									disabled={isLoading}
-									onClick={async () => {
-										setIsLoading(true);
-										await onInviteUser(
-											currentProject.id,
-											user.id,
-											user?.email,
-											currentProject
-										);
-										setIsLoading(false);
-									}}>
-									Ajouter
-								</button>
-							)}
-						</li>
-					))}
-				</ul>
-			</div>
-		</div>
-	);
+    const handleRevokeUser = async (userId) => {
+        const user = users.find(u => u.id === userId);
+        try {
+            await appDispatch(
+                revokeUser({
+                    projectId: currentProject.id,
+                    userId
+                }),
+                {
+                    successMessage: `${user.name} a été retiré du projet`,
+                    errorMessage: "Erreur lors de la révocation"
+                }
+            );
+        } catch (error) {
+            console.error("Erreur lors de la révocation:", error);
+        }
+    };
+
+    const filteredUsers = users
+        .filter(user => user.id !== currentUser?.id)
+        .filter(user =>
+            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+    if (!isOpen) return null;
+
+    return (
+        <Modal
+            title="Gestion des invités"
+            onClose={hideModal}
+            className="invite-users-dialog"
+        >
+            <div className="search-section">
+                <input
+                    type="text"
+                    placeholder="Rechercher un utilisateur..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                />
+            </div>
+
+            <ul className="user-list">
+                {filteredUsers.map((user) => (
+                    <li key={user.id} className="user-item">
+                        <div className="user-item-profile">
+                            <img
+                                src={`/assets/img/${user.profilePicture}`}
+                                className="user-avatar"
+                                alt={user.name}
+                            />
+                            <div className="user-info">
+                                <span className="user-name">{user.name}</span>
+                                <span className="user-email">{user.email}</span>
+                            </div>
+                        </div>
+
+                        {selectedUsers.includes(user.id) ? (
+                            <LoadingButton
+                                onClick={() => handleRevokeUser(user.id)}
+                                className="revoke-btn"
+                                isLoading={isLoading}
+                            >
+                                Révoquer
+                            </LoadingButton>
+                        ) : (
+                            <LoadingButton
+                                onClick={() => handleInviteUser(user.id)}
+                                className="invite-btn"
+                                isLoading={isLoading}
+                            >
+                                Inviter
+                            </LoadingButton>
+                        )}
+                    </li>
+                ))}
+
+                {filteredUsers.length === 0 && (
+                    <li className="no-results">
+                        Aucun utilisateur trouvé
+                    </li>
+                )}
+            </ul>
+        </Modal>
+    );
 };
 
 export default InviteUsersDialog;

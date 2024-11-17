@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from "react";
+// src/components/Notification.jsx
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { formatDistance } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
-const Notification = ({ notification, setNotificationSeen }) => {
-	const [isSeen, setIsSeen] = useState(notification?.seen);
+const Notification = ({ notification, onSeen }) => {
+	const dispatch = useDispatch();
 	const date = new Date(notification?.date);
-	const theDate = date?.toLocaleDateString();
-	const theHour = date?.toLocaleTimeString();
+	const formattedDate = formatDistance(date, new Date(), {
+		addSuffix: true,
+		locale: fr
+	});
 
 	useEffect(() => {
 		if (!notification?.seen) {
-			setNotificationSeen(notification?.id);
-			setIsSeen(false);
+			onSeen();
 		}
-	}, [isSeen]);
+	}, [notification?.seen, onSeen]);
 
 	return (
-		<li data-seen={isSeen} className="notification__item">
+		<li
+			data-seen={notification.seen}
+			className="notification__item"
+		>
 			<div className="notification__header">
 				<div className="notification__title">
 					<span>{notification?.title}</span>
 				</div>
 
 				<div className="notification__date">
-					<span>{theDate + " " + theHour}</span>
+					<span>{formattedDate}</span>
 				</div>
 			</div>
 			<div className="notification__task">

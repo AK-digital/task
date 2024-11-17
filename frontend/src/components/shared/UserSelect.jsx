@@ -1,7 +1,12 @@
+// src/components/shared/UserSelect.jsx
 import React from "react";
 import Select from "react-select";
+import { useSelector } from "react-redux";
 
-function UserSelect({ users, value = "", onChange, className }) {
+function UserSelect({ value = "", onChange, className }) {
+  const users = useSelector(state => state.projects.users);
+  const theme = useSelector(state => state.ui?.theme) || 'light';
+
   const options_users = users.map((user) => ({
     value: user.id,
     label: user.name,
@@ -21,9 +26,9 @@ function UserSelect({ users, value = "", onChange, className }) {
         ? `0 0 0 1px var(--accent-color) !important`
         : "none !important",
     }),
-    singleValue: (baseStyles, { data }) => ({
+    singleValue: (baseStyles) => ({
       ...baseStyles,
-      color: "white !important",
+      color: "var(--text-color) !important",
     }),
     menu: (baseStyles) => ({
       ...baseStyles,
@@ -31,12 +36,11 @@ function UserSelect({ users, value = "", onChange, className }) {
     }),
   };
 
-  // Fonction pour formater l'affichage des options avec image et nom
   const formatOptionLabel = ({ label, profilePicture }) => (
     <div style={{ display: "flex", alignItems: "center" }}>
       {profilePicture && (
         <img
-          src={`/public/assets/img/${profilePicture}`}
+          src={`/assets/img/${profilePicture}`}
           alt={label}
           style={{ width: 20, height: 20, borderRadius: "50%" }}
         />

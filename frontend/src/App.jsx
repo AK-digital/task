@@ -2,13 +2,18 @@ import React from "react";
 import FontLoader from "./FontLoader.jsx";
 import "./assets/css/common.css";
 import Router from "./routes/Router.jsx";
-console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
+import ToastContainer from './components/shared/ToastContainer';
+import LoadingSpinner from './components/shared/LoadingSpinner';
+import ModalManager from './components/shared/ModalManager';
 
 function App() {
 	return (
 		<>
 			<FontLoader />
 			<Router />
+			<ToastContainer />
+			<LoadingSpinner />
+			<ModalManager />
 		</>
 	);
 }

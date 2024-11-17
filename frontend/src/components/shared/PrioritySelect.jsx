@@ -1,7 +1,9 @@
+// src/components/shared/PrioritySelect.jsx
 import React from "react";
 import Select from "react-select";
+import { useSelector } from "react-redux";
 
-const options_priority = [
+const PRIORITY_OPTIONS = [
   { value: "low", label: "Basse", color: "#5e5887" },
   { value: "medium", label: "Moyenne", color: "#50448a" },
   { value: "high", label: "Élevée", color: "#4b3486" },
@@ -9,11 +11,11 @@ const options_priority = [
 ];
 
 function PrioritySelect({ value = "medium", onChange, className }) {
-  const defaultValue = options_priority.find(
-    (option) => option.value === value
-  );
+  const theme = useSelector(state => state.ui?.theme) || 'light';
 
-  const selectedPriority = defaultValue || options_priority[1];
+  const selectedPriority = PRIORITY_OPTIONS.find(
+    (option) => option.value === value
+  ) || PRIORITY_OPTIONS[1];
 
   const customStyles = {
     option: (baseStyles, state) => ({
@@ -34,7 +36,7 @@ function PrioritySelect({ value = "medium", onChange, className }) {
         ? `0 0 0 1px var(--accent-color) !important`
         : "none !important",
     }),
-    singleValue: (baseStyles, { data }) => ({
+    singleValue: (baseStyles) => ({
       ...baseStyles,
       color: "white !important",
     }),
@@ -57,7 +59,7 @@ function PrioritySelect({ value = "medium", onChange, className }) {
       value={selectedPriority}
       menuPortalTarget={document.body}
       onChange={(selectedOption) => onChange(selectedOption?.value || "medium")}
-      options={options_priority}
+      options={PRIORITY_OPTIONS}
       className={`select-priority ${className}`}
       classNamePrefix="select-priority"
       styles={customStyles}

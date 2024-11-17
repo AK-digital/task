@@ -2,8 +2,9 @@
     "name": "task",
     "version": "1.0.0",
     "scripts": {
+        "start": "node --no-deprecation server.js",
         "start:frontend": "cd frontend && npm run dev",
-        "start:backend": "cd backend && npm start",
+        "start:backend": "cd backend && npm start --no-deprecation",
         "dev": "npm-run-all --parallel start:frontend start:backend"
     },
     "devDependencies": {

@@ -9,3 +9,4 @@
 /backend.zip
 /backend/db.json
 /backend/public
+/frontend/src/store/middleware

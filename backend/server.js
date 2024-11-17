@@ -3,12 +3,18 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs-extra");
 const cors = require("cors");
+const admin = require('firebase-admin');
 
 const mailRouter = require("./routes/mail.routes");
 const { randomUUID } = require("crypto");
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Initialiser Firebase Admin
+admin.initializeApp({
+    credential: admin.credential.cert(require('./serviceAccountKey.json'))
+});
 
 // Configuration CORS
 const corsOptions = {
@@ -99,17 +105,20 @@ app.get('/api/users', (req, res) => {
 
 app.get('/api/users/by-email', async (req, res) => {
     try {
-        const email = req.query.email;
-        const db = await readDb();
-        const user = db.users.find(u => u.email === email);
+        const { email } = req.query;
 
-        if (!user) {
+        // Rechercher dans Firestore
+        const usersRef = admin.firestore().collection('users');
+        const snapshot = await usersRef.where('email', '==', email).get();
+
+        if (snapshot.empty) {
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
-        res.json(user);
+        const userData = snapshot.docs[0].data();
+        res.json(userData);
     } catch (error) {
-        console.error('Erreur lors de la recherche de l\'utilisateur:', error);
+        console.error('Erreur:', error);
         res.status(500).json({ message: 'Erreur serveur' });
     }
 });

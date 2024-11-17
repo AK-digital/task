@@ -1,357 +1,265 @@
-import React, {
-	useState,
-	useEffect,
-	useRef,
-	useCallback,
-	useMemo,
-} from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import RichTextEditor from "./shared/RichTextEditor.jsx";
-import "../assets/css/task-details.css";
+import React, { useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import DOMPurify from "dompurify";
+import RichTextEditor from "./shared/RichTextEditor";
+import { useAppDispatch } from '../hooks/useAppDispatch';
+import { dateUtils } from '../utils/dateUtils';
+import { formatters } from '../utils/formatters';
+import {
+	updateTask,
+	setCurrentTask,
+	clearCurrentTask,
+	addTaskResponse,
+	deleteTaskResponse
+} from '../store/slices/taskSlice';
+import { selectCurrentUser } from '../store/slices/authSlice';
+import { selectCurrentProject } from '../store/slices/projectSlice';
+import { tasksApi } from '../services/api/tasks';
 
-const TaskDetails = ({
-	currentProject,
-	task,
-	onClose,
-	onSave,
-	onAddResponse,
-	onEditResponse,
-	onDeleteResponse,
-	currentUser,
-	users,
-	onUploadFiles,
-	handleSendDescriptionMention,
-	handleSendResponseMention,
-}) => {
-	const [editedTask, setEditedTask] = useState(task || {});
-	const [localResponses, setLocalResponses] = useState(task?.responses || []);
+function TaskDetails() {
+	const appDispatch = useAppDispatch();
+	const dispatch = useDispatch();
+	const task = useSelector(state => state.tasks.currentTask);
+	const currentUser = useSelector(selectCurrentUser);
+	const currentProject = useSelector(selectCurrentProject);
+	const users = useSelector(state => state.projects.users);
+
 	const [isEditingDescription, setIsEditingDescription] = useState(false);
-	const [editingResponseId, setEditingResponseId] = useState(null);
-	const [showIcons, setShowIcons] = useState(null);
-	const taskDetailsRef = useRef(null);
-	const descriptionEditorRef = useRef(null);
 
-	useEffect(() => {
-		if (task) {
-			setEditedTask(task);
-			setLocalResponses(task.responses || []);
-		}
-	}, [task]);
+	const handleClose = () => {
+		dispatch(clearCurrentTask());
+	};
 
-	console.log(localResponses);
+	const handleSaveDescription = async (description, files) => {
+		try {
+			if (!currentProject || !task) return;
 
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (
-				taskDetailsRef.current &&
-				!taskDetailsRef.current.contains(event.target)
-			) {
-				onClose();
-			}
-		};
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [onClose]);
+			const sanitizedDescription = DOMPurify.sanitize(description);
 
-	useEffect(() => {
-		if (!editedTask.description) {
-			setIsEditingDescription(true);
-		}
-	}, [editedTask.description]);
-
-	useEffect(() => {
-		if (isEditingDescription && descriptionEditorRef.current) {
-			descriptionEditorRef.current.focusEditor();
-		}
-	}, [isEditingDescription]);
-
-	const handleUploadFiles = useCallback(
-		async (files) => {
-			if (!files || files.length === 0 || !currentUser || !task) {
-				return [];
-			}
-
-			try {
-				const uploadedFiles = await onUploadFiles({
-					files,
-					currentUser,
-					currentProject: { id: task.projectId },
+			await appDispatch(
+				updateTask({
+					projectId: currentProject.id,
 					boardId: task.boardId,
 					taskId: task.id,
-				});
-				return Array.isArray(uploadedFiles) ? uploadedFiles : [];
-			} catch (error) {
-				console.error("Erreur lors de l'upload des fichiers:", error);
-				return [];
-			}
-		},
-		[currentUser, task, onUploadFiles]
-	);
-
-	const handleSaveDescription = useCallback(
-		async (newDescription, files) => {
-			const sanitizedHtml = DOMPurify.sanitize(newDescription);
-			let uploadedFiles = [];
-			try {
-				if (files && files.length > 0) {
-					uploadedFiles = await handleUploadFiles(files);
+					updates: {
+						description: sanitizedDescription,
+						files: files || [],
+						lastUpdatedBy: currentUser.id,
+						lastUpdatedAt: new Date().toISOString()
+					}
+				}),
+				{
+					successMessage: "Description mise à jour avec succès",
+					errorMessage: "Erreur lors de la mise à jour de la description"
 				}
-				const updatedTask = {
+			);
+
+			// Notifier les utilisateurs mentionnés
+			const mentionedUsers = extractMentionedUsers(sanitizedDescription);
+			if (mentionedUsers.length > 0) {
+				await tasksApi.notifyMention(mentionedUsers, {
 					...task,
-					description: sanitizedHtml,
-					descriptionFiles: uploadedFiles,
-				};
-				setEditedTask(updatedTask);
-				onSave(updatedTask);
-				setIsEditingDescription(false);
-			} catch (error) {
-				console.error("Erreur lors de la sauvegarde de la description:", error);
-			}
-		},
-		[task, onSave, handleUploadFiles]
-	);
-
-	const handleAddResponse = useCallback(
-		async (responseText, uploadedFiles) => {
-			if (responseText.trim() === "" || !currentUser || !task) return;
-
-			const sanitizedHtml = DOMPurify.sanitize(responseText);
-			let files = [];
-			if (uploadedFiles && uploadedFiles.length > 0) {
-				files = await handleUploadFiles(uploadedFiles);
+					description: sanitizedDescription
+				}, 'description');
 			}
 
-			const newResponse = {
-				id: Date.now(),
-				text: sanitizedHtml,
-				date: new Date().toLocaleString(),
-				author_id: currentUser.id,
-				files: files,
-			};
+			setIsEditingDescription(false);
+		} catch (error) {
+			console.error("Erreur lors de la sauvegarde de la description:", error);
+		}
+	};
 
-			onAddResponse(task.id, newResponse);
-			setLocalResponses((prevResponses) => [...prevResponses, newResponse]);
-		},
-		[task, currentUser, onAddResponse, handleUploadFiles]
-	);
+	const handleAddResponse = async (responseText, files) => {
+		if (!responseText?.trim() || !currentUser || !task) return;
 
-	const handleDeleteResponse = useCallback(
-		(responseId) => {
-			onDeleteResponse(task.id, responseId);
-			setLocalResponses((prevResponses) =>
-				prevResponses.filter((response) => response.id !== responseId)
-			);
-		},
-		[task, onDeleteResponse]
-	);
+		try {
+			const textContent = typeof responseText === 'object' ?
+				responseText.value || responseText.text : responseText;
 
-	const handleEditResponse = useCallback(
-		async (responseId, newText, newFiles) => {
-			const sanitizedHtml = DOMPurify.sanitize(newText);
-			let uploadedFiles = [];
-			if (newFiles && newFiles.length > 0) {
-				uploadedFiles = await handleUploadFiles(newFiles);
-			}
-			const updatedResponse = {
-				id: responseId,
-				text: sanitizedHtml,
-				files: uploadedFiles,
-			};
-			onEditResponse(task.id, responseId, updatedResponse);
-			setLocalResponses((prevResponses) =>
-				prevResponses.map((response) =>
-					response.id === responseId
-						? { ...response, ...updatedResponse }
-						: response
-				)
-			);
-			setEditingResponseId(null);
-		},
-		[task, handleUploadFiles, onEditResponse]
-	);
+			const sanitizedHtml = DOMPurify.sanitize(textContent);
 
-	const getAuthorInfo = useMemo(
-		() => (authorId) => {
-			const author = users.find((user) => user.id === authorId);
-			return (
-				author || {
-					name: "Utilisateur inconnu",
-					profilePicture: "default-profile-pic.svg",
+			await appDispatch(
+				addTaskResponse({
+					projectId: currentProject.id,
+					boardId: task.boardId,
+					taskId: task.id,
+					response: {
+						id: Date.now(),
+						text: sanitizedHtml,
+						date: new Date().toISOString(),
+						author_id: currentUser.id,
+						files,
+						seenBy: [currentUser.id]
+					}
+				}),
+				{
+					successMessage: "Réponse ajoutée avec succès",
+					errorMessage: "Erreur lors de l'ajout de la réponse"
 				}
 			);
-		},
-		[users]
-	);
 
-	const taskAuthor = getAuthorInfo(editedTask.createdBy);
+			// Notifier les utilisateurs mentionnés
+			const mentionedUsers = extractMentionedUsers(sanitizedHtml);
+			if (mentionedUsers.length > 0) {
+				await tasksApi.notifyMention(mentionedUsers, {
+					...task,
+					response: sanitizedHtml
+				}, 'response');
+			}
+		} catch (error) {
+			console.error("Erreur réponse:", error);
+		}
+	};
+
+	const extractMentionedUsers = (content) => {
+		const mentionRegex = /@(\w+)/g;
+		const matches = content.match(mentionRegex) || [];
+		return matches
+			.map(match => match.substring(1))
+			.map(username => users.find(u => u.name === username))
+			.filter(user => user);
+	};
+
+	const getAuthorImage = useCallback((profilePicture) => {
+		if (!profilePicture) return "/assets/img/default-profile-pic.svg";
+		return profilePicture.startsWith('http') ? profilePicture : `/assets/img/${profilePicture}`;
+	}, []);
+
+	if (!task) return null;
+
+	const taskAuthor = users.find(u => u.id === task.createdBy) || {
+		name: "Utilisateur inconnu",
+		profilePicture: "default-profile-pic.svg"
+	};
 
 	return (
-		<div ref={taskDetailsRef} className={`task-details ${task ? "open" : ""}`}>
-			<button className="close-slider" onClick={onClose}>
-				&#x2715;
-			</button>
-			<div className="task-title">{editedTask.text}</div>
-			<h3>Description</h3>
-			<div className="task-description">
+		<div className={`task-details ${task ? "open" : ""}`}>
+			<button className="close-slider" onClick={handleClose}>×</button>
+
+			<div className="task-title">{task.text}</div>
+
+			<section className="task-description">
+				<h3>Description</h3>
 				<div className="task-description-header">
 					<img
-						src={`/public/assets/img/${taskAuthor.profilePicture}`}
+						src={getAuthorImage(taskAuthor.profilePicture)}
 						alt={taskAuthor.name}
 						className="author-avatar"
 					/>
-					<span className="author-name">{taskAuthor.name}</span>
-					<span className="response-date">{editedTask.createdAt}</span>
+					<span>{taskAuthor.name}</span>
+					<span className="creation-date">
+						{dateUtils.formatDate(task.createdAt)}
+					</span>
 				</div>
 
 				{isEditingDescription ? (
 					<RichTextEditor
-						ref={descriptionEditorRef} // Attacher la référence à l'éditeur
-						initialValue={editedTask.description || ""}
-						initialFiles={editedTask.descriptionFiles || []}
-						task={task}
-						currentProject={currentProject}
-						users={users}
-						handleSendDescriptionMention={handleSendDescriptionMention}
+						initialValue={task.description || ""}
 						onSave={handleSaveDescription}
 						onCancel={() => setIsEditingDescription(false)}
-						placeholder="Description de la tâche"
+						placeholder="Ajouter une description..."
 						saveButtonText="Enregistrer la description"
 					/>
 				) : (
 					<div
-						className="description-container"
+						className="task-description-content"
 						onClick={() => setIsEditingDescription(true)}
-						onMouseEnter={() => setShowIcons("description")}
-						onMouseLeave={() => setShowIcons(null)}>
-						<div
-							className="description-text"
-							dangerouslySetInnerHTML={{
-								__html: editedTask.description || "Pas de description",
-							}}
-						/>
-						{showIcons === "description" && (
-							<FontAwesomeIcon
-								icon={faPen}
-								className="edit-icon"
-								onClick={() => setIsEditingDescription(true)}
+						dangerouslySetInnerHTML={{
+							__html: task.description || "Ajouter une description..."
+						}}
+					/>
+				)}
+			</section>
+
+			<section className="task-responses">
+				<h3>Conversation</h3>
+				{task.responses?.map((response, index) => {
+					const author = users.find(u => u.id === response.author_id) || {
+						name: "Utilisateur inconnu",
+						profilePicture: "default-profile-pic.svg"
+					};
+
+					return (
+						<div key={response.id || index} className="response-item">
+							<div className="response-header">
+								<img
+									src={getAuthorImage(author.profilePicture)}
+									alt={author.name}
+									className="author-avatar"
+								/>
+								<div className="response-meta">
+									<span className="author-name">{author.name}</span>
+									<span className="response-date">
+										{dateUtils.formatRelative(response.date)}
+									</span>
+								</div>
+							</div>
+							<div
+								className="response-content"
+								dangerouslySetInnerHTML={{
+									__html: formatters.truncateHtml(response.text)
+								}}
 							/>
-						)}
-						{editedTask.descriptionFiles &&
-							editedTask.descriptionFiles.length > 0 && (
-								<div className="description-files">
-									<h4>Fichiers attachés:</h4>
-									<ul>
-										{editedTask.descriptionFiles.map((file, index) => (
-											<li key={index}>
-												<a
-													href={file.url}
-													target="_blank"
-													rel="noopener noreferrer">
-													{file.name}
-												</a>
-											</li>
-										))}
-									</ul>
+							{response.files?.length > 0 && (
+								<div className="response-files">
+									{response.files.map(file => (
+										<a
+											key={file.id}
+											href={file.url}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="file-link"
+										>
+											{file.name} ({formatters.formatFileSize(file.size)})
+										</a>
+									))}
 								</div>
 							)}
-					</div>
-				)}
-			</div>
+						</div>
+					);
+				})}
 
-			<div className="task-discuss">
-				<h3>Conversation</h3>
-				<ul>
-					{localResponses.map((response) => {
-						const author = getAuthorInfo(response.author_id);
-						return (
-							<li
-								className="task-chatbox"
-								key={response.id}
-								onMouseEnter={() => setShowIcons(response.id)}
-								onMouseLeave={() => setShowIcons(null)}>
-								<div className="response-header">
-									<img
-										src={`/public/assets/img/${author.profilePicture}`}
-										alt={author.name}
-										className="author-avatar"
-									/>
-									<span className="author-name">{author.name}</span>
-									<span className="response-date">{response.date}</span>
-								</div>
-								{editingResponseId === response.id ? (
-									<RichTextEditor
-										initialValue={response.text}
-										initialFiles={response.files}
-										onSave={(newText, newFiles) =>
-											handleEditResponse(response.id, newText, newFiles)
-										}
-										onCancel={() => setEditingResponseId(null)}
-										placeholder="Modifier la réponse"
-										saveButtonText="Enregistrer les modifications"
-										currentProject={currentProject}
-										users={users}
-										onUploadFiles={handleUploadFiles}
-									/>
-								) : (
-									<div className="response-text-container">
-										<div
-											className="response-text"
-											dangerouslySetInnerHTML={{ __html: response.text }}
-										/>
-										{response.files && response.files.length > 0 && (
-											<div className="response-files">
-												<h4>Fichiers attachés:</h4>
-												<ul>
-													{response.files.map((file, index) => (
-														<li key={index}>
-															<a
-																href={file.url}
-																target="_blank"
-																rel="noopener noreferrer">
-																{file.name}
-															</a>
-														</li>
-													))}
-												</ul>
-											</div>
-										)}
-										{showIcons === response.id &&
-											currentUser.id === response.author_id && (
-												<div className="response-icons">
-													<FontAwesomeIcon
-														icon={faPen}
-														className="edit-icon"
-														onClick={() => setEditingResponseId(response.id)}
-													/>
-													<FontAwesomeIcon
-														icon={faTrash}
-														className="delete-icon"
-														onClick={() => handleDeleteResponse(response.id)}
-													/>
-												</div>
-											)}
-									</div>
-								)}
-							</li>
-						);
-					})}
-				</ul>
-				<RichTextEditor
-					onSave={handleAddResponse}
-					onCancel={() => {}}
-					placeholder="Ajouter une nouvelle réponse"
-					saveButtonText="Ajouter une réponse"
-					onUploadFiles={handleUploadFiles}
-					task={task}
-					currentProject={currentProject}
-					users={users}
-					handleSendResponseMention={handleSendResponseMention}
-				/>
+				<div className="add-response">
+					<RichTextEditor
+						initialValue=""
+						onSave={handleAddResponse}
+						onCancel={() => { }}
+						placeholder="Ajouter un commentaire..."
+						saveButtonText="Envoyer"
+						task={task}
+						currentProject={currentProject}
+						users={users}
+						showMentions={true}
+					/>
+				</div>
+			</section>
+
+			<div className="task-metadata">
+				<div className="metadata-item">
+					<label>Créé par</label>
+					<span>{taskAuthor.name}</span>
+				</div>
+				<div className="metadata-item">
+					<label>Créé le</label>
+					<span>{dateUtils.formatDate(task.createdAt)}</span>
+				</div>
+				{task.lastUpdatedBy && (
+					<>
+						<div className="metadata-item">
+							<label>Dernière modification par</label>
+							<span>
+								{users.find(u => u.id === task.lastUpdatedBy)?.name || "Inconnu"}
+							</span>
+						</div>
+						<div className="metadata-item">
+							<label>Modifié le</label>
+							<span>{dateUtils.formatDate(task.lastUpdatedAt)}</span>
+						</div>
+					</>
+				)}
 			</div>
 		</div>
 	);
-};
+}
 
 export default TaskDetails;
