@@ -10,3 +10,6 @@
 /backend/db.json
 /backend/public
 /frontend/src/store/middleware
+/frontend/.env
+/frontend/.env.development
+/frontend/.env.production
