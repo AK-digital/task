@@ -1,70 +1,106 @@
-.signin-container h1 {
-  margin-bottom: 32px;
-  margin-top: -130px;
-}
-
 .signin-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  width: 100vw;
-  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
   background-color: var(--primary-background-color);
 }
 
 .signin-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
   background-color: var(--secondary-background-color);
-  border-radius: 5px;
-  padding: 24px;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
-  width: 300px;
-}
-
-.signin-form-wrapper h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: var(--text-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .signin-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
-.signin-form input {
-  padding: 10px;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  background-color: var(--third-background-color);
+  background-color: var(--input-background-color);
   color: var(--text-color);
+  font-size: 16px;
 }
 
-.signin-form button {
-  padding: 10px;
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(80, 86, 200, 0.1);
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forgot-password {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.signin-button {
+  width: 100%;
+  padding: 12px;
   background-color: var(--accent-color);
   color: white;
   border: none;
   border-radius: 4px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s;
 }
 
-.signin-form button:hover {
+.signin-button:hover:not(:disabled) {
   background-color: var(--accent-color-hover);
 }
 
+.signin-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .error-message {
-  color: #ff4d4d;
-  text-align: center;
-  margin-top: 10px;
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 4px;
+  color: #ff4444;
 }
 
 .signup-link {
   text-align: center;
-  margin-top: 15px;
-  color: var(--text-color-muted);
+  margin-top: 24px;
+  font-size: 14px;
 }
 
 .signup-link a {
@@ -74,35 +110,4 @@
 
 .signup-link a:hover {
   text-decoration: underline;
-}
-
-.sso-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.google-signin,
-.github-signin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid var(--border-color);
-  background: var(--third-background-color);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.google-signin:hover,
-.github-signin:hover {
-  background: var(--primary-background-color);
-}
-
-.google-signin svg,
-.github-signin svg {
-  font-size: 18px;
 }

@@ -9,24 +9,27 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider, githubProvider } from '../../config/firebase';
 import Cookies from 'js-cookie';
 
-// État initial
 const initialState = {
     currentUser: null,
     loading: false,
     error: null
 };
 
-// Thunk pour l'inscription
+// Ajout de l'export manquant pour signUp
 export const signUp = createAsyncThunk(
     'auth/signUp',
     async ({ email, password, name }, { rejectWithValue }) => {
         try {
-            // Création du compte avec Firebase Auth
+            // Création du compte Firebase
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            const token = await user.getIdToken();
+            console.log('Compte Firebase créé');
 
-            // Création du profil utilisateur dans Firestore
+            // Génération du token
+            const token = await user.getIdToken();
+            console.log('Token généré');
+
+            // Création du profil utilisateur
             const userToSave = {
                 id: user.uid,
                 name: name || email.split('@')[0],
@@ -36,28 +39,49 @@ export const signUp = createAsyncThunk(
                 createdAt: new Date().toISOString()
             };
 
+            // Sauvegarde dans Firestore
             await setDoc(doc(db, 'users', user.uid), userToSave);
+            console.log('Profil utilisateur créé dans Firestore');
 
-            // Sauvegarder le token dans les cookies
+            // Sauvegarde du token
             Cookies.set("authToken", token, { expires: 7 });
 
             return userToSave;
         } catch (error) {
-            return rejectWithValue(error.message);
+            console.error('Erreur inscription:', error);
+            let errorMessage = 'Une erreur est survenue lors de l\'inscription';
+
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'Cette adresse email est déjà utilisée';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Adresse email invalide';
+                    break;
+                case 'auth/operation-not-allowed':
+                    errorMessage = 'L\'inscription par email/mot de passe n\'est pas activée';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'Le mot de passe doit faire au moins 6 caractères';
+                    break;
+                default:
+                    errorMessage = error.message;
+            }
+            return rejectWithValue(errorMessage);
         }
     }
 );
 
-// Thunk pour la connexion par email/password
 export const signIn = createAsyncThunk(
     'auth/signIn',
     async ({ email, password }, { rejectWithValue }) => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log('Connexion Firebase réussie');
+
             const user = userCredential.user;
             const token = await user.getIdToken();
 
-            // Récupérer les données utilisateur de Firestore
             const userDoc = await getDoc(doc(db, 'users', user.uid));
             const userData = userDoc.exists() ? userDoc.data() : {};
 
@@ -66,54 +90,52 @@ export const signIn = createAsyncThunk(
                 name: userData.name || email.split('@')[0],
                 email: user.email,
                 authToken: token,
-                ...userData
+                ...userData,
+                lastLoginAt: new Date().toISOString()
             };
 
-            // Mise à jour des données dans Firestore
             await setDoc(doc(db, 'users', user.uid), userToSave, { merge: true });
-
-            // Sauvegarder le token dans les cookies
             Cookies.set("authToken", token, { expires: 7 });
 
             return userToSave;
         } catch (error) {
+            console.error('Erreur connexion:', error);
             return rejectWithValue(error.message);
         }
     }
 );
 
-// Thunk pour la connexion SSO
 export const signInWithSSO = createAsyncThunk(
     'auth/signInWithSSO',
     async (providerName, { rejectWithValue }) => {
         try {
             const provider = providerName === 'google' ? googleProvider : githubProvider;
             const result = await signInWithPopup(auth, provider);
+            console.log('Connexion SSO réussie');
+
             const user = result.user;
             const token = await user.getIdToken();
 
-            // Créer/mettre à jour l'utilisateur dans Firestore
-            const userData = {
+            const userToSave = {
                 id: user.uid,
                 name: user.displayName || user.email.split('@')[0],
                 email: user.email,
                 authToken: token,
                 profilePicture: user.photoURL || 'default-profile-pic.svg',
-                currentProjectId: null,
                 lastLoginAt: new Date().toISOString()
             };
 
-            await setDoc(doc(db, 'users', user.uid), userData, { merge: true });
+            await setDoc(doc(db, 'users', user.uid), userToSave, { merge: true });
             Cookies.set("authToken", token, { expires: 7 });
 
-            return userData;
+            return userToSave;
         } catch (error) {
+            console.error('Erreur SSO:', error);
             return rejectWithValue(error.message);
         }
     }
 );
 
-// Thunk pour la déconnexion
 export const logout = createAsyncThunk(
     'auth/logout',
     async (_, { rejectWithValue }) => {
@@ -127,7 +149,6 @@ export const logout = createAsyncThunk(
     }
 );
 
-// Création du slice
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -148,7 +169,7 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Gestion de l'inscription
+            // SignUp
             .addCase(signUp.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -162,8 +183,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-
-            // Gestion de la connexion email/password
+            // SignIn
             .addCase(signIn.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -177,8 +197,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-
-            // Gestion de la connexion SSO
+            // SSO
             .addCase(signInWithSSO.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -192,8 +211,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-
-            // Gestion de la déconnexion
+            // Logout
             .addCase(logout.pending, (state) => {
                 state.loading = true;
             })
@@ -209,13 +227,10 @@ const authSlice = createSlice({
     }
 });
 
-// Export des actions synchrones
 export const { setUser, clearError, clearUser } = authSlice.actions;
 
-// Export du reducer
-export default authSlice.reducer;
-
-// Sélecteurs
 export const selectCurrentUser = (state) => state.auth.currentUser;
 export const selectAuthLoading = (state) => state.auth.loading;
 export const selectAuthError = (state) => state.auth.error;
+
+export default authSlice.reducer;

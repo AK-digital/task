@@ -21,6 +21,7 @@ const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
+                // Actions à ignorer pour la vérification de sérialisation
                 ignoredActions: [
                     'auth/signIn/fulfilled',
                     'auth/signInWithSSO/fulfilled',
@@ -35,6 +36,7 @@ const store = configureStore({
                     'files/upload/pending',
                     'files/upload/fulfilled'
                 ],
+                // Chemins d'état à ignorer pour la vérification de sérialisation
                 ignoredPaths: [
                     'auth.currentUser',
                     'projects.currentProject',
@@ -42,7 +44,8 @@ const store = configureStore({
                     'tasks.currentTask',
                     'notifications.items'
                 ]
-            }
+            },
+            thunk: true
         }).concat(errorMiddleware)
 });
 

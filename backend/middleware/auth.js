@@ -1,28 +1,40 @@
-// Dans backend/middleware/auth.js
 const admin = require('firebase-admin');
 
 const verifyToken = async (req, res, next) => {
+    console.log('\n🔐 Authentication Middleware');
+    console.log('Headers:', req.headers);
+
     try {
-        const token = req.headers.authorization?.split('Bearer ')[1];
-        if (!token) {
-            return res.status(401).json({ message: 'Token manquant' });
+        const authHeader = req.headers.authorization;
+        if (!authHeader?.startsWith('Bearer ')) {
+            console.log('❌ No Bearer token found');
+            return res.status(401).json({ error: 'Token d\'authentification manquant' });
         }
+
+        const token = authHeader.split('Bearer ')[1];
+        console.log('🎟️ Token found:', token.substring(0, 20) + '...');
 
         const decodedToken = await admin.auth().verifyIdToken(token);
+        console.log('✅ Token verified:', decodedToken);
 
-        // Vérifier l'utilisateur dans Firestore
-        const userRef = admin.firestore().doc(`users/${decodedToken.uid}`);
-        const userDoc = await userRef.get();
+        const userRecord = await admin.auth().getUser(decodedToken.uid);
+        console.log('👤 User record retrieved:', userRecord.uid);
 
-        if (!userDoc.exists) {
-            return res.status(401).json({ message: 'Utilisateur non trouvé' });
-        }
+        req.user = {
+            uid: userRecord.uid,
+            email: userRecord.email,
+            displayName: userRecord.displayName,
+            ...decodedToken
+        };
 
-        req.user = { ...decodedToken, ...userDoc.data() };
+        console.log('✨ Authentication successful');
         next();
     } catch (error) {
-        console.error('Erreur de vérification du token:', error);
-        res.status(401).json({ message: 'Token invalide' });
+        console.error('🚫 Authentication error:', error);
+        res.status(401).json({
+            error: 'Token invalide ou expiré',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 

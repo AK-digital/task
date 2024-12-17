@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Fonctions helper
+    function isAuth() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuth() && request.auth.uid == userId;
+    }
+
+    function isProjectMember(projectData) {
+      return isAuth() && (
+        projectData.userId == request.auth.uid ||
+        request.auth.uid in projectData.guestUsers
+      );
+    }
+
+    // Validation des données
+    function isValidProject() {
+      let hasRequiredFields = 
+        request.resource.data.keys().hasAll(['userId', 'name', 'boards', 'guestUsers']) &&
+        request.resource.data.userId is string &&
+        request.resource.data.name is string &&
+        request.resource.data.boards is list &&
+        request.resource.data.guestUsers is list;
+        
+      return hasRequiredFields;
+    }
+
+    function isValidResponse() {
+      return request.resource.data.keys().hasAll(['id', 'text', 'date', 'author_id']) &&
+        request.resource.data.text is string &&
+        request.resource.data.author_id == request.auth.uid;
+    }
+
+    // Règles users
+    match /users/{userId} {
+      allow read: if isAuth();
+      allow create: if isOwner(userId) && 
+        request.resource.data.keys().hasAll(['email', 'name']);
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+
+    // Règles projects avec responses
+    match /projects/{projectId} {
+      allow create: if isAuth() && 
+        request.resource.data.userId == request.auth.uid &&
+        isValidProject();
+      
+      allow read: if isAuth() && (
+        resource.data.userId == request.auth.uid ||
+        request.auth.uid in resource.data.guestUsers
+      );
+      
+      // Permettre la mise à jour des boards et tasks, y compris les responses
+      allow update: if isAuth() && (
+        resource.data.userId == request.auth.uid ||
+        request.auth.uid in resource.data.guestUsers
+      ) && (
+        // Vérifier que l'userId ne change pas
+        request.resource.data.userId == resource.data.userId &&
+        // Autoriser la mise à jour des boards et des responses
+        (
+          !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['userId']) ||
+          request.resource.data.boards.hasAll(resource.data.boards)
+        )
+      );
+      
+       allow read, write: if request.auth != null;
+      
+      match /{document=**} {
+        allow read, write: if request.auth != null;
+      }
+      
+      allow delete: if isAuth() && resource.data.userId == request.auth.uid;
+    }
+
+    // Règles notifications
+    match /notifications/{notificationId} {
+      function isValidNotification() {
+        return request.resource.data.keys().hasAll(['userId', 'title', 'description', 'date', 'seen']);
+      }
+
+      allow create: if isAuth() && isValidNotification();
+      allow read: if isAuth() && resource.data.userId == request.auth.uid;
+      allow update: if isAuth() && 
+        resource.data.userId == request.auth.uid && 
+        request.resource.data.userId == resource.data.userId;
+      allow delete: if isAuth() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

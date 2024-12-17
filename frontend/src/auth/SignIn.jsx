@@ -1,110 +1,146 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch } from '../hooks/useAppDispatch';
-import { signInWithSSO, signIn } from '../store/slices/authSlice';
-import Head from '../components/shared/Head';
+import { signIn, selectAuthError, selectAuthLoading } from '../store/slices/authSlice';
+import { LoadingButton } from '../components/shared/LoadingSpinner';
 
 function SignIn() {
   const appDispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleSignIn = async (e) => {
-    e.preventDefault();
-    try {
-      await appDispatch(
-        signIn({ email, password }),
-        {
-          successMessage: 'Connexion réussie',
-          errorMessage: 'Erreur lors de la connexion'
-        }
-      );
-      navigate("/");
-    } catch (error) {
-      console.error("Erreur de connexion:", error);
+  // Redux state
+  const authError = useSelector(selectAuthError);
+  const isAuthLoading = useSelector(selectAuthLoading);
+
+  // Local state
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    rememberMe: false
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Reset error when inputs change
+  useEffect(() => {
+    if (error || authError) {
+      setError(null);
     }
+  }, [formData.email, formData.password]);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
-  const handleSSOSignIn = async (provider) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
     try {
-      await appDispatch(
-        signInWithSSO(provider),
-        {
-          successMessage: 'Connexion réussie',
-          errorMessage: 'Erreur lors de la connexion SSO'
-        }
+      console.log('Tentative de connexion...', {
+        email: formData.email,
+        timestamp: new Date().toISOString()
+      });
+
+      const result = await appDispatch(
+        signIn({
+          email: formData.email,
+          password: formData.password,
+          rememberMe: formData.rememberMe
+        })
       );
+
+      console.log('Résultat de la connexion:', result);
+
+      if (result.error) {
+        throw new Error(result.error.message || 'Erreur lors de la connexion');
+      }
+
+      console.log('Connexion réussie, redirection...');
       navigate("/");
     } catch (error) {
-      console.error("Erreur d'authentification:", error);
+      console.error('Erreur complète:', error);
+      setError(error.message || 'Erreur lors de la connexion');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <>
-      <Head
-        title="Connexion"
-        description="Connectez-vous à täsk pour gérer vos projets et tâches"
-        keywords="connexion, login, task management, projet"
-      />
-
-      <div className="signin-container">
-        <h1>täsk</h1>
-        <div className="signin-form-wrapper">
-          <h2>Connexion</h2>
-          <form onSubmit={handleSignIn} className="signin-form">
+    <div className="signin-container">
+      <h1>täsk</h1>
+      <div className="signin-form-wrapper">
+        <h2>Connexion</h2>
+        {(error || authError) && (
+          <div className="error-message" role="alert">
+            {error || authError}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="signin-form">
+          <div className="form-group">
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Email"
-              autoComplete="username"
+              autoComplete="email"
               required
+              disabled={isLoading || isAuthLoading}
             />
+          </div>
+
+          <div className="form-group">
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Mot de passe"
               autoComplete="current-password"
               required
+              disabled={isLoading || isAuthLoading}
             />
-            <button type="submit">
-              Se connecter
-            </button>
-          </form>
-
-          <div className="separator">
-            <span>ou</span>
           </div>
 
-          <div className="sso-buttons">
-            <button
-              className="google-signin"
-              onClick={() => handleSSOSignIn('google')}
-            >
-              <FontAwesomeIcon icon={faGoogle} />
-              Continuer avec Google
-            </button>
-            <button
-              className="github-signin"
-              onClick={() => handleSSOSignIn('github')}
-            >
-              <FontAwesomeIcon icon={faGithub} />
-              Continuer avec GitHub
-            </button>
+          <div className="form-options">
+            <label className="remember-me">
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={formData.rememberMe}
+                onChange={handleChange}
+                disabled={isLoading || isAuthLoading}
+              />
+              Se souvenir de moi
+            </label>
+            <Link to="/forgot-password" className="forgot-password">
+              Mot de passe oublié ?
+            </Link>
           </div>
 
-          <p className="signup-link">
-            Pas encore de compte ? <Link to="/signup">S'inscrire</Link>
-          </p>
-        </div>
+          <LoadingButton
+            type="submit"
+            isLoading={isLoading || isAuthLoading}
+            disabled={isLoading || isAuthLoading}
+            className="signin-button"
+          >
+            Se connecter
+          </LoadingButton>
+        </form>
+
+        <p className="signup-link">
+          Pas encore de compte ? <Link to="/signup">S'inscrire</Link>
+        </p>
       </div>
-    </>
+    </div>
   );
 }
 

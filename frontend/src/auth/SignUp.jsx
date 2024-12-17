@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
-import { validators } from '../utils/validators';
 import { useAppDispatch } from '../hooks/useAppDispatch';
-import { signInWithSSO, signUp } from '../store/slices/authSlice';
+import { signUp, signInWithSSO } from '../store/slices/authSlice';
+import { LoadingButton } from '../components/shared/LoadingSpinner';
+import { validators } from '../utils/validators';
 
 const SignUp = () => {
   const appDispatch = useAppDispatch();
@@ -18,58 +18,94 @@ const SignUp = () => {
     name: ""
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError(null);
+  };
+
+  const validateForm = () => {
+    if (!validators.isValidEmail(formData.email)) {
+      setError('Adresse email invalide');
+      return false;
+    }
+
+    if (!validators.isValidPassword(formData.password)) {
+      setError('Le mot de passe doit faire au moins 6 caractères');
+      return false;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Les mots de passe ne correspondent pas');
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validators.isValidEmail(formData.email)) {
-      return; // Géré par le hook useAppDispatch
-    }
+    if (!validateForm()) return;
 
-    if (!validators.isValidPassword(formData.password)) {
-      return; // Géré par le hook useAppDispatch
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      return; // Géré par le hook useAppDispatch
-    }
+    setIsLoading(true);
+    setError(null);
 
     try {
-      await appDispatch(
+      const result = await appDispatch(
         signUp({
           email: formData.email,
           password: formData.password,
-          name: formData.name || formData.email.split('@')[0]
+          name: formData.name
         }),
         {
-          successMessage: "Compte créé avec succès",
-          errorMessage: "Erreur lors de la création du compte"
+          successMessage: 'Compte créé avec succès',
+          errorMessage: 'Erreur lors de la création du compte'
         }
       );
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       navigate("/");
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error);
+      setError(error.message || 'Une erreur est survenue lors de l\'inscription');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSSOSignIn = async (provider) => {
+    setIsLoading(true);
+    setError(null);
+
     try {
-      await appDispatch(
+      const result = await appDispatch(
         signInWithSSO(provider),
         {
           successMessage: 'Connexion réussie',
-          errorMessage: 'Erreur lors de la connexion SSO'
+          errorMessage: `Erreur lors de la connexion avec ${provider}`
         }
       );
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       navigate("/");
     } catch (error) {
-      console.error("Erreur d'authentification SSO:", error);
+      console.error(`Erreur lors de la connexion ${provider}:`, error);
+      setError(error.message || `Une erreur est survenue lors de la connexion avec ${provider}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +114,11 @@ const SignUp = () => {
       <h1>täsk</h1>
       <div className="signup-form-wrapper">
         <h2>Créer un compte</h2>
+        {error && (
+          <div className="error-message" role="alert">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="signup-form">
           <input
             type="text"
@@ -85,6 +126,7 @@ const SignUp = () => {
             value={formData.name}
             onChange={handleChange}
             placeholder="Nom (optionnel)"
+            disabled={isLoading}
           />
           <input
             type="email"
@@ -94,6 +136,7 @@ const SignUp = () => {
             placeholder="Email"
             required
             autoComplete="email"
+            disabled={isLoading}
           />
           <input
             type="password"
@@ -103,6 +146,7 @@ const SignUp = () => {
             placeholder="Mot de passe"
             required
             autoComplete="new-password"
+            disabled={isLoading}
           />
           <input
             type="password"
@@ -112,8 +156,16 @@ const SignUp = () => {
             placeholder="Confirmer le mot de passe"
             required
             autoComplete="new-password"
+            disabled={isLoading}
           />
-          <button type="submit">S'inscrire</button>
+
+          <LoadingButton
+            type="submit"
+            isLoading={isLoading}
+            disabled={isLoading}
+          >
+            S'inscrire
+          </LoadingButton>
         </form>
 
         <div className="separator">
@@ -124,6 +176,7 @@ const SignUp = () => {
           <button
             className="google-signin"
             onClick={() => handleSSOSignIn('google')}
+            disabled={isLoading}
           >
             <FontAwesomeIcon icon={faGoogle} />
             Continuer avec Google
@@ -131,6 +184,7 @@ const SignUp = () => {
           <button
             className="github-signin"
             onClick={() => handleSSOSignIn('github')}
+            disabled={isLoading}
           >
             <FontAwesomeIcon icon={faGithub} />
             Continuer avec GitHub

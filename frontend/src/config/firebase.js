@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import {
+    getAuth,
+    GoogleAuthProvider,
+    GithubAuthProvider
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDk5MgY2tcQnVKpahtLYeDtTCU9sdkRqKo",
@@ -12,10 +17,50 @@ const firebaseConfig = {
     measurementId: "G-V7E2GM6QB9"
 };
 
+// Initialisation de Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialisation des services
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
+// Configuration des providers d'authentification
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
-export { auth, db, googleProvider, githubProvider };
+// Configuration additionnelle des providers
+googleProvider.setCustomParameters({
+    prompt: 'select_account'
+});
+
+githubProvider.setCustomParameters({
+    prompt: 'consent'
+});
+
+// Fonction utilitaire pour tester la connexion
+const testConnection = async () => {
+    try {
+        const currentUser = auth.currentUser;
+        console.log('État de la connexion Firebase :', {
+            isInitialized: !!app,
+            currentUser: currentUser ? {
+                uid: currentUser.uid,
+                email: currentUser.email
+            } : null
+        });
+        return true;
+    } catch (error) {
+        console.error('Erreur de connexion Firebase:', error);
+        return false;
+    }
+};
+
+export {
+    auth,
+    db,
+    storage,
+    googleProvider,
+    githubProvider,
+    testConnection
+};
