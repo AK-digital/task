@@ -13,17 +13,6 @@ export async function saveBoard(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    const project = await ProjectModel.findOne({
-      _id: projectId,
-    });
-
-    if (!project) {
-      return res.status(404).send({
-        success: false,
-        message: "Impossible d'ajouter un tableau à un projet qui n'existe pas",
-      });
-    }
-
     const newBoard = new BoardModel({
       projectId: projectId,
       title: title,
@@ -31,17 +20,6 @@ export async function saveBoard(req, res, next) {
     });
 
     const savedBoard = await newBoard.save();
-
-    await ProjectModel.findByIdAndUpdate(
-      {
-        _id: projectId,
-      },
-      {
-        $addToSet: {
-          boards: savedBoard._id,
-        },
-      }
-    );
 
     return res.status(201).send({
       success: true,
