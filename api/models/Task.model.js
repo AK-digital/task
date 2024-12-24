@@ -11,6 +11,10 @@ const taskSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Board",
     },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     text: {
       type: String,
       required: true,
@@ -27,9 +31,33 @@ const taskSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "User",
     },
+    timeTracking: {
+      totalTime: {
+        type: Number, // Temps total passé sur la tâche (en millisecondes)
+        default: 0,
+      },
+      sessions: [
+        {
+          userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+          },
+          startTime: {
+            type: Date, // Début de la session
+          },
+          endTime: {
+            type: Date, // Fin de la session
+          },
+          duration: {
+            type: Number, // Durée en millisecondes
+            default: 0, // Calculé automatiquement si endTime est fourni
+          },
+        },
+      ],
+    },
     status: {
       type: String,
-      enum: ["processing", "pending", "finished"],
+      enum: ["processing", "pending", "finished", "todo", "blocked"],
       default: "pending",
     },
     priority: {
