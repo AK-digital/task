@@ -3,6 +3,7 @@ const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import * as projectMiddlewares from "../middlewares/projectRole.middlewares.js";
 import * as taskControllers from "../controllers/task.controllers.js";
+import { upload } from "../middlewares/multer.middlewares.js";
 
 router.post(
   "/",
@@ -22,6 +23,7 @@ router.put(
   "/:id",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
+  upload.fields([{ name: "medias", maxCount: 20 }]),
   taskControllers.updateTask
 );
 

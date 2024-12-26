@@ -27,6 +27,9 @@ const taskSchema = new Schema(
       minlength: 2,
       maxlength: 1250,
     },
+    files: {
+      type: [String],
+    },
     responsibles: {
       type: [Schema.Types.ObjectId],
       ref: "User",
