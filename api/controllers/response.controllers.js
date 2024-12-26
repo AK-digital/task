@@ -98,14 +98,16 @@ export async function updateResponse(req, res, next) {
 
     const updateFields = {};
     if (message) updateFields.message = message;
-    if (taggedUsers && taggedUsers.length > 0)
-      updateFields.taggedUsers = taggedUsers;
+    if (taggedUsers.length > 0) updateFields.taggedUsers = taggedUsers;
     if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
 
     const updatedResponse = await ResponseModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
-        $set: updateFields,
+        $set: {
+          message: message,
+          taggedUsers: taggedUsers,
+        },
       },
       {
         new: true,
