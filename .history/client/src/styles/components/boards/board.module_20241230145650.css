@@ -1,9 +1,0 @@
-.board {
-    background-color: var(--secondary-background-color);
-    padding: 12px;
-    border-radius: 8px;
-}
-
-.board__title {
-    font-weight: 500;
-}

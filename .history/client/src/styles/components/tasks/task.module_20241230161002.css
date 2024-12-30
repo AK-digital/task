@@ -1,8 +1,0 @@
-.task {
-    display: flex;
-    justify-content: space-between;
-}
-
-.task input {
-    width: 100%;
-}

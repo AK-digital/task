@@ -1,9 +1,0 @@
-.container {
-    display: none;
-}
-
-.container__icon {
-    color: var(--text-color-muted);
-}
-
-.active .container {}
