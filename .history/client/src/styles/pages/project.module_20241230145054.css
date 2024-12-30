@@ -1,0 +1,8 @@
+.project {
+    margin-inline: 120px;
+}
+
+.project__container {
+    display: flex;
+    flex-direction: column;
+}

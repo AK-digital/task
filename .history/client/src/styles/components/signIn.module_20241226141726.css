@@ -1,0 +1,13 @@
+.container {
+    background-color: #30324E;
+    padding: 16px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}

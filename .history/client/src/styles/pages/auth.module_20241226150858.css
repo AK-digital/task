@@ -1,0 +1,17 @@
+.main {
+    /* margin-inline: 80px; */
+    height: 100svh;
+
+}
+
+.container {
+
+    height: 100%;
+    background-color: red;
+}
+
+.left {
+    background-color: blue;
+    width: 400px;
+    height: 100%;
+}

@@ -1,0 +1,11 @@
+.board {
+    background-color: var(--secondary-background-color);
+    padding: 14px 24px;
+    border-radius: 8px;
+}
+
+.board__header {
+    font-weight: 500;
+    padding-bottom: 10px;
+    border-bottom: 1px solid red;
+}

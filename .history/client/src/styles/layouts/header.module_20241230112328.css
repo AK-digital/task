@@ -1,0 +1,10 @@
+.container nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.projects {
+    display: flex;
+    background-color: red;
+    padding-inline: 40px;
+}

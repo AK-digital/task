@@ -1,0 +1,16 @@
+.main {
+    height: 100svh;
+}
+
+.container {
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    height: 100%;
+}
+
+.left {
+    max-width: 400px;
+    width: 400px;
+    height: 100%;
+}

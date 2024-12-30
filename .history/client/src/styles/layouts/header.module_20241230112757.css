@@ -1,0 +1,23 @@
+.container {
+    padding: 10px 5vw;
+    background-color: var(--secondary-background-color);
+    box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+.container nav,
+.projects,
+.user {
+    display: flex;
+    align-items: center;
+}
+
+.container nav {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.projects,
+{
+gap: 20px;
+background-color: red;
+}

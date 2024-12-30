@@ -1,0 +1,11 @@
+.container {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.container__icon {
+    color: var(--text-color-muted);
+}

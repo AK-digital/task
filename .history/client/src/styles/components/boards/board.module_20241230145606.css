@@ -1,0 +1,7 @@
+.board {
+    background-color: var(--secondary-background-color);
+}
+
+.board__title {
+    font-weight: 500;
+}

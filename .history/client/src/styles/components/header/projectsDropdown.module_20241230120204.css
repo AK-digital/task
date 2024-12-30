@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    padding: 6px;
+    border-radius: 4px;
+}
+
+.button span {
+    color: var(--text-color);
+}
+
+.button svg {
+    width: 20px;
+    height: 20px;
+}

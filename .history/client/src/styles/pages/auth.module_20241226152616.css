@@ -1,0 +1,14 @@
+.main {
+    height: 100svh;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.left {
+    max-width: 400px;
+    width: 100%;
+    height: 100%;
+}

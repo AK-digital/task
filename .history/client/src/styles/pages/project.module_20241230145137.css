@@ -1,0 +1,12 @@
+.project {
+    margin-inline: 120px;
+}
+
+.project__container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.project__c

@@ -1,0 +1,9 @@
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task .task__input {
+    width: 100%;
+}

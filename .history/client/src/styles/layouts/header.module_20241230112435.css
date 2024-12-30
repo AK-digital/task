@@ -1,0 +1,15 @@
+.container {
+    padding-inline: 5vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
+}
+
+.container nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.projects {
+    display: flex;
+    gap: 20px;
+}

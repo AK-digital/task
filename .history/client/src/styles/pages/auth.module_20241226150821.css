@@ -1,0 +1,11 @@
+.main {
+    /* margin-inline: 80px; */
+    height: 100svh;
+
+}
+
+.container {
+    display: flex;
+}
+
+.left {}
