@@ -1,4 +1,5 @@
 import styles from "@/styles/components/tasks/task.module.css";
+import TaskDropdown from "./TaskDropdown";
 
 export default function Task({ task }) {
   return (
@@ -10,7 +11,8 @@ export default function Task({ task }) {
       </div>
       {/* Options */}
       <div className={styles["task__options"]}>
-        <div className={styles["task__option"]}>Editer</div>
+        <TaskDropdown current={task?.status} />
+        <TaskDropdown current={task?.priority} />
       </div>
     </li>
   );

@@ -4,6 +4,7 @@
 
 .active {
     display: block;
+    cursor: pointer;
 }
 
 .container__icon {

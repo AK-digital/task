@@ -7,6 +7,18 @@
   --border-color: #3a3d5c;
   --text-color-muted: #656782;
   --text-color: #e0e0e0;
+
+  --pending-color: #6E7389;
+  --processing-color: #FDBC64;
+  --finished-color: #33BB87;
+  --todo-color: #339ECD;
+  --blocked-color: #DC3545;
+
+  --low-color: #79AFFD;
+  --medium-color: #777AE5;
+  --high-color: #6645A9;
+  --urgent-color: #DC3545;
+
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -86,4 +98,13 @@ button:hover {
 
 button[data-disabled="true"] {
   background-color: var(--accent-color-hover);
+}
+
+#overlay-hidden {
+  position: absolute;
+  z-index: 2000;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
