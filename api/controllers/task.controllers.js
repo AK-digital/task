@@ -74,11 +74,11 @@ export async function updateTask(req, res, next) {
     const medias = req.files["medias"];
 
     const allowedStatus = [
-      "processing",
-      "pending",
-      "finished",
-      "todo",
-      "blocked",
+      "En cours",
+      "En attente",
+      "Terminée",
+      "À faire",
+      "Bloquée",
     ];
 
     if (!text && !description && !status && !priority && !deadline) {
@@ -88,11 +88,13 @@ export async function updateTask(req, res, next) {
       });
     }
 
-    if (!allowedStatus.includes(status)) {
-      return res.status(400).send({
-        success: false,
-        message: "Paramètres invalide",
-      });
+    if (status) {
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).send({
+          success: false,
+          message: "Paramètres invalide",
+        });
+      }
     }
 
     const files = [];

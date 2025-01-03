@@ -36,3 +36,68 @@ export async function saveTask(projectId, prevState, formData) {
     );
   }
 }
+
+export async function updateTask(taskId, projectId, prevState, formData) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const data = new FormData();
+
+    const statuses = [
+      "En attente",
+      "À faire",
+      "En cours",
+      "Bloquée",
+      "Terminée",
+    ];
+
+    const priorities = ["Basse", "Moyenne", "Haute", "Urgent"];
+
+    const selectedStatus = statuses.find((status) => formData.get(status));
+    if (selectedStatus) {
+      data.append("status", selectedStatus);
+    }
+
+    const selectedPriority = priorities.find((priority) =>
+      formData.get(priority)
+    );
+    if (selectedPriority) {
+      data.append("priority", selectedPriority);
+    }
+
+    data.append("text", formData.get("text"));
+
+    console.log(data);
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}?projectId=${projectId}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: data, // Utilisez l'objet FormData comme body
+      }
+    );
+
+    const response = await res.json();
+
+    console.log(response);
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("tasks");
+
+    return {
+      status: "success",
+    };
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+  }
+}

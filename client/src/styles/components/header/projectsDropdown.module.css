@@ -51,7 +51,6 @@
 .projects-dropdown__list ul {
     display: flex;
     flex-direction: column;
-
 }
 
 .projects-dropdown__item {
