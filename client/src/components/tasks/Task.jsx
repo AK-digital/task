@@ -16,6 +16,7 @@ const initialState = {
 
 export default function Task({ task }) {
   const updateTaskWithIds = updateTask.bind(null, task?._id, task?.projectId);
+
   const [state, formAction, pending] = useActionState(
     updateTaskWithIds,
     initialState
@@ -39,6 +40,12 @@ export default function Task({ task }) {
     e.preventDefault();
     await deleteTask(task?._id, task?.projectId);
   }
+
+  function handleUpdateDate(e) {
+    formRef.current.requestSubmit();
+  }
+
+  const deadline = task?.deadline?.split("T")[0];
   return (
     <li className={styles["task"]}>
       {/* drag icon*/}
@@ -56,6 +63,7 @@ export default function Task({ task }) {
           </div>
           {/* Options */}
           <div className={styles["task__options"]}>
+            <div className={styles["task__responsibles"]}></div>
             <TaskDropdown
               current={task?.status}
               values={[
@@ -77,8 +85,8 @@ export default function Task({ task }) {
                 type="date"
                 name="deadline"
                 id="deadline"
-                defaultValue={task?.deadline}
-                form={formRef}
+                defaultValue={deadline}
+                onChange={handleUpdateDate}
               />
             </div>
           </div>

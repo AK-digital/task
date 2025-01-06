@@ -30,6 +30,10 @@ export async function saveTask(projectId, prevState, formData) {
     console.log(response);
 
     revalidateTag("tasks");
+
+    return {
+      status: "success",
+    };
   } catch (err) {
     console.log(
       err.message || "Une erreur est survenue lors de la création du tableau"
@@ -67,6 +71,7 @@ export async function updateTask(taskId, projectId, prevState, formData) {
     }
 
     data.append("text", formData.get("text"));
+    data.append("deadline", formData.get("deadline"));
 
     console.log(data);
     const res = await fetch(

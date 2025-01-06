@@ -4,12 +4,7 @@ import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import * as projectMiddlewares from "../middlewares/projectRole.middlewares.js";
 import * as projectControllers from "../controllers/project.controllers.js";
 
-router.post(
-  "/",
-  authMiddlewares.auth,
-  authMiddlewares.authorize,
-  projectControllers.saveProject
-);
+router.post("/", authMiddlewares.auth, projectControllers.saveProject);
 
 router.get("/", authMiddlewares.auth, projectControllers.getProjects);
 

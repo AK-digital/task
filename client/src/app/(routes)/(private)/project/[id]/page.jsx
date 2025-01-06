@@ -6,6 +6,7 @@ import { getProject } from "@/api/project";
 import { instrumentSans } from "@/utils/font";
 import { getTasks } from "@/api/task";
 import AddBoard from "@/components/Boards/AddBoard";
+import ProjectsOption from "@/components/Projects/ProjectsOption";
 
 export default async function Project({ params }) {
   const { id } = await params;
@@ -19,13 +20,15 @@ export default async function Project({ params }) {
         <div className={styles["project__header"]}>
           <span className={styles["project__name"]}>{project?.name}</span>
           <div className={styles["project__options"]}>
-            <button className={instrumentSans.className}>
-              Gérer les invités
-            </button>
+            <ProjectsOption
+              content={"Gérer les invités"}
+              projectId={project?._id}
+            />
             |
-            <button className={instrumentSans.className}>
-              Supprimer le projet
-            </button>
+            <ProjectsOption
+              content={"Supprimer le projet"}
+              projectId={project?._id}
+            />
           </div>
         </div>
         {/* Boards */}

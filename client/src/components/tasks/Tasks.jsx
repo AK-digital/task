@@ -3,7 +3,7 @@ import styles from "@/styles/components/tasks/tasks.module.css";
 import Task from "./Task";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { saveTask } from "@/actions/task";
 
 const initialState = {
@@ -19,7 +19,12 @@ export default function Tasks({ tasks, projectId, boardId }) {
     saveTaskWithProjectId,
     initialState
   );
+
   const [isWritting, setIsWritting] = useState(false);
+
+  useEffect(() => {
+    if (state?.status === "success") setIsWritting(false);
+  }, [state]);
   return (
     <div className={styles["tasks"]}>
       <ul className={styles["tasks__list"]}>

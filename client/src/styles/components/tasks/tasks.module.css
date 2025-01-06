@@ -3,8 +3,7 @@
 .tasks ul {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-
+    /* gap: 8px; */
 }
 
 .tasks li form {
@@ -19,6 +18,7 @@
 
 .task__add {
     max-width: 700px;
+    margin-top: 4px;
 }
 
 .tasks__info {

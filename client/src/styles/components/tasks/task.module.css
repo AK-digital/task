@@ -1,5 +1,5 @@
 .task {
-    border: 1px solid var(--border-color);
+    /* border: 1px solid var(--border-color); */
     padding: 4px;
     border-radius: 4px;
     transition: 200ms all linear;

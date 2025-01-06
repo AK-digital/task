@@ -16,11 +16,6 @@ export default async function Header() {
         <div>
           <span>Täsk</span>
         </div>
-        {/* Project list */}
-        <div className={styles.projects}>
-          <ProjectsDropdown projects={projects} />
-          <CreateProject />
-        </div>
         {/* user */}
         <div className={styles.user}>
           <UserInfo />

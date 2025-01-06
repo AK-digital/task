@@ -52,8 +52,6 @@ export async function getTasks(req, res, next) {
       });
     }
 
-    console.log(tasks);
-
     return res.status(200).send({
       success: true,
       message: "Tâches trouvées",

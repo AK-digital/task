@@ -9,17 +9,17 @@ import TaskModel from "../models/Task.model.js";
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
   try {
-    const { userId } = req.query; // Important to check if an user is trying to post on the behalf of the user
+    const authUser = res.locals.user;
     const { name } = req.body;
 
-    if (!userId || !name) {
+    if (!name) {
       return res
         .status(400)
         .send({ success: false, message: "Paramètres manquants" });
     }
 
     const newProject = new ProjectModel({
-      author: userId,
+      author: authUser?._id,
       name: name,
     });
 
@@ -165,6 +165,7 @@ export async function deleteProject(req, res, next) {
     // Cascade delete related boards and tasks
     await BoardModel.deleteMany({ projectId: deletedProject?._id });
     await TaskModel.deleteMany({ projectId: deletedProject?._id });
+    await ProjectModel.findByIdAndDelete({ _id: req.params.id });
 
     return res.status(200).send({
       success: true,
