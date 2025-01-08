@@ -73,7 +73,6 @@ export async function updateTask(taskId, projectId, prevState, formData) {
     data.append("text", formData.get("text"));
     data.append("deadline", formData.get("deadline"));
 
-    console.log(data);
     const res = await fetch(
       `${process.env.API_URL}/task/${taskId}?projectId=${projectId}`,
       {
@@ -87,8 +86,6 @@ export async function updateTask(taskId, projectId, prevState, formData) {
     );
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response.success) {
       throw new Error(response?.message);
@@ -104,5 +101,9 @@ export async function updateTask(taskId, projectId, prevState, formData) {
       err.message ||
         "Une erreur est survenue lors de la récupération des projets"
     );
+
+    return {
+      status: "failure",
+    };
   }
 }

@@ -1,13 +1,16 @@
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function TaskDropdown({ current, values, form }) {
+export default function TaskDropdown({ current, values, form, state }) {
+  const [optimisticCurrent, setOptimisticCurrent] = useState(current);
   const [isOpen, setIsOpen] = useState(false);
 
   async function handleUpdateTask(e) {
     e.preventDefault();
     const value = e.target.dataset.value;
+
+    setOptimisticCurrent(value);
 
     const input = document.createElement("input");
     input.type = "text";
@@ -27,14 +30,21 @@ export default function TaskDropdown({ current, values, form }) {
     }
   }
 
+  useEffect(() => {
+    // If form state status is failure then rollback the value of optimisticCurrent
+    if (state.status === "failure") {
+      setOptimisticCurrent(current);
+    }
+  }, [state]);
+
   return (
     <div className={styles["dropdown"]}>
       <div
         className={styles["dropdown-current"]}
-        data-current={current}
+        data-current={optimisticCurrent}
         onClick={(e) => setIsOpen(!isOpen)}
       >
-        <span>{current}</span>
+        <span>{optimisticCurrent}</span>
       </div>
       {isOpen && (
         <div className={styles["dropdown-list"]}>

@@ -85,12 +85,14 @@ export default function Task({ task }) {
                 "Terminée",
               ]}
               form={formRef}
+              state={state}
             />
             {/* Priority */}
             <TaskDropdown
               current={task?.priority}
               values={["Basse", "Moyenne", "Haute", "Urgent"]}
               form={formRef}
+              state={state}
             />
             {/* Deadline */}
             <div className={styles["task__deadline"]}>
