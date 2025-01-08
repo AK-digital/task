@@ -42,11 +42,10 @@ export async function updateBoard(boardId, projectId, prevState, formData) {
     const cookie = await cookies();
     const session = cookie.get("session");
 
-    console.log(formData.get("title"));
+    const rawFormData = {};
 
-    const rawFormData = {
-      title: formData.get("title"),
-    };
+    if (formData.get("title")) rawFormData.title = formData.get("title");
+    if (formData.get("color")) rawFormData.color = formData.get("color");
 
     const res = await fetch(
       `${process.env.API_URL}/board/${boardId}?projectId=${projectId}`,

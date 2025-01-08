@@ -10,7 +10,7 @@
     width: 100%;
 }
 
-.tasks li {
+.tasks .task__add {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -19,6 +19,10 @@
 .task__add {
     max-width: 700px;
     margin-top: 4px;
+}
+
+.task__add form {
+    width: 100%;
 }
 
 .tasks__info {

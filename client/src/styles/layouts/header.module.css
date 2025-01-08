@@ -1,6 +1,6 @@
 .container {
     position: fixed;
-    z-index: 2000;
+    z-index: 2001;
     padding: 10px 5vw;
     width: 100%;
     background-color: var(--secondary-background-color);

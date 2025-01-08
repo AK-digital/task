@@ -25,13 +25,14 @@ export default function Tasks({ tasks, projectId, boardId }) {
   useEffect(() => {
     if (state?.status === "success") setIsWritting(false);
   }, [state]);
+
   return (
     <div className={styles["tasks"]}>
-      <ul className={styles["tasks__list"]}>
+      <div className={styles["tasks__list"]}>
         {tasks?.map((task) => {
           return <Task task={task} key={task?._id} />;
         })}
-        <li className={styles["task__add"]}>
+        <div className={styles["task__add"]}>
           <FontAwesomeIcon icon={faPlus} />
           <form action={formAction}>
             <input
@@ -58,8 +59,8 @@ export default function Tasks({ tasks, projectId, boardId }) {
               Ajouter une tâche
             </button>
           </form>
-        </li>
-      </ul>
+        </div>
+      </div>
       {isWritting && (
         <div className={styles["tasks__info"]}>
           <p>

@@ -31,7 +31,7 @@
 html,
 body {
   max-width: 100vw;
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
 }
 
 body {
@@ -123,4 +123,36 @@ button[data-disabled="true"] {
   height: 100%;
   top: 0;
   left: 0;
+}
+
+/* QUILL STYLES */
+
+.ql-toolbar.ql-snow {
+  border-bottom: inherit !important;
+  border-color: var(--border-color) !important;
+  border-radius: 4px 4px 0 0 !important;
+  margin-bottom: -14px;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label {
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+}
+
+
+.ql-snow.ql-toolbar button svg {
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+}
+
+.ql-editor.ql-blank:before {
+  color: var(--text-color) !important;
+  font-style: normal !important;
+}
+
+.ql-container.ql-snow {
+  border-color: var(--border-color) !important;
+  border-radius: 0 0 4px 4px !important;
+  color: var(--text-color) !important;
+  background-color: var(--secondary-background-color) !important;
+  height: 100px;
+  cursor: text;
 }

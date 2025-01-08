@@ -9,7 +9,13 @@ export default async function Board({ projectId, board }) {
   const tasks = await getTasks(projectId, board?._id);
 
   return (
-    <div className={styles["board"]} data-board={board?._id}>
+    <div
+      className={styles["board"]}
+      data-board={board?._id}
+      style={{
+        boxShadow: `-2px 0 0 ${board?.color}`,
+      }}
+    >
       {/* Board title */}
       <div className={styles["board__header"]}>
         <UpdateBoard board={board} projectId={projectId} />

@@ -43,6 +43,16 @@
     gap: 8px;
 }
 
+.task__modal {
+    display: flex;
+    align-items: center;
+    margin-right: -8px;
+}
+
+.task__modal svg {
+    height: 25px;
+}
+
 .task:hover .task__remove {
     position: relative;
     right: 12px;

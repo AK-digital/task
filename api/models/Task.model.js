@@ -18,7 +18,6 @@ const taskSchema = new Schema(
     text: {
       type: String,
       required: true,
-      unique: true,
       minlength: 2,
       maxlength: 255,
     },

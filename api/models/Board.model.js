@@ -13,6 +13,7 @@ const boardSchema = new Schema(
     },
     color: {
       type: String,
+      default: "#ffff",
     },
   },
   {

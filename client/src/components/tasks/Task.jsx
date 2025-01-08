@@ -4,8 +4,9 @@ import { deleteTask } from "@/api/task";
 import { useActionState, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faMessage, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { updateTask } from "@/actions/task";
+import TaskMore from "./TaskMore";
 
 const initialState = {
   status: "pending",
@@ -15,6 +16,7 @@ const initialState = {
 };
 
 export default function Task({ task }) {
+  const [taskMore, setTaskMore] = useState(false);
   const updateTaskWithIds = updateTask.bind(null, task?._id, task?.projectId);
 
   const [state, formAction, pending] = useActionState(
@@ -47,7 +49,7 @@ export default function Task({ task }) {
 
   const deadline = task?.deadline?.split("T")[0];
   return (
-    <li className={styles["task"]}>
+    <div className={styles["task"]}>
       {/* drag icon*/}
       <form action={formAction} ref={formRef} className={styles["task__form"]}>
         {/* input */}
@@ -61,9 +63,18 @@ export default function Task({ task }) {
               onChange={handleChange}
             />
           </div>
-          {/* Options */}
+          {/* Task options */}
           <div className={styles["task__options"]}>
+            {/* Open task */}
+            <div
+              className={styles["task__modal"]}
+              onClick={(e) => setTaskMore(true)}
+            >
+              <FontAwesomeIcon icon={faMessage} />
+            </div>
+            {/* Responsibles */}
             <div className={styles["task__responsibles"]}></div>
+            {/* Status */}
             <TaskDropdown
               current={task?.status}
               values={[
@@ -75,11 +86,13 @@ export default function Task({ task }) {
               ]}
               form={formRef}
             />
+            {/* Priority */}
             <TaskDropdown
               current={task?.priority}
               values={["Basse", "Moyenne", "Haute", "Urgent"]}
               form={formRef}
             />
+            {/* Deadline */}
             <div className={styles["task__deadline"]}>
               <input
                 type="date"
@@ -95,6 +108,7 @@ export default function Task({ task }) {
           <FontAwesomeIcon icon={faTrash} onClick={handleDeleteTask} />
         </div>
       </form>
-    </li>
+      {taskMore && <TaskMore task={task} setTaskMore={setTaskMore} />}
+    </div>
   );
 }

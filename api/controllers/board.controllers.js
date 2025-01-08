@@ -83,7 +83,8 @@ export async function updateBoard(req, res, next) {
           title: title,
           color: color,
         },
-      }
+      },
+      { new: true, setDefaultsOnInsert: true }
     );
 
     if (!updatedBoard) {
