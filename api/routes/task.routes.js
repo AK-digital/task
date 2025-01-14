@@ -19,12 +19,40 @@ router.get(
   taskControllers.getTasks
 );
 
-router.put(
-  "/:id",
+router.patch(
+  "/:id/text",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.updateTaskText
+);
+
+router.patch(
+  "/:id/status",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.updateTaskStatus
+);
+
+router.patch(
+  "/:id/priority",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.updateTaskPriority
+);
+
+router.patch(
+  "/:id/deadline",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.updateTaskDeadline
+);
+
+router.patch(
+  "/:id/description",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
   upload.fields([{ name: "medias", maxCount: 20 }]),
-  taskControllers.updateTask
+  taskControllers.updateTaskDescription
 );
 
 router.delete(

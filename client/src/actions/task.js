@@ -72,6 +72,7 @@ export async function updateTask(taskId, projectId, prevState, formData) {
 
     data.append("text", formData.get("text"));
     data.append("deadline", formData.get("deadline"));
+    data.append("description");
 
     const res = await fetch(
       `${process.env.API_URL}/task/${taskId}?projectId=${projectId}`,
@@ -104,6 +105,177 @@ export async function updateTask(taskId, projectId, prevState, formData) {
 
     return {
       status: "failure",
+    };
+  }
+}
+
+// Update the text of a given task
+export async function updateTaskText(taskId, projectId, prevState, formData) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const text = formData.get("text");
+
+    if (!text) {
+      throw new Error("Paramètres manquants");
+    }
+
+    const rawData = {
+      text: text,
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/text?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("tasks");
+
+    return {
+      status: "success",
+    };
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+
+    return {
+      status: "failure",
+      message: err?.message,
+    };
+  }
+}
+
+// Update the status of a given task
+export async function updateTaskStatus(taskId, projectId, prevState, formData) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const status = formData.get("status");
+
+    const allowedStatus = [
+      "En attente",
+      "À faire",
+      "En cours",
+      "Bloquée",
+      "Terminée",
+    ];
+
+    if (!allowedStatus.includes(status)) throw new Error("Paramètre invalide");
+
+    const rawData = {
+      status: status,
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/status?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("tasks");
+
+    return {
+      status: "success",
+    };
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+
+    return {
+      status: "failure",
+      message: err?.message,
+    };
+  }
+}
+
+export async function updateTaskPriority(
+  taskId,
+  projectId,
+  prevState,
+  formData
+) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const priority = formData.get("priority");
+
+    const allowedPriorities = ["Basse", "Moyenne", "Haute", "Urgent"];
+
+    if (!allowedPriorities.includes(priority)) {
+      throw new Error("Paramètre invalide");
+    }
+
+    const rawData = {
+      priority: priority,
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/priority?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("tasks");
+
+    return {
+      status: "success",
+    };
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+
+    return {
+      status: "failure",
+      message: err?.message,
     };
   }
 }

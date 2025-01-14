@@ -38,13 +38,14 @@ export default function TaskMore({ task, setTaskMore }) {
         ) : (
           <RichTextEditor
             placeholder={"Ajouter une description à cette tâche"}
+            type="description"
           />
         )}
       </div>
       {/* Conversation */}
       <div className={styles["task-more__conversation"]}>
         <span>Conversation</span>
-        <RichTextEditor placeholder={"Écrire un message"} />
+        <RichTextEditor placeholder={"Écrire un message"} type="conversation" />
       </div>
     </div>
   );

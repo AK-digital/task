@@ -66,54 +66,23 @@ export async function getTasks(req, res, next) {
 }
 
 // Only authors and guets will be able to update the tasks
-export async function updateTask(req, res, next) {
+export async function updateTaskText(req, res, next) {
   try {
-    const { text, description, status, priority, deadline } = req.body;
-    const medias = req.files["medias"];
+    const { text } = req.body;
 
-    const allowedStatus = [
-      "En cours",
-      "En attente",
-      "Terminée",
-      "À faire",
-      "Bloquée",
-    ];
-
-    if (!text && !description && !status && !priority && !deadline) {
+    if (!text) {
       return res.status(400).send({
         success: false,
         message: "Paramètres manquants",
       });
     }
 
-    if (status) {
-      if (!allowedStatus.includes(status)) {
-        return res.status(400).send({
-          success: false,
-          message: "Paramètres invalide",
-        });
-      }
-    }
-
-    const files = [];
-    if (medias) {
-      for (const media of medias) {
-        files.push(media.filename);
-      }
-    }
-
-    const updateFields = {};
-    if (text) updateFields.text = text;
-    if (description) updateFields.description = description;
-    if (status) updateFields.status = status;
-    if (priority) updateFields.priority = priority;
-    if (deadline) updateFields.deadline = deadline;
-    if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
-
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
-        $set: updateFields,
+        $set: {
+          text: text,
+        },
       },
       {
         new: true,
@@ -141,15 +110,223 @@ export async function updateTask(req, res, next) {
   }
 }
 
-// export async function addTaskFields(req, res, next) {
-//   try {
-//   } catch (error) {
-//     return res.status(500).send({
-//       success: false,
-//       message: err.message || "Une erreur inattendue est survenue",
-//     });
-//   }
-// }
+export async function updateTaskStatus(req, res, next) {
+  try {
+    const { status } = req.body;
+
+    const allowedStatus = [
+      "En cours",
+      "En attente",
+      "Terminée",
+      "À faire",
+      "Bloquée",
+    ];
+
+    if (!status) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    if (status) {
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).send({
+          success: false,
+          message: "Paramètres invalide",
+        });
+      }
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          status: status,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de modifier le status d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Status modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTaskPriority(req, res, next) {
+  try {
+    const { priority } = req.body;
+
+    const allowedPriority = ["Basse", "Moyenne", "Haute", "Urgent"];
+
+    if (!priority) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    if (priority) {
+      if (!allowedPriority.includes(priority)) {
+        return res.status(400).send({
+          success: false,
+          message: "Paramètres invalide",
+        });
+      }
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          priority: priority,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de modifier la priorité d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Priorité modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTaskDeadline(req, res, next) {
+  try {
+    const { deadline } = req.body;
+
+    if (!deadline) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          deadline: deadline,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de modifier la deadline d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Deadline modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTaskDescription(req, res, next) {
+  try {
+    const { description } = req.body;
+    const medias = req.files["medias"];
+
+    if (!description) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const files = [];
+    if (medias) {
+      for (const media of medias) {
+        files.push(media.filename);
+      }
+    }
+
+    const updateFields = {};
+    if (description) updateFields.description = description;
+    if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: updateFields,
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de modifier la description d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Description modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
 
 // Only authors and guets will be able to delete the tasks
 export async function deleteTask(req, res, next) {

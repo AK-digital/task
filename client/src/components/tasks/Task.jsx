@@ -1,12 +1,13 @@
 import styles from "@/styles/components/tasks/task.module.css";
-import TaskDropdown from "./TaskDropdown";
 import { deleteTask } from "@/api/task";
 import { useActionState, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { updateTask } from "@/actions/task";
+import { updateTaskText } from "@/actions/task";
 import TaskMore from "./TaskMore";
+import TaskStatus from "./TaskStatus";
+import TaskPriority from "./TaskPriority";
 
 const initialState = {
   status: "pending",
@@ -17,10 +18,14 @@ const initialState = {
 
 export default function Task({ task }) {
   const [taskMore, setTaskMore] = useState(false);
-  const updateTaskWithIds = updateTask.bind(null, task?._id, task?.projectId);
+  const updateTaskTextWithIds = updateTaskText.bind(
+    null,
+    task?._id,
+    task?.projectId
+  );
 
   const [state, formAction, pending] = useActionState(
-    updateTaskWithIds,
+    updateTaskTextWithIds,
     initialState
   );
   const formRef = useRef(null);
@@ -51,10 +56,11 @@ export default function Task({ task }) {
   return (
     <div className={styles["task"]}>
       {/* drag icon*/}
-      <form action={formAction} ref={formRef} className={styles["task__form"]}>
-        {/* input */}
-        <div className={styles["task__left"]}>
-          <div className={styles["task__input"]}>
+
+      {/* input */}
+      <div className={styles["task__left"]}>
+        <div className={styles["task__input"]}>
+          <form action={formAction} ref={formRef}>
             <input
               type="text"
               name="text"
@@ -62,54 +68,42 @@ export default function Task({ task }) {
               value={inputValue}
               onChange={handleChange}
             />
+            <button type="submit" hidden>
+              Envoyé
+            </button>
+          </form>
+        </div>
+        {/* Task options */}
+        <div className={styles["task__options"]}>
+          {/* Open task */}
+          <div
+            className={styles["task__modal"]}
+            onClick={(e) => setTaskMore(true)}
+          >
+            <FontAwesomeIcon icon={faMessage} />
           </div>
-          {/* Task options */}
-          <div className={styles["task__options"]}>
-            {/* Open task */}
-            <div
-              className={styles["task__modal"]}
-              onClick={(e) => setTaskMore(true)}
-            >
-              <FontAwesomeIcon icon={faMessage} />
-            </div>
-            {/* Responsibles */}
-            <div className={styles["task__responsibles"]}></div>
-            {/* Status */}
-            <TaskDropdown
-              current={task?.status}
-              values={[
-                "En attente",
-                "À faire",
-                "En cours",
-                "Bloquée",
-                "Terminée",
-              ]}
-              form={formRef}
-              state={state}
+          {/* Responsibles */}
+          <div className={styles["task__responsibles"]}></div>
+          {/* Status */}
+          <TaskStatus task={task} />
+          {/* Priority */}
+          <TaskPriority task={task} />
+          {/* Deadline */}
+          <div className={styles["task__deadline"]}>
+            <input
+              type="date"
+              name="deadline"
+              id="deadline"
+              defaultValue={deadline}
+              onChange={handleUpdateDate}
             />
-            {/* Priority */}
-            <TaskDropdown
-              current={task?.priority}
-              values={["Basse", "Moyenne", "Haute", "Urgent"]}
-              form={formRef}
-              state={state}
-            />
-            {/* Deadline */}
-            <div className={styles["task__deadline"]}>
-              <input
-                type="date"
-                name="deadline"
-                id="deadline"
-                defaultValue={deadline}
-                onChange={handleUpdateDate}
-              />
-            </div>
           </div>
         </div>
-        <div className={styles["task__remove"]}>
-          <FontAwesomeIcon icon={faTrash} onClick={handleDeleteTask} />
-        </div>
-      </form>
+      </div>
+      <div className={styles["task__remove"]}>
+        <FontAwesomeIcon icon={faTrash} onClick={handleDeleteTask} />
+      </div>
+
       {taskMore && <TaskMore task={task} setTaskMore={setTaskMore} />}
     </div>
   );
