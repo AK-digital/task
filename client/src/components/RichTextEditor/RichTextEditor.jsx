@@ -1,6 +1,6 @@
 "use client";
 import { instrumentSans } from "@/utils/font";
-import Quill from "quill";
+// import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { useEffect, useRef, useState } from "react";
 

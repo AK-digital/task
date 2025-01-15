@@ -238,6 +238,21 @@ export async function refreshAccessToken(req, res, next) {
           const newAccessToken = generateAccessToken(user);
           const newRefreshToken = generateRefreshToken(user);
 
+          await RefreshTokenModel.findOneAndUpdate(
+            {
+              refreshToken: token,
+            },
+            {
+              $set: {
+                refreshToken: newRefreshToken,
+              },
+            },
+            {
+              new: true,
+              setDefaultsOnInsert: true,
+            }
+          );
+
           return res.status(200).send({
             success: true,
             message: "Les tokens ont été rafraîchis avec succès",

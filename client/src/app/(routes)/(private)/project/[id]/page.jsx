@@ -3,8 +3,6 @@ import styles from "@/styles/pages/project.module.css";
 import { getBoards } from "@/api/board";
 import Boards from "@/components/Boards/Boards";
 import { getProject } from "@/api/project";
-import { instrumentSans } from "@/utils/font";
-import { getTasks } from "@/api/task";
 import AddBoard from "@/components/Boards/AddBoard";
 import ProjectsOption from "@/components/Projects/ProjectsOption";
 

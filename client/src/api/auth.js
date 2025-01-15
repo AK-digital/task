@@ -62,8 +62,6 @@ export async function refreshToken(token) {
       token: token,
     };
 
-    console.log(token, "putain");
-
     const res = await fetch(`${process.env.API_URL}/auth/refresh-token`, {
       method: "POST",
       credentials: "include",
@@ -74,8 +72,6 @@ export async function refreshToken(token) {
     });
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response.success) {
       throw new Error(response?.message);
@@ -103,7 +99,7 @@ export async function refreshToken(token) {
 
     const newSessionToken = cookie.get("session");
 
-    console.log("tokens refreshed :", response.data);
+    console.log("tokens refreshed :", response);
 
     return await decryptToken(newSessionToken);
   } catch (err) {

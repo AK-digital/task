@@ -19,7 +19,7 @@ export async function auth(req, res, next) {
 
     // If yes that means that the given token is black listed then return a 403 error
     if (isTokenBlackListed) {
-      return res.status(401).send({
+      return res.status(403).send({
         success: false,
         message: "Accès refusé : Le token reçu est dans la liste noire",
       });

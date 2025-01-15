@@ -1,7 +1,6 @@
 "use server";
 import styles from "@/styles/components/boards/boards.module.css";
 import Board from "./Board";
-import AddBoard from "./AddBoard";
 
 export default async function Boards({ projectId, boards }) {
   return (

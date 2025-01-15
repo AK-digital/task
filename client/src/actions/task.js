@@ -221,6 +221,7 @@ export async function updateTaskStatus(taskId, projectId, prevState, formData) {
   }
 }
 
+// Update the priority of a given task
 export async function updateTaskPriority(
   taskId,
   projectId,
@@ -261,6 +262,63 @@ export async function updateTaskPriority(
     if (!response.success) {
       throw new Error(response?.message);
     }
+
+    revalidateTag("tasks");
+
+    return {
+      status: "success",
+    };
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+
+    return {
+      status: "failure",
+      message: err?.message,
+    };
+  }
+}
+
+export async function updateTaskDeadline(
+  taskId,
+  projectId,
+  prevState,
+  formData
+) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const deadline = formData.get("deadline");
+
+    if (!deadline) throw new Error("Paramètre manquant");
+
+    const rawData = {
+      deadline: deadline,
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/deadline?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    console.log(response);
 
     revalidateTag("tasks");
 

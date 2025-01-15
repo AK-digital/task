@@ -10,26 +10,29 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  const { data, error, isLoading } = useSWR("/auth/session", getSession, {
+  const { error } = useSWR("/auth/session", getSession, {
     onSuccess: (data, key, config) => {
-      // console.log(data);
-      if (!data?.success) {
+      const response = data;
+
+      // If get session failed then redirect the user to the login page
+      if (!response?.success) {
         router.push(`/auth`);
       }
 
-      if (uid === null) setUid(data?.data?._id);
-      if (user === null) setUser(data?.data);
+      // Prevents state mutation if null
+      if (uid === null) setUid(response?.data?._id);
+      if (user === null) setUser(response?.data);
     },
     refreshInterval: 15 * 60 * 1000, // Refresh every 15 minutes
-    revalidateOnMount: true,
-    revalidateOnFocus: true,
-    refreshWhenHidden: true,
+    revalidateOnMount: true, // Revalidate everytime componenets are mounted
+    revalidateOnFocus: true, // Revalidate everytime the user focus the page
+    refreshWhenHidden: true, // The request will be refreshed even if the user is not on the page
   });
 
   // Returns to auth page
-  // if(error) {
-
-  // }
+  if (error) {
+    router.push(`/auth`);
+  }
 
   return (
     <AuthContext.Provider value={{ uid, setUid, user, setUser }}>

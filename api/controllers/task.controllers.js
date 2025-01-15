@@ -43,7 +43,12 @@ export async function getTasks(req, res, next) {
   try {
     const boardId = req.query.boardId;
 
-    const tasks = await TaskModel.find({ boardId: boardId });
+    const tasks = await TaskModel.find({ boardId: boardId })
+      .populate({
+        path: "responsibles",
+        select: "-password -role", // Exclure le champ `password` des responsibles
+      })
+      .exec();
 
     if (tasks.length <= 0) {
       return res.status(404).send({

@@ -1,109 +1,47 @@
 import styles from "@/styles/components/tasks/task.module.css";
-import { deleteTask } from "@/api/task";
-import { useActionState, useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMessage, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { updateTaskText } from "@/actions/task";
+import { faListUl, faMessage } from "@fortawesome/free-solid-svg-icons";
 import TaskMore from "./TaskMore";
 import TaskStatus from "./TaskStatus";
 import TaskPriority from "./TaskPriority";
-
-const initialState = {
-  status: "pending",
-  payload: null,
-  message: "",
-  errors: null,
-};
+import TaskDeadline from "./TaskDeadline";
+import TaskText from "./TaskText";
+import TaskRemove from "./TaskRemove";
+import TaskResponsibles from "./TaskResponsibles";
 
 export default function Task({ task }) {
+  const [isHover, setIsHover] = useState(false);
   const [taskMore, setTaskMore] = useState(false);
-  const updateTaskTextWithIds = updateTaskText.bind(
-    null,
-    task?._id,
-    task?.projectId
-  );
 
-  const [state, formAction, pending] = useActionState(
-    updateTaskTextWithIds,
-    initialState
-  );
-  const formRef = useRef(null);
-  const [inputValue, setInputValue] = useState(task?.text || "");
-
-  // Créer un callback avec un délai de 300ms
-  const debouncedUpdateTask = useDebouncedCallback(async (value) => {
-    formRef.current.requestSubmit();
-  }, 600);
-
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-
-    debouncedUpdateTask(value);
-  };
-
-  async function handleDeleteTask(e) {
-    e.preventDefault();
-    await deleteTask(task?._id, task?.projectId);
-  }
-
-  function handleUpdateDate(e) {
-    formRef.current.requestSubmit();
-  }
-
-  const deadline = task?.deadline?.split("T")[0];
   return (
-    <div className={styles["task"]}>
-      {/* drag icon*/}
-
-      {/* input */}
-      <div className={styles["task__left"]}>
-        <div className={styles["task__input"]}>
-          <form action={formAction} ref={formRef}>
-            <input
-              type="text"
-              name="text"
-              id="text"
-              value={inputValue}
-              onChange={handleChange}
-            />
-            <button type="submit" hidden>
-              Envoyé
-            </button>
-          </form>
+    <div
+      className={styles["task"]}
+      onMouseEnter={(e) => setIsHover(true)}
+      onMouseLeave={(e) => setIsHover(false)}
+    >
+      <div className={styles["task__content"]}>
+        <FontAwesomeIcon icon={faListUl} />
+        {/* Task text */}
+        <TaskText task={task} />
+        {/* Open task */}
+        <div
+          className={styles["task__modal"]}
+          onClick={(e) => setTaskMore(true)}
+        >
+          <FontAwesomeIcon icon={faMessage} />
         </div>
-        {/* Task options */}
-        <div className={styles["task__options"]}>
-          {/* Open task */}
-          <div
-            className={styles["task__modal"]}
-            onClick={(e) => setTaskMore(true)}
-          >
-            <FontAwesomeIcon icon={faMessage} />
-          </div>
-          {/* Responsibles */}
-          <div className={styles["task__responsibles"]}></div>
-          {/* Status */}
-          <TaskStatus task={task} />
-          {/* Priority */}
-          <TaskPriority task={task} />
-          {/* Deadline */}
-          <div className={styles["task__deadline"]}>
-            <input
-              type="date"
-              name="deadline"
-              id="deadline"
-              defaultValue={deadline}
-              onChange={handleUpdateDate}
-            />
-          </div>
-        </div>
+        {/* Responsibles */}
+        <TaskResponsibles task={task} />
+        {/* Status */}
+        <TaskStatus task={task} />
+        {/* Priority */}
+        <TaskPriority task={task} />
+        {/* Deadline */}
+        <TaskDeadline task={task} />
       </div>
-      <div className={styles["task__remove"]}>
-        <FontAwesomeIcon icon={faTrash} onClick={handleDeleteTask} />
-      </div>
-
+      {/* Task remove icon */}
+      {isHover && <TaskRemove task={task} />}
       {taskMore && <TaskMore task={task} setTaskMore={setTaskMore} />}
     </div>
   );
