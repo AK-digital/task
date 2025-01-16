@@ -4,7 +4,8 @@ import { getBoards } from "@/api/board";
 import Boards from "@/components/Boards/Boards";
 import { getProject } from "@/api/project";
 import AddBoard from "@/components/Boards/AddBoard";
-import ProjectsOption from "@/components/Projects/ProjectsOption";
+import ProjectDelete from "@/components/Projects/ProjectDelete";
+import ProjectGuests from "@/components/Projects/ProjectGuests";
 
 export default async function Project({ params }) {
   const { id } = await params;
@@ -12,21 +13,15 @@ export default async function Project({ params }) {
   const boards = await getBoards(id);
 
   return (
-    <main className={styles["project"]}>
-      <div className={styles["project__container"]}>
+    <main className={styles.main}>
+      <div className={styles.container}>
         {/* Project Header */}
-        <div className={styles["project__header"]}>
-          <span className={styles["project__name"]}>{project?.name}</span>
-          <div className={styles["project__options"]}>
-            <ProjectsOption
-              content={"Gérer les invités"}
-              projectId={project?._id}
-            />
+        <div className={styles.header}>
+          <span className={styles.name}>{project?.name}</span>
+          <div className={styles.options}>
+            <ProjectGuests project={project} />
             |
-            <ProjectsOption
-              content={"Supprimer le projet"}
-              projectId={project?._id}
-            />
+            <ProjectDelete project={project} />
           </div>
         </div>
         {/* Boards */}
