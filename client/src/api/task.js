@@ -68,3 +68,85 @@ export async function deleteTask(taskId, projectId) {
     );
   }
 }
+
+export async function addResponsible(taskId, responsibleId, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const rawData = {
+      responsibleId: responsibleId,
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/add-responsible?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify(rawData),
+      }
+    );
+
+    const response = await res.json();
+
+    console.log(response);
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("project");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des tableaux"
+    );
+  }
+}
+
+export async function removeResponsible(taskId, responsibleId, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const rawData = {
+      responsibleId: responsibleId,
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/remove-responsible?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify(rawData),
+      }
+    );
+
+    const response = await res.json();
+
+    console.log(response);
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("project");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des tableaux"
+    );
+  }
+}

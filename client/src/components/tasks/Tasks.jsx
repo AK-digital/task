@@ -13,8 +13,8 @@ const initialState = {
   errors: null,
 };
 
-export default function Tasks({ tasks, projectId, boardId }) {
-  const saveTaskWithProjectId = saveTask.bind(null, projectId);
+export default function Tasks({ tasks, project, boardId }) {
+  const saveTaskWithProjectId = saveTask.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
     saveTaskWithProjectId,
     initialState
@@ -30,7 +30,7 @@ export default function Tasks({ tasks, projectId, boardId }) {
     <div className={styles["tasks"]}>
       <div className={styles["tasks__list"]}>
         {tasks?.map((task) => {
-          return <Task task={task} key={task?._id} />;
+          return <Task task={task} project={project} key={task?._id} />;
         })}
         <div className={styles["task__add"]}>
           <FontAwesomeIcon icon={faPlus} />

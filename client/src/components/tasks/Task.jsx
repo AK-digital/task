@@ -10,7 +10,7 @@ import TaskText from "./TaskText";
 import TaskRemove from "./TaskRemove";
 import TaskResponsibles from "./TaskResponsibles";
 
-export default function Task({ task }) {
+export default function Task({ task, project }) {
   const [isHover, setIsHover] = useState(false);
   const [taskMore, setTaskMore] = useState(false);
 
@@ -32,7 +32,7 @@ export default function Task({ task }) {
           <FontAwesomeIcon icon={faMessage} />
         </div>
         {/* Responsibles */}
-        <TaskResponsibles task={task} />
+        <TaskResponsibles task={task} project={project} />
         {/* Status */}
         <TaskStatus task={task} />
         {/* Priority */}

@@ -25,7 +25,9 @@ export default async function Project({ params }) {
           </div>
         </div>
         {/* Boards */}
-        {boards?.length > 0 && <Boards projectId={id} boards={boards} />}
+        {boards?.length > 0 && (
+          <Boards projectId={id} boards={boards} project={project} />
+        )}
         <AddBoard projectId={id} />
       </div>
     </main>

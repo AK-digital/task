@@ -87,7 +87,7 @@ export async function getProject(req, res, next) {
 
     const project = await ProjectModel.findOne(query)
       .populate({
-        path: "guests",
+        path: "guests author",
         select: "lastName firstName email picture",
       })
       .exec();

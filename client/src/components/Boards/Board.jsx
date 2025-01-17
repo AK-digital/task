@@ -5,8 +5,8 @@ import Tasks from "../tasks/Tasks";
 import RemoveBoard from "./RemoveBoard";
 import UpdateBoard from "./UpdateBoard";
 
-export default async function Board({ projectId, board }) {
-  const tasks = await getTasks(projectId, board?._id);
+export default async function Board({ project, board }) {
+  const tasks = await getTasks(project?._id, board?._id);
 
   return (
     <div
@@ -18,11 +18,11 @@ export default async function Board({ projectId, board }) {
     >
       {/* Board title */}
       <div className={styles["board__header"]}>
-        <UpdateBoard board={board} projectId={projectId} />
-        <RemoveBoard boardId={board?._id} projectId={projectId} />
+        <UpdateBoard board={board} projectId={project?._id} />
+        <RemoveBoard boardId={board?._id} projectId={project?._id} />
       </div>
       {/* tasks */}
-      <Tasks tasks={tasks} projectId={projectId} boardId={board?._id} />
+      <Tasks tasks={tasks} project={project} boardId={board?._id} />
     </div>
   );
 }
