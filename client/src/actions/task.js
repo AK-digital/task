@@ -163,12 +163,10 @@ export async function updateTaskText(taskId, projectId, prevState, formData) {
 }
 
 // Update the status of a given task
-export async function updateTaskStatus(taskId, projectId, prevState, formData) {
+export async function updateTaskStatus(taskId, projectId, status) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
-
-    const status = formData.get("status");
 
     const allowedStatus = [
       "En attente",
@@ -222,17 +220,10 @@ export async function updateTaskStatus(taskId, projectId, prevState, formData) {
 }
 
 // Update the priority of a given task
-export async function updateTaskPriority(
-  taskId,
-  projectId,
-  prevState,
-  formData
-) {
+export async function updateTaskPriority(taskId, projectId, priority) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
-
-    const priority = formData.get("priority");
 
     const allowedPriorities = ["Basse", "Moyenne", "Haute", "Urgent"];
 

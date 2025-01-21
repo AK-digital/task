@@ -162,12 +162,21 @@ button[data-disabled="true"] {
   cursor: text;
 }
 
-#modal-layout {
-  position: absolute;
+#modal-layout,
+#modal-layout-opacity {
+  position: fixed;
   z-index: 2000;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
+}
+
+#modal-layout {
   background-color: rgba(0, 0, 0, 0.300);
+}
+
+#modal-layout-opacity {
+  background-color: inherit;
 }

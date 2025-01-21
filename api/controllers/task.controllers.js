@@ -164,6 +164,8 @@ export async function updateTaskStatus(req, res, next) {
       });
     }
 
+    console.log(updatedTask);
+
     return res.status(200).send({
       success: true,
       message: "Status modifié avec succès",
@@ -281,7 +283,7 @@ export async function updateTaskDeadline(req, res, next) {
 export async function updateTaskDescription(req, res, next) {
   try {
     const { description } = req.body;
-    const medias = req.files["medias"];
+    // const medias = req.files["medias"];
 
     if (!description) {
       return res.status(400).send({
@@ -290,16 +292,16 @@ export async function updateTaskDescription(req, res, next) {
       });
     }
 
-    const files = [];
-    if (medias) {
-      for (const media of medias) {
-        files.push(media.filename);
-      }
-    }
+    // const files = [];
+    // if (medias) {
+    //   for (const media of medias) {
+    //     files.push(media.filename);
+    //   }
+    // }
 
     const updateFields = {};
     if (description) updateFields.description = description;
-    if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
+    // if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },

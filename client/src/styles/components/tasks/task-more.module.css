@@ -46,6 +46,17 @@
     border-radius: 4px;
     padding: 14px;
     font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.task-more__description__text ol,
+.task-more__description__text ul {
+    padding: 14px;
+}
+
+.task-more__description__text a {
+    color: #1E90FF;
+    text-decoration: underline;
 }
 
 @keyframes openAnimation {

@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { instrumentSans } from "@/utils/font";
 export default function TaskMore({ task, setTaskMore }) {
+  const [editDescription, setEditDescription] = useState(false);
   const containerRef = useRef(null);
 
   function handleClose(e) {
@@ -31,21 +32,30 @@ export default function TaskMore({ task, setTaskMore }) {
       </div>
       <div className={styles["task-more__description"]}>
         <span>Description</span>
-        {task?.description ? (
-          <div className={styles["task-more__description__text"]}>
-            <pre className={instrumentSans.className}>{task?.description}</pre>
+        {task?.description && !editDescription ? (
+          <div
+            className={styles["task-more__description__text"]}
+            onClick={(e) => setEditDescription(true)}
+          >
+            <div dangerouslySetInnerHTML={{ __html: task?.description }}></div>
           </div>
         ) : (
           <RichTextEditor
             placeholder={"Ajouter une description à cette tâche"}
             type="description"
+            task={task}
+            setEditDescription={setEditDescription}
           />
         )}
       </div>
       {/* Conversation */}
       <div className={styles["task-more__conversation"]}>
         <span>Conversation</span>
-        <RichTextEditor placeholder={"Écrire un message"} type="conversation" />
+        <RichTextEditor
+          placeholder={"Écrire un message"}
+          type="conversation"
+          task={task}
+        />
       </div>
     </div>
   );
