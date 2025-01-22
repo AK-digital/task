@@ -1,3 +1,4 @@
+import cloudinary from "../config/cloudinary.js";
 import { userUpdateValidation } from "../helpers/zod.js";
 import userModel from "../models/user.model.js";
 
@@ -84,6 +85,62 @@ export async function updateUser(req, res, next) {
           $set: {
             lastName: lastName,
             firstName: firstName,
+          },
+        },
+        {
+          setDefaultsOnInsert: true,
+          new: true,
+        }
+      )
+      .select("-password"); // Removing the password from the returned user data
+
+    if (!updatedUser) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de mofidier un utilisateur inexistant",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Utilisateur modifié avec succès",
+      data: updatedUser,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updatePicture(req, res, next) {
+  try {
+    const picture = req.file;
+
+    const file = picture?.path;
+
+    const uploadRes = await cloudinary.uploader.upload(file, {
+      folder: "Täsk/profil",
+      upload_preset: "Täsk_preset",
+    });
+
+    if (!uploadRes) {
+      return res.status(400).send({
+        success: false,
+        message:
+          "Une erreur s'est produite lors de l'enregistrement de la photo de profil sur Cloudinary",
+      });
+    }
+
+    const updatedUser = await userModel
+      .findByIdAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        {
+          $set: {
+            picture: uploadRes?.secure_url,
           },
         },
         {

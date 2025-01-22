@@ -39,12 +39,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    left: 2;
-    top: 2;
+    left: 2px;
+    top: 1px;
     background-color: white;
     border-radius: 4px;
     width: 40px;
     height: 40px;
+    scale: 0.9;
 }
 
 .google:hover {

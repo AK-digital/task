@@ -1,8 +1,12 @@
 "use client";
+import dynamic from "next/dynamic";
+import styles from "@/styles/components/richTextEditor/richTextEditor.module.css";
 import { updateDescription } from "@/api/task";
 import { instrumentSans } from "@/utils/font";
-import "quill/dist/quill.snow.css";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 export default function RichTextEditor({
   placeholder,
@@ -12,74 +16,70 @@ export default function RichTextEditor({
 }) {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState(null);
-  const [writting, setWritting] = useState(false);
-  const btnMessage = placeholder.includes("description")
+  const isDescription = type === "description";
+  const isConversation = type === "conversation";
+
+  const btnMessage = isDescription
     ? "Enregistrer la description"
     : "Envoyer un message";
 
-  const options = {
-    placeholder: placeholder,
-    theme: "snow",
-  };
-
-  const containerRef = useRef(null);
-  const quillRef = useRef(null);
-
-  useEffect(() => {
-    // On vérifie si nous sommes côté client
+  function isQuillEmpty(value) {
     if (
-      typeof window !== "undefined" &&
-      containerRef?.current &&
-      !quillRef.current
+      value?.replace(/<(.|\n)*?>/g, "")?.trim()?.length === 0 &&
+      !value?.includes("<img")
     ) {
-      // Import dynamique de Quill uniquement côté client
-      import("quill").then((Quill) => {
-        if (containerRef.current && !quillRef.current) {
-          quillRef.current = new Quill.default(containerRef.current, options);
-
-          quillRef.current.on("text-change", () => {
-            const htmlContent = quillRef.current.root.innerHTML;
-
-            setContent(htmlContent);
-            setWritting(htmlContent.trim().length > 0);
-          });
-        }
-      });
+      return true;
     }
-    // Fonction de nettoyage
-    return () => {
-      if (quillRef.current) {
-        // Supprimer tous les event listeners
-        quillRef.current.off("text-change");
-
-        // Détruire l'instance de Quill
-        const editor = quillRef.current.container;
-        if (editor && editor.parentNode) {
-          editor.parentNode.removeChild(editor);
-        }
-
-        // Réinitialiser la référence
-        quillRef.current = null;
-      }
-    };
-  }, []);
+    return false;
+  }
 
   async function handleSendContent() {
-    console.log(content);
+    const isEmpty = isQuillEmpty(content);
+
     setLoading(true);
-    if (placeholder.includes("description")) {
-      await updateDescription(task?._id, task?.projectId, content);
+
+    if (isDescription) {
+      if (isEmpty) {
+        await updateDescription(task?._id, task?.projectId, "");
+      } else {
+        await updateDescription(task?._id, task?.projectId, content);
+      }
       setLoading(false);
       setEditDescription(false);
-      return;
     }
   }
 
+  const modules = {};
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "indent",
+    "link",
+    "image",
+  ];
+
   return (
     <>
-      <div ref={containerRef}></div>
+      <ReactQuill
+        theme="snow"
+        modules={modules}
+        formats={formats}
+        placeholder={placeholder}
+        defaultValue={
+          (isDescription && task?.description) || (isConversation && "")
+        }
+        onChange={(value) => {
+          setContent(value);
+        }}
+      />
 
-      <div>
+      <div className={styles.buttons}>
         <button
           className={instrumentSans.className}
           disabled={loading}
@@ -90,7 +90,7 @@ export default function RichTextEditor({
         </button>
         <button
           className={instrumentSans.className}
-          onClick={(e) => {
+          onClick={() => {
             setEditDescription(false);
           }}
         >

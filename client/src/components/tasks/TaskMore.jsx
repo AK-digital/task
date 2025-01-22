@@ -20,43 +20,48 @@ export default function TaskMore({ task, setTaskMore }) {
   }
 
   return (
-    <div className={styles["task-more__container"]} ref={containerRef}>
-      {/* Description */}
-      <div className={styles["task-more__header"]}>
-        <div>
-          <span>{task?.text}</span>
-        </div>
-        <div>
-          <FontAwesomeIcon icon={faClose} onClick={handleClose} />
-        </div>
-      </div>
-      <div className={styles["task-more__description"]}>
-        <span>Description</span>
-        {task?.description && !editDescription ? (
-          <div
-            className={styles["task-more__description__text"]}
-            onClick={(e) => setEditDescription(true)}
-          >
-            <div dangerouslySetInnerHTML={{ __html: task?.description }}></div>
+    <>
+      <div className={styles["task-more__container"]} ref={containerRef}>
+        {/* Description */}
+        <div className={styles["task-more__header"]}>
+          <div>
+            <span>{task?.text}</span>
           </div>
-        ) : (
+          <div>
+            <FontAwesomeIcon icon={faClose} onClick={handleClose} />
+          </div>
+        </div>
+        <div className={styles["task-more__description"]}>
+          <span>Description</span>
+          {task?.description && !editDescription ? (
+            <div
+              className={styles["task-more__description__text"]}
+              onClick={(e) => setEditDescription(true)}
+            >
+              <div
+                dangerouslySetInnerHTML={{ __html: task?.description }}
+              ></div>
+            </div>
+          ) : (
+            <RichTextEditor
+              placeholder={"Ajouter une description à cette tâche"}
+              type="description"
+              task={task}
+              setEditDescription={setEditDescription}
+            />
+          )}
+        </div>
+        {/* Conversation */}
+        <div className={styles["task-more__conversation"]}>
+          <span>Conversation</span>
           <RichTextEditor
-            placeholder={"Ajouter une description à cette tâche"}
-            type="description"
+            placeholder={"Écrire un message"}
+            type="conversation"
             task={task}
-            setEditDescription={setEditDescription}
           />
-        )}
+        </div>
       </div>
-      {/* Conversation */}
-      <div className={styles["task-more__conversation"]}>
-        <span>Conversation</span>
-        <RichTextEditor
-          placeholder={"Écrire un message"}
-          type="conversation"
-          task={task}
-        />
-      </div>
-    </div>
+      <div onClick={handleClose} id="modal-layout"></div>
+    </>
   );
 }

@@ -21,11 +21,17 @@
     width: 100%;
 }
 
+.task__content svg {
+    width: 15px;
+    height: 15px;
+}
+
 .task__modal {
     display: flex;
     align-items: center;
 }
 
 .task__modal svg {
+    width: 25px;
     height: 25px;
 }

@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import * as userControllers from "../controllers/user.controllers.js";
+import { upload } from "../middlewares/multer.middlewares.js";
 
 router.get(
   "/",
@@ -20,6 +21,14 @@ router.put(
   authMiddlewares.auth,
   authMiddlewares.authorize,
   userControllers.updateUser
+);
+
+router.patch(
+  "/:id",
+  authMiddlewares.auth,
+  authMiddlewares.authorize,
+  upload.single("picture"),
+  userControllers.updatePicture
 );
 router.delete(
   "/:id",

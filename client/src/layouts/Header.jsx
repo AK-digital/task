@@ -17,9 +17,8 @@ export default async function Header() {
           <span>Täsk</span>
         </div>
         {/* user */}
-        <div className={styles.user}>
-          <UserInfo />
-        </div>
+
+        <UserInfo />
       </nav>
     </header>
   );

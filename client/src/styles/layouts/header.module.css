@@ -9,8 +9,7 @@
 }
 
 .container nav,
-.projects,
-.user {
+.projects {
     display: flex;
     align-items: center;
 }
@@ -27,17 +26,4 @@
 .projects span {
     color: var(--text-color-muted);
     font-size: 0.9rem;
-}
-
-.user {
-    gap: 14px;
-}
-
-.user svg {
-    width: 20px;
-    height: 20px;
-}
-
-.user svg:last-child {
-    color: var(--text-color-muted);
 }

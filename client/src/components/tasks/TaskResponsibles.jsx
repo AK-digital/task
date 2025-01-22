@@ -14,8 +14,6 @@ export default function TaskResponsibles({ task, project }) {
   const guests = project?.guests;
   const author = project?.author;
 
-  console.log(responsibles, guests);
-
   // Return guests that aren't responsible of the task already
   const filteredGuests = guests.filter(
     (guest) =>

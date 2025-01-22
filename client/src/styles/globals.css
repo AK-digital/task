@@ -136,7 +136,6 @@ button[data-disabled="true"] {
   border-bottom: inherit !important;
   border-color: var(--border-color) !important;
   border-radius: 4px 4px 0 0 !important;
-  margin-bottom: -14px;
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {

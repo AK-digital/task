@@ -193,3 +193,12 @@ export async function updateDescription(taskId, projectId, content) {
     );
   }
 }
+
+export async function addResponse() {
+  try {
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de l'envoie d'une réponse"
+    );
+  }
+}

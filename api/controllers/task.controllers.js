@@ -285,13 +285,6 @@ export async function updateTaskDescription(req, res, next) {
     const { description } = req.body;
     // const medias = req.files["medias"];
 
-    if (!description) {
-      return res.status(400).send({
-        success: false,
-        message: "Paramètres manquants",
-      });
-    }
-
     // const files = [];
     // if (medias) {
     //   for (const media of medias) {
@@ -300,7 +293,7 @@ export async function updateTaskDescription(req, res, next) {
     // }
 
     const updateFields = {};
-    if (description) updateFields.description = description;
+    updateFields.description = description;
     // if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
 
     const updatedTask = await TaskModel.findByIdAndUpdate(

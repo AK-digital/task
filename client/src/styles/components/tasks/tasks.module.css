@@ -21,6 +21,11 @@
     margin-top: 4px;
 }
 
+.task__add svg {
+    width: 15px;
+    height: 15px;
+}
+
 .task__add form {
     width: 100%;
 }
