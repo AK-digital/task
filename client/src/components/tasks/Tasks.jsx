@@ -13,7 +13,7 @@ const initialState = {
   errors: null,
 };
 
-export default function Tasks({ tasks, project, boardId }) {
+export default function Tasks({ tasks, project, boardId, optimisticColor }) {
   const saveTaskWithProjectId = saveTask.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
     saveTaskWithProjectId,
@@ -27,7 +27,12 @@ export default function Tasks({ tasks, project, boardId }) {
   }, [state]);
 
   return (
-    <div className={styles["tasks"]}>
+    <div
+      className={styles["tasks"]}
+      style={{
+        borderLeft: `2px solid ${optimisticColor}`,
+      }}
+    >
       <div className={styles["tasks__list"]}>
         {tasks?.map((task) => {
           return <Task task={task} project={project} key={task?._id} />;

@@ -6,13 +6,28 @@ import BoardHeader from "./BoardHeader";
 
 export default function Board({ tasks, project, board }) {
   const [open, setOpen] = useState(true);
+  const [optimisticColor, setOptimisticColor] = useState(board?.color);
 
   return (
     <div className={styles.container} data-board={board?._id}>
       {/* Board header */}
-      <BoardHeader board={board} open={open} setOpen={setOpen} tasks={tasks} />
+      <BoardHeader
+        board={board}
+        open={open}
+        setOpen={setOpen}
+        tasks={tasks}
+        setOptimisticColor={setOptimisticColor}
+        optimisticColor={optimisticColor}
+      />
       {/* Board content */}
-      {open && <Tasks tasks={tasks} project={project} boardId={board?._id} />}
+      {open && (
+        <Tasks
+          tasks={tasks}
+          project={project}
+          boardId={board?._id}
+          optimisticColor={optimisticColor}
+        />
+      )}
     </div>
   );
 }

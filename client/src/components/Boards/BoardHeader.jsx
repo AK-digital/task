@@ -3,37 +3,27 @@ import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-const initialState = {
-  status: "pending",
-  message: "",
-  errors: null,
-};
-
-export default function BoardHeader({ board, open, setOpen, tasks }) {
+export default function BoardHeader({
+  board,
+  open,
+  setOpen,
+  tasks,
+  setOptimisticColor,
+  optimisticColor,
+}) {
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
   const [title, setTitle] = useState(board?.title);
-  const [color, setColor] = useState(board?.color);
-  const updateBoardWithIds = updateBoard.bind(
-    null,
-    board?._id,
-    board?.projectId,
-    color
-  );
-  const [state, formAction, pending] = useActionState(
-    updateBoardWithIds,
-    initialState
-  );
 
   const colors = board?.colors;
 
   async function handleColor(e) {
     const value = e.target.dataset.value;
 
-    setColor(value);
+    setOptimisticColor(value);
 
     const response = await updateBoard(
       board?._id,
@@ -42,7 +32,7 @@ export default function BoardHeader({ board, open, setOpen, tasks }) {
       title
     );
 
-    if (!response?.success) setColor(board?.color);
+    if (!response?.success) setOptimisticColor(board?.color);
   }
 
   // Créer un callback avec un délai de 300ms
@@ -50,7 +40,7 @@ export default function BoardHeader({ board, open, setOpen, tasks }) {
     const response = await updateBoard(
       board?._id,
       board?.projectId,
-      color,
+      optimisticColor,
       value
     );
 
@@ -68,13 +58,13 @@ export default function BoardHeader({ board, open, setOpen, tasks }) {
     <div className={styles.container} data-open={open}>
       {open ? (
         <FontAwesomeIcon
-          style={{ color: `${color}` }}
+          style={{ color: `${optimisticColor}` }}
           icon={faCaretDown}
           onClick={(e) => setOpen(!open)}
         />
       ) : (
         <FontAwesomeIcon
-          style={{ color: `${color}` }}
+          style={{ color: `${optimisticColor}` }}
           icon={faCaretRight}
           onClick={(e) => setOpen(!open)}
         />
@@ -93,7 +83,7 @@ export default function BoardHeader({ board, open, setOpen, tasks }) {
       ) : (
         <span
           className={styles.title}
-          style={{ color: `${color}` }}
+          style={{ color: `${optimisticColor}` }}
           onClick={(e) => setEdit(true)}
         >
           {board?.title}
@@ -101,7 +91,7 @@ export default function BoardHeader({ board, open, setOpen, tasks }) {
       )}
       <span
         className={styles.bullet}
-        style={{ backgroundColor: `${color}` }}
+        style={{ backgroundColor: `${optimisticColor}` }}
         onClick={(e) => setOpenColors(true)}
       ></span>
       {!open && tasks?.length >= 1 && (
