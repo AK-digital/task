@@ -19,9 +19,8 @@ export default function AuthProvider({ children }) {
         router.push(`/auth`);
       }
 
-      // Prevents state mutation if null
-      if (uid === null) setUid(response?.data?._id);
-      if (user === null) setUser(response?.data);
+      setUid(response?.data?._id);
+      setUser(response?.data);
     },
     refreshInterval: 15 * 60 * 1000, // Refresh every 15 minutes
     revalidateOnMount: true, // Revalidate everytime componenets are mounted

@@ -1,11 +1,12 @@
 "use client";
 import styles from "@/styles/pages/profil.module.css";
 import { AuthContext } from "@/context/auth";
-import { useActionState, useContext, useRef, useState } from "react";
+import { useActionState, useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { updateUserPicture } from "@/actions/user";
+import { mutate } from "swr";
 
 const initialState = {
   status: "pending",
@@ -22,6 +23,12 @@ export default function Profil() {
     updateUserPictureWithId,
     initialState
   );
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      mutate("/auth/session");
+    }
+  }, [state]);
 
   function handleUpdateUpdatePicture() {
     form.current.requestSubmit();

@@ -1,28 +1,18 @@
-"use server";
-import { getTasks } from "@/api/task";
+"use client";
 import styles from "@/styles/components/boards/board.module.css";
 import Tasks from "../tasks/Tasks";
-import RemoveBoard from "./RemoveBoard";
-import UpdateBoard from "./UpdateBoard";
+import { useState } from "react";
+import BoardHeader from "./BoardHeader";
 
-export default async function Board({ project, board }) {
-  const tasks = await getTasks(project?._id, board?._id);
+export default function Board({ tasks, project, board }) {
+  const [open, setOpen] = useState(true);
 
   return (
-    <div
-      className={styles["board"]}
-      data-board={board?._id}
-      style={{
-        boxShadow: `-2px 0 0 ${board?.color}`,
-      }}
-    >
-      {/* Board title */}
-      <div className={styles["board__header"]}>
-        <UpdateBoard board={board} projectId={project?._id} />
-        <RemoveBoard boardId={board?._id} projectId={project?._id} />
-      </div>
-      {/* tasks */}
-      <Tasks tasks={tasks} project={project} boardId={board?._id} />
+    <div className={styles.container} data-board={board?._id}>
+      {/* Board header */}
+      <BoardHeader board={board} open={open} setOpen={setOpen} tasks={tasks} />
+      {/* Board content */}
+      {open && <Tasks tasks={tasks} project={project} boardId={board?._id} />}
     </div>
   );
 }

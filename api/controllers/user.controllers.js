@@ -1,4 +1,5 @@
 import cloudinary from "../config/cloudinary.js";
+import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
 import { userUpdateValidation } from "../helpers/zod.js";
 import userModel from "../models/user.model.js";
 
@@ -56,7 +57,7 @@ export async function getUser(req, res, next) {
 
 export async function updateUser(req, res, next) {
   try {
-    const { lastName, firstName, picture } = req.body;
+    const { lastName, firstName } = req.body;
 
     if (!lastName || !firstName) {
       return res
@@ -118,12 +119,21 @@ export async function updatePicture(req, res, next) {
   try {
     const picture = req.file;
 
-    const file = picture?.path;
+    const user = await userModel.findById({ _id: req.params.id });
 
-    const uploadRes = await cloudinary.uploader.upload(file, {
-      folder: "Täsk/profil",
-      upload_preset: "Täsk_preset",
-    });
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de mofidier un utilisateur inexistant",
+      });
+    }
+
+    // If user has a picture then we delete it from cloudinary
+    if (user?.picture) {
+      await destroyFile("profil", user?.picture);
+    }
+
+    const uploadRes = await uploadFile("task/profil", picture?.buffer);
 
     if (!uploadRes) {
       return res.status(400).send({
@@ -149,13 +159,6 @@ export async function updatePicture(req, res, next) {
         }
       )
       .select("-password"); // Removing the password from the returned user data
-
-    if (!updatedUser) {
-      return res.status(404).send({
-        success: false,
-        message: "Impossible de mofidier un utilisateur inexistant",
-      });
-    }
 
     return res.status(200).send({
       success: true,

@@ -24,10 +24,18 @@ export async function updateUserPicture(userId, prevState, formData) {
     const response = await res.json();
 
     console.log(response);
+
+    return {
+      status: "success",
+    };
   } catch (err) {
     console.log(
       err.message ||
         "Une erreur est survenue lors du changement de la photo de profil"
     );
+
+    return {
+      status: "failure",
+    };
   }
 }

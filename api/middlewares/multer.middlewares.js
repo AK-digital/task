@@ -1,5 +1,5 @@
 import multer from "multer";
-import path from "path";
+
 const allowedMimetypes = [
   "image/jpeg",
   "image/png",
@@ -10,16 +10,9 @@ const allowedMimetypes = [
   "image/docx",
 ];
 
-const uploadPath = path.resolve(process.cwd(), "uploads");
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    // Ajout d'un nom unique pour éviter les collisions de fichiers
-    const uniqueSuffix = Date.now();
-    cb(null, file.fieldname + "-" + uniqueSuffix + "-" + file.originalname);
+const storage = multer.memoryStorage({
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + "-" + Date.now());
   },
 });
 

@@ -1,4 +1,8 @@
-.tasks {}
+.tasks {
+    background-color: var(--secondary-background-color);
+    padding: 8px;
+    border-radius: 4px;
+}
 
 .tasks ul {
     display: flex;

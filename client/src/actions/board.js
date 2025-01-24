@@ -37,15 +37,15 @@ export async function saveBoard(projectId, prevState, formData) {
   }
 }
 
-export async function updateBoard(boardId, projectId, prevState, formData) {
+export async function updateBoard(boardId, projectId, color, title) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
 
     const rawFormData = {};
 
-    if (formData.get("title")) rawFormData.title = formData.get("title");
-    if (formData.get("color")) rawFormData.color = formData.get("color");
+    rawFormData.title = title;
+    rawFormData.color = color;
 
     const res = await fetch(
       `${process.env.API_URL}/board/${boardId}?projectId=${projectId}`,
@@ -66,9 +66,7 @@ export async function updateBoard(boardId, projectId, prevState, formData) {
 
     revalidateTag("boards");
 
-    return {
-      status: "success",
-    };
+    return response;
   } catch (err) {
     console.log(
       err.message || "Une erreur est survenue lors de la création du tableau"
