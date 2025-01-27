@@ -1,7 +1,9 @@
 "use client";
 import { saveProject } from "@/actions/project";
-import styles from "@/styles/components/header/create-project.module.css";
+import styles from "@/styles/components/projects/create-project.module.css";
 import { instrumentSans } from "@/utils/font";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useActionState, useEffect, useState } from "react";
 
 const initialState = {
@@ -25,15 +27,15 @@ export default function CreateProject() {
   }, [state]);
 
   return (
-    <div className={styles["create-project"]}>
+    <div className={styles.container}>
       <button
         className={`${styles["create-project__button"]} ${instrumentSans.className}`}
         onClick={(e) => setIsCreating(true)}
       >
-        Créer un projet
+        <FontAwesomeIcon icon={faPlus} />
       </button>
       {isCreating && (
-        <div className={styles["create-project__form"]}>
+        <div className={styles.modal}>
           <form action={formAction}>
             <div>
               <input type="text" name="project-name" id="project-name" />

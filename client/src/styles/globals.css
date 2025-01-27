@@ -3,10 +3,13 @@
   --accent-color-hover: #3f45b0;
   --primary-background-color: #151832;
   --secondary-background-color: #30324e;
+  --side-background-color: #17192b;
   --foreground: #171717;
   --border-color: #3a3d5c;
   --text-color-muted: #656782;
   --text-color: #e0e0e0;
+
+
 
   --pending-color: #6E7389;
   --processing-color: #FDBC64;

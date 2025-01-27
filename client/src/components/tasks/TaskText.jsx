@@ -2,6 +2,7 @@ import styles from "@/styles/components/tasks/task-text.module.css";
 import { updateTaskText } from "@/actions/task";
 import { useActionState, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { instrumentSans } from "@/utils/font";
 
 const initialState = {
   status: "pending",
@@ -12,6 +13,7 @@ const initialState = {
 
 export default function TaskText({ task }) {
   const formRef = useRef(null);
+  const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState(task?.text || "");
   const updateTaskTextWithIds = updateTaskText.bind(
     null,
@@ -36,16 +38,24 @@ export default function TaskText({ task }) {
   };
 
   return (
-    <div className={styles.container}>
-      <form action={formAction} ref={formRef}>
-        <input
-          type="text"
-          name="text"
-          id="text"
-          value={inputValue}
-          onChange={handleChange}
-        />
-      </form>
+    <div
+      className={styles.container}
+      onMouseEnter={(e) => setEdit(true)}
+      onMouseLeave={(e) => setEdit(false)}
+    >
+      {!edit && <p>{task?.text}</p>}
+      {edit && (
+        <form action={formAction} ref={formRef}>
+          <input
+            type="text"
+            name="text"
+            id="text"
+            value={inputValue}
+            onChange={handleChange}
+            className={instrumentSans.className}
+          />
+        </form>
+      )}
     </div>
   );
 }

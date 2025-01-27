@@ -1,6 +1,6 @@
 .tasks {
     background-color: var(--secondary-background-color);
-    padding: 8px;
+
     border-radius: 4px;
 }
 
@@ -14,15 +14,16 @@
     width: 100%;
 }
 
-.tasks .task__add {
+
+.task__add {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .task__add {
-    max-width: 700px;
-    margin-top: 4px;
+    max-width: 900px;
+    padding: 4px 8px;
 }
 
 .task__add svg {
@@ -32,6 +33,16 @@
 
 .task__add form {
     width: 100%;
+}
+
+.task__add input {
+    padding: 6px;
+}
+
+.task__add p {
+    font-size: 0.85rem;
+    padding: 6px;
+    color: var(--text-color-muted);
 }
 
 .tasks__info {

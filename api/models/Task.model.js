@@ -70,6 +70,9 @@ const taskSchema = new Schema(
     deadline: {
       type: Date,
     },
+    order: {
+      type: Number,
+    },
   },
   {
     timestamps: true,

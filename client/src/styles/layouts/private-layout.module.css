@@ -4,9 +4,9 @@
 }
 
 .private-layout__aside {
-    width: 10%;
+    width: 5%;
 }
 
 .private-layout__main {
-    width: 90%;
+    width: 100%;
 }

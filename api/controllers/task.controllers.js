@@ -1,4 +1,3 @@
-import { auth } from "../middlewares/jwt.middlewares.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
 
@@ -16,11 +15,17 @@ export async function saveTask(req, res, next) {
       });
     }
 
+    const tasks = await TaskModel.find({
+      projectId: projectId,
+      boardId: boardId,
+    });
+
     const newTask = new TaskModel({
       author: authUser?._id,
       projectId: projectId,
       boardId: boardId,
       text: text,
+      order: tasks ? tasks.length - 0 : 0,
     });
 
     const savedTask = await newTask.save();
@@ -44,6 +49,7 @@ export async function getTasks(req, res, next) {
     const boardId = req.query.boardId;
 
     const tasks = await TaskModel.find({ boardId: boardId })
+      .sort({ order: "asc" })
       .populate({
         path: "responsibles",
         select: "-password -role", // Exclure le champ `password` des responsibles
@@ -539,6 +545,39 @@ export async function endTimer(req, res, next) {
       success: true,
       message: "Le tracking du temps de la tâche est terminée",
       data: task,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTaskOrder(req, res, next) {
+  try {
+    const { tasks } = req.body;
+
+    if (tasks?.length <= 0) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const updatePromises = tasks.map((task, index) => {
+      return TaskModel.findByIdAndUpdate(
+        task._id,
+        { $set: { order: index } },
+        { new: true }
+      );
+    });
+
+    await Promise.all(updatePromises);
+
+    return res.status(500).send({
+      success: true,
+      message: "L'ordre des tâches a été mis à jour",
     });
   } catch (err) {
     return res.status(500).send({

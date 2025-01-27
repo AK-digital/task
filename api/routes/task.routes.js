@@ -90,4 +90,11 @@ router.patch(
   taskControllers.endTimer
 );
 
+router.patch(
+  "/reorder",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.updateTaskOrder
+);
+
 export default router;

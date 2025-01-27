@@ -1,6 +1,6 @@
 "use server";
 import styles from "@/styles/layouts/header.module.css";
-import CreateProject from "@/components/Header/CreateProject";
+import CreateProject from "@/components/Projects/CreateProject";
 import ProjectsDropdown from "@/components/Header/ProjectsDropdown";
 import UserInfo from "@/components/Header/UserInfo";
 import { getProjects } from "@/api/project";
