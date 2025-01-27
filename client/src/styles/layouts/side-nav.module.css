@@ -1,31 +1,27 @@
 .container {
     padding: 20px;
     position: fixed;
-    z-index: 1999;
+    z-index: 2001;
     bottom: 0;
-    background-color: var(--secondary-background-color);
+    background-color: var(--side-background-color);
     height: 100svh;
-    width: 10%;
+    width: 5%;
 }
 
-.wrapper {
+.projects {
     margin-top: 50px;
 }
 
-.wrapper,
-.wrapper__list {
+.projects,
+.projectsList {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 4px;
 }
 
-
-
-.wrapper__list {
-    text-align: left;
-}
-
-.wrapper__item {
+.projectsItem {
     font-size: 0.9rem;
     padding: 8px 4px;
     border-radius: 4px;
