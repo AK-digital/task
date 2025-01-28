@@ -2,22 +2,21 @@ import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import * as projectMiddlewares from "../middlewares/projectRole.middlewares.js";
-import * as reponseControllers from "../controllers/response.controllers.js";
+import * as reponseControllers from "../controllers/message.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 
 router.post(
   "/",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
-  upload.fields([{ name: "medias", maxCount: 20 }]),
-  reponseControllers.saveResponse
+  reponseControllers.saveMessage
 );
 
 router.get(
   "/",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
-  reponseControllers.getResponses
+  reponseControllers.getMessages
 );
 
 router.put(
@@ -32,7 +31,7 @@ router.delete(
   "/:id",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
-  reponseControllers.deleteResponse
+  reponseControllers.deleteMessage
 );
 
 export default router;

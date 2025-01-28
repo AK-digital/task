@@ -7,6 +7,8 @@ import { useRef, useState } from "react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
+import { saveMessage } from "@/api/message";
+import { mutate } from "swr";
 
 export default function RichTextEditor({
   placeholder,
@@ -42,11 +44,22 @@ export default function RichTextEditor({
       if (isEmpty) {
         await updateDescription(task?._id, task?.projectId, "");
       } else {
+        console.log(content);
         await updateDescription(task?._id, task?.projectId, content);
       }
-      setLoading(false);
-      setEditDescription(false);
     }
+
+    if (isConversation) {
+      const res = await saveMessage(task?.projectId, task?._id, content, []);
+      if (res?.success) {
+        console.log("played");
+        mutate(`/message?projectId=${task?.projectId}&taskId=${task?._id}`);
+        setContent("");
+      }
+    }
+
+    setLoading(false);
+    setEditDescription(false);
   }
 
   const modules = {};
@@ -74,6 +87,7 @@ export default function RichTextEditor({
         defaultValue={
           (isDescription && task?.description) || (isConversation && "")
         }
+        value={isConversation ? content : undefined}
         onChange={(value) => {
           setContent(value);
         }}

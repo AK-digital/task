@@ -1,46 +1,48 @@
-.task-more__container {
+.container {
     position: absolute;
     z-index: 2001;
     top: 0;
     right: -30%;
     background-color: var(--primary-background-color);
-    width: 40%;
+    width: 30%;
     height: 100%;
     box-shadow: -4px 10px 10px 0px rgba(0, 0, 0, 0.15);
     animation: openAnimation 250ms forwards ease-out;
-    padding: 64px 24px 24px 24px;
+    padding: 24px;
     cursor: default;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.task-more__container-close {
+.container-close {
     animation: closeAnimation 250ms forwards ease-out;
 }
 
-.task-more__header {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.task-more__header span {
+.header span {
     font-size: 1.2rem;
 }
 
-.task-more__header svg {
+.header svg {
     width: 30px;
     height: 30px;
     cursor: pointer;
 }
 
-.task-more__container,
-.task-more__description,
-.task-more__conversation {
+.container,
+.description,
+.conversation {
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-.task-more__description__text {
+.preview {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 14px;
@@ -48,14 +50,22 @@
     cursor: pointer;
 }
 
-.task-more__description__text ol,
-.task-more__description__text ul {
+.preview ol,
+.preview ul {
     padding: 14px;
 }
 
-.task-more__description__text a {
+.preview a {
     color: #1E90FF;
     text-decoration: underline;
+}
+
+.preview img {
+    max-width: 800px;
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    margin: 10px 0 10px 0;
 }
 
 @keyframes openAnimation {

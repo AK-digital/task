@@ -1,9 +1,16 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: "localhost",
-  port: 1025, // Default SMTP port of MailPit
-  ignoreTLS: false,
+  host: `${process.env.EMAIL_HOST}`,
+  port: process.env.EMAIL_PORT,
+  auth: {
+    user: `${process.env.EMAIL}`,
+    pass: `${process.env.EMAIL_PASS}`,
+  },
+  tls: {
+    // do not fail on invalid certs
+    rejectUnauthorized: false,
+  },
 });
 
 export async function sendEmail(from, to, subject, text) {
@@ -12,7 +19,6 @@ export async function sendEmail(from, to, subject, text) {
     from: from, // sender address
     to: to, // list of receivers
     subject: subject, // Subject line
-    text: "Hello world?", // plain text body
     html: text, // html body
   });
 

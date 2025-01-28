@@ -1,11 +1,12 @@
-import ResponseModel from "../models/Response.model.js";
+import MessageModel from "../models/Message.model.js";
 
-export async function saveResponse(req, res, next) {
+export async function saveMessage(req, res, next) {
   try {
     const projectId = req.query.projectId;
     const authUser = res.locals.user;
     const { taskId, message, taggedUsers } = req.body;
-    const medias = req.files["medias"];
+
+    console.log(taskId, message, taggedUsers);
 
     if (!taskId || !message) {
       return res
@@ -13,28 +14,20 @@ export async function saveResponse(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    const files = [];
-    if (medias) {
-      for (const media of medias) {
-        files.push(media.filename);
-      }
-    }
-
-    const newResponse = new ResponseModel({
+    const newMessage = new MessageModel({
       projectId: projectId,
       taskId: taskId,
       author: authUser?._id,
       message: message,
       taggedUsers: taggedUsers,
-      files: files,
     });
 
-    const savedResponse = await newResponse.save();
+    const savedMessage = await newMessage.save();
 
     return res.status(201).send({
       success: true,
-      message: "Réponse créée avec succès",
-      data: savedResponse,
+      message: "Message créée avec succès",
+      data: savedMessage,
     });
   } catch (err) {
     return res.status(500).send({
@@ -44,9 +37,9 @@ export async function saveResponse(req, res, next) {
   }
 }
 
-export async function getResponses(req, res, next) {
+export async function getMessages(req, res, next) {
   try {
-    const { taskId } = req.body;
+    const { taskId } = req.query;
 
     if (!taskId) {
       return res.status(500).send({
@@ -55,12 +48,15 @@ export async function getResponses(req, res, next) {
       });
     }
 
-    const responses = await ResponseModel.find({ taskId: taskId });
+    const responses = await MessageModel.find({ taskId: taskId }).populate({
+      path: "author",
+      select: "lastName firstName picture",
+    });
 
     if (responses.length <= 0) {
       return res.status(404).send({
         success: false,
-        message: "Aucune réponses trouvé pour cette tâche",
+        message: "Aucun messages trouvé pour cette tâche",
       });
     }
 
@@ -101,7 +97,7 @@ export async function updateResponse(req, res, next) {
     if (taggedUsers.length > 0) updateFields.taggedUsers = taggedUsers;
     if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
 
-    const updatedResponse = await ResponseModel.findByIdAndUpdate(
+    const updatedResponse = await MessageModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
@@ -135,9 +131,9 @@ export async function updateResponse(req, res, next) {
   }
 }
 
-export async function deleteResponse(req, res, next) {
+export async function deleteMessage(req, res, next) {
   try {
-    const deletedResponse = await ResponseModel.findByIdAndDelete({
+    const deletedResponse = await MessageModel.findByIdAndDelete({
       _id: req.params.id,
     });
 
