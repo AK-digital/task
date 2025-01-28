@@ -27,7 +27,7 @@ export default function TaskText({ task }) {
 
   // Créer un callback avec un délai de 300ms
   const debouncedUpdateTask = useDebouncedCallback(async (value) => {
-    formRef.current.requestSubmit();
+    formRef?.current?.requestSubmit();
   }, 600);
 
   const handleChange = (e) => {

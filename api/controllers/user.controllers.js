@@ -1,5 +1,4 @@
-import cloudinary from "../config/cloudinary.js";
-import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 import { userUpdateValidation } from "../helpers/zod.js";
 import userModel from "../models/user.model.js";
 
@@ -133,7 +132,7 @@ export async function updatePicture(req, res, next) {
       await destroyFile("profil", user?.picture);
     }
 
-    const uploadRes = await uploadFile("task/profil", picture?.buffer);
+    const uploadRes = await uploadFileBuffer("task/profil", picture?.buffer);
 
     if (!uploadRes) {
       return res.status(400).send({

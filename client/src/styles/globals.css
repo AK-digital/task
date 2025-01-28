@@ -103,8 +103,7 @@ i {
 }
 
 button {
-  padding: 12px;
-  font-weight: 500;
+  padding: 8px;
   background-color: var(--accent-color);
   border: none;
   outline: none;

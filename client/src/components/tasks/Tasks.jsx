@@ -3,7 +3,7 @@ import styles from "@/styles/components/tasks/tasks.module.css";
 import Task from "./Task";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { saveTask } from "@/actions/task";
 import {
   DndContext,
@@ -31,7 +31,7 @@ const initialState = {
 };
 
 export default function Tasks({ tasks, project, boardId, optimisticColor }) {
-  const [addTask, setAddTask] = useState(false);
+  const inputRef = useRef(null);
   const [taskItems, setTaskItems] = useState(tasks || []);
   const [isWritting, setIsWritting] = useState(false);
 
@@ -53,15 +53,20 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
   );
 
   useEffect(() => {
-    if (state?.status === "success") setIsWritting(false);
+    if (state?.status === "success") {
+      console.log(inputRef.current);
+
+      inputRef?.current?.focus();
+      setIsWritting(false);
+    }
   }, [state]);
 
   async function handleDragEnd(event) {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      const oldIndex = taskItems.findIndex((task) => task._id === active.id);
-      const newIndex = taskItems.findIndex((task) => task._id === over.id);
+    if (active?.id !== over?.id) {
+      const oldIndex = taskItems.findIndex((task) => task?._id === active.id);
+      const newIndex = taskItems.findIndex((task) => task?._id === over.id);
 
       const newItems = arrayMove(taskItems, oldIndex, newIndex);
 
@@ -97,46 +102,39 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
             ))}
           </SortableContext>
 
-          <div
-            className={styles["task__add"]}
-            onMouseEnter={(e) => setAddTask(true)}
-            onMouseLeave={(e) => setAddTask(false)}
-          >
+          <div className={styles["task__add"]}>
             <FontAwesomeIcon icon={faPlus} />
-            {addTask ? (
-              <form action={formAction}>
-                <input
-                  type="text"
-                  name="board-id"
-                  id="board-id"
-                  defaultValue={boardId}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="new-task"
-                  id="new-task"
-                  placeholder=" Ajouter une tâche"
-                  onChange={(e) => {
-                    if (e.target.value.length > 0) {
-                      setIsWritting(true);
-                    } else {
-                      setIsWritting(false);
-                    }
-                  }}
-                  className={instrumentSans.className}
-                />
-                <button type="submit" hidden>
-                  Ajouter une tâche
-                </button>
-              </form>
-            ) : (
-              <p>Ajouter une tâche</p>
-            )}
+
+            <form action={formAction}>
+              <input
+                type="text"
+                name="board-id"
+                id="board-id"
+                defaultValue={boardId}
+                hidden
+              />
+              <input
+                type="text"
+                name="new-task"
+                id="new-task"
+                placeholder=" Ajouter une tâche"
+                ref={inputRef}
+                onChange={(e) => {
+                  if (e.target.value.length > 0) {
+                    setIsWritting(true);
+                  } else {
+                    setIsWritting(false);
+                  }
+                }}
+                className={instrumentSans.className}
+              />
+              <button type="submit" hidden>
+                Ajouter une tâche
+              </button>
+            </form>
           </div>
         </div>
       </DndContext>
-
       {isWritting && (
         <div className={styles["tasks__info"]}>
           <p>

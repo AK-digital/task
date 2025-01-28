@@ -37,17 +37,15 @@
 
 .task__add input {
     padding: 6px;
+    border: none;
+    background-color: inherit;
+    padding: 6px 4px;
 }
 
-.task__add p {
-    font-size: 0.85rem;
-    padding: 6px;
-    color: var(--text-color-muted);
-}
 
 .tasks__info {
     position: absolute;
-    margin-top: 15px;
+    margin-top: 4px;
     margin-left: 25px;
     color: var(--text-color-muted);
     font-size: 0.8rem;

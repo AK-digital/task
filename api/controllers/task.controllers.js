@@ -1,5 +1,9 @@
+import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
+import userModel from "../models/user.model.js";
+import { regex } from "../utils/regex.js";
 
 // Only authors and guets will be able to post the tasks
 export async function saveTask(req, res, next) {
@@ -289,18 +293,46 @@ export async function updateTaskDeadline(req, res, next) {
 export async function updateTaskDescription(req, res, next) {
   try {
     const { description } = req.body;
-    // const medias = req.files["medias"];
+    let updatedDescription = description;
 
-    // const files = [];
-    // if (medias) {
-    //   for (const media of medias) {
-    //     files.push(media.filename);
-    //   }
-    // }
+    const imgRegex = /<img.*?src=["'](.*?)["']/g;
+
+    function getMatches(string, regex) {
+      return [...string.matchAll(regex)];
+    }
+
+    const matches = getMatches(description, imgRegex);
+
+    if (matches.length > 0) {
+      for (const match of matches) {
+        const img = match[1]; // Le src est dans le premier groupe capturé
+
+        const res = await uploadFile("task/description", img);
+
+        if (res?.secure_url) {
+          updatedDescription = updatedDescription.replace(img, res.secure_url);
+        }
+      }
+    } else {
+      const task = await TaskModel.findById({ _id: req.params.id });
+
+      const taskDescription = task?.description;
+
+      if (taskDescription) {
+        const descriptionMatches = getMatches(taskDescription, imgRegex);
+
+        if (descriptionMatches.length > 0) {
+          for (const descriptionMatch of descriptionMatches) {
+            const img = descriptionMatch[1];
+
+            await destroyFile("description", img);
+          }
+        }
+      }
+    }
 
     const updateFields = {};
-    updateFields.description = description;
-    // if (files.length > 0) updateFields.files = files; // If there is files then are updating the files field
+    updateFields.description = updatedDescription;
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
@@ -337,16 +369,38 @@ export async function updateTaskDescription(req, res, next) {
 // Only authors and guets will be able to delete the tasks
 export async function deleteTask(req, res, next) {
   try {
-    const deletedTask = await TaskModel.findByIdAndDelete({
-      _id: req.params.id,
-    });
+    const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
-    if (!deletedTask) {
+    function getMatches(string, regex) {
+      return [...string.matchAll(regex)];
+    }
+
+    const task = await TaskModel.findById({ _id: req.params.id });
+
+    if (!task) {
       return res.status(404).send({
         success: false,
         message: "Impossible de supprimer une tâche qui n'existe pas",
       });
     }
+
+    const description = task?.description;
+
+    if (description) {
+      const matches = getMatches(description, imgRegex);
+
+      if (matches.length > 0) {
+        for (const match of matches) {
+          const img = match[1];
+
+          await destroyFile("description", img);
+        }
+      }
+    }
+
+    const deletedTask = await TaskModel.findByIdAndDelete({
+      _id: req.params.id,
+    });
 
     return res.status(200).send({
       success: true,
@@ -369,6 +423,16 @@ export async function addResponsible(req, res, next) {
       return res.status(400).send({
         success: false,
         message: "Paramètres manquants",
+      });
+    }
+
+    const responsible = await userModel.findById({ _id: responsibleId });
+
+    if (!responsible) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de nommer responsable d'une tâche un utilisateur qui n'existe pas",
       });
     }
 
@@ -396,7 +460,12 @@ export async function addResponsible(req, res, next) {
         new: true,
         setDefaultsOnInsert: true,
       }
-    );
+    )
+      .populate({
+        path: "projectId",
+        select: "name",
+      })
+      .exec();
 
     if (!updatedTask) {
       return res.status(404).send({
@@ -405,6 +474,17 @@ export async function addResponsible(req, res, next) {
           "Impossible de nommer un responsable dans une tâche qui n'existe pas",
       });
     }
+
+    const subjet = `Vous avez été nommé responsable d'une tâche dans le projet ${updatedTask?.projectId?.name}`;
+    const text = `
+        <div style="font-family: Arial, sans-serif; color: #333; text-align: center; padding: 20px;">
+          <h1 style="color: #5056C8;">Une tâche vous a été assigné sur Täsk</h1>
+          <p>Bonjour,</p>
+          <p>Vous avez été nommé responsable de la tâche : <strong>${updatedTask?.text}</strong>. 
+        </div>
+        `;
+
+    await sendEmail("task@akdigital.fr", responsible?.email, subjet, text);
 
     return res.status(200).send({
       success: true,

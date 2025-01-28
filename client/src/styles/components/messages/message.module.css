@@ -1,0 +1,47 @@
+.container {
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header svg {
+    cursor: pointer;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.names {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.date {
+    font-size: 0.75rem;
+    color: var(--text-color-muted);
+}
+
+.ellipsis {
+    position: relative;
+}
+
+.more {
+    position: absolute;
+    width: 120px;
+    height: 100px;
+    background-color: var(--primary-background-color);
+    left: 0;
+}
+
+.text {
+    padding: 10px;
+}

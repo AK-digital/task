@@ -1,6 +1,6 @@
 import cloudinary from "../config/cloudinary.js";
 
-export async function uploadFile(path, buffer) {
+export async function uploadFileBuffer(path, buffer) {
   try {
     const options = {
       folder: path,
@@ -15,6 +15,19 @@ export async function uploadFile(path, buffer) {
         })
         .end(buffer);
     });
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function uploadFile(path, img) {
+  try {
+    const options = {
+      folder: path,
+      upload_preset: "task_preset",
+    };
+
+    return await cloudinary.uploader.upload(img, options);
   } catch (err) {
     throw err;
   }

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const responseSchema = new Schema(
+const messageSchema = new Schema(
   {
     projectId: {
       type: Schema.Types.ObjectId,
@@ -32,4 +32,4 @@ const responseSchema = new Schema(
   }
 );
 
-export default mongoose.model("Response", responseSchema);
+export default mongoose.model("Message", messageSchema);
