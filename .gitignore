@@ -1,6 +1,9 @@
 /.history
+/.vscode
 /api/.env
 /client/env
 /api/node_modules/
 /client/node_modules/
 /api/env
+/node_modules/
+
