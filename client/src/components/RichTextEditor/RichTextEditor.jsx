@@ -7,17 +7,23 @@ import { useRef, useState } from "react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
-import { saveMessage } from "@/api/message";
+import { saveMessage, updateMessage } from "@/api/message";
 import { mutate } from "swr";
 
 export default function RichTextEditor({
   placeholder,
   type,
   task,
+  message,
+  edit,
+  setEdit,
+  setConvLoading,
   setEditDescription,
 }) {
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(message ? message?.message : "");
+  const [isTaggedUsers, setIsTaggedUsers] = useState(false);
+  const [taggedUsers, setTaggedUsers] = useState([]);
   const isDescription = type === "description";
   const isConversation = type === "conversation";
 
@@ -35,6 +41,14 @@ export default function RichTextEditor({
     return false;
   }
 
+  function handleKeydown(e) {
+    if (e.key === "@") {
+      setIsTaggedUsers(true);
+    } else if (e.key === " ") {
+      setIsTaggedUsers(false);
+    }
+  }
+
   async function handleSendContent() {
     const isEmpty = isQuillEmpty(content);
 
@@ -44,22 +58,43 @@ export default function RichTextEditor({
       if (isEmpty) {
         await updateDescription(task?._id, task?.projectId, "");
       } else {
-        console.log(content);
         await updateDescription(task?._id, task?.projectId, content);
       }
+      setEditDescription(false);
     }
 
     if (isConversation) {
-      const res = await saveMessage(task?.projectId, task?._id, content, []);
+      const res = await saveMessage(
+        task?.projectId,
+        task?._id,
+        content,
+        taggedUsers
+      );
       if (res?.success) {
-        console.log("played");
-        mutate(`/message?projectId=${task?.projectId}&taskId=${task?._id}`);
-        setContent("");
+        await mutate(
+          `/message?projectId=${task?.projectId}&taskId=${task?._id}`
+        );
       }
     }
 
+    if (isConversation && edit) {
+      setConvLoading(true);
+      setEdit(false);
+      const res = await updateMessage(
+        message?.projectId,
+        message?._id,
+        content,
+        taggedUsers
+      );
+      if (res?.success) {
+        await mutate(
+          `/message?projectId=${message?.projectId}&taskId=${message?.taskId}`
+        );
+        setConvLoading(false);
+      }
+    }
+    setContent("");
     setLoading(false);
-    setEditDescription(false);
   }
 
   const modules = {};
@@ -79,19 +114,38 @@ export default function RichTextEditor({
 
   return (
     <>
-      <ReactQuill
-        theme="snow"
-        modules={modules}
-        formats={formats}
-        placeholder={placeholder}
-        defaultValue={
-          (isDescription && task?.description) || (isConversation && "")
-        }
-        value={isConversation ? content : undefined}
-        onChange={(value) => {
-          setContent(value);
-        }}
-      />
+      {isDescription && (
+        <div>
+          <ReactQuill
+            theme="snow"
+            modules={modules}
+            formats={formats}
+            placeholder={placeholder}
+            defaultValue={isDescription && task?.description}
+            onChange={(value) => {
+              setContent(value);
+            }}
+            onKeyDown={handleKeydown}
+          />
+          {isTaggedUsers && <div>oui</div>}
+        </div>
+      )}
+      {isConversation && (
+        <div>
+          <ReactQuill
+            theme="snow"
+            modules={modules}
+            formats={formats}
+            placeholder={placeholder}
+            value={content}
+            onChange={(value) => {
+              setContent(value);
+            }}
+            onKeyDown={handleKeydown}
+          />
+          {isTaggedUsers && <div>oui</div>}
+        </div>
+      )}
 
       <div className={styles.buttons}>
         <button

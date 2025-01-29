@@ -23,8 +23,7 @@ router.put(
   "/:id",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
-  upload.fields([{ name: "medias", maxCount: 20 }]),
-  reponseControllers.updateResponse
+  reponseControllers.updateMessage
 );
 
 router.delete(

@@ -118,6 +118,7 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
                 name="new-task"
                 id="new-task"
                 placeholder=" Ajouter une tâche"
+                autoComplete="off"
                 ref={inputRef}
                 onChange={(e) => {
                   if (e.target.value.length > 0) {

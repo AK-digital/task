@@ -4,6 +4,7 @@ import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
 import userModel from "../models/user.model.js";
 import { regex } from "../utils/regex.js";
+import { getMatches } from "../utils/utils.js";
 
 // Only authors and guets will be able to post the tasks
 export async function saveTask(req, res, next) {
@@ -297,10 +298,6 @@ export async function updateTaskDescription(req, res, next) {
 
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
-    function getMatches(string, regex) {
-      return [...string.matchAll(regex)];
-    }
-
     const matches = getMatches(description, imgRegex);
 
     if (matches.length > 0) {
@@ -370,10 +367,6 @@ export async function updateTaskDescription(req, res, next) {
 export async function deleteTask(req, res, next) {
   try {
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
-
-    function getMatches(string, regex) {
-      return [...string.matchAll(regex)];
-    }
 
     const task = await TaskModel.findById({ _id: req.params.id });
 

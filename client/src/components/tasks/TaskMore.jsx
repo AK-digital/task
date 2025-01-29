@@ -47,6 +47,9 @@ export default function TaskMore({ task, messages, setTaskMore }) {
               type="description"
               task={task}
               setEditDescription={setEditDescription}
+              message={null}
+              edit={null}
+              setEdit={null}
             />
           )}
         </div>
@@ -58,6 +61,9 @@ export default function TaskMore({ task, messages, setTaskMore }) {
             type="conversation"
             task={task}
             setEditDescription={setEditDescription}
+            message={null}
+            edit={null}
+            setEdit={null}
           />
         </div>
       </div>

@@ -1,13 +1,8 @@
 "use client";
 import styles from "@/styles/components/messages/messages.module.css";
 import { getMessages } from "@/api/message";
-import Image from "next/image";
 import useSWR from "swr";
-import moment from "moment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { isNotEmpty } from "@/utils/utils";
-import { useState } from "react";
 import Message from "./Message";
 
 export default function Messages({ task }) {
@@ -22,7 +17,9 @@ export default function Messages({ task }) {
     <div className={styles.container}>
       {isNotEmpty(messages) &&
         messages?.map((message) => {
-          return <Message message={message} key={message?._id} />;
+          return (
+            <Message message={message} mutate={mutate} key={message?._id} />
+          );
         })}
     </div>
   );

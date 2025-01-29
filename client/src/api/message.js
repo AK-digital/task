@@ -73,13 +73,58 @@ export async function saveMessage(projectId, taskId, message, taggedUsers) {
   }
 }
 
-export async function deleteMessage(projectId, taskId) {
+export async function updateMessage(
+  projectId,
+  messageId,
+  message,
+  taggedUsers
+) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    console.log(projectId, "from server");
+
+    const rawData = {
+      message: message,
+      taggedUsers: taggedUsers,
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/message/${messageId}?projectId=${projectId}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify(rawData),
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de l'enregistrement du message"
+    );
+  }
+}
+
+export async function deleteMessage(projectId, messageId) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
 
     const res = await fetch(
-      `${process.env.API_URL}/message/${taskId}?projectId=${projectId}`,
+      `${process.env.API_URL}/message/${messageId}?projectId=${projectId}`,
       {
         method: "DELETE",
         credentials: "include",
@@ -95,8 +140,6 @@ export async function deleteMessage(projectId, taskId) {
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
-    revalidateTag("messages");
 
     return response;
   } catch (err) {

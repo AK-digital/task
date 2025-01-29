@@ -26,6 +26,7 @@ export default function AuthProvider({ children }) {
     revalidateOnMount: true, // Revalidate everytime componenets are mounted
     revalidateOnFocus: true, // Revalidate everytime the user focus the page
     refreshWhenHidden: true, // The request will be refreshed even if the user is not on the page
+    refreshWhenOffline: true,
   });
 
   // Returns to auth page
