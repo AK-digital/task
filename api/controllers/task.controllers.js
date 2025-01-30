@@ -59,6 +59,7 @@ export async function getTasks(req, res, next) {
         path: "responsibles",
         select: "-password -role", // Exclure le champ `password` des responsibles
       })
+
       .exec();
 
     if (tasks.length <= 0) {

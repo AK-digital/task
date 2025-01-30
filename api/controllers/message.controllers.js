@@ -1,5 +1,7 @@
 import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import { sendEmail } from "../helpers/nodemailer.js";
 import MessageModel from "../models/Message.model.js";
+import userModel from "../models/user.model.js";
 import { getMatches } from "../utils/utils.js";
 
 export async function saveMessage(req, res, next) {
@@ -7,6 +9,9 @@ export async function saveMessage(req, res, next) {
     const projectId = req.query.projectId;
     const authUser = res.locals.user;
     const { taskId, message, taggedUsers } = req.body;
+
+    // Ensure that there is no duplicate value
+    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
 
     if (!taskId || !message) {
       return res
@@ -37,10 +42,27 @@ export async function saveMessage(req, res, next) {
       taskId: taskId,
       author: authUser?._id,
       message: messageWithImg ?? message,
-      taggedUsers: taggedUsers,
+      taggedUsers: uniqueTaggedUsers,
     });
 
     const savedMessage = await newMessage.save();
+
+    const subjet = `Vous avez été identifié dans un message dans Täsk`;
+    const text = `
+            <div style="font-family: Arial, sans-serif; color: #333; text-align: center; padding: 20px;">
+              <h1 style="color: #5056C8;">Identifié dans un message</h1>
+              <p>Bonjour,</p>
+              <p>Vous avez été identifié dans ce message : <strong>${savedMessage?.message}</strong>. 
+            </div>
+            `;
+
+    for (const taggedUser of uniqueTaggedUsers) {
+      const user = await userModel.findById({ _id: taggedUser });
+
+      if (user) {
+        await sendEmail("task@akdigital.fr", user?.email, subjet, text);
+      }
+    }
 
     return res.status(201).send({
       success: true,

@@ -1,7 +1,7 @@
 import styles from "@/styles/components/tasks/task.module.css";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faListUl } from "@fortawesome/free-solid-svg-icons";
+import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
 import TaskMore from "./TaskMore";
 import TaskStatus from "./TaskStatus";
@@ -37,22 +37,24 @@ export default function Task({ task, project }) {
       <div className={styles.content}>
         <div className={styles.wrapper}>
           <div {...attributes} {...listeners} suppressHydrationWarning>
-            <FontAwesomeIcon icon={faListUl} />
+            <FontAwesomeIcon icon={faGripVertical} />
           </div>
           <TaskText task={task} />
           <div className={styles.comment} onClick={(e) => setTaskMore(true)}>
             <FontAwesomeIcon icon={faComment} />
           </div>
           <TaskResponsibles task={task} project={project} />
+          <div className={styles.options}>
+            <TaskStatus task={task} />
+            <TaskPriority task={task} />
+          </div>
+          <TaskDeadline task={task} />
+          <TaskRemove task={task} />
+          {taskMore && (
+            <TaskMore task={task} project={project} setTaskMore={setTaskMore} />
+          )}
         </div>
-        <div className={styles.options}>
-          <TaskStatus task={task} />
-          <TaskPriority task={task} />
-        </div>
-        <TaskDeadline task={task} />
       </div>
-      {isHover && <TaskRemove task={task} />}
-      {taskMore && <TaskMore task={task} setTaskMore={setTaskMore} />}
     </div>
   );
 }

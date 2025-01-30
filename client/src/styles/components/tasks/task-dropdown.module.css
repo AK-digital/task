@@ -2,6 +2,7 @@
     position: relative;
     user-select: none;
     border-right: 1px solid var(--border-color);
+    font-size: .9rem;
 }
 
 .dropdown__current {
@@ -73,6 +74,6 @@
 }
 
 .dropdown__list ul li {
-    padding: 8px;
+    padding: 12px 8px;
     cursor: pointer;
 }

@@ -12,16 +12,15 @@
 
 
   --pending-color: #6E7389;
-  --processing-color: #FDBC64;
+  --processing-color: #d5ac4c;
   --finished-color: #33BB87;
   --todo-color: #339ECD;
-  --blocked-color: #DC3545;
+  --blocked-color: #ca4250;
 
   --low-color: #79AFFD;
   --medium-color: #777AE5;
   --high-color: #6645A9;
-  --urgent-color: #DC3545;
-
+  --urgent-color: #ca42b1;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -103,15 +102,16 @@ i {
 }
 
 button {
-  padding: 8px;
+  padding: .65rem .9rem;
   background-color: var(--accent-color);
   border: none;
   outline: none;
-  border-radius: 4px;
+  border-radius: 8px;
   color: white;
-  font-size: 1rem;
+  font-size: .85rem;
   cursor: pointer;
   transition: 120ms all linear;
+  letter-spacing: 0.012em;
 }
 
 button:hover {

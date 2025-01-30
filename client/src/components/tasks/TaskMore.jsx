@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
 
-export default function TaskMore({ task, messages, setTaskMore }) {
+export default function TaskMore({ task, project, setTaskMore }) {
   const [editDescription, setEditDescription] = useState(false);
   const containerRef = useRef(null);
 
@@ -50,6 +50,7 @@ export default function TaskMore({ task, messages, setTaskMore }) {
               message={null}
               edit={null}
               setEdit={null}
+              project={project}
             />
           )}
         </div>
@@ -64,6 +65,7 @@ export default function TaskMore({ task, messages, setTaskMore }) {
             message={null}
             edit={null}
             setEdit={null}
+            project={project}
           />
         </div>
       </div>

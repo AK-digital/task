@@ -48,6 +48,7 @@ export default function TaskResponsibles({ task, project }) {
                   style={{
                     objectFit: "cover",
                     borderRadius: "50%",
+                    cursor: "pointer",
                   }}
                   alt={`Photo de profil de ${responsible?.firstName}`}
                 />

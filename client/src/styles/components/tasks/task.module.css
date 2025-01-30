@@ -11,41 +11,67 @@
 
 .container:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
     transition: 200ms all linear;
+}
+
+.container:hover .task__remove {
+    visibility: visible;
 }
 
 .content {
     display: flex;
     justify-content: flex-start;
-
     width: 100%;
-
 }
 
 .wrapper {
     display: flex;
     align-items: center;
-    gap: 12px;
     width: 100%;
-    max-width: 700px;
+    max-width: 100%;
 }
 
-.content svg {
+.content [aria-roledescription="sortable"] svg {
     width: 15px;
     height: 15px;
+    cursor: grab;
 }
 
-.options {
+.content [aria-roledescription="sortable"] svg {
+    color: #ffffff24;
+}
+
+.content .options {
     display: flex;
 }
 
 .comment {
     display: flex;
     align-items: center;
+    margin-right: 8px;
 }
 
 .comment svg {
-    width: 25px;
-    height: 25px;
+    width: 1.5rem;
+    height: auto;
+    cursor: pointer;
+}
+
+.comment svg path {
+    fill: #cfcece;
+}
+
+.options {
+    height: 100%;
+}
+
+.task__remove {
+    cursor: pointer;
+    margin-right: 5px;
+    visibility: hidden;
+    color: #ca4250;
+}
+
+.container:hover .task__remove {
+    visibility: visible;
 }

@@ -1,6 +1,5 @@
 .tasks {
     background-color: var(--secondary-background-color);
-
     border-radius: 4px;
 }
 
@@ -13,7 +12,6 @@
 .tasks li form {
     width: 100%;
 }
-
 
 .task__add {
     display: flex;
@@ -31,6 +29,10 @@
     height: 15px;
 }
 
+.task__add svg path {
+    fill: #ffffff36;
+}
+
 .task__add form {
     width: 100%;
 }
@@ -41,7 +43,6 @@
     background-color: inherit;
     padding: 6px 4px;
 }
-
 
 .tasks__info {
     position: absolute;

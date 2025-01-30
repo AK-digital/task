@@ -2,9 +2,9 @@
     position: fixed;
     z-index: 2001;
     top: 0;
-    right: -30%;
+    right: 0;
     background-color: var(--primary-background-color);
-    width: 30%;
+    width: 44%;
     height: 100%;
     box-shadow: -4px 10px 10px 0px rgba(0, 0, 0, 0.15);
     animation: openAnimation 250ms forwards ease-out;

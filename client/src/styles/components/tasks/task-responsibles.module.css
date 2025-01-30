@@ -1,17 +1,18 @@
 .container {
     position: relative;
     display: flex;
-    width: fit-content;
-    max-width: 150px;
+    justify-content: center;
     border-left: 1px solid var(--border-color);
     border-right: 1px solid var(--border-color);
     padding: 4px 8px;
+    max-width: 90px;
+    width: 100%;
 }
 
 .list {
     display: flex;
+    justify-content: center;
     flex-direction: row !important;
-
 }
 
 .list li {
@@ -21,8 +22,8 @@
 
 .list li:not(:first-child) {
     position: relative;
-    left: -10px;
-    margin-right: -10px;
+    left: -12px;
+    margin-right: -12px;
 }
 
 .count {
@@ -79,6 +80,7 @@
     padding: 6px;
     border-radius: 20px;
     transition: 120ms all linear;
+    cursor: pointer;
 }
 
 .responsibles__list li svg {

@@ -1,4 +1,14 @@
+.reactQuill {
+    position: relative;
+}
+
 .buttons {
     display: flex;
     gap: 10px;
+}
+
+.mention {
+    color: var(--accent-color);
+    font-weight: 500;
+
 }
