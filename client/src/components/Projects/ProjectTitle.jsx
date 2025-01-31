@@ -1,25 +1,20 @@
 "use client";
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import styles from "@/styles/layouts/header.module.css";
+
+import styles from "@/styles/components/projects/project-header.module.css";
 import { useState, useRef, useEffect } from 'react';
 import { updateProjectName } from '@/actions/project';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function ProjectTitle({ projects }) {
-    const pathname = usePathname();
-    const projectId = pathname.split('/').pop();
-    const currentProject = projects?.find(project => project._id === projectId);
-
+export default function ProjectTitle({ project }) {
     const [isEditing, setIsEditing] = useState(false);
-    const [projectName, setProjectName] = useState(currentProject?.name || 'Täsk');
+    const [projectName, setProjectName] = useState(project?.name);
     const inputRef = useRef(null);
 
     const debouncedUpdate = useDebouncedCallback(async (newName) => {
-        if (projectId && newName !== currentProject?.name) {
-            const response = await updateProjectName(projectId, newName);
+        if (project?._id && newName !== project?.name) {
+            const response = await updateProjectName(project._id, newName);
             if (!response.success) {
-                setProjectName(currentProject?.name); // Reset en cas d'erreur
+                setProjectName(project?.name);
             }
         }
     }, 600);
@@ -32,19 +27,10 @@ export default function ProjectTitle({ projects }) {
     }, [isEditing]);
 
     useEffect(() => {
-        setProjectName(currentProject?.name || 'Täsk');
-    }, [currentProject]);
-
-    if (pathname === '/') {
-        return (
-            <div className={styles.title}>
-                <Link href="/">Täsk</Link>
-            </div>
-        );
-    }
+        setProjectName(project?.name);
+    }, [project]);
 
     const handleClick = () => {
-        if (!pathname.startsWith('/project/')) return;
         setIsEditing(true);
     };
 
@@ -58,7 +44,7 @@ export default function ProjectTitle({ projects }) {
             e.target.blur();
         }
         if (e.key === 'Escape') {
-            setProjectName(currentProject?.name);
+            setProjectName(project?.name);
             setIsEditing(false);
         }
     };

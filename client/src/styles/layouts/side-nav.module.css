@@ -6,8 +6,13 @@
     border-right: 1px solid #292a39;
 }
 
-.projects {
-    margin-top: 50px;
+.container>div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .projects,
@@ -16,11 +21,18 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
 }
 
 .projectsItem {
     font-size: 0.9rem;
     padding: 8px 4px;
-    border-radius: 4px;
+    border-radius: 50px;
+    background-color: rgb(72, 72, 72);
+    height: 48px;
+    width: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
 }

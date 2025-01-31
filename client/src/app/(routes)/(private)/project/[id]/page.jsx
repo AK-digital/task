@@ -1,23 +1,25 @@
-"use server";
-import styles from "@/styles/pages/project.module.css";
-import { getBoards } from "@/api/board";
-import Boards from "@/components/Boards/Boards";
 import { getProject } from "@/api/project";
-import AddBoard from "@/components/Boards/AddBoard";
+import { getBoards } from "@/api/board";
+import ProjectHeader from "@/components/Projects/ProjectHeader";
+import styles from "@/styles/pages/project.module.css";
+import AddBoard from "@/components/boards/AddBoard";
+import Boards from "@/components/boards/Boards";
 
 export default async function Project({ params }) {
-  const { id } = await params;
-  const project = await getProject(id);
-  const boards = await getBoards(id);
+  const project = await getProject(params.id);
+  const boards = await getBoards(params.id);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        {boards?.length > 0 && (
-          <Boards projectId={id} boards={boards} project={project} />
-        )}
-        <AddBoard projectId={id} />
-      </div>
-    </main>
+    <>
+      <main className={styles.main}>
+        <ProjectHeader project={project} />
+        <div className={styles.container}>
+          <Boards boards={boards} project={project} />
+          <div className={styles.options}>
+            <AddBoard projectId={params.id} />
+          </div>
+        </div>
+      </main>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import styles from "@/styles/layouts/private-layout.module.css";
 import AuthProvider from "@/app/AuthProvider";
-import Header from "@/layouts/Header";
+import Header from "@/components/Projects/ProjectHeader";
 import SideNav from "@/layouts/SideNav";
 
 export default function PrivateLayout({ children }) {
@@ -12,7 +12,6 @@ export default function PrivateLayout({ children }) {
         </div>
 
         <div className={styles["private-layout__main"]}>
-          <Header />
           {children}</div>
       </div>
     </AuthProvider>
