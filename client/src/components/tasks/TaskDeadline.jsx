@@ -5,7 +5,7 @@ import { useActionState, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import "moment/locale/fr"; // Importer la locale française
+import "moment/locale/fr";
 
 const initialState = {};
 
@@ -25,7 +25,7 @@ export default function TaskDeadline({ task }) {
 
   const deadline = task?.deadline?.split("T")[0];
   const deadlineMoment = moment(deadline, "YYYY MM DD");
-  const isPastDeadline = deadlineMoment.isBefore(moment(), "day");
+  const isPastDeadline = deadlineMoment.isBefore(moment(), "day") && task?.status !== "Terminée";
   const formattedDeadline = deadlineMoment.isValid()
     ? deadlineMoment.format("D MMMM", "fr")
     : null;

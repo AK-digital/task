@@ -46,7 +46,7 @@ export async function signUp(prevState, formData) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
+      "Une erreur est survenue lors de la création d'un nouvel utilisateur"
     );
     return {
       status: "failure",
@@ -117,7 +117,7 @@ export async function signIn(prevState, formData) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
+      "Une erreur est survenue lors de la création d'un nouvel utilisateur"
     );
     if (err.message.includes("mail")) {
       return {
@@ -141,5 +141,35 @@ export async function signIn(prevState, formData) {
       status: "failure",
       message: err?.message,
     };
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    if (!session?.value) {
+      return null;
+    }
+
+    const res = await fetch(`${process.env.API_URL}/auth/session`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${session.value}`,
+      },
+    });
+
+    const response = await res.json();
+
+    if (!response.success) {
+      return null;
+    }
+
+    return response.data;
+  } catch (err) {
+    console.log(err.message || "Erreur lors de la récupération de l'utilisateur");
+    return null;
   }
 }

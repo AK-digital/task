@@ -145,3 +145,41 @@ export async function removeGuest(projectId, prevState, formData) {
     };
   }
 }
+
+export async function updateProjectName(projectId, name) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const rawFormData = {
+      name: name,
+    };
+
+    const res = await fetch(`${process.env.API_URL}/project/${projectId}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.value}`,
+      },
+      body: JSON.stringify(rawFormData),
+    });
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("projects");
+    revalidateTag("project");
+
+    return response;
+  } catch (err) {
+    console.log(err.message || "Une erreur est survenue lors de la modification du projet");
+    return {
+      success: false,
+      message: err.message
+    };
+  }
+}

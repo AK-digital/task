@@ -1,12 +1,14 @@
 .private-layout {
     display: flex;
-
 }
 
 .private-layout__aside {
-    width: 5%;
+    position: fixed;
+    width: var(--aside-width);
+    height: 100%;
 }
 
 .private-layout__main {
-    width: 100%;
+    width: calc(100% - var(--aside-width));
+    margin-left: var(--aside-width);
 }

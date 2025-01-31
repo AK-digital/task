@@ -2,11 +2,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* padding: 4px 8px; */
     padding-inline: 8px;
     transition: 200ms all linear;
     border-bottom: 1px solid #43455f;
     width: 100%;
+    height: 40px;
 }
 
 .container:hover {
@@ -22,6 +22,7 @@
     display: flex;
     justify-content: flex-start;
     width: 100%;
+    height: 100%;
 }
 
 .wrapper {
@@ -67,7 +68,8 @@
 
 .task__remove {
     cursor: pointer;
-    margin-right: 5px;
+    margin-right: 7px;
+    margin-left: 7px;
     visibility: hidden;
     color: #ca4250;
 }

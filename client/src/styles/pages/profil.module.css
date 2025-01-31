@@ -1,7 +1,7 @@
 .main {
     display: flex;
     justify-content: center;
-    margin: 80px 120px 80px 120px;
+    margin: 40px;
 }
 
 .container {

@@ -79,7 +79,7 @@
 }
 
 .text p {
-    font-size: 0.95rem;
+    font-size: var(--text-size-normal);
 }
 
 .text img {

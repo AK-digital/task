@@ -83,7 +83,7 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
       className={styles["tasks"]}
       suppressHydrationWarning
       style={{
-        borderLeft: `2px solid ${optimisticColor}`,
+        borderLeft: `3px solid ${optimisticColor}`,
       }}
     >
       <DndContext

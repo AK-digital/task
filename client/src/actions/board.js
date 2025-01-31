@@ -73,3 +73,33 @@ export async function updateBoard(boardId, projectId, color, title) {
     );
   }
 }
+
+export async function deleteBoard(boardId, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const res = await fetch(
+      `${process.env.API_URL}/board/${boardId}?projectId=${projectId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`,
+        },
+      }
+    );
+
+    const response = await res.json();
+
+    console.log(response);
+
+    revalidateTag("boards");
+    revalidateTag("tasks");
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de la suppression du tableau"
+    );
+  }
+}

@@ -6,7 +6,6 @@
 .tasks ul {
     display: flex;
     flex-direction: column;
-    /* gap: 8px; */
 }
 
 .tasks li form {
@@ -42,6 +41,7 @@
     border: none;
     background-color: inherit;
     padding: 6px 4px;
+    font-size: var(--text-size-normal);
 }
 
 .tasks__info {

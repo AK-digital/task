@@ -6,10 +6,8 @@
   --side-background-color: #17192b;
   --foreground: #171717;
   --border-color: #3a3d5c;
-  --text-color-muted: #656782;
+  --text-color-muted: #72748f;
   --text-color: #e0e0e0;
-
-
 
   --pending-color: #6E7389;
   --processing-color: #d5ac4c;
@@ -17,10 +15,15 @@
   --todo-color: #339ECD;
   --blocked-color: #ca4250;
 
-  --low-color: #79AFFD;
+  --low-color: #6f9ee3;
   --medium-color: #777AE5;
   --high-color: #6645A9;
   --urgent-color: #ca42b1;
+
+  --text-size-normal: .9rem;
+  --letter-spacing-normal: 0.011rem;
+
+  --aside-width: 80px;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -43,6 +46,7 @@ html:has(#modal-layout) {
 
 body {
   color: var(--text-color);
+
   background: var(--primary-background-color);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -63,6 +67,10 @@ body {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--foreground);
+}
+
+::placeholder {
+  color: var(--text-color-muted);
 }
 
 * {
@@ -102,16 +110,17 @@ i {
 }
 
 button {
-  padding: .65rem .9rem;
+  padding: .65rem 1rem;
   background-color: var(--accent-color);
   border: none;
   outline: none;
   border-radius: 8px;
   color: white;
-  font-size: .85rem;
-  cursor: pointer;
+  font-size: var(--text-size-normal);
+  letter-spacing: var(--letter-spacing-normal);
+  font-family: inherit;
   transition: 120ms all linear;
-  letter-spacing: 0.012em;
+  cursor: pointer;
 }
 
 button:hover {
@@ -121,6 +130,11 @@ button:hover {
 
 button[data-disabled="true"] {
   background-color: var(--accent-color-hover);
+}
+
+p {
+  line-height: 1.5rem;
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 #overlay-hidden {
@@ -133,6 +147,15 @@ button[data-disabled="true"] {
 }
 
 /* QUILL STYLES */
+.ql-container {
+  font-family: inherit !important;
+}
+
+.ql-editor {
+  font-size: var(--text-size-normal);
+  letter-spacing: 0.01rem;
+  ;
+}
 
 .ql-toolbar.ql-snow {
   border-bottom: inherit !important;

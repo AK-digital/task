@@ -5,6 +5,7 @@ import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import DeleteBoard from "./DeleteBoard";
 
 export default function BoardHeader({
   board,
@@ -17,25 +18,17 @@ export default function BoardHeader({
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
   const [title, setTitle] = useState(board?.title);
+  const [showDelete, setShowDelete] = useState(false);
 
   const colors = board?.colors;
 
   async function handleColor(e) {
     const value = e.target.dataset.value;
-
     setOptimisticColor(value);
-
-    const response = await updateBoard(
-      board?._id,
-      board?.projectId,
-      value,
-      title
-    );
-
+    const response = await updateBoard(board?._id, board?.projectId, value, title);
     if (!response?.success) setOptimisticColor(board?.color);
   }
 
-  // Créer un callback avec un délai de 300ms
   const debouncedUpdateTask = useDebouncedCallback(async (value) => {
     const response = await updateBoard(
       board?._id,
@@ -43,19 +36,22 @@ export default function BoardHeader({
       optimisticColor,
       value
     );
-
     if (!response?.success) setTitle(board?.title);
   }, 600);
 
   const handleTitleChange = (e) => {
     const value = e.target.value;
     setTitle(value);
-
     debouncedUpdateTask(value);
   };
 
   return (
-    <div className={styles.container} data-open={open}>
+    <div
+      className={styles.container}
+      data-open={open}
+      onMouseEnter={() => setShowDelete(true)}
+      onMouseLeave={() => setShowDelete(false)}
+    >
       {open ? (
         <FontAwesomeIcon
           style={{ color: `${optimisticColor}` }}
@@ -101,20 +97,21 @@ export default function BoardHeader({
             : `${tasks?.length} Tâche`}
         </span>
       )}
+      {showDelete && (
+        <DeleteBoard boardId={board?._id} projectId={board?.projectId} />
+      )}
       {openColors && (
         <>
           <div className={styles.modal} id="modal">
             <ul>
-              {colors?.map((color, idx) => {
-                return (
-                  <li
-                    key={idx}
-                    style={{ backgroundColor: `${color}` }}
-                    data-value={color}
-                    onClick={handleColor}
-                  ></li>
-                );
-              })}
+              {colors?.map((color, idx) => (
+                <li
+                  key={idx}
+                  style={{ backgroundColor: `${color}` }}
+                  data-value={color}
+                  onClick={handleColor}
+                ></li>
+              ))}
             </ul>
           </div>
           <div
