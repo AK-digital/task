@@ -2,6 +2,7 @@ import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import MessageModel from "../models/Message.model.js";
 import userModel from "../models/user.model.js";
+import { emailMessage } from "../templates/emails.js";
 import { getMatches } from "../utils/utils.js";
 
 export async function saveMessage(req, res, next) {
@@ -47,20 +48,19 @@ export async function saveMessage(req, res, next) {
 
     const savedMessage = await newMessage.save();
 
-    const subjet = `Vous avez été identifié dans un message dans Täsk`;
-    const text = `
-            <div style="font-family: Arial, sans-serif; color: #333; text-align: center; padding: 20px;">
-              <h1 style="color: #5056C8;">Identifié dans un message</h1>
-              <p>Bonjour,</p>
-              <p>Vous avez été identifié dans ce message : <strong>${savedMessage?.message}</strong>. 
-            </div>
-            `;
-
+    // Email Logic, basically sending an email for each tagged user
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await userModel.findById({ _id: taggedUser });
 
+      const template = emailMessage(user, savedMessage);
+
       if (user) {
-        await sendEmail("task@akdigital.fr", user?.email, subjet, text);
+        await sendEmail(
+          "task@akdigital.fr",
+          user?.email,
+          template.subjet,
+          template.text
+        );
       }
     }
 
@@ -117,6 +117,8 @@ export async function updateMessage(req, res, next) {
   try {
     const { message, taggedUsers } = req.body;
 
+    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
+
     let messageWithImg = message;
 
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
@@ -134,7 +136,6 @@ export async function updateMessage(req, res, next) {
         }
       }
     } else {
-      console.log("played");
       const message = await MessageModel.findById({ _id: req.params.id });
 
       const messageContent = message?.message;
@@ -146,9 +147,7 @@ export async function updateMessage(req, res, next) {
           for (const messageMatch of messageMatches) {
             const img = messageMatch[1];
 
-            console.log(img);
-
-            const ya = await destroyFile("message", img);
+            await destroyFile("message", img);
           }
         }
       }
@@ -161,7 +160,7 @@ export async function updateMessage(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    const updatedResponse = await MessageModel.findByIdAndUpdate(
+    const updatedMessage = await MessageModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
@@ -175,17 +174,33 @@ export async function updateMessage(req, res, next) {
       }
     );
 
-    if (!updatedResponse) {
+    if (!updatedMessage) {
       return res.status(404).send({
         success: false,
         message: "Impossible de modifier une réponse qui n'existe pas",
       });
     }
 
+    // Email Logic, basically sending an email for each tagged user
+    for (const taggedUser of uniqueTaggedUsers) {
+      const user = await userModel.findById({ _id: taggedUser });
+
+      const template = emailMessage(user, updatedMessage);
+
+      if (user) {
+        await sendEmail(
+          "task@akdigital.fr",
+          user?.email,
+          template.subjet,
+          template.text
+        );
+      }
+    }
+
     return res.status(200).send({
       success: true,
       message: "Réponse modifié avec succès",
-      data: updatedResponse,
+      data: updatedMessage,
     });
   } catch (err) {
     return res.status(500).send({

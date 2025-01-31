@@ -12,12 +12,13 @@ import Image from "next/image";
 import { deleteMessage } from "@/api/message";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 
-export default function Message({ message, mutate }) {
+export default function Message({ message, project, mutate }) {
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
   moment.locale("fr");
   const author = message?.author;
+  const isUpdated = message?.createdAt !== message?.updatedAt;
 
   const date = moment(message?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
@@ -40,6 +41,7 @@ export default function Message({ message, mutate }) {
           type={"conversation"}
           message={message}
           task={null}
+          project={project}
           setEditDescription={null}
           edit={edit}
           setEdit={setEdit}
@@ -63,6 +65,7 @@ export default function Message({ message, mutate }) {
                   {author?.firstName + " " + author?.lastName}
                 </span>
                 <span className={styles.date}>{formattedDate}</span>
+                {isUpdated && <span className={styles.updated}>Modifié</span>}
               </div>
               <div className={styles.ellipsis}>
                 <FontAwesomeIcon

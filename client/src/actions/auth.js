@@ -1,8 +1,6 @@
 "use server";
-
 import { signInSchema, signUpSchema } from "@/utils/zod";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function signUp(prevState, formData) {
   try {
@@ -135,8 +133,7 @@ export async function signIn(prevState, formData) {
         status: "failure",
         message: err?.message,
         errors: {
-          passwordErr:
-            "Votre adresse e-mail ou votre mot de passe est invalide",
+          password: "Votre adresse e-mail ou votre mot de passe est invalide",
         },
       };
     }

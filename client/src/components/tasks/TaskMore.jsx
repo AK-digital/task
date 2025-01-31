@@ -56,7 +56,7 @@ export default function TaskMore({ task, project, setTaskMore }) {
         </div>
         {/* Conversation */}
         <div className={styles.conversation}>
-          <Messages task={task} />
+          <Messages task={task} project={project} />
           <RichTextEditor
             placeholder={"Écrire un message"}
             type="conversation"

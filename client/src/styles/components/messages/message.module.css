@@ -36,12 +36,11 @@
     font-weight: 500;
 }
 
-.date {
+.date,
+.updated {
     font-size: 0.75rem;
     color: var(--text-color-muted);
 }
-
-.ellipsis {}
 
 .more {
     position: absolute;

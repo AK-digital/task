@@ -38,6 +38,11 @@ export default function SignIn({ setSignIn, setSignUp }) {
       <div className={styles.title}>
         <span>Vous avez déjà un compte ?</span>
       </div>
+      {(state?.errors?.password || state?.errors?.email) && (
+        <div>
+          <i data-error={true}>Identifiants incorrects, veuillez réessayer.</i>
+        </div>
+      )}
       <form className={styles.form} action={formAction}>
         <input
           type="email"
@@ -46,7 +51,6 @@ export default function SignIn({ setSignIn, setSignUp }) {
           placeholder="Email"
           defaultValue={state?.payload?.email}
         />
-        {state?.errors?.email && <i>{state?.errors?.email}</i>}
         <input
           type="password"
           name="password"
@@ -54,18 +58,6 @@ export default function SignIn({ setSignIn, setSignUp }) {
           placeholder="Mot de passe"
           defaultValue={state?.payload?.password}
         />
-        {state?.errors?.password && (
-          <div className={styles.passwordErr}>
-            <i>Le mot de passe doit contenir :</i>
-            <ul>
-              <li>Au moins 8 caractères</li>
-              <li>Une lettre majuscule (A-Z)</li>
-              <li>Un chiffre (0-9)</li>
-              <li>Un caractère spécial (!@#$%^&?)</li>
-            </ul>
-          </div>
-        )}
-        {state?.errors?.passwordErr && <i>{state?.errors?.passwordErr}</i>}
         <div className={styles.buttons}>
           <button
             data-disabled={pending}

@@ -151,15 +151,19 @@ export async function removeResponsible(taskId, responsibleId, projectId) {
   }
 }
 
-export async function updateDescription(taskId, projectId, content) {
+export async function updateDescription(
+  taskId,
+  projectId,
+  content,
+  taggedUsers
+) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
 
-    console.log(content);
-
     const rawData = {
       description: content,
+      taggedUsers: taggedUsers,
     };
 
     const res = await fetch(
@@ -190,15 +194,6 @@ export async function updateDescription(taskId, projectId, content) {
     console.log(
       err.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
-    );
-  }
-}
-
-export async function addResponse() {
-  try {
-  } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de l'envoie d'une réponse"
     );
   }
 }
@@ -238,6 +233,72 @@ export async function updateTaskOrder(tasks, projectId) {
     console.log(
       err.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
+    );
+  }
+}
+
+export async function taskStartTimer(taskId, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/start-timer?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de l'enregistrement du timer"
+    );
+  }
+}
+
+export async function taskEndTimer(taskId, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/end-timer?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de l'enregistrement du timer"
     );
   }
 }

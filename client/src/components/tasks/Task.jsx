@@ -12,6 +12,7 @@ import TaskRemove from "./TaskRemove";
 import TaskResponsibles from "./TaskResponsibles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import TaskTimer from "./TaskTimer";
 
 export default function Task({ task, project }) {
   const [isHover, setIsHover] = useState(false);
@@ -49,6 +50,7 @@ export default function Task({ task, project }) {
             <TaskPriority task={task} />
           </div>
           <TaskDeadline task={task} />
+          <TaskTimer task={task} />
           <TaskRemove task={task} />
           {taskMore && (
             <TaskMore task={task} project={project} setTaskMore={setTaskMore} />

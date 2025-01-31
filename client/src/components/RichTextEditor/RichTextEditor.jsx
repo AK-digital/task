@@ -24,13 +24,27 @@ const ReactQuill = dynamic(
         static create(value) {
           const node = super.create();
           node.classList.add(styles.mention);
+          node.setAttribute("data-mention", value);
+          node.setAttribute("contenteditable", "false"); // Empêche l'édition partielle
           node.innerText = value;
           return node;
+        }
+
+        static value(node) {
+          return node.getAttribute("data-mention") || node.innerText;
+        }
+
+        // Ajouter une méthode pour gérer la suppression
+        static formats(node) {
+          return {
+            mention: node.getAttribute("data-mention"),
+          };
         }
       }
 
       SpanBlot.blotName = "span";
       SpanBlot.tagName = "span";
+      SpanBlot.className = styles.mention;
 
       // Enregistrement du format
       Quill.register("formats/span", SpanBlot);
@@ -54,7 +68,6 @@ export default function RichTextEditor({
   setEditDescription,
 }) {
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState(message ? message?.message : "");
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
   const [filteredGuests, setFilteredGuests] = useState([]);
   const [getLastWord, setGetLastWord] = useState("");
@@ -65,6 +78,10 @@ export default function RichTextEditor({
 
   const isDescription = type === "description";
   const isConversation = type === "conversation";
+
+  const [content, setContent] = useState(
+    message ? message?.message : isDescription ? task?.description : ""
+  );
 
   const btnMessage = isDescription
     ? "Enregistrer la description"
@@ -116,8 +133,36 @@ export default function RichTextEditor({
     }
   }
 
+  function handleChange(content, delta, source, editor) {
+    setContent(content);
+
+    // Si c'est une opération de suppression
+    if (delta.ops?.find((op) => op.delete)) {
+      // Récupérer le contenu actuel
+      const currentContents = editor.getContents();
+
+      // Parcourir les ops du contenu actuel pour trouver les mentions
+      const currentMentions = currentContents.ops
+        .filter((op) => op.insert?.span)
+        .map((op) => op.insert.span);
+
+      // Comparer avec la liste actuelle des taggedUsers
+      setTaggedUsers((prev) => {
+        const updatedTaggedUsers = prev.filter((userId) => {
+          const guest = project?.guests?.find((g) => g._id === userId);
+          if (!guest) return false;
+
+          const mentionText = `@${guest.firstName} ${guest.lastName}`;
+          return currentMentions.includes(mentionText);
+        });
+
+        return updatedTaggedUsers;
+      });
+    }
+  }
+
   function handleKeydown(e) {
-    if (!content.includes("@")) {
+    if (!content?.includes("@")) {
       setIsTaggedUsers(false);
     }
     if (e.key === "@") {
@@ -135,9 +180,14 @@ export default function RichTextEditor({
 
     if (isDescription) {
       if (isEmpty) {
-        await updateDescription(task?._id, task?.projectId, "");
+        await updateDescription(task?._id, task?.projectId, "", []);
       } else {
-        await updateDescription(task?._id, task?.projectId, content);
+        await updateDescription(
+          task?._id,
+          task?.projectId,
+          content,
+          taggedUsers
+        );
       }
       setEditDescription(false);
     }
@@ -149,7 +199,7 @@ export default function RichTextEditor({
         content,
         taggedUsers
       );
-      console.log(taggedUsers);
+
       if (res?.success) {
         await mutate(
           `/message?projectId=${task?.projectId}&taskId=${task?._id}`
@@ -173,6 +223,7 @@ export default function RichTextEditor({
         setConvLoading(false);
       }
     }
+    setTaggedUsers([]);
     setContent("");
     setLoading(false);
   }
@@ -234,9 +285,8 @@ export default function RichTextEditor({
             formats={formats}
             placeholder={placeholder}
             defaultValue={isDescription && task?.description}
-            onChange={(value) => {
-              setContent(value);
-            }}
+            value={content}
+            onChange={handleChange}
             onKeyDown={handleKeydown}
             onKeyUp={getWordBeforeCaret}
           />
@@ -262,10 +312,7 @@ export default function RichTextEditor({
             formats={formats}
             placeholder={placeholder}
             value={content}
-            onChange={(value) => {
-              setContent(value);
-              getWordBeforeCaret();
-            }}
+            onChange={handleChange}
             onKeyDown={handleKeydown}
             onKeyUp={getWordBeforeCaret}
           />

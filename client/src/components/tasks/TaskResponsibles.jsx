@@ -56,7 +56,7 @@ export default function TaskResponsibles({ task, project }) {
             );
           })}
           {responsibles?.length > 3 && (
-            <li className={styles.count}>+{responsibles?.length}</li>
+            <li className={styles.count}>+{responsibles?.length - 3}</li>
           )}
         </ul>
       ) : (

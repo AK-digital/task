@@ -70,6 +70,10 @@ const taskSchema = new Schema(
     deadline: {
       type: Date,
     },
+    taggedUsers: {
+      type: [Schema.Types.ObjectId],
+      ref: "User",
+    },
     order: {
       type: Number,
     },

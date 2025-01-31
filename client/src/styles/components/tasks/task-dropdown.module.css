@@ -2,7 +2,7 @@
     position: relative;
     user-select: none;
     border-right: 1px solid var(--border-color);
-    font-size: .9rem;
+    font-size: 0.9rem;
 }
 
 .dropdown__current {

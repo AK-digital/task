@@ -5,7 +5,7 @@ import useSWR from "swr";
 import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
 
-export default function Messages({ task }) {
+export default function Messages({ task, project }) {
   const { data, isLoading, mutate } = useSWR(
     `/message?projectId=${task?.projectId}&taskId=${task?._id}`,
     () => getMessages(task.projectId, task._id)
@@ -18,7 +18,12 @@ export default function Messages({ task }) {
       {isNotEmpty(messages) &&
         messages?.map((message) => {
           return (
-            <Message message={message} mutate={mutate} key={message?._id} />
+            <Message
+              message={message}
+              mutate={mutate}
+              project={project}
+              key={message?._id}
+            />
           );
         })}
     </div>

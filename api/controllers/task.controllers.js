@@ -3,6 +3,7 @@ import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
 import userModel from "../models/user.model.js";
+import { emailDescription } from "../templates/emails.js";
 import { regex } from "../utils/regex.js";
 import { getMatches } from "../utils/utils.js";
 
@@ -59,7 +60,10 @@ export async function getTasks(req, res, next) {
         path: "responsibles",
         select: "-password -role", // Exclure le champ `password` des responsibles
       })
-
+      .populate({
+        path: "timeTracking.sessions.userId", // Accès à userId dans sessions
+        select: "-password -role", // Exclure les champs sensibles
+      })
       .exec();
 
     if (tasks.length <= 0) {
@@ -294,8 +298,10 @@ export async function updateTaskDeadline(req, res, next) {
 
 export async function updateTaskDescription(req, res, next) {
   try {
-    const { description } = req.body;
+    const { description, taggedUsers } = req.body;
     let updatedDescription = description;
+
+    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
 
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
@@ -331,6 +337,7 @@ export async function updateTaskDescription(req, res, next) {
 
     const updateFields = {};
     updateFields.description = updatedDescription;
+    updateFields.taggedUsers = uniqueTaggedUsers;
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
@@ -342,6 +349,21 @@ export async function updateTaskDescription(req, res, next) {
         setDefaultsOnInsert: true,
       }
     );
+
+    for (const taggedUser of uniqueTaggedUsers) {
+      const user = await userModel.findById({ _id: taggedUser });
+
+      const template = emailDescription(user, updatedTask);
+
+      if (user) {
+        await sendEmail(
+          "task@akdigital.fr",
+          user?.email,
+          template?.subjet,
+          template?.text
+        );
+      }
+    }
 
     if (!updatedTask) {
       return res.status(404).send({
