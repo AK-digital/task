@@ -14,7 +14,7 @@ export default function UserInfo() {
   return (
     <div className={styles.container}>
       <FontAwesomeIcon icon={faBell} />
-      <Link href={"/profil"}>
+      <Link href={"/profile"}>
         <div className={styles.wrapper}>
           <span className={styles["user-name"]}>{user?.firstName}</span>
           <Image

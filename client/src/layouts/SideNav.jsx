@@ -44,7 +44,7 @@ export default async function SideNav() {
           <CreateProject />
         </div>
         <div className={styles.userAvatar}>
-          <Link href="/profil">
+          <Link href="/profile">
             <Image
               src={user?.picture || "/default-pfp.webp"}
               alt="Photo de profil"

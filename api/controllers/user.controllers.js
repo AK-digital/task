@@ -1,11 +1,11 @@
-import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 import { userUpdateValidation } from "../helpers/zod.js";
-import userModel from "../models/user.model.js";
+import userModel from "../models/User.model.js";
+import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 
 // Admin only
 export async function getUsers(req, res, next) {
   try {
-    const users = await userModel.find().select("-password"); // Removing the password from the returned user data
+    const users = await userModel.find().select("-password");
 
     if (users.length <= 0) {
       return res.status(404).send({
@@ -32,7 +32,7 @@ export async function getUser(req, res, next) {
   try {
     const user = await userModel
       .findById({ _id: req.params.id })
-      .select("-password"); // Removing the password from the returned user data
+      .select("-password");
 
     if (!user) {
       return res.status(404).send({
@@ -56,7 +56,7 @@ export async function getUser(req, res, next) {
 
 export async function updateUser(req, res, next) {
   try {
-    const { lastName, firstName } = req.body;
+    const { lastName, firstName, company, position } = req.body;
 
     if (!lastName || !firstName) {
       return res
@@ -64,7 +64,12 @@ export async function updateUser(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    const validation = userUpdateValidation.safeParse({ lastName, firstName });
+    const validation = userUpdateValidation.safeParse({
+      lastName,
+      firstName,
+      company,
+      position
+    });
 
     if (!validation.success) {
       const { errors } = validation.error;
@@ -83,8 +88,10 @@ export async function updateUser(req, res, next) {
         },
         {
           $set: {
-            lastName: lastName,
-            firstName: firstName,
+            lastName,
+            firstName,
+            company,
+            position
           },
         },
         {
@@ -92,12 +99,12 @@ export async function updateUser(req, res, next) {
           new: true,
         }
       )
-      .select("-password"); // Removing the password from the returned user data
+      .select("-password");
 
     if (!updatedUser) {
       return res.status(404).send({
         success: false,
-        message: "Impossible de mofidier un utilisateur inexistant",
+        message: "Impossible de modifier un utilisateur inexistant",
       });
     }
 
@@ -123,11 +130,11 @@ export async function updatePicture(req, res, next) {
     if (!user) {
       return res.status(404).send({
         success: false,
-        message: "Impossible de mofidier un utilisateur inexistant",
+        message: "Impossible de modifier un utilisateur inexistant",
       });
     }
 
-    // If user has a picture then we delete it from cloudinary
+    // Si l'utilisateur a déjà une photo, on la supprime de Cloudinary
     if (user?.picture) {
       await destroyFile("profil", user?.picture);
     }
@@ -138,7 +145,7 @@ export async function updatePicture(req, res, next) {
       return res.status(400).send({
         success: false,
         message:
-          "Une erreur s'est produite lors de l'enregistrement de la photo de profil sur Cloudinary",
+          "Une erreur s'est produite lors de l'enregistrement de la photo de  sur Cloudinary",
       });
     }
 
@@ -157,11 +164,11 @@ export async function updatePicture(req, res, next) {
           new: true,
         }
       )
-      .select("-password"); // Removing the password from the returned user data
+      .select("-password");
 
     return res.status(200).send({
       success: true,
-      message: "Utilisateur modifié avec succès",
+      message: "Photo de profil mise à jour avec succès",
       data: updatedUser,
     });
   } catch (err) {
@@ -172,7 +179,6 @@ export async function updatePicture(req, res, next) {
   }
 }
 
-// Handle user account deletion in case the user wants to delete his account
 export async function deleteUser(req, res, next) {
   try {
     const user = await userModel.findByIdAndDelete({ _id: req.params.id });

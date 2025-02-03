@@ -1,6 +1,5 @@
 import styles from "@/styles/layouts/private-layout.module.css";
 import AuthProvider from "@/app/AuthProvider";
-import Header from "@/layouts/ProjectHeader";
 import SideNav from "@/layouts/SideNav";
 
 export default function PrivateLayout({ children }) {

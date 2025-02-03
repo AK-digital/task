@@ -30,7 +30,16 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
+      required: true,
       trim: true,
+    },
+    company: {
+      type: String,
+      maxLength: 100,
+    },
+    position: {
+      type: String,
+      maxLength: 100,
     },
     picture: {
       type: String,
@@ -42,6 +51,7 @@ const userSchema = new Schema(
       type: String,
       default: "user",
       enum: ["user", "admin"],
+      default: "user",
     },
   },
   {
@@ -49,4 +59,6 @@ const userSchema = new Schema(
   }
 );
 
-export default mongoose.model("User", userSchema);
+const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
+
+export default UserModel;
