@@ -95,7 +95,7 @@ export default function TaskTimer({ task }) {
         {formatTime(timer)}
       </span>
       {sessionDetails.length > 0 && more && (
-        <div className={styles.more} id="modal">
+        <div className={styles.more} id="popover">
           <ul>
             {sessionDetails.map(({ user, totalDuration }) => (
               <li key={user._id}>

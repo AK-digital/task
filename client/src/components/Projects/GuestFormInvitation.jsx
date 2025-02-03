@@ -1,5 +1,6 @@
 import { sendProjectInvitationToGuest } from "@/actions/project";
-import { useActionState } from "react";
+import socket from "@/utils/socket";
+import { useActionState, useEffect, useState } from "react";
 
 const initialState = {
   status: "pending",
@@ -8,6 +9,7 @@ const initialState = {
 };
 
 export default function GuestFormInvitation({ project }) {
+  const [value, setValue] = useState("");
   const sendProjectInvitationToGuestWithId = sendProjectInvitationToGuest.bind(
     null,
     project?._id
@@ -18,6 +20,12 @@ export default function GuestFormInvitation({ project }) {
   );
   const errors = state?.errors;
 
+  useEffect(() => {
+    if (state?.status === "success") {
+      socket.emit("project invitation", value, project);
+    }
+  }, [state]);
+
   return (
     <div>
       <form action={formAction}>
@@ -26,6 +34,8 @@ export default function GuestFormInvitation({ project }) {
           name="email"
           id="email"
           placeholder="Inviter par e-mail"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
         />
         {errors && <i>{errors?.email}</i>}
         <button type="submit" hidden>

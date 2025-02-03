@@ -43,7 +43,7 @@ export default function TaskText({ task }) {
       onMouseEnter={(e) => setEdit(true)}
       onMouseLeave={(e) => setEdit(false)}
     >
-      {!edit && <p>{task?.text}</p>}
+      {!edit && <p>{inputValue}</p>}
       {edit && (
         <form action={formAction} ref={formRef}>
           <input

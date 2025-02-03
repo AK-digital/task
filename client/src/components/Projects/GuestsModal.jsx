@@ -12,7 +12,7 @@ const initialState = {
   errors: null,
 };
 
-export default function GuestsModal({ project, setModal }) {
+export default function GuestsModal({ project, setIsOpen }) {
   const removeGuestWithId = removeGuest.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
     removeGuestWithId,
@@ -22,7 +22,7 @@ export default function GuestsModal({ project, setModal }) {
 
   return (
     <>
-      <div className={styles.container}>
+      <div className={styles.container} id="modal">
         <div className={styles.heading}>
           <span>Inviter d'autres utilisateurs</span>
         </div>
@@ -34,16 +34,18 @@ export default function GuestsModal({ project, setModal }) {
               {guests.map((guest) => {
                 return (
                   <li key={guest?._id}>
-                    <Image
-                      src={guest?.picture || "/default-pfp.webp"}
-                      width={35}
-                      height={35}
-                      alt={`Photo de profil de ${guest?.firstName}`}
-                      style={{
-                        borderRadius: "50%",
-                      }}
-                    />
-                    <span>{guest?.email}</span>
+                    <div>
+                      <Image
+                        src={guest?.picture || "/default-pfp.webp"}
+                        width={35}
+                        height={35}
+                        alt={`Photo de profil de ${guest?.firstName}`}
+                        style={{
+                          borderRadius: "50%",
+                        }}
+                      />
+                      <span>{guest?.email}</span>
+                    </div>
                     <form action={formAction}>
                       <input
                         type="text"
@@ -52,7 +54,9 @@ export default function GuestsModal({ project, setModal }) {
                         defaultValue={guest?._id}
                         hidden
                       />
-                      <button type="submit">Révoquer</button>
+                      <button type="submit" data-disabled={pending}>
+                        Révoquer
+                      </button>
                     </form>
                   </li>
                 );
@@ -61,7 +65,7 @@ export default function GuestsModal({ project, setModal }) {
           </div>
         )}
       </div>
-      <div id="modal-layout" onClick={(e) => setModal(false)}></div>
+      <div id="modal-layout" onClick={(e) => setIsOpen(false)}></div>
     </>
   );
 }

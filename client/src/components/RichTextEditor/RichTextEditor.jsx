@@ -220,8 +220,8 @@ export default function RichTextEditor({
         await mutate(
           `/message?projectId=${message?.projectId}&taskId=${message?.taskId}`
         );
-        setConvLoading(false);
       }
+      setConvLoading(false);
     }
     setTaggedUsers([]);
     setContent("");

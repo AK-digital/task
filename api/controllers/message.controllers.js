@@ -115,7 +115,17 @@ export async function getMessages(req, res, next) {
 
 export async function updateMessage(req, res, next) {
   try {
+    const authUser = res.locals.user;
     const { message, taggedUsers } = req.body;
+
+    const messageToUpdate = await MessageModel.findById({ _id: req.params.id });
+
+    if (authUser?._id.toString() !== messageToUpdate?.author.toString()) {
+      return res.status(403).send({
+        success: false,
+        message: "Impossible de modifier un message qui n'est pas le votre",
+      });
+    }
 
     const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
 
@@ -212,9 +222,18 @@ export async function updateMessage(req, res, next) {
 
 export async function deleteMessage(req, res, next) {
   try {
+    const authUser = res.locals.user;
+
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
     const message = await MessageModel.findById({ _id: req.params.id });
+
+    if (authUser?._id.toString() !== message?.author.toString()) {
+      return res.status(403).send({
+        success: false,
+        message: "Impossible de supprimer un message qui n'est pas le votre",
+      });
+    }
 
     if (!message) {
       return res.status(404).send({
@@ -246,8 +265,6 @@ export async function deleteMessage(req, res, next) {
       message: "Message supprimé avec succès",
       data: deletedMessage,
     });
-
-    return;
   } catch (err) {
     return res.status(500).send({
       success: false,

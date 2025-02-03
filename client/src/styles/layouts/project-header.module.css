@@ -1,5 +1,5 @@
 .container {
-    z-index: 2001;
+    z-index: 2000;
     position: sticky;
     top: 0;
     width: 100%;
@@ -114,10 +114,33 @@
     gap: 20px;
 }
 
+/* Notification button styles */
+.notificationBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.notificationBtn svg {
+    cursor: pointer;
+}
+
+.notificationBtn:hover svg {
+    fill: white;
+}
+
+.separator {
+    width: 1px;
+    /* background-color: var(--border-color); */
+    height: 30px;
+}
+
 /* Guests styles */
 .guests {
     display: flex;
     align-items: center;
+
 }
 
 .guestAvatar {
@@ -133,22 +156,4 @@
 .avatar {
     border-radius: 50%;
     object-fit: cover;
-}
-
-/* Notification button styles */
-.notificationBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border: none;
-    background: none;
-    color: var(--text-color);
-    cursor: pointer;
-    border-radius: 50%;
-    transition: background-color 0.2s ease;
-}
-
-.notificationBtn:hover {
-    background-color: var(--background-color);
 }

@@ -24,7 +24,7 @@
     gap: 8px;
 }
 
-.projectsItem {
+.projectsItem a {
     font-size: 0.9rem;
     padding: 8px 4px;
     border-radius: 50px;

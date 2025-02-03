@@ -1,6 +1,7 @@
 "use client";
 import { getSession } from "@/api/auth";
 import { AuthContext } from "@/context/auth";
+import socket from "@/utils/socket";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useSWR from "swr";
@@ -16,11 +17,13 @@ export default function AuthProvider({ children }) {
 
       // If get session failed then redirect the user to the login page
       if (!response?.success) {
+        socket.emit("disconnect");
         router.push(`/auth`);
       }
 
       setUid(response?.data?._id);
       setUser(response?.data);
+      socket.emit("logged in", user);
     },
     refreshInterval: 15 * 60 * 1000, // Refresh every 15 minutes
     revalidateOnMount: true, // Revalidate everytime componenets are mounted

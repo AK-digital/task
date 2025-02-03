@@ -6,9 +6,12 @@ import { isNotEmpty } from "@/utils/utils";
 import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function TaskResponsibles({ task, project }) {
+  const [optimisticResponsibles, setOptimisticResponsibles] = useState(
+    task?.responsibles || []
+  );
   const [openModal, setOpenModal] = useState(false);
   const responsibles = task?.responsibles;
   const guests = project?.guests;
@@ -25,19 +28,45 @@ export default function TaskResponsibles({ task, project }) {
     (responsible) => responsible?._id === author?._id
   );
 
-  async function handleAddResponsible(e, responsibleId) {
-    await addResponsible(task?._id, responsibleId, project?._id);
+  async function handleAddResponsible(e, responsible) {
+    setOptimisticResponsibles((prev) => [...prev, responsible]);
+
+    const response = await addResponsible(
+      task?._id,
+      responsible?._id,
+      project?._id
+    );
+
+    if (!response?.success) {
+      setOptimisticResponsibles(responsibles);
+    }
   }
 
-  async function handleRemoveResponsible(e, responsibleId) {
-    await removeResponsible(task?._id, responsibleId, project?._id);
+  async function handleRemoveResponsible(e, responsible) {
+    const findDeletedResponsible = optimisticResponsibles.filter(
+      (deletedResponsible) => {
+        return deletedResponsible?._id !== responsible?._id;
+      }
+    );
+
+    setOptimisticResponsibles(findDeletedResponsible);
+
+    const response = await removeResponsible(
+      task?._id,
+      responsible?._id,
+      project?._id
+    );
+
+    if (!response?.success) {
+      setOptimisticResponsibles(responsibles);
+    }
   }
 
   return (
     <div className={styles.container}>
-      {isNotEmpty(responsibles) ? (
+      {isNotEmpty(optimisticResponsibles) ? (
         <ul className={styles.list} onClick={(e) => setOpenModal(!openModal)}>
-          {responsibles.slice(0, 3).map((responsible) => {
+          {optimisticResponsibles.slice(0, 3).map((responsible) => {
             return (
               <li key={responsible?._id}>
                 <Image
@@ -55,8 +84,10 @@ export default function TaskResponsibles({ task, project }) {
               </li>
             );
           })}
-          {responsibles?.length > 3 && (
-            <li className={styles.count}>+{responsibles?.length - 3}</li>
+          {optimisticResponsibles?.length > 3 && (
+            <li className={styles.count}>
+              +{optimisticResponsibles?.length - 3}
+            </li>
           )}
         </ul>
       ) : (
@@ -68,16 +99,16 @@ export default function TaskResponsibles({ task, project }) {
       {openModal && (
         <Modal setOpenModal={setOpenModal}>
           <div className={styles.modal}>
-            {isNotEmpty(responsibles) && (
+            {isNotEmpty(optimisticResponsibles) && (
               <div className={styles["responsibles__container"]}>
                 {/* Responsibles */}
                 <ul className={styles["responsibles__list"]}>
-                  {responsibles?.map((responsible) => {
+                  {optimisticResponsibles?.map((responsible) => {
                     return (
                       <li
                         key={responsible?._id}
                         onClick={(e) => {
-                          handleRemoveResponsible(e, responsible?._id);
+                          handleRemoveResponsible(e, responsible);
                         }}
                       >
                         <Image
@@ -110,7 +141,7 @@ export default function TaskResponsibles({ task, project }) {
                   {!filteredAuthor && (
                     <li
                       onClick={(e) => {
-                        handleAddResponsible(e, author?._id);
+                        handleAddResponsible(e, author);
                       }}
                     >
                       <Image
@@ -134,7 +165,7 @@ export default function TaskResponsibles({ task, project }) {
                       <li
                         key={guest?._id}
                         onClick={(e) => {
-                          handleAddResponsible(e, guest?._id);
+                          handleAddResponsible(e, guest);
                         }}
                       >
                         <Image

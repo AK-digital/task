@@ -25,7 +25,12 @@ export default function BoardHeader({
   async function handleColor(e) {
     const value = e.target.dataset.value;
     setOptimisticColor(value);
-    const response = await updateBoard(board?._id, board?.projectId, value, title);
+    const response = await updateBoard(
+      board?._id,
+      board?.projectId,
+      value,
+      title
+    );
     if (!response?.success) setOptimisticColor(board?.color);
   }
 
@@ -71,7 +76,7 @@ export default function BoardHeader({
             type="text"
             name="title"
             id="title"
-            defaultValue={board?.title}
+            defaultValue={title}
             onChange={handleTitleChange}
           />
           <div id="modal-layout-opacity" onClick={(e) => setEdit(false)}></div>
@@ -82,7 +87,7 @@ export default function BoardHeader({
           style={{ color: `${optimisticColor}` }}
           onClick={(e) => setEdit(true)}
         >
-          {board?.title}
+          {title}
         </span>
       )}
       <span
@@ -102,7 +107,7 @@ export default function BoardHeader({
       )}
       {openColors && (
         <>
-          <div className={styles.modal} id="modal">
+          <div className={styles.modal} id="popover">
             <ul>
               {colors?.map((color, idx) => (
                 <li

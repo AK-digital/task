@@ -83,8 +83,6 @@ export async function updateMessage(
     const cookie = await cookies();
     const session = cookie.get("session");
 
-    console.log(projectId, "from server");
-
     const rawData = {
       message: message,
       taggedUsers: taggedUsers,

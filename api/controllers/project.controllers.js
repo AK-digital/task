@@ -5,6 +5,7 @@ import ProjectInvitationModel from "../models/ProjectInvitation.model.js";
 import userModel from "../models/user.model.js";
 import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
+import { emailProjectInvitation } from "../templates/emails.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -211,24 +212,10 @@ export async function sendProjectInvitationToGuest(req, res, next) {
 
     await newProjectInvitation.save();
 
-    const subjet = `Invitation au projet : ${project?.name}`;
-    const text = `
-    <div style="font-family: Arial, sans-serif; color: #333; text-align: center; padding: 20px;">
-      <h1 style="color: #5056C8;">Invitation à rejoindre un nouveau projet sur Täsk</h1>
-      <p>Bonjour,</p>
-      <p>Vous avez été invité à participer à un nouveau projet par <strong>${authEmail}</strong> sur <strong>${project.name}</strong>. 
-      Cette opportunité vous permettra de collaborer avec votre équipe et de contribuer à l’avancement du projet.</p>
-      <p>Pour confirmer votre participation, veuillez cliquer sur le boutton ci-dessous :</p>
-      <div style="margin: 20px 0;">
-        <button style="background-color: #5056C8; color: white; border: none; padding: 20px 20px; font-size: 16px; margin: 5px; cursor: pointer; font-weight: bold; border-radius: 8px;">
-          Accepter l'invitation
-        </button>
-      </div>
-      <p style="font-size: 12px; color: #777;">Si vous n’êtes pas intéréssé par cette invitation, veuillez ignorer cet e-mail.</p>
-    </div>
-    `;
+    const link = `${process.env.CLIENT_URL}/invitation/${newProjectInvitation?._id}`;
+    const template = emailProjectInvitation(project, authUser, link);
 
-    await sendEmail(authEmail, email, subjet, text);
+    await sendEmail(authEmail, email, template.subjet, template.text);
 
     return res.status(200).send({
       success: true,
@@ -246,25 +233,18 @@ export async function sendProjectInvitationToGuest(req, res, next) {
 export async function acceptProjectInvitation(req, res, next) {
   try {
     const authUser = res.locals.user;
+    const { invitationId } = req.body;
 
-    const updatedProjectInvitation =
-      await ProjectInvitationModel.findOneAndUpdate(
-        {
-          guestEmail: authUser?.email,
-          status: "pending",
-        },
-        {
-          $set: {
-            status: "accepted",
-          },
-        },
-        {
-          new: true,
-          setDefaultsOnInsert: true,
-        }
-      );
+    console.log(authUser?.email);
+    console.log(invitationId);
 
-    if (!updatedProjectInvitation) {
+    const projectInvitation = await ProjectInvitationModel.findOne({
+      guestEmail: authUser?.email,
+      status: "pending",
+      _id: invitationId,
+    });
+
+    if (!projectInvitation) {
       return res.status(404).send({
         success: false,
         message: "Impossible d'accepter une invitation qui n'existe pas",
@@ -272,7 +252,7 @@ export async function acceptProjectInvitation(req, res, next) {
     }
 
     const user = await userModel.findOne({
-      email: updatedProjectInvitation.guestEmail,
+      email: projectInvitation.guestEmail,
     });
 
     if (!user) {
@@ -285,7 +265,7 @@ export async function acceptProjectInvitation(req, res, next) {
 
     const project = await ProjectModel.findByIdAndUpdate(
       {
-        _id: updatedProjectInvitation?.projectId,
+        _id: projectInvitation?.projectId,
       },
       {
         $addToSet: {
@@ -305,6 +285,10 @@ export async function acceptProjectInvitation(req, res, next) {
           "Impossible d'accepter l'invitation d'un projet qui n'existe pas",
       });
     }
+
+    await ProjectInvitationModel.findOneAndDelete({
+      _id: projectInvitation?._id,
+    });
 
     return res.status(200).send({
       success: true,

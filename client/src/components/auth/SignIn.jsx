@@ -3,6 +3,7 @@
 import { signIn } from "@/actions/auth";
 import styles from "@/styles/components/auth/signIn.module.css";
 import { instrumentSans } from "@/utils/font";
+import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
@@ -30,7 +31,14 @@ export default function SignIn({ setSignIn, setSignUp }) {
   }
 
   useEffect(() => {
-    if (state?.status === "success") router.push("/project");
+    if (state?.status === "success") {
+      const invitationId = getCookie("invitationId");
+      if (invitationId) {
+        router.push(`invitation/${invitationId}`);
+      } else {
+        router.push("/project");
+      }
+    }
   }, [state]);
 
   return (
