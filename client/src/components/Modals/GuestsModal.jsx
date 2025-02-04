@@ -1,10 +1,10 @@
 "use client";
 import { removeGuest } from "@/actions/project";
-import styles from "@/styles/components/projects/guests-modal.module.css";
+import styles from "@/styles/components/modals/guests-modal.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
 import { useActionState, useEffect, useState } from "react";
-import GuestFormInvitation from "./GuestFormInvitation";
+import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 
 const initialState = {

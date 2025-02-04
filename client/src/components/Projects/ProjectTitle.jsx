@@ -3,10 +3,13 @@ import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect } from "react";
 import { updateProjectName } from "@/actions/project";
 import { useDebouncedCallback } from "use-debounce";
+import { MoreHorizontal } from "lucide-react";
+import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 
 export default function ProjectTitle({ project }) {
   const [isEditing, setIsEditing] = useState(false);
   const [projectName, setProjectName] = useState(project?.name);
+  const [modalOpen, setModalOpen] = useState(false);
   const inputRef = useRef(null);
 
   const debouncedUpdate = useDebouncedCallback(async (newName) => {
@@ -55,20 +58,26 @@ export default function ProjectTitle({ project }) {
   };
 
   return (
-    <div className={styles.title}>
-      {isEditing ? (
-        <input
-          ref={inputRef}
-          type="text"
-          value={projectName}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          className={styles.titleInput}
-        />
-      ) : (
-        <span onClick={handleClick}>{projectName}</span>
-      )}
+    <div className={styles.titleContainer}>
+      <div className={styles.title}>
+        {isEditing ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={projectName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            className={styles.titleInput}
+          />
+        ) : (
+          <span onClick={handleClick}>{projectName}</span>
+        )}
+      </div>
+      <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
+        <MoreHorizontal />
+      </div>
+      {modalOpen && <ProjectOptionsModal projectId={project._id} setOpenModal={setModalOpen} />}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import ProjectTitle from "@/components/Projects/ProjectTitle";
 import SearchForm from "@/components/Projects/SearchForm";
 import { Bell, UserPlus2 } from "lucide-react";
 import { useState } from "react";
-import GuestsModal from "@/components/Projects/GuestsModal";
+import GuestsModal from "@/components/Modals/GuestsModal";
 import Notifications from "@/components/Notifications/Notifications";
 import NoPicture from "@/components/User/NoPicture";
 

@@ -31,15 +31,14 @@ export default function TaskDeadline({ task }) {
     : null;
 
   function handleUpdateDate(e) {
-    const date = e.target.value;
-    // Prevents API call if the date is unchanged
+    const date = e.target.value || null;
     if (date !== deadlineMoment._i) {
       form.current.requestSubmit();
     }
     setIsEditing(false);
   }
 
-  const displayDate = formattedDeadline ?? "Définir une échéance";
+  const displayDate = formattedDeadline ?? "__/__/__";
 
   return (
     <div className={styles.container}>
@@ -59,6 +58,7 @@ export default function TaskDeadline({ task }) {
         <span
           className={styles.deadline}
           data-past={isPastDeadline}
+          data-empty={!deadline}
           onClick={() => setIsEditing(true)} // Ouvrir l'input au clic
         >
           <FontAwesomeIcon icon={faCalendarAlt} />

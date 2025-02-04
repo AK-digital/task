@@ -5,6 +5,7 @@
     width: 100%;
     overflow: visible;
     background-color: var(--primary-background-color);
+    margin-bottom: 16px;
 }
 
 .container:after {
@@ -27,8 +28,8 @@
 .container nav {
     justify-content: space-between;
     align-items: center;
-    padding-top: 24px;
-    padding-bottom: 24px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     border-bottom: 1px solid #3b3d53;
 }
 
@@ -41,9 +42,20 @@
     font-size: var(--text-size-normal);
 }
 
+.titleContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+
+
+
 .title {
     font-weight: bold;
     font-size: 1.2rem;
+    display: flex;
+    align-items: center;
 }
 
 .title span {
@@ -70,6 +82,17 @@
 .titleInput:focus {
     outline: none;
     background-color: var(--background-color);
+}
+
+.optionsBtn {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.optionsBtn svg {
+    width: 36px;
+    height: auto;
 }
 
 /* Search styles */
@@ -134,8 +157,8 @@
 
 .separator {
     width: 1px;
-    /* background-color: var(--border-color); */
-    height: 30px;
+    background-color: var(--border-color);
+    height: 24px;
 }
 
 /* Guests styles */
@@ -143,7 +166,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 .guestAvatar {
@@ -160,4 +182,8 @@
     margin-top: 5px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.addGuestBtn {
+    cursor: pointer;
 }
