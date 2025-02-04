@@ -67,7 +67,7 @@ export default function CreateProject() {
               type="text"
               name="project-name"
               id="project-name"
-              placeholder="Nommez votre projet"
+              placeholder="Nommer votre projet"
               required
               minLength={2}
               maxLength={250}
@@ -75,7 +75,7 @@ export default function CreateProject() {
             <span className={styles.projectCreationInfo}>Appuyer sur Entrée pour créer le projet</span>
             <span className={styles.projectCreationInfo}>OU</span>
             <button type="submit" data-disabled={pending} disabled={pending}>
-              Cliquez pour créer le projet
+              Cliquer pour créer le projet
             </button>
           </form>
         </div>
