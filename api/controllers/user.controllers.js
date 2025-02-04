@@ -1,11 +1,11 @@
 import { userUpdateValidation } from "../helpers/zod.js";
-import userModel from "../models/User.model.js";
+import UserModel from "../models/User.model.js";
 import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 
 // Admin only
 export async function getUsers(req, res, next) {
   try {
-    const users = await userModel.find().select("-password");
+    const users = await UserModel.find().select("-password");
 
     if (users.length <= 0) {
       return res.status(404).send({
@@ -68,7 +68,7 @@ export async function updateUser(req, res, next) {
       lastName,
       firstName,
       company,
-      position
+      position,
     });
 
     if (!validation.success) {
@@ -81,25 +81,23 @@ export async function updateUser(req, res, next) {
       });
     }
 
-    const updatedUser = await userModel
-      .findByIdAndUpdate(
-        {
-          _id: req.params.id,
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: {
+          lastName,
+          firstName,
+          company,
+          position,
         },
-        {
-          $set: {
-            lastName,
-            firstName,
-            company,
-            position
-          },
-        },
-        {
-          setDefaultsOnInsert: true,
-          new: true,
-        }
-      )
-      .select("-password");
+      },
+      {
+        setDefaultsOnInsert: true,
+        new: true,
+      }
+    ).select("-password");
 
     if (!updatedUser) {
       return res.status(404).send({
@@ -125,7 +123,7 @@ export async function updatePicture(req, res, next) {
   try {
     const picture = req.file;
 
-    const user = await userModel.findById({ _id: req.params.id });
+    const user = await UserModel.findById({ _id: req.params.id });
 
     if (!user) {
       return res.status(404).send({
@@ -145,26 +143,24 @@ export async function updatePicture(req, res, next) {
       return res.status(400).send({
         success: false,
         message:
-          "Une erreur s'est produite lors de l'enregistrement de la photo de  sur Cloudinary",
+          "Une erreur s'est produite lors de l'enregistrement de la photo de sur Cloudinary",
       });
     }
 
-    const updatedUser = await userModel
-      .findByIdAndUpdate(
-        {
-          _id: req.params.id,
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: {
+          picture: uploadRes?.secure_url,
         },
-        {
-          $set: {
-            picture: uploadRes?.secure_url,
-          },
-        },
-        {
-          setDefaultsOnInsert: true,
-          new: true,
-        }
-      )
-      .select("-password");
+      },
+      {
+        setDefaultsOnInsert: true,
+        new: true,
+      }
+    ).select("-password");
 
     return res.status(200).send({
       success: true,
@@ -181,7 +177,7 @@ export async function updatePicture(req, res, next) {
 
 export async function deleteUser(req, res, next) {
   try {
-    const user = await userModel.findByIdAndDelete({ _id: req.params.id });
+    const user = await UserModel.findByIdAndDelete({ _id: req.params.id });
 
     if (!user) {
       return res.status(500).send({

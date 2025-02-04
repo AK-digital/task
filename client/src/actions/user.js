@@ -1,7 +1,5 @@
 "use server";
-
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
 import { userUpdateValidation } from "@/utils/zod";
 
 export async function updateUserProfile(prevState, formData) {
@@ -44,8 +42,6 @@ export async function updateUserProfile(prevState, formData) {
       throw new Error(response?.message);
     }
 
-    revalidatePath('/profil');
-
     return {
       status: "success",
       message: "Profil mis à jour avec succès",
@@ -70,7 +66,7 @@ export async function updateUserPicture(prevState, formData) {
     if (!pictureFile || pictureFile.size === 0) {
       return {
         status: "failure",
-        message: "Aucun fichier sélectionné"
+        message: "Aucun fichier sélectionné",
       };
     }
 
@@ -84,16 +80,16 @@ export async function updateUserPicture(prevState, formData) {
       headers: {
         Authorization: `Bearer ${session.value}`,
       },
-      body: formDataUpload
+      body: formDataUpload,
     });
 
     const response = await res.json();
 
+    console.log(response);
+
     if (!response.success) {
       throw new Error(response?.message);
     }
-
-    revalidatePath('/profil');
 
     return {
       status: "success",
@@ -103,7 +99,9 @@ export async function updateUserPicture(prevState, formData) {
   } catch (err) {
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue lors de la mise à jour de la photo",
+      message:
+        err.message ||
+        "Une erreur est survenue lors de la mise à jour de la photo",
     };
   }
 }

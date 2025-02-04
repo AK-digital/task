@@ -3,8 +3,9 @@ import { removeGuest } from "@/actions/project";
 import styles from "@/styles/components/projects/guests-modal.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import GuestFormInvitation from "./GuestFormInvitation";
+import PopupMessage from "@/layouts/PopupMessage";
 
 const initialState = {
   status: "pending",
@@ -13,6 +14,7 @@ const initialState = {
 };
 
 export default function GuestsModal({ project, setIsOpen }) {
+  const [isPopup, setIsPopup] = useState(null);
   const removeGuestWithId = removeGuest.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
     removeGuestWithId,
@@ -20,13 +22,36 @@ export default function GuestsModal({ project, setIsOpen }) {
   );
   const guests = project?.guests;
 
+  useEffect(() => {
+    if (state?.status === "success") {
+      setIsPopup({
+        status: state?.status,
+        title: "Utilisateur révoqué avec succès",
+        message: state?.message,
+      });
+    }
+    if (state?.status === "failure" && state?.errors === null) {
+      setIsPopup({
+        status: state?.status,
+        title: "Une erreur s'est produite",
+        message: state?.message,
+      });
+    }
+
+    const timeout = setTimeout(() => {
+      setIsPopup(null);
+    }, 4000);
+
+    return () => clearTimeout(timeout);
+  }, [state, isPopup]);
+
   return (
     <>
       <div className={styles.container} id="modal">
         <div className={styles.heading}>
           <span>Inviter d'autres utilisateurs</span>
         </div>
-        <GuestFormInvitation project={project} />
+        <GuestFormInvitation project={project} setIsPopup={setIsPopup} />
         {/* Guests list */}
         {isNotEmpty(guests) && (
           <div className={styles.guests}>
@@ -66,6 +91,13 @@ export default function GuestsModal({ project, setIsOpen }) {
         )}
       </div>
       <div id="modal-layout" onClick={(e) => setIsOpen(false)}></div>
+      {isPopup && (
+        <PopupMessage
+          status={isPopup?.status}
+          title={isPopup?.title}
+          message={isPopup?.message}
+        />
+      )}
     </>
   );
 }

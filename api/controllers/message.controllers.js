@@ -1,7 +1,7 @@
 import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import MessageModel from "../models/Message.model.js";
-import userModel from "../models/user.model.js";
+import UserModel from "../models/User.model.js";
 import { emailMessage } from "../templates/emails.js";
 import { getMatches } from "../utils/utils.js";
 
@@ -50,7 +50,7 @@ export async function saveMessage(req, res, next) {
 
     // Email Logic, basically sending an email for each tagged user
     for (const taggedUser of uniqueTaggedUsers) {
-      const user = await userModel.findById({ _id: taggedUser });
+      const user = await UserModel.findById({ _id: taggedUser });
 
       const template = emailMessage(user, savedMessage);
 
@@ -193,7 +193,7 @@ export async function updateMessage(req, res, next) {
 
     // Email Logic, basically sending an email for each tagged user
     for (const taggedUser of uniqueTaggedUsers) {
-      const user = await userModel.findById({ _id: taggedUser });
+      const user = await UserModel.findById({ _id: taggedUser });
 
       const template = emailMessage(user, updatedMessage);
 

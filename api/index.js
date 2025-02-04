@@ -12,7 +12,7 @@ import projectRouter from "./routes/project.routes.js";
 import boardRouter from "./routes/board.routes.js";
 import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
-import userModel from "./models/user.model.js";
+import UserModel from "./models/User.model.js";
 import NotificationModel from "./models/Notification.model.js";
 
 const app = express();
@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("project invitation", async (email, project) => {
-    const user = await userModel.findOne({ email: email });
+    const user = await UserModel.findOne({ email: email });
 
     if (!user) {
       return;

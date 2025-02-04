@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import userModel from "../models/user.model.js";
+import UserModel from "../models/User.model.js";
 import TokenBlackListModel from "../models/TokenBlackList.model.js";
 export async function auth(req, res, next) {
   try {
@@ -43,9 +43,9 @@ export async function auth(req, res, next) {
           });
         } else if (decoded) {
           // Get the user based in the given access token
-          const user = await userModel
-            .findById({ _id: decoded?.uid })
-            .select("-password");
+          const user = await UserModel.findById({ _id: decoded?.uid }).select(
+            "-password"
+          );
 
           if (!user) {
             return res.status(404).send({

@@ -116,6 +116,7 @@
 
 /* Notification button styles */
 .notificationBtn {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -126,7 +127,8 @@
     cursor: pointer;
 }
 
-.notificationBtn:hover svg {
+.notificationBtn:hover svg,
+.notificationBtn[data-open="true"] {
     fill: white;
 }
 
@@ -139,6 +141,7 @@
 /* Guests styles */
 .guests {
     display: flex;
+    justify-content: center;
     align-items: center;
 
 }
@@ -154,6 +157,7 @@
 }
 
 .avatar {
+    margin-top: 5px;
     border-radius: 50%;
     object-fit: cover;
 }

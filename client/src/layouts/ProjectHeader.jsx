@@ -4,10 +4,10 @@ import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import SearchForm from "@/components/Projects/SearchForm";
 import { Bell, UserPlus2 } from "lucide-react";
-import GuestFormInvitation from "@/components/Projects/GuestFormInvitation";
 import { useState } from "react";
 import GuestsModal from "@/components/Projects/GuestsModal";
 import Notifications from "@/components/Notifications/Notifications";
+import NoPicture from "@/components/User/NoPicture";
 
 export default function ProjectHeader({ project }) {
   const [notifOpen, setNotifOpen] = useState(false);
@@ -22,7 +22,7 @@ export default function ProjectHeader({ project }) {
           </div>
           <div className={styles.actions}>
             {/* Notifications bell */}
-            <div className={styles.notificationBtn}>
+            <div className={styles.notificationBtn} data-open={notifOpen}>
               <Bell size={24} onClick={(e) => setNotifOpen(true)} />
               {notifOpen && <Notifications setNotifOpen={setNotifOpen} />}
             </div>
@@ -31,13 +31,17 @@ export default function ProjectHeader({ project }) {
             <div className={styles.guests}>
               {project?.guests?.map((guest) => (
                 <div key={guest._id} className={styles.guestAvatar}>
-                  <Image
-                    src={guest?.picture || "/default-pfp.webp"}
-                    alt={`${guest.firstName} ${guest.lastName}`}
-                    width={35}
-                    height={35}
-                    className={styles.avatar}
-                  />
+                  {guest?.picture ? (
+                    <Image
+                      src={guest?.picture || "/default-pfp.webp"}
+                      alt={`${guest.firstName} ${guest.lastName}`}
+                      width={35}
+                      height={35}
+                      className={styles.avatar}
+                    />
+                  ) : (
+                    <NoPicture user={guest} width={"35px"} height={"35px"} />
+                  )}
                 </div>
               ))}
               {/* Project author */}

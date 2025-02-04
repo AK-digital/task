@@ -89,13 +89,23 @@ export async function sendProjectInvitationToGuest(
 
     return {
       status: "success",
+      message: `Invitation envoyé à ${email} avec succès`,
     };
   } catch (err) {
-    console.log(err.message || "Une erreur est survenue");
+    console.log(err?.message || "Une erreur est survenue");
+
+    if (err?.message.includes("E11000 duplicate")) {
+      return {
+        status: "failure",
+        message: "Une invitation a déjà été envoyé à cet utilisateur",
+        errors: null,
+      };
+    }
 
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue",
+      message: "Une erreur est survenue",
+      errors: null,
     };
   }
 }
@@ -185,6 +195,7 @@ export async function removeGuest(projectId, prevState, formData) {
 
     return {
       status: "success",
+      message: "Cet utilisateur a été révoqué avec succès",
     };
   } catch (err) {
     console.log(err.message || "Une erreur est survenue");

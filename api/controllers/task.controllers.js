@@ -2,7 +2,7 @@ import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
-import userModel from "../models/user.model.js";
+import UserModel from "../models/User.model.js";
 import { emailDescription } from "../templates/emails.js";
 import { regex } from "../utils/regex.js";
 import { getMatches } from "../utils/utils.js";
@@ -351,7 +351,7 @@ export async function updateTaskDescription(req, res, next) {
     );
 
     for (const taggedUser of uniqueTaggedUsers) {
-      const user = await userModel.findById({ _id: taggedUser });
+      const user = await UserModel.findById({ _id: taggedUser });
 
       const template = emailDescription(user, updatedTask);
 
@@ -442,7 +442,7 @@ export async function addResponsible(req, res, next) {
       });
     }
 
-    const responsible = await userModel.findById({ _id: responsibleId });
+    const responsible = await UserModel.findById({ _id: responsibleId });
 
     if (!responsible) {
       return res.status(404).send({

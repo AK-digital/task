@@ -33,7 +33,7 @@ router.delete(
 router.post(
   "/:id/send-invitation",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthor,
+  projectMiddlewares.isAuthorOrGuests,
   projectControllers.sendProjectInvitationToGuest
 );
 

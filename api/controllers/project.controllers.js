@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import ProjectModel from "../models/Project.model.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectInvitationModel from "../models/ProjectInvitation.model.js";
-import userModel from "../models/user.model.js";
+import UserModel from "../models/User.model.js";
 import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
@@ -251,7 +251,7 @@ export async function acceptProjectInvitation(req, res, next) {
       });
     }
 
-    const user = await userModel.findOne({
+    const user = await UserModel.findOne({
       email: projectInvitation.guestEmail,
     });
 

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import UserModel from "../models/user.model.js";
+import UserModel from "../models/User.model.js";
 import { signInValidation, signUpValidation } from "../helpers/zod.js";
 import { generateAccessToken, generateRefreshToken } from "../helpers/jwt.js";
 import RefreshTokenModel from "../models/RefreshToken.model.js";

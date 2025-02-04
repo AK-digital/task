@@ -9,7 +9,6 @@ export default function PrivateLayout({ children }) {
         <div className={styles["private-layout__aside"]}>
           <SideNav />
         </div>
-
         <div className={styles["private-layout__main"]}>{children}</div>
       </div>
     </AuthProvider>

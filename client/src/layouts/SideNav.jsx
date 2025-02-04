@@ -4,11 +4,10 @@ import { getProjects } from "@/api/project";
 import CreateProject from "@/components/Projects/CreateProject";
 import Link from "next/link";
 import Image from "next/image";
-import { getCurrentUser } from "@/actions/auth";
+import UserInfo from "@/components/Header/UserInfo";
 
 export default async function SideNav() {
   const projects = await getProjects();
-  const user = await getCurrentUser();
 
   return (
     <aside className={styles.container}>
@@ -44,18 +43,7 @@ export default async function SideNav() {
           <CreateProject />
         </div>
         <div className={styles.userAvatar}>
-          <Link href="/profile">
-            <Image
-              src={user?.picture || "/default-pfp.webp"}
-              alt="Photo de profil"
-              width={40}
-              height={40}
-              style={{
-                objectFit: "cover",
-                borderRadius: "50%",
-              }}
-            />
-          </Link>
+          <UserInfo />
         </div>
       </div>
     </aside>
