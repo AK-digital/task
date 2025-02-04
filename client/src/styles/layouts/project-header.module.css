@@ -128,7 +128,7 @@
 }
 
 .notificationBtn:hover svg,
-.notificationBtn[data-open="true"] {
+.notificationBtn[data-open="true"] svg {
     fill: white;
 }
 

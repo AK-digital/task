@@ -8,6 +8,7 @@ import cors from "cors";
 import passport from "passport";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
+import notificationRouter from "./routes/notification.routes.js";
 import projectRouter from "./routes/project.routes.js";
 import boardRouter from "./routes/board.routes.js";
 import taskRouter from "./routes/task.routes.js";
@@ -43,6 +44,7 @@ app.use(passport.initialize());
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/notification", notificationRouter);
 
 app.use("/api/project", projectRouter);
 app.use("/api/board", boardRouter);
@@ -67,7 +69,7 @@ io.on("connection", (socket) => {
     }
 
     const newNotification = new NotificationModel({
-      user: user?._id,
+      userId: user?._id,
       message: {
         title: `🎉 Invitation à ${project?.name} !`,
         content: `Bonne nouvelle ! Vous avez été invité pour rejoindre le projet "${project?.name}".`,
@@ -79,9 +81,7 @@ io.on("connection", (socket) => {
     // Récupérer le socketId de l'utilisateur invité
     const userSocketId = connectedUsers.get(user._id.toString());
 
-    if (userSocketId) {
-      io.to(userSocketId).emit("new notification");
-    }
+    io.emit("new notification");
   });
 
   socket.on("disconnect", () => {
