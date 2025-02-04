@@ -2,8 +2,7 @@
 import styles from "@/styles/components/tasks/task-deadline.module.css";
 import { updateTaskDeadline } from "@/actions/task";
 import { useActionState, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { Calendar } from "lucide-react";
 import moment from "moment";
 import "moment/locale/fr";
 
@@ -44,7 +43,7 @@ export default function TaskDeadline({ task }) {
     <div className={styles.container}>
       {isEditing ? (
         <form action={formAction} ref={form}>
-          <FontAwesomeIcon icon={faCalendarAlt} />
+          <Calendar />
           <input
             type="date"
             name="deadline"
@@ -61,7 +60,7 @@ export default function TaskDeadline({ task }) {
           data-empty={!deadline}
           onClick={() => setIsEditing(true)} // Ouvrir l'input au clic
         >
-          <FontAwesomeIcon icon={faCalendarAlt} />
+          <Calendar />
           {displayDate}
         </span>
       )}

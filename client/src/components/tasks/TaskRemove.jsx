@@ -1,7 +1,6 @@
 import { deleteTask } from "@/api/task";
 import styles from "@/styles/components/tasks/task.module.css"; // Changement ici
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Trash } from "lucide-react";
 
 export default function TaskRemove({ task }) {
   async function handleDeleteTask(e) {
@@ -11,7 +10,7 @@ export default function TaskRemove({ task }) {
 
   return (
     <div className={styles.task__remove}>
-      <FontAwesomeIcon icon={faTrash} onClick={handleDeleteTask} />
+      <Trash size={20} onClick={handleDeleteTask} />
     </div>
   );
 }

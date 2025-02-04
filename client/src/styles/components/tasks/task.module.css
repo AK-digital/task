@@ -66,14 +66,21 @@
     height: 100%;
 }
 
-.task__remove {
-    cursor: pointer;
-    margin-right: 7px;
-    margin-left: 7px;
-    visibility: hidden;
-    color: #ca4250;
+.container:hover .task__remove {
+    color: var(--text-color-muted);
 }
 
-.container:hover .task__remove {
-    visibility: visible;
+.task__remove {
+    cursor: pointer;
+    margin-right: 8px;
+    margin-left: 8px;
+    color: #41435f;
+    transition: color 150ms ease-in-out;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.container .task__remove:hover {
+    color: var(--danger-color);
 }
