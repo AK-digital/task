@@ -72,7 +72,7 @@ export default function CreateProject() {
               minLength={2}
               maxLength={250}
             />
-            <span className={styles.projectCreationInfo}>Créez le projet en appuyant sur Entrée</span>
+            <span className={styles.projectCreationInfo}>Appuyer sur Entrée pour créer le projet</span>
             <span className={styles.projectCreationInfo}>OU</span>
             <button type="submit" data-disabled={pending} disabled={pending}>
               Cliquez pour créer le projet
