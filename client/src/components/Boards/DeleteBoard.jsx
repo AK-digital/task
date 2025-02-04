@@ -1,8 +1,9 @@
 "use client";
 import { deleteBoard } from "@/actions/board";
-import styles from "@/styles/components/boards/BoardHeader.module.css";
-import { Trash, X } from "lucide-react";
+import { Trash } from "lucide-react";
 import { useTransition, useState } from "react";
+import ConfirmDialog from "../Modals/ConfirmDialog";
+import styles from "@/styles/components/boards/BoardHeader.module.css";
 
 export default function DeleteBoard({ boardId, projectId }) {
     const [isPending, startTransition] = useTransition();
@@ -21,32 +22,12 @@ export default function DeleteBoard({ boardId, projectId }) {
                 onClick={() => setShowConfirm(true)}
                 className={styles.trashIcon}
             />
-
-            {showConfirm && (
-                <div className={styles.popupConfirm}>
-                    <div className={styles.arrow}></div>
-                    <div className={styles.popupContent}>
-                        <p>Supprimer ce tableau ?</p>
-                        <div className={styles.confirmButtons}>
-                            <button
-                                onClick={() => setShowConfirm(false)}
-                                className={styles.cancelButton}
-                            >
-                                Non
-                            </button>
-                            <button
-                                onClick={() => {
-                                    handleDeleteBoard();
-                                    setShowConfirm(false);
-                                }}
-                                className={styles.deleteButton}
-                            >
-                                Oui
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <ConfirmDialog
+                isOpen={showConfirm}
+                onClose={() => setShowConfirm(false)}
+                onConfirm={handleDeleteBoard}
+                message="Supprimer ce tableau ?"
+            />
         </div>
     );
 }

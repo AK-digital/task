@@ -79,8 +79,16 @@
     height: 100%;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .container .task__remove:hover {
     color: var(--danger-color);
+}
+
+.confirm_container {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 1000;
 }

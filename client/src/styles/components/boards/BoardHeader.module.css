@@ -90,10 +90,21 @@
     position: relative;
     cursor: pointer;
     color: #272b4e;
+    display: flex;
+    align-items: center;
 }
 
 .container:hover .deleteIcon {
     color: #353855;
+}
+
+.trashIcon {
+    color: var(--text-color-muted);
+    cursor: pointer;
+}
+
+.trashIcon:hover {
+    color: var(--error);
 }
 
 .deleteIcon:hover .trashIcon {
