@@ -2,9 +2,9 @@
 import { saveProject } from "@/actions/project";
 import styles from "@/styles/components/projects/create-project.module.css";
 import { instrumentSans } from "@/utils/font";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useActionState, useEffect, useState } from "react";
+import { Plus, X } from "lucide-react";
+import { useActionState, useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 const initialState = {
   status: "pending",
@@ -15,44 +15,68 @@ const initialState = {
 
 export default function CreateProject() {
   const [isCreating, setIsCreating] = useState(false);
-  const [state, formAction, pending] = useActionState(
-    saveProject,
-    initialState
-  );
+  const [state, formAction, pending] = useActionState(saveProject, initialState);
+  const formRef = useRef(null);
+  const inputRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
-    if (state?.status === "success") {
+    if (state?.status === "success" && state?.data?._id) {
       setIsCreating(false);
+      // Utilisation de la nouvelle URL avec l'ID du projet
+      router.push(`/project/${state.data._id}`);
+      router.refresh(); // Pour forcer un rechargement des données
     }
-  }, [state]);
+  }, [state, router]);
+
+  useEffect(() => {
+    if (isCreating && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isCreating]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (formRef.current && !formRef.current.contains(e.target)) {
+        setIsCreating(false);
+      }
+    };
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCreating]);
 
   return (
     <div className={styles.container}>
       <button
         className={`${styles["create-project__button"]} ${instrumentSans.className}`}
-        onClick={(e) => setIsCreating(true)}
+        onClick={() => setIsCreating(true)}
       >
-        <FontAwesomeIcon icon={faPlus} />
+        <Plus size={32} />
       </button>
+
       {isCreating && (
-        <div className={styles.modal}>
-          <form action={formAction}>
-            <div>
-              <input type="text" name="project-name" id="project-name" />
-            </div>
-            <div className={styles["create-project__buttons"]}>
-              <button data-disabled={pending} disabled={pending}>
-                Créer
-              </button>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsCreating(false);
-                }}
-              >
-                Annuler
-              </button>
-            </div>
+        <div className={styles.overlay}>
+          <span className={styles.closeButton}
+            onClick={() => setIsCreating(false)} >
+            <X size={32} />
+          </span>
+          <form ref={formRef} action={formAction} className={styles.form}>
+            <input
+              ref={inputRef}
+              type="text"
+              name="project-name"
+              id="project-name"
+              placeholder="Nommez votre projet"
+              required
+              minLength={2}
+              maxLength={250}
+            />
+            <span className={styles.projectCreationInfo}>Créez le projet en appuyant sur Entrée</span>
+            <span className={styles.projectCreationInfo}>OU</span>
+            <button type="submit" data-disabled={pending} disabled={pending}>
+              Cliquez pour créer le projet
+            </button>
           </form>
         </div>
       )}
