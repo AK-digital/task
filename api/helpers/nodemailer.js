@@ -19,7 +19,7 @@ export async function sendEmail(from, to, subject, text) {
     from: from, // sender address
     to: to, // list of receivers
     subject: subject, // Subject line
-    html: text, // html body
+    html: '<body style="background-color:#E2E7FF">' + text + '</body>', // html body
   });
 
   console.log("Message sent: %s", info.messageId);
