@@ -1,7 +1,6 @@
 "use client";
 import { logout } from "@/api/auth";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function SignOut() {
@@ -9,11 +8,7 @@ export default function SignOut() {
   async function handleLogout(e) {
     e.preventDefault();
     await logout();
-    router.push("/auth");
+    router.push("/");
   }
-  return (
-    <>
-      <FontAwesomeIcon onClick={handleLogout} icon={faRightFromBracket} />
-    </>
-  );
+  return <LogOut onClick={handleLogout} size={24} cursor={"pointer"} />;
 }

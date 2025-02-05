@@ -16,8 +16,6 @@ export default async function getNotifications() {
 
     const response = await res.json();
 
-    console.log(response);
-
     if (!response?.success && res.status !== 404) {
       throw new Error(response?.message);
     }

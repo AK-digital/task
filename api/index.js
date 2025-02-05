@@ -52,46 +52,70 @@ app.use("/api/task", taskRouter);
 app.use("/api/message", messageRouter);
 
 // SOCKET LOGIC
-const connectedUsers = new Map();
-
 io.on("connection", (socket) => {
-  socket.once("logged in", (user) => {
-    console.log("Utilisateur connecté à socket.io:", user);
+  socket.once("logged in", async (userId) => {
+    if (userId) {
+      const user = await UserModel.findById({ _id: userId });
 
-    connectedUsers.set(user?._id.toString(), socket.id);
+      if (!user) {
+        throw new Error("Aucun utilisateur trouvé avec cette ID : ", userId);
+      }
+
+      await UserModel.findByIdAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            socketId: socket?.id,
+          },
+        },
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    }
   });
 
-  socket.on("project invitation", async (email, project) => {
-    const user = await UserModel.findOne({ email: email });
+  socket.on("create notification", async (sender, email, message, link) => {
+    const senderUser = await UserModel.findById({ _id: sender?._id });
+    const receiverUser = await UserModel.findOne({ email: email });
 
-    if (!user) {
-      return;
-    }
-
+    // Create a new notification for the user
     const newNotification = new NotificationModel({
-      userId: user?._id,
-      message: {
-        title: `🎉 Invitation à ${project?.name} !`,
-        content: `Bonne nouvelle ! Vous avez été invité pour rejoindre le projet "${project?.name}".`,
-      },
+      userId: receiverUser?._id,
+      senderId: senderUser?._id,
+      message: message,
+      link: link,
     });
 
     await newNotification.save();
 
-    // Récupérer le socketId de l'utilisateur invité
-    const userSocketId = connectedUsers.get(user._id.toString());
-
-    io.emit("new notification");
+    io.to(receiverUser?.socketId).emit("new notification");
   });
 
-  socket.on("disconnect", () => {
-    // Trouver l'userId associé à ce socket et le supprimer
-    for (let [userId, socketId] of connectedUsers.entries()) {
-      if (socketId === socket.id) {
-        connectedUsers.delete(userId);
-        break;
-      }
-    }
+  socket.on("unread notifications", async (unreadNotifications) => {
+    const user = await UserModel.findById({
+      _id: unreadNotifications[0]?.userId,
+    });
+
+    // Mark all the unread notifications as read
+    unreadNotifications?.forEach(async (notif) => {
+      await NotificationModel.findByIdAndUpdate(
+        { _id: notif?._id },
+        {
+          $set: {
+            read: true,
+          },
+        },
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    });
+
+    // Emit to the user that the notifications have been read so we can update the UI
+    io.to(user?.socketId).emit("notifications read");
   });
 });
 

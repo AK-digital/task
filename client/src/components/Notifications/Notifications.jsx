@@ -1,33 +1,37 @@
 "use client";
-import getNotifications from "@/api/notification";
 import styles from "@/styles/components/notifications/notifications.module.css";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
+import Image from "next/image";
 import { useEffect } from "react";
-import useSWR from "swr";
+import NoPicture from "../User/NoPicture";
+import moment from "moment";
+import Link from "next/link";
 
-export default function Notifications({ setNotifOpen }) {
-  const { data, mutate } = useSWR(
-    `${process.env.API_URL}/notification`,
-    getNotifications
-  );
-
-  const notFound = data?.message === "Aucune notifications trouvées";
-
-  const notifications = data?.data;
-
+export default function Notifications({ setNotifOpen, notifications, mutate }) {
+  console.log(notifications);
   useEffect(() => {
-    const handleNewNotification = () => {
+    const getUnreadNotifications = () => {
+      return notifications?.filter((notif) => !notif.read);
+    };
+
+    const unread = getUnreadNotifications();
+
+    if (notifications?.some((notif) => !notif.read)) {
+      socket.emit("unread notifications", unread);
+    }
+
+    const handleReadNotifications = () => {
       mutate();
     };
 
-    socket.on("new notification", handleNewNotification);
+    socket.on("notifications read", handleReadNotifications);
 
     return () => {
-      socket.off("new notification", handleNewNotification);
+      socket.off("unread notifications", unread);
+      socket.off("notifications read", handleReadNotifications);
     };
-  }, [socket, mutate]);
-
+  }, [socket]);
   return (
     <>
       <div className={styles.container} id="popover">
@@ -35,23 +39,47 @@ export default function Notifications({ setNotifOpen }) {
           <span>Notifications</span>
         </div>
         <div>
-          {notFound ? (
+          {!isNotEmpty(notifications) ? (
             <span>Vous n'avez aucune notification pour le moment</span>
           ) : (
-            <ul>
-              {isNotEmpty(notifications) &&
-                notifications?.map((notif) => {
-                  return (
-                    <li className={styles.notification}>
-                      <div className={styles.title}>
-                        <span>{notif?.message?.title}</span>
+            <ul className={styles.notifications}>
+              {notifications?.map((notif, idx) => {
+                const dateFromNow = moment(notif?.createdAt).fromNow();
+                return (
+                  <li className={styles.notification} key={idx}>
+                    <Link href={`${notif?.link}`}>
+                      <div>
+                        {notif?.senderId?.picture ? (
+                          <Image
+                            src={notif?.senderId?.picture}
+                            width={30}
+                            height={30}
+                            alt={`Photo de profil de ${notif?.senderId?.firstName}`}
+                            style={{ borderRadius: "50%" }}
+                          />
+                        ) : (
+                          <NoPicture
+                            user={notif?.senderId}
+                            width={"30px"}
+                            height={"30px"}
+                          />
+                        )}
                       </div>
-                      <div className={styles.content}>
-                        <span>{notif?.message?.content}</span>
+                      <div className={styles.message}>
+                        <div className={styles.title}>
+                          <span>{notif?.message?.title}</span>
+                        </div>
+                        <div className={styles.content}>
+                          <span>{notif?.message?.content}</span>
+                        </div>
                       </div>
-                    </li>
-                  );
-                })}
+                      <div className={styles.date}>
+                        <span>{dateFromNow}</span>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

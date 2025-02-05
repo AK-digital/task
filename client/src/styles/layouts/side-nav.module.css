@@ -6,7 +6,7 @@
     border-right: 1px solid #292a39;
 }
 
-.container>div {
+.wrapper {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -36,4 +36,12 @@
     align-items: center;
     font-size: 12px;
     text-align: center;
+}
+
+.footer {
+    text-align: center;
+}
+
+.signOut {
+    margin-top: 10px;
 }

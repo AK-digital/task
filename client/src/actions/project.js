@@ -34,13 +34,15 @@ export async function saveProject(prevState, formData) {
 
     return {
       status: "success",
-      data: response.data // Contient le projet créé avec son _id
+      data: response.data, // Contient le projet créé avec son _id
     };
   } catch (err) {
-    console.log(err.message || "Une erreur est survenue lors de la création du projet");
+    console.log(
+      err.message || "Une erreur est survenue lors de la création du projet"
+    );
     return {
       status: "failure",
-      message: err.message
+      message: err.message,
     };
   }
 }
@@ -95,6 +97,7 @@ export async function sendProjectInvitationToGuest(
     return {
       status: "success",
       message: `Invitation envoyé à ${email} avec succès`,
+      data: response?.data,
     };
   } catch (err) {
     console.log(err?.message || "Une erreur est survenue");

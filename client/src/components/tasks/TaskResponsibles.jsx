@@ -1,14 +1,17 @@
 "use client";
 import { addResponsible, removeResponsible } from "@/api/task";
+import { AuthContext } from "@/context/auth";
 import Modal from "@/layouts/Modal";
 import styles from "@/styles/components/tasks/task-responsibles.module.css";
+import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
 import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function TaskResponsibles({ task, project }) {
+  const { user, uid } = useContext(AuthContext);
   const [optimisticResponsibles, setOptimisticResponsibles] = useState(
     task?.responsibles || []
   );
@@ -40,6 +43,20 @@ export default function TaskResponsibles({ task, project }) {
     if (!response?.success) {
       setOptimisticResponsibles(responsibles);
     }
+
+    if (responsible?._id === uid) {
+      return;
+    }
+
+    const message = {
+      title: `🎉 Une tâche vous a été assigné(e) dans ${project?.name}`,
+      content: `Vous venez d'être nommé responsable de la tâche "${task?.text}".`,
+    };
+
+    const link = "/project/" + project?._id;
+
+    // Emit a notification to the user that has been assigned to the task
+    socket.emit("create notification", user, responsible?.email, message, link);
   }
 
   async function handleRemoveResponsible(e, responsible) {
