@@ -6,6 +6,7 @@ import UserModel from "../models/User.model.js";
 import { emailDescription } from "../templates/emails.js";
 import { regex } from "../utils/regex.js";
 import { getMatches } from "../utils/utils.js";
+import { emailTaskAssigned } from "../templates/emails.js";
 
 // Only authors and guets will be able to post the tasks
 export async function saveTask(req, res, next) {
@@ -491,16 +492,15 @@ export async function addResponsible(req, res, next) {
       });
     }
 
-    const subjet = `Vous avez été nommé responsable d'une tâche dans le projet ${updatedTask?.projectId?.name}`;
-    const text = `
-        <div style="font-family: Arial, sans-serif; color: #333; text-align: center; padding: 20px;">
-          <h1 style="color: #5056C8;">Une tâche vous a été assigné sur Täsk</h1>
-          <p>Bonjour,</p>
-          <p>Vous avez été nommé responsable de la tâche : <strong>${updatedTask?.text}</strong>. 
-        </div>
-        `;
+    const projectLink = `${process.env.CLIENT_URL}/project/${updatedTask.projectId._id}`;
 
-    await sendEmail("task@akdigital.fr", responsible?.email, subjet, text);
+    const template = emailTaskAssigned(updatedTask, projectLink);
+    await sendEmail(
+      "task@akdigital.fr",
+      responsible?.email,
+      template.subjet,
+      template.text
+    );
 
     return res.status(200).send({
       success: true,
