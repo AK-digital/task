@@ -84,27 +84,21 @@ export function emailTaskAssigned(task, projectLink) {
 
 export function emailResetCode(user, resetLink) {
   const templates = {
-    subjet: `Réinitialisation de votre mot de passe`,
+    subjet: "Réinitialisation de votre mot de passe",
     text: `
-        <div style="font-family: Arial, sans-serif; color: #5C5D61;; text-align: center; padding: 20px; margin-inline: auto;">
-        <h1 style="font-size: 40px; font-weight: bold;">Réinitialisation du mot de passe 🔒</h1>
-        <div style="font-size: 20px; font-weight: 300; max-width: 300px;">
-         <p>
-           Bonjour ${user?.firstName + " " + user?.lastName},
-           <br><br>
-           Nous avons reçu une demande de réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe :
-         </p>
-         <div>
-         <a href="${resetLink}">
-           <button style="background-color: #777AE4; outline: none; border: none; border-radius: 32px; padding: 16px 24px; color: #FFFFFF; font-weight: 500;">
-             Réinitialiser le mot de passe
-           </button>
-         </a>
-         </div>
+      <div style="${emailStyles.container}">
+        <h1 style="${emailStyles.title}">Réinitialisation du mot de passe</h1>
+        <p style="${emailStyles.paragraph}">Bonjour ${user?.firstName},</p>
+        <p style="${emailStyles.content}">Vous avez demandé la réinitialisation de votre mot de passe.</p>
+        <p style="${emailStyles.content}">Cliquez sur le bouton ci-dessous pour continuer :</p>
+        <div>
+          <a href="${resetLink}" style="${emailStyles.button}">
+            Réinitialiser mon mot de passe
+          </a>
         </div>
-        </div>
-        `,
+        <p style="${emailStyles.content}">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.</p>
+      </div>
+    `
   };
-
   return templates;
 }
