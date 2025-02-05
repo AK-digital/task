@@ -12,18 +12,21 @@ export default function Notifications({ setNotifOpen }) {
     getNotifications
   );
 
-  console.log(data);
-
   const notFound = data?.message === "Aucune notifications trouvées";
 
   const notifications = data?.data;
 
   useEffect(() => {
-    socket.on("new notification", () => {
-      console.log("worked");
+    const handleNewNotification = () => {
       mutate();
-    });
-  }, [socket]);
+    };
+
+    socket.on("new notification", handleNewNotification);
+
+    return () => {
+      socket.off("new notification", handleNewNotification);
+    };
+  }, [socket, mutate]);
 
   return (
     <>
