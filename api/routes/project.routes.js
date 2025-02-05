@@ -18,7 +18,7 @@ router.get(
 router.put(
   "/:id",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
+  projectMiddlewares.isAuthor,
   projectControllers.updateProject
 );
 

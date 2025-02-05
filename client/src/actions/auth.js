@@ -1,4 +1,5 @@
 "use server";
+import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
 import { cookies } from "next/headers";
 
@@ -140,6 +141,125 @@ export async function signIn(prevState, formData) {
     return {
       status: "failure",
       message: err?.message,
+    };
+  }
+}
+
+export async function sendResetCode(prevState, formData) {
+  try {
+    const email = formData.get("email");
+
+    if (!email) {
+      return {
+        status: "failure",
+        errors: { email: "Veuillez renseigner votre adresse mail" },
+      };
+    }
+
+    if (!regex.email.test(email)) {
+      return {
+        status: "failure",
+        errors: { email: "Adresse mail invalide" },
+      };
+    }
+
+    const res = await fetch(`${process.env.API_URL}/auth/reset-code`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const response = await res.json();
+
+    if (res.status === 404) {
+      return {
+        status: "failure",
+        errors: { email: "Aucun utilisateur trouvé ave cette adresse mail" },
+      };
+    }
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return {
+      status: "success",
+      message: "Un code de réinitialisation a été envoyé à votre adresse mail",
+    };
+  } catch (err) {
+    return {
+      status: "failure",
+      message:
+        err.message ||
+        "Une erreur est survenue lors de l'envoi du code de réinitialisation",
+    };
+  }
+}
+
+export async function resetForgotPassword(prevState, formData) {
+  try {
+    const resetCode = formData.get("reset-code");
+    const newPassword = formData.get("newPassword");
+    const confirmPassword = formData.get("confirmPassword");
+
+    console.log(newPassword, confirmPassword);
+
+    if (!newPassword || !confirmPassword) {
+      return {
+        status: "failure",
+        errors: { newPassword: "Veuillez renseigner un nouveau mot de passe" },
+      };
+    }
+
+    if (!regex.password.test(newPassword)) {
+      return {
+        status: "failure",
+        errors: {
+          newPassword:
+            "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre",
+        },
+      };
+    }
+
+    if (newPassword !== confirmPassword) {
+      return {
+        status: "failure",
+        errors: { confirmPassword: "Les mots de passe ne correspondent pas" },
+      };
+    }
+
+    const res = await fetch(
+      `${process.env.API_URL}/auth/reset-forgot-password`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ resetCode, newPassword }),
+      }
+    );
+
+    const response = await res.json();
+
+    console.log(response);
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return {
+      status: "success",
+      message: response?.message,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: "failure",
+      message:
+        err.message ||
+        "Une erreur est survenue lors de la réinitialisation de votre mot de passe",
     };
   }
 }
