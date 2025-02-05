@@ -6,6 +6,7 @@ import UserModel from "../models/User.model.js";
 import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
+import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -341,6 +342,41 @@ export async function removeGuest(req, res, next) {
     return res.status(500).send({
       success: false,
       message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateProjectLogo(req, res) {
+  try {
+    const { id } = req.params;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        success: false,
+        message: "Aucun fichier n'a été uploadé"
+      });
+    }
+
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: "task/projects"
+    });
+
+    const updatedProject = await ProjectModel.findByIdAndUpdate(
+      id,
+      { logo: result.secure_url },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Logo mis à jour avec succès",
+      data: updatedProject
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
     });
   }
 }

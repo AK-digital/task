@@ -3,6 +3,7 @@ const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import * as projectMiddlewares from "../middlewares/projectRole.middlewares.js";
 import * as projectControllers from "../controllers/project.controllers.js";
+import { upload } from "../middlewares/multer.middlewares.js";
 
 router.post("/", authMiddlewares.auth, projectControllers.saveProject);
 
@@ -20,6 +21,14 @@ router.put(
   authMiddlewares.auth,
   projectMiddlewares.isAuthor,
   projectControllers.updateProject
+);
+
+router.patch(
+  "/:id/logo",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthor,
+  upload.single("logo"),
+  projectControllers.updateProjectLogo
 );
 
 router.delete(

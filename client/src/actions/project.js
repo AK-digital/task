@@ -254,3 +254,49 @@ export async function updateProjectName(projectId, name) {
     };
   }
 }
+
+export async function updateProjectLogo(prevState, formData) {
+  try {
+    const cookie = await cookies();
+    const session = cookie?.get("session");
+    const projectId = formData.get("projectId");
+    const logoFile = formData.get("logo");
+
+    if (!logoFile || logoFile.size === 0) {
+      return {
+        status: "failure",
+        message: "Aucun fichier sélectionné",
+      };
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("logo", logoFile);
+
+    const res = await fetch(`${process.env.API_URL}/project/${projectId}/logo`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${session.value}`,
+      },
+      body: formDataToSend,
+    });
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag(`project-${projectId}`);
+
+    return {
+      status: "success",
+      data: response.data
+    };
+  } catch (err) {
+    return {
+      status: "failure",
+      message: err.message
+    };
+  }
+}

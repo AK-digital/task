@@ -13,6 +13,12 @@ const projectSchema = new Schema(
       minLength: 2,
       maxLength: 250,
     },
+    logo: {
+      type: String,
+      trim: true,
+      required: false,
+      default: "/default-project-logo.webp", // Chemin par défaut de l'image
+    },
     guests: {
       type: [Schema.Types.ObjectId],
       ref: "User",
