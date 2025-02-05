@@ -11,7 +11,6 @@ const projectInvitationSchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
-      unique: true,
       required: "Une adresse mail est requise",
     },
     status: {

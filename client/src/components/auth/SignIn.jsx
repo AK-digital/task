@@ -15,7 +15,7 @@ const initialState = {
   errors: null,
 };
 
-export default function SignIn({ setSignIn, setSignUp }) {
+export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(signIn, initialState);
 
@@ -52,20 +52,33 @@ export default function SignIn({ setSignIn, setSignUp }) {
         </div>
       )}
       <form className={styles.form} action={formAction}>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          placeholder="Email"
-          defaultValue={state?.payload?.email}
-        />
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Mot de passe"
-          defaultValue={state?.payload?.password}
-        />
+        <div>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email"
+            defaultValue={state?.payload?.email}
+          />
+        </div>
+        <div className={styles.password}>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Mot de passe"
+            defaultValue={state?.payload?.password}
+          />
+          <span
+            className={styles.forgotPassword}
+            onClick={(e) => {
+              setSignIn(false);
+              setForgotPassword(true);
+            }}
+          >
+            Mot de passe oublié ?
+          </span>
+        </div>
         <div className={styles.buttons}>
           <button
             data-disabled={pending}

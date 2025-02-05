@@ -1,12 +1,14 @@
 "use client";
 import styles from "@/styles/layouts/project-header.module.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { updateProjectName } from "@/actions/project";
 import { useDebouncedCallback } from "use-debounce";
 import { MoreHorizontal } from "lucide-react";
 import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
+import { AuthContext } from "@/context/auth";
 
 export default function ProjectTitle({ project }) {
+  const { uid } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [projectName, setProjectName] = useState(project?.name);
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,7 +35,9 @@ export default function ProjectTitle({ project }) {
   }, [project]);
 
   const handleClick = () => {
-    setIsEditing(true);
+    if (project?.author?._id === uid) {
+      setIsEditing(true);
+    }
   };
 
   const handleBlur = () => {
@@ -74,10 +78,17 @@ export default function ProjectTitle({ project }) {
           <span onClick={handleClick}>{projectName}</span>
         )}
       </div>
-      <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
-        <MoreHorizontal />
-      </div>
-      {modalOpen && <ProjectOptionsModal projectId={project._id} setOpenModal={setModalOpen} />}
+      {project?.author?._id === uid && (
+        <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
+          <MoreHorizontal />
+        </div>
+      )}
+      {modalOpen && (
+        <ProjectOptionsModal
+          projectId={project._id}
+          setOpenModal={setModalOpen}
+        />
+      )}
     </div>
   );
 }

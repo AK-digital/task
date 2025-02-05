@@ -8,6 +8,8 @@ import "../middlewares/google.middlewares.js";
 router.post("/sign-up", authControllers.signUp);
 router.post("/sign-in", authControllers.signIn);
 router.post("/refresh-token", authControllers.refreshAccessToken);
+router.post("/reset-code", authControllers.sendResetCode);
+router.patch("/reset-forgot-password", authControllers.resetForgotPassword);
 router.delete("/logout", authMiddlewares.auth, authControllers.logout);
 
 router.get("/session", authMiddlewares.auth, async function (req, res, next) {

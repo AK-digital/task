@@ -5,6 +5,11 @@ import { generateAccessToken, generateRefreshToken } from "../helpers/jwt.js";
 import RefreshTokenModel from "../models/RefreshToken.model.js";
 import jwt from "jsonwebtoken";
 import TokenBlackListModel from "../models/TokenBlackList.model.js";
+import { sendEmail } from "../helpers/nodemailer.js";
+import { regex } from "../utils/regex.js";
+import PasswordResetCodeModel from "../models/PasswordResetCode.model.js";
+import { emailResetCode } from "../templates/emails.js";
+import crypto from "crypto";
 
 // Logic for user sign up
 export async function signUp(req, res, next) {
@@ -266,6 +271,134 @@ export async function refreshAccessToken(req, res, next) {
         }
       }
     );
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function sendResetCode(req, res, next) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    if (!regex.email.test(email)) {
+      return res.status(400).send({
+        success: false,
+        message: "Adresse mail invalide",
+      });
+    }
+
+    const user = await UserModel.findOne({ email: email });
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucun utilisateur trouvé avec cette adresse mail",
+      });
+    }
+
+    const resetCode = crypto.randomBytes(10).toString("hex");
+
+    const newPasswordResetCode = await PasswordResetCodeModel({
+      userId: user._id,
+      resetCode: resetCode,
+    });
+
+    const savedPasswordResetCode = await newPasswordResetCode.save();
+
+    const link = `${process.env.CLIENT_URL}/forgot-password/${savedPasswordResetCode?.resetCode}`;
+    const template = emailResetCode(user, link);
+
+    await sendEmail(
+      "task@akdigital.fr",
+      email,
+      template?.subjet,
+      template.text
+    );
+
+    return res.status(201).send({
+      success: true,
+      message: "Code de réinitialisation envoyé avec succès",
+      data: savedPasswordResetCode,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function resetForgotPassword(req, res, next) {
+  try {
+    const { resetCode, newPassword } = req.body;
+
+    if (!resetCode || !newPassword) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const resetCodeFound = await PasswordResetCodeModel.findOne({
+      resetCode: resetCode,
+    });
+
+    if (!resetCodeFound) {
+      return res.status(404).send({
+        success: false,
+        message: "Code de réinitialisation invalide",
+      });
+    }
+
+    const user = await UserModel.findById({ _id: resetCodeFound?.userId });
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucun utilisateur trouvé avec ce code de réinitialisation",
+      });
+    }
+    console.log(newPassword, user?.password);
+    const match = await bcrypt.compare(newPassword, user?.password);
+
+    if (match) {
+      return res.status(400).send({
+        success: false,
+        message: "Le nouveau mot de passe doit être différent de l'ancien",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await UserModel.findByIdAndUpdate(
+      { _id: user?._id },
+      {
+        $set: {
+          password: hashedPassword,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    await PasswordResetCodeModel.findOneAndDelete({ resetCode: resetCode });
+
+    return res.status(200).send({
+      success: true,
+      message: "Mot de passe réinitialisé avec succès",
+    });
   } catch (err) {
     return res.status(500).send({
       success: false,
