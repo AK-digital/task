@@ -2,7 +2,7 @@
 import styles from "@/styles/components/projects/project-guests.module.css";
 import { instrumentSans } from "@/utils/font";
 import { useState } from "react";
-import GuestsModal from "./GuestsModal";
+import GuestsModal from "../Modals/GuestsModal";
 
 export default function ProjectGuests({ project }) {
   const [modal, setModal] = useState(false);

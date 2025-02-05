@@ -3,20 +3,25 @@
     display: flex;
     max-width: 120px;
     width: 100%;
-    padding: 4px 8px;
+    padding-left: 8px;
+    padding-right: 8px;
     border-right: 1px solid var(--border-color);
     height: 100%;
 }
 
 .container svg {
-
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
+    transition: color 150ms ease-in-out;
+}
+
+.container svg:hover {
+    color: var(--accent-color);
 }
 
 .container[data-running="false"] span {
-    color: #ffffff24;
+    color: #ffffff89;
 }
 
 .container[data-running="true"] {
@@ -27,6 +32,7 @@
     display: flex;
     align-items: center;
     gap: 14px;
+    font-size: var(--text-size-normal);
 }
 
 /* .more {

@@ -1,15 +1,15 @@
 "use client";
 import { deleteBoard } from "@/actions/board";
+import { Trash } from "lucide-react";
+import { useTransition, useState } from "react";
+import ConfirmDialog from "../Modals/ConfirmDialog";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTransition } from "react";
 
 export default function DeleteBoard({ boardId, projectId }) {
     const [isPending, startTransition] = useTransition();
+    const [showConfirm, setShowConfirm] = useState(false);
 
-    function handleDeleteBoard(e) {
-        e.preventDefault();
+    function handleDeleteBoard() {
         startTransition(async () => {
             await deleteBoard(boardId, projectId);
         });
@@ -17,11 +17,16 @@ export default function DeleteBoard({ boardId, projectId }) {
 
     return (
         <div className={styles.deleteIcon}>
-            <FontAwesomeIcon
-                icon={faTrash}
-                onClick={handleDeleteBoard}
+            <Trash
+                size={20}
+                onClick={() => setShowConfirm(true)}
                 className={styles.trashIcon}
-                style={{ opacity: isPending ? 0.5 : 1 }}
+            />
+            <ConfirmDialog
+                isOpen={showConfirm}
+                onClose={() => setShowConfirm(false)}
+                onConfirm={handleDeleteBoard}
+                message="Supprimer ce tableau ?"
             />
         </div>
     );

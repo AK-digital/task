@@ -31,7 +31,7 @@ export async function getProject(id) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
+      "Une erreur est survenue lors de la récupération des projets"
     );
   }
 }
@@ -64,7 +64,7 @@ export async function getProjects() {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
+      "Une erreur est survenue lors de la récupération des projets"
     );
   }
 }
@@ -79,7 +79,7 @@ export async function deleteProject(projectId) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        Authorization: `Bearer ${session.value}`,
       },
     });
 
@@ -93,7 +93,7 @@ export async function deleteProject(projectId) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des tableaux"
+      "Une erreur est survenue lors de la récupération des tableaux"
     );
   }
 }

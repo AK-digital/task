@@ -17,9 +17,9 @@
 }
 
 .container svg {
-    color: #ffffff24;
-    width: 16px;
-    height: 16px;
+    color: var(--text-color-muted);
+    width: 18px;
+    height: 18px;
 }
 
 .deadline {
@@ -28,6 +28,11 @@
     align-items: center;
     font-size: 0.9rem;
     margin-left: 2px;
+}
+
+.deadline[data-empty="true"] {
+    color: var(--text-color-muted);
+    letter-spacing: 0.015rem;
 }
 
 .deadline[data-past="true"],

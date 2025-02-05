@@ -28,11 +28,12 @@
     font-size: 0.9rem;
     padding: 8px 4px;
     border-radius: 50px;
-    background-color: rgb(72, 72, 72);
+    background-color: #44455e;
     height: 48px;
     width: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 12px;
+    text-align: center;
 }

@@ -18,7 +18,6 @@ export default function BoardHeader({
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
   const [title, setTitle] = useState(board?.title);
-  const [showDelete, setShowDelete] = useState(false);
 
   const colors = board?.colors;
 
@@ -54,8 +53,6 @@ export default function BoardHeader({
     <div
       className={styles.container}
       data-open={open}
-      onMouseEnter={() => setShowDelete(true)}
-      onMouseLeave={() => setShowDelete(false)}
     >
       {open ? (
         <FontAwesomeIcon
@@ -102,9 +99,9 @@ export default function BoardHeader({
             : `${tasks?.length} Tâche`}
         </span>
       )}
-      {showDelete && (
-        <DeleteBoard boardId={board?._id} projectId={board?.projectId} />
-      )}
+
+      <DeleteBoard boardId={board?._id} projectId={board?.projectId} />
+
       {openColors && (
         <>
           <div className={styles.modal} id="popover">

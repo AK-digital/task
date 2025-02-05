@@ -24,3 +24,11 @@
     align-items: center;
     gap: 12px;
 }
+
+.empty {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25%;
+}

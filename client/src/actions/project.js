@@ -19,24 +19,29 @@ export async function saveProject(prevState, formData) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        Authorization: `Bearer ${session.value}`,
       },
       body: JSON.stringify(rawFormData),
     });
 
     const response = await res.json();
 
-    console.log(response);
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
 
     revalidateTag("projects");
 
     return {
       status: "success",
+      data: response.data // Contient le projet créé avec son _id
     };
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la création du tableau"
-    );
+    console.log(err.message || "Une erreur est survenue lors de la création du projet");
+    return {
+      status: "failure",
+      message: err.message
+    };
   }
 }
 
