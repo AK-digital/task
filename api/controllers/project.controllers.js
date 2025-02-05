@@ -220,6 +220,7 @@ export async function sendProjectInvitationToGuest(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Invitation par e-mail envoyé avec succès",
+      data: newProjectInvitation,
     });
   } catch (err) {
     return res.status(500).send({

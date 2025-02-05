@@ -3,6 +3,9 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema(
   {
+    socketId: {
+      type: String,
+    },
     googleId: {
       type: String,
       trim: true,

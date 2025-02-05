@@ -159,6 +159,16 @@
     fill: white;
 }
 
+.unread {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ca4250;
+}
+
 .separator {
     width: 1px;
     background-color: var(--border-color);

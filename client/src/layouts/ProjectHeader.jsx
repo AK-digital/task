@@ -4,14 +4,36 @@ import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import SearchForm from "@/components/Projects/SearchForm";
 import { Bell, UserPlus2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import Notifications from "@/components/Notifications/Notifications";
 import NoPicture from "@/components/User/NoPicture";
+import getNotifications from "@/api/notification";
+import useSWR from "swr";
+import socket from "@/utils/socket";
 
 export default function ProjectHeader({ project }) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const { data, mutate } = useSWR(
+    `${process.env.API_URL}/notification`,
+    getNotifications
+  );
+
+  useEffect(() => {
+    const handleNewNotification = () => {
+      mutate();
+    };
+
+    socket.on("new notification", handleNewNotification);
+
+    return () => {
+      socket.off("new notification", handleNewNotification);
+    };
+  }, [socket, mutate]);
+
+  const hasUnread = data?.data?.some((notif) => !notif.read);
   return (
     <>
       <header className={styles.container}>
@@ -24,7 +46,14 @@ export default function ProjectHeader({ project }) {
             {/* Notifications bell */}
             <div className={styles.notificationBtn} data-open={notifOpen}>
               <Bell size={24} onClick={(e) => setNotifOpen(true)} />
-              {notifOpen && <Notifications setNotifOpen={setNotifOpen} />}
+              {hasUnread && <div className={styles.unread}></div>}
+              {notifOpen && (
+                <Notifications
+                  setNotifOpen={setNotifOpen}
+                  notifications={data?.data}
+                  mutate={mutate}
+                />
+              )}
             </div>
             <div className={styles.separator}></div>
             {/* Guests avatars */}

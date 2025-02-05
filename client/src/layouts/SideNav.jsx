@@ -5,6 +5,7 @@ import CreateProject from "@/components/Projects/CreateProject";
 import Link from "next/link";
 import Image from "next/image";
 import UserInfo from "@/components/Header/UserInfo";
+import SignOut from "@/components/auth/SignOut";
 
 export default async function SideNav() {
   const projects = await getProjects();
@@ -23,7 +24,7 @@ export default async function SideNav() {
           fill="#43455F"
         />
       </svg>
-      <div>
+      <div className={styles.wrapper}>
         <div className={styles.projects}>
           {/* list of project */}
           <nav className={styles.nav}>
@@ -42,8 +43,13 @@ export default async function SideNav() {
           {/* create a project */}
           <CreateProject />
         </div>
-        <div className={styles.userAvatar}>
-          <UserInfo />
+        <div className={styles.footer}>
+          <div className={styles.userAvatar}>
+            <UserInfo />
+          </div>
+          <div className={styles.signOut}>
+            <SignOut />
+          </div>
         </div>
       </div>
     </aside>

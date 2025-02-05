@@ -17,13 +17,13 @@ export default function AuthProvider({ children }) {
 
       // If get session failed then redirect the user to the login page
       if (!response?.success) {
-        socket.emit("disconnect");
-        router.push(`/auth`);
+        // socket.emit("disconnect");
+        router.push(`/`);
       }
 
       setUid(response?.data?._id);
       setUser(response?.data);
-      socket.emit("logged in", user);
+      socket.emit("logged in", response?.data?._id);
     },
     refreshInterval: 15 * 60 * 1000, // Refresh every 15 minutes
     revalidateOnMount: true, // Revalidate everytime componenets are mounted
@@ -34,7 +34,7 @@ export default function AuthProvider({ children }) {
 
   // Returns to auth page
   if (error) {
-    router.push(`/auth`);
+    router.push(`/`);
   }
 
   return (

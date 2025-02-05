@@ -6,12 +6,16 @@ export async function getNotifications(req, res, next) {
 
     const notifications = await NotificationModel.find({
       userId: authUser?._id,
-    });
+    })
+      .sort("-createdAt")
+      .populate("senderId", "firstName lastName picture")
+      .exec();
 
     if (notifications.length <= 0) {
       return res.status(404).send({
         success: false,
         message: "Aucune notifications trouvées",
+        data: notifications,
       });
     }
 

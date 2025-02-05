@@ -1,16 +1,19 @@
+"use client";
 import styles from "@/styles/components/projects/guest-form-invitation.module.css";
 import { sendProjectInvitationToGuest } from "@/actions/project";
 import socket from "@/utils/socket";
-import { useActionState, useEffect, useState } from "react";
-import PopupMessage from "@/layouts/PopupMessage";
+import { useActionState, useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/context/auth";
 
 const initialState = {
   status: "pending",
   message: "",
+  data: null,
   errors: null,
 };
 
 export default function GuestFormInvitation({ project, setIsPopup }) {
+  const { user } = useContext(AuthContext);
   const [value, setValue] = useState("");
   const sendProjectInvitationToGuestWithId = sendProjectInvitationToGuest.bind(
     null,
@@ -29,7 +32,15 @@ export default function GuestFormInvitation({ project, setIsPopup }) {
         title: "Invitation envoyé avec succès",
         message: state?.message,
       });
-      socket.emit("project invitation", value, project);
+
+      const message = {
+        title: `🎉 Invitation à ${project?.name} !`,
+        content: `Bonne nouvelle ! Vous avez été invité pour rejoindre le projet "${project?.name}".`,
+      };
+
+      const link = "/invitation/" + state?.data?._id;
+
+      socket.emit("create notification", user, value, message, link);
     }
 
     if (state?.status === "failure" && state?.errors === null) {
