@@ -21,7 +21,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
 }
 
 .projectsItem {
@@ -32,7 +32,7 @@
 }
 
 .projectsItem img {
-    border: 2px solid #44455e;
+    border: 3px solid transparent;
     transition: 150ms all linear;
 }
 
@@ -58,8 +58,8 @@
 
 .dragHandle {
     cursor: pointer;
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     transition: transform 0.3s ease;
 }
 

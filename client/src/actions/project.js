@@ -295,6 +295,14 @@ export async function updateProjectLogo(prevState, formData) {
       };
     }
 
+    // Vérification du type de fichier
+    if (!logo.type.startsWith('image/')) {
+      return {
+        status: "failure",
+        message: "Le fichier doit être une image",
+      };
+    }
+
     const formDataToSend = new FormData();
     formDataToSend.append("logo", logo);
 
@@ -313,19 +321,22 @@ export async function updateProjectLogo(prevState, formData) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message);
+      throw new Error(response?.message || "Une erreur inattendue est survenue");
     }
 
     revalidateTag("projects");
+    revalidateTag("project"); // Ajout de la revalidation du tag project
 
     return {
       status: "success",
+      message: "Le logo a été mis à jour avec succès",
       data: response.data,
     };
   } catch (err) {
+    console.error("Erreur lors de la mise à jour du logo :", err);
     return {
       status: "failure",
-      message: err.message,
+      message: "Une erreur inattendue est survenue lors de la mise à jour du logo",
     };
   }
 }

@@ -52,12 +52,16 @@ export default function SortableProject({ project, projectId, isActive }) {
                 className={styles.dragHandle}
             >
                 <Image
-                    src={project?.logo || "/default-project-logo.webp"}
-                    width={48}
-                    height={48}
+                    src={project?.logo || project?.favicon || "/default-project-logo.webp"}
+                    width={52}
+                    height={52}
                     alt="project logo"
                     style={{ borderRadius: "50%" }}
                     data-active={isActive} // Ajout de data-active sur l'image aussi
+                    onError={(e) => {
+                        // Si le favicon n'est pas accessible, on utilise le logo par défaut
+                        e.target.src = "/default-project-logo.webp";
+                    }}
                 />
             </div>
         </li>

@@ -37,7 +37,7 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
         >
           <X size={32} />
         </span>
-        <h1>Options du projet</h1>
+        <h1>Options du projet {project?.name}</h1>
         <div className={styles.content}>
           <ProjectLogoForm
             project={project}
@@ -118,12 +118,16 @@ export function ProjectLogoForm({ project, setStatusMessage, setStatus }) {
           onMouseLeave={() => setEditImg(false)}
         >
           <Image
-            src={project?.logo || "/default-project-logo.webp"}
+            src={project?.logo || project?.favicon || "/default-project-logo.webp"}
             alt="Logo du projet"
             width={120}
             height={120}
             quality={100}
             className={styles.projectLogo}
+            onError={(e) => {
+              // Si le favicon n'est pas accessible, on utilise le logo par défaut
+              e.target.src = "/default-project-logo.webp";
+            }}
           />
           {editImg && (
             <label htmlFor="logo" className={styles.editPicture}>
