@@ -27,9 +27,9 @@ export default function CreateProject({ onProjectCreated }) {
   useEffect(() => {
     if (state?.status === "success" && state?.data?._id) {
       setIsCreating(false);
-      router.refresh(); // On garde uniquement le refresh
-      // On retire l'appel à onProjectCreated car il peut causer des doublons
-      router.push(`/project/${state.data._id}`);
+      router.refresh();
+      // Correction de l'URL de redirection
+      router.push(`/project/${state.data._id}/`);
     }
   }, [state, router]);
 

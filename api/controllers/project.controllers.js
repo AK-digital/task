@@ -39,6 +39,32 @@ export async function saveProject(req, res, next) {
 
     const savedProject = await newProject.save();
 
+    // Créer un tableau par défaut
+    const defaultBoard = new BoardModel({
+      projectId: savedProject._id,
+      author: authUser._id,
+      title: "Votre premier tableau",
+    });
+
+    const savedBoard = await defaultBoard.save();
+
+    // Utiliser la même logique que dans board.controllers.js
+    const randomIndex = Math.floor(Math.random() * savedBoard?.colors.length);
+    const randomColor = savedBoard?.colors[randomIndex];
+
+    await BoardModel.findByIdAndUpdate(
+      { _id: savedBoard._id },
+      {
+        $set: {
+          color: randomColor,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
     return res.status(201).send({
       success: true,
       message: "Projet créé avec succès",

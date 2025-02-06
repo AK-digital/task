@@ -49,7 +49,7 @@ export async function getProjects() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.value}`,
         },
-        next: { tags: ["projects"] } // Ajout du tag
+        next: { tags: ["projects"] }
       }
     );
 
