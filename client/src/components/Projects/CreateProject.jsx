@@ -27,13 +27,11 @@ export default function CreateProject({ onProjectCreated }) {
   useEffect(() => {
     if (state?.status === "success" && state?.data?._id) {
       setIsCreating(false);
-      // Appeler onProjectCreated avec les données du nouveau projet
-      onProjectCreated(state.data);
-      // Navigation vers le nouveau projet
+      router.refresh(); // On garde uniquement le refresh
+      // On retire l'appel à onProjectCreated car il peut causer des doublons
       router.push(`/project/${state.data._id}`);
-      router.refresh();
     }
-  }, [state, router, onProjectCreated]);
+  }, [state, router]);
 
   useEffect(() => {
     if (isCreating && inputRef.current) {

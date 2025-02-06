@@ -1,7 +1,6 @@
 "use server";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function getProject(id) {
   try {
@@ -31,7 +30,7 @@ export async function getProject(id) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
+      "Une erreur est survenue lors de la récupération des projets"
     );
   }
 }
@@ -48,10 +47,10 @@ export async function getProjects() {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+          Authorization: `Bearer ${session.value}`,
         },
-      },
-      { next: { tags: ["projects"] } }
+        next: { tags: ["projects"] } // Ajout du tag
+      }
     );
 
     const response = await res.json();
@@ -62,10 +61,7 @@ export async function getProjects() {
 
     return response.data;
   } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
-    );
+    console.log(err.message || "Une erreur est survenue lors de la récupération des projets");
   }
 }
 
@@ -95,7 +91,7 @@ export async function deleteProject(projectId) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des tableaux"
+      "Une erreur est survenue lors de la récupération des tableaux"
     );
   }
 }

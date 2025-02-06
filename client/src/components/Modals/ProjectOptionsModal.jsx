@@ -15,12 +15,15 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
   const [status, setStatus] = useState("");
 
   async function handleDeleteProject() {
-    const response = await deleteProject(project?._id);
+    const isConfirmed = window.confirm(`Êtes-vous sûr de vouloir supprimer le projet "${project?.name}" ?`);
 
-    console.log(response);
+    if (!isConfirmed) return;
+
+    const response = await deleteProject(project?._id);
 
     if (response?.success) {
       setOpenModal(false);
+      router.refresh();
       router.push("/projects");
     }
   }

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import styles from "@/styles/layouts/side-nav.module.css";
 import { useState, useRef } from "react";
 
-export default function SortableProject({ project, projectId }) {
+export default function SortableProject({ project, projectId, isActive }) {
     const router = useRouter();
     const [isDragging, setIsDragging] = useState(false);
     const mouseDownTime = useRef(null);
@@ -40,15 +40,16 @@ export default function SortableProject({ project, projectId }) {
     return (
         <li
             ref={setNodeRef}
-            style={style}
             className={styles.projectsItem}
+            data-active={isActive} // Utilisation de data-active au lieu d'une classe
+            style={style}
+            {...attributes}
+            {...listeners}
         >
             <div
-                {...attributes}
-                {...listeners}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
-                className={`${styles.dragHandle} ${isDragging ? styles.isDragging : ''}`}
+                className={styles.dragHandle}
             >
                 <Image
                     src={project?.logo || "/default-project-logo.webp"}
@@ -56,7 +57,7 @@ export default function SortableProject({ project, projectId }) {
                     height={48}
                     alt="project logo"
                     style={{ borderRadius: "50%" }}
-                    data-active={projectId === project?._id}
+                    data-active={isActive} // Ajout de data-active sur l'image aussi
                 />
             </div>
         </li>

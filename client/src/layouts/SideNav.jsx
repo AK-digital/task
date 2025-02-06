@@ -27,29 +27,19 @@ export default function SideNav({ projects }) {
   const params = useParams();
   const { id } = params;
   const projectId = id;
-  const [projectItems, setProjectItems] = useState(projects || []);
+  const [projectItems, setProjectItems] = useState([]);
 
-  // Fonction pour ajouter un nouveau projet à la liste
-  const handleProjectCreated = (newProject) => {
-    setProjectItems(prevItems => [...prevItems, newProject]);
-  };
-
-  // Effet pour déplacer le projet actif en haut
   useEffect(() => {
-    if (projectId && projectItems.length > 0) {
-      const activeIndex = projectItems.findIndex(p => p._id === projectId);
-      if (activeIndex > 0) {
-        const newItems = arrayMove(projectItems, activeIndex, 0);
-        setProjectItems(newItems);
-      }
+    if (projects) {
+      setProjectItems(projects);
     }
-  }, [projectId]);
+  }, [projects]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        delay: 0, // Supprime le délai d'activation
-        tolerance: 5, // Réduit la tolérance de mouvement pour activer le drag
+        delay: 0,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -64,21 +54,17 @@ export default function SideNav({ projects }) {
       const oldIndex = projectItems.findIndex((project) => project?._id === active.id);
       const newIndex = projectItems.findIndex((project) => project?._id === over.id);
 
-      // Mise à jour optimiste de l'UI
       const newItems = arrayMove(projectItems, oldIndex, newIndex);
       setProjectItems(newItems);
 
       try {
-        // Appel API en arrière-plan
         const response = await updateProjectsOrder(newItems);
 
         if (!response.success) {
-          // En cas d'erreur, on revient à l'état précédent
           setProjectItems(projectItems);
           console.error("Erreur lors de la mise à jour de l'ordre:", response.message);
         }
       } catch (error) {
-        // En cas d'erreur réseau, on revient à l'état précédent
         setProjectItems(projectItems);
         console.error("Erreur lors de la mise à jour de l'ordre:", error);
       }
@@ -123,13 +109,14 @@ export default function SideNav({ projects }) {
                       key={project._id}
                       project={project}
                       projectId={projectId}
+                      isActive={project._id === projectId} // Ajout de la prop isActive
                     />
                   ))}
                 </SortableContext>
               </ul>
             </DndContext>
           </nav>
-          <CreateProject onProjectCreated={handleProjectCreated} />
+          <CreateProject />
         </div>
         <div className={styles.footer}>
           <div className={styles.userAvatar}>

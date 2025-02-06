@@ -37,7 +37,7 @@
 }
 
 .projectsItem img[data-active="true"] {
-    border: 2px solid var(--accent-color);
+    border: 3px solid var(--accent-color);
     transition: 150ms all linear;
 }
 

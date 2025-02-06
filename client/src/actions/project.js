@@ -1,7 +1,6 @@
 "use server";
 
 import { regex } from "@/utils/regex";
-import { signInSchema } from "@/utils/zod";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -34,7 +33,7 @@ export async function saveProject(prevState, formData) {
 
     return {
       status: "success",
-      data: response.data, // Contient le projet créé avec son _id
+      data: response.data,
     };
   } catch (err) {
     console.log(
@@ -351,5 +350,36 @@ export async function updateProjectsOrder(projects) {
   } catch (err) {
     console.error("Erreur lors de la mise à jour de l'ordre des projets:", err);
     throw err; // Propage l'erreur pour la gestion dans handleDragEnd
+  }
+}
+
+export async function deleteProject(projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const res = await fetch(`${process.env.API_URL}/project/${projectId}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${session.value}`,
+      },
+    });
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("projects");
+
+    return response;
+  } catch (err) {
+    console.log(err.message || "Une erreur est survenue lors de la suppression du projet");
+    return {
+      status: "failure",
+      message: err.message,
+    };
   }
 }
