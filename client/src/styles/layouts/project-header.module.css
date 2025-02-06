@@ -87,11 +87,12 @@
     cursor: pointer;
     padding: 2px;
     transition: background-color 0.2s ease;
-    border-radius: 50px;
+    border-radius: 8px;
 }
 
 .optionsBtn:hover {
-    background-color: #10111f;
+    background-color: #ffffff08;
+    color: var(--accent-color);
 }
 
 .optionsBtn svg {
@@ -138,7 +139,22 @@
 .actions {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 8px;
+}
+
+.linkIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 6px;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+}
+
+.linkIcon:hover {
+    background-color: #ffffff08;
+    color: var(--accent-color);
 }
 
 /* Notification button styles */
@@ -171,8 +187,9 @@
 
 .separator {
     width: 1px;
-    background-color: var(--border-color);
     height: 24px;
+    background-color: var(--border-color);
+    margin: 0 12px;
 }
 
 /* Guests styles */
@@ -180,6 +197,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 10px;
 }
 
 .guestAvatar {
@@ -200,4 +218,15 @@
 
 .addGuestBtn {
     cursor: pointer;
+    border-radius: 8px;
+    padding: 6px 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.addGuestBtn:hover {
+    background-color: #ffffff08;
+    color: var(--accent-color);
 }

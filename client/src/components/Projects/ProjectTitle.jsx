@@ -2,7 +2,7 @@
 import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect, useContext, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Globe, Layout } from "lucide-react";
 import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
@@ -101,14 +101,42 @@ export default function ProjectTitle({ project }) {
           <span onClick={handleClick}>{projectName}</span>
         )}
       </div>
-      {project?.author?._id === uid && (
-        <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
-          <MoreHorizontal />
-        </div>
-      )}
       {modalOpen && (
         <ProjectOptionsModal project={project} setOpenModal={setModalOpen} />
       )}
+      <div className={styles.actions}>
+        {project?.settings?.urlWordpress && (
+          <a
+            href={project.settings.urlWordpress}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.linkIcon}
+            title="Voir le site"
+          >
+            <Globe size={20} />
+          </a>
+        )}
+        {project?.settings?.urlBackofficeWordpress && (
+          <a
+            href={project.settings.urlBackofficeWordpress}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.linkIcon}
+            title="Accéder au backoffice"
+          >
+            <Layout size={20} />
+          </a>
+        )}
+        {/* Ajout du séparateur vertical */}
+        {(project?.settings?.urlWordpress || project?.settings?.urlBackofficeWordpress) && project?.author?._id === uid && (
+          <div className={styles.separator}></div>
+        )}
+        {project?.author?._id === uid && (
+          <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
+            <MoreHorizontal />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

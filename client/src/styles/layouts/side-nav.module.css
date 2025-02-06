@@ -45,6 +45,16 @@
     order: -1;
 }
 
+.projectsItem[data-active="true"]::after {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    background-color: var(--accent-color);
+    right: -13px;
+    top: 0;
+}
+
 .footer {
     text-align: center;
     gap: 8px;
@@ -58,8 +68,8 @@
 
 .dragHandle {
     cursor: pointer;
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     transition: transform 0.3s ease;
 }
 
