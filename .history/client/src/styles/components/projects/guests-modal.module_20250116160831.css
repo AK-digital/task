@@ -1,0 +1,11 @@
+.container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    /* Ajuste la largeur automatiquement */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 4px var(--foreground);
+    background-color: var(--secondary-background-color);
+}

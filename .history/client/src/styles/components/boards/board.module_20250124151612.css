@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.header {
+    font-weight: 500;
+}
+
+.header span:nth-child(2) {
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: red;
+}

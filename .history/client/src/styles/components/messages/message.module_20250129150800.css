@@ -1,0 +1,66 @@
+.container {
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: 50ms all linear;
+}
+
+.container[data-loading="true"] {
+    opacity: 0.4;
+    transition: 50ms all linear;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header svg {
+    cursor: pointer;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.names {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.date {
+    font-size: 0.75rem;
+    color: var(--text-color-muted);
+}
+
+.ellipsis {
+    position: relative;
+}
+
+.more {
+    position: absolute;
+    width: fit-content;
+    padding: 8px;
+    background-color: var(--secondary-background-color);
+    left: -50px;
+    border-radius: 4px;
+}
+
+.more ul li {
+    padding: 4px;
+}
+
+.text {
+    padding: 10px;
+}
+
+.text img {
+    max-width: 800px;
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    margin: 10px 0 10px 0;
+}

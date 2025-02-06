@@ -1,0 +1,13 @@
+.container {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background-color: white;
+    padding: 24px;
+    width: 450px;
+    text-align: left;
+}
+
+.header {
+    color: red;
+}

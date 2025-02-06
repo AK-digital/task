@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--accent-color);
+    padding: 4px 8px;
+    border-radius: 4px;
+    gap: 8px;
+}
+
+.wrapper span {
+    font-size: 0.9rem;
+}

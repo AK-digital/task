@@ -1,0 +1,8 @@
+.boards {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    height: calc(100svh - 50px);
+    background-color: red;
+    overflow-y: auto;
+}

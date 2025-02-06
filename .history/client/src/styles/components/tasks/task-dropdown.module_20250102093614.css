@@ -1,0 +1,77 @@
+.dropdown {
+    position: relative;
+}
+
+.dropdown-current {
+    min-width: 120px;
+    padding: 8px 8px;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Status */
+.dropdown-current[data-current="pending"],
+.dropdown-list ul li[data-value="En attente"] {
+    background-color: var(--pending-color);
+}
+
+.dropdown-current[data-current="todo"],
+.dropdown-list ul li[data-value="À faire"] {
+    background-color: var(--todo-color);
+}
+
+.dropdown-current[data-current="processing"] {
+    background-color: var(--processing-color);
+}
+
+.dropdown-current[data-current="blocked"] {
+    background-color: var(--blocked-color);
+}
+
+.dropdown-current[data-current="finished"] {
+    background-color: var(--finished-color);
+}
+
+/* priority  */
+.dropdown-current[data-current="low"] {
+    background-color: var(--low-color);
+}
+
+.dropdown-current[data-current="mid"] {
+    background-color: var(--medium-color);
+}
+
+.dropdown-current[data-current="high"],
+.dropdown-list ul li[data-value="Haute"] {
+    background-color: var(--high-color);
+}
+
+.dropdown-current[data-current="urgent"] {
+    background-color: var(--urgent-color);
+}
+
+.dropdown-list {
+    position: absolute;
+    z-index: 2;
+    margin-top: 4px;
+    left: 0;
+    width: 100%;
+    background-color: var(--accent-color);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.dropdown-list ul {
+    background-color: blue;
+    width: 100%;
+}
+
+.dropdown-list ul li {
+    padding: 8px;
+    cursor: pointer;
+    /* padding: 8px 0; */
+    /* width: 100%;
+    text-align: center;
+    margin-inline: auto; */
+}

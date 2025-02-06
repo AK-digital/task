@@ -1,0 +1,45 @@
+.task-more__container {
+    position: absolute;
+    z-index: 2000;
+    top: 0;
+    right: -30%;
+    background-color: var(--primary-background-color);
+    width: 30%;
+    height: 100%;
+    box-shadow: -4px 10px 10px 0px rgba(0, 0, 0, 0.15);
+    animation: openAnimation 250ms forwards ease-out;
+    padding: 24px;
+}
+
+.task-more__container-close {
+    animation: closeAnimation 250ms forwards ease-out;
+}
+
+.task-more__logo {
+    text-align: right;
+}
+
+.task-more__logo svg {
+    width: 30px;
+    height: 30px;
+}
+
+@keyframes openAnimation {
+    from {
+        right: -30%;
+    }
+
+    to {
+        right: 0%;
+    }
+}
+
+@keyframes closeAnimation {
+    from {
+        right: 0%;
+    }
+
+    to {
+        right: -30%;
+    }
+}

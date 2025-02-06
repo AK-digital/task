@@ -1,0 +1,17 @@
+.create-project__button {
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.create-project__buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.create-project__buttons button {
+    width: 100%;
+}
+
+.create-project__buttons button {
+    background-color: none;
+}

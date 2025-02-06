@@ -1,0 +1,55 @@
+.tasks {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+.tasks__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 100px;
+    padding: 0.5rem;
+}
+
+.tasks__list>* {
+    transition: transform 0.2s ease;
+    transform-origin: center center;
+}
+
+/* task.module.css */
+.task {
+    position: relative;
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Ajout d'une transition pour une animation fluide */
+    transition: all 0.2s ease-in-out;
+}
+
+.task--dragging {
+    /* Styles spécifiques pendant le drag */
+    background: #fafafa;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    /* Désactiver la transition pendant le drag pour éviter les effets indésirables */
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Optimisation pour le placeholder */
+[data-rbd-placeholder-context-id] {
+    transition: all 0.2s ease-in-out !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+}
+
+.task__content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    /* Éviter le changement de taille pendant le drag */
+    height: 100%;
+    transform: translate3d(0, 0, 0);
+}

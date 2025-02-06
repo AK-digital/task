@@ -1,0 +1,10 @@
+.tasks ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tasks li {
+    display: flex;
+    max-width: 700px;
+}

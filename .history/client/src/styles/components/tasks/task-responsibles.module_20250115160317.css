@@ -1,0 +1,8 @@
+.container {
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    width: fit-content;
+    max-width: 200%;
+}

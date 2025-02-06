@@ -1,0 +1,42 @@
+.container {
+    padding: 24px 16px;
+    z-index: 2008;
+    height: 100%;
+    background-color: var(--side-background-color);
+    border-right: 1px solid #292a39;
+}
+
+.container>div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.projects,
+.projectsList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.projects a {
+    display: block;
+}
+
+.projectsItem {
+    font-size: 0.9rem;
+    padding: 8px 4px;
+    border-radius: 50px;
+    background-color: rgb(72, 72, 72);
+    height: 48px;
+    width: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}

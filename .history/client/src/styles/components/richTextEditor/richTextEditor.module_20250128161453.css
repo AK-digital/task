@@ -1,0 +1,13 @@
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* .buttons button:last-child {
+    background: transparent !important;
+
+}
+
+.buttons button:last-child:hover {
+    color: var(--text-color);
+} */

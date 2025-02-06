@@ -1,0 +1,10 @@
+.container {
+
+    padding: 4px 8px;
+}
+
+.container svg {
+    color: #ffffff24;
+    width: 16px;
+    height: 16px;
+}

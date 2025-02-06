@@ -1,0 +1,28 @@
+.main {
+    margin: 80px 120px 80px 120px;
+
+}
+
+.container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.name {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

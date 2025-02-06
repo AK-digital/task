@@ -1,0 +1,16 @@
+.board {
+
+    border-radius: 8px;
+}
+
+.board__header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.container__icon {
+    background-color: red;
+}

@@ -1,0 +1,15 @@
+.container,
+.container form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.header {
+    font-size: 1.2rem;
+
+}
+
+.container button {
+    border-radius: 4px;
+}

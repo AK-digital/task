@@ -1,0 +1,14 @@
+.main {
+    margin: 80px 120px 80px 120px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.formWrapper {
+    background-color: var(--secondary-background-color);
+    padding: 24px;
+    border-radius: 4px;
+}

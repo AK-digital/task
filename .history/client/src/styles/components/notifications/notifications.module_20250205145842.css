@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    top: 40px;
+    left: -50px;
+    transform: translateX(-50%);
+    width: 400px;
+}
+
+.header {
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.notifications {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.notification {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    border-top: 1px solid var(--border-color);
+
+}
+
+.notification:hover {}
+
+.title {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.content {
+    font-size: 0.8rem;
+}

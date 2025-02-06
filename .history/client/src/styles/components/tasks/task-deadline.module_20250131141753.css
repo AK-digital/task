@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 4px 8px;
+    border-right: 1px solid var(--border-color);
+    width: 200px;
+    background-color: red;
+}
+
+.container form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-left: 3px;
+}
+
+.container svg {
+    color: #ffffff24;
+    width: 16px;
+    height: 16px;
+}
+
+.deadline {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-left: 2px;
+}
+
+.deadline[data-past="true"] {
+    color: var(--text-color-muted);
+}
+
+.deadline[data-past="true"] svg {
+    color: #b75e5d;
+}
+
+.container input {
+    padding: 8px;
+    color-scheme: dark;
+}

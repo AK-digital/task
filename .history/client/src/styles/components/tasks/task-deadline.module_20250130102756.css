@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: 8px;
+}
+
+.container form {
+    display: flex;
+    gap: 12px;
+}
+
+.deadline {
+    display: flex;
+    gap: 12px;
+    font-size: 0.9rem;
+    margin-left: 2px;
+}
+
+.deadline svg {
+    color: #ffffff24;
+    width: 16px;
+    height: 16px;
+}
+
+.deadline[data-past="true"] {
+    color: var(--text-color-muted);
+}
+
+.deadline[data-past="true"] svg {
+    color: #b75e5d;
+}
+
+.container input {
+    padding: 8px;
+    color-scheme: dark;
+}

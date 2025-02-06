@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: 8px;
+}
+
+.deadline {
+    display: flex;
+    gap: 10px;
+}
+
+.container input {
+    padding: 8px;
+    color-scheme: dark;
+}

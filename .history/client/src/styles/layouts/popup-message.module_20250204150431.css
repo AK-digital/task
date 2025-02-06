@@ -1,0 +1,46 @@
+.container {
+    position: fixed;
+    z-index: 9999;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background-color: var(--secondary-background-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    padding: 24px;
+    width: 450px;
+    text-align: left;
+    border-radius: 4px;
+}
+
+.container::before {
+    position: absolute;
+    content: "";
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+}
+
+
+.header {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.container[data-status="success"] .header {
+    color: #33BB87;
+}
+
+.container[data-status="success"]::before {
+    background-color: #33BB87;
+}
+
+.container[data-status="failure"] .header {
+    color: #ca4250;
+}
+
+.container[data-status="failure"]::before {
+    background-color: #ca4250;
+}

@@ -1,0 +1,11 @@
+.update-board__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.update-board__title span:last-child {
+    width: 16px;
+    height: 15px;
+    border-radius: 50%;
+}

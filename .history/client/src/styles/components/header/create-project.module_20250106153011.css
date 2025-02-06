@@ -1,0 +1,10 @@
+.create-project__button {
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.container__modal {
+    position: absolute;
+    background-color: red;
+    top: 0;
+}

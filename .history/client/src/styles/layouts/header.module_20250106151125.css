@@ -1,0 +1,43 @@
+.container {
+    position: fixed;
+
+    padding: 10px 5vw;
+    width: 100%;
+    background-color: var(--secondary-background-color);
+    box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.25);
+    overflow: visible;
+}
+
+.container nav,
+.projects,
+.user {
+    display: flex;
+    align-items: center;
+}
+
+.container nav {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.projects {
+    gap: 14px;
+}
+
+.projects span {
+    color: var(--text-color-muted);
+    font-size: 0.9rem;
+}
+
+.user {
+    gap: 14px;
+}
+
+.user svg {
+    width: 20px;
+    height: 20px;
+}
+
+.user svg:last-child {
+    color: var(--text-color-muted);
+}

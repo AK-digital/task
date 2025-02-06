@@ -1,0 +1,15 @@
+.create-project__button {
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.container__modal {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}

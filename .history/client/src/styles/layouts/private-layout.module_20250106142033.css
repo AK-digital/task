@@ -1,0 +1,13 @@
+.private-layout {
+    display: flex;
+    background-color: red;
+    min-height: 100svh;
+}
+
+.private-layout__aside {
+    background-color: var(--secondary-background-color);
+}
+
+.private-layout__main {
+    width: 100%;
+}

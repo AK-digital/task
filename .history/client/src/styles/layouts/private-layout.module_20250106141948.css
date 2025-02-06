@@ -1,0 +1,10 @@
+.private-layout {
+    display: flex;
+
+}
+
+.private-layout__aside {}
+
+.private-layout__main {
+    width: 100%;
+}

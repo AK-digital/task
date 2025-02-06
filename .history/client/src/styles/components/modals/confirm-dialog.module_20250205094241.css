@@ -1,0 +1,66 @@
+.container {
+    position: relative;
+}
+
+.popupConfirm {
+    position: absolute;
+    background-color: #444665;
+    border-radius: 8px;
+    z-index: 1000;
+    right: 29px;
+    top: -50px;
+    min-width: 200px;
+}
+
+.arrow {
+    position: absolute;
+    top: 19%;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: #444665;
+    transform: rotate(45deg) translateY(-50%);
+}
+
+.popupContent {
+    padding: 12px;
+}
+
+.popupContent p {
+    font-size: .85em;
+    color: white;
+    text-align: center;
+
+}
+
+.info {
+    font-size: .7rem;
+    color: #8688a4;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.confirmButtons {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.cancelButton,
+.deleteButton {
+    padding: 8px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.cancelButton {
+    background: var(--text-color-muted);
+}
+
+.deleteButton {
+    background-color: var(--danger-color);
+    color: white;
+}

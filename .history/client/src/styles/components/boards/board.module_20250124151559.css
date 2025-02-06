@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.header {
+    font-weight: 500;
+}
+
+.header span) {
+    width: 12px;
+    height: 12px;
+}

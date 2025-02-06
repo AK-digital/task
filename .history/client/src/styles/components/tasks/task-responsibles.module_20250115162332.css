@@ -1,0 +1,25 @@
+.container {
+    position: relative;
+    border-radius: 4px;
+    display: flex;
+    width: fit-content;
+    max-width: 150px;
+}
+
+.modal {
+    position: absolute;
+    top: 40px;
+    z-index: 2000;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: red;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+
+.modal li {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}

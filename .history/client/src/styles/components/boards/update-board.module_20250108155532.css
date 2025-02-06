@@ -1,0 +1,8 @@
+.update-board__title {
+    display: flex;
+}
+
+.update-board__title span:last-child {
+    width: 20px;
+    height: 25px;
+}

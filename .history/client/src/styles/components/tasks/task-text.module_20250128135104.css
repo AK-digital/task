@@ -1,0 +1,21 @@
+.container {
+    width: 100%;
+    max-width: 700px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.container p {
+    padding: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.container input {
+    padding: 6px;
+    /* font-size: 0.85rem; */
+
+}

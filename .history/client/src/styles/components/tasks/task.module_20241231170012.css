@@ -1,0 +1,21 @@
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.task .task__input {
+    width: 100%;
+    max-width: 700px;
+}
+
+.task__input input {
+    padding: 10px;
+}
+
+.task__options {
+    display: flex;
+    gap: 8px;
+}

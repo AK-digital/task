@@ -1,0 +1,52 @@
+.tasks {
+    background-color: var(--secondary-background-color);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.tasks ul {
+    display: flex;
+    flex-direction: column;
+    /* gap: 8px; */
+}
+
+.tasks li form {
+    width: 100%;
+}
+
+.dragging {
+    transition: none;
+    background-color: red !important;
+}
+
+.tasks .task__add {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task__add {
+    max-width: 700px;
+    margin-top: 4px;
+}
+
+.task__add svg {
+    width: 15px;
+    height: 15px;
+}
+
+.task__add form {
+    width: 100%;
+}
+
+.tasks__info {
+    position: absolute;
+    margin-top: 15px;
+    margin-left: 25px;
+    color: var(--text-color-muted);
+    font-size: 0.8rem;
+}
+
+.tasks__info span {
+    color: white;
+}

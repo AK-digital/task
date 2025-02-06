@@ -1,0 +1,13 @@
+.container {
+    position: relative;
+    border-radius: 4px;
+    display: flex;
+    width: fit-content;
+    max-width: 150px;
+}
+
+.modal {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}

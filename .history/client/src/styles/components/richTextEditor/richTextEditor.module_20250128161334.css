@@ -1,0 +1,8 @@
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.buttons button:last-child {
+    background: transparent !important;
+}

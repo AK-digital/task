@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: absolute;
+    z-index: 9999;
+    right: -50%;
+    bottom: 20px;
+    background-color: white;
+    padding: 24px;
+    width: 450px;
+    text-align: left;
+    border-radius: 4px;
+}
+
+.header {
+    color: red;
+}

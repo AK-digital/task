@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    top: 40px;
+    right: 50%;
+    width: 450px;
+    padding: 0 !important;
+}
+
+.header {
+    font-weight: bold;
+    font-size: 1.4rem;
+    padding: 24px;
+}
+
+.notifications {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.notification {
+    display: flex;
+    padding: 24px;
+    gap: 7px;
+    border-top: 1px solid var(--border-color);
+
+}
+
+.notification:hover {}
+
+.title {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.content {
+    font-size: 0.8rem;
+}
+
+.notification .date {
+    font-size: 0.8rem;
+}

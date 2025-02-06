@@ -1,0 +1,95 @@
+.container {
+    background-color: var(--secondary-background-color);
+    padding: 24px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.password {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+.forgotPassword {
+    position: absolute;
+    right: 20px;
+    bottom: -20px;
+    color: var(--accent-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.buttons {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.google {
+    position: relative;
+    background-color: #3184FC;
+    color: white;
+}
+
+.google span {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 2px;
+    top: 1px;
+    background-color: white;
+    border-radius: 4px;
+    width: 34px;
+    height: 34px;
+    scale: 0.9;
+}
+
+.google:hover {
+    transition: 120ms all linear;
+    background-color: color-mix(in srgb, white 10%, #3184FC);
+}
+
+.text {
+    color: var(--text-color-muted);
+
+}
+
+.text span {
+    color: var(--accent-color);
+    font-weight: 500;
+    cursor: pointer;
+
+}
+
+.text span:hover {
+    text-decoration: underline;
+}
+
+.passwordErr {
+    margin-top: -14px;
+    text-align: left;
+    color: #DC3545;
+    font-style: italic;
+    font-size: 0.875rem;
+}
+
+.passwordErr ul {
+    margin-left: 24px;
+    margin-top: 14px;
+}

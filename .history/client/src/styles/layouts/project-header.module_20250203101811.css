@@ -1,0 +1,160 @@
+.container {
+    z-index: 2001;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    overflow: visible;
+    background-color: var(--primary-background-color);
+}
+
+.container:after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    height: 20px;
+    z-index: -1;
+    width: 100%;
+    background: rgb(21, 24, 50);
+    background: linear-gradient(180deg, rgba(21, 24, 50, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.container nav,
+.projects {
+    display: flex;
+    align-items: center;
+}
+
+.container nav {
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #3b3d53;
+}
+
+.projects {
+    gap: 14px;
+}
+
+.projects span {
+    color: var(--text-color-muted);
+    font-size: var(--text-size-normal);
+}
+
+.title {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.title span {
+    cursor: pointer;
+}
+
+.title span:hover {
+    opacity: 0.8;
+}
+
+.titleInput {
+    background: none;
+    border: none;
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    color: inherit;
+    padding: 2px 4px;
+    border-radius: 4px;
+    width: 300px;
+    background-color: var(--background-color);
+}
+
+.titleInput:focus {
+    outline: none;
+    background-color: var(--background-color);
+}
+
+/* Search styles */
+.searchContainer {
+    flex: 1;
+    max-width: 640px;
+    margin: 0 40px;
+}
+
+.searchForm {
+    position: relative;
+    width: 100%;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color-muted);
+}
+
+.searchInput {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: var(--font-size-normal);
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* Actions styles */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Notification button styles */
+.notificationBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.notificationBtn:hover {
+    background-color: var(--background-color);
+}
+
+.separator {
+    width: 1px;
+    background-color: var(--border-color);
+}
+
+/* Guests styles */
+.guests {
+    display: flex;
+    align-items: center;
+
+}
+
+.guestAvatar {
+    margin-left: -8px;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.guestAvatar:hover {
+    transform: translateY(-2px);
+}
+
+.avatar {
+    border-radius: 50%;
+    object-fit: cover;
+}

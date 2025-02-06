@@ -1,0 +1,79 @@
+.dropdown {
+    position: relative;
+    user-select: none;
+    border-right: 1px solid var(--border-color);
+}
+
+.dropdown__current {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Status */
+.dropdown__current[data-current="En attente"],
+.dropdown__list ul li[data-value="En attente"] {
+    background-color: var(--pending-color);
+}
+
+.dropdown__current[data-current="À faire"],
+.dropdown__list ul li[data-value="À faire"] {
+    background-color: var(--todo-color);
+}
+
+.dropdown__current[data-current="En cours"],
+.dropdown__list ul li[data-value="En cours"] {
+    background-color: var(--processing-color);
+}
+
+.dropdown__current[data-current="Bloquée"],
+.dropdown__list ul li[data-value="Bloquée"] {
+    background-color: var(--blocked-color);
+}
+
+.dropdown__current[data-current="Terminée"],
+.dropdown__list ul li[data-value="Terminée"] {
+    background-color: var(--finished-color);
+}
+
+/* priority  */
+.dropdown__current[data-current="Basse"],
+.dropdown__list ul li[data-value="Basse"] {
+    background-color: var(--low-color);
+}
+
+.dropdown__current[data-current="Moyenne"],
+.dropdown__list ul li[data-value="Moyenne"] {
+    background-color: var(--medium-color);
+}
+
+.dropdown__current[data-current="Haute"],
+.dropdown__list ul li[data-value="Haute"] {
+    background-color: var(--high-color);
+}
+
+.dropdown__current[data-current="Urgent"],
+.dropdown__list ul li[data-value="Urgent"] {
+    background-color: var(--urgent-color);
+}
+
+.dropdown__list {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    width: 100%;
+}
+
+.dropdown__list ul {
+    gap: inherit;
+}
+
+.dropdown__list ul li {
+    padding: 8px;
+    cursor: pointer;
+    font-size: .5rem;
+}

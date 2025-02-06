@@ -1,0 +1,9 @@
+.container {
+    display: inline-block;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.container span {
+    display: inline-block;
+}

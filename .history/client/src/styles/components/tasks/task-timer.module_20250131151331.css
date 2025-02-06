@@ -1,0 +1,17 @@
+.container {
+    max-width: 250px;
+    width: 100%;
+    padding: 4px 8px;
+}
+
+.container svg {
+    color: #ffffff24;
+    width: 16px;
+    height: 16px;
+}
+
+.container span {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}

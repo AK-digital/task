@@ -1,0 +1,65 @@
+import styles from "@/styles/components/tasks/task-dropdown.module.css";
+import { updateTaskStatus } from "@/actions/task";
+import { useActionState, useEffect, useRef, useState } from "react";
+
+const status = ["En attente", "À faire", "En cours", "Bloquée", "Terminée"];
+
+const initialState = {
+  status: "pending",
+  message: "",
+};
+
+export default function TaskStatus({ task }) {
+  const formRef = useRef(null);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [optimisticCurrent, setOptimisticCurrent] = useState(task?.status);
+  const [isOpen, setIsOpen] = useState(false);
+  const updateTaskStatusWithId = updateTaskStatus.bind(
+    null,
+    task?._id,
+    task?.projectId
+  );
+  const [state, formAction] = useActionState(
+    updateTaskStatusWithId,
+    initialState
+  );
+
+  async function handleUpdateStatus(e) {
+    const value = e.target.dataset.value;
+    setOptimisticCurrent(value);
+
+    const response = await updateTaskStatus(task?._id, task?.projectId, value);
+
+    console.log(response);
+  }
+
+  useEffect(() => {
+    // If status update fail then roll back to the old status
+    if (state?.status === "failure") setOptimisticCurrent(task?.status);
+  }, [state]);
+
+  return (
+    <div className={styles["dropdown"]}>
+      <div
+        className={styles["dropdown__current"]}
+        data-current={optimisticCurrent}
+        onClick={(e) => setIsOpen(!isOpen)}
+      >
+        <span>{optimisticCurrent}</span>
+      </div>
+      {isOpen && (
+        <div className={styles["dropdown__list"]}>
+          <ul>
+            {status?.map((value, idx) => {
+              return (
+                <li key={idx} data-value={value} onClick={handleUpdateStatus}>
+                  {value}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}

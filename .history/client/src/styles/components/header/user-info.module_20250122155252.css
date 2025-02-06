@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-background-color);
+    padding: 4px;
+    border-radius: 4px;
+    gap: 14px;
+}

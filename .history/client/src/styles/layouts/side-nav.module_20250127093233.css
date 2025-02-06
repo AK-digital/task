@@ -1,0 +1,28 @@
+.container {
+    padding: 20px;
+    position: fixed;
+    z-index: 1999;
+    bottom: 0;
+    background-color: var(--side-background-color);
+    height: 100svh;
+    width: 5%;
+}
+
+.projects {
+    margin-top: 50px;
+}
+
+.projects,
+{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 4px;
+}
+
+.wrapper__item {
+    font-size: 0.9rem;
+    padding: 8px 4px;
+    border-radius: 4px;
+}

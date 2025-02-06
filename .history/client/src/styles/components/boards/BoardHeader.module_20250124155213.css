@@ -1,0 +1,49 @@
+.container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    user-select: none;
+    background-color: none;
+    padding: 8px;
+}
+
+.container svg {
+    cursor: pointer;
+}
+
+.title {
+    border: 1px solid transparent;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.title:hover {
+    border: 1px solid var(--border-color);
+}
+
+.bullet {
+    position: relative;
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.count {
+    color: var(--text-color-muted);
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.container[data-open="false"] {
+    background-color: var(--secondary-background-color);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.modal {
+    left: 15px;
+}

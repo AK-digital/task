@@ -1,0 +1,11 @@
+.container {}
+
+.message {
+    border: 1px solid var(--border-color);
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

@@ -1,0 +1,7 @@
+.update-board__title {
+    display: flex;
+}
+
+.update-board__title:last-child {
+    background-color: red;
+}

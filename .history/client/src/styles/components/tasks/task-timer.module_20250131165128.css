@@ -1,0 +1,57 @@
+.container {
+    position: relative;
+    display: flex;
+    max-width: 120px;
+    width: 100%;
+    padding: 4px 8px;
+    border-right: 1px solid var(--border-color);
+    height: 100%;
+}
+
+.container svg {
+
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.container[data-running="false"] span {
+    color: #ffffff24;
+}
+
+.container[data-running="true"] {
+    color: inherit;
+}
+
+.container span {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* .more {
+    position: absolute;
+    background-color: var();
+} */
+
+.more {
+    top: 40px;
+    left: 0px;
+    padding: 8px !important;
+    width: 100%;
+    border-radius: 0 0 4px 4px
+}
+
+.more ul {
+    gap: 10px;
+}
+
+.more ul li {
+    display: flex;
+    gap: 4px;
+
+}
+
+.more li span {
+    color: white !important;
+}

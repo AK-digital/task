@@ -1,0 +1,34 @@
+.container button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #43455f !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.container button svg {
+    color: var(--side-background-color);
+    width: 24px;
+    height: 24px;
+}
+
+.container button:hover {
+    background-color: #525474 !important;
+}
+
+.modal input {
+    margin-top: 10px;
+}
+
+.create-project__buttons {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+
+.create-project__buttons button:nth-child(2) {
+    background: none;
+}

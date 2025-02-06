@@ -1,0 +1,11 @@
+.task__deadline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: 12px;
+}
+
+.task__deadline input {
+    padding: 8px;
+    color-scheme: dark;
+}

@@ -1,0 +1,12 @@
+.private-layout {
+    display: flex;
+
+}
+
+.private-layout__aside {
+    background-color: #151832;
+}
+
+.private-layout__main {
+    width: 100%;
+}

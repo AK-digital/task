@@ -1,0 +1,12 @@
+.container,
+.list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+}
+
+.container {
+    padding: 4px;
+    border: 1px solid var(--border-color);
+}

@@ -1,0 +1,10 @@
+.container {
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.container span {
+    position: absolute;
+}

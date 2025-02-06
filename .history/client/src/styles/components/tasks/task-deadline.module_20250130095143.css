@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: 8px;
+}
+
+.deadline {
+    display: flex;
+    gap: 14px;
+}
+
+.deadline svg {
+    color: #ffffff24;
+}
+
+.container input {
+    padding: 8px;
+    color-scheme: dark;
+}

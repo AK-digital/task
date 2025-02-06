@@ -1,0 +1,88 @@
+.dropdown {
+
+    position: relative;
+    user-select: none;
+
+}
+
+.dropdown__current {
+    min-width: 140px;
+
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Status */
+.dropdown__current[data-current="En attente"],
+.dropdown__list ul li[data-value="En attente"] {
+    background-color: var(--pending-color);
+}
+
+.dropdown__current[data-current="À faire"],
+.dropdown__list ul li[data-value="À faire"] {
+    background-color: var(--todo-color);
+}
+
+.dropdown__current[data-current="En cours"],
+.dropdown__list ul li[data-value="En cours"] {
+    background-color: var(--processing-color);
+}
+
+.dropdown__current[data-current="Bloquée"],
+.dropdown__list ul li[data-value="Bloquée"] {
+    background-color: var(--blocked-color);
+}
+
+.dropdown__current[data-current="Terminée"],
+.dropdown__list ul li[data-value="Terminée"] {
+    background-color: var(--finished-color);
+}
+
+/* priority  */
+.dropdown__current[data-current="Basse"],
+.dropdown__list ul li[data-value="Basse"] {
+    background-color: var(--low-color);
+}
+
+.dropdown__current[data-current="Moyenne"],
+.dropdown__list ul li[data-value="Moyenne"] {
+    background-color: var(--medium-color);
+}
+
+.dropdown__current[data-current="Haute"],
+.dropdown__list ul li[data-value="Haute"] {
+    background-color: var(--high-color);
+}
+
+.dropdown__current[data-current="Urgent"],
+.dropdown__list ul li[data-value="Urgent"] {
+    background-color: var(--urgent-color);
+}
+
+.dropdown__list {
+    position: absolute;
+    z-index: 2;
+    margin-top: 4px;
+    left: 0;
+    width: 100%;
+    background-color: var(--accent-color);
+    border-radius: 4px;
+    box-shadow: 0 4px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+.dropdown__list ul {
+    gap: inherit;
+}
+
+.dropdown__list ul li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.dropdown__list ul li:first-child {
+    border-radius: 4px 4px 0 0;
+}
+
+.dropdown__list ul li:last-child {
+    border-radius: 0 0 4px 4px;
+}

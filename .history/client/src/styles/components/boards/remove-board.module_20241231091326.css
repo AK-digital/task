@@ -1,0 +1,12 @@
+.container {
+    display: none;
+}
+
+.active {
+    display: block;
+    cursor: pointer;
+}
+
+.container__icon {
+    color: var(--text-color-muted);
+}

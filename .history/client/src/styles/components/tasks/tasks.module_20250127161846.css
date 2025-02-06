@@ -1,0 +1,58 @@
+.tasks {
+    background-color: var(--secondary-background-color);
+
+    border-radius: 4px;
+}
+
+.tasks ul {
+    display: flex;
+    flex-direction: column;
+    /* gap: 8px; */
+}
+
+.tasks li form {
+    width: 100%;
+}
+
+
+.task__add {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task__add {
+    max-width: 900px;
+    padding: 2px 8px;
+}
+
+.task__add svg {
+    width: 15px;
+    height: 15px;
+}
+
+.task__add form {
+    width: 100%;
+}
+
+.task__add input {
+    padding: 6px;
+}
+
+.task__add p {
+    font-size: 0.85rem;
+    padding: 6px;
+    color: var(--text-color-muted);
+}
+
+.tasks__info {
+    position: absolute;
+    margin-top: 15px;
+    margin-left: 25px;
+    color: var(--text-color-muted);
+    font-size: 0.8rem;
+}
+
+.tasks__info span {
+    color: white;
+}

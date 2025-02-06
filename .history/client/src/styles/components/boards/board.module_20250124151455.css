@@ -1,0 +1,16 @@
+.board__header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    padding-bottom: 12px;
+
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.container__icon {
+    background-color: red;
+}

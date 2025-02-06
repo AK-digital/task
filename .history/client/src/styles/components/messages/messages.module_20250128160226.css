@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.message {
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.names {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.text {
+    padding: 10px;
+}

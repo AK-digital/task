@@ -1,0 +1,14 @@
+.container {
+    position: absolute;
+    z-index: 9999;
+    right: 0px;
+    bottom: 20px;
+    background-color: white;
+    padding: 24px;
+    width: 450px;
+    text-align: left;
+}
+
+.header {
+    color: red;
+}
