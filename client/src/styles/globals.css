@@ -150,6 +150,8 @@ p {
 /* QUILL STYLES */
 .ql-container {
   font-family: inherit !important;
+  min-height: 100px;
+  height: fit-content;
 }
 
 .ql-editor {

@@ -2,28 +2,72 @@
 import styles from "@/styles/components/tasks/task-more.module.css";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
 
-export default function TaskMore({ task, project, setTaskMore }) {
-  const [editDescription, setEditDescription] = useState(false);
+export default function TaskMore({ task, setTaskMore, project }) {
   const containerRef = useRef(null);
+  const [editDescription, setEditDescription] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [startX, setStartX] = useState(null);
+  const [startWidth, setStartWidth] = useState(null);
 
-  function handleClose(e) {
-    e.preventDefault();
-    const container = containerRef.current;
-    container?.classList?.add(styles["container-close"]);
+  const startResizing = useCallback((e) => {
+    setIsResizing(true);
+    setStartX(e.clientX);
+    setStartWidth(containerRef.current.offsetWidth);
+  }, []);
 
-    container?.addEventListener("animationend", function () {
-      container?.classList?.remove(styles["container-close"]); // Remove the "close" class from the container
-      setTaskMore(false); // When animation ends remove set the state to false
-    });
-  }
+  const stopResizing = useCallback(() => {
+    setIsResizing(false);
+    setStartX(null);
+    setStartWidth(null);
+  }, []);
+
+  const resize = useCallback((e) => {
+    if (isResizing && startX !== null && startWidth !== null) {
+      const diff = startX - e.clientX;
+      const maxWidth = window.innerWidth - 80; // calc(100% - 80px)
+      const newWidth = Math.min(maxWidth, Math.max(300, startWidth + diff));
+      containerRef.current.style.width = `${newWidth}px`;
+    }
+  }, [isResizing, startX, startWidth]);
+
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener('mousemove', resize);
+      window.addEventListener('mouseup', stopResizing);
+    }
+    return () => {
+      window.removeEventListener('mousemove', resize);
+      window.removeEventListener('mouseup', stopResizing);
+    };
+  }, [isResizing, resize, stopResizing]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        const currentWidth = containerRef.current.offsetWidth;
+        const maxWidth = window.innerWidth - 80;
+        if (currentWidth > maxWidth) {
+          containerRef.current.style.width = `${maxWidth}px`;
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleClose = () => {
+    setTaskMore(false);
+  };
 
   return (
     <>
       <div className={styles.container} ref={containerRef}>
+        <div className={styles.resizer} onMouseDown={startResizing}></div>
         {/* Description */}
         <div className={styles.header}>
           <div>
