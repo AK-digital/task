@@ -34,7 +34,7 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
         >
           <X size={32} />
         </span>
-        <h2>Options du projet</h2>
+        <h1>Options du projet</h1>
         <div className={styles.content}>
           <ProjectLogoForm
             project={project}

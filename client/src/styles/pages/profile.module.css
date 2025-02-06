@@ -1,5 +1,5 @@
 .main {
-    margin: 40px;
+    height: 100%;
 }
 
 .container {
@@ -8,6 +8,7 @@
     align-items: center;
     justify-content: center;
     gap: 14px;
+    height: 100%;
 }
 
 .wrapper {
