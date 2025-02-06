@@ -24,16 +24,24 @@ export async function saveProject(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
+    // Trouver l'ordre maximum actuel
+    const maxOrder = await ProjectModel.findOne({
+      $or: [{ author: authUser._id }, { guests: authUser?._id }],
+    })
+      .sort({ order: -1 })
+      .select('order');
+
     const newProject = new ProjectModel({
       author: authUser?._id,
       name: name,
+      order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
     });
 
     const savedProject = await newProject.save();
 
     return res.status(201).send({
       success: true,
-      message: "Projet créée avec succès",
+      message: "Projet créé avec succès",
       data: savedProject,
     });
   } catch (err) {
@@ -47,12 +55,12 @@ export async function saveProject(req, res, next) {
 // Only authors and guests will be able to see the projects
 export async function getProjects(req, res, next) {
   try {
-    const authUser = res.locals.user; // Getting the informations of the logged user
+    const authUser = res.locals.user;
 
-    // Only if auth user is the author or if the auth user is in guests array the projects will be returned
     const projects = await ProjectModel.find({
       $or: [{ author: authUser._id }, { guests: authUser?._id }],
-    });
+    })
+      .sort({ order: 1 }); // Ajout du tri par ordre
 
     if (projects.length <= 0) {
       return res.status(404).send({
@@ -403,3 +411,29 @@ export async function removeGuest(req, res, next) {
     });
   }
 }
+
+export const updateProjectsOrder = async (req, res) => {
+  try {
+    const { projects } = req.body;
+
+    // Mise à jour en masse des ordres
+    const bulkOps = projects.map((project, index) => ({
+      updateOne: {
+        filter: { _id: project._id },
+        update: { $set: { order: index } }
+      }
+    }));
+
+    await ProjectModel.bulkWrite(bulkOps);
+
+    return res.status(200).json({
+      success: true,
+      message: "Ordre des projets mis à jour"
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

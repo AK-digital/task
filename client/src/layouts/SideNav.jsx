@@ -1,17 +1,90 @@
 "use client";
 import styles from "@/styles/layouts/side-nav.module.css";
-import { getProjects } from "@/api/project";
 import CreateProject from "@/components/Projects/CreateProject";
-import Link from "next/link";
-import Image from "next/image";
 import UserInfo from "@/components/Header/UserInfo";
 import SignOut from "@/components/auth/SignOut";
 import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import SortableProject from "@/components/Projects/SortableProject";
+import { updateProjectsOrder } from "@/actions/project";
+import { MeasuringStrategy } from "@dnd-kit/core";
 
 export default function SideNav({ projects }) {
   const params = useParams();
   const { id } = params;
   const projectId = id;
+  const [projectItems, setProjectItems] = useState(projects || []);
+
+  // Fonction pour ajouter un nouveau projet à la liste
+  const handleProjectCreated = (newProject) => {
+    setProjectItems(prevItems => [...prevItems, newProject]);
+  };
+
+  // Effet pour déplacer le projet actif en haut
+  useEffect(() => {
+    if (projectId && projectItems.length > 0) {
+      const activeIndex = projectItems.findIndex(p => p._id === projectId);
+      if (activeIndex > 0) {
+        const newItems = arrayMove(projectItems, activeIndex, 0);
+        setProjectItems(newItems);
+      }
+    }
+  }, [projectId]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        delay: 0, // Supprime le délai d'activation
+        tolerance: 5, // Réduit la tolérance de mouvement pour activer le drag
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  async function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active?.id !== over?.id) {
+      const oldIndex = projectItems.findIndex((project) => project?._id === active.id);
+      const newIndex = projectItems.findIndex((project) => project?._id === over.id);
+
+      // Mise à jour optimiste de l'UI
+      const newItems = arrayMove(projectItems, oldIndex, newIndex);
+      setProjectItems(newItems);
+
+      try {
+        // Appel API en arrière-plan
+        const response = await updateProjectsOrder(newItems);
+
+        if (!response.success) {
+          // En cas d'erreur, on revient à l'état précédent
+          setProjectItems(projectItems);
+          console.error("Erreur lors de la mise à jour de l'ordre:", response.message);
+        }
+      } catch (error) {
+        // En cas d'erreur réseau, on revient à l'état précédent
+        setProjectItems(projectItems);
+        console.error("Erreur lors de la mise à jour de l'ordre:", error);
+      }
+    }
+  }
+
   return (
     <aside className={styles.container}>
       <svg
@@ -28,29 +101,35 @@ export default function SideNav({ projects }) {
       </svg>
       <div className={styles.wrapper}>
         <div className={styles.projects}>
-          {/* list of project */}
           <nav className={styles.nav}>
-            <ul className={styles.projectsList}>
-              {projects?.map((project) => {
-                return (
-                  <li className={styles.projectsItem} key={project?._id}>
-                    <Link href={`/project/${project?._id}`}>
-                      <Image
-                        src={project?.logo || "/default-project-logo.webp"}
-                        width={48}
-                        height={48}
-                        alt="project logo"
-                        style={{ borderRadius: "50%" }}
-                        data-active={projectId === project?._id}
-                      />
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              measuring={{
+                droppable: {
+                  strategy: MeasuringStrategy.Always
+                }
+              }}
+              modifiers={[]}
+            >
+              <ul className={styles.projectsList}>
+                <SortableContext
+                  items={projectItems.map((project) => project._id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {projectItems?.map((project) => (
+                    <SortableProject
+                      key={project._id}
+                      project={project}
+                      projectId={projectId}
+                    />
+                  ))}
+                </SortableContext>
+              </ul>
+            </DndContext>
           </nav>
-          {/* create a project */}
-          <CreateProject />
+          <CreateProject onProjectCreated={handleProjectCreated} />
         </div>
         <div className={styles.footer}>
           <div className={styles.userAvatar}>

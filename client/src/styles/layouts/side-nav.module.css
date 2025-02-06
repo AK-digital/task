@@ -24,6 +24,13 @@
     gap: 8px;
 }
 
+.projectsItem {
+    transition: all 0.3s ease;
+    transform-origin: center;
+    will-change: transform;
+    position: relative;
+}
+
 .projectsItem img {
     border: 2px solid #44455e;
     transition: 150ms all linear;
@@ -32,6 +39,10 @@
 .projectsItem img[data-active="true"] {
     border: 2px solid var(--accent-color);
     transition: 150ms all linear;
+}
+
+.projectsItem[data-active="true"] {
+    order: -1;
 }
 
 .footer {
@@ -43,4 +54,20 @@
 
 .signOut {
     margin-top: 10px;
+}
+
+.dragHandle {
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    transition: transform 0.3s ease;
+}
+
+.isDragging {
+    cursor: grab;
+    z-index: 1;
+}
+
+.isDragging:active {
+    cursor: grabbing;
 }

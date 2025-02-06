@@ -59,4 +59,10 @@ router.patch(
   projectControllers.removeGuest
 );
 
+router.patch(
+  "/reorder",
+  authMiddlewares.auth,
+  projectControllers.updateProjectsOrder
+);
+
 export default router;

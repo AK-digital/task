@@ -330,3 +330,26 @@ export async function updateProjectLogo(prevState, formData) {
     };
   }
 }
+
+export async function updateProjectsOrder(projects) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const res = await fetch(`${process.env.API_URL}/project/reorder`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.value}`,
+      },
+      body: JSON.stringify({ projects }),
+    });
+
+    const response = await res.json();
+    return response; // Retourne la réponse complète
+
+  } catch (err) {
+    console.error("Erreur lors de la mise à jour de l'ordre des projets:", err);
+    throw err; // Propage l'erreur pour la gestion dans handleDragEnd
+  }
+}

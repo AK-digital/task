@@ -32,6 +32,10 @@ const projectSchema = new Schema(
         required: false,
       },
     },
+    order: {
+      type: Number,
+      default: 0
+    },
   },
   {
     timestamps: true,
