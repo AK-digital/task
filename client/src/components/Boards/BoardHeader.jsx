@@ -1,8 +1,7 @@
 "use client";
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
-import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import DeleteBoard from "./DeleteBoard";
@@ -50,21 +49,18 @@ export default function BoardHeader({
   };
 
   return (
-    <div
-      className={styles.container}
-      data-open={open}
-    >
+    <div className={styles.container} data-open={open}>
       {open ? (
-        <FontAwesomeIcon
+        <ChevronDown
           style={{ color: `${optimisticColor}` }}
-          icon={faCaretDown}
           onClick={(e) => setOpen(!open)}
+          size={20}
         />
       ) : (
-        <FontAwesomeIcon
+        <ChevronRight
           style={{ color: `${optimisticColor}` }}
-          icon={faCaretRight}
           onClick={(e) => setOpen(!open)}
+          size={20}
         />
       )}
       {edit ? (

@@ -97,6 +97,7 @@ input {
   outline: none;
   border-radius: 4px;
   color: var(--text-color);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 input:focus {
