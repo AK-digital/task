@@ -1,9 +1,8 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 14px;
     top: 40px;
-    right: 50%;
+    right: -50px;
     width: 450px;
     padding: 0 !important;
 
@@ -11,21 +10,29 @@
 
 .header {
     font-weight: bold;
-    font-size: 1.4rem;
-    padding: 14px 14px 0 14px;
+    font-size: 1.1rem;
 }
 
 .notifications {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .notification a {
     display: flex;
-    gap: 7px;
-    padding: 16px;
+    gap: 4px;
     border-top: 1px solid var(--border-color);
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.header,
+.messsage,
+.notification a {
+    padding: 14px;
 }
 
 .message {
@@ -43,4 +50,8 @@
 
 .notification .date {
     font-size: 0.8rem;
+}
+
+.date {
+    text-align: right;
 }
