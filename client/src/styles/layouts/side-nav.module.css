@@ -24,23 +24,12 @@
     gap: 8px;
 }
 
-.projectsItem a {
-    font-size: 0.9rem;
-    padding: 8px 4px;
-    border-radius: 50px;
-    background-color: #44455e;
-    height: 48px;
-    width: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    text-align: center;
+.projectsItem img {
     border: 2px solid #44455e;
     transition: 150ms all linear;
 }
 
-.projectsItem a[data-active="true"] {
+.projectsItem img[data-active="true"] {
     border: 2px solid var(--accent-color);
     transition: 150ms all linear;
 }

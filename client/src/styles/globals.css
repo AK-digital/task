@@ -116,13 +116,14 @@ button {
   background-color: var(--accent-color);
   border: none;
   outline: none;
-  border-radius: 8px;
+  border-radius: 4px;
   color: white;
   font-size: var(--text-size-normal);
   letter-spacing: var(--letter-spacing-normal);
   font-family: inherit;
   transition: 120ms all linear;
   cursor: pointer;
+
 }
 
 button:hover {

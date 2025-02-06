@@ -34,18 +34,15 @@ export default function SideNav({ projects }) {
               {projects?.map((project) => {
                 return (
                   <li className={styles.projectsItem} key={project?._id}>
-                    {/* <Image
-                      src={project?.logo || "/default-project-logo.webp"}
-                      width={30}
-                      height={30}
-                      alt="project logo"
-                      style={{ borderRadius: "50%" }}
-                    /> */}
-                    <Link
-                      href={`/project/${project?._id}`}
-                      data-active={projectId === project?._id}
-                    >
-                      {project.name}
+                    <Link href={`/project/${project?._id}`}>
+                      <Image
+                        src={project?.logo || "/default-project-logo.webp"}
+                        width={48}
+                        height={48}
+                        alt="project logo"
+                        style={{ borderRadius: "50%" }}
+                        data-active={projectId === project?._id}
+                      />
                     </Link>
                   </li>
                 );

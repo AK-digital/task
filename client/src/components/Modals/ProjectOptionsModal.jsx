@@ -1,29 +1,30 @@
 "use client";
-import {
-  useState,
-  useRef,
-  useEffect,
-  useTransition,
-  useActionState,
-} from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect, useActionState } from "react";
 import Image from "next/image";
 import { Pencil } from "lucide-react";
 import { updateProject, updateProjectLogo } from "@/actions/project";
 import styles from "@/styles/components/modals/project-options-modal.module.css";
 import { X } from "lucide-react";
 import { instrumentSans } from "@/utils/font";
-
-const initialState = {
-  status: "pending",
-  message: "",
-  errors: null,
-};
+import { deleteProject } from "@/api/project";
+import { useRouter } from "next/navigation";
 
 export default function ProjectOptionsModal({ project, setOpenModal }) {
+  const router = useRouter();
   const [statusMessage, setStatusMessage] = useState();
   const [status, setStatus] = useState("");
+
+  async function handleDeleteProject() {
+    const response = await deleteProject(project?._id);
+
+    console.log(response);
+
+    if (response?.success) {
+      setOpenModal(false);
+      router.push("/projects");
+    }
+  }
+
   return (
     <>
       <div className={styles.overlay}>
@@ -46,6 +47,14 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
             setStatusMessage={setStatusMessage}
             setStatus={setStatus}
           />
+
+          <button
+            className={`${instrumentSans.className} ${styles.deleteBtn}`}
+            onClick={handleDeleteProject}
+          >
+            Supprimer le projet
+          </button>
+
           {statusMessage && (
             <div className={styles.statusMessage}>
               <span data-status={status}>{statusMessage}</span>
@@ -53,7 +62,11 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
           )}
         </div>
       </div>
-      <div id="modal-layout-opacity" onClick={() => setOpenModal(false)}></div>
+      <div
+        id="modal-layout"
+        onClick={() => setOpenModal(false)}
+        className={styles.layout}
+      ></div>
     </>
   );
 }

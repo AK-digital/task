@@ -245,6 +245,20 @@ export async function resetForgotPassword(prevState, formData) {
 
     console.log(response);
 
+    if (
+      !response.success &&
+      response?.message ===
+        "Le nouveau mot de passe doit être différent de l'ancien"
+    ) {
+      return {
+        status: "failure",
+        errors: {
+          newPassword:
+            "Le nouveau mot de passe doit être différent de l'ancien",
+        },
+      };
+    }
+
     if (!response.success) {
       throw new Error(response?.message);
     }

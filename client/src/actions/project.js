@@ -199,7 +199,7 @@ export async function removeGuest(projectId, prevState, formData) {
       throw new Error(response?.message);
     }
 
-    revalidateTag("projects");
+    revalidateTag("project");
 
     return {
       status: "success",
@@ -262,7 +262,7 @@ export async function updateProject(prevState, formData) {
       throw new Error(response?.message);
     }
 
-    revalidateTag("projects");
+    revalidateTag("project");
 
     console.log(response);
 

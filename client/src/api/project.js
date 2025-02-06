@@ -31,7 +31,7 @@ export async function getProject(id) {
   } catch (err) {
     console.log(
       err.message ||
-      "Une erreur est survenue lors de la récupération des projets"
+        "Une erreur est survenue lors de la récupération des projets"
     );
   }
 }
@@ -64,7 +64,7 @@ export async function getProjects() {
   } catch (err) {
     console.log(
       err.message ||
-      "Une erreur est survenue lors de la récupération des projets"
+        "Une erreur est survenue lors de la récupération des projets"
     );
   }
 }
@@ -90,10 +90,12 @@ export async function deleteProject(projectId) {
     }
 
     revalidateTag("projects");
+
+    return response;
   } catch (err) {
     console.log(
       err.message ||
-      "Une erreur est survenue lors de la récupération des tableaux"
+        "Une erreur est survenue lors de la récupération des tableaux"
     );
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "@/actions/auth";
-import styles from "@/styles/components/auth/signIn.module.css";
+import styles from "@/styles/components/auth/sign.module.css";
 import { instrumentSans } from "@/utils/font";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
@@ -25,10 +25,10 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
     setSignUp(true);
   }
 
-  async function handleGoogleAuth(e) {
-    e.preventDefault();
-    window.open(`http://localhost:5000/api/auth/google/`, "_self");
-  }
+  // async function handleGoogleAuth(e) {
+  //   e.preventDefault();
+  //   window.open(`http://localhost:5000/api/auth/google/`, "_self");
+  // }
 
   useEffect(() => {
     if (state?.status === "success") {
@@ -36,7 +36,7 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
       if (invitationId) {
         router.push(`invitation/${invitationId}`);
       } else {
-        router.push("/project");
+        router.push("/projects");
       }
     }
   }, [state]);
@@ -52,7 +52,8 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
         </div>
       )}
       <form className={styles.form} action={formAction}>
-        <div>
+        <div className={styles.formGroup}>
+          <label htmlFor="email">Adresse mail</label>
           <input
             type="email"
             name="email"
@@ -62,6 +63,7 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
           />
         </div>
         <div className={styles.password}>
+          <label htmlFor="password">Mot de passe</label>
           <input
             type="password"
             name="password"
@@ -88,7 +90,7 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
           >
             {pending ? "Connexion en cours..." : "Se connecter"}
           </button>
-          <button
+          {/* <button
             className={`${instrumentSans.className} ${styles.google}`}
             onClick={handleGoogleAuth}
           >
@@ -97,7 +99,7 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
               <Image src={"/google.svg"} width={25} height={25} alt="Google" />
             </span>{" "}
             Se connecter avec Google
-          </button>
+          </button> */}
         </div>
       </form>
       <div className={styles.text}>

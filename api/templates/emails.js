@@ -1,11 +1,15 @@
 const emailStyles = {
-  container: "font-family: Arial, sans-serif; color:#4a4a4a; text-align: center; padding: 20px; margin-inline: auto;",
+  container:
+    "font-family: Arial, sans-serif; color:#4a4a4a; text-align: center; padding: 20px; margin-inline: auto;",
   title: "font-size: 40px; font-weight: bold;",
-  subtitle: "font-size: 28px; max-width: 450px; margin-inline: auto; font-weight: 500;",
-  paragraph: "font-size: 20px; font-weight: 300; text-align: center; margin-bottom:30px;",
+  subtitle:
+    "font-size: 28px; max-width: 450px; margin-inline: auto; font-weight: 500;",
+  paragraph:
+    "font-size: 20px; font-weight: 300; text-align: center; margin-bottom:30px;",
   content: "font-size: 20px; font-weight: 300;",
-  button: "background-color: #777AE4; outline: none; border: none; border-radius: 32px; padding: 16px 24px; color: #FFFFFF; font-weight: 500; font-size:18px;",
-  highlight: "color: #777AE4;"
+  button:
+    "background-color: #777AE4; outline: none; border: none; border-radius: 32px; padding: 16px 24px; color: #FFFFFF; font-weight: 500; font-size:18px; text-decoration: none;",
+  highlight: "color: #777AE4;",
 };
 
 export function emailDescription(user, task) {
@@ -14,7 +18,11 @@ export function emailDescription(user, task) {
     text: `
       <div style="${emailStyles.container}">
       <h1 style="${emailStyles.title}">Hey ! Par ici 🙋‍♂️</h1>
-      <h2 style="${emailStyles.subtitle}">${user?.firstName + " " + user?.lastName} vous a mentionné dans <span style="${emailStyles.highlight}">cette description</span></h2>
+      <h2 style="${emailStyles.subtitle}">${
+      user?.firstName + " " + user?.lastName
+    } vous a mentionné dans <span style="${
+      emailStyles.highlight
+    }">cette description</span></h2>
       <div style="${emailStyles.content}">
         "${task?.description}"
       </div>
@@ -35,7 +43,11 @@ export function emailMessage(user, message) {
     text: `
       <div style="${emailStyles.container}">
       <h1 style="${emailStyles.title}">Hey ! Par ici 🙋‍♂️</h1>
-      <p style="${emailStyles.paragraph}">${user?.firstName + " " + user?.lastName} vous a mentionné dans <span style="${emailStyles.highlight}">cette conversation</span></p>
+      <p style="${emailStyles.paragraph}">${
+      user?.firstName + " " + user?.lastName
+    } vous a mentionné dans <span style="${
+      emailStyles.highlight
+    }">cette conversation</span></p>
       <div style="${emailStyles.content}">
         "${message?.message}"
       </div>
@@ -56,7 +68,11 @@ export function emailProjectInvitation(project, sender, link) {
     text: `
       <div style="${emailStyles.container}">
       <h1 style="${emailStyles.title}">La chaaance 🍀</h1>
-      <p style="${emailStyles.paragraph}">${sender?.firstName + " " + sender?.lastName} vous a invité à rejoindre le projet <span style="${emailStyles.highlight}">${project?.name}</span>.</p>
+      <p style="${emailStyles.paragraph}">${
+      sender?.firstName + " " + sender?.lastName
+    } vous a invité à rejoindre le projet <span style="${
+      emailStyles.highlight
+    }">${project?.name}</span>.</p>
       <a href=${link} style="display:inline-block;width:auto;background-color: #777AE4; outline:none; border:none; border-radius:32px; padding:16px 24px; color: #FFFFFF;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:8px;font-size:16px;">
           Accéder au projet
       </a>
@@ -98,7 +114,7 @@ export function emailResetCode(user, resetLink) {
         </div>
         <p style="${emailStyles.content}">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.</p>
       </div>
-    `
+    `,
   };
   return templates;
 }
