@@ -36,6 +36,13 @@
     align-items: center;
     font-size: 12px;
     text-align: center;
+    border: 2px solid #44455e;
+    transition: 150ms all linear;
+}
+
+.projectsItem a[data-active="true"] {
+    border: 2px solid var(--accent-color);
+    transition: 150ms all linear;
 }
 
 .footer {

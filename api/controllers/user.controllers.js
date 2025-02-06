@@ -123,6 +123,13 @@ export async function updatePicture(req, res, next) {
   try {
     const picture = req.file;
 
+    if (!picture) {
+      return res.status(400).json({
+        success: false,
+        message: "Aucun fichier n'a été uploadé",
+      });
+    }
+
     const user = await UserModel.findById({ _id: req.params.id });
 
     if (!user) {

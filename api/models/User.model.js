@@ -48,7 +48,6 @@ const UserSchema = new Schema(
       type: String,
       trim: true,
       required: false,
-      default: "", // Photo de profil par défaut de Task
     },
     role: {
       type: String,

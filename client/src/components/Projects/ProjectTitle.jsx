@@ -1,25 +1,34 @@
 "use client";
 import styles from "@/styles/layouts/project-header.module.css";
-import { useState, useRef, useEffect, useContext } from "react";
-import { updateProjectName } from "@/actions/project";
+import { useState, useRef, useEffect, useContext, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { MoreHorizontal } from "lucide-react";
 import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 import { AuthContext } from "@/context/auth";
+import { updateProject } from "@/actions/project";
+
+const initialState = {
+  status: "pending",
+  message: "",
+  payload: null,
+  errors: null,
+};
 
 export default function ProjectTitle({ project }) {
   const { uid } = useContext(AuthContext);
+  const [state, formAction, pending] = useActionState(
+    updateProject,
+    initialState
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [projectName, setProjectName] = useState(project?.name);
   const [modalOpen, setModalOpen] = useState(false);
+  const formRef = useRef(null);
   const inputRef = useRef(null);
 
   const debouncedUpdate = useDebouncedCallback(async (newName) => {
-    if (project?._id && newName !== project?.name) {
-      const response = await updateProjectName(project._id, newName);
-      if (!response.success) {
-        setProjectName(project?.name);
-      }
+    if (newName !== project?.name) {
+      formRef?.current?.requestSubmit();
     }
   }, 600);
 
@@ -31,8 +40,10 @@ export default function ProjectTitle({ project }) {
   }, [isEditing]);
 
   useEffect(() => {
-    setProjectName(project?.name);
-  }, [project]);
+    if (state?.status === "failure") {
+      setProjectName(project?.name);
+    }
+  }, [state]);
 
   const handleClick = () => {
     if (project?.author?._id === uid) {
@@ -46,6 +57,7 @@ export default function ProjectTitle({ project }) {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
+      formRef?.current?.requestSubmit();
       setIsEditing(false);
       e.target.blur();
     }
@@ -65,15 +77,26 @@ export default function ProjectTitle({ project }) {
     <div className={styles.titleContainer}>
       <div className={styles.title}>
         {isEditing ? (
-          <input
-            ref={inputRef}
-            type="text"
-            value={projectName}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            className={styles.titleInput}
-          />
+          <form action={formAction} ref={formRef}>
+            <input
+              type="text"
+              name="project-id"
+              id="project-id"
+              defaultValue={project?._id}
+              hidden
+            />
+            <input
+              ref={inputRef}
+              type="text"
+              id="project-name"
+              name="project-name"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              defaultValue={projectName}
+              className={styles.titleInput}
+            />
+          </form>
         ) : (
           <span onClick={handleClick}>{projectName}</span>
         )}
@@ -84,10 +107,7 @@ export default function ProjectTitle({ project }) {
         </div>
       )}
       {modalOpen && (
-        <ProjectOptionsModal
-          projectId={project._id}
-          setOpenModal={setModalOpen}
-        />
+        <ProjectOptionsModal project={project} setOpenModal={setModalOpen} />
       )}
     </div>
   );

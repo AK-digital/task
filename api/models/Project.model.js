@@ -17,11 +17,20 @@ const projectSchema = new Schema(
       type: String,
       trim: true,
       required: false,
-      default: "/default-project-logo.webp", // Chemin par défaut de l'image
     },
     guests: {
       type: [Schema.Types.ObjectId],
       ref: "User",
+    },
+    settings: {
+      urlWordpress: {
+        type: String,
+        required: false,
+      },
+      urlBackofficeWordpress: {
+        type: String,
+        required: false,
+      },
     },
   },
   {

@@ -1,4 +1,4 @@
-"use server";
+"use client";
 import styles from "@/styles/layouts/side-nav.module.css";
 import { getProjects } from "@/api/project";
 import CreateProject from "@/components/Projects/CreateProject";
@@ -6,10 +6,12 @@ import Link from "next/link";
 import Image from "next/image";
 import UserInfo from "@/components/Header/UserInfo";
 import SignOut from "@/components/auth/SignOut";
+import { useParams } from "next/navigation";
 
-export default async function SideNav() {
-  const projects = await getProjects();
-
+export default function SideNav({ projects }) {
+  const params = useParams();
+  const { id } = params;
+  const projectId = id;
   return (
     <aside className={styles.container}>
       <svg
@@ -32,7 +34,17 @@ export default async function SideNav() {
               {projects?.map((project) => {
                 return (
                   <li className={styles.projectsItem} key={project?._id}>
-                    <Link href={`/project/${project?._id}`}>
+                    {/* <Image
+                      src={project?.logo || "/default-project-logo.webp"}
+                      width={30}
+                      height={30}
+                      alt="project logo"
+                      style={{ borderRadius: "50%" }}
+                    /> */}
+                    <Link
+                      href={`/project/${project?._id}`}
+                      data-active={projectId === project?._id}
+                    >
                       {project.name}
                     </Link>
                   </li>

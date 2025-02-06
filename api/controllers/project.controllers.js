@@ -6,7 +6,11 @@ import UserModel from "../models/User.model.js";
 import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
-import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
+import {
+  destroyFile,
+  uploadFile,
+  uploadFileBuffer,
+} from "../helpers/cloudinary.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -117,7 +121,14 @@ export async function getProject(req, res, next) {
 // Authors and guests will be able to update the project
 export async function updateProject(req, res, next) {
   try {
-    const { name } = req.body;
+    const { name, urlWordpress, urlBackofficeWordpress } = req.body;
+
+    if (!name) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
 
     const updatedProject = await ProjectModel.findOneAndUpdate(
       {
@@ -126,6 +137,10 @@ export async function updateProject(req, res, next) {
       {
         $set: {
           name: name,
+          settings: {
+            urlWordpress: urlWordpress,
+            urlBackofficeWordpress: urlBackofficeWordpress,
+          },
         },
       },
       { new: true, setDefaultsOnInsert: true }
@@ -150,6 +165,52 @@ export async function updateProject(req, res, next) {
     });
   }
 }
+
+export async function updateProjectLogo(req, res) {
+  try {
+    const logo = req.file;
+
+    if (!logo) {
+      return res.status(400).json({
+        success: false,
+        message: "Aucun fichier n'a été uploadé",
+      });
+    }
+
+    const project = await ProjectModel.findById({ _id: req.params.id });
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Impossible de mettre à jour le logo d'un projet inexistant",
+      });
+    }
+
+    if (project?.logo) {
+      await destroyFile("project", project?.logo);
+    }
+
+    const uploadedFile = await uploadFileBuffer("task/project", logo?.buffer);
+
+    const updatedProject = await ProjectModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      { logo: uploadedFile?.secure_url },
+      { new: true, setDefaultsOnInsert: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Logo mis à jour avec succès",
+      data: updatedProject,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 // Only the author will be able to delete the project
 export async function deleteProject(req, res, next) {
   try {
@@ -236,9 +297,6 @@ export async function acceptProjectInvitation(req, res, next) {
   try {
     const authUser = res.locals.user;
     const { invitationId } = req.body;
-
-    console.log(authUser?.email);
-    console.log(invitationId);
 
     const projectInvitation = await ProjectInvitationModel.findOne({
       guestEmail: authUser?.email,
@@ -342,41 +400,6 @@ export async function removeGuest(req, res, next) {
     return res.status(500).send({
       success: false,
       message: err.message || "Une erreur inattendue est survenue",
-    });
-  }
-}
-
-export async function updateProjectLogo(req, res) {
-  try {
-    const { id } = req.params;
-    const file = req.file;
-
-    if (!file) {
-      return res.status(400).json({
-        success: false,
-        message: "Aucun fichier n'a été uploadé"
-      });
-    }
-
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: "task/projects"
-    });
-
-    const updatedProject = await ProjectModel.findByIdAndUpdate(
-      id,
-      { logo: result.secure_url },
-      { new: true }
-    );
-
-    return res.status(200).json({
-      success: true,
-      message: "Logo mis à jour avec succès",
-      data: updatedProject
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message
     });
   }
 }

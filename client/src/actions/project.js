@@ -215,21 +215,43 @@ export async function removeGuest(projectId, prevState, formData) {
   }
 }
 
-export async function updateProjectName(projectId, name) {
+export async function updateProject(prevState, formData) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
+    const projectId = formData.get("project-id");
+    const name = formData.get("project-name");
+
+    if (!name) {
+      return {
+        status: "failure",
+        message: "Le nom du projet est obligatoire",
+      };
+    }
 
     const rawFormData = {
       name: name,
     };
+
+    const urlWordpress = formData.get("url-wordpress");
+    const urlBackofficeWordpress = formData.get("url-backoffice-wordpress");
+
+    if (urlWordpress) {
+      rawFormData.urlWordpress = urlWordpress;
+    }
+
+    if (urlBackofficeWordpress) {
+      rawFormData.urlBackofficeWordpress = formData.get(
+        "url-backoffice-wordpress"
+      );
+    }
 
     const res = await fetch(`${process.env.API_URL}/project/${projectId}`, {
       method: "PUT",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`,
+        Authorization: `Bearer ${session?.value}`,
       },
       body: JSON.stringify(rawFormData),
     });
@@ -241,15 +263,20 @@ export async function updateProjectName(projectId, name) {
     }
 
     revalidateTag("projects");
-    revalidateTag("project");
 
-    return response;
+    console.log(response);
+
+    return {
+      status: "success",
+      message: "Le projet a été modifié avec succès",
+      data: response.data,
+    };
   } catch (err) {
     console.log(
       err.message || "Une erreur est survenue lors de la modification du projet"
     );
     return {
-      success: false,
+      status: "failure",
       message: err.message,
     };
   }
@@ -259,10 +286,10 @@ export async function updateProjectLogo(prevState, formData) {
   try {
     const cookie = await cookies();
     const session = cookie?.get("session");
-    const projectId = formData.get("projectId");
-    const logoFile = formData.get("logo");
+    const projectId = formData.get("project-id");
+    const logo = formData.get("logo");
 
-    if (!logoFile || logoFile.size === 0) {
+    if (!logo || logo.size === 0) {
       return {
         status: "failure",
         message: "Aucun fichier sélectionné",
@@ -270,16 +297,19 @@ export async function updateProjectLogo(prevState, formData) {
     }
 
     const formDataToSend = new FormData();
-    formDataToSend.append("logo", logoFile);
+    formDataToSend.append("logo", logo);
 
-    const res = await fetch(`${process.env.API_URL}/project/${projectId}/logo`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        Authorization: `Bearer ${session.value}`,
-      },
-      body: formDataToSend,
-    });
+    const res = await fetch(
+      `${process.env.API_URL}/project/${projectId}/logo`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${session.value}`,
+        },
+        body: formDataToSend,
+      }
+    );
 
     const response = await res.json();
 
@@ -287,16 +317,16 @@ export async function updateProjectLogo(prevState, formData) {
       throw new Error(response?.message);
     }
 
-    revalidateTag(`project-${projectId}`);
+    revalidateTag("projects");
 
     return {
       status: "success",
-      data: response.data
+      data: response.data,
     };
   } catch (err) {
     return {
       status: "failure",
-      message: err.message
+      message: err.message,
     };
   }
 }
