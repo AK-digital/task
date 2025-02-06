@@ -40,8 +40,8 @@
 
 .bullet {
     display: block;
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     cursor: pointer;
 }
@@ -62,7 +62,7 @@
     left: 0;
     top: 40px;
     width: max-content;
-    max-width: 250px;
+    max-width: 234px;
 }
 
 .modal ul {
@@ -72,8 +72,8 @@
 }
 
 .modal li {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     cursor: pointer;
     transition: 80ms all linear;

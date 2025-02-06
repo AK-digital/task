@@ -4,7 +4,7 @@ import TaskModel from "../models/Task.model.js";
 
 export async function saveBoard(req, res, next) {
   try {
-    const { title, color } = req.body;
+    const { title } = req.body;
     const projectId = req.query.projectId;
 
     if (!projectId || !title) {
@@ -16,10 +16,21 @@ export async function saveBoard(req, res, next) {
     const newBoard = new BoardModel({
       projectId: projectId,
       title: title,
-      color: color,
     });
 
     const savedBoard = await newBoard.save();
+
+    const randomIndex = Math.floor(Math.random() * savedBoard?.colors.length);
+    const randomColor = savedBoard?.colors[randomIndex];
+
+    await BoardModel.findByIdAndUpdate({ _id: savedBoard._id }, {
+      $set: {
+        color: randomColor,
+      },
+    }, {
+      new: true,
+      setDefaultsOnInsert: true,
+    });
 
     return res.status(201).send({
       success: true,
