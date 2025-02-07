@@ -9,7 +9,6 @@ import moment from "moment";
 import Link from "next/link";
 
 export default function Notifications({ setNotifOpen, notifications, mutate }) {
-  console.log(notifications);
   useEffect(() => {
     const getUnreadNotifications = () => {
       return notifications?.filter((notif) => !notif.read);
@@ -40,7 +39,9 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
         </div>
         <div>
           {!isNotEmpty(notifications) ? (
-            <span>Vous n'avez aucune notification pour le moment</span>
+            <div className={styles.empty}>
+              <span>Vous n'avez aucune notification pour le moment</span>
+            </div>
           ) : (
             <ul className={styles.notifications}>
               {notifications?.map((notif, idx) => {
@@ -48,7 +49,7 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
                 return (
                   <li className={styles.notification} key={idx}>
                     <Link href={`${notif?.link}`}>
-                      <div>
+                      <div className={styles.left}>
                         {notif?.senderId?.picture ? (
                           <Image
                             src={notif?.senderId?.picture}
@@ -64,18 +65,16 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
                             height={"30px"}
                           />
                         )}
-                      </div>
-                      <div className={styles.message}>
-                        <div className={styles.title}>
-                          <span>{notif?.message?.title}</span>
+                        <div className={styles.message}>
+                          <div className={styles.title}>
+                            <span>{notif?.message?.title}</span>
+                          </div>
+                          <div className={styles.content}>
+                            {notif?.message?.content}
+                          </div>
                         </div>
-                        <div className={styles.content}>
-                          {notif?.message?.content}
-                        </div>
                       </div>
-                      <div className={styles.date}>
-                        {dateFromNow}
-                      </div>
+                      <div className={styles.date}>{dateFromNow}</div>
                     </Link>
                   </li>
                 );

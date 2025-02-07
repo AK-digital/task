@@ -15,6 +15,7 @@ import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import UserModel from "./models/User.model.js";
 import NotificationModel from "./models/Notification.model.js";
+import mongoose from "mongoose";
 
 const app = express();
 const server = createServer(app);
@@ -53,7 +54,7 @@ app.use("/api/message", messageRouter);
 
 // SOCKET LOGIC
 io.on("connection", (socket) => {
-  socket.once("logged in", async (userId) => {
+  socket.on("logged in", async (userId) => {
     if (userId) {
       const user = await UserModel.findById({ _id: userId });
 
@@ -76,9 +77,17 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("create notification", async (sender, email, message, link) => {
+  socket.on("create notification", async (sender, receiver, message, link) => {
     const senderUser = await UserModel.findById({ _id: sender?._id });
-    const receiverUser = await UserModel.findOne({ email: email });
+    let receiverUser = null;
+
+    if (receiver.includes("@")) {
+      receiverUser = await UserModel.findOne({
+        email: receiver,
+      });
+    } else {
+      receiverUser = await UserModel.findById({ _id: receiver });
+    }
 
     // Create a new notification for the user
     const newNotification = new NotificationModel({

@@ -6,11 +6,7 @@ import UserModel from "../models/User.model.js";
 import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
-import {
-  destroyFile,
-  uploadFile,
-  uploadFileBuffer,
-} from "../helpers/cloudinary.js";
+import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -29,7 +25,7 @@ export async function saveProject(req, res, next) {
       $or: [{ author: authUser._id }, { guests: authUser?._id }],
     })
       .sort({ order: -1 })
-      .select('order');
+      .select("order");
 
     const newProject = new ProjectModel({
       author: authUser?._id,
@@ -40,13 +36,12 @@ export async function saveProject(req, res, next) {
     const savedProject = await newProject.save();
 
     // Créer un tableau par défaut
-    const defaultBoard = new BoardModel({
+    const newBoard = new BoardModel({
       projectId: savedProject._id,
-      author: authUser._id,
       title: "Votre premier tableau",
     });
 
-    const savedBoard = await defaultBoard.save();
+    const savedBoard = await newBoard.save();
 
     // Utiliser la même logique que dans board.controllers.js
     const randomIndex = Math.floor(Math.random() * savedBoard?.colors.length);
@@ -85,8 +80,7 @@ export async function getProjects(req, res, next) {
 
     const projects = await ProjectModel.find({
       $or: [{ author: authUser._id }, { guests: authUser?._id }],
-    })
-      .sort({ order: 1 }); // Ajout du tri par ordre
+    }).sort({ order: 1 }); // Ajout du tri par ordre
 
     if (projects.length <= 0) {
       return res.status(404).send({
@@ -116,13 +110,15 @@ async function getFaviconUrl(websiteUrl) {
 
     // Créer un parseur HTML
     const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    const doc = parser.parseFromString(html, "text/html");
 
     // Chercher les balises link avec rel="icon" ou rel="shortcut icon"
-    const iconLink = doc.querySelector('link[rel="icon"], link[rel="shortcut icon"]');
+    const iconLink = doc.querySelector(
+      'link[rel="icon"], link[rel="shortcut icon"]'
+    );
 
     if (iconLink) {
-      const faviconUrl = iconLink.getAttribute('href');
+      const faviconUrl = iconLink.getAttribute("href");
       // Convertir en URL absolue si nécessaire
       const absoluteUrl = new URL(faviconUrl, websiteUrl).toString();
       return absoluteUrl;
@@ -260,15 +256,18 @@ export async function updateProjectLogo(req, res) {
     if (project.logo) {
       try {
         // Extraire l'ID public de l'URL Cloudinary
-        const urlParts = project.logo.split('/');
+        const urlParts = project.logo.split("/");
         const filenameWithExtension = urlParts[urlParts.length - 1];
-        const publicId = filenameWithExtension.split('.')[0];
+        const publicId = filenameWithExtension.split(".")[0];
 
         if (publicId) {
           await destroyFile("task/project", publicId);
         }
       } catch (deleteError) {
-        console.error("Erreur lors de la suppression de l'ancien logo:", deleteError);
+        console.error(
+          "Erreur lors de la suppression de l'ancien logo:",
+          deleteError
+        );
         // On continue même si la suppression échoue
       }
     }
@@ -277,7 +276,7 @@ export async function updateProjectLogo(req, res) {
     const uploadedFile = await uploadFileBuffer(
       "task/project",
       logo.buffer,
-      `project_${project._id}_${Date.now()}`  // Nom de fichier unique
+      `project_${project._id}_${Date.now()}` // Nom de fichier unique
     );
 
     if (!uploadedFile || !uploadedFile.secure_url) {
@@ -299,7 +298,9 @@ export async function updateProjectLogo(req, res) {
     console.error("Erreur lors de la mise à jour du logo:", error);
     return res.status(500).json({
       success: false,
-      message: error.message || "Une erreur est survenue lors de la mise à jour du logo",
+      message:
+        error.message ||
+        "Une erreur est survenue lors de la mise à jour du logo",
     });
   }
 }
@@ -505,20 +506,20 @@ export const updateProjectsOrder = async (req, res) => {
     const bulkOps = projects.map((project, index) => ({
       updateOne: {
         filter: { _id: project._id },
-        update: { $set: { order: index } }
-      }
+        update: { $set: { order: index } },
+      },
     }));
 
     await ProjectModel.bulkWrite(bulkOps);
 
     return res.status(200).json({
       success: true,
-      message: "Ordre des projets mis à jour"
+      message: "Ordre des projets mis à jour",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };

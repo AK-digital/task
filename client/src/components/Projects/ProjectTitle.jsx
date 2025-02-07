@@ -26,6 +26,9 @@ export default function ProjectTitle({ project }) {
   const formRef = useRef(null);
   const inputRef = useRef(null);
 
+  const hasWordpressUrl = project?.settings?.urlWordpress;
+  const hasBackofficeUrl = project?.settings?.urlBackofficeWordpress;
+
   const debouncedUpdate = useDebouncedCallback(async (newName) => {
     if (newName !== project?.name) {
       formRef?.current?.requestSubmit();
@@ -105,7 +108,7 @@ export default function ProjectTitle({ project }) {
         <ProjectOptionsModal project={project} setOpenModal={setModalOpen} />
       )}
       <div className={styles.actions}>
-        {project?.settings?.urlWordpress && (
+        {hasWordpressUrl && (
           <a
             href={project.settings.urlWordpress}
             target="_blank"
@@ -116,7 +119,7 @@ export default function ProjectTitle({ project }) {
             <Globe size={20} />
           </a>
         )}
-        {project?.settings?.urlBackofficeWordpress && (
+        {hasBackofficeUrl && (
           <a
             href={project.settings.urlBackofficeWordpress}
             target="_blank"
@@ -128,9 +131,10 @@ export default function ProjectTitle({ project }) {
           </a>
         )}
         {/* Ajout du séparateur vertical */}
-        {(project?.settings?.urlWordpress || project?.settings?.urlBackofficeWordpress) && project?.author?._id === uid && (
-          <div className={styles.separator}></div>
-        )}
+        {(hasWordpressUrl || hasBackofficeUrl) &&
+          project?.author?._id === uid && (
+            <div className={styles.separator}></div>
+          )}
         {project?.author?._id === uid && (
           <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
             <MoreHorizontal />

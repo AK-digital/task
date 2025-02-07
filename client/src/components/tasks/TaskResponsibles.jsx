@@ -8,7 +8,7 @@ import { isNotEmpty } from "@/utils/utils";
 import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 export default function TaskResponsibles({ task, project }) {
   const { user, uid } = useContext(AuthContext);
@@ -44,6 +44,7 @@ export default function TaskResponsibles({ task, project }) {
       setOptimisticResponsibles(responsibles);
     }
 
+    // If the auth user is the one who assigned the task, don't send a notification
     if (responsible?._id === uid) {
       return;
     }

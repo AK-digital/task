@@ -50,6 +50,10 @@ export default function GuestFormInvitation({ project, setIsPopup }) {
         message: state?.message,
       });
     }
+
+    return () => {
+      socket.off("create notification");
+    };
   }, [state]);
 
   return (

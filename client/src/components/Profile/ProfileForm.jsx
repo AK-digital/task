@@ -5,7 +5,6 @@ import { updateUserProfile } from "@/actions/user";
 import { instrumentSans } from "@/utils/font";
 import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
-import { useRouter } from "next/navigation";
 import PopupMessage from "@/layouts/PopupMessage";
 
 const initialState = {
@@ -16,20 +15,33 @@ const initialState = {
 
 export default function ProfileForm() {
   const { user } = useContext(AuthContext);
-  const router = useRouter();
   const [state, formAction, pending] = useActionState(
     updateUserProfile,
     initialState
   );
-  const [showPopup, setShowPopup] = useState(false);
+  const [popUp, setPopup] = useState(null);
 
   useEffect(() => {
+    // Mutate the session data if the update was successful
     if (state?.status === "success") {
       mutate("/auth/session");
-      setShowPopup(true);
-      // Masquer le popup après 3 secondes
-      setTimeout(() => setShowPopup(false), 3000);
+      setPopup({
+        status: state?.success,
+        title: "Succès",
+        message: "Profil mis à jour avec succès",
+      });
     }
+
+    if (state?.status === "failure") {
+      setPopup({
+        status: state?.success,
+        title: "Erreur",
+        message: "Une erreur s'est produite lors de la mise à jour du profil",
+      });
+    }
+
+    // Hide the popup after 4 seconds
+    setTimeout(() => setPopup(false), 4000);
   }, [state]);
 
   return (
@@ -100,11 +112,11 @@ export default function ProfileForm() {
         </button>
       </form>
 
-      {showPopup && (
+      {popUp && (
         <PopupMessage
-          status="success"
-          title="Succès"
-          message="Profil mis à jour avec succès"
+          status={popUp.status}
+          title={popUp.title}
+          message={popUp.message}
         />
       )}
     </>

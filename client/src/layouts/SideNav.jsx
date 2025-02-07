@@ -25,8 +25,9 @@ import { MeasuringStrategy } from "@dnd-kit/core";
 
 export default function SideNav({ projects }) {
   const params = useParams();
-  const { id } = params;
-  const projectId = id;
+  const { slug } = params;
+  const id = slug ? slug[0] : null;
+  const projectId = id ?? "";
   const [projectItems, setProjectItems] = useState([]);
 
   useEffect(() => {
@@ -51,8 +52,12 @@ export default function SideNav({ projects }) {
     const { active, over } = event;
 
     if (active?.id !== over?.id) {
-      const oldIndex = projectItems.findIndex((project) => project?._id === active.id);
-      const newIndex = projectItems.findIndex((project) => project?._id === over.id);
+      const oldIndex = projectItems.findIndex(
+        (project) => project?._id === active.id
+      );
+      const newIndex = projectItems.findIndex(
+        (project) => project?._id === over.id
+      );
 
       const newItems = arrayMove(projectItems, oldIndex, newIndex);
       setProjectItems(newItems);
@@ -62,7 +67,10 @@ export default function SideNav({ projects }) {
 
         if (!response.success) {
           setProjectItems(projectItems);
-          console.error("Erreur lors de la mise à jour de l'ordre:", response.message);
+          console.error(
+            "Erreur lors de la mise à jour de l'ordre:",
+            response.message
+          );
         }
       } catch (error) {
         setProjectItems(projectItems);
@@ -94,8 +102,8 @@ export default function SideNav({ projects }) {
               onDragEnd={handleDragEnd}
               measuring={{
                 droppable: {
-                  strategy: MeasuringStrategy.Always
-                }
+                  strategy: MeasuringStrategy.Always,
+                },
               }}
               modifiers={[]}
             >

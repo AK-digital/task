@@ -30,7 +30,7 @@ export async function getProject(id) {
   } catch (err) {
     console.log(
       err.message ||
-      "Une erreur est survenue lors de la récupération des projets"
+        "Une erreur est survenue lors de la récupération des projets"
     );
   }
 }
@@ -40,18 +40,15 @@ export async function getProjects() {
     const cookie = await cookies();
     const session = cookie.get("session");
 
-    const res = await fetch(
-      `${process.env.API_URL}/project`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`,
-        },
-        next: { tags: ["projects"] }
-      }
-    );
+    const res = await fetch(`${process.env.API_URL}/project`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.value}`,
+      },
+      next: { tags: ["projects"] },
+    });
 
     const response = await res.json();
 
@@ -61,7 +58,10 @@ export async function getProjects() {
 
     return response.data;
   } catch (err) {
-    console.log(err.message || "Une erreur est survenue lors de la récupération des projets");
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
   }
 }
 
@@ -75,7 +75,7 @@ export async function deleteProject(projectId) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`,
+        Authorization: `Bearer ${session?.value}`,
       },
     });
 
@@ -91,7 +91,7 @@ export async function deleteProject(projectId) {
   } catch (err) {
     console.log(
       err.message ||
-      "Une erreur est survenue lors de la récupération des tableaux"
+        "Une erreur est survenue lors de la récupération des tableaux"
     );
   }
 }

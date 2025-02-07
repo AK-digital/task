@@ -203,6 +203,7 @@ export async function removeGuest(projectId, prevState, formData) {
     return {
       status: "success",
       message: "Cet utilisateur a été révoqué avec succès",
+      guestId: guestId,
     };
   } catch (err) {
     console.log(err.message || "Une erreur est survenue");
@@ -296,7 +297,7 @@ export async function updateProjectLogo(prevState, formData) {
     }
 
     // Vérification du type de fichier
-    if (!logo.type.startsWith('image/')) {
+    if (!logo.type.startsWith("image/")) {
       return {
         status: "failure",
         message: "Le fichier doit être une image",
@@ -321,7 +322,9 @@ export async function updateProjectLogo(prevState, formData) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || "Une erreur inattendue est survenue");
+      throw new Error(
+        response?.message || "Une erreur inattendue est survenue"
+      );
     }
 
     revalidateTag("projects");
@@ -336,7 +339,8 @@ export async function updateProjectLogo(prevState, formData) {
     console.error("Erreur lors de la mise à jour du logo :", err);
     return {
       status: "failure",
-      message: "Une erreur inattendue est survenue lors de la mise à jour du logo",
+      message:
+        "Une erreur inattendue est survenue lors de la mise à jour du logo",
     };
   }
 }
@@ -357,40 +361,8 @@ export async function updateProjectsOrder(projects) {
 
     const response = await res.json();
     return response; // Retourne la réponse complète
-
   } catch (err) {
     console.error("Erreur lors de la mise à jour de l'ordre des projets:", err);
     throw err; // Propage l'erreur pour la gestion dans handleDragEnd
-  }
-}
-
-export async function deleteProject(projectId) {
-  try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(`${process.env.API_URL}/project/${projectId}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        Authorization: `Bearer ${session.value}`,
-      },
-    });
-
-    const response = await res.json();
-
-    if (!response.success) {
-      throw new Error(response?.message);
-    }
-
-    revalidateTag("projects");
-
-    return response;
-  } catch (err) {
-    console.log(err.message || "Une erreur est survenue lors de la suppression du projet");
-    return {
-      status: "failure",
-      message: err.message,
-    };
   }
 }

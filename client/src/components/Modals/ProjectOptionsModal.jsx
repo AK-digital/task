@@ -14,7 +14,9 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
   const router = useRouter();
 
   async function handleDeleteProject() {
-    const isConfirmed = window.confirm(`Êtes-vous sûr de vouloir supprimer le projet "${project?.name}" ?`);
+    const isConfirmed = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer le projet "${project?.name}" ?`
+    );
 
     if (!isConfirmed) return;
 
@@ -60,11 +62,7 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
 export function ProjectLogoForm({ project }) {
   const formRef = useRef(null);
   const [editImg, setEditImg] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupState, setPopupState] = useState({
-    status: '',
-    message: ''
-  });
+  const [popup, setPopup] = useState(null);
 
   const initialState = {
     status: "pending",
@@ -79,23 +77,22 @@ export function ProjectLogoForm({ project }) {
 
   useEffect(() => {
     if (state?.status === "success") {
-      setPopupState({
-        status: "success",
-        message: "Le logo a été mis à jour avec succès"
+      setPopup({
+        status: state?.status,
+        title: "Succès",
+        message: "Logo mis à jour avec succès",
       });
-      setShowPopup(true);
       setEditImg(false);
-      setTimeout(() => setShowPopup(false), 3000);
     }
     if (state?.status === "failure") {
-      setPopupState({
-        status: "error",
-        message: "Une erreur inattendue est survenue"
+      setPopup({
+        status: state?.status,
+        title: "Erreur",
+        message: "Une erreur est survenue lors de la mise à jour du logo",
       });
-      setShowPopup(true);
       setEditImg(false);
-      setTimeout(() => setShowPopup(false), 3000);
     }
+    setTimeout(() => setPopup(false), 4000);
   }, [state]);
 
   function handleUpdateLogo() {
@@ -114,7 +111,11 @@ export function ProjectLogoForm({ project }) {
             onMouseLeave={() => setEditImg(false)}
           >
             <Image
-              src={project?.logo || project?.favicon || "/default-project-logo.webp"}
+              src={
+                project?.logo ||
+                project?.favicon ||
+                "/default-project-logo.webp"
+              }
               alt="Logo du projet"
               width={120}
               height={120}
@@ -143,18 +144,18 @@ export function ProjectLogoForm({ project }) {
         </div>
       </form>
 
-      {showPopup && (
+      {popup && (
         <PopupMessage
-          status={popupState.status}
-          title={popupState.status === "success" ? "Succès" : "Erreur"}
-          message={popupState.message}
+          status={popup.status}
+          title={popup.title}
+          message={popup.message}
         />
       )}
     </>
   );
 }
 
-export function ProjectOptionsForm({ project, setStatusMessage, setStatus }) {
+export function ProjectOptionsForm({ project }) {
   const initialState = {
     status: "pending",
     message: "",
@@ -165,14 +166,27 @@ export function ProjectOptionsForm({ project, setStatusMessage, setStatus }) {
     updateProject,
     initialState
   );
-  const [showPopup, setShowPopup] = useState(false);
+  const [popup, setPopup] = useState(null);
 
   useEffect(() => {
     if (state?.status === "success") {
-      setShowPopup(true);
-      // Masquer le popup après 3 secondes
-      setTimeout(() => setShowPopup(false), 3000);
+      setPopup({
+        status: state?.status,
+        title: "Modifications enregistrées avec succès",
+        message: "Les modifications ont été enregistrées avec succès",
+      });
     }
+
+    if (state?.status === "failure") {
+      setPopup({
+        status: state?.status,
+        title: "Une erreur inattendue s'est produite",
+        message:
+          "Une erreur est survenue lors de l'enregistrement des modifications",
+      });
+    }
+
+    setTimeout(() => setPopup(null), 4000);
   }, [state]);
 
   return (
@@ -224,11 +238,11 @@ export function ProjectOptionsForm({ project, setStatusMessage, setStatus }) {
         </button>
       </form>
 
-      {showPopup && (
+      {popup && (
         <PopupMessage
-          status="success"
-          title="Succès"
-          message="Les modifications ont été enregistrées avec succès"
+          status={popup.status}
+          title={popup.title}
+          message={popup.message}
         />
       )}
     </>

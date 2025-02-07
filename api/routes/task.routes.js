@@ -19,6 +19,13 @@ router.get(
   taskControllers.getTasks
 );
 
+router.get(
+  "/:id",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.getTask
+);
+
 router.patch(
   "/:id/text",
   authMiddlewares.auth,

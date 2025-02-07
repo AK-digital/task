@@ -3,15 +3,18 @@
     flex-direction: column;
     top: 40px;
     right: -50px;
-    width: 450px;
+    width: 600px;
     padding: 0 !important;
-
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .header {
     font-weight: bold;
     font-size: 1.1rem;
 }
+
+
 
 .notifications {
     display: flex;
@@ -29,14 +32,22 @@
     justify-content: space-between;
 }
 
+.left {
+    display: flex;
+    gap: 8px;
+}
+
 .header,
 .messsage,
+.empty,
 .notification a {
     padding: 14px;
 }
 
 .message {
-    max-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .title {
@@ -54,4 +65,5 @@
 
 .date {
     text-align: right;
+    min-width: max-content;
 }

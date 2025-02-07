@@ -5,8 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState, useEffect, useCallback } from "react";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
+import { useRouter } from "next/navigation";
 
 export default function TaskMore({ task, setTaskMore, project }) {
+  const [open, setOpen] = useState(true);
+  const router = useRouter();
   const containerRef = useRef(null);
   const [editDescription, setEditDescription] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -25,23 +28,26 @@ export default function TaskMore({ task, setTaskMore, project }) {
     setStartWidth(null);
   }, []);
 
-  const resize = useCallback((e) => {
-    if (isResizing && startX !== null && startWidth !== null) {
-      const diff = startX - e.clientX;
-      const maxWidth = window.innerWidth - 80; // calc(100% - 80px)
-      const newWidth = Math.min(maxWidth, Math.max(300, startWidth + diff));
-      containerRef.current.style.width = `${newWidth}px`;
-    }
-  }, [isResizing, startX, startWidth]);
+  const resize = useCallback(
+    (e) => {
+      if (isResizing && startX !== null && startWidth !== null) {
+        const diff = startX - e.clientX;
+        const maxWidth = window.innerWidth - 80; // calc(100% - 80px)
+        const newWidth = Math.min(maxWidth, Math.max(300, startWidth + diff));
+        containerRef.current.style.width = `${newWidth}px`;
+      }
+    },
+    [isResizing, startX, startWidth]
+  );
 
   useEffect(() => {
     if (isResizing) {
-      window.addEventListener('mousemove', resize);
-      window.addEventListener('mouseup', stopResizing);
+      window.addEventListener("mousemove", resize);
+      window.addEventListener("mouseup", stopResizing);
     }
     return () => {
-      window.removeEventListener('mousemove', resize);
-      window.removeEventListener('mouseup', stopResizing);
+      window.removeEventListener("mousemove", resize);
+      window.removeEventListener("mouseup", stopResizing);
     };
   }, [isResizing, resize, stopResizing]);
 
@@ -56,14 +62,25 @@ export default function TaskMore({ task, setTaskMore, project }) {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleClose = () => {
-    setTaskMore(false);
-  };
+    setOpen(false);
+    const container = containerRef.current;
+    container?.classList?.add(styles["container-close"]);
 
+    const handleAnimationEnd = () => {
+      // Remove the event listener first to prevent multiple calls
+      container?.removeEventListener("animationend", handleAnimationEnd);
+      router.push(`/project/${task?.projectId}`);
+    };
+
+    container?.addEventListener("animationend", handleAnimationEnd, {
+      once: true,
+    });
+  };
   return (
     <>
       <div className={styles.container} ref={containerRef}>
@@ -113,7 +130,7 @@ export default function TaskMore({ task, setTaskMore, project }) {
           />
         </div>
       </div>
-      <div onClick={handleClose} id="modal-layout"></div>
+      {open && <div onClick={handleClose} id="modal-layout"></div>}
     </>
   );
 }

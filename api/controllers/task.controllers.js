@@ -87,6 +87,36 @@ export async function getTasks(req, res, next) {
   }
 }
 
+// Only authors and guets will be able to get the tasks
+export async function getTask(req, res, next) {
+  try {
+    const projectId = req.query.projectId;
+
+    const task = await TaskModel.findById({
+      _id: req.params.id,
+      projectId: projectId,
+    });
+
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de trouver la tâche",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Tâches trouvée",
+      data: task,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 // Only authors and guets will be able to update the tasks
 export async function updateTaskText(req, res, next) {
   try {

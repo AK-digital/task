@@ -11,6 +11,7 @@ import NoPicture from "@/components/User/NoPicture";
 import getNotifications from "@/api/notification";
 import useSWR from "swr";
 import socket from "@/utils/socket";
+import Link from "next/link";
 
 export default function ProjectHeader({ project }) {
   const [notifOpen, setNotifOpen] = useState(false);
@@ -75,13 +76,15 @@ export default function ProjectHeader({ project }) {
               ))}
               {/* Project author */}
               <div className={styles.guestAvatar}>
-                <Image
-                  src={project?.author?.picture || "/default-pfp.webp"}
-                  alt={`${project?.author?.firstName} ${project?.author?.lastName}`}
-                  width={32}
-                  height={32}
-                  className={styles.avatar}
-                />
+                <Link href={"/profile"}>
+                  <Image
+                    src={project?.author?.picture || "/default-pfp.webp"}
+                    alt={`${project?.author?.firstName} ${project?.author?.lastName}`}
+                    width={32}
+                    height={32}
+                    className={styles.avatar}
+                  />
+                </Link>
               </div>
             </div>
             <div

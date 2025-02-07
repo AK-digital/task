@@ -6,11 +6,13 @@ import Image from "next/image";
 import { useActionState, useEffect, useState } from "react";
 import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
+import socket from "@/utils/socket";
 
 const initialState = {
   status: "pending",
   message: "",
   errors: null,
+  guestId: null,
 };
 
 export default function GuestsModal({ project, setIsOpen }) {
@@ -42,7 +44,10 @@ export default function GuestsModal({ project, setIsOpen }) {
       setIsPopup(null);
     }, 4000);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      socket.off("project user remove");
+    };
   }, [state, isPopup]);
 
   return (

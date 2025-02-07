@@ -3,11 +3,13 @@ import dynamic from "next/dynamic";
 import styles from "@/styles/components/richTextEditor/richTextEditor.module.css";
 import { updateDescription } from "@/api/task";
 import { instrumentSans } from "@/utils/font";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import "react-quill/dist/quill.snow.css";
 import { saveMessage, updateMessage } from "@/api/message";
 import { mutate } from "swr";
 import TaggedUsersModal from "../Modals/TaggedUsersModal";
+import socket from "@/utils/socket";
+import { AuthContext } from "@/context/auth";
 
 // Import dynamique de ReactQuill
 const ReactQuill = dynamic(
@@ -67,6 +69,7 @@ export default function RichTextEditor({
   setConvLoading,
   setEditDescription,
 }) {
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
   const [filteredGuests, setFilteredGuests] = useState([]);
@@ -182,12 +185,25 @@ export default function RichTextEditor({
       if (isEmpty) {
         await updateDescription(task?._id, task?.projectId, "", []);
       } else {
-        await updateDescription(
+        const res = await updateDescription(
           task?._id,
           task?.projectId,
           content,
           taggedUsers
         );
+
+        if (res?.success) {
+          const message = {
+            title: `${user?.firstName} vous a mentionné(e) dans une description`,
+            content: `Vous venez d'être mentionné(e) dans une description "${project?.name}".`,
+          };
+          const link =
+            "/project/" + res?.data?.projectId + "/task/" + task?._id;
+
+          for (const taggedUser of taggedUsers) {
+            socket.emit("create notification", user, taggedUser, message, link);
+          }
+        }
       }
       setEditDescription(false);
     }
@@ -204,6 +220,16 @@ export default function RichTextEditor({
         await mutate(
           `/message?projectId=${task?.projectId}&taskId=${task?._id}`
         );
+
+        const message = {
+          title: `${user?.firstName} vous a mentionné(e) dans une conversation`,
+          content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
+        };
+        const link = "/project/" + res?.data?.projectId + "/task/" + task?._id;
+
+        for (const taggedUser of taggedUsers) {
+          socket.emit("create notification", user, taggedUser, message, link);
+        }
       }
     }
 
@@ -220,6 +246,16 @@ export default function RichTextEditor({
         await mutate(
           `/message?projectId=${message?.projectId}&taskId=${message?.taskId}`
         );
+
+        const message = {
+          title: `${user?.firstName} vous a mentionné(e) dans une conversation`,
+          content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
+        };
+        const link = "/project/" + res?.data?.projectId + "/task/" + task?._id;
+
+        for (const taggedUser of taggedUsers) {
+          socket.emit("create notification", user, taggedUser, message, link);
+        }
       }
       setConvLoading(false);
     }
