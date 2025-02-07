@@ -92,7 +92,10 @@ export function ProjectLogoForm({ project }) {
       });
       setEditImg(false);
     }
-    setTimeout(() => setPopup(false), 4000);
+    // Hide the popup after 4 seconds
+    const timeout = setTimeout(() => setPopup(false), 4000);
+
+    return () => clearTimeout(timeout);
   }, [state]);
 
   function handleUpdateLogo() {
@@ -186,7 +189,10 @@ export function ProjectOptionsForm({ project }) {
       });
     }
 
-    setTimeout(() => setPopup(null), 4000);
+    // Hide the popup after 4 seconds
+    const timeout = setTimeout(() => setPopup(false), 4000);
+
+    return () => clearTimeout(timeout);
   }, [state]);
 
   return (

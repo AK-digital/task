@@ -41,7 +41,9 @@ export default function ProfileForm() {
     }
 
     // Hide the popup after 4 seconds
-    setTimeout(() => setPopup(false), 4000);
+    const timeout = setTimeout(() => setPopup(false), 4000);
+
+    return () => clearTimeout(timeout);
   }, [state]);
 
   return (
