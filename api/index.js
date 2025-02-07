@@ -15,7 +15,6 @@ import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import UserModel from "./models/User.model.js";
 import NotificationModel from "./models/Notification.model.js";
-import mongoose from "mongoose";
 
 const app = express();
 const server = createServer(app);

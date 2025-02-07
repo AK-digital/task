@@ -3,11 +3,11 @@ import { getProject } from "@/api/project";
 import { getBoards } from "@/api/board";
 import ProjectHeader from "@/layouts/ProjectHeader";
 import styles from "@/styles/pages/project.module.css";
-import AddBoard from "@/components/boards/AddBoard";
-import Boards from "@/components/boards/Boards";
 import { isNotEmpty } from "@/utils/utils";
 import TaskMore from "@/components/tasks/TaskMore";
 import { getTask } from "@/api/task";
+import AddBoard from "@/components/Boards/AddBoard";
+import Boards from "@/components/Boards/Boards";
 
 export default async function Project({ params }) {
   const { slug } = await params;

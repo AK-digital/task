@@ -26,7 +26,7 @@ export default function ProfileForm() {
     if (state?.status === "success") {
       mutate("/auth/session");
       setPopup({
-        status: state?.success,
+        status: state?.status,
         title: "Succès",
         message: "Profil mis à jour avec succès",
       });
@@ -34,7 +34,7 @@ export default function ProfileForm() {
 
     if (state?.status === "failure") {
       setPopup({
-        status: state?.success,
+        status: state?.status,
         title: "Erreur",
         message: "Une erreur s'est produite lors de la mise à jour du profil",
       });
