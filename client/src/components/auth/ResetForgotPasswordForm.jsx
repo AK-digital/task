@@ -35,7 +35,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
 
   return (
     <div className={styles.container}>
-      <h1>Réinitialisation de votre mot de passe ?</h1>
+      <div className={styles.title}>Réinitialisation de votre mot de passe ?</div>
       {statusMessage && (
         <div className={styles.messageStatus}>
           <span data-status={state?.status}>{statusMessage}</span>

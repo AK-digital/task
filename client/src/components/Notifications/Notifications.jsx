@@ -70,11 +70,11 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
                           <span>{notif?.message?.title}</span>
                         </div>
                         <div className={styles.content}>
-                          <span>{notif?.message?.content}</span>
+                          {notif?.message?.content}
                         </div>
                       </div>
                       <div className={styles.date}>
-                        <span>{dateFromNow}</span>
+                        {dateFromNow}
                       </div>
                     </Link>
                   </li>

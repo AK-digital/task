@@ -21,17 +21,38 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
+}
+
+.projectsItem {
+    transition: all 0.3s ease;
+    transform-origin: center;
+    will-change: transform;
+    position: relative;
 }
 
 .projectsItem img {
-    border: 2px solid #44455e;
+    border: 3px solid transparent;
     transition: 150ms all linear;
 }
 
 .projectsItem img[data-active="true"] {
-    border: 2px solid var(--accent-color);
+    border: 3px solid var(--accent-color);
     transition: 150ms all linear;
+}
+
+.projectsItem[data-active="true"] {
+    order: -1;
+}
+
+.projectsItem[data-active="true"]::after {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    background-color: var(--accent-color);
+    right: -13px;
+    top: 0;
 }
 
 .footer {
@@ -43,4 +64,20 @@
 
 .signOut {
     margin-top: 10px;
+}
+
+.dragHandle {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    transition: transform 0.3s ease;
+}
+
+.isDragging {
+    cursor: grab;
+    z-index: 1;
+}
+
+.isDragging:active {
+    cursor: grabbing;
 }

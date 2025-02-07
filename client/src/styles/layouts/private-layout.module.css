@@ -1,6 +1,6 @@
 .private-layout {
     display: flex;
-
+    height: 100%;
 }
 
 .private-layout__aside {
@@ -14,4 +14,5 @@
 .private-layout__main {
     width: calc(100% - var(--aside-width));
     margin-left: var(--aside-width);
+    height: 100%;
 }

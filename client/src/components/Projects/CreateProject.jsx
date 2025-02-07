@@ -14,7 +14,7 @@ const initialState = {
   errors: null,
 };
 
-export default function CreateProject() {
+export default function CreateProject({ onProjectCreated }) {
   const [isCreating, setIsCreating] = useState(false);
   const [state, formAction, pending] = useActionState(
     saveProject,
@@ -27,9 +27,9 @@ export default function CreateProject() {
   useEffect(() => {
     if (state?.status === "success" && state?.data?._id) {
       setIsCreating(false);
-      // Utilisation de la nouvelle URL avec l'ID du projet
-      router.push(`/project/${state.data._id}`);
-      router.refresh(); // Pour forcer un rechargement des données
+      router.refresh();
+      // Correction de l'URL de redirection
+      router.push(`/project/${state.data._id}/`);
     }
   }, [state, router]);
 
@@ -49,6 +49,23 @@ export default function CreateProject() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isCreating]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await saveProject(formData);
+
+      if (response.success) {
+        // Appeler la fonction de callback avec le nouveau projet
+        onProjectCreated(response.data);
+        // Réinitialiser le formulaire ou fermer la modal
+        // ...
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du projet:", error);
+    }
+  };
 
   return (
     <div className={styles.container}>

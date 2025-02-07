@@ -62,8 +62,8 @@ export default function GuestsModal({ project, setIsOpen }) {
                     <div>
                       <Image
                         src={guest?.picture || "/default-pfp.webp"}
-                        width={35}
-                        height={35}
+                        width={32}
+                        height={32}
                         alt={`Photo de profil de ${guest?.firstName}`}
                         style={{
                           borderRadius: "50%",

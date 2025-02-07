@@ -64,12 +64,12 @@ export default function ProjectHeader({ project }) {
                     <Image
                       src={guest?.picture || "/default-pfp.webp"}
                       alt={`${guest.firstName} ${guest.lastName}`}
-                      width={35}
-                      height={35}
+                      width={32}
+                      height={32}
                       className={styles.avatar}
                     />
                   ) : (
-                    <NoPicture user={guest} width={"35px"} height={"35px"} />
+                    <NoPicture user={guest} width={"32px"} height={"32px"} />
                   )}
                 </div>
               ))}
@@ -78,8 +78,8 @@ export default function ProjectHeader({ project }) {
                 <Image
                   src={project?.author?.picture || "/default-pfp.webp"}
                   alt={`${project?.author?.firstName} ${project?.author?.lastName}`}
-                  width={35}
-                  height={35}
+                  width={32}
+                  height={32}
                   className={styles.avatar}
                 />
               </div>

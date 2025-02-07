@@ -24,16 +24,50 @@ export async function saveProject(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
+    // Trouver l'ordre maximum actuel
+    const maxOrder = await ProjectModel.findOne({
+      $or: [{ author: authUser._id }, { guests: authUser?._id }],
+    })
+      .sort({ order: -1 })
+      .select('order');
+
     const newProject = new ProjectModel({
       author: authUser?._id,
       name: name,
+      order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
     });
 
     const savedProject = await newProject.save();
 
+    // Créer un tableau par défaut
+    const defaultBoard = new BoardModel({
+      projectId: savedProject._id,
+      author: authUser._id,
+      title: "Votre premier tableau",
+    });
+
+    const savedBoard = await defaultBoard.save();
+
+    // Utiliser la même logique que dans board.controllers.js
+    const randomIndex = Math.floor(Math.random() * savedBoard?.colors.length);
+    const randomColor = savedBoard?.colors[randomIndex];
+
+    await BoardModel.findByIdAndUpdate(
+      { _id: savedBoard._id },
+      {
+        $set: {
+          color: randomColor,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
     return res.status(201).send({
       success: true,
-      message: "Projet créée avec succès",
+      message: "Projet créé avec succès",
       data: savedProject,
     });
   } catch (err) {
@@ -47,12 +81,12 @@ export async function saveProject(req, res, next) {
 // Only authors and guests will be able to see the projects
 export async function getProjects(req, res, next) {
   try {
-    const authUser = res.locals.user; // Getting the informations of the logged user
+    const authUser = res.locals.user;
 
-    // Only if auth user is the author or if the auth user is in guests array the projects will be returned
     const projects = await ProjectModel.find({
       $or: [{ author: authUser._id }, { guests: authUser?._id }],
-    });
+    })
+      .sort({ order: 1 }); // Ajout du tri par ordre
 
     if (projects.length <= 0) {
       return res.status(404).send({
@@ -75,16 +109,40 @@ export async function getProjects(req, res, next) {
 }
 
 // Only authors and guests will be able to see the project
+async function getFaviconUrl(websiteUrl) {
+  try {
+    const response = await fetch(websiteUrl);
+    const html = await response.text();
+
+    // Créer un parseur HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Chercher les balises link avec rel="icon" ou rel="shortcut icon"
+    const iconLink = doc.querySelector('link[rel="icon"], link[rel="shortcut icon"]');
+
+    if (iconLink) {
+      const faviconUrl = iconLink.getAttribute('href');
+      // Convertir en URL absolue si nécessaire
+      const absoluteUrl = new URL(faviconUrl, websiteUrl).toString();
+      return absoluteUrl;
+    }
+
+    // Fallback sur le favicon par défaut
+    return `${websiteUrl}/favicon.ico`;
+  } catch (error) {
+    console.error("Erreur lors de la récupération du favicon:", error);
+    return null;
+  }
+}
+
 export async function getProject(req, res, next) {
   try {
     let query = {};
 
-    // Checking if the params is a valid object ID
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      // Then try to get the project by his ID
       query._id = req.params.id;
     } else {
-      // If not then try to get the project by his name
       query.name = {
         $regex: req.params.id.replaceAll("-", " "),
         $options: "i",
@@ -103,6 +161,18 @@ export async function getProject(req, res, next) {
         success: false,
         message: "Aucun projet n'a été trouvé dans la base de données",
       });
+    }
+
+    // Si pas de logo mais une URL WordPress, on cherche le favicon
+    if (!project.logo && project.settings?.urlWordpress) {
+      try {
+        const faviconUrl = await getFaviconUrl(project.settings.urlWordpress);
+        if (faviconUrl) {
+          project.favicon = faviconUrl;
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du favicon:", error);
+      }
     }
 
     return res.status(200).send({
@@ -177,7 +247,7 @@ export async function updateProjectLogo(req, res) {
       });
     }
 
-    const project = await ProjectModel.findById({ _id: req.params.id });
+    const project = await ProjectModel.findById(req.params.id);
 
     if (!project) {
       return res.status(404).json({
@@ -186,16 +256,38 @@ export async function updateProjectLogo(req, res) {
       });
     }
 
-    if (project?.logo) {
-      await destroyFile("project", project?.logo);
+    // Si un logo existe déjà, on le supprime d'abord
+    if (project.logo) {
+      try {
+        // Extraire l'ID public de l'URL Cloudinary
+        const urlParts = project.logo.split('/');
+        const filenameWithExtension = urlParts[urlParts.length - 1];
+        const publicId = filenameWithExtension.split('.')[0];
+
+        if (publicId) {
+          await destroyFile("task/project", publicId);
+        }
+      } catch (deleteError) {
+        console.error("Erreur lors de la suppression de l'ancien logo:", deleteError);
+        // On continue même si la suppression échoue
+      }
     }
 
-    const uploadedFile = await uploadFileBuffer("task/project", logo?.buffer);
+    // Upload du nouveau fichier
+    const uploadedFile = await uploadFileBuffer(
+      "task/project",
+      logo.buffer,
+      `project_${project._id}_${Date.now()}`  // Nom de fichier unique
+    );
+
+    if (!uploadedFile || !uploadedFile.secure_url) {
+      throw new Error("Échec de l'upload du fichier");
+    }
 
     const updatedProject = await ProjectModel.findByIdAndUpdate(
-      { _id: req.params.id },
-      { logo: uploadedFile?.secure_url },
-      { new: true, setDefaultsOnInsert: true }
+      req.params.id,
+      { logo: uploadedFile.secure_url },
+      { new: true }
     );
 
     return res.status(200).json({
@@ -204,9 +296,10 @@ export async function updateProjectLogo(req, res) {
       data: updatedProject,
     });
   } catch (error) {
+    console.error("Erreur lors de la mise à jour du logo:", error);
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Une erreur est survenue lors de la mise à jour du logo",
     });
   }
 }
@@ -403,3 +496,29 @@ export async function removeGuest(req, res, next) {
     });
   }
 }
+
+export const updateProjectsOrder = async (req, res) => {
+  try {
+    const { projects } = req.body;
+
+    // Mise à jour en masse des ordres
+    const bulkOps = projects.map((project, index) => ({
+      updateOne: {
+        filter: { _id: project._id },
+        update: { $set: { order: index } }
+      }
+    }));
+
+    await ProjectModel.bulkWrite(bulkOps);
+
+    return res.status(200).json({
+      success: true,
+      message: "Ordre des projets mis à jour"
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

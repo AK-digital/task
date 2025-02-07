@@ -30,7 +30,7 @@ export default function SendResetCodeForm({ setForgotPassword, setSignIn }) {
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        <span>Vous avez oublié votre mot de passe ?</span>
+        Vous avez oublié votre mot de passe ?
       </div>
       {messageStatus && (
         <div className={styles.messageStatus}>
