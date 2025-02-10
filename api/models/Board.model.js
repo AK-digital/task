@@ -27,7 +27,7 @@ const boardSchema = new Schema(
         "#26A65B",
         "#F5D76E",
         "#663399",
-        "#E74C3C"
+        "#E74C3C",
       ],
     },
     color: {

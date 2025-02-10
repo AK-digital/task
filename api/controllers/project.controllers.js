@@ -389,12 +389,9 @@ export async function sendProjectInvitationToGuest(req, res, next) {
 // Accept project invitation
 export async function acceptProjectInvitation(req, res, next) {
   try {
-    const authUser = res.locals.user;
     const { invitationId } = req.body;
 
     const projectInvitation = await ProjectInvitationModel.findOne({
-      guestEmail: authUser?.email,
-      status: "pending",
       _id: invitationId,
     });
 

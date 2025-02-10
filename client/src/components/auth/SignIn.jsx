@@ -4,9 +4,10 @@ import { signIn } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
 import { instrumentSans } from "@/utils/font";
 import { getCookie } from "cookies-next";
+import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 const initialState = {
   status: "pending",
@@ -17,6 +18,7 @@ const initialState = {
 
 export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
   const router = useRouter();
+  const [hiddenPassword, setHiddenPassword] = useState(true);
   const [state, formAction, pending] = useActionState(signIn, initialState);
 
   function handleSignUp(e) {
@@ -58,6 +60,7 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
             type="email"
             name="email"
             id="email"
+            autoComplete="email"
             placeholder="Email"
             defaultValue={state?.payload?.email}
           />
@@ -65,12 +68,24 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
         <div className={styles.password}>
           <label htmlFor="password">Mot de passe</label>
           <input
-            type="password"
+            type={hiddenPassword ? "password" : "text"}
             name="password"
             id="password"
+            autoComplete="current-password"
             placeholder="Mot de passe"
             defaultValue={state?.payload?.password}
           />
+          {hiddenPassword ? (
+            <Eye
+              className={styles.eye}
+              onClick={(e) => setHiddenPassword(false)}
+            />
+          ) : (
+            <EyeOff
+              className={styles.eye}
+              onClick={(e) => setHiddenPassword(true)}
+            />
+          )}
           <span
             className={styles.forgotPassword}
             onClick={(e) => {

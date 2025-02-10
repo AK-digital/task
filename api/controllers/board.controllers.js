@@ -23,14 +23,18 @@ export async function saveBoard(req, res, next) {
     const randomIndex = Math.floor(Math.random() * savedBoard?.colors.length);
     const randomColor = savedBoard?.colors[randomIndex];
 
-    await BoardModel.findByIdAndUpdate({ _id: savedBoard._id }, {
-      $set: {
-        color: randomColor,
+    await BoardModel.findByIdAndUpdate(
+      { _id: savedBoard._id },
+      {
+        $set: {
+          color: randomColor,
+        },
       },
-    }, {
-      new: true,
-      setDefaultsOnInsert: true,
-    });
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
 
     return res.status(201).send({
       success: true,

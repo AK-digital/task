@@ -98,6 +98,20 @@ router.patch(
 );
 
 router.patch(
+  "/:id/set-timer",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.setTimer
+);
+
+router.patch(
+  "/:id/remove-session",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.removeTaskSession
+);
+
+router.patch(
   "/reorder",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,

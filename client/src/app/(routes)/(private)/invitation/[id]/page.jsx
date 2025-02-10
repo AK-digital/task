@@ -3,7 +3,6 @@ import { acceptProjectInvitation } from "@/actions/project";
 import { deleteCookie } from "cookies-next";
 import { setCookie } from "cookies-next/client";
 import { useParams, useRouter } from "next/navigation";
-
 import useSWR from "swr";
 
 export default function Invitation() {
@@ -17,7 +16,6 @@ export default function Invitation() {
           setCookie("invitationId", id);
           return;
         }
-        console.log(data);
       } else {
         const project = data?.data;
         deleteCookie("invitationId");

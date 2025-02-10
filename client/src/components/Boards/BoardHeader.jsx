@@ -5,6 +5,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import DeleteBoard from "./DeleteBoard";
+import { openCloseBoard } from "@/api/board";
 
 export default function BoardHeader({
   board,
@@ -48,18 +49,25 @@ export default function BoardHeader({
     debouncedUpdateTask(value);
   };
 
+  async function handleOpenCloseBoard() {
+    if (window !== undefined) {
+      localStorage.setItem(`board-${board?._id}`, !open);
+    }
+    setOpen(!open);
+  }
+
   return (
     <div className={styles.container} data-open={open}>
       {open ? (
         <ChevronDown
           style={{ color: `${optimisticColor}` }}
-          onClick={(e) => setOpen(!open)}
+          onClick={handleOpenCloseBoard}
           size={20}
         />
       ) : (
         <ChevronRight
           style={{ color: `${optimisticColor}` }}
-          onClick={(e) => setOpen(!open)}
+          onClick={handleOpenCloseBoard}
           size={20}
         />
       )}

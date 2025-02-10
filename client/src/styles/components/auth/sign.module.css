@@ -23,6 +23,7 @@
 
 .formGroup,
 .password {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -41,6 +42,19 @@
 .password {
     position: relative;
     margin-bottom: 14px;
+}
+
+.password input {
+    padding-right: 40px;
+}
+
+.eye {
+    position: absolute;
+    right: 12px;
+    top: 35px;
+    width: 20px;
+    cursor: pointer;
+    color: var(--text-color-muted);
 }
 
 .forgotPassword {

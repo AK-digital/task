@@ -1,19 +1,33 @@
-import { taskEndTimer, taskStartTimer } from "@/api/task";
+import { taskSetTimer } from "@/actions/task";
+import { removeTaskSession, taskEndTimer, taskStartTimer } from "@/api/task";
+import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
-import { isNotEmpty } from "@/utils/utils";
 import { faPauseCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Delete, MinusCircle, PlusCircle } from "lucide-react";
+import moment from "moment";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useActionState,
+  useContext,
+} from "react";
 
 export default function TaskTimer({ task }) {
   const [timer, setTimer] = useState(
     Math.floor((task?.timeTracking?.totalTime || 0) / 1000)
   );
   const [more, setMore] = useState(false);
+  const [addingSession, setAddingSession] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
 
-  const sessions = task?.timeTracking?.sessions;
+  const sessions = task?.timeTracking?.sessions || [];
+
+  useEffect(() => {
+    setTimer(Math.floor((task?.timeTracking?.totalTime || 0) / 1000));
+  }, [task]);
 
   useEffect(() => {
     let intervalId;
@@ -21,23 +35,21 @@ export default function TaskTimer({ task }) {
       intervalId = setInterval(() => {
         setTimer((prevTimer) => prevTimer + 1);
       }, 1000);
-    } else {
-      clearInterval(intervalId);
     }
     return () => clearInterval(intervalId);
   }, [isRunning]);
 
-  async function handlePauseTimer() {
+  const handlePauseTimer = async () => {
     setIsRunning(false);
     await taskEndTimer(task?._id, task?.projectId);
-  }
+  };
 
-  async function handlePlayTimer() {
+  const handlePlayTimer = async () => {
     setIsRunning(true);
     await taskStartTimer(task?._id, task?.projectId);
-  }
+  };
 
-  const formatTime = (totalSeconds) => {
+  const formatTime = useCallback((totalSeconds) => {
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
     const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
       2,
@@ -45,60 +57,178 @@ export default function TaskTimer({ task }) {
     );
     const seconds = String(totalSeconds % 60).padStart(2, "0");
     return `${hours}:${minutes}:${seconds}`;
-  };
-
-  // Fonction pour transformer les sessions en un tableau structuré
-  const getSessionDetails = (sessions) => {
-    return Object.values(
-      sessions.reduce((acc, session) => {
-        const userId = session?.userId?._id;
-        if (!userId) return acc;
-
-        if (!acc[userId]) {
-          acc[userId] = {
-            user: session.userId,
-            totalDuration: 0,
-          };
-        }
-
-        acc[userId].totalDuration += session.duration || 0;
-        return acc;
-      }, {})
-    );
-  };
-
-  const sessionDetails = isNotEmpty(sessions)
-    ? getSessionDetails(sessions)
-    : [];
+  }, []);
 
   return (
-    <div
-      className={styles.container}
-      data-running={isRunning}
-      onMouseEnter={(e) => setMore(true)}
-      onMouseLeave={(e) => setMore(false)}
-    >
-      <span>
-        {isRunning ? (
-          <FontAwesomeIcon
-            icon={faPauseCircle}
-            data-running={isRunning}
-            onClick={handlePauseTimer}
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon={faPlayCircle}
-            data-running={isRunning}
-            onClick={handlePlayTimer}
-          />
-        )}
-        {formatTime(timer)}
+    <div className={styles.container} data-running={isRunning}>
+      <span className={styles.timer}>
+        <FontAwesomeIcon
+          icon={isRunning ? faPauseCircle : faPlayCircle}
+          data-running={isRunning}
+          onClick={isRunning ? handlePauseTimer : handlePlayTimer}
+        />
+        <span onClick={() => setMore(true)}>{formatTime(timer)}</span>
       </span>
-      {sessionDetails.length > 0 && more && (
-        <div className={styles.more} id="popover">
-          <ul>
-            {sessionDetails.map(({ user, totalDuration }) => (
-              <li key={user._id}>
+      {more && (
+        <div
+          className={styles.more}
+          id="popover"
+          onMouseLeave={() => setMore(false)}
+        >
+          <div className={styles.title}>
+            <span>Gestion du temps</span>
+            {addingSession && (
+              <span
+                className={styles.back}
+                onClick={(e) => setAddingSession(false)}
+              >
+                Retour
+              </span>
+            )}
+          </div>
+          {addingSession ? (
+            <TimeTrackingForm task={task} formatTime={formatTime} />
+          ) : (
+            <div className={styles.content}>
+              <div className={styles.addTime}>
+                <button onClick={() => setAddingSession(true)}>
+                  Ajouter une session
+                </button>
+              </div>
+              <TimeTrackingSessions
+                task={task}
+                sessions={sessions}
+                formatTime={formatTime}
+              />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function TimeTrackingForm({ task, formatTime }) {
+  const [startTime, setStartTime] = useState(moment().format("HH:mm"));
+  const [endTime, setEndTime] = useState("");
+  const [timeExpected, setTimeExpected] = useState("00:00:00");
+
+  const initialState = {
+    status: "pending",
+    message: "",
+    data: null,
+    errors: null,
+  };
+  const taskSetTimerWithIds = taskSetTimer.bind(null, task._id, task.projectId);
+  const [state, formAction, pending] = useActionState(
+    taskSetTimerWithIds,
+    initialState
+  );
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      setStartTime(moment().format("HH:mm"));
+      setEndTime("");
+      setTimeExpected("00:00:00");
+    }
+  }, [state]);
+
+  const calculateTimeDifference = (startTime, endTime) => {
+    if (!startTime || !endTime) return;
+
+    const [startHours, startMinutes] = startTime.split(":");
+    const [endHours, endMinutes] = endTime.split(":");
+
+    const startDate = new Date();
+    startDate.setHours(parseInt(startHours), parseInt(startMinutes), 0);
+
+    const endDate = new Date();
+    endDate.setHours(parseInt(endHours), parseInt(endMinutes), 0);
+
+    if (endDate < startDate) {
+      endDate.setDate(endDate.getDate() + 1);
+    }
+
+    const diffInSeconds = Math.floor((endDate - startDate) / 1000);
+    return formatTime(diffInSeconds);
+  };
+
+  const handleStartTimeChange = (e) => {
+    setStartTime(e.target.value);
+    if (endTime) {
+      setTimeExpected(calculateTimeDifference(e.target.value, endTime));
+    }
+  };
+
+  const handleEndTimeChange = (e) => {
+    setEndTime(e.target.value);
+    if (startTime) {
+      setTimeExpected(calculateTimeDifference(startTime, e.target.value));
+    }
+  };
+
+  return (
+    <div className={styles.content}>
+      <form action={formAction} className={styles.form}>
+        <div>
+          <label>Date de début</label>
+          <input
+            type="date"
+            name="date"
+            id="date"
+            defaultValue={moment().format("YYYY-MM-DD")}
+          />
+        </div>
+        <div className={styles.timeInputs}>
+          <div>
+            <label>Heure de début</label>
+            <input
+              type="time"
+              name="start-time"
+              id="start-time"
+              onChange={handleStartTimeChange}
+              defaultValue={moment().format("HH:mm")}
+            />
+          </div>
+          <div>
+            <label>Heure de fin</label>
+            <input
+              type="time"
+              name="end-time"
+              id="end-time"
+              onChange={handleEndTimeChange}
+            />
+          </div>
+        </div>
+        <div className={styles.buttons}>
+          <span>{timeExpected}</span>
+          <button type="submit" disabled={pending} data-disabled={pending}>
+            Ajouter la session
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export function TimeTrackingSessions({ task, sessions, formatTime }) {
+  const { uid } = useContext(AuthContext);
+  async function handleDeleteSession(sessionId) {
+    await removeTaskSession(task._id, task.projectId, sessionId);
+  }
+
+  return (
+    <div className={styles.sessions} data-overflow={sessions?.length > 6}>
+      <ul>
+        {sessions.map((session, index) => {
+          const user = session?.userId;
+          const endDate = moment(session?.endTime).format("D MMM");
+          const hoursStart = moment(session?.startTime).format("HH:mm");
+          const hoursEnd = moment(session?.endTime).format("HH:mm");
+
+          return (
+            <li key={session._id}>
+              <div className={styles.monthDay}>
                 <Image
                   src={user.picture || "/default-pfp.webp"}
                   width={25}
@@ -106,12 +236,26 @@ export default function TaskTimer({ task }) {
                   style={{ borderRadius: "50%" }}
                   alt={`Photo de profil de ${user?.firstName}`}
                 />
-                <span>{formatTime(Math.floor(totalDuration / 1000))}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                <span>{endDate}</span>
+              </div>
+              <span className={styles.hours}>
+                {hoursStart} à {hoursEnd}
+              </span>
+              <span className={styles.time}>
+                {formatTime(Math.floor(session?.duration / 1000))}
+              </span>
+              {uid === user?._id && (
+                <span
+                  className={styles.delete}
+                  onClick={() => handleDeleteSession(session?._id)}
+                >
+                  <MinusCircle />
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

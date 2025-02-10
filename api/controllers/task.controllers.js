@@ -680,6 +680,129 @@ export async function endTimer(req, res, next) {
   }
 }
 
+export async function setTimer(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { startTime, endTime } = req.body;
+
+    if (!startTime || !endTime) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $push: {
+          "timeTracking.sessions": {
+            userId: authUser?._id,
+            startTime: startTime,
+            endTime: endTime,
+            duration: new Date(endTime) - new Date(startTime),
+          },
+        },
+        $inc: {
+          "timeTracking.totalTime": new Date(endTime) - new Date(startTime),
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de définir le temps d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Le tracking du temps de la tâche a bien été défini",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function removeTaskSession(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { sessionId } = req.body;
+
+    if (!sessionId) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const task = await TaskModel.findById({ _id: req.params.id });
+
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de supprimer une session d'une tâche qui n'existe pas",
+      });
+    }
+
+    const session = task.timeTracking.sessions.id(sessionId);
+
+    if (session?.userId.toString() !== authUser?._id.toString()) {
+      return res.status(403).send({
+        success: false,
+        message: "Vous n'êtes pas autorisé à supprimer cette session",
+      });
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $pull: {
+          "timeTracking.sessions": {
+            _id: sessionId,
+          },
+        },
+        $inc: {
+          "timeTracking.totalTime": -session.duration,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de supprimer la session d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Session supprimée",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function updateTaskOrder(req, res, next) {
   try {
     const { tasks } = req.body;

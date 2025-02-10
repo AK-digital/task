@@ -1,8 +1,9 @@
 import { signUp } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
 import { instrumentSans } from "@/utils/font";
+import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 const initialState = {
   status: "pending",
@@ -12,6 +13,7 @@ const initialState = {
 };
 
 export default function SignUp({ setSignIn, setSignUp }) {
+  const [hiddenPassword, setHiddenPassword] = useState(true);
   const [state, formAction, pending] = useActionState(signUp, initialState);
 
   function handleSignIn(e) {
@@ -45,6 +47,7 @@ export default function SignUp({ setSignIn, setSignUp }) {
             name="last-name"
             id="last-name"
             placeholder="Nom"
+            autoComplete="last-name"
             defaultValue={state?.payload?.lastName}
             required
           />
@@ -57,6 +60,7 @@ export default function SignUp({ setSignIn, setSignUp }) {
             name="first-name"
             id="first-name"
             placeholder="Prénom"
+            autoComplete="first-name"
             defaultValue={state?.payload?.firstName}
             required
           />
@@ -68,6 +72,7 @@ export default function SignUp({ setSignIn, setSignUp }) {
             type="email"
             name="email"
             id="email"
+            autoComplete="email"
             placeholder="Email"
             defaultValue={state?.payload?.email}
             required
@@ -77,13 +82,25 @@ export default function SignUp({ setSignIn, setSignUp }) {
         <div className={styles.formGroup}>
           <label htmlFor="password">Mot de passe</label>
           <input
-            type="password"
+            type={hiddenPassword ? "password" : "text"}
             name="password"
             id="password"
+            autoComplete="password"
             placeholder="Mot de passe"
             defaultValue={state?.payload?.password}
             required
           />
+          {hiddenPassword ? (
+            <Eye
+              className={styles.eye}
+              onClick={(e) => setHiddenPassword(false)}
+            />
+          ) : (
+            <EyeOff
+              className={styles.eye}
+              onClick={(e) => setHiddenPassword(true)}
+            />
+          )}
           {state?.errors?.password && (
             <div className={styles.passwordErr}>
               <i>Le mot de passe doit contenir :</i>

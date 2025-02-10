@@ -335,3 +335,37 @@ export async function taskEndTimer(taskId, projectId) {
     );
   }
 }
+
+export async function removeTaskSession(taskId, projectId, sessionId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/remove-session?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify({ sessionId: sessionId }),
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de la suppression du timer"
+    );
+  }
+}

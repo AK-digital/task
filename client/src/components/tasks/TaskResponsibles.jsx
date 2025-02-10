@@ -31,7 +31,9 @@ export default function TaskResponsibles({ task, project }) {
     (responsible) => responsible?._id === author?._id
   );
 
-  async function handleAddResponsible(e, responsible) {
+  async function handleAddResponsible(responsible) {
+    const previousResponsibles = optimisticResponsibles;
+
     setOptimisticResponsibles((prev) => {
       // Vérifier si le responsable n'existe pas déjà !
       const exists = prev.some((r) => r._id === responsible._id);
@@ -46,7 +48,7 @@ export default function TaskResponsibles({ task, project }) {
     );
 
     if (!response?.success) {
-      setOptimisticResponsibles(responsibles);
+      setOptimisticResponsibles(previousResponsibles);
     }
 
     // If the auth user is the one who assigned the task, don't send a notification
@@ -65,7 +67,7 @@ export default function TaskResponsibles({ task, project }) {
     socket.emit("create notification", user, responsible?.email, message, link);
   }
 
-  async function handleRemoveResponsible(e, responsible) {
+  async function handleRemoveResponsible(responsible) {
     const findDeletedResponsible = optimisticResponsibles.filter(
       (deletedResponsible) => {
         return deletedResponsible?._id !== responsible?._id;
@@ -131,7 +133,7 @@ export default function TaskResponsibles({ task, project }) {
                       <li
                         key={responsible?._id}
                         onClick={(e) => {
-                          handleRemoveResponsible(e, responsible);
+                          handleRemoveResponsible(responsible);
                         }}
                       >
                         <Image
@@ -164,7 +166,7 @@ export default function TaskResponsibles({ task, project }) {
                   {!filteredAuthor && (
                     <li
                       onClick={(e) => {
-                        handleAddResponsible(e, author);
+                        handleAddResponsible(author);
                       }}
                     >
                       <Image
@@ -188,7 +190,7 @@ export default function TaskResponsibles({ task, project }) {
                       <li
                         key={guest?._id}
                         onClick={(e) => {
-                          handleAddResponsible(e, guest);
+                          handleAddResponsible(guest);
                         }}
                       >
                         <Image

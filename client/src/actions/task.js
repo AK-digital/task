@@ -328,3 +328,54 @@ export async function updateTaskDeadline(
     };
   }
 }
+
+export async function taskSetTimer(taskId, projectId, prevState, formData) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const date = formData.get("date");
+    const startTime = formData.get("start-time");
+    const endTime = formData.get("end-time");
+
+    const startDateTime = new Date(`${date}T${startTime}`);
+    const endDateTime = new Date(`${date}T${endTime}`);
+
+    const rawData = {
+      startTime: startDateTime.toISOString(),
+      endTime: endDateTime.toISOString(),
+    };
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/set-timer?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`,
+        },
+        body: JSON.stringify(rawData),
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("tasks");
+
+    return {
+      status: "success",
+      message: "Le timer a été enregistré avec succès",
+      data: response?.data,
+    };
+  } catch (err) {
+    return {
+      status: "failure",
+      message: err.message || "Une erreur est survenue",
+    };
+  }
+}

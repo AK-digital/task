@@ -3,10 +3,11 @@ import { removeGuest } from "@/actions/project";
 import styles from "@/styles/components/modals/guests-modal.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useContext, useEffect, useState } from "react";
 import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 import socket from "@/utils/socket";
+import { AuthContext } from "@/context/auth";
 
 const initialState = {
   status: "pending",
@@ -16,6 +17,7 @@ const initialState = {
 };
 
 export default function GuestsModal({ project, setIsOpen }) {
+  const { uid } = useContext(AuthContext);
   const [isPopup, setIsPopup] = useState(null);
   const removeGuestWithId = removeGuest.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
@@ -76,18 +78,20 @@ export default function GuestsModal({ project, setIsOpen }) {
                       />
                       <span>{guest?.email}</span>
                     </div>
-                    <form action={formAction}>
-                      <input
-                        type="text"
-                        name="guest-id"
-                        id="guest-id"
-                        defaultValue={guest?._id}
-                        hidden
-                      />
-                      <button type="submit" data-disabled={pending}>
-                        Révoquer
-                      </button>
-                    </form>
+                    {uid === project?.author?._id && (
+                      <form action={formAction}>
+                        <input
+                          type="text"
+                          name="guest-id"
+                          id="guest-id"
+                          defaultValue={guest?._id}
+                          hidden
+                        />
+                        <button type="submit" data-disabled={pending}>
+                          Révoquer
+                        </button>
+                      </form>
+                    )}
                   </li>
                 );
               })}
