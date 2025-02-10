@@ -32,7 +32,12 @@ export default function TaskResponsibles({ task, project }) {
   );
 
   async function handleAddResponsible(e, responsible) {
-    setOptimisticResponsibles((prev) => [...prev, responsible]);
+    setOptimisticResponsibles((prev) => {
+      // Vérifier si le responsable n'existe pas déjà !
+      const exists = prev.some((r) => r._id === responsible._id);
+      if (exists) return prev;
+      return [...prev, responsible];
+    });
 
     const response = await addResponsible(
       task?._id,
