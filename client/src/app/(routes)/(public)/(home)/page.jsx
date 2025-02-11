@@ -7,6 +7,7 @@ import SendResetCodeForm from "@/components/auth/SendResetCodeForm";
 
 export default function Auth() {
   const [forgotPassword, setForgotPassword] = useState(false);
+
   const [signIn, setSignIn] = useState(true);
   const [signUp, setSignUp] = useState(false);
 

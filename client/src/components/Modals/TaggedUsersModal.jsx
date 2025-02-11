@@ -1,6 +1,9 @@
+"use client";
+import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/modals/tagged-users-modal.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
+import { useContext, useEffect } from "react";
 
 export default function TaggedUsersModal({
   project,
@@ -11,6 +14,8 @@ export default function TaggedUsersModal({
   setIsTaggedUsers,
   lastAtPosition,
 }) {
+  const { uid } = useContext(AuthContext);
+
   function handleTaggedUsers(guest) {
     const editor = quillRef.current.getEditor();
 
@@ -38,6 +43,8 @@ export default function TaggedUsersModal({
     setIsTaggedUsers(false);
   }
 
+  useEffect(() => {}, []);
+
   return (
     <div
       className={styles.container}
@@ -53,32 +60,54 @@ export default function TaggedUsersModal({
       {isNotEmpty(filteredGuests) ? (
         <ul>
           {filteredGuests?.map((guest) => (
-            <li key={guest?._id} onClick={() => handleTaggedUsers(guest)}>
-              <Image
-                src={guest?.picture || "/default-pfp.webp"}
-                width={25}
-                height={25}
-                alt={`Photo de profil de ${guest?.firstName}`}
-                style={{ borderRadius: "50%" }}
-              />
-              {guest?.firstName + " " + guest?.lastName}
-            </li>
+            <>
+              {guest._id !== uid && (
+                <li key={guest?._id} onClick={() => handleTaggedUsers(guest)}>
+                  <Image
+                    src={guest?.picture || "/default-pfp.webp"}
+                    width={25}
+                    height={25}
+                    alt={`Photo de profil de ${guest?.firstName}`}
+                    style={{ borderRadius: "50%" }}
+                  />
+                  {guest?.firstName + " " + guest?.lastName}
+                </li>
+              )}
+            </>
           ))}
         </ul>
       ) : (
         <ul>
-          {project?.guests?.map((guest) => (
-            <li key={guest?._id} onClick={() => handleTaggedUsers(guest)}>
+          {project?.guests?.map((guest) => {
+            return (
+              <>
+                {guest._id !== uid && (
+                  <li key={guest?._id} onClick={() => handleTaggedUsers(guest)}>
+                    <Image
+                      src={guest?.picture || "/default-pfp.webp"}
+                      width={25}
+                      height={25}
+                      alt={`Photo de profil de ${guest?.firstName}`}
+                      style={{ borderRadius: "50%" }}
+                    />
+                    {guest?.firstName + " " + guest?.lastName}
+                  </li>
+                )}
+              </>
+            );
+          })}
+          {project?.author?._id !== uid && (
+            <li onClick={() => handleTaggedUsers(project?.author)}>
               <Image
-                src={guest?.picture || "/default-pfp.webp"}
+                src={project?.author?.picture || "/default-pfp.webp"}
                 width={25}
                 height={25}
-                alt={`Photo de profil de ${guest?.firstName}`}
+                alt={`Photo de profil de ${project?.author?.firstName}`}
                 style={{ borderRadius: "50%" }}
               />
-              {guest?.firstName + " " + guest?.lastName}
+              {project?.author?.firstName + " " + project?.author?.lastName}
             </li>
-          ))}
+          )}
         </ul>
       )}
     </div>

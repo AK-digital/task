@@ -13,6 +13,8 @@ export default function Messages({ task, project }) {
 
   const messages = data?.data;
 
+  console.log(messages);
+
   return (
     <div className={styles.container}>
       {isNotEmpty(messages) &&

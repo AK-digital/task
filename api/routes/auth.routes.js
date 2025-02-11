@@ -6,6 +6,8 @@ import passport from "passport";
 import "../middlewares/google.middlewares.js";
 
 router.post("/sign-up", authControllers.signUp);
+router.post("/verification", authControllers.reSendVerification);
+router.patch("/verification/:token", authControllers.verificationToken);
 router.post("/sign-in", authControllers.signIn);
 router.post("/refresh-token", authControllers.refreshAccessToken);
 router.post("/reset-code", authControllers.sendResetCode);

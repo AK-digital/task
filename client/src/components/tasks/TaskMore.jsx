@@ -7,7 +7,7 @@ import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
 import { useRouter } from "next/navigation";
 
-export default function TaskMore({ task, setTaskMore, project }) {
+export default function TaskMore({ task, project }) {
   const [open, setOpen] = useState(true);
   const router = useRouter();
   const containerRef = useRef(null);
@@ -66,21 +66,34 @@ export default function TaskMore({ task, setTaskMore, project }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = useCallback(() => {
     const container = containerRef.current;
-    container?.classList?.add(styles["container-close"]);
+    if (!container) return;
+
+    container.classList.add(styles["container-close"]);
 
     const handleAnimationEnd = () => {
-      // Remove the event listener first to prevent multiple calls
-      container?.removeEventListener("animationend", handleAnimationEnd);
-      router.push(`/project/${task?.projectId}`);
+      container.removeEventListener("animationend", handleAnimationEnd);
+      router.push(`/project/${task?.projectId}`, { scroll: false }).then(() => {
+        setOpen(false);
+      });
     };
 
-    container?.addEventListener("animationend", handleAnimationEnd, {
+    container.addEventListener("animationend", handleAnimationEnd, {
       once: true,
     });
-  };
+  }, [router, task?.projectId]);
+
+  // Nettoyage des écouteurs d'événements lors du démontage
+  useEffect(() => {
+    return () => {
+      const container = containerRef.current;
+      if (container) {
+        container.removeEventListener("animationend", () => {});
+      }
+    };
+  }, []);
+
   return (
     <>
       <div className={styles.container} ref={containerRef}>

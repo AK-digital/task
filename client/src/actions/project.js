@@ -87,11 +87,11 @@ export async function sendProjectInvitationToGuest(
 
     const response = await res.json();
 
-    console.log(response);
-
     if (!response.success) {
       throw new Error(response?.message);
     }
+
+    revalidateTag("project-invitations");
 
     return {
       status: "success",
@@ -152,6 +152,9 @@ export async function acceptProjectInvitation(invitationId) {
     if (!response.success) {
       throw new Error(response?.message);
     }
+
+    revalidateTag("project-invitations");
+    revalidateTag("project");
 
     return response;
   } catch (err) {

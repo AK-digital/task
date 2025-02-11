@@ -27,6 +27,7 @@ export default function GuestFormInvitation({ project, setIsPopup }) {
 
   useEffect(() => {
     if (state?.status === "success") {
+      setValue("");
       setIsPopup({
         status: state?.status,
         title: "Invitation envoyé avec succès",

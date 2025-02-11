@@ -8,8 +8,9 @@ import TokenBlackListModel from "../models/TokenBlackList.model.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import { regex } from "../utils/regex.js";
 import PasswordResetCodeModel from "../models/PasswordResetCode.model.js";
-import { emailResetCode } from "../templates/emails.js";
+import { emailResetCode, emailVerification } from "../templates/emails.js";
 import crypto from "crypto";
+import VerificationModel from "../models/Verification.model.js";
 
 // Logic for user sign up
 export async function signUp(req, res, next) {
@@ -54,10 +55,146 @@ export async function signUp(req, res, next) {
 
     const savedUser = await user.save(); // Save user in DB
 
+    const verificationToken = crypto.randomBytes(10).toString("hex");
+
+    const newVerification = new VerificationModel({
+      userId: savedUser?._id,
+      email: savedUser?.email,
+      token: verificationToken,
+    });
+
+    const savedVerification = await newVerification.save();
+
+    const link = `${process.env.CLIENT_URL}/verification/${savedVerification?.token}`;
+    const template = emailVerification(user, link);
+
+    await sendEmail(
+      "task@akdigital.fr",
+      savedUser?.email,
+      template?.subjet,
+      template?.text
+    );
+
     return res.status(201).send({
       success: true,
       message: "Utilisateur créée avec succès",
       data: savedUser,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function verificationToken(req, res, next) {
+  try {
+    if (!req.params.token) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Paramètres manquants" });
+    }
+
+    const verification = await VerificationModel.findOne({
+      token: req.params.token,
+    });
+
+    if (!verification) {
+      return res.status(404).send({
+        success: false,
+        message: "Le token de vérification est expiré ou invalide",
+      });
+    }
+
+    const user = await UserModel.findById({ _id: verification?.userId });
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucun utilisateur correspondant à ce token de vérification",
+      });
+    }
+
+    await UserModel.findByIdAndUpdate(
+      { _id: user?._id },
+      {
+        $set: {
+          verified: true,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    await VerificationModel.findOneAndDelete({ token: req.params.token });
+
+    return res.status(200).send({
+      success: true,
+      message: "Adresse mail vérifiée avec succès",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function reSendVerification(req, res, next) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const user = await UserModel.findOne({ email: email });
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucun utilisateur trouvé avec cette adresse mail",
+      });
+    }
+
+    if (user?.verified) {
+      return res.status(403).send({
+        success: false,
+        message: "Votre adresse mail est déjà vérifiée",
+      });
+    }
+
+    await VerificationModel.findOneAndDelete({ email: email });
+
+    const verificationToken = crypto.randomBytes(10).toString("hex");
+
+    const newVerification = new VerificationModel({
+      userId: user?._id,
+      email: user?.email,
+      token: verificationToken,
+    });
+
+    const savedVerification = await newVerification.save();
+
+    const link = `${process.env.CLIENT_URL}/verification/${savedVerification?.token}`;
+    const template = emailVerification(user, link);
+
+    await sendEmail(
+      "task@akdigital.fr",
+      user?.email,
+      template?.subjet,
+      template?.text
+    );
+
+    return res.status(201).send({
+      success: true,
+      message: "Email de vérification renvoyé avec succès",
     });
   } catch (err) {
     return res.status(500).send({
@@ -99,6 +236,14 @@ export async function signIn(req, res, next) {
       return res.status(404).send({
         success: false,
         message: "Aucun utilisateur correspondant à l'adresse mail saisie",
+      });
+    }
+
+    if (user?.verified === false) {
+      return res.status(403).send({
+        success: false,
+        message:
+          "Votre adresse mail n'est pas vérifiée, veuillez vérifier votre boîte mail",
       });
     }
 

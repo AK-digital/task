@@ -118,3 +118,24 @@ export function emailResetCode(user, resetLink) {
   };
   return templates;
 }
+
+export function emailVerification(user, verificationLink) {
+  const templates = {
+    subjet: "Vérification de votre adresse email",
+    text: `
+      <div style="${emailStyles.container}">
+        <h1 style="${emailStyles.title}">Vérification de votre adresse email</h1>
+        <p style="${emailStyles.paragraph}">Bonjour ${user?.firstName},</p>
+        <p style="${emailStyles.content}">Cliquez sur le bouton ci-dessous pour vérifier votre adresse email :</p>
+        <div>
+          <a href="${verificationLink}" style="${emailStyles.button}">
+            Vérifier mon adresse email
+          </a>
+        </div>
+        <p style="${emailStyles.content}">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.</p>
+      </div>
+    `,
+  };
+
+  return templates;
+}

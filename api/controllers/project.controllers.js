@@ -102,36 +102,6 @@ export async function getProjects(req, res, next) {
   }
 }
 
-// Only authors and guests will be able to see the project
-async function getFaviconUrl(websiteUrl) {
-  try {
-    const response = await fetch(websiteUrl);
-    const html = await response.text();
-
-    // Créer un parseur HTML
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-
-    // Chercher les balises link avec rel="icon" ou rel="shortcut icon"
-    const iconLink = doc.querySelector(
-      'link[rel="icon"], link[rel="shortcut icon"]'
-    );
-
-    if (iconLink) {
-      const faviconUrl = iconLink.getAttribute("href");
-      // Convertir en URL absolue si nécessaire
-      const absoluteUrl = new URL(faviconUrl, websiteUrl).toString();
-      return absoluteUrl;
-    }
-
-    // Fallback sur le favicon par défaut
-    return `${websiteUrl}/favicon.ico`;
-  } catch (error) {
-    console.error("Erreur lors de la récupération du favicon:", error);
-    return null;
-  }
-}
-
 export async function getProject(req, res, next) {
   try {
     let query = {};
@@ -159,17 +129,7 @@ export async function getProject(req, res, next) {
       });
     }
 
-    // Si pas de logo mais une URL WordPress, on cherche le favicon
-    if (!project.logo && project.settings?.urlWordpress) {
-      try {
-        const faviconUrl = await getFaviconUrl(project.settings.urlWordpress);
-        if (faviconUrl) {
-          project.favicon = faviconUrl;
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération du favicon:", error);
-      }
-    }
+    // const
 
     return res.status(200).send({
       success: true,
@@ -360,6 +320,11 @@ export async function sendProjectInvitationToGuest(req, res, next) {
         message: "Impossible d'inviter un utilisateur à un projet inexistant",
       });
     }
+
+    await ProjectInvitationModel.findOneAndDelete({
+      guestEmail: email,
+      projectId: project._id,
+    });
 
     const newProjectInvitation = new ProjectInvitationModel({
       projectId: project?._id,

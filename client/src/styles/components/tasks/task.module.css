@@ -6,7 +6,11 @@
     transition: 200ms all linear;
     border-bottom: 1px solid #43455f;
     width: 100%;
-    height: 40px;
+    height: 42px;
+}
+
+.container[data-openned="true"] {
+    background-color: var(--accent-color);
 }
 
 .container:hover {

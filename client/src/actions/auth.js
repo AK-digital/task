@@ -49,9 +49,17 @@ export async function signUp(prevState, formData) {
       err.message ||
         "Une erreur est survenue lors de la création d'un nouvel utilisateur"
     );
+    if (err.message.includes("E11000")) {
+      return {
+        status: "failure",
+        message: "Cette adresse mail est déjà utilisée",
+        errors: null,
+      };
+    }
     return {
       status: "failure",
       message: err?.message,
+      errors: null,
     };
   }
 }
@@ -86,6 +94,15 @@ export async function signIn(prevState, formData) {
     });
 
     const response = await res.json();
+
+    if (res.status === 403) {
+      return {
+        status: "failure",
+        message: "Votre compte n'est pas encore vérifié.",
+        payload: rawFormData,
+        errors: null,
+      };
+    }
 
     if (!response.success) {
       throw new Error(response?.message);

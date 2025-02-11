@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "@/actions/auth";
+import { reSendVerificationEmail } from "@/api/auth";
 import styles from "@/styles/components/auth/sign.module.css";
 import { instrumentSans } from "@/utils/font";
 import { getCookie } from "cookies-next";
@@ -18,6 +19,9 @@ const initialState = {
 
 export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
   const router = useRouter();
+  const [message, setMessage] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [unVerified, setUnVerified] = useState(false);
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [state, formAction, pending] = useActionState(signIn, initialState);
 
@@ -33,6 +37,8 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
   // }
 
   useEffect(() => {
+    setMessage("");
+    setUnVerified(false);
     if (state?.status === "success") {
       const invitationId = getCookie("invitationId");
       if (invitationId) {
@@ -40,14 +46,45 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
       } else {
         router.push("/projects");
       }
+      setStatus("success");
+    }
+    if (state?.status === "failure" && state?.errors === null) {
+      setMessage(
+        state?.message ||
+          "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
+      );
+      setStatus("failure");
+    }
+    if (state?.message.includes("vérifié")) {
+      setUnVerified(true);
+      setStatus("failure");
     }
   }, [state]);
+
+  async function handleResendEmail() {
+    const res = await reSendVerificationEmail(state?.payload?.email);
+
+    if (res?.success) {
+      setStatus("success");
+      setMessage("Email de vérification renvoyé avec succès.");
+    }
+  }
+
+  console.log(state);
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>
         <span>Vous avez déjà un compte ?</span>
       </div>
+      {message && (
+        <div className={styles.messageStatus}>
+          <span data-status={status}>{message}</span>
+          <button className={styles.resend} onClick={handleResendEmail}>
+            Renvoyer un email de vérification
+          </button>
+        </div>
+      )}
       {(state?.errors?.password || state?.errors?.email) && (
         <div>
           <i data-error={true}>Identifiants incorrects, veuillez réessayer.</i>
@@ -96,6 +133,7 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
             Mot de passe oublié ?
           </span>
         </div>
+
         <div className={styles.buttons}>
           <button
             data-disabled={pending}
@@ -108,15 +146,16 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
           {/* <button
             className={`${instrumentSans.className} ${styles.google}`}
             onClick={handleGoogleAuth}
-          >
+            >
             {" "}
             <span>
-              <Image src={"/google.svg"} width={25} height={25} alt="Google" />
+            <Image src={"/google.svg"} width={25} height={25} alt="Google" />
             </span>{" "}
             Se connecter avec Google
-          </button> */}
+            </button> */}
         </div>
       </form>
+
       <div className={styles.text}>
         <p>
           Vous n'avez pas encore de compte ?{" "}

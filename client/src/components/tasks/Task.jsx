@@ -1,5 +1,5 @@
+"use client";
 import styles from "@/styles/components/tasks/task.module.css";
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
@@ -13,10 +13,11 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskTimer from "./TaskTimer";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function Task({ task, project }) {
-  const [isHover, setIsHover] = useState(false);
-
+  const params = useParams();
+  const opennedTask = params?.slug[2];
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task._id });
 
@@ -30,9 +31,8 @@ export default function Task({ task, project }) {
       ref={setNodeRef}
       style={style}
       className={styles.container}
-      onMouseEnter={(e) => setIsHover(true)}
-      onMouseLeave={(e) => setIsHover(false)}
       suppressHydrationWarning
+      data-openned={opennedTask === task?._id}
     >
       <div className={styles.content}>
         <div className={styles.wrapper}>

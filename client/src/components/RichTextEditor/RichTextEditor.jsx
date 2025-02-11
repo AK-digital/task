@@ -117,6 +117,8 @@ export default function RichTextEditor({
       return firstName.includes(searchTerm) || lastName.includes(searchTerm);
     });
 
+    filtered.push(project?.author);
+
     setFilteredGuests(filtered);
   }, [getLastWord]);
 

@@ -1,12 +1,11 @@
 .container {
-
     box-shadow: 2px 2px 4px var(--foreground);
     background-color: var(--secondary-background-color);
     display: flex;
     flex-direction: column;
     gap: 20px;
     width: 100%;
-    max-width: 450px;
+    max-width: 480px;
 }
 
 .heading {
@@ -37,4 +36,12 @@
     justify-content: space-between;
     align-items: center;
     gap: 8px;
+}
+
+.container form:nth-child(2) button {
+    width: 100px;
+}
+
+.pending {
+    color: var(--text-color-muted);
 }

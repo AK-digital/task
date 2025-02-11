@@ -464,6 +464,7 @@ export async function deleteTask(req, res, next) {
 
 export async function addResponsible(req, res, next) {
   try {
+    const authUser = res.locals.user;
     const { responsibleId } = req.body;
 
     if (!responsibleId) {
@@ -522,15 +523,17 @@ export async function addResponsible(req, res, next) {
       });
     }
 
-    const projectLink = `${process.env.CLIENT_URL}/project/${updatedTask.projectId._id}`;
+    if (authUser?._id.toString() !== responsibleId) {
+      const projectLink = `${process.env.CLIENT_URL}/project/${updatedTask.projectId._id}`;
 
-    const template = emailTaskAssigned(updatedTask, projectLink);
-    await sendEmail(
-      "task@akdigital.fr",
-      responsible?.email,
-      template.subjet,
-      template.text
-    );
+      const template = emailTaskAssigned(updatedTask, projectLink);
+      await sendEmail(
+        "task@akdigital.fr",
+        responsible?.email,
+        template.subjet,
+        template.text
+      );
+    }
 
     return res.status(200).send({
       success: true,

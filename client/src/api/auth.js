@@ -114,6 +114,69 @@ export async function refreshToken(token) {
   }
 }
 
+export async function verification(id) {
+  try {
+    const res = await fetch(`${process.env.API_URL}/auth/verification/${id}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message ||
+        "Une erreur inattendue s'est produite lors de la vérification du compte"
+    );
+    return {
+      success: false,
+      message:
+        err.message ||
+        "Une erreur inattendue s'est produite lors de la vérification du compte",
+    };
+  }
+}
+
+export async function reSendVerificationEmail(email) {
+  try {
+    const res = await fetch(`${process.env.API_URL}/auth/verification`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur inattendue s'est produite lors de l'envoi de l'email de vérification"
+    );
+    return {
+      success: false,
+      message:
+        err.message ||
+        "Une erreur inattendue s'est produite lors de la vérification du compte",
+    };
+  }
+}
+
 export async function logout() {
   try {
     const cookie = await cookies();

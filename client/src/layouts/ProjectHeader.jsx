@@ -13,7 +13,7 @@ import useSWR from "swr";
 import socket from "@/utils/socket";
 import Link from "next/link";
 
-export default function ProjectHeader({ project }) {
+export default function ProjectHeader({ project, projectInvitations }) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -96,7 +96,13 @@ export default function ProjectHeader({ project }) {
           </div>
         </nav>
       </header>
-      {isOpen && <GuestsModal project={project} setIsOpen={setIsOpen} />}
+      {isOpen && (
+        <GuestsModal
+          project={project}
+          projectInvitations={projectInvitations}
+          setIsOpen={setIsOpen}
+        />
+      )}
     </>
   );
 }

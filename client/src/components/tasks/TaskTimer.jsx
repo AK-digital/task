@@ -4,7 +4,7 @@ import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import { faPauseCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Delete, MinusCircle, PlusCircle } from "lucide-react";
+import { MinusCircle } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 import {
@@ -70,39 +70,38 @@ export default function TaskTimer({ task }) {
         <span onClick={() => setMore(true)}>{formatTime(timer)}</span>
       </span>
       {more && (
-        <div
-          className={styles.more}
-          id="popover"
-          onMouseLeave={() => setMore(false)}
-        >
-          <div className={styles.title}>
-            <span>Gestion du temps</span>
-            {addingSession && (
-              <span
-                className={styles.back}
-                onClick={(e) => setAddingSession(false)}
-              >
-                Retour
-              </span>
+        <>
+          <div className={styles.more} id="popover">
+            <div className={styles.title}>
+              <span>Gestion du temps</span>
+              {addingSession && (
+                <span
+                  className={styles.back}
+                  onClick={(e) => setAddingSession(false)}
+                >
+                  Retour
+                </span>
+              )}
+            </div>
+            {addingSession ? (
+              <TimeTrackingForm task={task} formatTime={formatTime} />
+            ) : (
+              <div className={styles.content}>
+                <div className={styles.addTime}>
+                  <button onClick={() => setAddingSession(true)}>
+                    Ajouter une session
+                  </button>
+                </div>
+                <TimeTrackingSessions
+                  task={task}
+                  sessions={sessions}
+                  formatTime={formatTime}
+                />
+              </div>
             )}
           </div>
-          {addingSession ? (
-            <TimeTrackingForm task={task} formatTime={formatTime} />
-          ) : (
-            <div className={styles.content}>
-              <div className={styles.addTime}>
-                <button onClick={() => setAddingSession(true)}>
-                  Ajouter une session
-                </button>
-              </div>
-              <TimeTrackingSessions
-                task={task}
-                sessions={sessions}
-                formatTime={formatTime}
-              />
-            </div>
-          )}
-        </div>
+          <div id="modal-layout-opacity" onClick={(e) => setMore(false)}></div>
+        </>
       )}
     </div>
   );
