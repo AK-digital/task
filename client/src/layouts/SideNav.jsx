@@ -82,7 +82,13 @@ export default function SideNav({ projects }) {
 
   return (
     <aside className={styles.container}>
-      <Image src={"/task-logo.svg"} width={70} height={30} alt="Logo de Task" />
+      <Image
+        src={"/task-logo.svg"}
+        width={70}
+        height={30}
+        alt="Logo de Täsk"
+        className={styles.logo}
+      />
       <div className={styles.wrapper}>
         <div className={styles.projects}>
           <nav className={styles.nav}>

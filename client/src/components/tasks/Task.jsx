@@ -12,12 +12,14 @@ import TaskResponsibles from "./TaskResponsibles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskTimer from "./TaskTimer";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import TaskMore from "./TaskMore";
 
 export default function Task({ task, project }) {
-  const params = useParams();
-  const opennedTask = params?.slug[2];
+  const pathname = usePathname();
+  const [opennedTask, setOpennedTask] = useState(null);
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task._id });
 
@@ -25,6 +27,23 @@ export default function Task({ task, project }) {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const handleTaskClick = (e) => {
+    e.preventDefault();
+
+    window.history.pushState(
+      {},
+      "",
+      `/project/${project?._id}/task/${task?._id}`
+    );
+  };
+
+  useEffect(() => {
+    if (pathname?.includes("/task/")) {
+      const taskId = pathname.split("/").pop();
+      setOpennedTask(taskId);
+    }
+  }, [pathname]);
 
   return (
     <div
@@ -41,12 +60,9 @@ export default function Task({ task, project }) {
           </div>
           <TaskText task={task} />
           <div className={styles.comment}>
-            <Link
-              href={`/project/${project?._id}/task/${task?._id}`}
-              scroll={false}
-            >
+            <div onClick={handleTaskClick}>
               <FontAwesomeIcon icon={faComment} />
-            </Link>
+            </div>
           </div>
           <TaskResponsibles task={task} project={project} />
           <div className={styles.options}>
@@ -58,6 +74,13 @@ export default function Task({ task, project }) {
           <TaskRemove task={task} />
         </div>
       </div>
+      {opennedTask === task?._id && (
+        <TaskMore
+          task={task}
+          project={project}
+          setOpennedTask={setOpennedTask}
+        />
+      )}
     </div>
   );
 }

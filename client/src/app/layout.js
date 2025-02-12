@@ -1,6 +1,7 @@
-import { Geist, Geist_Mono, Instrument_Sans } from "next/font/google";
 import "@/styles/globals.css";
 import { instrumentSans } from "@/utils/font";
+import moment from "moment-timezone";
+moment.tz.setDefault("Europe/Paris");
 
 export const metadata = {
   title: "Täsk | Simple as fäck",

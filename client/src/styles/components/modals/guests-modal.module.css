@@ -13,25 +13,29 @@
     font-weight: 500;
 }
 
-.guests {
+.guests,
+.invitations {
     border-top: 1px solid var(--border-color);
     padding-top: 20px;
 }
 
-.guests ul {
+.guests ul,
+.invitations ul {
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-.guests li {
+.guests li,
+.invitations li {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
 
-.guests div {
+.guests div,
+.invitations div {
     display: flex;
     justify-content: space-between;
     align-items: center;

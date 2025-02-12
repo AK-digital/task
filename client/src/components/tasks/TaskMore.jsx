@@ -7,7 +7,7 @@ import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
 import { useRouter } from "next/navigation";
 
-export default function TaskMore({ task, project }) {
+export default function TaskMore({ task, project, setOpennedTask }) {
   const [open, setOpen] = useState(true);
   const router = useRouter();
   const containerRef = useRef(null);
@@ -66,33 +66,23 @@ export default function TaskMore({ task, project }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     const container = containerRef.current;
     if (!container) return;
 
     container.classList.add(styles["container-close"]);
 
-    const handleAnimationEnd = () => {
+    const handleAnimationEnd = async () => {
       container.removeEventListener("animationend", handleAnimationEnd);
-      router.push(`/project/${task?.projectId}`, { scroll: false }).then(() => {
-        setOpen(false);
-      });
+      window.history.pushState({}, "", `/project/${project?._id}`);
+      setOpennedTask(null);
+      setOpen(false);
     };
 
     container.addEventListener("animationend", handleAnimationEnd, {
       once: true,
     });
-  }, [router, task?.projectId]);
-
-  // Nettoyage des écouteurs d'événements lors du démontage
-  useEffect(() => {
-    return () => {
-      const container = containerRef.current;
-      if (container) {
-        container.removeEventListener("animationend", () => {});
-      }
-    };
-  }, []);
+  };
 
   return (
     <>
@@ -130,6 +120,7 @@ export default function TaskMore({ task, project }) {
         </div>
         {/* Conversation */}
         <div className={styles.conversation}>
+          <span className={styles.conversationTitle}>Conversation</span>
           <Messages task={task} project={project} />
           <RichTextEditor
             placeholder={"Écrire un message"}
@@ -143,7 +134,7 @@ export default function TaskMore({ task, project }) {
           />
         </div>
       </div>
-      {open && <div onClick={handleClose} id="modal-layout"></div>}
+      {open && <div onClick={handleClose} id="task-modal-layout"></div>}
     </>
   );
 }

@@ -1,11 +1,14 @@
-import { taskSetTimer } from "@/actions/task";
+import { addTaskSession, taskSetTimer } from "@/actions/task";
 import { removeTaskSession, taskEndTimer, taskStartTimer } from "@/api/task";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import { faPauseCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MinusCircle } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
+moment.tz.setDefault("Europe/Paris");
+moment.tz("Europe/Paris");
+moment.locale("fr");
 import Image from "next/image";
 import {
   useEffect,
@@ -118,9 +121,13 @@ export function TimeTrackingForm({ task, formatTime }) {
     data: null,
     errors: null,
   };
-  const taskSetTimerWithIds = taskSetTimer.bind(null, task._id, task.projectId);
+  const addTaskSessionWithIds = addTaskSession.bind(
+    null,
+    task._id,
+    task.projectId
+  );
   const [state, formAction, pending] = useActionState(
-    taskSetTimerWithIds,
+    addTaskSessionWithIds,
     initialState
   );
 
@@ -229,7 +236,7 @@ export function TimeTrackingSessions({ task, sessions, formatTime }) {
             <li key={session._id}>
               <div className={styles.monthDay}>
                 <Image
-                  src={user.picture || "/default-pfp.webp"}
+                  src={user?.picture || "/default-pfp.webp"}
                   width={25}
                   height={25}
                   style={{ borderRadius: "50%" }}

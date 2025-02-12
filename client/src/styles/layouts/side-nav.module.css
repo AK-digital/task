@@ -3,7 +3,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px;
+    padding-top: 24px;
+    padding-bottom: 24px;
     z-index: 2008;
     height: 100%;
     background-color: var(--side-background-color);
@@ -15,24 +16,82 @@
     justify-content: space-between;
     flex-direction: column;
     height: 100%;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    width: 100%;
+    padding-top: 32px;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 
-.projects,
+.projects {
+    height: fit-content;
+    max-height: 65%;
+}
+
+.nav {
+    position: relative;
+    height: 100%;
+}
+
+.nav:before,
+.nav:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background: rgb(21, 24, 50);
+    z-index: 2;
+    /* Augmenter le z-index pour être au-dessus de la liste */
+    pointer-events: none;
+    left: 0;
+    /* S'assurer que les gradients couvrent toute la largeur */
+}
+
+.nav:before {
+    background: linear-gradient(180deg, rgba(21, 24, 50, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    top: 0;
+}
+
+.nav:after {
+    background: linear-gradient(0deg, rgba(21, 24, 50, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    bottom: 0;
+}
+
+.logo {
+    position: relative;
+    left: 12px;
+}
+
 .projectsList {
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px 0;
+    scroll-behavior: smooth;
+    z-index: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
+    direction: rtl;
+    gap: 8px;
+}
+
+.projectsList::-webkit-scrollbar {
+    width: 3px;
 }
 
 .projectsItem {
+    direction: ltr;
+    position: relative;
+    z-index: 1;
     transition: all 0.3s ease;
     transform-origin: center;
     will-change: transform;
-    position: relative;
+    order: 1;
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    padding-right: 3px;
 }
 
 .projectsItem img {
@@ -46,17 +105,8 @@
 }
 
 .projectsItem[data-active="true"] {
-    order: -1;
-}
-
-.projectsItem[data-active="true"]::after {
-    content: "";
-    position: absolute;
-    width: 3px;
-    height: 100%;
-    background-color: var(--accent-color);
-    right: -13px;
-    top: 0;
+    border-right: 2px solid var(--accent-color);
+    /* L'élément actif aura toujours un ordre de -1 */
 }
 
 .footer {

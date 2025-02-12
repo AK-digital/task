@@ -683,7 +683,7 @@ export async function endTimer(req, res, next) {
   }
 }
 
-export async function setTimer(req, res, next) {
+export async function addTaskSession(req, res, next) {
   try {
     const authUser = res.locals.user;
     const { startTime, endTime } = req.body;

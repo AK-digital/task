@@ -329,7 +329,7 @@ export async function updateTaskDeadline(
   }
 }
 
-export async function taskSetTimer(taskId, projectId, prevState, formData) {
+export async function addTaskSession(taskId, projectId, prevState, formData) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
@@ -342,12 +342,12 @@ export async function taskSetTimer(taskId, projectId, prevState, formData) {
     const endDateTime = new Date(`${date}T${endTime}`);
 
     const rawData = {
-      startTime: startDateTime.toISOString(),
-      endTime: endDateTime.toISOString(),
+      startTime: startDateTime.toLocaleString(),
+      endTime: endDateTime.toLocaleString(),
     };
 
     const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/set-timer?projectId=${projectId}`,
+      `${process.env.API_URL}/task/${taskId}/add-session?projectId=${projectId}`,
       {
         method: "PATCH",
         credentials: "include",

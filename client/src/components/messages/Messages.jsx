@@ -6,14 +6,13 @@ import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
 
 export default function Messages({ task, project }) {
+  const messagesWithIds = getMessages.bind(null, task.projectId, task._id);
   const { data, isLoading, mutate } = useSWR(
     `/message?projectId=${task?.projectId}&taskId=${task?._id}`,
-    () => getMessages(task.projectId, task._id)
+    messagesWithIds
   );
 
   const messages = data?.data;
-
-  console.log(messages);
 
   return (
     <div className={styles.container}>

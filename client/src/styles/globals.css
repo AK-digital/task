@@ -39,11 +39,6 @@ html,
 body {
   max-width: 100vw;
   height: 100%;
-
-
-  scroll-behavior: auto !important;
-
-
 }
 
 body:has(#modal-layout),
@@ -224,6 +219,7 @@ p {
 }
 
 #modal-layout,
+#task-modal-layout,
 #modal-layout-opacity {
   position: fixed;
   z-index: 2000;
@@ -231,10 +227,10 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-
 }
 
-#modal-layout {
+#modal-layout,
+#task-modal-layout {
   background-color: rgba(0, 0, 0, 0.300);
 }
 

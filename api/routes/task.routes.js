@@ -98,10 +98,10 @@ router.patch(
 );
 
 router.patch(
-  "/:id/set-timer",
+  "/:id/add-session",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
-  taskControllers.setTimer
+  taskControllers.addTaskSession
 );
 
 router.patch(

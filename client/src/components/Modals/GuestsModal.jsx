@@ -115,13 +115,19 @@ export default function GuestsModal({
                     </li>
                   );
                 })}
-                <ProjectInvitationsList
-                  projectInvitations={projectInvitations}
-                  setIsPopup={setIsPopup}
-                  uid={uid}
-                  project={project}
-                />
               </>
+            </ul>
+          </div>
+        )}
+        {isNotEmpty(projectInvitations) && (
+          <div className={styles.invitations}>
+            <ul>
+              <ProjectInvitationsList
+                projectInvitations={projectInvitations}
+                setIsPopup={setIsPopup}
+                uid={uid}
+                project={project}
+              />
             </ul>
           </div>
         )}
