@@ -83,7 +83,7 @@ export default function RichTextEditor({
   const isConversation = type === "conversation";
 
   const [content, setContent] = useState(
-    message ? message?.message : isDescription ? task?.description : ""
+    message ? message?.message : isDescription ? task?.description?.text : ""
   );
 
   const btnMessage = isDescription

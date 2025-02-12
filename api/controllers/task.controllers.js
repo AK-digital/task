@@ -62,6 +62,10 @@ export async function getTasks(req, res, next) {
         select: "-password -role", // Exclure le champ `password` des responsibles
       })
       .populate({
+        path: "description.author", // Accès à l'auteur de la description
+        select: "-password -role", // Exclure les champs sensibles
+      })
+      .populate({
         path: "timeTracking.sessions.userId", // Accès à userId dans sessions
         select: "-password -role", // Exclure les champs sensibles
       })
@@ -329,7 +333,11 @@ export async function updateTaskDeadline(req, res, next) {
 
 export async function updateTaskDescription(req, res, next) {
   try {
+    const authUser = res.locals.user;
     const { description, taggedUsers } = req.body;
+
+    console.log(typeof description);
+
     let updatedDescription = description;
 
     const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
@@ -337,6 +345,8 @@ export async function updateTaskDescription(req, res, next) {
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
     const matches = getMatches(description, imgRegex);
+
+    console.log(matches);
 
     if (matches.length > 0) {
       for (const match of matches) {
@@ -351,7 +361,7 @@ export async function updateTaskDescription(req, res, next) {
     } else {
       const task = await TaskModel.findById({ _id: req.params.id });
 
-      const taskDescription = task?.description;
+      const taskDescription = task?.description?.text;
 
       if (taskDescription) {
         const descriptionMatches = getMatches(taskDescription, imgRegex);
@@ -366,14 +376,18 @@ export async function updateTaskDescription(req, res, next) {
       }
     }
 
-    const updateFields = {};
-    updateFields.description = updatedDescription;
-    updateFields.taggedUsers = uniqueTaggedUsers;
+    const task = await TaskModel.findById({ _id: req.params.id });
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
-        $set: updateFields,
+        $set: {
+          "description.author": authUser?._id,
+          "description.text": updatedDescription,
+          "description.createdAt": task?.description?.createdAt ?? Date.now(),
+          "description.updatedAt": Date.now(),
+          taggedUsers: uniqueTaggedUsers,
+        },
       },
       {
         new: true,
@@ -431,7 +445,7 @@ export async function deleteTask(req, res, next) {
       });
     }
 
-    const description = task?.description;
+    const description = task?.description?.text;
 
     if (description) {
       const matches = getMatches(description, imgRegex);
@@ -454,10 +468,10 @@ export async function deleteTask(req, res, next) {
       message: "Tâche supprimé avec succès",
       data: deletedTask,
     });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).send({
       success: false,
-      message: err.message || "Une erreur inattendue est survenue",
+      message: err?.message || "Une erreur inattendue est survenue",
     });
   }
 }

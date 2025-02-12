@@ -22,9 +22,21 @@ const taskSchema = new Schema(
       maxlength: 255,
     },
     description: {
-      type: String,
-      minlength: 2,
-      maxlength: 1250,
+      author: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      text: {
+        type: String,
+        minlength: 2,
+        maxlength: 1250,
+      },
+      createdAt: {
+        type: Date,
+      },
+      updatedAt: {
+        type: Date,
+      },
     },
     files: {
       type: [String],

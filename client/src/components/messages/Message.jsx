@@ -61,7 +61,7 @@ export default function Message({ message, project, mutate }) {
                   src={author?.picture || "/default-pfp.webp"}
                   width={35}
                   height={35}
-                  alt={`Photo de profil de ${author?.picture}`}
+                  alt={`Photo de profil de ${author?.firstName}`}
                   style={{ borderRadius: "50%" }}
                 />
                 <span className={styles.names}>

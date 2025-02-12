@@ -52,6 +52,7 @@ export default function Task({ task, project }) {
       className={styles.container}
       suppressHydrationWarning
       data-openned={opennedTask === task?._id}
+      data-done={task?.status === "Terminée"}
     >
       <div className={styles.content}>
         <div className={styles.wrapper}>

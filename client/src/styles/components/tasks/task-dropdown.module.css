@@ -1,5 +1,6 @@
 .dropdown {
     position: relative;
+
     user-select: none;
     border-right: 1px solid var(--border-color);
     font-size: 0.9rem;
@@ -64,7 +65,7 @@
 
 .dropdown__list {
     position: absolute;
-    z-index: 2;
+    z-index: 2001;
     left: 0;
     width: 100%;
 }

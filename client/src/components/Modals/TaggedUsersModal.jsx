@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/modals/tagged-users-modal.module.css";
 import { isNotEmpty } from "@/utils/utils";
@@ -33,17 +34,18 @@ export default function TaggedUsersModal({
       const mentionText = `@${guest.firstName} ${guest.lastName}`;
 
       // Insérer la mention sans espace ni saut de ligne après
-      editor.insertEmbed(lastAtPosition, "span", mentionText);
+      editor.insertEmbed(lastAtPosition, "span", mentionText + " ");
 
       // Mettre à jour la position du curseur après l'insertion
-      editor.setSelection(lastAtPosition + mentionText.length, 0);
+      setTimeout(
+        () => editor.setSelection(lastAtPosition + mentionText.length + 1),
+        1
+      );
     }
 
     setTaggedUsers((prev) => [...prev, guest._id]);
     setIsTaggedUsers(false);
   }
-
-  useEffect(() => {}, []);
 
   return (
     <div
@@ -59,8 +61,8 @@ export default function TaggedUsersModal({
 
       {isNotEmpty(filteredGuests) ? (
         <ul>
-          {filteredGuests?.map((guest) => (
-            <>
+          {filteredGuests?.map((guest, idx) => (
+            <React.Fragment key={idx}>
               {guest._id !== uid && (
                 <li key={guest?._id} onClick={() => handleTaggedUsers(guest)}>
                   <Image
@@ -73,16 +75,16 @@ export default function TaggedUsersModal({
                   {guest?.firstName + " " + guest?.lastName}
                 </li>
               )}
-            </>
+            </React.Fragment>
           ))}
         </ul>
       ) : (
         <ul>
-          {project?.guests?.map((guest) => {
+          {project?.guests?.map((guest, idx) => {
             return (
-              <>
+              <React.Fragment key={idx}>
                 {guest._id !== uid && (
-                  <li key={guest?._id} onClick={() => handleTaggedUsers(guest)}>
+                  <li key={idx} onClick={() => handleTaggedUsers(guest)}>
                     <Image
                       src={guest?.picture || "/default-pfp.webp"}
                       width={25}
@@ -93,7 +95,7 @@ export default function TaggedUsersModal({
                     {guest?.firstName + " " + guest?.lastName}
                   </li>
                 )}
-              </>
+              </React.Fragment>
             );
           })}
           {project?.author?._id !== uid && (

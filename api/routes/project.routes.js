@@ -19,14 +19,14 @@ router.get(
 router.put(
   "/:id",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthor,
+  projectMiddlewares.isAuthorOrGuests,
   projectControllers.updateProject
 );
 
 router.patch(
   "/:id/logo",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthor,
+  projectMiddlewares.isAuthorOrGuests,
   upload.single("logo"),
   projectControllers.updateProjectLogo
 );

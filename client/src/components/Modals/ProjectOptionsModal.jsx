@@ -10,7 +10,7 @@ import { deleteProject } from "@/api/project";
 import { useRouter } from "next/navigation";
 import PopupMessage from "@/layouts/PopupMessage";
 
-export default function ProjectOptionsModal({ project, setOpenModal }) {
+export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
   const router = useRouter();
 
   async function handleDeleteProject() {
@@ -42,12 +42,14 @@ export default function ProjectOptionsModal({ project, setOpenModal }) {
         <div className={styles.content}>
           <ProjectLogoForm project={project} />
           <ProjectOptionsForm project={project} />
-          <button
-            className={`${instrumentSans.className} ${styles.deleteBtn}`}
-            onClick={handleDeleteProject}
-          >
-            Supprimer le projet
-          </button>
+          {project?.author === uid && (
+            <button
+              className={`${instrumentSans.className} ${styles.deleteBtn}`}
+              onClick={handleDeleteProject}
+            >
+              Supprimer le projet
+            </button>
+          )}
         </div>
       </div>
       <div

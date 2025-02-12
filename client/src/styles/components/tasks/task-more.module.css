@@ -45,16 +45,28 @@
     gap: 16px;
 }
 
-.conversationTitle {
-    margin-bottom: -16px;
-}
-
-.preview {
+.edit {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 16px;
     font-size: var(--text-size-normal);
     cursor: pointer;
+}
+
+.edit .user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date,
+.updated {
+    font-size: 0.75rem;
+    color: var(--text-color-muted);
+}
+
+.preview {
+    margin-top: 10px;
 }
 
 .preview ol,

@@ -28,17 +28,23 @@ export default function TaskStatus({ task }) {
         <span>{optimisticCurrent}</span>
       </div>
       {isOpen && (
-        <div className={styles["dropdown__list"]}>
-          <ul>
-            {status?.map((value, idx) => {
-              return (
-                <li key={idx} data-value={value} onClick={handleUpdateStatus}>
-                  {value}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <>
+          <div className={styles["dropdown__list"]}>
+            <ul>
+              {status?.map((value, idx) => {
+                return (
+                  <li key={idx} data-value={value} onClick={handleUpdateStatus}>
+                    {value}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div
+            id="modal-layout-opacity"
+            onClick={(e) => setIsOpen(false)}
+          ></div>
+        </>
       )}
     </div>
   );

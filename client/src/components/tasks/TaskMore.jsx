@@ -6,6 +6,8 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import moment from "moment";
 
 export default function TaskMore({ task, project, setOpennedTask }) {
   const [open, setOpen] = useState(true);
@@ -15,6 +17,14 @@ export default function TaskMore({ task, project, setOpennedTask }) {
   const [isResizing, setIsResizing] = useState(false);
   const [startX, setStartX] = useState(null);
   const [startWidth, setStartWidth] = useState(null);
+
+  const descriptionAuthor = task?.description?.author;
+
+  const isUpdated =
+    task?.description?.createdAt !== task?.description?.updatedAt;
+
+  const date = moment(task?.description?.createdAt);
+  const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
   const startResizing = useCallback((e) => {
     setIsResizing(true);
@@ -99,12 +109,38 @@ export default function TaskMore({ task, project, setOpennedTask }) {
         </div>
         <div className={styles.description}>
           <span>Description</span>
-          {task?.description && !editDescription ? (
+          {task?.description?.text && !editDescription ? (
             <div
-              className={styles.preview}
               onClick={(e) => setEditDescription(true)}
-              dangerouslySetInnerHTML={{ __html: task?.description }}
-            ></div>
+              className={styles.edit}
+            >
+              <div className={styles.user}>
+                <Image
+                  src={descriptionAuthor?.picture || "/default-pfp.webp"}
+                  width={35}
+                  height={35}
+                  alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
+                  style={{ borderRadius: "50%" }}
+                />
+                <span className={styles.names}>
+                  {descriptionAuthor?.firstName +
+                    " " +
+                    descriptionAuthor?.lastName}
+                </span>
+                {task?.description?.createdAt && (
+                  <>
+                    <span className={styles.date}>{formattedDate}</span>
+                    {isUpdated && (
+                      <span className={styles.updated}>Modifié</span>
+                    )}
+                  </>
+                )}
+              </div>
+              <div
+                className={styles.preview}
+                dangerouslySetInnerHTML={{ __html: task?.description?.text }}
+              ></div>
+            </div>
           ) : (
             <RichTextEditor
               placeholder={"Ajouter une description à cette tâche"}

@@ -49,9 +49,7 @@ export default function ProjectTitle({ project }) {
   }, [state]);
 
   const handleClick = () => {
-    if (project?.author?._id === uid) {
-      setIsEditing(true);
-    }
+    setIsEditing(true);
   };
 
   const handleBlur = () => {
@@ -104,9 +102,7 @@ export default function ProjectTitle({ project }) {
           <span onClick={handleClick}>{projectName}</span>
         )}
       </div>
-      {modalOpen && (
-        <ProjectOptionsModal project={project} setOpenModal={setModalOpen} />
-      )}
+
       <div className={styles.actions}>
         {hasWordpressUrl && (
           <a
@@ -131,16 +127,20 @@ export default function ProjectTitle({ project }) {
           </a>
         )}
         {/* Ajout du séparateur vertical */}
-        {(hasWordpressUrl || hasBackofficeUrl) &&
-          project?.author?._id === uid && (
-            <div className={styles.separator}></div>
-          )}
-        {project?.author?._id === uid && (
-          <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
-            <MoreHorizontal />
-          </div>
+        {(hasWordpressUrl || hasBackofficeUrl) && (
+          <div className={styles.separator}></div>
         )}
+        <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
+          <MoreHorizontal />
+        </div>
       </div>
+      {modalOpen && (
+        <ProjectOptionsModal
+          project={project}
+          setOpenModal={setModalOpen}
+          uid={uid}
+        />
+      )}
     </div>
   );
 }

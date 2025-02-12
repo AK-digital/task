@@ -61,7 +61,7 @@ export default function TaskResponsibles({ task, project }) {
       content: `Vous venez d'être nommé responsable de la tâche "${task?.text}".`,
     };
 
-    const link = "/project/" + project?._id;
+    const link = "/project/" + project?._id + "/task/" + task?._id;
 
     // Emit a notification to the user that has been assigned to the task
     socket.emit("create notification", user, responsible?.email, message, link);
