@@ -1,13 +1,11 @@
-import { addTaskSession, taskSetTimer } from "@/actions/task";
+import { addTaskSession } from "@/actions/task";
 import { removeTaskSession, taskEndTimer, taskStartTimer } from "@/api/task";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import { faPauseCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MinusCircle } from "lucide-react";
-import moment from "moment-timezone";
-moment.tz.setDefault("Europe/Paris");
-moment.tz("Europe/Paris");
+import moment from "moment";
 moment.locale("fr");
 import Image from "next/image";
 import {
@@ -138,6 +136,8 @@ export function TimeTrackingForm({ task, formatTime }) {
       setTimeExpected("00:00:00");
     }
   }, [state]);
+
+  console.log(state);
 
   const calculateTimeDifference = (startTime, endTime) => {
     if (!startTime || !endTime) return;

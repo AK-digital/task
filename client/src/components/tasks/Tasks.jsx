@@ -5,23 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { saveTask } from "@/actions/task";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { updateTaskOrder } from "@/api/task";
-import { instrumentSans } from "@/utils/font";
 
 const initialState = {
   status: "pending",
@@ -32,19 +15,12 @@ const initialState = {
 
 export default function Tasks({ tasks, project, boardId, optimisticColor }) {
   const inputRef = useRef(null);
-  const [taskItems, setTaskItems] = useState(tasks || []);
   const [isWritting, setIsWritting] = useState(false);
+  const [items, setItems] = useState(tasks || []);
 
   useEffect(() => {
-    setTaskItems(tasks || []);
+    setItems(tasks);
   }, [tasks]);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   const saveTaskWithProjectId = saveTask.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
@@ -54,29 +30,10 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
 
   useEffect(() => {
     if (state?.status === "success") {
-      console.log(inputRef.current);
-
       inputRef?.current?.focus();
       setIsWritting(false);
     }
   }, [state]);
-
-  async function handleDragEnd(event) {
-    const { active, over } = event;
-
-    if (active?.id !== over?.id) {
-      const oldIndex = taskItems.findIndex((task) => task?._id === active.id);
-      const newIndex = taskItems.findIndex((task) => task?._id === over.id);
-
-      const newItems = arrayMove(taskItems, oldIndex, newIndex);
-
-      // D'abord, mettre à jour l'état local
-      setTaskItems(newItems);
-
-      // Ensuite, effectuer la mise à jour sur le serveur
-      await updateTaskOrder(newItems, project?._id);
-    }
-  }
 
   return (
     <div
@@ -85,57 +42,50 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
       style={{
         borderLeft: `3px solid ${optimisticColor}`,
       }}
+      data-board-id={boardId}
     >
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        modifiers={[restrictToVerticalAxis]}
-      >
-        <div className={styles["tasks__list"]}>
-          <SortableContext
-            items={taskItems.map((task) => task._id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {taskItems?.map((task) => (
-              <Task key={task._id} task={task} project={project} />
-            ))}
-          </SortableContext>
-
-          <div className={styles["task__add"]}>
-            <FontAwesomeIcon icon={faPlus} />
-
-            <form action={formAction}>
-              <input
-                type="text"
-                name="board-id"
-                id="board-id"
-                defaultValue={boardId}
-                hidden
-              />
-              <input
-                type="text"
-                name="new-task"
-                id="new-task"
-                placeholder=" Ajouter une tâche"
-                autoComplete="off"
-                ref={inputRef}
-                onChange={(e) => {
-                  if (e.target.value.length > 0) {
-                    setIsWritting(true);
-                  } else {
-                    setIsWritting(false);
-                  }
-                }}
-                className={instrumentSans.className}
-              />
-              <button type="submit" hidden>
-                Ajouter une tâche
-              </button>
-            </form>
-          </div>
+      <div className={styles["tasks__list"]}>
+        {items?.map((task, index) => (
+          <Task
+            key={task._id}
+            task={task}
+            project={project}
+            index={index}
+            boardId={boardId}
+          />
+        ))}
+        <div className={styles["task__add"]}>
+          <FontAwesomeIcon icon={faPlus} />
+          <form action={formAction}>
+            <input
+              type="text"
+              name="board-id"
+              id="board-id"
+              defaultValue={boardId}
+              hidden
+            />
+            <input
+              type="text"
+              name="new-task"
+              id="new-task"
+              placeholder=" Ajouter une tâche"
+              autoComplete="off"
+              ref={inputRef}
+              onChange={(e) => {
+                if (e.target.value.length > 0) {
+                  setIsWritting(true);
+                } else {
+                  setIsWritting(false);
+                }
+              }}
+            />
+            <button type="submit" hidden>
+              Ajouter une tâche
+            </button>
+          </form>
         </div>
-      </DndContext>
+      </div>
+
       {isWritting && (
         <div className={styles["tasks__info"]}>
           <p>

@@ -62,13 +62,6 @@ router.patch(
   taskControllers.updateTaskDescription
 );
 
-router.delete(
-  "/:id",
-  authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
-  taskControllers.deleteTask
-);
-
 router.patch(
   "/:id/add-responsible",
   authMiddlewares.auth,
@@ -116,6 +109,20 @@ router.patch(
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
   taskControllers.updateTaskOrder
+);
+
+router.patch(
+  "/:id/update-board",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.updateTaskBoard
+);
+
+router.delete(
+  "/:id",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.deleteTask
 );
 
 export default router;

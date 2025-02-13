@@ -32,17 +32,23 @@ export default function TaskPriority({ task }) {
         <span>{optimisticCurrent}</span>
       </div>
       {isOpen && (
-        <div className={styles["dropdown__list"]}>
-          <ul>
-            {priorities?.map((value, idx) => {
-              return (
-                <li key={idx} data-value={value} onClick={handleUpdateStatus}>
-                  {value}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <>
+          <div className={styles["dropdown__list"]}>
+            <ul>
+              {priorities?.map((value, idx) => {
+                return (
+                  <li key={idx} data-value={value} onClick={handleUpdateStatus}>
+                    {value}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div
+            id="modal-layout-opacity"
+            onClick={(e) => setIsOpen(false)}
+          ></div>
+        </>
       )}
     </div>
   );

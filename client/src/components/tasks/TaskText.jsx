@@ -1,7 +1,6 @@
 import styles from "@/styles/components/tasks/task-text.module.css";
 import { updateTaskText } from "@/actions/task";
 import { useActionState, useRef, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
 import { instrumentSans } from "@/utils/font";
 
 const initialState = {
@@ -20,21 +19,16 @@ export default function TaskText({ task }) {
     task?._id,
     task?.projectId
   );
+
   const [state, formAction, pending] = useActionState(
     updateTaskTextWithIds,
     initialState
   );
 
-  // Créer un callback avec un délai de 300ms
-  const debouncedUpdateTask = useDebouncedCallback(async (value) => {
-    formRef?.current?.requestSubmit();
-  }, 600);
-
   const handleChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-
-    debouncedUpdateTask(value);
+    formRef?.current?.requestSubmit();
   };
 
   return (

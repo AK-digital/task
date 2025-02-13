@@ -24,7 +24,8 @@ export default function TaskDeadline({ task }) {
 
   const deadline = task?.deadline?.split("T")[0];
   const deadlineMoment = moment(deadline, "YYYY MM DD");
-  const isPastDeadline = deadlineMoment.isBefore(moment(), "day") && task?.status !== "Terminée";
+  const isPastDeadline =
+    deadlineMoment.isBefore(moment(), "day") && task?.status !== "Terminée";
   const formattedDeadline = deadlineMoment.isValid()
     ? deadlineMoment.format("D MMMM", "fr")
     : null;
@@ -34,7 +35,6 @@ export default function TaskDeadline({ task }) {
     if (date !== deadlineMoment._i) {
       form.current.requestSubmit();
     }
-    setIsEditing(false);
   }
 
   const displayDate = formattedDeadline ?? "__/__/__";
@@ -49,7 +49,8 @@ export default function TaskDeadline({ task }) {
             name="deadline"
             id="deadline"
             defaultValue={deadline}
-            onBlur={handleUpdateDate} // Cacher l'input quand l'utilisateur clique ailleurs
+            onChange={handleUpdateDate}
+            onBlur={(e) => setIsEditing(false)}
             autoFocus
           />
         </form>

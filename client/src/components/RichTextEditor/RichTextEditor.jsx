@@ -68,6 +68,7 @@ export default function RichTextEditor({
   setEdit,
   setConvLoading,
   setEditDescription,
+  mutateMessage,
 }) {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
@@ -245,9 +246,7 @@ export default function RichTextEditor({
         taggedUsers
       );
       if (res?.success) {
-        await mutate(
-          `/message?projectId=${message?.projectId}&taskId=${message?.taskId}`
-        );
+        await mutateMessage();
 
         const message = {
           title: `${user?.firstName} vous a mentionné(e) dans une conversation`,

@@ -26,7 +26,7 @@ export async function getTasks(projectId, boardId) {
       throw new Error(response?.message);
     }
 
-    return response.data;
+    return response;
   } catch (err) {
     console.log(
       err.message ||
@@ -259,7 +259,40 @@ export async function updateTaskOrder(tasks, projectId) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
-    revalidateTag("tasks");
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des tableaux"
+    );
+  }
+}
+
+export async function updateTaskBoard(taskId, boardId, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/${taskId}/update-board?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify({ boardId: boardId }),
+      }
+    );
+
+    const response = await res.json();
+
+    console.log(response);
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
 
     return response;
   } catch (err) {

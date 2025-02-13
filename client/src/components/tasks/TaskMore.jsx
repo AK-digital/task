@@ -8,6 +8,8 @@ import Messages from "../messages/Messages";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import moment from "moment";
+import { X } from "lucide-react";
+moment.locale("fr");
 
 export default function TaskMore({ task, project, setOpennedTask }) {
   const [open, setOpen] = useState(true);
@@ -98,13 +100,30 @@ export default function TaskMore({ task, project, setOpennedTask }) {
     <>
       <div className={styles.container} ref={containerRef}>
         <div className={styles.resizer} onMouseDown={startResizing}></div>
+        <div>
+          <X size={22} onClick={handleClose} cursor={"pointer"} />
+        </div>
         {/* Description */}
         <div className={styles.header}>
-          <div>
+          <div className={styles.text}>
             <span>{task?.text}</span>
           </div>
-          <div>
-            <FontAwesomeIcon icon={faClose} onClick={handleClose} />
+          <div className={styles.taskAuthor}>
+            <Image
+              src={task?.author?.picture || "/default-pfp.webp"}
+              width={30}
+              height={30}
+              alt={`Photo de profil de ${task?.author?.firstName}`}
+              style={{
+                borderRadius: "50%",
+              }}
+            />
+            <div className={styles.authorInfo}>
+              <span>
+                {task?.author?.firstName + " " + task?.author?.lastName}
+              </span>
+              <span>{moment(task?.createdAt).format("DD/MM/YYYY")}</span>
+            </div>
           </div>
         </div>
         <div className={styles.description}>

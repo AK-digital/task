@@ -24,7 +24,6 @@ export async function saveTask(req, res, next) {
 
     const tasks = await TaskModel.find({
       projectId: projectId,
-      boardId: boardId,
     });
 
     const newTask = new TaskModel({
@@ -59,6 +58,10 @@ export async function getTasks(req, res, next) {
       .sort({ order: "asc" })
       .populate({
         path: "responsibles",
+        select: "-password -role", // Exclure le champ `password` des responsibles
+      })
+      .populate({
+        path: "author",
         select: "-password -role", // Exclure le champ `password` des responsibles
       })
       .populate({
@@ -431,51 +434,6 @@ export async function updateTaskDescription(req, res, next) {
   }
 }
 
-// Only authors and guets will be able to delete the tasks
-export async function deleteTask(req, res, next) {
-  try {
-    const imgRegex = /<img.*?src=["'](.*?)["']/g;
-
-    const task = await TaskModel.findById({ _id: req.params.id });
-
-    if (!task) {
-      return res.status(404).send({
-        success: false,
-        message: "Impossible de supprimer une tâche qui n'existe pas",
-      });
-    }
-
-    const description = task?.description?.text;
-
-    if (description) {
-      const matches = getMatches(description, imgRegex);
-
-      if (matches.length > 0) {
-        for (const match of matches) {
-          const img = match[1];
-
-          await destroyFile("description", img);
-        }
-      }
-    }
-
-    const deletedTask = await TaskModel.findByIdAndDelete({
-      _id: req.params.id,
-    });
-
-    return res.status(200).send({
-      success: true,
-      message: "Tâche supprimé avec succès",
-      data: deletedTask,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message: err?.message || "Une erreur inattendue est survenue",
-    });
-  }
-}
-
 export async function addResponsible(req, res, next) {
   try {
     const authUser = res.locals.user;
@@ -715,8 +673,8 @@ export async function addTaskSession(req, res, next) {
         $push: {
           "timeTracking.sessions": {
             userId: authUser?._id,
-            startTime: startTime,
-            endTime: endTime,
+            startTime: new Date(startTime),
+            endTime: new Date(endTime),
             duration: new Date(endTime) - new Date(startTime),
           },
         },
@@ -824,31 +782,119 @@ export async function updateTaskOrder(req, res, next) {
   try {
     const { tasks } = req.body;
 
-    if (tasks?.length <= 0) {
+    if (!tasks || tasks.length === 0) {
+      return res.status(400).send({
+        success: false,
+        message: "Aucune tâche à mettre à jour",
+      });
+    }
+
+    const bulkOps = tasks.map((task) => ({
+      updateOne: {
+        filter: { _id: task._id },
+        update: { $set: { order: task.order, boardId: task.boardId } },
+      },
+    }));
+
+    await TaskModel.bulkWrite(bulkOps);
+
+    return res.status(200).send({
+      success: true,
+      message: "L'ordre et les colonnes des tâches ont été mis à jour",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTaskBoard(req, res, next) {
+  try {
+    const { boardId } = req.body;
+
+    if (!boardId) {
       return res.status(400).send({
         success: false,
         message: "Paramètres manquants",
       });
     }
 
-    const updatePromises = tasks.map((task, index) => {
-      return TaskModel.findByIdAndUpdate(
-        task._id,
-        { $set: { order: index } },
-        { new: true }
-      );
-    });
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          boardId: boardId,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
 
-    await Promise.all(updatePromises);
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de déplacer une tâche qui n'existe pas",
+      });
+    }
 
-    return res.status(500).send({
+    return res.status(200).send({
       success: true,
-      message: "L'ordre des tâches a été mis à jour",
+      message: "Tâche déplacée avec succès",
+      data: updatedTask,
     });
   } catch (err) {
     return res.status(500).send({
       success: false,
-      message: err.message || "Une erreur inattendue est survenue",
+      message: err?.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Only authors and guets will be able to delete the tasks
+export async function deleteTask(req, res, next) {
+  try {
+    const imgRegex = /<img.*?src=["'](.*?)["']/g;
+
+    const task = await TaskModel.findById({ _id: req.params.id });
+
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de supprimer une tâche qui n'existe pas",
+      });
+    }
+
+    const description = task?.description?.text;
+
+    if (description) {
+      const matches = getMatches(description, imgRegex);
+
+      if (matches.length > 0) {
+        for (const match of matches) {
+          const img = match[1];
+
+          await destroyFile("description", img);
+        }
+      }
+    }
+
+    const deletedTask = await TaskModel.findByIdAndDelete({
+      _id: req.params.id,
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "Tâche supprimé avec succès",
+      data: deletedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
     });
   }
 }

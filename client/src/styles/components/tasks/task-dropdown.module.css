@@ -68,10 +68,12 @@
     z-index: 2001;
     left: 0;
     width: 100%;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25), -2px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .dropdown__list ul {
     gap: inherit;
+    text-align: center;
 }
 
 .dropdown__list ul li {

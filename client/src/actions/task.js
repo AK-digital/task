@@ -342,8 +342,8 @@ export async function addTaskSession(taskId, projectId, prevState, formData) {
     const endDateTime = new Date(`${date}T${endTime}`);
 
     const rawData = {
-      startTime: startDateTime.toLocaleString(),
-      endTime: endDateTime.toLocaleString(),
+      startTime: startDateTime.getTime(),
+      endTime: endDateTime.getTime(),
     };
 
     const res = await fetch(

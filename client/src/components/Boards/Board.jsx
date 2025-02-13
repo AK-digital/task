@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import BoardHeader from "./BoardHeader";
 
 export default function Board({ tasks, project, board }) {
-  // Initialize with default value
   const [open, setOpen] = useState(true);
   const [optimisticColor, setOptimisticColor] = useState(board?.color);
 

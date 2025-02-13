@@ -24,17 +24,30 @@
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .header span {
     font-size: 1.2rem;
 }
 
-.header svg {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
+.taskAuthor {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: max-content;
+}
+
+.taskAuthor span {
+    font-size: 0.8rem;
+    color: var(--text-color-muted);
+}
+
+.authorInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .container,

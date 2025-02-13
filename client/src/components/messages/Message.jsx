@@ -50,6 +50,7 @@ export default function Message({ message, project, mutate }) {
           setEdit={setEdit}
           setConvLoading={setIsLoading}
           placeholder={null}
+          mutateMessage={mutate}
         />
       ) : (
         <>
