@@ -1,6 +1,7 @@
 "use server";
 import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
+import { redirect } from "next/dist/server/api-utils";
 import { cookies } from "next/headers";
 
 export async function signUp(prevState, formData) {
@@ -113,26 +114,27 @@ export async function signIn(prevState, formData) {
     const accessToken = response?.data?.accessToken;
     const refreshToken = response?.data?.refreshToken;
 
+    // Pour les deux fonctions, utilisez ce format :
     cookie.set("session", accessToken, {
       secure: true,
       httpOnly: true,
-      sameSite: "strict",
-      expires: Date.now() + 30 * 60 * 1000, // Expires in 30m
-      domain: "task.akdigital.fr",
+      sameSite: "lax",
+      expires: new Date(Date.now() + 30 * 60 * 1000),
     });
 
     cookie.set("rtk", refreshToken, {
       secure: true,
       httpOnly: true,
-      sameSite: "strict",
-      expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 jours en millisecondes
-      domain: "task.akdigital.fr",
-      // Add domain
+      sameSite: "lax",
+      expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
     });
+
+    const invitationId = cookie.get("invitationId");
 
     return {
       status: "success",
       message: response?.message,
+      invitationId: invitationId ? invitationId?.value : null,
     };
   } catch (err) {
     console.log(

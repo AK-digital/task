@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { act, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { updateTaskBoard, updateTaskOrder } from "@/api/task";
 import Task from "../tasks/Task";
 

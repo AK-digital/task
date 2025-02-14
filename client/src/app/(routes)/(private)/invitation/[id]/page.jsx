@@ -16,14 +16,12 @@ export default function Invitation() {
 
         if (!response?.success) {
           if (response?.message === "L'utilisateur n'est pas connecté") {
-            setCookie("invitationId", id);
             router.push("/");
             return;
           }
           router.push("/projects");
         } else {
           const project = response?.data;
-          deleteCookie("invitationId");
           router.push(`/project/${project?._id}`);
         }
       } catch (err) {

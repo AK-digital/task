@@ -57,10 +57,6 @@ export default function GuestsModal({
         message: state?.message,
       });
     }
-
-    return () => {
-      socket.off("project user remove");
-    };
   }, [state]);
 
   return (
@@ -161,24 +157,26 @@ export function ProjectInvitationsList({
   );
 
   useEffect(() => {
-    setIsPopup(null);
-
     if (state?.status === "success") {
-      setIsPopup({
-        status: state?.status,
-        title: "Invitation annulée avec succès",
-        message: state?.message,
-      });
-    }
-    if (state?.status === "failure") {
       console.log("played");
       setIsPopup({
         status: state?.status,
+        title: "Invitation annulée avec succès",
+        message: state?.message || "L'invitation a été annulée avec succès",
+      });
+    }
+    if (state?.status === "failure") {
+      setIsPopup({
+        status: state?.status,
         title: "Une erreur s'est produite",
-        message: state?.message,
+        message:
+          state?.message ||
+          "Une erreur s'est produite lors de l'annulation de l'invitation",
       });
     }
   }, [state]);
+
+  console.log(state);
 
   return (
     <>

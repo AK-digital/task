@@ -15,6 +15,7 @@ const initialState = {
   payload: null,
   message: "",
   errors: null,
+  invitationId: null,
 };
 
 export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
@@ -40,9 +41,8 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
     setMessage("");
     setUnVerified(false);
     if (state?.status === "success") {
-      const invitationId = getCookie("invitationId");
-      if (invitationId) {
-        router.push(`invitation/${invitationId}`);
+      if (state?.invitationId) {
+        router.push(`invitation/${state?.invitationId}`);
       } else {
         router.push("/projects");
       }

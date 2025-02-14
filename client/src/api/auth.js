@@ -88,19 +88,15 @@ export async function refreshToken(token) {
     cookie.set("session", newAccessToken, {
       secure: true,
       httpOnly: true,
-      sameSite: "strict",
-      expires: Date.now() + 30 * 60 * 1000, // expires in 30m
-      domain: "task.akdigital.fr",
-      // Add domain
+      sameSite: "lax",
+      expires: new Date(Date.now() + 30 * 60 * 1000),
     });
 
     cookie.set("rtk", newRefreshToken, {
       secure: true,
       httpOnly: true,
-      sameSite: "strict",
-      expires: Date.now() + 14 * 24 * 60 * 60 * 1000, // 14 jours en millisecondes
-      domain: "task.akdigital.fr",
-      // Add domain
+      sameSite: "lax",
+      expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
     });
 
     const newSessionToken = cookie.get("session");
@@ -211,8 +207,17 @@ export async function logout() {
       throw new Error(response?.message);
     }
 
-    cookie.delete("session");
-    cookie.delete("rtk");
+    // Options de base pour les cookies
+    const cookieOptions = {
+      secure: true,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+    };
+
+    // Double vérification avec delete
+    cookie.delete("session", cookieOptions);
+    cookie.delete("rtk", cookieOptions);
 
     return response;
   } catch (err) {
@@ -220,6 +225,7 @@ export async function logout() {
       err.message ||
         "Une erreur est survenue lors de la déconnexion d'un utilisateur"
     );
+
     return {
       success: false,
       message:

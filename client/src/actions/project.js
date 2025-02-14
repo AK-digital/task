@@ -118,8 +118,8 @@ export async function sendProjectInvitationToGuest(
 }
 
 export async function acceptProjectInvitation(invitationId) {
+  const cookie = await cookies();
   try {
-    const cookie = await cookies();
     const session = cookie.get("session");
 
     if (!invitationId) {
@@ -156,10 +156,24 @@ export async function acceptProjectInvitation(invitationId) {
     revalidateTag("project-invitations");
     revalidateTag("project");
 
+    cookie.delete("invitationId", {
+      secure: true,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+    });
+
     return response;
   } catch (err) {
     console.log(err.message || "Une erreur est survenue");
-
+    if (err?.message === "L'utilisateur n'est pas connecté") {
+      cookie.set("invitationId", invitationId, {
+        secure: true,
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      });
+    }
     return {
       success: false,
       message: err.message || "Une erreur est survenue",

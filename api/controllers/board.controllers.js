@@ -61,6 +61,13 @@ export async function getBoards(req, res, next) {
 
     const boards = await BoardModel.find({ projectId: projectId });
 
+    const boardsWithTasks = await Promise.all(
+      boards.map(async (board) => {
+        const tasks = await TaskModel.find({ boardId: board._id });
+        return { ...board.toObject(), tasks: tasks };
+      })
+    );
+
     if (!boards) {
       return res.status(404).send({
         success: false,
@@ -71,7 +78,7 @@ export async function getBoards(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Tableaux trouvés",
-      data: boards,
+      data: boardsWithTasks,
     });
   } catch (err) {
     return res.status(500).send({
