@@ -4,7 +4,7 @@ import Tasks from "../tasks/Tasks";
 import { useState, useEffect } from "react";
 import BoardHeader from "./BoardHeader";
 
-export default function Board({ tasks, project, board }) {
+export default function Board({ tasks, project, board, activeId }) {
   const [open, setOpen] = useState(true);
   const [optimisticColor, setOptimisticColor] = useState(board?.color);
 
@@ -33,6 +33,7 @@ export default function Board({ tasks, project, board }) {
           tasks={tasks}
           project={project}
           boardId={board?._id}
+          activeId={activeId}
           optimisticColor={optimisticColor}
         />
       )}

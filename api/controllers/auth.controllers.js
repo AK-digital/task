@@ -263,9 +263,6 @@ export async function signIn(req, res, next) {
     // Generating refresh token and passing user info as parameter
     const refreshToken = generateRefreshToken(user);
 
-    // Deleting the old refresh token in DB if there is one
-    await RefreshTokenModel.findOneAndDelete({ userId: user?._id });
-
     // Then create a new refresh token
     const newRefreshToken = new RefreshTokenModel({
       userId: user?.id,
@@ -555,20 +552,25 @@ export async function resetForgotPassword(req, res, next) {
 // Logic for user logout by deleting the user refresh token and blacklisting the access token
 export async function logout(req, res, next) {
   try {
-    // Getting the access token in the header
-    const token = req.headers.authorization?.split(" ")[1];
+    const { refreshToken, accessToken } = req.body;
 
-    if (!token) {
+    console.log(accessToken, refreshToken);
+
+    if (!accessToken || !refreshToken) {
       return res
         .status(400)
         .send({ success: false, message: "Paramètres manquants" });
     }
 
     const newTokenBlackListModel = new TokenBlackListModel({
-      token: token,
+      token: accessToken,
     });
 
     await newTokenBlackListModel.save();
+
+    await RefreshTokenModel.findOneAndDelete({
+      refreshToken: refreshToken,
+    });
 
     return res.status(200).send({
       success: true,

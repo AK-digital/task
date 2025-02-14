@@ -3,6 +3,7 @@ import styles from "@/styles/components/boards/boards.module.css";
 import Board from "./Board";
 import {
   DndContext,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -17,6 +18,7 @@ import {
 } from "@dnd-kit/sortable";
 import { act, useCallback, useEffect, useState } from "react";
 import { updateTaskBoard, updateTaskOrder } from "@/api/task";
+import Task from "../tasks/Task";
 
 export default function ClientBoards({ boards, project, initialTasks }) {
   const [tasks, setTasks] = useState(initialTasks || []);
@@ -48,9 +50,12 @@ export default function ClientBoards({ boards, project, initialTasks }) {
     [tasks]
   );
 
-  const handleDragStart = useCallback((event) => {
-    setActiveId(event.active.id);
-  }, []);
+  function handleDragStart(event) {
+    const { active } = event;
+    const { id } = active;
+
+    setActiveId(id);
+  }
 
   const handleDragOver = useCallback(
     (event) => {
@@ -63,14 +68,15 @@ export default function ClientBoards({ boards, project, initialTasks }) {
       const activeBoardId = findBoardByTaskId(activeTaskId);
       const overBoardId =
         over.data?.current?.sortable?.containerId ||
-        findBoardByTaskId(overTaskId);
+        findBoardByTaskId(overTaskId) ||
+        over.id; // Ajout de over.id pour gérer le cas du tableau vide
 
       if (!activeBoardId || !overBoardId || activeBoardId === overBoardId)
         return;
 
       setTasks((prev) => {
         const activeBoard = [...prev[activeBoardId]];
-        const overBoard = [...prev[overBoardId]];
+        const overBoard = [...(prev[overBoardId] || [])]; // S'assurer que overBoard est un tableau même s'il est vide
 
         const activeTaskIndex = activeBoard.findIndex(
           (task) => task._id === activeTaskId
@@ -80,6 +86,17 @@ export default function ClientBoards({ boards, project, initialTasks }) {
         const newActiveBoard = activeBoard.filter(
           (_, index) => index !== activeTaskIndex
         );
+
+        // Si on dépose sur un tableau vide, on ajoute simplement la tâche à la fin
+        if (!overTaskId || overTaskId === overBoardId) {
+          return {
+            ...prev,
+            [activeBoardId]: newActiveBoard,
+            [overBoardId]: [...overBoard, activeTask],
+          };
+        }
+
+        // Sinon on insère à la position spécifique
         const insertIndex = overBoard.findIndex(
           (task) => task._id === overTaskId
         );
@@ -205,10 +222,22 @@ export default function ClientBoards({ boards, project, initialTasks }) {
                 tasks={tasks[board._id] || []}
                 project={project}
                 board={board}
+                activeId={activeId}
               />
             </SortableContext>
           </div>
         ))}
+        <DragOverlay>
+          {activeId ? (
+            <Task
+              id={activeId}
+              task={Object.values(tasks)
+                .flat()
+                .find((task) => task._id === activeId)}
+              project={project}
+            />
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </div>
   );

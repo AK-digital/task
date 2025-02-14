@@ -7,7 +7,10 @@ export default function SignOut() {
   const router = useRouter();
   async function handleLogout(e) {
     e.preventDefault();
-    await logout();
+    const response = await logout();
+    if (!response.success) {
+      return;
+    }
     router.push("/");
   }
   return <LogOut onClick={handleLogout} size={24} cursor={"pointer"} />;

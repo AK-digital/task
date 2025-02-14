@@ -74,6 +74,10 @@ export async function refreshToken(token) {
     const response = await res.json();
 
     if (!response.success) {
+      console.error(
+        "Erreur lors du rafraîchissement du token:",
+        response?.message
+      );
       throw new Error(response?.message);
     }
 
@@ -93,23 +97,22 @@ export async function refreshToken(token) {
       secure: true,
       httpOnly: true,
       sameSite: "strict",
-      expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 jours en millisecondes
+      expires: Date.now() + 14 * 24 * 60 * 60 * 1000, // 14 jours en millisecondes
       // Add domain
     });
 
     const newSessionToken = cookie.get("session");
 
-    console.log("tokens refreshed :", response);
+    console.log("Tokens refreshed:", response);
 
     return await decryptToken(newSessionToken);
   } catch (err) {
-    console.log(err);
-    // logout();
+    console.error("Erreur dans refreshToken:", err.message);
     return {
       success: false,
       message:
         err.message ||
-        "An unexpected error occurred while refreshing the access token",
+        "Une erreur inattendue s'est produite lors du rafraîchissement du token d'accès",
     };
   }
 }
@@ -180,18 +183,24 @@ export async function reSendVerificationEmail(email) {
 export async function logout() {
   try {
     const cookie = await cookies();
-    const session = cookie.get("session");
+    const refreshToken = cookie.get("rtk");
+    const accessToken = cookie.get("session");
 
-    if (!session) {
-      throw new Error("Aucun Access Token reçu");
+    if (!accessToken || !refreshToken) {
+      throw new Error("Paramètres manquants");
     }
 
     const res = await fetch(`${process.env.API_URL}/auth/logout`, {
       method: "DELETE",
       credentials: "include",
       headers: {
-        Authorization: `Bearer ${session.value}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken?.value}`,
       },
+      body: JSON.stringify({
+        accessToken: accessToken?.value,
+        refreshToken: refreshToken?.value,
+      }),
     });
 
     const response = await res.json();
@@ -202,10 +211,18 @@ export async function logout() {
 
     cookie.delete("session");
     cookie.delete("rtk");
+
+    return response;
   } catch (err) {
     console.log(
       err.message ||
         "Une erreur est survenue lors de la déconnexion d'un utilisateur"
     );
+    return {
+      success: false,
+      message:
+        err.message ||
+        "Une erreur est survenue lors de la déconnexion d'un utilisateur",
+    };
   }
 }

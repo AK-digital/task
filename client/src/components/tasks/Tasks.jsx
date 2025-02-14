@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { saveTask } from "@/actions/task";
+import { useDroppable } from "@dnd-kit/core";
 
 const initialState = {
   status: "pending",
@@ -13,7 +14,13 @@ const initialState = {
   errors: null,
 };
 
-export default function Tasks({ tasks, project, boardId, optimisticColor }) {
+export default function Tasks({
+  tasks,
+  project,
+  boardId,
+  optimisticColor,
+  activeId,
+}) {
   const inputRef = useRef(null);
   const [isWritting, setIsWritting] = useState(false);
   const [items, setItems] = useState(tasks || []);
@@ -35,6 +42,9 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
     }
   }, [state]);
 
+  const { setNodeRef } = useDroppable({
+    id: boardId,
+  });
   return (
     <div
       className={styles["tasks"]}
@@ -44,14 +54,13 @@ export default function Tasks({ tasks, project, boardId, optimisticColor }) {
       }}
       data-board-id={boardId}
     >
-      <div className={styles["tasks__list"]}>
-        {items?.map((task, index) => (
+      <div className={styles["tasks__list"]} ref={setNodeRef}>
+        {items?.map((task) => (
           <Task
             key={task._id}
             task={task}
             project={project}
-            index={index}
-            boardId={boardId}
+            isDragging={task?._id === activeId}
           />
         ))}
         <div className={styles["task__add"]}>

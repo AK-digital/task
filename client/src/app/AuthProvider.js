@@ -20,18 +20,32 @@ export default function AuthProvider({ children }) {
   });
 
   useEffect(() => {
-    if (data) {
-      const response = data;
-      // If get session failed then redirect the user to the login page
-      if (!response?.success) {
-        // socket.emit("disconnect");
-        router.push(`/`);
-      } else {
-        setUid(response?.data?._id);
-        setUser(response?.data);
-        socket.emit("logged in", response?.data?._id);
+    let retryCount = 0;
+    const maxRetries = 3;
+
+    const handleSession = async () => {
+      try {
+        if (data) {
+          const response = data;
+          if (!response?.success) {
+            if (retryCount < maxRetries) {
+              retryCount++;
+              // Attendre un peu avant de réessayer
+              setTimeout(() => handleSession(), 1000 * retryCount);
+              return;
+            }
+            router.push(`/`);
+          } else {
+            setUid(response?.data?._id);
+            setUser(response?.data);
+          }
+        }
+      } catch (error) {
+        console.error("Session error:", error);
       }
-    }
+    };
+
+    handleSession();
   }, [data, router]);
 
   // Returns to auth page

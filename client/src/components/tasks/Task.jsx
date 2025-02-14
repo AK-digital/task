@@ -16,7 +16,8 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
 
-export default function Task({ task, project }) {
+export default function Task({ task, project, isDragging }) {
+  console.log(isDragging);
   const pathname = usePathname();
   const [opennedTask, setOpennedTask] = useState(null);
 
@@ -49,7 +50,7 @@ export default function Task({ task, project }) {
     <div
       ref={setNodeRef}
       style={style}
-      className={styles.container}
+      className={`${styles.container} ${isDragging ? styles.dragging : ""}`}
       suppressHydrationWarning
       data-openned={opennedTask === task?._id}
       data-done={task?.status === "Terminée"}

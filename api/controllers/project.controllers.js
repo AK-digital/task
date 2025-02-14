@@ -356,7 +356,7 @@ export async function acceptProjectInvitation(req, res, next) {
   try {
     const { invitationId } = req.body;
 
-    const projectInvitation = await ProjectInvitationModel.findOne({
+    const projectInvitation = await ProjectInvitationModel.findById({
       _id: invitationId,
     });
 
@@ -402,7 +402,7 @@ export async function acceptProjectInvitation(req, res, next) {
       });
     }
 
-    await ProjectInvitationModel.findOneAndDelete({
+    await ProjectInvitationModel.findByIdAndDelete({
       _id: projectInvitation?._id,
     });
 

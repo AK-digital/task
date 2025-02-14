@@ -70,8 +70,6 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
     }
   }
 
-  console.log(state);
-
   return (
     <div className={styles.container}>
       <div className={styles.title}>

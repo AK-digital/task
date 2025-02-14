@@ -42,7 +42,7 @@ export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
         <div className={styles.content}>
           <ProjectLogoForm project={project} />
           <ProjectOptionsForm project={project} />
-          {project?.author === uid && (
+          {project?.author?._id === uid && (
             <button
               className={`${instrumentSans.className} ${styles.deleteBtn}`}
               onClick={handleDeleteProject}
