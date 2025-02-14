@@ -129,7 +129,8 @@ export default function ClientBoards({ boards, project, initialTasks }) {
       const activeBoardId = findBoardByTaskId(activeTaskId);
       const overBoardId =
         over.data?.current?.sortable?.containerId ||
-        findBoardByTaskId(overTaskId);
+        findBoardByTaskId(overTaskId) ||
+        over.id; // Ajout de over.id comme fallback
 
       let newTasks;
 
@@ -137,7 +138,7 @@ export default function ClientBoards({ boards, project, initialTasks }) {
         // Déplacement vers un autre board
         setTasks((prev) => {
           const activeBoard = [...prev[activeBoardId]];
-          const overBoard = [...prev[overBoardId]];
+          const overBoard = [...(prev[overBoardId] || [])]; // Protection pour les tableaux vides
 
           const activeTaskIndex = activeBoard.findIndex(
             (task) => task._id === activeTaskId
@@ -150,6 +151,17 @@ export default function ClientBoards({ boards, project, initialTasks }) {
           const newActiveBoard = activeBoard.filter(
             (_, index) => index !== activeTaskIndex
           );
+
+          // Si on dépose sur un tableau vide, on ajoute à la fin
+          if (!overTaskId || overTaskId === overBoardId) {
+            newTasks = {
+              ...prev,
+              [activeBoardId]: newActiveBoard,
+              [overBoardId]: [...overBoard, activeTask],
+            };
+            return newTasks;
+          }
+
           const insertIndex =
             over.data?.current?.sortable?.index ?? overBoard.length;
 
@@ -164,9 +176,6 @@ export default function ClientBoards({ boards, project, initialTasks }) {
 
           return newTasks;
         });
-
-        // Appel API pour mettre à jour boardId
-        console.log(activeTaskId, overBoardId, project?._id);
       } else {
         // Réorganisation dans la même board
         setTasks((prev) => {
@@ -188,6 +197,8 @@ export default function ClientBoards({ boards, project, initialTasks }) {
       }
 
       setActiveId(null);
+
+      // Appel API pour mettre à jour boardId
       await updateTaskBoard(activeTaskId, overBoardId, project?._id);
       if (newTasks) {
         const updatedTasks = Object.values(newTasks)
