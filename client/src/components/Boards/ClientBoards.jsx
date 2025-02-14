@@ -133,8 +133,6 @@ export default function ClientBoards({ boards, project, initialTasks }) {
 
       let newTasks;
 
-      console.log(activeBoardId, overBoardId);
-
       if (activeBoardId !== overBoardId) {
         // Déplacement vers un autre board
         setTasks((prev) => {

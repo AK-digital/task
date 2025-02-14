@@ -108,6 +108,7 @@ export default function TaskMore({ task, project, setOpennedTask }) {
           <div className={styles.text}>
             <span>{task?.text}</span>
           </div>
+
           <div className={styles.taskAuthor}>
             <Image
               src={task?.author?.picture || "/default-pfp.webp"}
@@ -119,9 +120,13 @@ export default function TaskMore({ task, project, setOpennedTask }) {
               }}
             />
             <div className={styles.authorInfo}>
-              <span>
-                {task?.author?.firstName + " " + task?.author?.lastName}
-              </span>
+              {task?.author ? (
+                <span>
+                  {task?.author?.firstName + " " + task?.author?.lastName}
+                </span>
+              ) : (
+                <span>Compte supprimé</span>
+              )}
               <span>{moment(task?.createdAt).format("DD/MM/YYYY")}</span>
             </div>
           </div>

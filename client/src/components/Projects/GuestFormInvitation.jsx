@@ -57,6 +57,8 @@ export default function GuestFormInvitation({ project, setIsPopup }) {
     };
   }, [state]);
 
+  console.log(state);
+
   return (
     <>
       <div className={styles.container}>

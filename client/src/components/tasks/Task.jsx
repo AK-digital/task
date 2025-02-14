@@ -17,7 +17,6 @@ import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
 
 export default function Task({ task, project, isDragging }) {
-  console.log(isDragging);
   const pathname = usePathname();
   const [opennedTask, setOpennedTask] = useState(null);
 
