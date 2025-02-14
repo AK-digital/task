@@ -118,6 +118,7 @@ export async function signIn(prevState, formData) {
       httpOnly: true,
       sameSite: "strict",
       expires: Date.now() + 30 * 60 * 1000, // Expires in 30m
+      domain: "task.akdigital.fr",
     });
 
     cookie.set("rtk", refreshToken, {
@@ -125,6 +126,7 @@ export async function signIn(prevState, formData) {
       httpOnly: true,
       sameSite: "strict",
       expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 jours en millisecondes
+      domain: "task.akdigital.fr",
       // Add domain
     });
 

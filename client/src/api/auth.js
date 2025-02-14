@@ -90,6 +90,7 @@ export async function refreshToken(token) {
       httpOnly: true,
       sameSite: "strict",
       expires: Date.now() + 30 * 60 * 1000, // expires in 30m
+      domain: "task.akdigital.fr",
       // Add domain
     });
 
@@ -98,6 +99,7 @@ export async function refreshToken(token) {
       httpOnly: true,
       sameSite: "strict",
       expires: Date.now() + 14 * 24 * 60 * 60 * 1000, // 14 jours en millisecondes
+      domain: "task.akdigital.fr",
       // Add domain
     });
 
