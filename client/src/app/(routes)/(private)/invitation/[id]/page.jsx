@@ -1,7 +1,7 @@
 "use client";
 import { acceptProjectInvitation } from "@/actions/project";
-import { deleteCookie } from "cookies-next";
-import { setCookie } from "cookies-next/client";
+import { revalidateProject } from "@/api/project";
+import socket from "@/utils/socket";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -22,6 +22,7 @@ export default function Invitation() {
           router.push("/projects");
         } else {
           const project = response?.data;
+          socket.emit("accept project invitation", project?._id);
           router.push(`/project/${project?._id}`);
         }
       } catch (err) {

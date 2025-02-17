@@ -2,6 +2,7 @@ import { addTaskSession } from "@/actions/task";
 import { removeTaskSession, taskEndTimer, taskStartTimer } from "@/api/task";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
+import socket from "@/utils/socket";
 import { faPauseCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MinusCircle } from "lucide-react";
@@ -43,6 +44,8 @@ export default function TaskTimer({ task }) {
   const handlePauseTimer = async () => {
     setIsRunning(false);
     await taskEndTimer(task?._id, task?.projectId);
+
+    socket.emit("update task", task?.projectId);
   };
 
   const handlePlayTimer = async () => {
@@ -134,6 +137,7 @@ export function TimeTrackingForm({ task, formatTime }) {
       setStartTime(moment().format("HH:mm"));
       setEndTime("");
       setTimeExpected("00:00:00");
+      socket.emit("update task", task?.projectId);
     }
   }, [state]);
 
@@ -221,6 +225,8 @@ export function TimeTrackingSessions({ task, sessions, formatTime }) {
   const { uid } = useContext(AuthContext);
   async function handleDeleteSession(sessionId) {
     await removeTaskSession(task._id, task.projectId, sessionId);
+
+    socket.emit("update task", task.projectId);
   }
 
   return (

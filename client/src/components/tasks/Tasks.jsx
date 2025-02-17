@@ -36,6 +36,8 @@ export default function Tasks({
     if (state?.status === "success") {
       inputRef?.current?.focus();
       setIsWritting(false);
+
+      socket.emit("update task", project?._id);
     }
   }, [state]);
 

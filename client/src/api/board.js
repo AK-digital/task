@@ -36,10 +36,6 @@ export async function getBoards(projectId) {
 }
 
 export async function revalidateBoards() {
-  try {
-    console.log("Revalidating boards");
-    revalidateTag("project");
-  } catch (err) {
-    console.log(err);
-  }
+  revalidateTag("projects");
+  revalidateTag("boards");
 }

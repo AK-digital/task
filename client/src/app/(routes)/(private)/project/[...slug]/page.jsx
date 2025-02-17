@@ -7,6 +7,7 @@ import { isNotEmpty } from "@/utils/utils";
 import AddBoard from "@/components/Boards/AddBoard";
 import Boards from "@/components/Boards/Boards";
 import { getProjectInvitations } from "@/api/projectInvitation";
+import ProjectClient from "@/components/Projects/ProjectClient";
 
 export default async function Project({ params }) {
   const { slug } = await params;
@@ -18,16 +19,11 @@ export default async function Project({ params }) {
 
   return (
     <main className={styles.main}>
-      <ProjectHeader
+      <ProjectClient
         project={project}
         projectInvitations={projectInvitations}
+        boards={boards}
       />
-      <div className={styles.container}>
-        {isNotEmpty(boards) && <Boards boards={boards} project={project} />}
-        <div className={styles.options}>
-          <AddBoard projectId={id} />
-        </div>
-      </div>
     </main>
   );
 }

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import DeleteBoard from "./DeleteBoard";
 import { openCloseBoard } from "@/api/board";
+import socket from "@/utils/socket";
 
 export default function BoardHeader({
   board,
@@ -41,6 +42,8 @@ export default function BoardHeader({
       value
     );
     if (!response?.success) setTitle(board?.title);
+
+    socket.emit("update board", board?.projectId);
   }, 600);
 
   const handleTitleChange = (e) => {

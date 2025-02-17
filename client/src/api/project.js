@@ -17,7 +17,7 @@ export async function getProject(id) {
           Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
         },
       },
-      { next: { tags: ["project"] } }
+      { next: { tags: [`project-${id}`] } }
     );
 
     const response = await res.json();
@@ -33,6 +33,11 @@ export async function getProject(id) {
         "Une erreur est survenue lors de la récupération des projets"
     );
   }
+}
+
+export async function revalidateProject(id) {
+  revalidateTag(`project-${id}`);
+  revalidateTag("project-invitations");
 }
 
 export async function getProjects() {

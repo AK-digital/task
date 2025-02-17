@@ -187,6 +187,8 @@ export default function RichTextEditor({
     if (isDescription) {
       if (isEmpty) {
         await updateDescription(task?._id, task?.projectId, "", []);
+
+        socket.emit("update task", task?.projectId);
       } else {
         const res = await updateDescription(
           task?._id,
@@ -206,6 +208,8 @@ export default function RichTextEditor({
           for (const taggedUser of taggedUsers) {
             socket.emit("create notification", user, taggedUser, message, link);
           }
+
+          socket.emit("update task", task?.projectId);
         }
       }
       setEditDescription(false);

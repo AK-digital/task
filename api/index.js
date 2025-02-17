@@ -16,6 +16,8 @@ import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import UserModel from "./models/User.model.js";
 import NotificationModel from "./models/Notification.model.js";
+import ProjectModel from "./models/Project.model.js";
+import TaskModel from "./models/Task.model.js";
 
 const app = express();
 const server = createServer(app);
@@ -132,8 +134,23 @@ io.on("connection", (socket) => {
     io.to(user?.socketId).emit("notifications read");
   });
 
-  // Task update
+  // Project invitation
+  socket.on("accept project invitation", async (projectId) => {
+    // Find the project
+    const project = await ProjectModel.findById({ _id: projectId });
 
+    if (!project) return; // If the project doesn't exist, return
+
+    const guests = [...project?.guests, project?.author];
+
+    // Emit to all the guests of the project that a new member has joined
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest });
+      io.to(user?.socketId).emit("accepted project invitation", project?._id);
+    });
+  });
+
+  // Task update
   socket.on("task text update", async (guests, taskId, value) => {
     guests?.forEach(async (guest) => {
       const user = await UserModel.findById({ _id: guest._id });
@@ -175,6 +192,40 @@ io.on("connection", (socket) => {
         taskId,
         optimisticValue
       );
+      io.to(user?.socketId).emit("task updated");
+    });
+  });
+  // task deadline
+  socket.on("task deadline update", async (guests) => {
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest._id });
+      io.to(user?.socketId).emit("task updated");
+    });
+  });
+
+  socket.on("update board", async (projectId) => {
+    const project = await ProjectModel.findById({ _id: projectId });
+
+    if (!project) return;
+
+    const guests = [...project?.guests, project?.author];
+
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest });
+
+      io.to(user?.socketId).emit("task updated");
+    });
+  });
+
+  socket.on("update task", async (projectId) => {
+    const project = await ProjectModel.findById({ _id: projectId });
+
+    if (!project) return;
+
+    const guests = [...project?.guests, project?.author];
+
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest });
       io.to(user?.socketId).emit("task updated");
     });
   });

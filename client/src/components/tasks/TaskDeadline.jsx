@@ -1,14 +1,15 @@
 "use client";
 import styles from "@/styles/components/tasks/task-deadline.module.css";
 import { updateTaskDeadline } from "@/actions/task";
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { Calendar } from "lucide-react";
 import moment from "moment";
 import "moment/locale/fr";
+import socket from "@/utils/socket";
 
 const initialState = {};
 
-export default function TaskDeadline({ task }) {
+export default function TaskDeadline({ task, project }) {
   const form = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -36,6 +37,12 @@ export default function TaskDeadline({ task }) {
       form.current.requestSubmit();
     }
   }
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      socket.emit("update task", task?.projectId);
+    }
+  }, [state]);
 
   const displayDate = formattedDeadline ?? "__/__/__";
 

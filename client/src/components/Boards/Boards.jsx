@@ -11,14 +11,15 @@ export default function Boards({ boards, project }) {
   const tasks = boards?.map((board) => board?.tasks);
 
   useEffect(() => {
-    const handleTaskUpdate = async () => {
+    const handleBoardUpdate = async () => {
+      console.log("played");
       await revalidateBoards();
     };
 
-    socket.on("task updated", handleTaskUpdate);
+    socket.on("task updated", handleBoardUpdate);
 
     return () => {
-      socket.off("task updated", handleTaskUpdate);
+      socket.off("task updated", handleBoardUpdate);
     };
   }, [socket]);
 
