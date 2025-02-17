@@ -8,7 +8,7 @@ import { isNotEmpty } from "@/utils/utils";
 import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function TaskResponsibles({ task, project }) {
   const { user, uid } = useContext(AuthContext);
@@ -16,28 +16,27 @@ export default function TaskResponsibles({ task, project }) {
     task?.responsibles || []
   );
   const [openModal, setOpenModal] = useState(false);
-  const responsibles = task?.responsibles;
-  const guests = project?.guests;
+  const responsibles = task?.responsibles || [];
+  const guests = project?.guests || [];
   const author = project?.author;
 
-  // Return guests that aren't responsible of the task already
+  // Retourne les invités qui ne sont pas encore responsables
   const filteredGuests = guests.filter(
     (guest) =>
       !responsibles.some((responsible) => responsible?._id === guest?._id)
   );
 
-  // Chekcs if author is already in responsibles arr
-  const filteredAuthor = responsibles?.some(
+  // Vérifie si l'auteur est déjà responsable
+  const filteredAuthor = responsibles.some(
     (responsible) => responsible?._id === author?._id
   );
 
   async function handleAddResponsible(responsible) {
-    const previousResponsibles = optimisticResponsibles;
+    const previousResponsibles = [...optimisticResponsibles];
 
+    // Mise à jour optimiste
     setOptimisticResponsibles((prev) => {
-      // Vérifier si le responsable n'existe pas déjà !
-      const exists = prev.some((r) => r._id === responsible._id);
-      if (exists) return prev;
+      if (prev.some((r) => r._id === responsible._id)) return prev;
       return [...prev, responsible];
     });
 
@@ -49,32 +48,38 @@ export default function TaskResponsibles({ task, project }) {
 
     if (!response?.success) {
       setOptimisticResponsibles(previousResponsibles);
-    }
-
-    // If the auth user is the one who assigned the task, don't send a notification
-    if (responsible?._id === uid) {
       return;
     }
 
+    const updatedGuests = [...guests, author];
+
+    socket.emit(
+      "task responsible update",
+      updatedGuests,
+      task?._id,
+      responsible
+    );
+
+    // Ne pas envoyer de notification si c'est l'utilisateur qui s'ajoute lui-même
+    if (responsible?._id === uid) return;
+
     const message = {
-      title: `🎉 Une tâche vous a été assigné(e) dans ${project?.name}`,
+      title: `🎉 Une tâche vous a été assignée dans ${project?.name}`,
       content: `Vous venez d'être nommé responsable de la tâche "${task?.text}".`,
     };
 
-    const link = "/project/" + project?._id + "/task/" + task?._id;
+    const link = `/project/${project?._id}/task/${task?._id}`;
 
-    // Emit a notification to the user that has been assigned to the task
     socket.emit("create notification", user, responsible?.email, message, link);
   }
 
   async function handleRemoveResponsible(responsible) {
-    const findDeletedResponsible = optimisticResponsibles.filter(
-      (deletedResponsible) => {
-        return deletedResponsible?._id !== responsible?._id;
-      }
-    );
+    const previousResponsibles = [...optimisticResponsibles];
 
-    setOptimisticResponsibles(findDeletedResponsible);
+    // Mise à jour optimiste
+    setOptimisticResponsibles((prev) =>
+      prev.filter((r) => r._id !== responsible._id)
+    );
 
     const response = await removeResponsible(
       task?._id,
@@ -83,133 +88,134 @@ export default function TaskResponsibles({ task, project }) {
     );
 
     if (!response?.success) {
-      setOptimisticResponsibles(responsibles);
+      setOptimisticResponsibles(previousResponsibles);
+      return;
     }
+
+    const updatedGuests = [...guests, author];
+
+    socket.emit("task responsible update", updatedGuests, task?._id, {
+      removed: true,
+      responsible,
+    });
   }
+
+  useEffect(() => {
+    function handleResponsibleUpdate(taskId, updateData) {
+      if (task?._id !== taskId) return;
+
+      setOptimisticResponsibles((prev) => {
+        if (updateData?.removed) {
+          return prev.filter((r) => r._id !== updateData?.responsible._id);
+        }
+
+        if (prev.some((r) => r?._id === updateData?._id)) return prev;
+        return [...prev, updateData];
+      });
+    }
+
+    socket.on("task responsible updated", handleResponsibleUpdate);
+
+    return () => {
+      socket.off("task responsible updated", handleResponsibleUpdate);
+    };
+  }, [task]);
 
   return (
     <div className={styles.container}>
       {isNotEmpty(optimisticResponsibles) ? (
-        <ul className={styles.list} onClick={(e) => setOpenModal(!openModal)}>
-          {optimisticResponsibles.slice(0, 3).map((responsible) => {
-            return (
-              <li key={responsible?._id}>
-                <Image
-                  src={responsible?.picture || "/default-pfp.webp"}
-                  width={30}
-                  height={30}
-                  quality={100}
-                  style={{
-                    objectFit: "cover",
-                    borderRadius: "50%",
-                    cursor: "pointer",
-                  }}
-                  alt={`Photo de profil de ${responsible?.firstName}`}
-                />
-              </li>
-            );
-          })}
-          {optimisticResponsibles?.length > 3 && (
+        <ul className={styles.list} onClick={() => setOpenModal(!openModal)}>
+          {optimisticResponsibles.slice(0, 3).map((responsible) => (
+            <li key={responsible?._id}>
+              <Image
+                src={responsible?.picture || "/default-pfp.webp"}
+                width={30}
+                height={30}
+                quality={100}
+                style={{
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                  cursor: "pointer",
+                }}
+                alt={`Photo de profil de ${responsible?.firstName}`}
+              />
+            </li>
+          ))}
+          {optimisticResponsibles.length > 3 && (
             <li className={styles.count}>
-              +{optimisticResponsibles?.length - 3}
+              +{optimisticResponsibles.length - 3}
             </li>
           )}
         </ul>
       ) : (
-        <div className={styles.plus} onClick={(e) => setOpenModal(!openModal)}>
+        <div className={styles.plus} onClick={() => setOpenModal(!openModal)}>
           <FontAwesomeIcon icon={faPlus} />
         </div>
       )}
+
       {/* MODAL */}
       {openModal && (
         <Modal setOpenModal={setOpenModal}>
           <div className={styles.modal}>
             {isNotEmpty(optimisticResponsibles) && (
               <div className={styles["responsibles__container"]}>
-                {/* Responsibles */}
                 <ul className={styles["responsibles__list"]}>
-                  {optimisticResponsibles?.map((responsible) => {
-                    return (
-                      <li
-                        key={responsible?._id}
-                        onClick={(e) => {
-                          handleRemoveResponsible(responsible);
-                        }}
-                      >
-                        <Image
-                          src={responsible?.picture || "/default-pfp.webp"}
-                          width={20}
-                          height={20}
-                          quality={100}
-                          style={{
-                            objectFit: "fill",
-                            borderRadius: "50%",
-                          }}
-                          alt={`Photo de profil de ${responsible?.firstName}`}
-                        />
-                        {responsible?.firstName + " " + responsible?.lastName}
-                        <FontAwesomeIcon icon={faX} />
-                      </li>
-                    );
-                  })}
+                  {optimisticResponsibles.map((responsible) => (
+                    <li
+                      key={responsible?._id}
+                      onClick={() => handleRemoveResponsible(responsible)}
+                    >
+                      <Image
+                        src={responsible?.picture || "/default-pfp.webp"}
+                        width={20}
+                        height={20}
+                        quality={100}
+                        style={{ objectFit: "fill", borderRadius: "50%" }}
+                        alt={`Photo de profil de ${responsible?.firstName}`}
+                      />
+                      {responsible?.firstName + " " + responsible?.lastName}
+                      <FontAwesomeIcon icon={faX} />
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}
-            {/* Guests (Display only if author and guests are not empty) */}
+
             {(!filteredAuthor || isNotEmpty(filteredGuests)) && (
               <div className={styles["guests__container"]}>
                 <span className={styles["guests__title"]}>
                   Personnes à inviter
                 </span>
-
                 <ul className={styles["guests__list"]}>
                   {!filteredAuthor && (
-                    <li
-                      onClick={(e) => {
-                        handleAddResponsible(author);
-                      }}
-                    >
+                    <li onClick={() => handleAddResponsible(author)}>
                       <Image
                         src={author?.picture || "/default-pfp.webp"}
                         width={25}
                         height={25}
                         quality={100}
-                        style={{
-                          position: "relative",
-                          top: "1px",
-                          objectFit: "fill",
-                          borderRadius: "50%",
-                        }}
+                        style={{ objectFit: "fill", borderRadius: "50%" }}
                         alt={`Photo de profil de ${author?.firstName}`}
                       />
                       <span className={styles.email}>{author?.email}</span>
                     </li>
                   )}
-                  {filteredGuests?.map((guest) => {
-                    return (
-                      <li
-                        key={guest?._id}
-                        onClick={(e) => {
-                          handleAddResponsible(guest);
-                        }}
-                      >
-                        <Image
-                          src={guest?.picture || "/default-pfp.webp"}
-                          width={25}
-                          height={25}
-                          quality={100}
-                          style={{
-                            position: "relative",
-                            top: "1px",
-                            objectFit: "fill",
-                            borderRadius: "50%",
-                          }}
-                          alt={`Photo de profil de ${guest?.firstName}`}
-                        />
-                        <span className={styles.email}>{guest?.email}</span>
-                      </li>
-                    );
-                  })}
+                  {filteredGuests.map((guest) => (
+                    <li
+                      key={guest?._id}
+                      onClick={() => handleAddResponsible(guest)}
+                    >
+                      <Image
+                        src={guest?.picture || "/default-pfp.webp"}
+                        width={25}
+                        height={25}
+                        quality={100}
+                        style={{ objectFit: "fill", borderRadius: "50%" }}
+                        alt={`Photo de profil de ${guest?.firstName}`}
+                      />
+                      <span className={styles.email}>{guest?.email}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}

@@ -22,6 +22,7 @@ import Task from "../tasks/Task";
 
 export default function ClientBoards({ boards, project, initialTasks }) {
   const [tasks, setTasks] = useState(initialTasks || []);
+
   const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {

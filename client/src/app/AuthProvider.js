@@ -38,6 +38,7 @@ export default function AuthProvider({ children }) {
           } else {
             setUid(response?.data?._id);
             setUser(response?.data);
+            socket.emit("logged in", response?.data?._id);
           }
         }
       } catch (error) {
@@ -47,6 +48,16 @@ export default function AuthProvider({ children }) {
 
     handleSession();
   }, [data, router]);
+
+  useEffect(() => {
+    socket.on("logged in", (data) => {
+      setUser(data);
+    });
+
+    return () => {
+      socket.off("logged in");
+    };
+  }, [socket]);
 
   // Returns to auth page
   if (error) {

@@ -1,7 +1,8 @@
 import styles from "@/styles/components/tasks/task-text.module.css";
 import { updateTaskText } from "@/actions/task";
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { instrumentSans } from "@/utils/font";
+import socket from "@/utils/socket";
 
 const initialState = {
   status: "pending",
@@ -10,7 +11,7 @@ const initialState = {
   errors: null,
 };
 
-export default function TaskText({ task }) {
+export default function TaskText({ task, project }) {
   const formRef = useRef(null);
   const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState(task?.text || "");
@@ -30,6 +31,27 @@ export default function TaskText({ task }) {
     setInputValue(value);
     formRef?.current?.requestSubmit();
   };
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      const guests = [...project?.guests, project?.author];
+
+      socket.emit("task text update", guests, task?._id, inputValue);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    async function handleTextUpdate(taskId, value) {
+      if (task?._id !== taskId) return;
+      setInputValue(value);
+    }
+
+    socket.on("task text updated", handleTextUpdate);
+
+    return () => {
+      socket.off("task text updated", handleTextUpdate);
+    };
+  }, [inputValue]);
 
   return (
     <div

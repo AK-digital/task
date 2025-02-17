@@ -63,7 +63,25 @@ export async function getBoards(req, res, next) {
 
     const boardsWithTasks = await Promise.all(
       boards.map(async (board) => {
-        const tasks = await TaskModel.find({ boardId: board._id });
+        const tasks = await TaskModel.find({ boardId: board._id })
+          .sort({ order: "asc" })
+          .populate({
+            path: "responsibles",
+            select: "-password -role", // Exclure le champ `password` des responsibles
+          })
+          .populate({
+            path: "author",
+            select: "-password -role", // Exclure le champ `password` des responsibles
+          })
+          .populate({
+            path: "description.author", // Accès à l'auteur de la description
+            select: "-password -role", // Exclure les champs sensibles
+          })
+          .populate({
+            path: "timeTracking.sessions.userId", // Accès à userId dans sessions
+            select: "-password -role", // Exclure les champs sensibles
+          })
+          .exec();
         return { ...board.toObject(), tasks: tasks };
       })
     );

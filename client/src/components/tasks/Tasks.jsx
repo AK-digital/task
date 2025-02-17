@@ -6,6 +6,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { saveTask } from "@/actions/task";
 import { useDroppable } from "@dnd-kit/core";
+import socket from "@/utils/socket";
+import { revalidateBoards } from "@/api/board";
 
 const initialState = {
   status: "pending",
@@ -23,11 +25,6 @@ export default function Tasks({
 }) {
   const inputRef = useRef(null);
   const [isWritting, setIsWritting] = useState(false);
-  const [items, setItems] = useState(tasks || []);
-
-  useEffect(() => {
-    setItems(tasks);
-  }, [tasks]);
 
   const saveTaskWithProjectId = saveTask.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
@@ -55,7 +52,7 @@ export default function Tasks({
       data-board-id={boardId}
     >
       <div className={styles["tasks__list"]} ref={setNodeRef}>
-        {items?.map((task) => (
+        {tasks?.map((task) => (
           <Task
             key={task._id}
             task={task}

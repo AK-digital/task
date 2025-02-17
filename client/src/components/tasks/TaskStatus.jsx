@@ -1,10 +1,14 @@
+"use client";
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskStatus } from "@/actions/task";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import socket from "@/utils/socket";
+import { revalidateBoards } from "@/api/board";
+import { set } from "zod";
 
 const status = ["En attente", "À faire", "En cours", "Bloquée", "Terminée"];
 
-export default function TaskStatus({ task }) {
+export default function TaskStatus({ task, project }) {
   const [optimisticCurrent, setOptimisticCurrent] = useState(task?.status);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -15,8 +19,29 @@ export default function TaskStatus({ task }) {
 
     const response = await updateTaskStatus(task?._id, task?.projectId, value);
 
-    if (response?.status === "failure") setOptimisticCurrent(task?.status);
+    if (response?.status === "failure") {
+      setOptimisticCurrent(task?.status);
+      return;
+    }
+
+    const guests = [...project?.guests, project?.author];
+
+    socket.emit("task status update", guests, task?._id, value);
   }
+
+  useEffect(() => {
+    function onTaskUpdated(taskId, optimisticValue) {
+      if (task?._id === taskId) {
+        setOptimisticCurrent(optimisticValue);
+      }
+    }
+
+    socket.on("task status updated", onTaskUpdated);
+
+    return () => {
+      socket.off("task status updated", onTaskUpdated);
+    };
+  }, [optimisticCurrent]);
 
   return (
     <div className={styles["dropdown"]}>

@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
         throw new Error("Aucun utilisateur trouvé avec cette ID : ", userId);
       }
 
-      await UserModel.findByIdAndUpdate(
+      const userWithSocketId = await UserModel.findByIdAndUpdate(
         { _id: userId },
         {
           $set: {
@@ -77,6 +77,8 @@ io.on("connection", (socket) => {
           setDefaultsOnInsert: true,
         }
       );
+
+      socket.emit("logged in", userWithSocketId);
     }
   });
 
@@ -128,6 +130,53 @@ io.on("connection", (socket) => {
 
     // Emit to the user that the notifications have been read so we can update the UI
     io.to(user?.socketId).emit("notifications read");
+  });
+
+  // Task update
+
+  socket.on("task text update", async (guests, taskId, value) => {
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest._id });
+      io.to(user?.socketId).emit("task text updated", taskId, value);
+      io.to(user?.socketId).emit("task updated");
+    });
+  });
+
+  socket.on("task responsible update", async (guests, taskId, responsible) => {
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest._id });
+      io.to(user?.socketId).emit(
+        "task responsible updated",
+        taskId,
+        responsible
+      );
+      io.to(user?.socketId).emit("task updated");
+    });
+  });
+
+  socket.on("task status update", async (guests, taskId, optimisticValue) => {
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest._id });
+      io.to(user?.socketId).emit(
+        "task status updated",
+        taskId,
+        optimisticValue
+      );
+      io.to(user?.socketId).emit("task updated");
+    });
+  });
+
+  socket.on("task priority update", (guests, taskId, optimisticValue) => {
+    // Emit to all the guests of the project that a task has been updated
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest._id });
+      io.to(user?.socketId).emit(
+        "task priority updated",
+        taskId,
+        optimisticValue
+      );
+      io.to(user?.socketId).emit("task updated");
+    });
   });
 });
 

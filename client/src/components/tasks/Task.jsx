@@ -59,7 +59,7 @@ export default function Task({ task, project, isDragging }) {
           <div {...attributes} {...listeners} suppressHydrationWarning>
             <FontAwesomeIcon icon={faGripVertical} />
           </div>
-          <TaskText task={task} />
+          <TaskText task={task} project={project} />
           <div className={styles.comment}>
             <div onClick={handleTaskClick}>
               <FontAwesomeIcon icon={faComment} />
@@ -67,8 +67,8 @@ export default function Task({ task, project, isDragging }) {
           </div>
           <TaskResponsibles task={task} project={project} />
           <div className={styles.options}>
-            <TaskStatus task={task} />
-            <TaskPriority task={task} />
+            <TaskStatus task={task} project={project} />
+            <TaskPriority task={task} project={project} />
           </div>
           <TaskDeadline task={task} />
           <TaskTimer task={task} />
