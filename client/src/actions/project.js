@@ -166,7 +166,11 @@ export async function acceptProjectInvitation(invitationId) {
     return response;
   } catch (err) {
     console.log(err.message || "Une erreur est survenue");
-    if (err?.message === "L'utilisateur n'est pas connecté") {
+
+    if (
+      err?.message === "L'utilisateur n'est pas connecté" ||
+      err?.message === "L'utilisateur n'existe pas"
+    ) {
       cookie.set("invitationId", invitationId, {
         secure: true,
         httpOnly: true,
@@ -174,6 +178,7 @@ export async function acceptProjectInvitation(invitationId) {
         path: "/",
       });
     }
+
     return {
       success: false,
       message: err.message || "Une erreur est survenue",

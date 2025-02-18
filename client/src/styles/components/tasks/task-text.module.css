@@ -8,6 +8,10 @@
     font-size: var(--text-size-normal);
 }
 
+.container[data-header="true"] {
+    text-align: center;
+}
+
 .container p {
     padding: 6px 7px;
     white-space: nowrap;

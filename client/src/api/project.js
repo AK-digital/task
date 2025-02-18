@@ -64,7 +64,7 @@ export async function getProjects() {
     return response.data;
   } catch (err) {
     console.log(
-      err.message ||
+      err?.message ||
         "Une erreur est survenue lors de la récupération des projets"
     );
   }
@@ -95,7 +95,7 @@ export async function deleteProject(projectId) {
     return response;
   } catch (err) {
     console.log(
-      err.message ||
+      err?.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
     );
   }

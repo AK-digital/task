@@ -3,6 +3,7 @@ import styles from "@/styles/components/auth/sign.module.css";
 import { instrumentSans } from "@/utils/font";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 
 const initialState = {
@@ -12,15 +13,15 @@ const initialState = {
   errors: null,
 };
 
-export default function SignUp({ setSignIn, setSignUp }) {
+export default function SignUp() {
+  const router = useRouter();
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [message, setMessage] = useState(null);
   const [state, formAction, pending] = useActionState(signUp, initialState);
 
   function handleSignIn(e) {
     e.preventDefault();
-    setSignUp(false);
-    setSignIn(true);
+    router.push("/");
   }
 
   //   async function handleGoogleAuth(e) {

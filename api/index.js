@@ -18,6 +18,7 @@ import UserModel from "./models/User.model.js";
 import NotificationModel from "./models/Notification.model.js";
 import ProjectModel from "./models/Project.model.js";
 import TaskModel from "./models/Task.model.js";
+import BoardModel from "./models/Board.model.js";
 
 const app = express();
 const server = createServer(app);
@@ -203,17 +204,18 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("update board", async (projectId) => {
+  socket.on("update board", async (boardId, projectId) => {
     const project = await ProjectModel.findById({ _id: projectId });
+    const board = await BoardModel.findById({ _id: boardId });
 
-    if (!project) return;
+    if (!project || !board) return;
 
     const guests = [...project?.guests, project?.author];
 
     guests?.forEach(async (guest) => {
       const user = await UserModel.findById({ _id: guest });
 
-      io.to(user?.socketId).emit("task updated");
+      io.to(user?.socketId).emit("board updated", board);
     });
   });
 
@@ -227,6 +229,19 @@ io.on("connection", (socket) => {
     guests?.forEach(async (guest) => {
       const user = await UserModel.findById({ _id: guest });
       io.to(user?.socketId).emit("task updated");
+    });
+  });
+
+  socket.on("update message", async (projectId) => {
+    const project = await ProjectModel.findById({ _id: projectId });
+
+    if (!project) return;
+
+    const guests = [...project?.guests, project?.author];
+
+    guests?.forEach(async (guest) => {
+      const user = await UserModel.findById({ _id: guest });
+      io.to(user?.socketId).emit("message updated");
     });
   });
 });

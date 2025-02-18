@@ -21,7 +21,7 @@ export default function Task({ task, project, isDragging }) {
   const [opennedTask, setOpennedTask] = useState(null);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: task._id });
+    useSortable({ id: task?._id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -65,6 +65,7 @@ export default function Task({ task, project, isDragging }) {
               <FontAwesomeIcon icon={faComment} />
             </div>
           </div>
+
           <TaskResponsibles task={task} project={project} />
           <div className={styles.options}>
             <TaskStatus task={task} project={project} />

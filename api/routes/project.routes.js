@@ -48,6 +48,7 @@ router.post(
 
 router.patch(
   "/accept-invitation",
+  authMiddlewares.hasAccount,
   authMiddlewares.auth,
   projectControllers.acceptProjectInvitation
 );

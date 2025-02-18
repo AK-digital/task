@@ -12,7 +12,6 @@ export default function Boards({ boards, project }) {
 
   useEffect(() => {
     const handleBoardUpdate = async () => {
-      console.log("played");
       await revalidateBoards();
     };
 

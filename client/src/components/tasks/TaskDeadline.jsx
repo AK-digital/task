@@ -16,7 +16,7 @@ export default function TaskDeadline({ task, project }) {
   const updateTaskDeadlineWithIds = updateTaskDeadline.bind(
     null,
     task?._id,
-    task.projectId
+    task?.projectId
   );
   const [state, formAction, pending] = useActionState(
     updateTaskDeadlineWithIds,

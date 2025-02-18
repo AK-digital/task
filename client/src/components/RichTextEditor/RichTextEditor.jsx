@@ -228,6 +228,8 @@ export default function RichTextEditor({
           `/message?projectId=${task?.projectId}&taskId=${task?._id}`
         );
 
+        socket.emit("update message", project?._id);
+
         const message = {
           title: `${user?.firstName} vous a mentionné(e) dans une conversation`,
           content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
@@ -251,6 +253,8 @@ export default function RichTextEditor({
       );
       if (res?.success) {
         await mutateMessage();
+
+        socket.emit("update message", project?._id);
 
         const message = {
           title: `${user?.firstName} vous a mentionné(e) dans une conversation`,

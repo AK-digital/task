@@ -1,9 +1,9 @@
 "use client";
+import SendResetCodeForm from "@/components/auth/SendResetCodeForm";
 import styles from "@/styles/pages/auth.module.css";
-import SignIn from "@/components/auth/SignIn";
 import Image from "next/image";
 
-export default function Auth() {
+export default function ForgotPassword() {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -15,7 +15,7 @@ export default function Auth() {
           className={styles.logo}
         />
 
-        <SignIn />
+        <SendResetCodeForm />
       </div>
     </main>
   );

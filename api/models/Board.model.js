@@ -35,6 +35,10 @@ const boardSchema = new Schema(
       required: true,
       default: "#ffffff",
     },
+    isArchived: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

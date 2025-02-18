@@ -18,20 +18,22 @@ const initialState = {
   invitationId: null,
 };
 
-export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
+export default function SignIn() {
   const router = useRouter();
   const [message, setMessage] = useState(null);
   const [status, setStatus] = useState(null);
-  const [unVerified, setUnVerified] = useState(false);
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [state, formAction, pending] = useActionState(signIn, initialState);
 
   function handleSignUp(e) {
     e.preventDefault();
-    setSignIn(false);
-    setSignUp(true);
+    router.push("/sign-up");
   }
 
+  function handleForgotPassword(e) {
+    e.preventDefault();
+    router.push("/forgot-password");
+  }
   // async function handleGoogleAuth(e) {
   //   e.preventDefault();
   //   window.open(`http://localhost:5000/api/auth/google/`, "_self");
@@ -39,7 +41,6 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
 
   useEffect(() => {
     setMessage("");
-    setUnVerified(false);
     if (state?.status === "success") {
       if (state?.invitationId) {
         router.push(`invitation/${state?.invitationId}`);
@@ -56,7 +57,6 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
       setStatus("failure");
     }
     if (state?.message.includes("vérifié")) {
-      setUnVerified(true);
       setStatus("failure");
     }
   }, [state]);
@@ -123,10 +123,7 @@ export default function SignIn({ setSignIn, setSignUp, setForgotPassword }) {
           )}
           <span
             className={styles.forgotPassword}
-            onClick={(e) => {
-              setSignIn(false);
-              setForgotPassword(true);
-            }}
+            onClick={handleForgotPassword}
           >
             Mot de passe oublié ?
           </span>

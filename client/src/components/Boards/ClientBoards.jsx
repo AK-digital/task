@@ -19,6 +19,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { updateTaskBoard, updateTaskOrder } from "@/api/task";
 import Task from "../tasks/Task";
+import socket from "@/utils/socket";
 
 export default function ClientBoards({ boards, project, initialTasks }) {
   const [tasks, setTasks] = useState(initialTasks || []);
@@ -208,6 +209,8 @@ export default function ClientBoards({ boards, project, initialTasks }) {
 
         await updateTaskOrder(updatedTasks, project._id);
       }
+
+      socket.emit("update task", project?._id);
     },
     [findBoardByTaskId]
   );

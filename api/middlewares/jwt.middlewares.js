@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User.model.js";
 import TokenBlackListModel from "../models/TokenBlackList.model.js";
+import ProjectInvitationModel from "../models/ProjectInvitation.model.js";
 export async function auth(req, res, next) {
   try {
     // Getting the access token in the header
@@ -119,6 +120,43 @@ export async function isAdmin(req, res, next) {
         success: false,
         message:
           "Accès refusé : L'utilisateur n'est pas autorisé à effectuer cette action",
+      });
+    }
+
+    next();
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Checks if has an account for project accept invitation
+
+export async function hasAccount(req, res, next) {
+  try {
+    const { invitationId } = req.body;
+
+    const projectInvitation = await ProjectInvitationModel.findById({
+      _id: invitationId,
+    });
+
+    if (!projectInvitation) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible d'accepter une invitation qui n'existe pas",
+      });
+    }
+
+    const user = await UserModel.findOne({
+      email: projectInvitation?.guestEmail,
+    });
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "L'utilisateur n'existe pas",
       });
     }
 

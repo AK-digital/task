@@ -2,10 +2,9 @@
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import DeleteBoard from "./DeleteBoard";
-import { openCloseBoard } from "@/api/board";
 import socket from "@/utils/socket";
 
 export default function BoardHeader({
@@ -25,13 +24,17 @@ export default function BoardHeader({
   async function handleColor(e) {
     const value = e.target.dataset.value;
     setOptimisticColor(value);
+
     const response = await updateBoard(
       board?._id,
       board?.projectId,
       value,
       title
     );
+
     if (!response?.success) setOptimisticColor(board?.color);
+
+    socket.emit("update board", board?._id, board?.projectId);
   }
 
   const debouncedUpdateTask = useDebouncedCallback(async (value) => {
@@ -41,9 +44,10 @@ export default function BoardHeader({
       optimisticColor,
       value
     );
+
     if (!response?.success) setTitle(board?.title);
 
-    socket.emit("update board", board?.projectId);
+    socket.emit("update board", board?._id, board?.projectId);
   }, 600);
 
   const handleTitleChange = (e) => {
@@ -58,6 +62,21 @@ export default function BoardHeader({
     }
     setOpen(!open);
   }
+
+  useEffect(() => {
+    function handleBoardUpdate(updatedBoard) {
+      if (updatedBoard?._id === board?._id) {
+        setTitle(updatedBoard?.title);
+        setOptimisticColor(updatedBoard?.color);
+      }
+    }
+
+    socket.on("board updated", handleBoardUpdate);
+
+    return () => {
+      socket.off("board updated", handleBoardUpdate);
+    };
+  }, [socket]);
 
   return (
     <div className={styles.container} data-open={open}>

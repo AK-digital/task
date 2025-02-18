@@ -1,42 +1,43 @@
-.tasks {
+.container {
+    position: relative;
     background-color: var(--secondary-background-color);
     border-radius: 4px;
 }
 
-.tasks ul {
+.container ul {
     display: flex;
     flex-direction: column;
 }
 
-.tasks li form {
+.container li form {
     width: 100%;
 }
 
-.task__add {
+.add {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.task__add {
+.add {
     max-width: 900px;
     padding: 4px 8px;
 }
 
-.task__add svg {
+.add svg {
     width: 15px;
     height: 15px;
 }
 
-.task__add svg path {
+.add svg path {
     fill: #ffffff36;
 }
 
-.task__add form {
+.add form {
     width: 100%;
 }
 
-.task__add input {
+.add input {
     padding: 6px;
     border: none;
     background-color: inherit;
@@ -44,7 +45,7 @@
     font-size: var(--text-size-normal);
 }
 
-.tasks__info {
+.info {
     position: absolute;
     margin-top: 4px;
     margin-left: 25px;
@@ -52,6 +53,6 @@
     font-size: 0.8rem;
 }
 
-.tasks__info span {
+.info span {
     color: white;
 }

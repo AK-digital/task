@@ -11,7 +11,7 @@ const initialState = {
   errors: null,
 };
 
-export default function TaskText({ task, project }) {
+export default function TaskText({ isHeader, task, project }) {
   const formRef = useRef(null);
   const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState(task?.text || "");

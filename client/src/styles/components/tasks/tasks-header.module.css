@@ -1,0 +1,89 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 8px;
+    border-top: 1px solid #43455f;
+    border-bottom: 1px solid #43455f;
+    border-radius: 4px 4px 0 0;
+    width: 100%;
+    height: 42px;
+    font-size: 0.9rem;
+}
+
+.content {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+.text {
+    width: 100%;
+    max-width: 747px;
+    margin-inline: 8px;
+    padding: 6px 7px;
+    text-align: center;
+}
+
+.responsibles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    height: 100%;
+    padding-inline: 8px;
+    max-width: 90px;
+    width: 100%;
+}
+
+.status,
+.priority {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150.5px;
+    height: 100%;
+    border-right: 1px solid var(--border-color);
+}
+
+.deadline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 8px;
+    border-right: 1px solid var(--border-color);
+    max-width: 201px;
+    width: 100%;
+    height: 100%;
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 120px;
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-right: 1px solid var(--border-color);
+    height: 100%;
+}
+
+.last {
+    margin-right: 8px;
+    margin-left: 8px;
+    min-width: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}

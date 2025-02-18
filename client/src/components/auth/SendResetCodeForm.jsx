@@ -1,6 +1,7 @@
 import { sendResetCode } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
 import { instrumentSans } from "@/utils/font";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 const initialState = {
   status: "pending",
@@ -9,7 +10,8 @@ const initialState = {
   errors: null,
 };
 
-export default function SendResetCodeForm({ setForgotPassword, setSignIn }) {
+export default function SendResetCodeForm() {
+  const router = useRouter();
   const [messageStatus, setMessageStatus] = useState("");
   const [state, formAction, pending] = useActionState(
     sendResetCode,
@@ -29,9 +31,7 @@ export default function SendResetCodeForm({ setForgotPassword, setSignIn }) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>
-        Vous avez oublié votre mot de passe ?
-      </div>
+      <div className={styles.title}>Vous avez oublié votre mot de passe ?</div>
       {messageStatus && (
         <div className={styles.messageStatus}>
           <span data-status={state?.status}>{messageStatus}</span>
@@ -69,8 +69,7 @@ export default function SendResetCodeForm({ setForgotPassword, setSignIn }) {
           Vous vous souvenez de votre mot de passe ?{" "}
           <span
             onClick={(e) => {
-              setForgotPassword(false);
-              setSignIn(true);
+              router.push("/");
             }}
           >
             Se connecter

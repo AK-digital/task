@@ -1,6 +1,6 @@
 "use client";
 import styles from "@/styles/pages/auth.module.css";
-import SignIn from "@/components/auth/SignIn";
+import SignUp from "@/components/auth/SignUp";
 import Image from "next/image";
 
 export default function Auth() {
@@ -14,8 +14,7 @@ export default function Auth() {
           alt="Logo de Täsk"
           className={styles.logo}
         />
-
-        <SignIn />
+        <SignUp />
       </div>
     </main>
   );

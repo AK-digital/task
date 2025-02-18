@@ -1,6 +1,5 @@
 .dropdown {
     position: relative;
-
     user-select: none;
     border-right: 1px solid var(--border-color);
     font-size: 0.9rem;

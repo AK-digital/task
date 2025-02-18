@@ -12,6 +12,7 @@ import Image from "next/image";
 import { deleteMessage } from "@/api/message";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { AuthContext } from "@/context/auth";
+import socket from "@/utils/socket";
 
 export default function Message({ message, project, mutate }) {
   const { uid } = useContext(AuthContext);
@@ -34,6 +35,7 @@ export default function Message({ message, project, mutate }) {
       setIsLoading(false);
     }
     await mutate();
+    socket.emit("update message", message?.projectId);
     setIsLoading(false);
   }
 

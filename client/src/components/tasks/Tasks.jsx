@@ -8,6 +8,7 @@ import { saveTask } from "@/actions/task";
 import { useDroppable } from "@dnd-kit/core";
 import socket from "@/utils/socket";
 import { revalidateBoards } from "@/api/board";
+import TasksHeader from "./TasksHeader";
 
 const initialState = {
   status: "pending",
@@ -46,23 +47,26 @@ export default function Tasks({
   });
   return (
     <div
-      className={styles["tasks"]}
+      className={styles.container}
       suppressHydrationWarning
       style={{
         borderLeft: `3px solid ${optimisticColor}`,
       }}
       data-board-id={boardId}
     >
-      <div className={styles["tasks__list"]} ref={setNodeRef}>
+      <div className={styles.list} ref={setNodeRef}>
+        {/* Task headers */}
+        <TasksHeader />
         {tasks?.map((task) => (
           <Task
             key={task._id}
+            isHeader={false}
             task={task}
             project={project}
             isDragging={task?._id === activeId}
           />
         ))}
-        <div className={styles["task__add"]}>
+        <div className={styles.add}>
           <FontAwesomeIcon icon={faPlus} />
           <form action={formAction}>
             <input
@@ -95,7 +99,7 @@ export default function Tasks({
       </div>
 
       {isWritting && (
-        <div className={styles["tasks__info"]}>
+        <div className={styles.info}>
           <p>
             Appuyer sur <span>entrée</span> pour ajouter une tâche
           </p>

@@ -1,6 +1,5 @@
 "use client";
 import { acceptProjectInvitation } from "@/actions/project";
-import { revalidateProject } from "@/api/project";
 import socket from "@/utils/socket";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -14,9 +13,14 @@ export default function Invitation() {
       try {
         const response = await acceptProjectInvitation(id);
 
+        console.log(response);
         if (!response?.success) {
           if (response?.message === "L'utilisateur n'est pas connecté") {
             router.push("/");
+            return;
+          }
+          if (response?.message === "L'utilisateur n'existe pas") {
+            router.push("/sign-up");
             return;
           }
           router.push("/projects");
