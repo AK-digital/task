@@ -13,7 +13,6 @@ moment.locale("fr");
 
 export default function TaskMore({ task, project, setOpennedTask }) {
   const [open, setOpen] = useState(true);
-  const router = useRouter();
   const containerRef = useRef(null);
   const [editDescription, setEditDescription] = useState(false);
   const [isResizing, setIsResizing] = useState(false);

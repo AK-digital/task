@@ -3,7 +3,7 @@ import styles from "@/styles/layouts/project-header.module.css";
 import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import SearchForm from "@/components/Projects/SearchForm";
-import { UserPlus2 } from "lucide-react";
+import { Archive, UserPlus2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import NoPicture from "@/components/User/NoPicture";
@@ -42,6 +42,11 @@ export default function ProjectHeader({ project, projectInvitations }) {
             <SearchForm />
           </div>
           <div className={styles.actions}>
+            <div title="Archive du projet">
+              <Link href={`/projects/${project._id}/archive`}>
+                <Archive size={24} />
+              </Link>
+            </div>
             <div className={styles.separator}></div>
             {/* Guests avatars */}
             <div className={styles.guests}>

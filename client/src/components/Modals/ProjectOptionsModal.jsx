@@ -313,6 +313,7 @@ export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
               <button
                 type="button"
                 className={`${instrumentSans.className} ${styles.delete}`}
+                onClick={handleDeleteProject}
               >
                 Supprimer le projet
               </button>

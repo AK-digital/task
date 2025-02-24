@@ -7,8 +7,7 @@ import ProjectClient from "@/components/Projects/ProjectClient";
 import { notFound } from "next/navigation";
 
 export default async function Project({ params }) {
-  const { slug } = await params;
-  const id = slug[0];
+  const { id } = await params;
 
   const project = await getProject(id);
   const projectInvitations = await getProjectInvitations(id);

@@ -1,0 +1,60 @@
+.container {
+    position: fixed;
+    z-index: 2001;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20px;
+    background-color: #DBDBDB;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    color: black;
+}
+
+.count {
+    background-color: #007CFF;
+    height: 100%;
+    color: var(--text-color);
+    border-radius: 8px 0 0 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 18px 24px;
+}
+
+
+.main {
+    align-items: center;
+    gap: 12px;
+    padding-right: 24px;
+}
+
+.container,
+.main,
+.actions,
+.action {
+    display: flex;
+}
+
+.header {
+    font-size: 1.4rem;
+}
+
+.actions {
+    gap: 24px;
+}
+
+.action {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    gap: 2px;
+}
+
+.action span {
+    font-size: 0.8rem;
+}
+
+.action:last-child {
+    border-left: 1px solid #007CFF;
+    padding-left: 12px;
+}

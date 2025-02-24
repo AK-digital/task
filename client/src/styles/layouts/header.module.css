@@ -2,8 +2,10 @@
     position: fixed;
     top: 0;
     background-color: var(--secondary-background-color);
+    /* background-color: red; */
     z-index: 1999;
     width: 100%;
+    padding: 8px 0;
 }
 
 .nav {
@@ -23,7 +25,6 @@
 
 .logo {
     position: relative;
-    top: -8px;
 }
 
 .actions {
@@ -36,6 +37,7 @@
 
 .bell:hover {
     fill: white;
+    cursor: pointer;
 }
 
 .bell[data-open="true"] {

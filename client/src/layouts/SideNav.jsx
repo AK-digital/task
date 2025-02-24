@@ -20,7 +20,12 @@ import {
 import SortableProject from "@/components/Projects/SortableProject";
 import { updateProjectsOrder } from "@/actions/project";
 import { MeasuringStrategy } from "@dnd-kit/core";
-import { LayoutGrid, Plus } from "lucide-react";
+import {
+  ArrowLeftFromLine,
+  ArrowRightFromLine,
+  LayoutGrid,
+  Plus,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function SideNav({ projects }) {
@@ -85,14 +90,16 @@ export default function SideNav({ projects }) {
   }
 
   return (
-    <aside
-      className={styles.container}
-      onMouseEnter={() => setIsMenuOpen(true)}
-      onMouseLeave={() => setIsMenuOpen(false)}
-      data-open={isMenuOpen}
-    >
+    <aside className={styles.container} data-open={isMenuOpen}>
       <div className={styles.wrapper}>
         {/* projects */}
+        <div
+          className={styles.openArrow}
+          onClick={(e) => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen && <ArrowLeftFromLine size={24} />}
+          {!isMenuOpen && <ArrowRightFromLine size={24} />}
+        </div>
         <nav className={styles.nav}>
           <DndContext
             sensors={sensors}

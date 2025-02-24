@@ -9,6 +9,7 @@ import { useDroppable } from "@dnd-kit/core";
 import socket from "@/utils/socket";
 import { revalidateBoards } from "@/api/board";
 import TasksHeader from "./TasksHeader";
+import SelectedTasks from "./SelectedTasks";
 
 const initialState = {
   status: "pending",
@@ -28,6 +29,7 @@ export default function Tasks({
   const [isWritting, setIsWritting] = useState(false);
 
   const saveTaskWithProjectId = saveTask.bind(null, project?._id);
+  const [selectedTasks, setSelectedTasks] = useState([]);
   const [state, formAction, pending] = useActionState(
     saveTaskWithProjectId,
     initialState
@@ -56,14 +58,15 @@ export default function Tasks({
     >
       <div className={styles.list} ref={setNodeRef}>
         {/* Task headers */}
-        <TasksHeader />
+        {/* <TasksHeader /> */}
         {tasks?.map((task) => (
           <Task
             key={task._id}
-            isHeader={false}
             task={task}
             project={project}
             isDragging={task?._id === activeId}
+            selectedTasks={selectedTasks}
+            setSelectedTasks={setSelectedTasks}
           />
         ))}
         <div className={styles.add}>
@@ -105,6 +108,7 @@ export default function Tasks({
           </p>
         </div>
       )}
+      {selectedTasks.length > 0 && <SelectedTasks tasks={selectedTasks} />}
     </div>
   );
 }

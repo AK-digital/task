@@ -2,6 +2,7 @@
     min-width: 65px;
     width: 65px;
     transition: width linear 150ms, min-width linear 150ms;
+    user-select: none;
 }
 
 .container[data-open="true"] {
@@ -82,7 +83,8 @@
     gap: 8px;
 }
 
-.createProjectButton {
+.createProjectButton,
+.openArrow {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,12 +94,14 @@
     border-radius: 50%;
 }
 
-.createProjectButton:hover {
+.createProjectButton:hover,
+.openArrow:hover {
     background-color: #525474;
     cursor: pointer;
 }
 
-.createProjectButton svg {
+.createProjectButton svg,
+.container[data-open="false"] .openArrow svg {
     color: var(--side-background-color);
 }
 

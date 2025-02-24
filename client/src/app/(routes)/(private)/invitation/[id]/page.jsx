@@ -27,7 +27,7 @@ export default function Invitation() {
         } else {
           const project = response?.data;
           socket.emit("accept project invitation", project?._id);
-          router.push(`/project/${project?._id}`);
+          router.push(`/projects/${project?._id}`);
         }
       } catch (err) {
         console.error("Erreur lors de l'acceptation de l'invitation :", err);

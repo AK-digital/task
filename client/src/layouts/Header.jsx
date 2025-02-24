@@ -38,9 +38,9 @@ export default function Header() {
     <header className={styles.container}>
       <nav className={styles.nav}>
         <Image
-          src={"/task-logo.svg"}
+          src={"/task.svg"}
           width={70}
-          height={70}
+          height={40}
           alt="Logo de Täsk"
           className={styles.logo}
         />

@@ -15,8 +15,15 @@ import TaskTimer from "./TaskTimer";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
+import { Check, GripVertical } from "lucide-react";
 
-export default function Task({ task, project, isDragging }) {
+export default function Task({
+  task,
+  project,
+  isDragging,
+  selectedTasks,
+  setSelectedTasks,
+}) {
   const pathname = usePathname();
   const [opennedTask, setOpennedTask] = useState(null);
 
@@ -45,6 +52,16 @@ export default function Task({ task, project, isDragging }) {
     }
   }, [pathname]);
 
+  function handleSelectedTask(e) {
+    setSelectedTasks((prev) => {
+      if (e.target.checked) {
+        return [...prev, task?._id];
+      } else {
+        return prev.filter((id) => id !== task?._id);
+      }
+    });
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -56,7 +73,17 @@ export default function Task({ task, project, isDragging }) {
     >
       <div className={styles.content}>
         <div className={styles.wrapper}>
+          <div>
+            <input
+              type="checkbox"
+              name="task"
+              id="task"
+              defaultValue={task?._id}
+              onClick={handleSelectedTask}
+            />
+          </div>
           <div {...attributes} {...listeners} suppressHydrationWarning>
+            {/* <GripVertical width={60} height={60} /> */}
             <FontAwesomeIcon icon={faGripVertical} />
           </div>
           <TaskText task={task} project={project} />
