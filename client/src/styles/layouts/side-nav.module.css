@@ -1,137 +1,132 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: 24px;
-    padding-bottom: 24px;
-    z-index: 2008;
-    height: 100%;
-    background-color: var(--side-background-color);
-    border-right: 1px solid #292a39;
+    min-width: 65px;
+    width: 65px;
+    transition: width linear 150ms, min-width linear 150ms;
+}
+
+.container[data-open="true"] {
+    min-width: 220px;
+    width: 220px;
 }
 
 .wrapper {
+    position: fixed;
+    min-width: 66px;
+    width: 66px;
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background-color: var(--primary-background-color);
     height: 100%;
-    width: 100%;
-    padding-top: 32px;
-    padding-top: 16px;
-    padding-bottom: 16px;
+    border-radius: 0 8px 0;
+    transition: width linear 150ms, min-width linear 150ms;
 }
 
-.projects {
-    height: fit-content;
-    max-height: 65%;
+.container[data-open="true"] .wrapper {
+    min-width: 220px;
+    width: 220px;
 }
 
 .nav {
     position: relative;
-    height: 100%;
-}
-
-.nav:before,
-.nav:after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 20px;
-    background: rgb(21, 24, 50);
-    z-index: 2;
-    /* Augmenter le z-index pour être au-dessus de la liste */
-    pointer-events: none;
-    left: 0;
-    /* S'assurer que les gradients couvrent toute la largeur */
-}
-
-.nav:before {
-    background: linear-gradient(180deg, rgba(21, 24, 50, 1) 0%, rgba(255, 255, 255, 0) 100%);
-    top: 0;
-}
-
-.nav:after {
-    background: linear-gradient(0deg, rgba(21, 24, 50, 1) 0%, rgba(255, 255, 255, 0) 100%);
-    bottom: 0;
-}
-
-.logo {
-    position: relative;
-    left: 12px;
-}
-
-.projectsList {
-    position: relative;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 16px 0;
-    scroll-behavior: smooth;
-    z-index: 0;
     display: flex;
     flex-direction: column;
-    direction: rtl;
     gap: 8px;
+    max-height: 600px;
+    overflow: auto;
 }
 
-.projectsList::-webkit-scrollbar {
-    width: 3px;
+.nav::-webkit-scrollbar {
+    display: none;
 }
 
-.projectsItem {
-    direction: ltr;
-    position: relative;
-    z-index: 1;
-    transition: all 0.3s ease;
-    transform-origin: center;
-    will-change: transform;
-    order: 1;
-    width: 100%;
-    justify-content: center;
+.project {
     display: flex;
-    width: 100%;
-    padding-right: 3px;
-}
-
-.projectsItem img {
-    border: 3px solid transparent;
-    transition: 150ms all linear;
-}
-
-.projectsItem img[data-active="true"] {
-    border: 3px solid var(--accent-color);
-    transition: 150ms all linear;
-}
-
-.projectsItem[data-active="true"] {
-    border-right: 2px solid var(--accent-color);
-    /* L'élément actif aura toujours un ordre de -1 */
-}
-
-.footer {
-    text-align: center;
-    gap: 8px;
-    display: flex;
-    flex-direction: column;
-}
-
-.signOut {
-    margin-top: 10px;
-}
-
-.dragHandle {
+    align-items: center;
+    gap: 4px;
     cursor: pointer;
-    width: 50px;
-    height: 50px;
-    transition: transform 0.3s ease;
 }
 
-.isDragging {
-    cursor: grab;
-    z-index: 1;
+.project img {
+    border: 2px solid transparent;
+    transition: all linear 150ms;
 }
 
-.isDragging:active {
-    cursor: grabbing;
+.project:hover img {
+    border: 2px solid var(--text-color-muted);
+    transition: all linear 150ms;
+}
+
+.project[data-active="true"] img {
+    border: 4px solid var(--accent-color);
+    transition: all linear 150ms;
+}
+
+.project span {
+    color: var(--text-color-muted);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.project[data-active="true"] span {
+    color: var(--text-color);
+    transition: all linear 150ms;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.createProjectButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #33354e;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+}
+
+.createProjectButton:hover {
+    background-color: #525474;
+    cursor: pointer;
+}
+
+.createProjectButton svg {
+    color: var(--side-background-color);
+}
+
+
+.create-project__buttons button:nth-child(2) {
+    background: none;
+}
+
+.actions a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #33354e;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+}
+
+.actions a:hover {
+    background-color: #525474;
+    cursor: pointer;
+}
+
+.actions a svg {
+    color: var(--text-color-muted);
+    transition: all linear 150ms;
+}
+
+.actions a[data-active="true"] svg {
+    color: var(--text-color);
+    transition: all linear 150ms;
 }

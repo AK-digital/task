@@ -1,11 +1,15 @@
 .main {
-    margin: 0 40px 40px 40px;
+    margin: 0 20px 50px 20px;
+    margin-bottom: 50px;
+    width: 100%;
 }
 
 .container {
     display: flex;
     flex-direction: column;
     gap: 30px;
+    background-color: var(--primary-background-color);
+    border-radius: 8px;
 }
 
 .header {
@@ -23,16 +27,4 @@
     display: flex;
     align-items: center;
     gap: 12px;
-}
-
-.empty {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    font-size: 1.75rem;
-    color: var(--text-color-muted);
-    font-weight: 900;
-    opacity: 0.5;
 }

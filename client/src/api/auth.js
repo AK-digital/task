@@ -9,7 +9,6 @@ function handleRedirect(path) {
 export async function getSession() {
   const cookie = await cookies();
   const session = cookie.get("session");
-  if (!session) return null;
   return await decryptToken(session);
 }
 
@@ -19,7 +18,7 @@ export async function decryptToken(session) {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization: `Bearer ${session.value}`,
+        Authorization: `Bearer ${session?.value}`,
       },
     });
 
@@ -31,7 +30,7 @@ export async function decryptToken(session) {
         response.message.includes("expiré")
       ) {
         const cookie = await cookies();
-        const token = cookie.get("rtk").value;
+        const token = cookie.get("rtk")?.value;
 
         if (!token) {
           throw new Error(response?.message);
@@ -96,7 +95,7 @@ export async function refreshToken(token) {
       secure: true,
       httpOnly: true,
       sameSite: "lax",
-      expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
     const newSessionToken = cookie.get("session");

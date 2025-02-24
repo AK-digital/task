@@ -30,10 +30,6 @@ export default function TasksHeader() {
           <div className={styles.last}>
             <span></span>
           </div>
-
-          {/* <TaskDeadline task={task} />
-          <TaskTimer task={task} />
-          <TaskRemove task={task} /> */}
         </div>
       </div>
     </div>

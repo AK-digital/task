@@ -30,6 +30,7 @@ export default function GuestsModal({
     removeGuestWithId,
     initialState
   );
+  const author = project?.author;
   const guests = project?.guests;
 
   useEffect(() => {
@@ -71,6 +72,24 @@ export default function GuestsModal({
           <div className={styles.guests}>
             <ul>
               <>
+                <li>
+                  <div>
+                    {author?.picture ? (
+                      <Image
+                        src={author?.picture || "/default-pfp.webp"}
+                        width={32}
+                        height={32}
+                        alt={`Photo de profil de ${author?.firstName}`}
+                        style={{
+                          borderRadius: "50%",
+                        }}
+                      />
+                    ) : (
+                      <NoPicture user={author} width={32} height={32} />
+                    )}
+                    <span>{author?.email}</span>
+                  </div>
+                </li>
                 {guests.map((guest) => {
                   return (
                     <li key={guest?._id}>

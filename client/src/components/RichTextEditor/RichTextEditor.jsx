@@ -203,7 +203,7 @@ export default function RichTextEditor({
             content: `Vous venez d'être mentionné(e) dans une description "${project?.name}".`,
           };
           const link =
-            "/project/" + res?.data?.projectId + "/task/" + task?._id;
+            "/projects/" + res?.data?.projectId + "/task/" + task?._id;
 
           for (const taggedUser of taggedUsers) {
             socket.emit("create notification", user, taggedUser, message, link);
@@ -234,7 +234,7 @@ export default function RichTextEditor({
           title: `${user?.firstName} vous a mentionné(e) dans une conversation`,
           content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
         };
-        const link = "/project/" + res?.data?.projectId + "/task/" + task?._id;
+        const link = "/projects/" + res?.data?.projectId + "/task/" + task?._id;
 
         for (const taggedUser of taggedUsers) {
           socket.emit("create notification", user, taggedUser, message, link);
@@ -260,7 +260,7 @@ export default function RichTextEditor({
           title: `${user?.firstName} vous a mentionné(e) dans une conversation`,
           content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
         };
-        const link = "/project/" + res?.data?.projectId + "/task/" + task?._id;
+        const link = "/projects/" + res?.data?.projectId + "/task/" + task?._id;
 
         for (const taggedUser of taggedUsers) {
           socket.emit("create notification", user, taggedUser, message, link);

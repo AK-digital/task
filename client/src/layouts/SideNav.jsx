@@ -1,8 +1,6 @@
 "use client";
 import styles from "@/styles/layouts/side-nav.module.css";
 import CreateProject from "@/components/Projects/CreateProject";
-import UserInfo from "@/components/Header/UserInfo";
-import SignOut from "@/components/auth/SignOut";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
@@ -22,14 +20,17 @@ import {
 import SortableProject from "@/components/Projects/SortableProject";
 import { updateProjectsOrder } from "@/actions/project";
 import { MeasuringStrategy } from "@dnd-kit/core";
-import Image from "next/image";
+import { LayoutGrid, Plus } from "lucide-react";
+import Link from "next/link";
 
 export default function SideNav({ projects }) {
   const params = useParams();
   const { slug } = params;
   const id = slug ? slug[0] : null;
   const projectId = id ?? "";
+  const [isCreating, setIsCreating] = useState(false);
   const [projectItems, setProjectItems] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (projects) {
@@ -59,12 +60,15 @@ export default function SideNav({ projects }) {
       const newIndex = projectItems.findIndex(
         (project) => project?._id === over.id
       );
+      console.log("handleDragEnd", event);
 
       const newItems = arrayMove(projectItems, oldIndex, newIndex);
       setProjectItems(newItems);
 
       try {
         const response = await updateProjectsOrder(newItems);
+
+        console.log("response", response);
 
         if (!response.success) {
           setProjectItems(projectItems);
@@ -81,56 +85,58 @@ export default function SideNav({ projects }) {
   }
 
   return (
-    <aside className={styles.container}>
-      <Image
-        src={"/task-logo.svg"}
-        width={70}
-        height={30}
-        alt="Logo de Täsk"
-        className={styles.logo}
-      />
+    <aside
+      className={styles.container}
+      onMouseEnter={() => setIsMenuOpen(true)}
+      onMouseLeave={() => setIsMenuOpen(false)}
+      data-open={isMenuOpen}
+    >
       <div className={styles.wrapper}>
-        <div className={styles.projects}>
-          <nav className={styles.nav}>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-              measuring={{
-                droppable: {
-                  strategy: MeasuringStrategy.Always,
-                },
-              }}
-              modifiers={[]}
+        {/* projects */}
+        <nav className={styles.nav}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            measuring={{
+              droppable: {
+                strategy: MeasuringStrategy.Always,
+              },
+            }}
+            modifiers={[]}
+          >
+            <SortableContext
+              items={projectItems.map((project) => project._id)}
+              strategy={verticalListSortingStrategy}
             >
-              <ul className={styles.projectsList}>
-                <SortableContext
-                  items={projectItems.map((project) => project._id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  {projectItems?.map((project) => (
-                    <SortableProject
-                      key={project._id}
-                      project={project}
-                      projectId={projectId}
-                      isActive={project._id === projectId} // Ajout de la prop isActive
-                    />
-                  ))}
-                </SortableContext>
-              </ul>
-            </DndContext>
-          </nav>
-          <CreateProject />
-        </div>
-        <div className={styles.footer}>
-          <div className={styles.userAvatar}>
-            <UserInfo />
+              {projectItems?.map((project) => (
+                <SortableProject
+                  key={project._id}
+                  project={project}
+                  projectId={projectId}
+                  isActive={project._id === projectId}
+                  open={isMenuOpen}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
+        </nav>
+        {/* options */}
+        <div className={styles.actions}>
+          <div
+            onClick={() => setIsCreating(true)}
+            className={styles.createProjectButton}
+          >
+            <Plus size={32} />
           </div>
-          <div className={styles.signOut}>
-            <SignOut />
-          </div>
+          <Link href={"/projects"} data-active={projectId === ""}>
+            <LayoutGrid size={24} />
+          </Link>
         </div>
       </div>
+      {isCreating && (
+        <CreateProject isCreating={isCreating} setIsCreating={setIsCreating} />
+      )}
     </aside>
   );
 }

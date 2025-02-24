@@ -1,5 +1,7 @@
 .main {
+    margin-inline: 20px;
     height: 100%;
+    width: 100%;
 }
 
 .container {
@@ -9,10 +11,11 @@
     justify-content: center;
     gap: 14px;
     height: 100%;
+    width: 100%;
 }
 
 .wrapper {
-    background-color: var(--secondary-background-color);
+    background-color: var(--primary-background-color);
     padding: 32px;
     border-radius: 8px;
     width: 100%;

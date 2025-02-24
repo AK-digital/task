@@ -20,13 +20,14 @@ export default function ProjectClient({ project, projectInvitations, boards }) {
       socket.off("accepted project invitation");
     };
   }, [socket]);
+
   return (
     <>
-      <ProjectHeader
-        project={project}
-        projectInvitations={projectInvitations}
-      />
       <div className={styles.container}>
+        <ProjectHeader
+          project={project}
+          projectInvitations={projectInvitations}
+        />
         {isNotEmpty(boards) && <Boards boards={boards} project={project} />}
         <div className={styles.options}>
           <AddBoard projectId={project?._id} />

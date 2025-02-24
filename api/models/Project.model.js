@@ -18,9 +18,28 @@ const projectSchema = new Schema(
       trim: true,
       required: false,
     },
+    note: {
+      type: String,
+      required: false,
+    },
     guests: {
       type: [Schema.Types.ObjectId],
       ref: "User",
+    },
+    urls: {
+      type: [
+        {
+          icon: {
+            type: String,
+            required: false,
+          },
+          url: {
+            type: String,
+            required: false,
+          },
+        },
+      ],
+      required: false,
     },
     settings: {
       urlWordpress: {
@@ -34,7 +53,7 @@ const projectSchema = new Schema(
     },
     order: {
       type: Number,
-      default: 0
+      default: 0,
     },
   },
   {

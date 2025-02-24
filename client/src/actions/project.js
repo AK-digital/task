@@ -243,6 +243,23 @@ export async function updateProject(prevState, formData) {
     const session = cookie.get("session");
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");
+    const note = formData.get("note");
+    const urls = formData.getAll("url");
+    const icons = formData.getAll("icon");
+
+    for (var i = 0; i < urls.length; i++) {
+      if (urls[i] === "") {
+        return {
+          status: "failure",
+          message: "L'URL ne peut pas être vide",
+        };
+      }
+    }
+
+    const urlsArray = urls.map((url, index) => ({
+      icon: icons[index] || "Globe", // Utilise l'icône correspondante ou "Globe" par défaut
+      url: url,
+    }));
 
     if (!name) {
       return {
@@ -253,6 +270,8 @@ export async function updateProject(prevState, formData) {
 
     const rawFormData = {
       name: name,
+      note: note,
+      urls: urlsArray,
     };
 
     const urlWordpress = formData.get("url-wordpress");
@@ -284,9 +303,9 @@ export async function updateProject(prevState, formData) {
       throw new Error(response?.message);
     }
 
+    revalidateTag("projects");
     revalidateTag("project");
-
-    console.log(response);
+    revalidateTag("boards"); // Ajout de la revalidation du tag project
 
     return {
       status: "success",
@@ -304,69 +323,6 @@ export async function updateProject(prevState, formData) {
   }
 }
 
-export async function updateProjectLogo(prevState, formData) {
-  try {
-    const cookie = await cookies();
-    const session = cookie?.get("session");
-    const projectId = formData.get("project-id");
-    const logo = formData.get("logo");
-
-    if (!logo || logo.size === 0) {
-      return {
-        status: "failure",
-        message: "Aucun fichier sélectionné",
-      };
-    }
-
-    // Vérification du type de fichier
-    if (!logo.type.startsWith("image/")) {
-      return {
-        status: "failure",
-        message: "Le fichier doit être une image",
-      };
-    }
-
-    const formDataToSend = new FormData();
-    formDataToSend.append("logo", logo);
-
-    const res = await fetch(
-      `${process.env.API_URL}/project/${projectId}/logo`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${session.value}`,
-        },
-        body: formDataToSend,
-      }
-    );
-
-    const response = await res.json();
-
-    if (!response.success) {
-      throw new Error(
-        response?.message || "Une erreur inattendue est survenue"
-      );
-    }
-
-    revalidateTag("projects");
-    revalidateTag("project"); // Ajout de la revalidation du tag project
-
-    return {
-      status: "success",
-      message: "Le logo a été mis à jour avec succès",
-      data: response.data,
-    };
-  } catch (err) {
-    console.error("Erreur lors de la mise à jour du logo :", err);
-    return {
-      status: "failure",
-      message:
-        "Une erreur inattendue est survenue lors de la mise à jour du logo",
-    };
-  }
-}
-
 export async function updateProjectsOrder(projects) {
   try {
     const cookie = await cookies();
@@ -376,7 +332,7 @@ export async function updateProjectsOrder(projects) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`,
+        Authorization: `Bearer ${session?.value}`,
       },
       body: JSON.stringify({ projects }),
     });

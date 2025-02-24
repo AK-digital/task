@@ -1,4 +1,5 @@
 "use client";
+
 import { getSession } from "@/api/auth";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
@@ -34,7 +35,6 @@ export default function AuthProvider({ children }) {
               setTimeout(() => handleSession(), 1000 * retryCount);
               return;
             }
-            router.push(`/`);
           } else {
             setUid(response?.data?._id);
             setUser(response?.data);
@@ -43,6 +43,7 @@ export default function AuthProvider({ children }) {
         }
       } catch (error) {
         console.error("Session error:", error);
+        router.push("/");
       }
     };
 

@@ -854,6 +854,38 @@ export async function updateTaskBoard(req, res, next) {
   }
 }
 
+export async function addTaskToArchive(req, res, next) {
+  try {
+    const { tasks } = req.body;
+
+    if (!tasks || tasks?.length <= 0) {
+      return res.status(400).send({
+        success: false,
+        message: "Aucune tâche à archiver",
+      });
+    }
+
+    const bulkOps = tasks.map((task) => ({
+      updateOne: {
+        filter: { _id: task?._id },
+        update: { $set: { archived: true } },
+      },
+    }));
+
+    await TaskModel.bulkWrite(bulkOps);
+
+    return res.status(200).send({
+      success: true,
+      message: "Les tâches ont été archivées avec succès",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 // Only authors and guets will be able to delete the tasks
 export async function deleteTask(req, res, next) {
   try {

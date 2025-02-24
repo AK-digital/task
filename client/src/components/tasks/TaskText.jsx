@@ -54,12 +54,8 @@ export default function TaskText({ isHeader, task, project }) {
   }, [inputValue]);
 
   return (
-    <div
-      className={styles.container}
-      onMouseEnter={(e) => setEdit(true)}
-      onMouseLeave={(e) => setEdit(false)}
-    >
-      {!edit && <p>{inputValue}</p>}
+    <div className={styles.container}>
+      {!edit && <p onClick={(e) => setEdit(true)}>{inputValue}</p>}
       {edit && (
         <form action={formAction} ref={formRef}>
           <input
@@ -69,6 +65,8 @@ export default function TaskText({ isHeader, task, project }) {
             value={inputValue}
             onChange={handleChange}
             className={instrumentSans.className}
+            onBlur={(e) => setEdit(false)}
+            autoFocus
           />
         </form>
       )}

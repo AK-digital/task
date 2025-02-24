@@ -1,9 +1,11 @@
 .boards {
+    margin-top: -35px;
     display: flex;
     flex-direction: column;
     gap: 30px;
     /* height: calc(100svh - 240px);
     overflow-y: auto; */
+    padding: 24px;
 }
 
 .task-overlay {

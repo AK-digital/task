@@ -1,11 +1,13 @@
 "use client";
+import * as LucideIcons from "lucide-react";
 import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect, useContext, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { MoreHorizontal, Globe, Layout } from "lucide-react";
+import { MoreHorizontal, Globe, Layout, Icon } from "lucide-react";
 import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
+import { set } from "zod";
 
 const initialState = {
   status: "pending",
@@ -26,14 +28,15 @@ export default function ProjectTitle({ project }) {
   const formRef = useRef(null);
   const inputRef = useRef(null);
 
-  const hasWordpressUrl = project?.settings?.urlWordpress;
-  const hasBackofficeUrl = project?.settings?.urlBackofficeWordpress;
-
   const debouncedUpdate = useDebouncedCallback(async (newName) => {
     if (newName !== project?.name) {
       formRef?.current?.requestSubmit();
     }
   }, 600);
+
+  useEffect(() => {
+    setProjectName(project?.name);
+  }, [project?.name]);
 
   useEffect(() => {
     if (isEditing) {
@@ -104,32 +107,24 @@ export default function ProjectTitle({ project }) {
       </div>
 
       <div className={styles.actions}>
-        {hasWordpressUrl && (
-          <a
-            href={project.settings.urlWordpress}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkIcon}
-            title="Voir le site"
-          >
-            <Globe size={20} />
-          </a>
-        )}
-        {hasBackofficeUrl && (
-          <a
-            href={project.settings.urlBackofficeWordpress}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkIcon}
-            title="Accéder au backoffice"
-          >
-            <Layout size={20} />
-          </a>
-        )}
+        {project?.urls.map((elt, idx) => {
+          const IconComponent = LucideIcons[elt?.icon]; // Récupère l'icône dynamiquement
+          return (
+            <a
+              href={elt?.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.linkIcon}
+              title="Voir le site"
+              key={idx}
+            >
+              {IconComponent && <IconComponent size={20} />}
+            </a>
+          );
+        })}
         {/* Ajout du séparateur vertical */}
-        {(hasWordpressUrl || hasBackofficeUrl) && (
-          <div className={styles.separator}></div>
-        )}
+        {project?.urls.length > 0 && <div className={styles.separator}></div>}
+
         <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
           <MoreHorizontal />
         </div>

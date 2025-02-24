@@ -86,7 +86,7 @@ export default function TaskMore({ task, project, setOpennedTask }) {
 
     const handleAnimationEnd = async () => {
       container.removeEventListener("animationend", handleAnimationEnd);
-      window.history.pushState({}, "", `/project/${project?._id}`);
+      window.history.pushState({}, "", `/projects/${project?._id}`);
       setOpennedTask(null);
       setOpen(false);
     };

@@ -14,7 +14,7 @@ export async function getBoards(projectId) {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
         },
       },
       { next: { tags: ["boards"] } }

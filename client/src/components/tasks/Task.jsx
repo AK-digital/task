@@ -34,7 +34,7 @@ export default function Task({ task, project, isDragging }) {
     window.history.pushState(
       {},
       "",
-      `/project/${project?._id}/task/${task?._id}`
+      `/projects/${project?._id}/task/${task?._id}`
     );
   };
 

@@ -17,6 +17,6 @@ export function generateRefreshToken(user) {
       role: user?.role,
     },
     process.env.JWT_REFRESH_SECRET,
-    { expiresIn: "1d" }
+    { expiresIn: "7d" }
   );
 }

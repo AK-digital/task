@@ -20,6 +20,7 @@ router.put(
   "/:id",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
+  upload.single("logo"),
   projectControllers.updateProject
 );
 

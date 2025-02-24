@@ -3,10 +3,9 @@ import styles from "@/styles/layouts/project-header.module.css";
 import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import SearchForm from "@/components/Projects/SearchForm";
-import { Bell, UserPlus2 } from "lucide-react";
+import { UserPlus2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
-import Notifications from "@/components/Notifications/Notifications";
 import NoPicture from "@/components/User/NoPicture";
 import getNotifications from "@/api/notification";
 import useSWR from "swr";
@@ -14,7 +13,6 @@ import socket from "@/utils/socket";
 import Link from "next/link";
 
 export default function ProjectHeader({ project, projectInvitations }) {
-  const [notifOpen, setNotifOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const { data, mutate } = useSWR(
@@ -34,9 +32,9 @@ export default function ProjectHeader({ project, projectInvitations }) {
     };
   }, [socket, mutate]);
 
-  const hasUnread = data?.data?.some((notif) => !notif.read);
   return (
     <>
+      <div className={styles.top}></div>
       <header className={styles.container}>
         <nav className={styles.nav}>
           <ProjectTitle project={project} />
@@ -44,18 +42,6 @@ export default function ProjectHeader({ project, projectInvitations }) {
             <SearchForm />
           </div>
           <div className={styles.actions}>
-            {/* Notifications bell */}
-            <div className={styles.notificationBtn} data-open={notifOpen}>
-              <Bell size={24} onClick={(e) => setNotifOpen(true)} />
-              {hasUnread && <div className={styles.unread}></div>}
-              {notifOpen && (
-                <Notifications
-                  setNotifOpen={setNotifOpen}
-                  notifications={data?.data}
-                  mutate={mutate}
-                />
-              )}
-            </div>
             <div className={styles.separator}></div>
             {/* Guests avatars */}
             <div className={styles.guests}>

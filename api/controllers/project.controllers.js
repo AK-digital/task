@@ -31,6 +31,12 @@ export async function saveProject(req, res, next) {
       author: authUser?._id,
       name: name,
       order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
+      urls: [
+        {
+          icon: "Globe",
+          url: "",
+        },
+      ],
     });
 
     const savedProject = await newProject.save();
@@ -78,9 +84,37 @@ export async function getProjects(req, res, next) {
   try {
     const authUser = res.locals.user;
 
-    const projects = await ProjectModel.find({
-      $or: [{ author: authUser._id }, { guests: authUser?._id }],
-    }).sort({ order: 1 }); // Ajout du tri par ordre
+    const projects = await ProjectModel.aggregate([
+      {
+        // Filtrer les projets où l'auteur ou un invité est l'utilisateur connecté
+        $match: {
+          $or: [{ author: authUser?._id }, { guests: authUser?._id }],
+        },
+      },
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "_id",
+          foreignField: "projectId",
+          as: "tasks",
+        },
+      },
+      {
+        $addFields: {
+          tasksCount: { $size: "$tasks" },
+        },
+      },
+      {
+        $project: {
+          tasks: 0,
+        },
+      },
+      {
+        $sort: {
+          order: 1,
+        },
+      },
+    ]);
 
     if (projects.length <= 0) {
       return res.status(404).send({
@@ -147,7 +181,7 @@ export async function getProject(req, res, next) {
 // Authors and guests will be able to update the project
 export async function updateProject(req, res, next) {
   try {
-    const { name, urlWordpress, urlBackofficeWordpress } = req.body;
+    const { name, note, urls } = req.body;
 
     if (!name) {
       return res.status(400).send({
@@ -163,10 +197,8 @@ export async function updateProject(req, res, next) {
       {
         $set: {
           name: name,
-          settings: {
-            urlWordpress: urlWordpress,
-            urlBackofficeWordpress: urlBackofficeWordpress,
-          },
+          note: note,
+          urls: urls,
         },
       },
       { new: true, setDefaultsOnInsert: true }
@@ -214,22 +246,7 @@ export async function updateProjectLogo(req, res) {
 
     // Si un logo existe déjà, on le supprime d'abord
     if (project.logo) {
-      try {
-        // Extraire l'ID public de l'URL Cloudinary
-        const urlParts = project.logo.split("/");
-        const filenameWithExtension = urlParts[urlParts.length - 1];
-        const publicId = filenameWithExtension.split(".")[0];
-
-        if (publicId) {
-          await destroyFile("task/project", publicId);
-        }
-      } catch (deleteError) {
-        console.error(
-          "Erreur lors de la suppression de l'ancien logo:",
-          deleteError
-        );
-        // On continue même si la suppression échoue
-      }
+      await destroyFile("task/project", project.logo);
     }
 
     // Upload du nouveau fichier
@@ -244,9 +261,9 @@ export async function updateProjectLogo(req, res) {
     }
 
     const updatedProject = await ProjectModel.findByIdAndUpdate(
-      req.params.id,
+      { _id: req.params.id },
       { logo: uploadedFile.secure_url },
-      { new: true }
+      { new: true, setDefaultsOnInsert: true }
     );
 
     return res.status(200).json({

@@ -1,0 +1,43 @@
+.container {
+    position: fixed;
+    top: 0;
+    background-color: var(--secondary-background-color);
+    z-index: 1999;
+    width: 100%;
+}
+
+.nav {
+    margin-inline: 20px;
+}
+
+.nav,
+.actions {
+    display: flex;
+    align-items: center;
+}
+
+.nav {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    position: relative;
+    top: -8px;
+}
+
+.actions {
+    gap: 24px;
+}
+
+.actions li {
+    position: relative;
+}
+
+.bell:hover {
+    fill: white;
+}
+
+.bell[data-open="true"] {
+    fill: white;
+}

@@ -6,7 +6,12 @@ import { useRouter } from "next/navigation";
 import styles from "@/styles/layouts/side-nav.module.css";
 import { useState, useRef } from "react";
 
-export default function SortableProject({ project, projectId, isActive }) {
+export default function SortableProject({
+  project,
+  open,
+  projectId,
+  isActive,
+}) {
   const router = useRouter();
   const [isDragging, setIsDragging] = useState(false);
   const mouseDownTime = useRef(null);
@@ -28,40 +33,31 @@ export default function SortableProject({ project, projectId, isActive }) {
 
     if (clickDuration < 200) {
       // Si le clic dure moins de 200ms
-      router.push(`/project/${project._id}`);
+      router.push(`/projects/${project._id}`);
     }
     setIsDragging(false);
   };
 
   return (
-    <li
+    <div
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       ref={setNodeRef}
-      className={`${styles.projectsItem} ${isActive ? styles.active : ""}`}
+      className={styles.project}
       data-active={isActive} // Utilisation de data-active au lieu d'une classe
       style={style}
       {...attributes}
       {...listeners}
     >
-      <div
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        className={styles.dragHandle}
-      >
-        <Image
-          src={
-            project?.logo || project?.favicon || "/default-project-logo.webp"
-          }
-          width={52}
-          height={52}
-          alt="project logo"
-          style={{ borderRadius: "50%" }}
-          data-active={isActive} // Ajout de data-active sur l'image aussi
-          onError={(e) => {
-            // Si le favicon n'est pas accessible, on utilise le logo par défaut
-            e.target.src = "/default-project-logo.webp";
-          }}
-        />
-      </div>
-    </li>
+      <Image
+        src={project?.logo || "/default-project-logo.webp"}
+        width={42}
+        height={42}
+        alt="project logo"
+        style={{ borderRadius: "50%" }}
+        data-active={isActive} // Ajout de data-active sur l'image aussi
+      />
+      {open && <span>{project?.name}</span>}
+    </div>
   );
 }

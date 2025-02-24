@@ -21,7 +21,7 @@ export async function getProjectInvitations(projectId) {
 
     const response = await res.json();
 
-    if (!response.success) {
+    if (!response?.success) {
       throw new Error(data?.message || "Une erreur s'est produite");
     }
 

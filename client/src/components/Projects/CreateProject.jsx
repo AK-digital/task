@@ -14,8 +14,11 @@ const initialState = {
   errors: null,
 };
 
-export default function CreateProject({ onProjectCreated }) {
-  const [isCreating, setIsCreating] = useState(false);
+export default function CreateProject({
+  onProjectCreated,
+  isCreating,
+  setIsCreating,
+}) {
   const [state, formAction, pending] = useActionState(
     saveProject,
     initialState
@@ -29,7 +32,7 @@ export default function CreateProject({ onProjectCreated }) {
       setIsCreating(false);
       router.refresh();
       // Correction de l'URL de redirection
-      router.push(`/project/${state.data._id}/`);
+      router.push(`/projects/${state.data._id}/`);
     }
   }, [state, router]);
 
@@ -69,48 +72,37 @@ export default function CreateProject({ onProjectCreated }) {
 
   return (
     <div className={styles.container}>
-      <button
-        className={`${styles["create-project__button"]} ${instrumentSans.className}`}
-        onClick={() => setIsCreating(true)}
-      >
-        <Plus size={32} />
-      </button>
-
-      {isCreating && (
-        <>
-          <div className={styles.overlay}>
-            <span
-              className={styles.closeButton}
-              onClick={() => setIsCreating(false)}
-            >
-              <X size={32} />
-            </span>
-            <form ref={formRef} action={formAction} className={styles.form}>
-              <input
-                ref={inputRef}
-                type="text"
-                name="project-name"
-                id="project-name"
-                placeholder="Nommer votre projet"
-                required
-                minLength={2}
-                maxLength={250}
-              />
-              <span className={styles.projectCreationInfo}>
-                Appuyer sur Entrée pour créer le projet
-              </span>
-              <span className={styles.projectCreationInfo}>OU</span>
-              <button type="submit" data-disabled={pending} disabled={pending}>
-                Cliquer pour créer le projet
-              </button>
-            </form>
-          </div>
-          <div
-            id="modal-layout-opacity"
-            onClick={(e) => setIsCreating(false)}
-          ></div>
-        </>
-      )}
+      <div className={styles.overlay}>
+        <span
+          className={styles.closeButton}
+          onClick={() => setIsCreating(false)}
+        >
+          <X size={32} />
+        </span>
+        <form ref={formRef} action={formAction} className={styles.form}>
+          <input
+            ref={inputRef}
+            type="text"
+            name="project-name"
+            id="project-name"
+            placeholder="Nommer votre projet"
+            required
+            minLength={2}
+            maxLength={250}
+          />
+          <span className={styles.projectCreationInfo}>
+            Appuyer sur Entrée pour créer le projet
+          </span>
+          <span className={styles.projectCreationInfo}>OU</span>
+          <button type="submit" data-disabled={pending} disabled={pending}>
+            Cliquer pour créer le projet
+          </button>
+        </form>
+      </div>
+      <div
+        id="modal-layout-opacity"
+        onClick={(e) => setIsCreating(false)}
+      ></div>
     </div>
   );
 }

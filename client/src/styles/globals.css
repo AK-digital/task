@@ -49,7 +49,7 @@ html:has(#modal-layout) {
 
 body {
   color: var(--text-color);
-  background: var(--primary-background-color);
+  background: var(--secondary-background-color);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -95,7 +95,8 @@ ul {
   list-style-type: none;
 }
 
-input {
+input,
+textarea {
   width: 100%;
   padding: 12px;
   background-color: #2C2E4A;
@@ -232,9 +233,9 @@ p {
 
 #modal-layout,
 #task-modal-layout {
-  background-color: rgba(0, 0, 0, 0.300);
+  background-color: rgba(0, 0, 0, 0.500);
 }
 
 #modal-layout-opacity {
-  background-color: inherit;
+  background-color: transparent;
 }

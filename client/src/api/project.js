@@ -14,10 +14,10 @@ export async function getProject(id) {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
         },
       },
-      { next: { tags: [`project-${id}`] } }
+      { next: { tags: ["project"] } }
     );
 
     const response = await res.json();
@@ -50,7 +50,7 @@ export async function getProjects() {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`,
+        Authorization: `Bearer ${session?.value}`,
       },
       next: { tags: ["projects"] },
     });
@@ -67,6 +67,66 @@ export async function getProjects() {
       err?.message ||
         "Une erreur est survenue lors de la récupération des projets"
     );
+  }
+}
+
+export async function updateProjectLogo(projectId, logo) {
+  try {
+    const cookie = await cookies();
+    const session = cookie?.get("session");
+
+    if (!logo || logo.size === 0) {
+      return {
+        status: "failure",
+        message: "Aucun fichier sélectionné",
+      };
+    }
+
+    // Vérification du type de fichier
+    if (!logo.type.startsWith("image/")) {
+      return {
+        status: "failure",
+        message: "Le fichier doit être une image",
+      };
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("logo", logo);
+
+    const res = await fetch(
+      `${process.env.API_URL}/project/${projectId}/logo`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${session?.value}`,
+        },
+        body: formDataToSend,
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(
+        response?.message || "Une erreur inattendue est survenue"
+      );
+    }
+
+    revalidateTag("projects");
+
+    return {
+      status: "success",
+      message: "Le logo a été mis à jour avec succès",
+      data: response.data,
+    };
+  } catch (err) {
+    console.error("Erreur lors de la mise à jour du logo :", err);
+    return {
+      status: "failure",
+      message:
+        "Une erreur inattendue est survenue lors de la mise à jour du logo",
+    };
   }
 }
 
