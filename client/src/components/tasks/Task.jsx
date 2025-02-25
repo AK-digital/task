@@ -15,14 +15,13 @@ import TaskTimer from "./TaskTimer";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
-import { Check, GripVertical } from "lucide-react";
 
 export default function Task({
   task,
   project,
   isDragging,
-  selectedTasks,
   setSelectedTasks,
+  archive,
 }) {
   const pathname = usePathname();
   const [opennedTask, setOpennedTask] = useState(null);
@@ -41,7 +40,9 @@ export default function Task({
     window.history.pushState(
       {},
       "",
-      `/projects/${project?._id}/task/${task?._id}`
+      archive
+        ? `/projects/${project?._id}/archive/task/${task?._id}`
+        : `/projects/${project?._id}/task/${task?._id}`
     );
   };
 
@@ -77,8 +78,10 @@ export default function Task({
             <input
               type="checkbox"
               name="task"
-              id="task"
+              id={`task-${task?._id}`}
+              data-value={task?._id}
               defaultValue={task?._id}
+              className={styles.checkbox}
               onClick={handleSelectedTask}
             />
           </div>
@@ -87,19 +90,20 @@ export default function Task({
             <FontAwesomeIcon icon={faGripVertical} />
           </div>
           <TaskText task={task} project={project} />
+
           <div className={styles.comment}>
             <div onClick={handleTaskClick}>
               <FontAwesomeIcon icon={faComment} />
             </div>
           </div>
 
-          <TaskResponsibles task={task} project={project} />
+          <TaskResponsibles task={task} project={project} archive={archive} />
           <div className={styles.options}>
             <TaskStatus task={task} project={project} />
             <TaskPriority task={task} project={project} />
           </div>
           <TaskDeadline task={task} />
-          <TaskTimer task={task} />
+          {!archive && <TaskTimer task={task} />}
           <TaskRemove task={task} />
         </div>
       </div>
@@ -108,6 +112,7 @@ export default function Task({
           task={task}
           project={project}
           setOpennedTask={setOpennedTask}
+          archive={archive}
         />
       )}
     </div>

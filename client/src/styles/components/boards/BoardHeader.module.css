@@ -27,6 +27,14 @@
     cursor: pointer;
 }
 
+.checkbox {
+    position: relative;
+    z-index: 1 !important;
+    margin-left: 4px;
+    width: 15px !important;
+    height: 15px;
+}
+
 .title {
     border: 1px solid transparent;
     padding: 4px;
@@ -34,8 +42,9 @@
     cursor: pointer;
 }
 
-.title:hover {
+.container[data-archive="false"] .title:hover {
     border: 1px solid var(--border-color);
+    cursor: inherit !important;
 }
 
 .bullet {

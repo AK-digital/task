@@ -58,11 +58,16 @@
     align-items: center;
     width: 100%;
     max-width: 100%;
-    gap: 10px;
+
 }
 
-.wrapper input {
+.checkbox {
+    position: relative;
+    top: 2px;
     cursor: pointer;
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
 }
 
 .content [aria-roledescription="sortable"] svg {

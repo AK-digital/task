@@ -8,6 +8,12 @@
     padding: 24px;
 }
 
+.archiveTitle {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: -20px;
+}
+
 .task-overlay {
     cursor: grabbing;
     background: white;

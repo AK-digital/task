@@ -1,14 +1,14 @@
 "use server";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export async function getBoards(projectId) {
+export async function getBoards(projectId, archive) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
 
     const res = await fetch(
-      `${process.env.API_URL}/board?projectId=${projectId}`,
+      `${process.env.API_URL}/board?projectId=${projectId}&archive=${archive}`,
       {
         method: "GET",
         credentials: "include",

@@ -68,20 +68,101 @@ export async function getTask(taskId, projectId) {
   }
 }
 
-export async function deleteTask(taskId, projectId) {
+export async function addTaskToArchive(tasksIds, projectId) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
 
+    if (tasksIds.length <= 0) {
+      throw new Error("Aucune tâche n'a été séléctionnée");
+    }
+
     const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}?projectId=${projectId}`,
+      `${process.env.API_URL}/task/add-archive?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify({ tasks: tasksIds }),
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de l'archivage des tâches"
+    );
+  }
+}
+
+export async function removeTaskFromArchive(tasksIds, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    if (tasksIds.length <= 0) {
+      throw new Error("Aucune tâche n'a été séléctionnée");
+    }
+
+    const res = await fetch(
+      `${process.env.API_URL}/task/remove-archive?projectId=${projectId}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
+        },
+        body: JSON.stringify({ tasks: tasksIds }),
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de l'archivage des tâches"
+    );
+  }
+}
+
+export async function deleteTask(tasksIds, projectId) {
+  try {
+    const cookie = await cookies();
+    const session = cookie.get("session");
+
+    if (tasksIds.length <= 0) {
+      throw new Error("Aucune tâche n'a été séléctionnée");
+    }
+
+    const res = await fetch(
+      `${process.env.API_URL}/task?projectId=${projectId}`,
       {
         method: "DELETE",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
         },
+        body: JSON.stringify({ tasks: tasksIds }),
       }
     );
 

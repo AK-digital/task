@@ -7,8 +7,6 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { saveTask } from "@/actions/task";
 import { useDroppable } from "@dnd-kit/core";
 import socket from "@/utils/socket";
-import { revalidateBoards } from "@/api/board";
-import TasksHeader from "./TasksHeader";
 import SelectedTasks from "./SelectedTasks";
 
 const initialState = {
@@ -24,12 +22,14 @@ export default function Tasks({
   boardId,
   optimisticColor,
   activeId,
+  selectedTasks,
+  setSelectedTasks,
+  archive,
 }) {
   const inputRef = useRef(null);
   const [isWritting, setIsWritting] = useState(false);
 
   const saveTaskWithProjectId = saveTask.bind(null, project?._id);
-  const [selectedTasks, setSelectedTasks] = useState([]);
   const [state, formAction, pending] = useActionState(
     saveTaskWithProjectId,
     initialState
@@ -65,40 +65,42 @@ export default function Tasks({
             task={task}
             project={project}
             isDragging={task?._id === activeId}
-            selectedTasks={selectedTasks}
             setSelectedTasks={setSelectedTasks}
+            archive={archive}
           />
         ))}
-        <div className={styles.add}>
-          <FontAwesomeIcon icon={faPlus} />
-          <form action={formAction}>
-            <input
-              type="text"
-              name="board-id"
-              id="board-id"
-              defaultValue={boardId}
-              hidden
-            />
-            <input
-              type="text"
-              name="new-task"
-              id="new-task"
-              placeholder=" Ajouter une tâche"
-              autoComplete="off"
-              ref={inputRef}
-              onChange={(e) => {
-                if (e.target.value.length > 0) {
-                  setIsWritting(true);
-                } else {
-                  setIsWritting(false);
-                }
-              }}
-            />
-            <button type="submit" hidden>
-              Ajouter une tâche
-            </button>
-          </form>
-        </div>
+        {!archive && (
+          <div className={styles.add}>
+            <FontAwesomeIcon icon={faPlus} />
+            <form action={formAction}>
+              <input
+                type="text"
+                name="board-id"
+                id="board-id"
+                defaultValue={boardId}
+                hidden
+              />
+              <input
+                type="text"
+                name="new-task"
+                id="new-task"
+                placeholder=" Ajouter une tâche"
+                autoComplete="off"
+                ref={inputRef}
+                onChange={(e) => {
+                  if (e.target.value.length > 0) {
+                    setIsWritting(true);
+                  } else {
+                    setIsWritting(false);
+                  }
+                }}
+              />
+              <button type="submit" hidden>
+                Ajouter une tâche
+              </button>
+            </form>
+          </div>
+        )}
       </div>
 
       {isWritting && (
@@ -108,7 +110,14 @@ export default function Tasks({
           </p>
         </div>
       )}
-      {selectedTasks.length > 0 && <SelectedTasks tasks={selectedTasks} />}
+      {selectedTasks.length > 0 && (
+        <SelectedTasks
+          project={project}
+          tasks={selectedTasks}
+          setSelectedTasks={setSelectedTasks}
+          archive={archive}
+        />
+      )}
     </div>
   );
 }

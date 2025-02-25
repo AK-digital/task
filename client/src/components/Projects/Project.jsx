@@ -8,7 +8,12 @@ import { useEffect } from "react";
 import socket from "@/utils/socket";
 import { revalidateProject } from "@/api/project";
 
-export default function ProjectClient({ project, projectInvitations, boards }) {
+export default function Project({
+  project,
+  projectInvitations,
+  boards,
+  archive,
+}) {
   useEffect(() => {
     function handleRevalidate(projectId) {
       revalidateProject(projectId);
@@ -28,10 +33,15 @@ export default function ProjectClient({ project, projectInvitations, boards }) {
           project={project}
           projectInvitations={projectInvitations}
         />
-        {isNotEmpty(boards) && <Boards boards={boards} project={project} />}
-        <div className={styles.options}>
-          <AddBoard projectId={project?._id} />
-        </div>
+        {isNotEmpty(boards) && (
+          <Boards boards={boards} project={project} archive={archive} />
+        )}
+        {/* If archive is false */}
+        {!archive && (
+          <div className={styles.options}>
+            <AddBoard projectId={project?._id} />
+          </div>
+        )}
       </div>
     </>
   );

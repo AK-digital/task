@@ -1,17 +1,14 @@
 "use client";
 import styles from "@/styles/components/tasks/task-more.module.css";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState, useEffect, useCallback } from "react";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import moment from "moment";
 import { X } from "lucide-react";
 moment.locale("fr");
 
-export default function TaskMore({ task, project, setOpennedTask }) {
+export default function TaskMore({ task, project, setOpennedTask, archive }) {
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
   const [editDescription, setEditDescription] = useState(false);
@@ -85,7 +82,13 @@ export default function TaskMore({ task, project, setOpennedTask }) {
 
     const handleAnimationEnd = async () => {
       container.removeEventListener("animationend", handleAnimationEnd);
-      window.history.pushState({}, "", `/projects/${project?._id}`);
+      window.history.pushState(
+        {},
+        "",
+        archive
+          ? `/projects/${project?._id}/archive`
+          : `/projects/${project?._id}`
+      );
       setOpennedTask(null);
       setOpen(false);
     };
@@ -107,7 +110,6 @@ export default function TaskMore({ task, project, setOpennedTask }) {
           <div className={styles.text}>
             <span>{task?.text}</span>
           </div>
-
           <div className={styles.taskAuthor}>
             <Image
               src={task?.author?.picture || "/default-pfp.webp"}

@@ -89,7 +89,7 @@ const taskSchema = new Schema(
     order: {
       type: Number,
     },
-    isArchived: {
+    archived: {
       type: Boolean,
       default: false,
     },

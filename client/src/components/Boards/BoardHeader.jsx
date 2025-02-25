@@ -14,6 +14,9 @@ export default function BoardHeader({
   tasks,
   setOptimisticColor,
   optimisticColor,
+  selectedTasks,
+  setSelectedTasks,
+  archive,
 }) {
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
@@ -78,8 +81,43 @@ export default function BoardHeader({
     };
   }, [socket]);
 
+  function handleEditState(e) {
+    e.preventDefault();
+
+    if (archive) return;
+
+    setEdit(false);
+  }
+
+  const handleCheckBoard = (e) => {
+    if (e.target.checked) {
+      setSelectedTasks((prev) => [...prev, ...tasks?.map((task) => task?._id)]);
+    } else {
+      setSelectedTasks((prev) => [
+        ...prev.filter(
+          (taskId) => !tasks?.map((task) => task?._id).includes(taskId)
+        ),
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    const inputs = document?.getElementsByName("task");
+
+    for (const input of inputs) {
+      input.checked = selectedTasks.includes(input.value);
+    }
+  }, [selectedTasks]);
+
   return (
-    <div className={styles.container} data-open={open}>
+    <div className={styles.container} data-open={open} data-archive={archive}>
+      <input
+        type="checkbox"
+        name="board"
+        className={styles.checkbox}
+        onClick={handleCheckBoard}
+      />
+
       {open ? (
         <ChevronDown
           style={{ color: `${optimisticColor}` }}
@@ -102,22 +140,24 @@ export default function BoardHeader({
             defaultValue={title}
             onChange={handleTitleChange}
           />
-          <div id="modal-layout-opacity" onClick={(e) => setEdit(false)}></div>
+          <div id="modal-layout-opacity" onClick={handleEditState}></div>
         </>
       ) : (
         <span
           className={styles.title}
           style={{ color: `${optimisticColor}` }}
-          onClick={(e) => setEdit(true)}
+          onClick={handleEditState}
         >
           {title}
         </span>
       )}
-      <span
-        className={styles.bullet}
-        style={{ backgroundColor: `${optimisticColor}` }}
-        onClick={(e) => setOpenColors(true)}
-      ></span>
+      {!archive && (
+        <span
+          className={styles.bullet}
+          style={{ backgroundColor: `${optimisticColor}` }}
+          onClick={(e) => setOpenColors(true)}
+        ></span>
+      )}
       {!open && tasks?.length >= 1 && (
         <span className={styles.count}>
           {tasks?.length > 1
@@ -126,7 +166,9 @@ export default function BoardHeader({
         </span>
       )}
 
-      <DeleteBoard boardId={board?._id} projectId={board?.projectId} />
+      {!archive && (
+        <DeleteBoard boardId={board?._id} projectId={board?.projectId} />
+      )}
 
       {openColors && (
         <>

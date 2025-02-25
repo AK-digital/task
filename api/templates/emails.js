@@ -12,7 +12,7 @@ const emailStyles = {
   highlight: "color: #777AE4;",
 };
 
-export function emailDescription(user, task) {
+export function emailDescription(user, task, link) {
   const templates = {
     subjet: `Vous avez été identifié dans une description`,
     text: `
@@ -24,12 +24,12 @@ export function emailDescription(user, task) {
       emailStyles.highlight
     }">cette description</span></h2>
       <div style="${emailStyles.content}">
-        "${task?.description}"
+        "${task?.description?.text}"
       </div>
       <div>
-      <button style="${emailStyles.button}">
-        Accéder à la description
-      </button>
+       <a href="${link}" style="${emailStyles.button}">
+            Accéder à la description
+       </a>
       </div>
       </div>
       `,
@@ -37,7 +37,7 @@ export function emailDescription(user, task) {
   return templates;
 }
 
-export function emailMessage(user, message) {
+export function emailMessage(user, message, link) {
   const templates = {
     subjet: `Vous avez été identifié dans une conversation`,
     text: `
@@ -52,9 +52,9 @@ export function emailMessage(user, message) {
         "${message?.message}"
       </div>
       <div>
-      <button style="${emailStyles.button}">
-        Accéder à la conversation
-      </button>
+       <a href="${link}" style="${emailStyles.button}">
+            Accéder à la conversation
+       </a>
       </div>
       </div>
       `,

@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
-export default function TaskResponsibles({ task, project }) {
+export default function TaskResponsibles({ task, project, archive }) {
   const { user, uid } = useContext(AuthContext);
   const [optimisticResponsibles, setOptimisticResponsibles] = useState(
     task?.responsibles || []
@@ -100,6 +100,14 @@ export default function TaskResponsibles({ task, project }) {
     });
   }
 
+  function handleOpenModal(e) {
+    e.preventDefault();
+
+    if (archive) return;
+
+    setOpenModal(!openModal);
+  }
+
   useEffect(() => {
     function handleResponsibleUpdate(taskId, updateData) {
       if (task?._id !== taskId) return;
@@ -124,7 +132,7 @@ export default function TaskResponsibles({ task, project }) {
   return (
     <div className={styles.container}>
       {isNotEmpty(optimisticResponsibles) ? (
-        <ul className={styles.list} onClick={() => setOpenModal(!openModal)}>
+        <ul className={styles.list} onClick={handleOpenModal}>
           {optimisticResponsibles.slice(0, 3).map((responsible) => (
             <li key={responsible?._id}>
               <Image
@@ -148,7 +156,7 @@ export default function TaskResponsibles({ task, project }) {
           )}
         </ul>
       ) : (
-        <div className={styles.plus} onClick={() => setOpenModal(!openModal)}>
+        <div className={styles.plus} onClick={handleOpenModal}>
           <FontAwesomeIcon icon={faPlus} />
         </div>
       )}

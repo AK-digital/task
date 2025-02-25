@@ -118,8 +118,22 @@ router.patch(
   taskControllers.updateTaskBoard
 );
 
+router.patch(
+  "/add-archive",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.addTaskToArchive
+);
+
+router.patch(
+  "/remove-archive",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.removeTaskFromArchive
+);
+
 router.delete(
-  "/:id",
+  "/",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
   taskControllers.deleteTask

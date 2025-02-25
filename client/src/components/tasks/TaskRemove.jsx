@@ -9,7 +9,7 @@ export default function TaskRemove({ task }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   async function handleDeleteTask() {
-    await deleteTask(task?._id, task?.projectId);
+    await deleteTask([task?._id], task?.projectId);
 
     socket.emit("update task", task?.projectId);
   }

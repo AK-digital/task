@@ -51,7 +51,7 @@ export async function saveBoard(req, res, next) {
 
 export async function getBoards(req, res, next) {
   try {
-    const projectId = req.query.projectId;
+    const { projectId, archive } = req.query;
 
     if (!projectId) {
       return res
@@ -63,7 +63,10 @@ export async function getBoards(req, res, next) {
 
     const boardsWithTasks = await Promise.all(
       boards.map(async (board) => {
-        const tasks = await TaskModel.find({ boardId: board._id })
+        const tasks = await TaskModel.find({
+          boardId: board._id,
+          archived: archive, // True or False
+        })
           .sort({ order: "asc" })
           .populate({
             path: "responsibles",

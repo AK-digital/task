@@ -48,11 +48,14 @@ export async function saveMessage(req, res, next) {
 
     const savedMessage = await newMessage.save();
 
+    const link =
+      "/projects/" + savedMessage?.projectId + "/task/" + savedMessage?.taskId;
+
     // Email Logic, basically sending an email for each tagged user
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
 
-      const template = emailMessage(user, savedMessage);
+      const template = emailMessage(user, savedMessage, link);
 
       if (user) {
         await sendEmail(

@@ -7,6 +7,7 @@ import { emailDescription } from "../templates/emails.js";
 import { regex } from "../utils/regex.js";
 import { getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
+import MessageModel from "../models/Message.model.js";
 
 // Only authors and guets will be able to post the tasks
 export async function saveTask(req, res, next) {
@@ -398,10 +399,13 @@ export async function updateTaskDescription(req, res, next) {
       }
     );
 
+    const link =
+      "/projects/" + updatedTask?.projectId + "/task/" + updatedTask?._id;
+
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
 
-      const template = emailDescription(user, updatedTask);
+      const template = emailDescription(user, updatedTask, link);
 
       if (user) {
         await sendEmail(
@@ -867,7 +871,7 @@ export async function addTaskToArchive(req, res, next) {
 
     const bulkOps = tasks.map((task) => ({
       updateOne: {
-        filter: { _id: task?._id },
+        filter: { _id: task },
         update: { $set: { archived: true } },
       },
     }));
@@ -886,42 +890,99 @@ export async function addTaskToArchive(req, res, next) {
   }
 }
 
-// Only authors and guets will be able to delete the tasks
-export async function deleteTask(req, res, next) {
+export async function removeTaskFromArchive(req, res, next) {
   try {
-    const imgRegex = /<img.*?src=["'](.*?)["']/g;
+    const { tasks } = req.body;
 
-    const task = await TaskModel.findById({ _id: req.params.id });
-
-    if (!task) {
-      return res.status(404).send({
+    if (!tasks || tasks?.length <= 0) {
+      return res.status(400).send({
         success: false,
-        message: "Impossible de supprimer une tâche qui n'existe pas",
+        message: "Aucune tâche à désarchiver",
       });
     }
 
-    const description = task?.description?.text;
+    const bulkOps = tasks.map((task) => ({
+      updateOne: {
+        filter: { _id: task },
+        update: { $set: { archived: false } },
+      },
+    }));
 
-    if (description) {
-      const matches = getMatches(description, imgRegex);
-
-      if (matches.length > 0) {
-        for (const match of matches) {
-          const img = match[1];
-
-          await destroyFile("description", img);
-        }
-      }
-    }
-
-    const deletedTask = await TaskModel.findByIdAndDelete({
-      _id: req.params.id,
-    });
+    await TaskModel.bulkWrite(bulkOps);
 
     return res.status(200).send({
       success: true,
-      message: "Tâche supprimé avec succès",
-      data: deletedTask,
+      message: "Les tâches ont été désarchivées avec succès",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Only authors and guets will be able to delete the tasks
+export async function deleteTask(req, res, next) {
+  try {
+    const tasks = req.body.tasks;
+
+    if (tasks.length <= 0) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const imgRegex = /<img.*?src=["'](.*?)["']/g;
+    let deletedTasks = [];
+
+    // Parcours des IDs de tâches reçus dans la requête
+    for (const taskId of tasks) {
+      // Recherche de la tâche par ID
+      const task = await TaskModel.findById(taskId);
+      const message = await MessageModel.findOne({ taskId: taskId });
+
+      if (!task) {
+        return res.status(404).send({
+          success: false,
+          message: `Impossible de supprimer la tâche avec l'ID ${taskId} car elle n'existe pas`,
+        });
+      }
+
+      // Suppression des images dans la description de la tâche
+      const description = task?.description?.text;
+      if (description) {
+        const matches = getMatches(description, imgRegex);
+        if (matches.length > 0) {
+          for (const match of matches) {
+            const img = match[1];
+            await destroyFile("description", img);
+          }
+        }
+      }
+
+      const messageContent = message?.message;
+
+      if (messageContent) {
+        const matches = getMatches(messageContent, imgRegex);
+        if (matches.length > 0) {
+          for (const match of matches) {
+            const img = match[1];
+            await destroyFile("message", img);
+          }
+        }
+      }
+
+      // Suppression de la tâche
+      const deletedTask = await TaskModel.findByIdAndDelete({ _id: taskId });
+      deletedTasks.push(deletedTask);
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: `${deletedTasks.length} tâche(s) supprimée(s) avec succès`,
+      data: deletedTasks,
     });
   } catch (err) {
     return res.status(500).send({

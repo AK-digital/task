@@ -2,12 +2,13 @@
     position: fixed;
     z-index: 2001;
     left: 50%;
-    transform: translateX(-50%);
     bottom: 20px;
+    transform: translateX(-50%);
     background-color: #DBDBDB;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     color: black;
+    animation: showAnim 0.2s ease-out;
 }
 
 .count {
@@ -21,14 +22,14 @@
 }
 
 
-.main {
+.wrapper {
     align-items: center;
     gap: 12px;
     padding-right: 24px;
 }
 
 .container,
-.main,
+.wrapper,
 .actions,
 .action {
     display: flex;
@@ -54,7 +55,23 @@
     font-size: 0.8rem;
 }
 
+.action:nth-child(2) {
+    color: var(--blocked-color);
+}
+
 .action:last-child {
     border-left: 1px solid #007CFF;
     padding-left: 12px;
+}
+
+@keyframes showAnim {
+    from {
+        opacity: 0;
+        bottom: -50%;
+    }
+
+    to {
+        opacity: 1;
+        bottom: 20px;
+    }
 }
