@@ -92,9 +92,9 @@ export default function BoardHeader({
   function handleEditState(e) {
     e.preventDefault();
 
-    if (archive === true) return;
+    if (archive) return;
 
-    setEdit(false);
+    setEdit(!edit);
   }
 
   const handleCheckBoard = (e) => {
@@ -161,11 +161,10 @@ export default function BoardHeader({
             <div id="modal-layout-opacity" onClick={handleEditState}></div>
           </div>
         ) : (
-          <div>
+          <div onClick={handleEditState}>
             <span
               className={styles.title}
               style={{ color: `${optimisticColor}` }}
-              onClick={handleEditState}
             >
               {title}
             </span>
