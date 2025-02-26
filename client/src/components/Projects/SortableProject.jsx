@@ -51,8 +51,8 @@ export default function SortableProject({
     >
       <Image
         src={project?.logo || "/default-project-logo.webp"}
-        width={42}
-        height={42}
+        width={46}
+        height={46}
         alt="project logo"
         style={{ borderRadius: "50%" }}
         data-active={isActive} // Ajout de data-active sur l'image aussi

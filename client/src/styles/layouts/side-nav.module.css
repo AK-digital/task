@@ -17,10 +17,10 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 12px;
+    padding: 12px 0 12px 10px;
     background-color: var(--primary-background-color);
     height: 100%;
-    border-radius: 0 8px 0;
+    border-top-right-radius: 12px;
     transition: width linear 150ms, min-width linear 150ms;
 }
 
@@ -43,30 +43,41 @@
 }
 
 .project {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 12px;
     cursor: pointer;
+    transition: all linear 150ms;
 }
 
 .project img {
     border: 2px solid transparent;
-    transition: all linear 150ms;
 }
 
-.project:hover img {
-    border: 2px solid var(--text-color-muted);
-    transition: all linear 150ms;
-}
-
+.project:hover img,
 .project[data-active="true"] img {
-    border: 4px solid var(--accent-color);
-    transition: all linear 150ms;
+    border: 2px solid var(--accent-color);
+}
+
+.project:hover:after,
+.project[data-active="true"]:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(100% - 2px);
+    height: 100%;
+    background-color: #5d63c51f;
+    border-right: 2px solid var(--accent-color);
+    z-index: -1;
+    border-radius: 33px 0 0 33px;
 }
 
 .project span {
     color: var(--text-color-muted);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -80,7 +91,7 @@
 .actions {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .createProjectButton,
@@ -88,7 +99,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #33354e;
     width: 42px;
     height: 42px;
     border-radius: 50%;
@@ -97,15 +107,23 @@
 
 .createProjectButton:hover,
 .openArrow:hover {
-    background-color: #525474;
     cursor: pointer;
 }
 
-.createProjectButton svg,
-.container[data-open="false"] .openArrow svg {
-    color: var(--side-background-color);
+.openArrow svg {
+    color: #525474;
+    transition: ease-in-out 0.2s;
 }
 
+.openArrow:hover svg {
+    color: #7a7c99;
+}
+
+.createProjectButton,
+.openProjects {
+    background-color: #525474;
+    color: var(--side-background-color);
+}
 
 .create-project__buttons button:nth-child(2) {
     background: none;
@@ -115,19 +133,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #33354e;
     width: 42px;
     height: 42px;
     border-radius: 50%;
 }
 
 .actions a:hover {
-    background-color: #525474;
     cursor: pointer;
 }
 
 .actions a svg {
-    color: var(--text-color-muted);
     transition: all linear 150ms;
 }
 

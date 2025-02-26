@@ -1,15 +1,15 @@
 .container {
     position: fixed;
     top: 0;
-    background-color: var(--secondary-background-color);
-    /* background-color: red; */
+    background-color: var(--third-background-color);
     z-index: 1999;
     width: 100%;
     padding: 8px 0;
+    height: 60px;
 }
 
 .nav {
-    margin-inline: 20px;
+    margin-inline: 8px 16px;
 }
 
 .nav,
@@ -20,7 +20,7 @@
 
 .nav {
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 }
 
 .logo {
@@ -31,8 +31,15 @@
     gap: 24px;
 }
 
-.actions li {
+.actions {
     position: relative;
+}
+
+.actions li {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .bell:hover {

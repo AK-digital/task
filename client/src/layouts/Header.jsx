@@ -39,15 +39,15 @@ export default function Header() {
       <nav className={styles.nav}>
         <Image
           src={"/task.svg"}
-          width={70}
-          height={40}
+          width={67}
+          height={38}
           alt="Logo de Täsk"
           className={styles.logo}
         />
         <ul className={styles.actions}>
           <li>
             <Bell
-              size={24}
+              size={22}
               onClick={(e) => setNotifOpen(true)}
               data-open={notifOpen}
               className={styles.bell}
@@ -66,8 +66,8 @@ export default function Header() {
               <Image
                 src={user?.picture || "/default-pfp.webp"}
                 alt={`Photo de profil de ${user?.firstName}`}
-                width={40}
-                height={40}
+                width={38}
+                height={38}
                 quality={100}
                 style={{ borderRadius: "50%" }}
               />

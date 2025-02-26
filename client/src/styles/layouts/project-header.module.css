@@ -3,18 +3,18 @@
     z-index: 1998;
     top: 60px;
     width: 100%;
-    border-radius: 8px 8px 0 0;
+    border-top-left-radius: 12px;
     background-color: var(--primary-background-color);
-    padding: 24px 24px 0 24px;
+    padding: 16px 24px 0 24px;
 }
 
 .top {
     position: fixed;
     z-index: 1;
     top: 60px;
-    background-color: var(--secondary-background-color);
+    background-color: var(--third-background-color);
     height: 10px;
-    width: 100%;
+    padding-right: 35px;
 }
 
 .container:after {
@@ -132,17 +132,21 @@
 .searchInput {
     width: 100%;
     padding: 8px 12px 8px 36px;
-    border-radius: 6px;
+    border-radius: 12px;
     border: 1px solid var(--border-color);
     background-color: var(--background-color);
     color: var(--text-color);
     font-size: var(--font-size-normal);
+    height: 44px;
+    transition: all 0.2s ease-in-out;
 }
 
+.searchInput:hover,
 .searchInput:focus {
-    outline: none;
-    border-color: var(--accent-color);
+    color: var(--text-color);
+    box-shadow: 0 0 15px 0 rgba(255, 255, 255, 0.1);
 }
+
 
 /* Actions styles */
 .actions {

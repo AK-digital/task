@@ -1,6 +1,5 @@
 .main {
-    margin: 0 20px 50px 20px;
-    margin-bottom: 50px;
+    margin-left: 20px;
     width: 100%;
     min-width: 0;
 }
@@ -10,8 +9,7 @@
     flex-direction: column;
     gap: 30px;
     background-color: var(--primary-background-color);
-    border-radius: 8px;
-
+    min-height: 100%;
 }
 
 .header {
