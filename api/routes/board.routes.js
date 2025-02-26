@@ -25,6 +25,20 @@ router.put(
   boardControllers.updateBoard
 );
 
+router.patch(
+  "/:id/add-archive",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  boardControllers.addBoardToArchive
+);
+
+router.patch(
+  "/:id/remove-archive",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  boardControllers.removeBoardFromArchive
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

@@ -23,18 +23,16 @@ import Task from "../tasks/Task";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
 
-export default function Boards({ boards, project, archive }) {
+export default function Boards({ boards, project, tasksData, archive }) {
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   // Transformer les résultats en un objet avec les tâches par board
-  const initialTasksData = boards
-    ?.map((board) => board?.tasks)
-    .reduce((acc, tasksArray, index) => {
-      if (tasksArray) {
-        acc[boards[index]._id] = tasksArray;
-      }
-      return acc;
-    }, {});
+  const initialTasksData = tasksData.reduce((acc, tasksArray, index) => {
+    if (tasksArray) {
+      acc[boards[index]._id] = tasksArray;
+    }
+    return acc;
+  }, {});
 
   const [tasks, setTasks] = useState(initialTasksData || {});
   const [activeId, setActiveId] = useState(null);
@@ -264,30 +262,31 @@ export default function Boards({ boards, project, archive }) {
         onDragEnd={handleDragEnd}
         modifiers={[restrictToVerticalAxis]}
       >
-        {boards?.map((board) => {
-          if (archive && tasks[board._id]?.length === 0) {
-            return null;
-          }
-          return (
-            <div key={board._id} data-board-id={board._id}>
-              <SortableContext
-                id={board._id}
-                items={tasks[board._id]?.map((task) => task._id) || []}
-                strategy={verticalListSortingStrategy}
-              >
-                <Board
-                  tasks={tasks[board._id] || []}
-                  project={project}
-                  board={board}
-                  activeId={activeId}
-                  selectedTasks={selectedTasks}
-                  setSelectedTasks={setSelectedTasks}
-                  archive={archive}
-                />
-              </SortableContext>
-            </div>
-          );
-        })}
+        {boards
+          ?.filter((board) =>
+            archive ? tasks[board._id] && tasks[board._id].length > 0 : true
+          )
+          ?.map((board) => {
+            return (
+              <div key={board._id} data-board-id={board._id}>
+                <SortableContext
+                  id={board._id}
+                  items={tasks[board._id]?.map((task) => task._id) || []}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <Board
+                    tasks={tasks[board._id] || []}
+                    project={project}
+                    board={board}
+                    activeId={activeId}
+                    selectedTasks={selectedTasks}
+                    setSelectedTasks={setSelectedTasks}
+                    archive={archive}
+                  />
+                </SortableContext>
+              </div>
+            );
+          })}
         <DragOverlay>
           {activeId ? (
             <Task

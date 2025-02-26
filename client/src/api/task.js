@@ -2,19 +2,19 @@
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export async function getTasks(projectId, boardId) {
+export async function getTasks(projectId, boardId, archived) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
 
     const res = await fetch(
-      `${process.env.API_URL}/task?projectId=${projectId}&boardId=${boardId}`,
+      `${process.env.API_URL}/task?projectId=${projectId}&boardId=${boardId}&archived=${archived}`,
       {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
+          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
         },
       },
       { next: { tags: ["tasks"] } }
@@ -26,7 +26,7 @@ export async function getTasks(projectId, boardId) {
       throw new Error(response?.message);
     }
 
-    return response;
+    return response?.data;
   } catch (err) {
     console.log(
       err.message ||

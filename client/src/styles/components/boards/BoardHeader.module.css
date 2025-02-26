@@ -2,6 +2,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
     font-weight: 500;
     user-select: none;
@@ -14,7 +15,7 @@
     max-height: 20px;
 }
 
-.container input {
+.container input[type="text"] {
     position: relative;
     z-index: 2001;
     width: fit-content;
@@ -27,17 +28,46 @@
     cursor: pointer;
 }
 
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.actions div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.actions div svg {
+    cursor: pointer;
+}
+
+.actionCheckbox input {
+    cursor: pointer;
+}
+
+.actionMore {
+    position: relative;
+    color: var(--text-color-muted);
+}
+
+.actionMore>svg:hover {
+    color: var(--text-color);
+}
+
 .checkbox {
     position: relative;
-    z-index: 1 !important;
-    margin-left: 4px;
-    width: 15px !important;
+    z-index: 1;
+    margin-left: 3px;
+    width: 15px;
     height: 15px;
 }
 
 .title {
     border: 1px solid transparent;
-    padding: 4px;
+    /* padding: 4px; */
     border-radius: 4px;
     cursor: pointer;
 }

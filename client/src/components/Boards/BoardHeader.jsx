@@ -1,11 +1,18 @@
 "use client";
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import {
+  Archive,
+  ChevronDown,
+  ChevronRight,
+  EllipsisVertical,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import DeleteBoard from "./DeleteBoard";
 import socket from "@/utils/socket";
+import { isNotEmpty } from "@/utils/utils";
+import BoardMore from "./BoardMore";
 
 export default function BoardHeader({
   board,
@@ -18,6 +25,7 @@ export default function BoardHeader({
   setSelectedTasks,
   archive,
 }) {
+  const [more, setMore] = useState(false);
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
   const [title, setTitle] = useState(board?.title);
@@ -84,7 +92,7 @@ export default function BoardHeader({
   function handleEditState(e) {
     e.preventDefault();
 
-    if (archive) return;
+    if (archive === true) return;
 
     setEdit(false);
   }
@@ -111,64 +119,88 @@ export default function BoardHeader({
 
   return (
     <div className={styles.container} data-open={open} data-archive={archive}>
-      <input
-        type="checkbox"
-        name="board"
-        className={styles.checkbox}
-        onClick={handleCheckBoard}
-      />
-
-      {open ? (
-        <ChevronDown
-          style={{ color: `${optimisticColor}` }}
-          onClick={handleOpenCloseBoard}
-          size={20}
-        />
-      ) : (
-        <ChevronRight
-          style={{ color: `${optimisticColor}` }}
-          onClick={handleOpenCloseBoard}
-          size={20}
-        />
-      )}
-      {edit ? (
-        <>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            defaultValue={title}
-            onChange={handleTitleChange}
-          />
-          <div id="modal-layout-opacity" onClick={handleEditState}></div>
-        </>
-      ) : (
-        <span
-          className={styles.title}
-          style={{ color: `${optimisticColor}` }}
-          onClick={handleEditState}
-        >
-          {title}
-        </span>
-      )}
-      {!archive && (
-        <span
-          className={styles.bullet}
-          style={{ backgroundColor: `${optimisticColor}` }}
-          onClick={(e) => setOpenColors(true)}
-        ></span>
-      )}
-      {!open && tasks?.length >= 1 && (
-        <span className={styles.count}>
-          {tasks?.length > 1
-            ? `${tasks?.length} Tâches`
-            : `${tasks?.length} Tâche`}
-        </span>
-      )}
-
-      {!archive && (
-        <DeleteBoard boardId={board?._id} projectId={board?.projectId} />
-      )}
+      <div className={styles.actions}>
+        {/* Display if tasks is not empty and if there is at least 2 task */}
+        {isNotEmpty(tasks) && tasks?.length > 1 && (
+          <div
+            className={styles.actionCheckbox}
+            title="Sélectionner toutes les tâches"
+          >
+            <input
+              type="checkbox"
+              name="board"
+              className={styles.checkbox}
+              onClick={handleCheckBoard}
+            />
+          </div>
+        )}
+        <div>
+          {open ? (
+            <ChevronDown
+              style={{ color: `${optimisticColor}` }}
+              onClick={handleOpenCloseBoard}
+              size={20}
+            />
+          ) : (
+            <ChevronRight
+              style={{ color: `${optimisticColor}` }}
+              onClick={handleOpenCloseBoard}
+              size={20}
+            />
+          )}
+        </div>
+        {edit ? (
+          <div>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              defaultValue={title}
+              onChange={handleTitleChange}
+            />
+            <div id="modal-layout-opacity" onClick={handleEditState}></div>
+          </div>
+        ) : (
+          <div>
+            <span
+              className={styles.title}
+              style={{ color: `${optimisticColor}` }}
+              onClick={handleEditState}
+            >
+              {title}
+            </span>
+          </div>
+        )}
+        {!archive && (
+          <div>
+            <span
+              className={styles.bullet}
+              style={{ backgroundColor: `${optimisticColor}` }}
+              onClick={(e) => setOpenColors(true)}
+            ></span>
+          </div>
+        )}
+        {!open && tasks?.length >= 1 && (
+          <div>
+            <span className={styles.count}>
+              {tasks?.length > 1
+                ? `${tasks?.length} Tâches`
+                : `${tasks?.length} Tâche`}
+            </span>
+          </div>
+        )}
+        <div className={styles.actionMore}>
+          <EllipsisVertical size={18} onClick={(e) => setMore(true)} />
+          {more && (
+            <BoardMore
+              board={board}
+              projectId={board?.projectId}
+              setMore={setMore}
+              archive={archive}
+            />
+          )}
+        </div>
+      </div>
 
       {openColors && (
         <>

@@ -3,6 +3,7 @@
     width: 65px;
     transition: width linear 150ms, min-width linear 150ms;
     user-select: none;
+
 }
 
 .container[data-open="true"] {

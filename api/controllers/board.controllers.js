@@ -51,7 +51,7 @@ export async function saveBoard(req, res, next) {
 
 export async function getBoards(req, res, next) {
   try {
-    const { projectId, archive } = req.query;
+    const { projectId } = req.query;
 
     if (!projectId) {
       return res
@@ -59,35 +59,9 @@ export async function getBoards(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    const boards = await BoardModel.find({ projectId: projectId });
-
-    const boardsWithTasks = await Promise.all(
-      boards.map(async (board) => {
-        const tasks = await TaskModel.find({
-          boardId: board._id,
-          archived: archive, // True or False
-        })
-          .sort({ order: "asc" })
-          .populate({
-            path: "responsibles",
-            select: "-password -role", // Exclure le champ `password` des responsibles
-          })
-          .populate({
-            path: "author",
-            select: "-password -role", // Exclure le champ `password` des responsibles
-          })
-          .populate({
-            path: "description.author", // Accès à l'auteur de la description
-            select: "-password -role", // Exclure les champs sensibles
-          })
-          .populate({
-            path: "timeTracking.sessions.userId", // Accès à userId dans sessions
-            select: "-password -role", // Exclure les champs sensibles
-          })
-          .exec();
-        return { ...board.toObject(), tasks: tasks };
-      })
-    );
+    const boards = await BoardModel.find({
+      projectId: projectId,
+    });
 
     if (!boards) {
       return res.status(404).send({
@@ -99,7 +73,7 @@ export async function getBoards(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Tableaux trouvés",
-      data: boardsWithTasks,
+      data: boards,
     });
   } catch (err) {
     return res.status(500).send({
@@ -146,6 +120,90 @@ export async function updateBoard(req, res, next) {
     return res.status(500).send({
       success: false,
       message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function addBoardToArchive(req, res, next) {
+  try {
+    const board = await BoardModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: { archived: true },
+      },
+      { new: true, setDefaultsOnInsert: true }
+    );
+
+    if (!board) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible d'archiver un tableau qui n'existe pas",
+      });
+    }
+
+    const tasks = await TaskModel.find({ boardId: board._id });
+
+    if (tasks?.length >= 1) {
+      const bulkOps = tasks.map((task) => ({
+        updateOne: {
+          filter: { _id: task },
+          update: { $set: { archived: true } },
+        },
+      }));
+
+      await TaskModel.bulkWrite(bulkOps);
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Le tableau ainsi que ses tâches ont été archivées avec succès",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function removeBoardFromArchive(req, res, next) {
+  try {
+    const board = await BoardModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: { archived: false },
+      },
+      { new: true, setDefaultsOnInsert: true }
+    );
+
+    if (!board) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de restaurer un tableau qui n'existe pas",
+      });
+    }
+
+    const tasks = await TaskModel.find({ boardId: board._id });
+
+    if (tasks?.length >= 1) {
+      const bulkOps = tasks.map((task) => ({
+        updateOne: {
+          filter: { _id: task },
+          update: { $set: { archived: false } },
+        },
+      }));
+
+      await TaskModel.bulkWrite(bulkOps);
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Le tableau ainsi que ses tâches ont été restaurés avec succès",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
     });
   }
 }

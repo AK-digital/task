@@ -24,8 +24,6 @@ export default function Board({
     }
   }, [board?._id]);
 
-  console.log(selectedTasks);
-
   return (
     <div className={styles.container} data-board={board?._id}>
       {/* Board header */}

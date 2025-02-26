@@ -12,6 +12,7 @@ export default function Project({
   project,
   projectInvitations,
   boards,
+  tasks,
   archive,
 }) {
   useEffect(() => {
@@ -32,10 +33,14 @@ export default function Project({
         <ProjectHeader
           project={project}
           projectInvitations={projectInvitations}
+          tasks={tasks}
         />
-        {isNotEmpty(boards) && (
-          <Boards boards={boards} project={project} archive={archive} />
-        )}
+        <Boards
+          boards={boards}
+          project={project}
+          tasksData={tasks}
+          archive={archive}
+        />
         {/* If archive is false */}
         {!archive && (
           <div className={styles.options}>

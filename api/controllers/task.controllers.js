@@ -53,9 +53,10 @@ export async function saveTask(req, res, next) {
 // Only authors and guets will be able to get the tasks
 export async function getTasks(req, res, next) {
   try {
-    const boardId = req.query.boardId;
+    console.log("played");
+    const { boardId, archived } = req.query;
 
-    const tasks = await TaskModel.find({ boardId: boardId })
+    const tasks = await TaskModel.find({ boardId: boardId, archived: archived })
       .sort({ order: "asc" })
       .populate({
         path: "responsibles",
@@ -74,6 +75,8 @@ export async function getTasks(req, res, next) {
         select: "-password -role", // Exclure les champs sensibles
       })
       .exec();
+
+    console.log(tasks);
 
     if (tasks.length <= 0) {
       return res.status(404).send({
