@@ -9,15 +9,16 @@ import passport from "passport";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import notificationRouter from "./routes/notification.routes.js";
+import templateRouter from "./routes/template.routes.js";
 import projectRouter from "./routes/project.routes.js";
 import projectInvitations from "./routes/projectInvitation.routes.js";
 import boardRouter from "./routes/board.routes.js";
 import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
+
 import UserModel from "./models/User.model.js";
 import NotificationModel from "./models/Notification.model.js";
 import ProjectModel from "./models/Project.model.js";
-import TaskModel from "./models/Task.model.js";
 import BoardModel from "./models/Board.model.js";
 
 const app = express();
@@ -51,6 +52,8 @@ app.use(passport.initialize());
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/notification", notificationRouter);
+
+app.use("/api/template", templateRouter);
 
 app.use("/api/project", projectRouter);
 app.use("/api/project-invitation", projectInvitations);

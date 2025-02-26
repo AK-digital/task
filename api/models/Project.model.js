@@ -41,16 +41,6 @@ const projectSchema = new Schema(
       ],
       required: false,
     },
-    settings: {
-      urlWordpress: {
-        type: String,
-        required: false,
-      },
-      urlBackofficeWordpress: {
-        type: String,
-        required: false,
-      },
-    },
     order: {
       type: Number,
       default: 0,

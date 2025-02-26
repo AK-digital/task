@@ -80,7 +80,9 @@ export default function SelectedTasks({
           <span> {tasks.length}</span>
         </div>
         <div className={styles.header}>
-          <span>Tâche séléctionné(s)</span>
+          <span>
+            {tasks?.length > 1 ? "Tâches séléctionnées" : "Tâche séléctionnée"}
+          </span>
         </div>
         {/* actions */}
         <div className={styles.actions}>

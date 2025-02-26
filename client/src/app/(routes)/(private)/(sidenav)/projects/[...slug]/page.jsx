@@ -16,7 +16,7 @@ export default async function ProjectPage({ params }) {
 
   const projectData = getProject(id);
   const projectInvitationsData = getProjectInvitations(id);
-  const boardsData = getBoards(id);
+  const boardsData = getBoards(id, archive);
 
   const [project, projectInvitations, boards] = await Promise.all([
     projectData,

@@ -1,7 +1,7 @@
 .main {
     margin-inline: 20px;
     width: 100%;
-    height: calc(100svh - 120px);
+    height: calc(100svh - 60px);
 }
 
 .container {
@@ -10,7 +10,7 @@
     flex-direction: column;
     gap: 12px;
     background-color: var(--primary-background-color);
-    border-radius: 8px;
+    border-radius: 8px 8px 0 0;
     height: 100%;
     padding: 24px;
     overflow: auto;

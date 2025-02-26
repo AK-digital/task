@@ -51,7 +51,7 @@ export async function saveBoard(req, res, next) {
 
 export async function getBoards(req, res, next) {
   try {
-    const { projectId } = req.query;
+    const { projectId, archived } = req.query;
 
     if (!projectId) {
       return res
@@ -59,9 +59,18 @@ export async function getBoards(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    const boards = await BoardModel.find({
-      projectId: projectId,
-    });
+    let boards;
+
+    if (archived === "true") {
+      boards = await BoardModel.find({
+        projectId: projectId,
+      });
+    } else {
+      boards = await BoardModel.find({
+        projectId: projectId,
+        archived: false,
+      });
+    }
 
     if (!boards) {
       return res.status(404).send({

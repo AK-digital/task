@@ -3,13 +3,13 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { getSession } from "./auth";
 
-export async function getBoards(projectId) {
+export async function getBoards(projectId, archived) {
   try {
     const cookie = await cookies();
     const session = cookie.get("session");
 
     const res = await fetch(
-      `${process.env.API_URL}/board?projectId=${projectId}`,
+      `${process.env.API_URL}/board?projectId=${projectId}&archived=${archived}`,
       {
         method: "GET",
         credentials: "include",
