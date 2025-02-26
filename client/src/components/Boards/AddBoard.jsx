@@ -2,6 +2,7 @@
 import { saveBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/add-board.module.css";
 import { useActionState } from "react";
+import { Plus } from "lucide-react";
 
 const initialState = {
   status: "pending",
@@ -29,10 +30,11 @@ export default function AddBoard({ projectId }) {
         />
         <button
           type="submit"
-          className={styles["form__btn"]}
+          className={styles.addButton}
           data-disabled={pending}
           disabled={pending}
         >
+          <Plus size={18} />
           Ajouter un tableau
         </button>
       </form>

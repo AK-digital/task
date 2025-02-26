@@ -42,7 +42,7 @@ export default function ProjectHeader({ project, projectInvitations }) {
             <SearchForm />
           </div>
           <div className={styles.actions}>
-            <div title="Archive du projet">
+            <div className={styles.archive} title="Archive du projet">
               <Link href={`/projects/${project._id}/archive`}>
                 <Archive size={24} />
               </Link>
