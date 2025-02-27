@@ -141,6 +141,7 @@ button:hover {
 }
 
 button[data-disabled="true"] {
+  pointer-events: none;
   background-color: var(--accent-color-hover);
 }
 

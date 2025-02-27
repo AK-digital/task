@@ -3,7 +3,7 @@ import styles from "@/styles/layouts/project-header.module.css";
 import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import SearchForm from "@/components/Projects/SearchForm";
-import { Archive, UserPlus2 } from "lucide-react";
+import { Archive, Layout, UserPlus2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import NoPicture from "@/components/User/NoPicture";
@@ -11,8 +11,10 @@ import getNotifications from "@/api/notification";
 import useSWR from "swr";
 import socket from "@/utils/socket";
 import Link from "next/link";
+import AddTemplate from "@/components/Templates/AddTemplate";
 
 export default function ProjectHeader({ project, projectInvitations }) {
+  const [addTemplate, setAddTemplate] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const { data, mutate } = useSWR(
@@ -42,6 +44,15 @@ export default function ProjectHeader({ project, projectInvitations }) {
             <SearchForm />
           </div>
           <div className={styles.actions}>
+            <div className={styles.template} title="Ajouter un template">
+              <Layout size={24} onClick={(e) => setAddTemplate(true)} />
+              {addTemplate && (
+                <AddTemplate
+                  project={project}
+                  setAddTemplate={setAddTemplate}
+                />
+              )}
+            </div>
             <div className={styles.archive} title="Archive du projet">
               <Link href={`/projects/${project._id}/archive`}>
                 <Archive size={24} />

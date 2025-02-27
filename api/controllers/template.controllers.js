@@ -8,7 +8,7 @@ export async function saveTemplate(req, res, next) {
     const authUser = res.locals.user;
     const { name, description, projectId } = req.body;
 
-    if (!name || !description || !projectId) {
+    if (!name || !projectId) {
       return res.status(400).send({
         success: false,
         message: "Paramètres manquants",
@@ -116,9 +116,37 @@ export async function useTemplate(req, res, next) {
 
 export async function getTemplates(req, res, next) {
   try {
-    const templates = await TemplateModel.find();
+    const templates = await TemplateModel.aggregate([
+      {
+        $lookup: {
+          from: "boards",
+          localField: "project",
+          foreignField: "projectId",
+          as: "boards",
+        },
+      },
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "project",
+          foreignField: "projectId",
+          as: "tasks",
+        },
+      },
+      {
+        $addFields: {
+          boardsCount: { $size: "$boards" },
+          tasksCount: { $size: "$tasks" },
+        },
+      },
+      {
+        $project: {
+          tasks: 0,
+        },
+      },
+    ]);
 
-    if (!templates) {
+    if (templates.length === 0) {
       return res.status(404).send({
         success: false,
         message: "Aucun modèle trouvé",

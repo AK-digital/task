@@ -44,7 +44,7 @@ export async function decryptToken(session) {
 
     return response;
   } catch (err) {
-    console.log(err);
+    console.log("Erreur dans decryptToken:", err.message);
     // logout();
     return {
       success: false,
@@ -57,26 +57,18 @@ export async function decryptToken(session) {
 
 export async function refreshToken(token) {
   try {
-    const rawFormData = {
-      token: token,
-    };
-
     const res = await fetch(`${process.env.API_URL}/auth/refresh-token`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(rawFormData),
+      body: JSON.stringify({ token: token }),
     });
 
     const response = await res.json();
 
     if (!response.success) {
-      console.error(
-        "Erreur lors du rafraîchissement du token:",
-        response?.message
-      );
       throw new Error(response?.message);
     }
 
@@ -104,7 +96,7 @@ export async function refreshToken(token) {
 
     return await decryptToken(newSessionToken);
   } catch (err) {
-    console.error("Erreur dans refreshToken:", err.message);
+    console.log("Erreur dans refreshToken:", err.message);
     return {
       success: false,
       message:

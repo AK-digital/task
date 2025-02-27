@@ -13,7 +13,7 @@ export default function AuthProvider({ children }) {
   const router = useRouter();
 
   const { data, error } = useSWR("/auth/session", getSession, {
-    refreshInterval: 15 * 60 * 1000, // Refresh every 15 minutes
+    refreshInterval: 5 * 60 * 1000, // Refresh every 5 minutes
     revalidateOnMount: true, // Revalidate everytime componenets are mounted
     revalidateOnFocus: true, // Revalidate everytime the user focus the page
     refreshWhenHidden: true, // The request will be refreshed even if the user is not on the page
@@ -21,33 +21,16 @@ export default function AuthProvider({ children }) {
   });
 
   useEffect(() => {
-    let retryCount = 0;
-    const maxRetries = 3;
-
-    const handleSession = async () => {
-      try {
-        if (data) {
-          const response = data;
-          if (!response?.success) {
-            if (retryCount < maxRetries) {
-              retryCount++;
-              // Attendre un peu avant de réessayer
-              setTimeout(() => handleSession(), 1000 * retryCount);
-              return;
-            }
-          } else {
-            setUid(response?.data?._id);
-            setUser(response?.data);
-            socket.emit("logged in", response?.data?._id);
-          }
-        }
-      } catch (error) {
-        console.error("Session error:", error);
+    if (data) {
+      const response = data;
+      if (!response?.success) {
         router.push("/");
+      } else {
+        setUid(response?.data?._id);
+        setUser(response?.data);
+        socket.emit("logged in", response?.data?._id);
       }
-    };
-
-    handleSession();
+    }
   }, [data, router]);
 
   useEffect(() => {

@@ -15,5 +15,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/projects", "/projects/:path*", "/profile"], // Protected routes
+  matcher: ["/projects", "/projects/:path*", "/profile", "/new-project/:path*"], // Protected routes
 };

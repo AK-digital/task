@@ -130,21 +130,23 @@ export default function SideNav({ projects }) {
         </nav>
         {/* options */}
         <div className={styles.actions}>
-          <Link className={styles.openProjects} href={"/projects"} data-active={projectId === ""}>
+          <Link
+            className={styles.openProjects}
+            href={"/projects"}
+            data-active={projectId === ""}
+          >
             <LayoutGrid size={24} />
           </Link>
-          <div
-            onClick={() => setIsCreating(true)}
-            className={styles.createProjectButton}
-          >
-            <Plus size={32} />
+          <div className={styles.createProjectButton}>
+            <Link href={"/new-project"}>
+              <Plus size={32} />
+            </Link>
           </div>
-
         </div>
       </div>
-      {isCreating && (
+      {/* {isCreating && (
         <CreateProject isCreating={isCreating} setIsCreating={setIsCreating} />
-      )}
+      )} */}
     </aside>
   );
 }
