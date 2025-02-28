@@ -1,7 +1,7 @@
 import styles from "@/styles/components/tasks/task-text.module.css";
 import { updateTaskText } from "@/actions/task";
 import { useActionState, useEffect, useRef, useState } from "react";
-import { instrumentSans } from "@/utils/font";
+import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 
 const initialState = {
@@ -64,7 +64,7 @@ export default function TaskText({ isHeader, task, project }) {
             id="text"
             value={inputValue}
             onChange={handleChange}
-            className={instrumentSans.className}
+            className={bricolageGrostesque.className}
             onBlur={(e) => setEdit(false)}
             autoFocus
           />

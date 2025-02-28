@@ -1,6 +1,6 @@
 .container {
-    min-width: 65px;
-    width: 65px;
+    min-width: 80px;
+    width: 80px;
     transition: width linear 150ms, min-width linear 150ms;
     user-select: none;
 }
@@ -12,15 +12,15 @@
 
 .wrapper {
     position: fixed;
-    min-width: 66px;
-    width: 66px;
+    top: 0;
+    min-width: 81px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 12px 0 12px 10px;
-    background-color: var(--primary-background-color);
+    justify-content: space-between;
+    width: 81px;
+    padding: 12px 0px 12px 19px;
+    background-color: var(--side-background-color);
     height: 100%;
-    border-top-right-radius: 12px;
     transition: width linear 150ms, min-width linear 150ms;
 }
 
@@ -110,14 +110,12 @@
     cursor: pointer;
 }
 
-.openArrow svg {
-    color: #525474;
-    transition: ease-in-out 0.2s;
+.openArrow {
+    color: var(--text-color);
+    margin-bottom: 24px;
 }
 
-.openArrow:hover svg {
-    color: #7a7c99;
-}
+
 
 .createProjectButton,
 .openProjects {
@@ -127,6 +125,10 @@
 
 .create-project__buttons button:nth-child(2) {
     background: none;
+}
+
+.actions {
+    margin-bottom: 44px;
 }
 
 .actions a {

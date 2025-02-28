@@ -2,7 +2,6 @@
 
 import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 /**
  * Fetches templates using authenticated request
@@ -20,6 +19,29 @@ import { cookies } from "next/headers";
  * @param {null} body - Request body (null for GET requests)
  * @param {'templates'} cache - Cache key for the request
  */
+
+export async function saveBoardTemplate(boardId, projectId) {
+  try {
+    const res = await useAuthFetch(
+      `template/board?projectId=${projectId}`,
+      "POST",
+      "application/json",
+      { boardId: boardId }
+    );
+
+    const data = await res.json();
+
+    if (!data?.success) {
+      throw new Error(data?.message || "Une erreur s'est produite");
+    }
+
+    revalidateTag("projects");
+
+    return data;
+  } catch (err) {
+    console.log(err?.message || "Une erreur s'est produite");
+  }
+}
 
 export async function getTemplates() {
   try {
@@ -54,14 +76,34 @@ export async function getTemplates() {
 export async function useTemplate(templateId) {
   try {
     const res = await useAuthFetch(
-      `template/use/${templateId}`,
+      `template/use/project/${templateId}`,
       "POST",
       "application/json"
     );
 
     const data = await res.json();
 
-    console.log(data);
+    if (!data?.success) {
+      throw new Error(data?.message || "Une erreur s'est produite");
+    }
+
+    revalidateTag("projects");
+
+    return data;
+  } catch (err) {
+    console.log(err.message || "Une erreur s'est produite");
+  }
+}
+
+export async function useBoardTemplate(templateId) {
+  try {
+    const res = await useAuthFetch(
+      `template/use/board/${templateId}`,
+      "POST",
+      "application/json"
+    );
+
+    const data = await res.json();
 
     if (!data?.success) {
       throw new Error(data?.message || "Une erreur s'est produite");

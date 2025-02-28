@@ -6,6 +6,7 @@
     left: 14px;
     width: max-content;
     border-radius: 0 8px 8px 8px !important;
+
 }
 
 .items {
@@ -21,9 +22,17 @@
     font-weight: normal;
     font-size: 0.85rem;
     cursor: pointer;
+    color: var(--text-color-dark);
 }
 
-.item svg,
-.item:hover {
-    color: var(--text-color);
+.item:last-child {
+    color: var(--text-color-red);
+}
+
+.item svg {
+    color: var(--text-color-dark);
+}
+
+.item:last-child svg {
+    color: var(--text-color-red);
 }

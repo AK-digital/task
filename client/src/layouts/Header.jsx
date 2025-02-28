@@ -37,13 +37,7 @@ export default function Header() {
   return (
     <header className={styles.container}>
       <nav className={styles.nav}>
-        <Image
-          src={"/task.svg"}
-          width={67}
-          height={38}
-          alt="Logo de Täsk"
-          className={styles.logo}
-        />
+        <div></div>
         <ul className={styles.actions}>
           <li>
             <Bell

@@ -3,19 +3,17 @@ import { useState, useEffect, useActionState } from "react";
 import Image from "next/image";
 import {
   AppWindow,
-  Edit,
   Figma,
   Github,
   Globe,
   Pencil,
-  Trash,
   Umbrella,
   X,
 } from "lucide-react";
 import { updateProject } from "@/actions/project";
 import { updateProjectLogo } from "@/api/project";
 import styles from "@/styles/components/modals/project-options-modal.module.css";
-import { instrumentSans } from "@/utils/font";
+import { bricolageGrostesque } from "@/utils/font";
 import { deleteProject } from "@/api/project";
 import { useRouter } from "next/navigation";
 import PopupMessage from "@/layouts/PopupMessage";
@@ -174,7 +172,7 @@ export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
                         id="project-name"
                         name="project-name"
                         placeholder="Täsk"
-                        className={`${instrumentSans.className} ${styles.input}`}
+                        className={`${bricolageGrostesque.className} ${styles.input}`}
                         defaultValue={project?.name}
                         required
                       />
@@ -262,7 +260,7 @@ export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
                             name="url"
                             id="url"
                             placeholder="https://exemple.com"
-                            className={`${instrumentSans.className} ${styles.input}`}
+                            className={`${bricolageGrostesque.className} ${styles.input}`}
                             defaultValue={link?.url}
                             required
                           />
@@ -292,14 +290,14 @@ export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
                     <textarea
                       name="note"
                       id="note"
-                      className={`${instrumentSans.className} ${styles.input}`}
+                      className={`${bricolageGrostesque.className} ${styles.input}`}
                       defaultValue={project?.note}
                     ></textarea>
                   </div>
                   <div className={styles.submitWrapper}>
                     <button
                       type="submit"
-                      className={`${instrumentSans.className} ${styles.submit}`}
+                      className={`${bricolageGrostesque.className} ${styles.submit}`}
                       data-disabled={pending}
                       disabled={pending}
                     >
@@ -312,7 +310,7 @@ export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
             <div>
               <button
                 type="button"
-                className={`${instrumentSans.className} ${styles.delete}`}
+                className={`${bricolageGrostesque.className} ${styles.delete}`}
                 onClick={handleDeleteProject}
               >
                 Supprimer le projet

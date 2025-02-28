@@ -1,5 +1,5 @@
 .main {
-    margin-left: 20px;
+    margin: 0px 0 0 20px;
     width: 100%;
     min-width: 0;
 }
@@ -10,6 +10,7 @@
     gap: 30px;
     background-color: var(--primary-background-color);
     min-height: 100%;
+    border-radius: 16px 0 0 0;
 }
 
 .header {

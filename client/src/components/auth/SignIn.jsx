@@ -3,12 +3,11 @@
 import { signIn } from "@/actions/auth";
 import { reSendVerificationEmail } from "@/api/auth";
 import styles from "@/styles/components/auth/sign.module.css";
-import { instrumentSans } from "@/utils/font";
-import { getCookie } from "cookies-next";
-import { Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
+import { bricolageGrostesque } from "@/utils/font";
+import { ArrowRightCircle, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import { set } from "zod";
 
 const initialState = {
   status: "pending",
@@ -20,6 +19,8 @@ const initialState = {
 
 export default function SignIn() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [status, setStatus] = useState(null);
   const [hiddenPassword, setHiddenPassword] = useState(true);
@@ -73,7 +74,7 @@ export default function SignIn() {
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        <span>Vous avez déjà un compte ?</span>
+        <span>Connexion</span>
       </div>
       {message && (
         <div className={styles.messageStatus}>
@@ -90,25 +91,41 @@ export default function SignIn() {
       )}
       <form className={styles.form} action={formAction}>
         <div className={styles.formGroup}>
-          <label htmlFor="email">Adresse mail</label>
+          <label
+            htmlFor="email"
+            className={styles.emailLabel}
+            data-active={email ? true : false}
+          >
+            Adresse mail
+          </label>
           <input
             type="email"
             name="email"
             id="email"
+            className={`${styles.email} ${bricolageGrostesque.className}`}
             autoComplete="email"
-            placeholder="Email"
-            defaultValue={state?.payload?.email}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
-        <div className={styles.password}>
-          <label htmlFor="password">Mot de passe</label>
+        <div className={styles.formGroup}>
+          <label
+            htmlFor="password"
+            className={styles.passwordLabel}
+            data-active={password ? true : false}
+          >
+            Mot de passe
+          </label>
           <input
             type={hiddenPassword ? "password" : "text"}
             name="password"
             id="password"
             autoComplete="current-password"
-            placeholder="Mot de passe"
-            defaultValue={state?.payload?.password}
+            className={styles.password}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
           {hiddenPassword ? (
             <Eye
@@ -133,7 +150,7 @@ export default function SignIn() {
           <button
             data-disabled={pending}
             type="submit"
-            className={instrumentSans.className}
+            className={bricolageGrostesque.className}
             disabled={pending}
           >
             {pending ? "Connexion en cours..." : "Se connecter"}

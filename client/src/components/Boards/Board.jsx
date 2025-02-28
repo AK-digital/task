@@ -25,7 +25,11 @@ export default function Board({
   }, [board?._id]);
 
   return (
-    <div className={styles.container} data-board={board?._id}>
+    <div
+      className={styles.container}
+      data-board={board?._id}
+      style={{ borderLeft: `solid 3px ${board?.color}` }}
+    >
       {/* Board header */}
       <BoardHeader
         board={board}

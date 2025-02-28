@@ -3,6 +3,7 @@
     user-select: none;
     border-right: 1px solid var(--border-color);
     font-size: 0.9rem;
+    color: var(--text-color);
 }
 
 .dropdown__current {
@@ -13,6 +14,7 @@
     height: 100%;
     text-align: center;
     cursor: pointer;
+
 }
 
 /* Status */

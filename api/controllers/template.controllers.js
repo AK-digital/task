@@ -8,6 +8,7 @@ export async function saveTemplate(req, res, next) {
     const authUser = res.locals.user;
     const { name, description, projectId } = req.body;
 
+    // Check if the required fields are provided
     if (!name || !projectId) {
       return res.status(400).send({
         success: false,
@@ -19,14 +20,52 @@ export async function saveTemplate(req, res, next) {
       name: name,
       description: description,
       author: authUser?._id,
-      project: projectId,
+      projectId: projectId,
     });
 
     const savedTemplate = await newTemplate.save();
 
     return res.status(201).send({
       success: true,
-      message: "Modèle enregistré avec succès",
+      message: "Modèle de projet enregistré avec succès",
+      data: savedTemplate,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur s'est produite lors de l'enregistrement du modèle",
+    });
+  }
+}
+
+export async function saveBoardTemplate(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { boardId } = req.body;
+
+    // Check if the required fields are provided
+    if (!boardId) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const board = await BoardModel.findById({ _id: boardId });
+
+    const newTemplate = new TemplateModel({
+      name: board?.title,
+      author: authUser?._id,
+      boardId: boardId,
+    });
+
+    const savedTemplate = await newTemplate.save();
+
+    return res.status(201).send({
+      success: true,
+      message: "Modèle de tableau enregistré avec succès",
       data: savedTemplate,
     });
   } catch (err) {
@@ -114,6 +153,63 @@ export async function useTemplate(req, res, next) {
   }
 }
 
+export async function useBoardTemplate(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { projectId } = req.body;
+
+    const template = await TemplateModel.findById({
+      _id: req.params.id,
+    })
+      .populate("board")
+      .exec();
+
+    if (!template) {
+      return res.status(404).send({
+        success: false,
+        message: "Modèle non trouvé",
+      });
+    }
+
+    const board = await BoardModel.findById({ _id: template?.board?._id });
+
+    if (!board) {
+      return res.status(404).send({
+        success: false,
+        message: "Tableau non trouvé",
+      });
+    }
+
+    const newBoard = new BoardModel({
+      projectId: projectId,
+      title: board?.title,
+      color: board?.color,
+    });
+
+    const savedBoard = await newBoard.save();
+
+    const tasks = await TaskModel.find({ boardId: board?._id });
+
+    tasks.forEach(async (task) => {
+      const newTask = new TaskModel({
+        projectId: projectId?._id,
+        boardId: savedBoard?._id,
+        author: authUser?._id,
+        text: task?.text,
+      });
+
+      await newTask.save();
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur s'est produite lors de l'utilisation du modèle",
+    });
+  }
+}
+
 export async function getTemplates(req, res, next) {
   try {
     const templates = await TemplateModel.aggregate([
@@ -130,6 +226,14 @@ export async function getTemplates(req, res, next) {
           from: "tasks",
           localField: "project",
           foreignField: "projectId",
+          as: "tasks",
+        },
+      },
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "board",
+          foreignField: "boardId",
           as: "tasks",
         },
       },
@@ -152,6 +256,8 @@ export async function getTemplates(req, res, next) {
         message: "Aucun modèle trouvé",
       });
     }
+
+    console.log(templates);
 
     return res.status(200).send({
       success: true,

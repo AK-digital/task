@@ -1,14 +1,12 @@
 .container {
-    position: sticky;
-    z-index: 1998;
-    top: 60px;
+
     width: 100%;
-    border-top-left-radius: 12px;
+    border-radius: 16px;
     background-color: var(--primary-background-color);
-    padding: 16px 24px 0 24px;
+    padding: 0px 24px 0 24px;
 }
 
-.top {
+/* .top {
     position: fixed;
     z-index: 1;
     top: 60px;
@@ -27,7 +25,7 @@
     width: 100%;
     background: rgb(21, 24, 50);
     background: linear-gradient(180deg, rgba(21, 24, 50, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
+} */
 
 .container nav,
 .projects {

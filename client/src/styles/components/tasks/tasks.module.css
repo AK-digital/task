@@ -1,7 +1,6 @@
 .container {
     position: relative;
-    background-color: var(--secondary-background-color);
-    border-radius: 4px;
+
 }
 
 .container ul {

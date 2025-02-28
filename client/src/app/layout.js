@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import { instrumentSans } from "@/utils/font";
+import { bricolageGrostesque } from "@/utils/font";
 import moment from "moment-timezone";
 moment.tz.setDefault("Europe/Paris");
 
@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr">
-      <body className={instrumentSans.className}>{children}</body>
+      <body className={bricolageGrostesque.className}>{children}</body>
     </html>
   );
 }

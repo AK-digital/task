@@ -20,7 +20,6 @@ export default function Tasks({
   tasks,
   project,
   boardId,
-  optimisticColor,
   activeId,
   selectedTasks,
   setSelectedTasks,
@@ -51,9 +50,6 @@ export default function Tasks({
     <div
       className={styles.container}
       suppressHydrationWarning
-      style={{
-        borderLeft: `3px solid ${optimisticColor}`,
-      }}
       data-board-id={boardId}
     >
       <div className={styles.list} ref={setNodeRef}>

@@ -3,11 +3,9 @@ import * as LucideIcons from "lucide-react";
 import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect, useContext, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { MoreHorizontal, Globe, Layout, Icon } from "lucide-react";
 import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
-import { set } from "zod";
 
 const initialState = {
   status: "pending",
@@ -24,6 +22,7 @@ export default function ProjectTitle({ project }) {
   );
   const [isEditing, setIsEditing] = useState(false);
   const [projectName, setProjectName] = useState(project?.name);
+  const [projectMore, setProjectMore] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const formRef = useRef(null);
   const inputRef = useRef(null);
@@ -126,7 +125,7 @@ export default function ProjectTitle({ project }) {
         {project?.urls.length > 0 && <div className={styles.separator}></div>}
 
         <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
-          <MoreHorizontal />
+          <LucideIcons.MoreVertical size={20} />
         </div>
       </div>
       {modalOpen && (

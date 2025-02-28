@@ -1,6 +1,6 @@
-import { Instrument_Sans } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 
-export const instrumentSans = Instrument_Sans({
+export const bricolageGrostesque = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });

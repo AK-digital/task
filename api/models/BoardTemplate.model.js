@@ -19,11 +19,6 @@ const templateSchema = new Schema(
       ref: "User",
       required: true,
     },
-    project: {
-      type: Schema.Types.ObjectId,
-      ref: "Project", // Permet de dupliquer la structure d'un projet existant
-      required: false,
-    },
     board: {
       type: Schema.Types.ObjectId,
       ref: "Board",

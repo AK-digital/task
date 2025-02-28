@@ -27,6 +27,7 @@ import {
   Plus,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function SideNav({ projects }) {
   const params = useParams();
@@ -92,43 +93,51 @@ export default function SideNav({ projects }) {
   return (
     <aside className={styles.container} data-open={isMenuOpen}>
       <div className={styles.wrapper}>
-        {/* projects */}
-        <div
-          className={styles.openArrow}
-          onClick={(e) => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen && <ArrowLeftFromLine size={24} />}
-          {!isMenuOpen && <ArrowRightFromLine size={24} />}
-        </div>
-        <nav className={styles.nav}>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            measuring={{
-              droppable: {
-                strategy: MeasuringStrategy.Always,
-              },
-            }}
-            modifiers={[]}
+        <div className={styles.top}>
+          {/* projects */}
+          <Image
+            src={"/task.svg"}
+            width={67}
+            height={38}
+            alt="Logo de Täsk"
+            className={styles.logo}
+          />
+          <div
+            className={styles.openArrow}
+            onClick={(e) => setIsMenuOpen(!isMenuOpen)}
           >
-            <SortableContext
-              items={projectItems.map((project) => project._id)}
-              strategy={verticalListSortingStrategy}
+            {isMenuOpen && <ArrowLeftFromLine size={24} />}
+            {!isMenuOpen && <ArrowRightFromLine size={24} />}
+          </div>
+          <nav className={styles.nav}>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              measuring={{
+                droppable: {
+                  strategy: MeasuringStrategy.Always,
+                },
+              }}
+              modifiers={[]}
             >
-              {projectItems?.map((project) => (
-                <SortableProject
-                  key={project._id}
-                  project={project}
-                  projectId={projectId}
-                  isActive={project._id === projectId}
-                  open={isMenuOpen}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
-        </nav>
-        {/* options */}
+              <SortableContext
+                items={projectItems.map((project) => project._id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {projectItems?.map((project) => (
+                  <SortableProject
+                    key={project._id}
+                    project={project}
+                    projectId={projectId}
+                    isActive={project._id === projectId}
+                    open={isMenuOpen}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          </nav>
+        </div>
         <div className={styles.actions}>
           <Link
             className={styles.openProjects}
@@ -143,6 +152,7 @@ export default function SideNav({ projects }) {
             </Link>
           </div>
         </div>
+        {/* options */}
       </div>
       {/* {isCreating && (
         <CreateProject isCreating={isCreating} setIsCreating={setIsCreating} />

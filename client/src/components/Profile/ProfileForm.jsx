@@ -2,7 +2,7 @@
 import styles from "@/styles/components/profile/profile-form.module.css";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { updateUserProfile } from "@/actions/user";
-import { instrumentSans } from "@/utils/font";
+import { bricolageGrostesque } from "@/utils/font";
 import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";
@@ -57,7 +57,7 @@ export default function ProfileForm() {
             id="lastName"
             name="lastName"
             defaultValue={user?.lastName || ""}
-            className={`${instrumentSans.className} ${styles.input}`}
+            className={`${bricolageGrostesque.className} ${styles.input}`}
           />
           {state?.errors?.lastName && (
             <span className={styles.error}>{state.errors.lastName}</span>
@@ -71,7 +71,7 @@ export default function ProfileForm() {
             id="firstName"
             name="firstName"
             defaultValue={user?.firstName || ""}
-            className={`${instrumentSans.className} ${styles.input}`}
+            className={`${bricolageGrostesque.className} ${styles.input}`}
           />
           {state?.errors?.firstName && (
             <span className={styles.error}>{state.errors.firstName}</span>
@@ -85,7 +85,7 @@ export default function ProfileForm() {
             id="company"
             name="company"
             defaultValue={user?.company || ""}
-            className={`${instrumentSans.className} ${styles.input}`}
+            className={`${bricolageGrostesque.className} ${styles.input}`}
           />
           {state?.errors?.company && (
             <span className={styles.error}>{state.errors.company}</span>
@@ -99,7 +99,7 @@ export default function ProfileForm() {
             id="position"
             name="position"
             defaultValue={user?.position || ""}
-            className={`${instrumentSans.className} ${styles.input}`}
+            className={`${bricolageGrostesque.className} ${styles.input}`}
           />
           {state?.errors?.position && (
             <span className={styles.error}>{state.errors.position}</span>
@@ -107,7 +107,7 @@ export default function ProfileForm() {
         </div>
         <button
           type="submit"
-          className={`${instrumentSans.className} ${styles.submitBtn}`}
+          className={`${bricolageGrostesque.className} ${styles.submitBtn}`}
           data-disabled={pending}
         >
           Mettre à jour

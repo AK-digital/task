@@ -1,18 +1,21 @@
 :root {
-  --accent-color: #5056c8;
-  --accent-color-hover: #3f45b0;
-  --primary-background-color: #151832;
-  --secondary-background-color: #30324e;
-  --third-background-color: #1b1d35;
-  --side-background-color: #17192b;
+  --accent-color: #BE9161;
+  --accent-color-hover: #9E754A;
+  --primary-background-color: #DAD6C7;
+  --secondary-background-color: #F9F7EF;
+  --third-background-color: #eae7de;
+  --side-background-color: rgba(45, 63, 68, 0.9);
   --foreground: #171717;
   --border-color: #3a3d5c;
   --text-color-muted: #72748f;
   --text-color: #e0e0e0;
+  --text-accent-color: #D4A979;
+  --text-color-dark: #3A4344;
+  --text-color-red: #C04747;
 
   --pending-color: #6E7389;
   --processing-color: #d5ac4c;
-  --finished-color: #33BB87;
+  --finished-color: #5CAE51;
   --todo-color: #339ECD;
   --blocked-color: #ca4250;
 
@@ -41,6 +44,7 @@ body {
   max-width: 100vw;
   height: 100%;
   overflow-x: hidden;
+
 }
 
 body:has(#modal-layout),
@@ -50,11 +54,14 @@ html:has(#modal-layout) {
 }
 
 body {
-  color: var(--text-color);
-  background: var(--third-background-color);
+  background-image: url("/backgrounds/background.png");
+  background-repeat: no-repeat;
+  background-position: 50% 80%;
+  background-size: cover;
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color-dark);
 }
 
 ::-webkit-scrollbar {
@@ -113,6 +120,16 @@ input:focus {
   border: 1px solid var(--accent-color);
 }
 
+/* Prevent the background of the autocomplete */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: white !important;
+}
+
 i {
   margin-top: -5px;
   color: #DC3545;
@@ -121,18 +138,18 @@ i {
 }
 
 button {
-  padding: .65rem 1rem;
+  padding: .75rem 2.2rem;
   background-color: var(--accent-color);
   border: none;
   outline: none;
-  border-radius: 4px;
+  border-radius: 20px;
   color: white;
   font-size: var(--text-size-normal);
   letter-spacing: var(--letter-spacing-normal);
   font-family: inherit;
   transition: 120ms all linear;
   cursor: pointer;
-
+  font-size: 1rem;
 }
 
 button:hover {

@@ -69,6 +69,10 @@ const taskSchema = new Schema(
         },
       ],
     },
+    estimationTime: {
+      type: String, // Temps estimé pour la tâche (en millisecondes)
+      default: 0,
+    },
     status: {
       type: String,
       enum: ["En cours", "En attente", "Terminée", "À faire", "bloquée"],

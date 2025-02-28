@@ -1,6 +1,6 @@
 import { sendResetCode } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
-import { instrumentSans } from "@/utils/font";
+import { bricolageGrostesque, instrumentSans } from "@/utils/font";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 const initialState = {
@@ -12,6 +12,7 @@ const initialState = {
 
 export default function SendResetCodeForm() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
   const [messageStatus, setMessageStatus] = useState("");
   const [state, formAction, pending] = useActionState(
     sendResetCode,
@@ -31,7 +32,7 @@ export default function SendResetCodeForm() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Vous avez oublié votre mot de passe ?</div>
+      <div className={styles.title}>Mot de passe oublié</div>
       {messageStatus && (
         <div className={styles.messageStatus}>
           <span data-status={state?.status}>{messageStatus}</span>
@@ -39,12 +40,20 @@ export default function SendResetCodeForm() {
       )}
       <form className={styles.form} action={formAction}>
         <div className={styles.formGroup}>
-          <label htmlFor="email">Adresse mail</label>
+          <label
+            htmlFor="email"
+            className={styles.emailLabel}
+            data-active={email.length > 0}
+          >
+            Adresse mail
+          </label>
           <input
             type="email"
             id="email"
             name="email"
-            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={styles.email}
             required
           />
           {state?.errors?.email && (
@@ -56,7 +65,7 @@ export default function SendResetCodeForm() {
         <div className={styles.buttons}>
           <button
             type="submit"
-            className={instrumentSans.className}
+            className={bricolageGrostesque.className}
             data-disabled={pending}
             disabled={pending}
           >

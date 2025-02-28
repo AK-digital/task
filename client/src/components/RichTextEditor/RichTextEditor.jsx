@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import styles from "@/styles/components/richTextEditor/richTextEditor.module.css";
 import { updateDescription } from "@/api/task";
-import { instrumentSans } from "@/utils/font";
+import { bricolageGrostesque } from "@/utils/font";
 import { useState, useRef, useEffect, useContext } from "react";
 import "react-quill/dist/quill.snow.css";
 import { saveMessage, updateMessage } from "@/api/message";
@@ -377,7 +377,7 @@ export default function RichTextEditor({
 
       <div className={styles.buttons}>
         <button
-          className={instrumentSans.className}
+          className={bricolageGrostesque.className}
           disabled={loading}
           data-disabled={loading}
           onClick={handleSendContent}
@@ -385,7 +385,7 @@ export default function RichTextEditor({
           {btnMessage}
         </button>
         <button
-          className={instrumentSans.className}
+          className={bricolageGrostesque.className}
           onClick={() => {
             setEditDescription(false);
           }}

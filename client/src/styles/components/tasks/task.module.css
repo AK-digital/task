@@ -2,7 +2,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-inline: 8px;
     transition: 200ms all linear;
     border-bottom: 1px solid #43455f;
     width: 100%;
@@ -15,21 +14,6 @@
 
 .dragging {
     opacity: 0;
-}
-
-.container[data-done="true"] {
-    position: relative;
-}
-
-.container[data-done="true"]::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.1);
-    pointer-events: none;
 }
 
 .container[data-openned="true"] {

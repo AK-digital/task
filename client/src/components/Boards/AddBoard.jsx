@@ -35,7 +35,7 @@ export default function AddBoard({ projectId }) {
           disabled={pending}
         >
           <Plus size={18} />
-          Ajouter un tableau
+          Tableau vide
         </button>
       </form>
     </div>

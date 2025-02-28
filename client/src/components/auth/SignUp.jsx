@@ -1,6 +1,6 @@
 import { signUp } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
-import { instrumentSans } from "@/utils/font";
+import { bricolageGrostesque, instrumentSans } from "@/utils/font";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,10 @@ const initialState = {
 
 export default function SignUp() {
   const router = useRouter();
+  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [message, setMessage] = useState(null);
   const [state, formAction, pending] = useActionState(signUp, initialState);
@@ -23,11 +27,6 @@ export default function SignUp() {
     e.preventDefault();
     router.push("/");
   }
-
-  //   async function handleGoogleAuth(e) {
-  //     e.preventDefault();
-  //     window.open(`http://localhost:5000/api/auth/google/`, "_self");
-  //   }
 
   useEffect(() => {
     setMessage("");
@@ -55,7 +54,7 @@ export default function SignUp() {
       ) : (
         <>
           <div className={styles.title}>
-            <span>Vous n'avez pas de compte ?</span>
+            <span>Inscription</span>
           </div>
           {message && (
             <div className={styles.messageStatus}>
@@ -64,53 +63,81 @@ export default function SignUp() {
           )}
           <form className={styles.form} action={formAction}>
             <div className={styles.formGroup}>
-              <label htmlFor="last-name">Nom</label>
+              <label
+                htmlFor="last-name"
+                className={styles.lastNameLabel}
+                data-active={lastName.length > 0}
+              >
+                Nom
+              </label>
               <input
                 type="text"
                 name="last-name"
                 id="last-name"
-                placeholder="Nom"
                 autoComplete="last-name"
-                defaultValue={state?.payload?.lastName}
+                className={`${styles.lastName} ${bricolageGrostesque.className}`}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 required
               />
               {state?.errors?.lastName && <i>{state?.errors?.lastName}</i>}
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="first-name">Prénom</label>
+              <label
+                htmlFor="first-name"
+                className={styles.firstNameLabel}
+                data-active={firstName.length > 0}
+              >
+                Prénom
+              </label>
               <input
                 type="text"
                 name="first-name"
                 id="first-name"
-                placeholder="Prénom"
                 autoComplete="first-name"
-                defaultValue={state?.payload?.firstName}
+                className={`${styles.firstName} ${bricolageGrostesque.className}`}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 required
               />
               {state?.errors?.firstName && <i>{state?.errors?.firstName}</i>}
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="email">Adresse mail</label>
+              <label
+                htmlFor="email"
+                className={styles.emailLabel}
+                data-active={email.length > 0}
+              >
+                Adresse mail
+              </label>
               <input
                 type="email"
                 name="email"
                 id="email"
+                className={`${styles.email} ${bricolageGrostesque.className}`}
                 autoComplete="email"
-                placeholder="Email"
-                defaultValue={state?.payload?.email}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
               {state?.errors?.email && <i>{state?.errors?.email}</i>}
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="password">Mot de passe</label>
+              <label
+                htmlFor="password"
+                className={styles.passwordLabel}
+                data-active={password.length > 0}
+              >
+                Mot de passe
+              </label>
               <input
                 type={hiddenPassword ? "password" : "text"}
                 name="password"
                 id="password"
                 autoComplete="password"
-                placeholder="Mot de passe"
-                defaultValue={state?.payload?.password}
+                className={styles.password}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
               {hiddenPassword ? (
@@ -141,7 +168,7 @@ export default function SignUp() {
               <button
                 type="submit"
                 data-disabled={pending}
-                className={instrumentSans.className}
+                className={bricolageGrostesque.className}
                 disabled={pending}
               >
                 {pending ? "Inscription en cours..." : "S'inscrire"}

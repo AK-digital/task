@@ -14,6 +14,8 @@ const initialState = {
 
 export default function ResetForgotPasswordForm({ resetCode }) {
   const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [statusMessage, setStatusMessage] = useState("");
   const [state, formAction, pending] = useActionState(
@@ -48,12 +50,20 @@ export default function ResetForgotPasswordForm({ resetCode }) {
       {state?.status !== "success" && (
         <form className={styles.form} action={formAction}>
           <div className={styles.formGroup}>
-            <label htmlFor="newPassword">Nouveau mot de passe</label>
+            <label
+              htmlFor="newPassword"
+              className={styles.passwordLabel}
+              data-active={password.length > 0}
+            >
+              Nouveau mot de passe
+            </label>
             <input
               type={hiddenPassword ? "password" : "text"}
               id="newPassword"
               name="newPassword"
-              placeholder="Mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={styles.password}
               required
             />
             {hiddenPassword ? (
@@ -70,12 +80,20 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             {state?.errors?.newPassword && <i>{state?.errors?.newPassword}</i>}
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="confirmPassword">Confirmez le mot de passe</label>
+            <label
+              htmlFor="confirmPassword"
+              className={styles.confirmPasswordLabel}
+              data-active={confirmPassword.length > 0}
+            >
+              Confirmez le mot de passe
+            </label>
             <input
               type={hiddenPassword ? "password" : "text"}
               id="confirmPassword"
               name="confirmPassword"
-              placeholder="Mot de passe"
+              className={styles.confirmPassword}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
             {hiddenPassword ? (

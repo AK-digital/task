@@ -1,15 +1,14 @@
 .container {
-    position: fixed;
-    top: 0;
-    background-color: var(--third-background-color);
-    z-index: 1999;
+
     width: 100%;
     padding: 8px 0;
-    height: 60px;
+    height: 70px;
 }
 
 .nav {
-    margin-inline: 8px 16px;
+    justify-content: space-between;
+    margin-inline: 84px 40px;
+    height: 100%;
 }
 
 .nav,
@@ -18,10 +17,7 @@
     align-items: center;
 }
 
-.nav {
-    justify-content: space-between;
-    align-items: baseline;
-}
+
 
 .logo {
     position: relative;

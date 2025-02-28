@@ -43,6 +43,7 @@
 }
 
 .container form:nth-child(2) button {
+    padding: 8px;
     width: 100px;
 }
 

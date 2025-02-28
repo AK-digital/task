@@ -1,18 +1,17 @@
 import styles from "@/styles/components/boards/board-more.module.css";
-import { Archive, ArchiveRestore, Trash } from "lucide-react";
+import {
+  Archive,
+  ArchiveRestore,
+  Save,
+  Settings2Icon,
+  Trash,
+} from "lucide-react";
 import { deleteBoard } from "@/actions/board";
 import { addBoardToArchive, removeBoardFromArchive } from "@/api/board";
+import { saveBoardTemplate } from "@/api/template";
 
 export default function BoardMore({ projectId, board, setMore, archive }) {
-  console.log(board);
   const isBoardArchived = board?.archived;
-  async function handleDeleteBoard() {
-    const confirmed = confirm("Supprimer ce tableau ?");
-
-    if (!confirmed) return;
-
-    await deleteBoard(board?._id, projectId);
-  }
 
   const handleAddArchive = async (e) => {
     e.preventDefault();
@@ -23,6 +22,19 @@ export default function BoardMore({ projectId, board, setMore, archive }) {
     e.preventDefault();
     await removeBoardFromArchive(board?._id, projectId);
   };
+
+  const handleAddBoardTemplate = async (e) => {
+    await saveBoardTemplate(board?._id, projectId);
+    e.preventDefault();
+  };
+
+  async function handleDeleteBoard() {
+    const confirmed = confirm("Supprimer ce tableau ?");
+
+    if (!confirmed) return;
+
+    await deleteBoard(board?._id, projectId);
+  }
 
   return (
     <>
@@ -39,6 +51,10 @@ export default function BoardMore({ projectId, board, setMore, archive }) {
               Restaurer le tableau
             </li>
           )}
+          <li className={styles.item} onClick={handleAddBoardTemplate}>
+            <Save size={16} />
+            Enregistrer comme modèle
+          </li>
           {!archive && (
             <li className={styles.item} onClick={handleDeleteBoard}>
               <Trash size={16} />
