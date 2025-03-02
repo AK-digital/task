@@ -6,8 +6,10 @@
     gap: 12px;
     font-weight: 500;
     user-select: none;
-    background-color: none;
+    background-color: var(--secondary-background-color);
     margin-bottom: 16px;
+    width: 100%;
+    z-index: 10;
 }
 
 .container svg {
@@ -117,6 +119,7 @@
     background-color: var(--secondary-background-color);
     padding: 8px;
     border-radius: var(--border-radius-xs);
+    margin-bottom: 0;
 }
 
 .modal {

@@ -5,6 +5,26 @@
     border-radius: var(--border-radius-medium);
     box-shadow: var(--box-shadow-small);
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerWrapper {
+    position: sticky;
+    top: 0;
+    /* Ajustement pour tenir compte du dégradé en haut de .boards */
+    z-index: 5;
+    background-color: var(--secondary-background-color);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+}
+
+.content {
+    overflow-y: auto;
+    max-height: calc(100vh - 250px);
+    position: relative;
+    padding-bottom: 55px;
 }
 
 .container:before {

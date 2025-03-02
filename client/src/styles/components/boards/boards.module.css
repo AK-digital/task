@@ -8,19 +8,6 @@
     position: relative;
 }
 
-.boards:before {
-    position: sticky;
-    content: "";
-    display: block;
-    top: 0;
-    width: 100%;
-    height: 16px;
-    min-height: 16px;
-    background: rgb(225, 220, 208);
-    background: linear-gradient(0deg, rgba(225, 220, 208, 0) 0%, rgba(225, 220, 208, 0.9710259103641457) 80%);
-    z-index: 2;
-}
-
 .archiveTitle {
     font-weight: 600;
     font-size: var(--text-size-large);

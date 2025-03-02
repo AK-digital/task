@@ -30,18 +30,20 @@ export default function Board({
       data-board={board?._id}
       style={{ borderLeft: `solid 3px ${board?.color}` }}
     >
-      {/* Board header */}
-      <BoardHeader
-        board={board}
-        open={open}
-        setOpen={setOpen}
-        tasks={tasks}
-        setOptimisticColor={setOptimisticColor}
-        optimisticColor={optimisticColor}
-        selectedTasks={selectedTasks}
-        setSelectedTasks={setSelectedTasks}
-        archive={archive}
-      />
+      {/* Board header - Utilisation de la classe sticky */}
+      <div className={styles.headerWrapper}>
+        <BoardHeader
+          board={board}
+          open={open}
+          setOpen={setOpen}
+          tasks={tasks}
+          setOptimisticColor={setOptimisticColor}
+          optimisticColor={optimisticColor}
+          selectedTasks={selectedTasks}
+          setSelectedTasks={setSelectedTasks}
+          archive={archive}
+        />
+      </div>
       {/* Board content */}
       {open && (
         <Tasks
