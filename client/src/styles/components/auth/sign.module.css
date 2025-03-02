@@ -57,8 +57,9 @@
     border-radius: 0;
     border-bottom: 1px solid var(--text-lighter-color);
     padding-left: 0;
-    font-size: 1.1rem;
+    font-size: var(--text-size-medium);
     font-weight: 300;
+    color: var(--text-lighter-color);
 }
 
 .password {
@@ -197,7 +198,7 @@
 .resend {
     background: transparent;
     color: var(--accent-color);
-    font-size: 0.8rem;
+    font-size: var(--text-size-small);
 }
 
 .resend:hover {

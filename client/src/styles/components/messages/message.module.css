@@ -32,7 +32,7 @@
 }
 
 .names {
-    font-size: 0.9rem;
+    font-size: var(--text-size-normal);
     font-weight: 500;
 }
 
@@ -58,7 +58,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.9rem;
+    font-size: var(--text-size-normal);
     cursor: pointer;
     transition: 120ms all linear;
 }

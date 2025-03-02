@@ -107,7 +107,7 @@
 .formGroup label {
     font-size: 14px;
     color: var(--text-color-muted);
-    font-size: 0.9rem;
+    font-size: var(--text-size-normal);
 }
 
 .formGroup input {
@@ -167,7 +167,7 @@
 
 .addLink span {
     color: var(--accent-color);
-    font-size: 1rem;
+    font-size: var(--text-size-medium);
     font-weight: 400;
     cursor: pointer;
 }
@@ -176,7 +176,7 @@
 .deleteLink {
     color: var(--danger-color);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: var(--text-size-normal);
     margin-top: 40px;
     cursor: pointer;
 }
@@ -223,7 +223,7 @@
 
 .input {
     padding: 10px;
-    font-size: 1rem;
+    font-size: var(--text-size-medium);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-xs);
     background-color: #2C2E4A !important;

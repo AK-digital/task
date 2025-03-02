@@ -49,16 +49,16 @@
 }
 
 .title {
-    font-size: 0.9rem;
+    font-size: var(--text-size-normal);
     font-weight: 500;
 }
 
 .content {
-    font-size: 0.8rem;
+    font-size: var(--text-size-small);
 }
 
 .notification .date {
-    font-size: 0.8rem;
+    font-size: var(--text-size-small);
 }
 
 .date {

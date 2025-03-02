@@ -22,10 +22,11 @@ export default async function Projects() {
               <div key={project?._id} className={styles.element}>
                 <Link href={`/projects/${project?._id}`}>
                   <Image
+                    className={styles.logo}
                     src={project?.logo || "/default-project-logo.webp"}
                     alt="project"
-                    width={100}
-                    height={100}
+                    width={45}
+                    height={45}
                     style={{ borderRadius: "50%", cursor: "pointer" }}
                   />
                   <div className={styles.infos}>

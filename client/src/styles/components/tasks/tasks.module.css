@@ -1,6 +1,6 @@
 .container {
     position: relative;
-
+    /* z-index: 2; */
 }
 
 .container ul {
@@ -15,12 +15,11 @@
 .add {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 2px;
 }
 
 .add {
     max-width: 900px;
-    padding: 4px 8px;
 }
 
 .add svg {
@@ -29,7 +28,7 @@
 }
 
 .add svg path {
-    fill: #ffffff36;
+    fill: var(--text-color-muted);
 }
 
 .add form {
@@ -49,7 +48,7 @@
     margin-top: 4px;
     margin-left: 25px;
     color: var(--text-color-muted);
-    font-size: 0.8rem;
+    font-size: var(--text-size-small);
 }
 
 .info span {

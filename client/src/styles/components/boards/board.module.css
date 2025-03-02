@@ -1,6 +1,22 @@
 .container {
-    padding: 24px;
+    position: relative;
+    padding: var(--layout-gap) var(--layout-gap) 0 var(--layout-gap);
     background-color: var(--secondary-background-color);
     border-radius: var(--border-radius-medium);
     box-shadow: var(--box-shadow-small);
+    margin-bottom: 30px;
+}
+
+.container:before {
+    content: "";
+    display: block;
+    bottom: 0;
+    height: 55px;
+    left: 0;
+    background-color: #F6F4E9;
+    box-shadow: inset 0 3px 3px 0 #00000010;
+    position: absolute;
+    width: 100%;
+    border-bottom-left-radius: calc(var(--border-radius-medium) - 1px);
+    border-bottom-right-radius: calc(var(--border-radius-medium) - 1px);
 }

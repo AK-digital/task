@@ -89,7 +89,7 @@
     background: transparent;
     box-shadow: none;
     color: var(--accent-color);
-    font-size: 1rem;
+    font-size: var(--text-size-medium);
     max-width: fit-content;
     margin-inline: auto;
 }

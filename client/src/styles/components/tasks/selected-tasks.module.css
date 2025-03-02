@@ -17,7 +17,7 @@
     color: var(--text-color);
     border-radius: 8px 0 0 8px;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: var(--text-size-large);
     padding: 18px 24px;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .action span {
-    font-size: 0.8rem;
+    font-size: var(--text-size-small);
 }
 
 .action:nth-child(2) {
