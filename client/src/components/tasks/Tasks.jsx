@@ -8,6 +8,7 @@ import { saveTask } from "@/actions/task";
 import { useDroppable } from "@dnd-kit/core";
 import socket from "@/utils/socket";
 import SelectedTasks from "./SelectedTasks";
+import TasksHeader from "./TasksHeader"; // Assurez-vous que cette importation existe
 
 const initialState = {
   status: "pending",
@@ -52,9 +53,9 @@ export default function Tasks({
       suppressHydrationWarning
       data-board-id={boardId}
     >
+      {tasks && tasks.length > 0 && <TasksHeader />}
+
       <div className={styles.list} ref={setNodeRef}>
-        {/* Task headers */}
-        {/* <TasksHeader /> */}
         {tasks?.map((task) => (
           <Task
             key={task._id}
