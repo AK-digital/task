@@ -1,6 +1,6 @@
 .container {
     position: relative;
-    padding: var(--layout-gap) var(--layout-gap) 0 var(--layout-gap);
+    padding: 12px var(--layout-gap) 0 var(--layout-gap);
     background-color: var(--secondary-background-color);
     border-radius: var(--border-radius-medium);
     box-shadow: var(--box-shadow-small);
@@ -15,9 +15,8 @@
     /* Ajustement pour tenir compte du dégradé en haut de .boards */
     z-index: 5;
     background-color: var(--secondary-background-color);
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 6px;
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
 
 .content {

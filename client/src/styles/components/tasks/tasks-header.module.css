@@ -44,6 +44,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
 }
 
 /* Colonne pour l'icône de commentaire, clairement séparée */
