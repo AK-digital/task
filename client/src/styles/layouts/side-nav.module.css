@@ -39,7 +39,12 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding-bottom: 16px;
+    padding-bottom: 0;
+    /* Modifié: suppression du padding qui peut causer des décalages */
+    scroll-padding: 0;
+    /* Assurer qu'il n'y a pas de padding de défilement */
+    scroll-snap-type: y mandatory;
+    /* Aide à aligner le défilement sur les éléments */
 }
 
 .nav::-webkit-scrollbar {
@@ -54,6 +59,8 @@
     cursor: pointer;
     transition: all linear 150ms;
     color: var(--text-lighter-color);
+    scroll-snap-align: start;
+    /* Aide à aligner le défilement sur les projets */
 }
 
 .project img {

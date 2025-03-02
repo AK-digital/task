@@ -75,6 +75,8 @@ export default function SideNav({ projects }) {
         const visibleItems = Math.floor(availableHeight / itemHeight);
 
         // Définir la hauteur pour afficher exactement ce nombre d'éléments
+
+        // S'assurer que la hauteur est exactement un multiple de la hauteur d'élément
         const optimalHeight = visibleItems * itemHeight;
         setNavHeight(`${optimalHeight}px`);
       }
@@ -172,11 +174,20 @@ export default function SideNav({ projects }) {
   }
 
   const checkScrollability = () => {
-    if (!navRef.current) return;
+    if (!navRef.current || !projectItemHeight) return;
 
     const { scrollHeight, clientHeight, scrollTop } = navRef.current;
-    setCanScrollUp(scrollTop > 0);
-    setCanScrollDown(scrollHeight > clientHeight + scrollTop);
+    const maxVisibleItems = Math.floor(clientHeight / projectItemHeight);
+    const totalItems = projectItems.length;
+
+    // Calculer l'index actuel approximatif du premier élément visible
+    const currentFirstVisibleIndex = Math.floor(scrollTop / projectItemHeight);
+
+    setCanScrollUp(currentFirstVisibleIndex > 0);
+
+    // On ne peut pas défiler davantage si on affiche déjà les derniers éléments
+    const maxFirstVisibleIndex = Math.max(0, totalItems - maxVisibleItems);
+    setCanScrollDown(currentFirstVisibleIndex < maxFirstVisibleIndex);
   };
 
   // Fonction améliorée pour défiler d'un élément à la fois
@@ -198,8 +209,20 @@ export default function SideNav({ projects }) {
     if (!navRef.current || !canScrollDown || !projectItemHeight) return;
 
     const currentScrollTop = navRef.current.scrollTop;
-    const maxScrollTop = navRef.current.scrollHeight - navRef.current.clientHeight;
-    const targetScrollTop = Math.min(maxScrollTop, currentScrollTop + projectItemHeight);
+    const maxVisibleItems = Math.floor(navRef.current.clientHeight / projectItemHeight);
+    const totalItems = projectItems.length;
+
+    // Calculer l'index actuel approximatif du premier élément visible
+    const currentFirstVisibleIndex = Math.floor(currentScrollTop / projectItemHeight);
+
+    // Calculer l'index maximal possible pour le premier élément visible
+    const maxFirstVisibleIndex = Math.max(0, totalItems - maxVisibleItems);
+
+    // Limiter le défilement pour ne pas dépasser le nombre total d'éléments
+    const nextIndex = Math.min(currentFirstVisibleIndex + 1, maxFirstVisibleIndex);
+
+    // Déterminer la position précise pour le défilement
+    const targetScrollTop = nextIndex * projectItemHeight;
 
     navRef.current.scrollTo({
       top: targetScrollTop,
