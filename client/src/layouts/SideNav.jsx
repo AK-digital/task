@@ -2,7 +2,7 @@
 import styles from "@/styles/layouts/side-nav.module.css";
 import CreateProject from "@/components/Projects/CreateProject";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   DndContext,
   closestCenter,
@@ -37,12 +37,93 @@ export default function SideNav({ projects }) {
   const [isCreating, setIsCreating] = useState(false);
   const [projectItems, setProjectItems] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const containerRef = useRef(null);
+  const [navHeight, setNavHeight] = useState("50vh"); // Hauteur par défaut
+  const [projectItemHeight, setProjectItemHeight] = useState(0);
+  const [canScrollUp, setCanScrollUp] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
 
   useEffect(() => {
     if (projects) {
       setProjectItems(projects);
     }
   }, [projects]);
+
+  // Calculer la hauteur optimale de la navigation
+  useEffect(() => {
+    const calculateOptimalHeight = () => {
+      if (!navRef.current || !containerRef.current) return;
+
+      // Hauteur du conteneur parent
+      const containerHeight = containerRef.current.clientHeight;
+
+      // Espace utilisé pour le logo, les boutons de contrôle, etc.
+      const topOffset = navRef.current.offsetTop;
+      const bottomOffset = 125; // Actions en bas + espace
+
+      // Hauteur disponible
+      const availableHeight = containerHeight - topOffset - bottomOffset;
+
+      // Obtenir la hauteur d'un élément de projet
+      const projectElement = navRef.current.querySelector(`.${styles.project}`);
+      if (projectElement) {
+        const itemHeight = projectElement.offsetHeight + 8; // +8 pour le gap
+        setProjectItemHeight(itemHeight);
+
+        // Calculer combien d'éléments complets peuvent s'afficher
+        const visibleItems = Math.floor(availableHeight / itemHeight);
+
+        // Définir la hauteur pour afficher exactement ce nombre d'éléments
+        const optimalHeight = visibleItems * itemHeight;
+        setNavHeight(`${optimalHeight}px`);
+      }
+    };
+
+    calculateOptimalHeight();
+    window.addEventListener('resize', calculateOptimalHeight);
+
+    return () => {
+      window.removeEventListener('resize', calculateOptimalHeight);
+    };
+  }, [projectItems, isMenuOpen]);
+
+  useEffect(() => {
+    if (navRef.current) {
+      checkScrollability();
+
+      // Observer les changements de dimension
+      const resizeObserver = new ResizeObserver(checkScrollability);
+      resizeObserver.observe(navRef.current);
+
+      return () => resizeObserver.disconnect();
+    }
+  }, [projectItems, isMenuOpen, navHeight]);
+
+  // Fonction pour gérer le défilement de la molette de souris
+  const handleWheel = useCallback((e) => {
+    e.preventDefault();
+
+    if (!navRef.current) return;
+
+    // Détermine la direction du défilement
+    if (e.deltaY > 0 && canScrollDown) {
+      scrollDown();
+    } else if (e.deltaY < 0 && canScrollUp) {
+      scrollUp();
+    }
+  }, [canScrollDown, canScrollUp]);
+
+  // Attacher l'événement de la molette
+  useEffect(() => {
+    const navElement = navRef.current;
+    if (navElement) {
+      navElement.addEventListener('wheel', handleWheel, { passive: false });
+      return () => {
+        navElement.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, [handleWheel]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -90,11 +171,52 @@ export default function SideNav({ projects }) {
     }
   }
 
+  const checkScrollability = () => {
+    if (!navRef.current) return;
+
+    const { scrollHeight, clientHeight, scrollTop } = navRef.current;
+    setCanScrollUp(scrollTop > 0);
+    setCanScrollDown(scrollHeight > clientHeight + scrollTop);
+  };
+
+  // Fonction améliorée pour défiler d'un élément à la fois
+  const scrollToPrevProject = () => {
+    if (!navRef.current || !canScrollUp || !projectItemHeight) return;
+
+    const currentScrollTop = navRef.current.scrollTop;
+    const targetScrollTop = Math.max(0, currentScrollTop - projectItemHeight);
+
+    navRef.current.scrollTo({
+      top: targetScrollTop,
+      behavior: "smooth"
+    });
+
+    setTimeout(checkScrollability, 400);
+  };
+
+  const scrollToNextProject = () => {
+    if (!navRef.current || !canScrollDown || !projectItemHeight) return;
+
+    const currentScrollTop = navRef.current.scrollTop;
+    const maxScrollTop = navRef.current.scrollHeight - navRef.current.clientHeight;
+    const targetScrollTop = Math.min(maxScrollTop, currentScrollTop + projectItemHeight);
+
+    navRef.current.scrollTo({
+      top: targetScrollTop,
+      behavior: "smooth"
+    });
+
+    setTimeout(checkScrollability, 400);
+  };
+
+  // Remplacement des anciennes fonctions par les nouvelles
+  const scrollUp = scrollToPrevProject;
+  const scrollDown = scrollToNextProject;
+
   return (
-    <aside className={styles.container} data-open={isMenuOpen}>
+    <aside className={styles.container} data-open={isMenuOpen} ref={containerRef}>
       <div className={styles.wrapper}>
         <div className={styles.top}>
-          {/* projects */}
           <Image
             src={"/task.svg"}
             width={46}
@@ -109,7 +231,12 @@ export default function SideNav({ projects }) {
             {isMenuOpen && <ArrowLeftFromLine size={24} />}
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
           </div>
-          <nav className={styles.nav}>
+          <nav
+            className={styles.nav}
+            ref={navRef}
+            onScroll={checkScrollability}
+            style={{ maxHeight: navHeight }} // Appliquer la hauteur dynamique
+          >
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -152,11 +279,7 @@ export default function SideNav({ projects }) {
             </Link>
           </div>
         </div>
-        {/* options */}
       </div>
-      {/* {isCreating && (
-        <CreateProject isCreating={isCreating} setIsCreating={setIsCreating} />
-      )} */}
     </aside>
   );
 }

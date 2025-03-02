@@ -35,7 +35,11 @@
     flex-direction: column;
     gap: 8px;
     max-height: 50vh;
-    overflow: auto;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 16px;
 }
 
 .nav::-webkit-scrollbar {
@@ -115,8 +119,6 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
-
 
 .createProjectButton,
 .openProjects {
