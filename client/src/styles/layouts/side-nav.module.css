@@ -21,17 +21,7 @@
     padding: 22px 0px 32px calc(var(--aside-width) / 7);
     height: 100%;
     transition: width linear 150ms, min-width linear 150ms;
-}
-
-.wrapper:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #2a3730f6;
-    z-index: -1;
+    background-color: #2a3730;
 }
 
 .container[data-open="true"] .wrapper {

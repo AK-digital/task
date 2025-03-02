@@ -85,7 +85,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--text-dark-color);
-  font-weight: 300;
   height: 100%;
 }
 
