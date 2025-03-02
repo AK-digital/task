@@ -1,31 +1,7 @@
 .container {
-
     width: 100%;
-    border-radius: 16px;
-    background-color: var(--primary-background-color);
-    padding: 0px 24px 0 24px;
+    padding-right: var(--layout-gap);
 }
-
-/* .top {
-    position: fixed;
-    z-index: 1;
-    top: 60px;
-    background-color: var(--third-background-color);
-    height: 10px;
-    padding-right: 35px;
-}
-
-.container:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -20px;
-    height: 20px;
-    z-index: -1;
-    width: 100%;
-    background: rgb(21, 24, 50);
-    background: linear-gradient(180deg, rgba(21, 24, 50, 1) 0%, rgba(255, 255, 255, 0) 100%);
-} */
 
 .container nav,
 .projects {
@@ -36,8 +12,7 @@
 .container nav {
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #3b3d53;
+    padding-bottom: var(--layout-gap);
 }
 
 .projects {
@@ -52,6 +27,7 @@
 .titleContainer {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 1rem;
 }
 
@@ -78,7 +54,7 @@
     font-family: inherit;
     color: inherit;
     padding: 2px 4px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-xs);
     width: 300px;
     background-color: var(--background-color);
 }
@@ -94,7 +70,7 @@
     cursor: pointer;
     padding: 2px;
     transition: background-color 0.2s ease;
-    border-radius: 8px;
+    border-radius: var(--border-radius-small);
 }
 
 .optionsBtn:hover {
@@ -161,7 +137,7 @@
 .archive {
     color: var(--text-color-muted);
     padding: 5px 7px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-small);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,7 +156,6 @@
     justify-content: center;
     padding: 8px;
     border-radius: 6px;
-    color: var(--text-color);
     transition: all 0.2s ease;
 }
 
@@ -223,7 +198,7 @@
 .separator {
     width: 1px;
     height: 24px;
-    background-color: var(--border-color);
+    background-color: var(--text-medium-color);
     margin: 0 12px;
 }
 
@@ -253,7 +228,7 @@
 
 .addGuestBtn {
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: var(--border-radius-small);
     padding: 6px 7px;
     display: flex;
     justify-content: center;

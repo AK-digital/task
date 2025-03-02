@@ -3,8 +3,7 @@ import { removeTaskSession, taskEndTimer, taskStartTimer } from "@/api/task";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import socket from "@/utils/socket";
-import { faPauseCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CirclePause, CirclePlay } from "lucide-react";
 import { MinusCircle } from "lucide-react";
 import moment from "moment";
 moment.locale("fr");
@@ -66,11 +65,17 @@ export default function TaskTimer({ task }) {
   return (
     <div className={styles.container} data-running={isRunning}>
       <span className={styles.timer}>
-        <FontAwesomeIcon
-          icon={isRunning ? faPauseCircle : faPlayCircle}
-          data-running={isRunning}
-          onClick={isRunning ? handlePauseTimer : handlePlayTimer}
-        />
+        {isRunning ? (
+          <CirclePause
+            data-running={isRunning}
+            onClick={handlePauseTimer}
+          />
+        ) : (
+          <CirclePlay
+            data-running={isRunning}
+            onClick={handlePlayTimer}
+          />
+        )}
         <span onClick={() => setMore(true)}>{formatTime(timer)}</span>
       </span>
       {more && (

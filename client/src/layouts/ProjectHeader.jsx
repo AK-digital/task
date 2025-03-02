@@ -36,13 +36,10 @@ export default function ProjectHeader({ project, projectInvitations }) {
 
   return (
     <>
-      <div className={styles.top}></div>
       <header className={styles.container}>
         <nav className={styles.nav}>
           <ProjectTitle project={project} />
-          <div className={styles.searchContainer}>
-            <SearchForm />
-          </div>
+
           <div className={styles.actions}>
             <div className={styles.template} title="Ajouter un template">
               <Layout size={24} onClick={(e) => setAddTemplate(true)} />

@@ -1,8 +1,7 @@
 .container {
-
     width: 100%;
-    padding: 8px 0;
-    height: 70px;
+    padding: 10px 0;
+    height: var(--header-height);
 }
 
 .nav {
@@ -16,8 +15,6 @@
     display: flex;
     align-items: center;
 }
-
-
 
 .logo {
     position: relative;

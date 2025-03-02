@@ -1,5 +1,5 @@
 .main {
-    margin: 0px 0 0 20px;
+    margin-left: var(--layout-gap);
     width: 100%;
     min-width: 0;
 }
@@ -7,10 +7,14 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    background-color: var(--primary-background-color);
+    background-color: rgba(218, 214, 199, 0.6);
     min-height: 100%;
-    border-radius: 16px 0 0 0;
+    border-top-left-radius: var(--border-radius-medium);
+    height: 100%;
+    padding-top: var(--layout-gap);
+    padding-left: var(--layout-gap);
+    padding-bottom: 30px;
+    padding-right: 13px;
 }
 
 .header {

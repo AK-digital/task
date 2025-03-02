@@ -21,6 +21,7 @@ import { updateTaskBoard, updateTaskOrder } from "@/api/task";
 import { revalidateBoards } from "@/api/board";
 import Task from "../tasks/Task";
 import socket from "@/utils/socket";
+import AddBoard from "@/components/Boards/AddBoard";
 import { isNotEmpty } from "@/utils/utils";
 
 export default function Boards({ boards, project, tasksData, archive }) {
@@ -300,6 +301,11 @@ export default function Boards({ boards, project, tasksData, archive }) {
           ) : null}
         </DragOverlay>
       </DndContext>
+      {!archive && (
+        <div className={styles.options}>
+          <AddBoard projectId={project?._id} />
+        </div>
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export const signUpSchema = z.object({
     .string()
     .min(1)
     .max(50)
-    .regex(regex.email, "L'adresse mail saisie est invalide"),
+    .regex(regex.email, "L'adresse e-mail saisie est invalide"),
   password: z.string().regex(regex.password, "Le mot de passe doit contenir "),
 });
 

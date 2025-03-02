@@ -33,7 +33,7 @@ export default function SignUp() {
     if (state?.status === "failure" && state?.errors === null) {
       setMessage(
         state?.message ||
-          "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."
+        "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."
       );
     }
   }, [state]);
@@ -44,7 +44,7 @@ export default function SignUp() {
         <div className={styles.accountCreated}>
           <span>Votre compte a été créé avec succès !</span>
           <p>
-            Un email de vérification a été envoyé à votre adresse mail. Veuillez
+            Un email de vérification a été envoyé à votre adresse e-mail. Veuillez
             cliquer sur le lien dans l'email pour activer votre compte.
           </p>
           <button type="button" onClick={handleSignIn}>
@@ -108,7 +108,7 @@ export default function SignUp() {
                 className={styles.emailLabel}
                 data-active={email.length > 0}
               >
-                Adresse mail
+                Adresse e-mail
               </label>
               <input
                 type="email"

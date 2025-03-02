@@ -45,7 +45,7 @@ export default function SendResetCodeForm() {
             className={styles.emailLabel}
             data-active={email.length > 0}
           >
-            Adresse mail
+            Adresse e-mail
           </label>
           <input
             type="email"
@@ -75,13 +75,12 @@ export default function SendResetCodeForm() {
       </form>
       <div className={styles.text}>
         <p>
-          Vous vous souvenez de votre mot de passe ?{" "}
           <span
             onClick={(e) => {
               router.push("/");
             }}
           >
-            Se connecter
+            Retourner sur l'écran de connexion
           </span>
         </p>
       </div>

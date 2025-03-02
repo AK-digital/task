@@ -53,7 +53,7 @@ export default function SignIn() {
     if (state?.status === "failure" && state?.errors === null) {
       setMessage(
         state?.message ||
-          "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
+        "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
       );
       setStatus("failure");
     }
@@ -96,7 +96,7 @@ export default function SignIn() {
             className={styles.emailLabel}
             data-active={email ? true : false}
           >
-            Adresse mail
+            Adresse e-mail
           </label>
           <input
             type="email"

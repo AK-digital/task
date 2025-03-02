@@ -5,7 +5,7 @@
 .popupConfirm {
     position: absolute;
     background-color: #444665;
-    border-radius: 8px;
+    border-radius: var(--border-radius-small);
     z-index: 2002;
     right: 29px;
     top: -50px;
@@ -52,7 +52,7 @@
 .deleteButton {
     padding: 8px 22px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-small);
     cursor: pointer;
 }
 

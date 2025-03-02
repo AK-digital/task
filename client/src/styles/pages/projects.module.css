@@ -1,32 +1,35 @@
 .main {
-    margin-inline: 20px;
+    margin-left: var(--layout-gap);
     width: 100%;
-    height: calc(100svh - 60px);
+    height: 100%;
 }
 
 .container {
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 12px;
-    background-color: var(--primary-background-color);
-    border-radius: 8px 8px 0 0;
+    border-top-left-radius: var(--border-radius-medium);
+    background-color: rgba(218, 214, 199, 0.6);
     height: 100%;
-    padding: 24px;
-    overflow: auto;
+    padding: var(--layout-gap);
+    overflow: hidden;
+    height: 100%;
 }
 
 .elements {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 100px));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
     max-width: 1200px;
     width: 100%;
     gap: 68px;
     justify-content: center;
+    overflow-y: auto;
+    padding-bottom: 32px;
 }
 
 .element {
     margin-inline: auto;
+    background-color: var(--secondary-background-color);
 }
 
 .infos {

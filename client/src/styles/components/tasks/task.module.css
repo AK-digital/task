@@ -3,12 +3,12 @@
     align-items: center;
     justify-content: space-between;
     transition: 200ms all linear;
-    border-bottom: 1px solid #43455f;
+    border-bottom: 1px solid var(--text-light-color);
     width: 100%;
     height: 42px;
 }
 
-.container:has(.dragging) {
+.container:last-child .container:has(.dragging) {
     background-color: red;
 }
 
@@ -55,7 +55,7 @@
     /* Nouveaux styles */
     appearance: none;
     background: transparent;
-    border: 1px solid var(--text-color-muted);
+    border: 1px solid var(--text-medium-color);
     border-radius: 2px;
     padding: 6px;
 }
@@ -83,11 +83,13 @@
 }
 
 .content [aria-roledescription="sortable"] svg {
-    color: #ffffff24;
+    color: var(--text-light-color);
 }
 
 .content .options {
     display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .comment {

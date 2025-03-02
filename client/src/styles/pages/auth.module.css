@@ -4,7 +4,7 @@
     align-items: center;
     height: 100svh;
     margin-inline: 20px;
-    color: var(--text-color);
+    color: var(--text-lighter-color);
 }
 
 .container {
@@ -19,13 +19,12 @@
 
 .logo {
     position: relative;
-    left: 20px;
 }
 
 .footer {
     position: relative;
-    bottom: 220px;
+    bottom: 9%;
     left: 340px;
     font-size: 2rem;
-    color: black;
+    color: var(--text-darker-color);
 }

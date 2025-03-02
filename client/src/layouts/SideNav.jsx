@@ -97,8 +97,8 @@ export default function SideNav({ projects }) {
           {/* projects */}
           <Image
             src={"/task.svg"}
-            width={67}
-            height={38}
+            width={46}
+            height={18}
             alt="Logo de Täsk"
             className={styles.logo}
           />

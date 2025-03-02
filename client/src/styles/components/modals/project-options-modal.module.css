@@ -35,7 +35,7 @@
     background-color: var(--secondary-background-color);
     width: 100%;
     padding: 24px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-small);
     height: 100%;
 
 }
@@ -112,7 +112,7 @@
 
 .formGroup input {
     padding: 12px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-xs);
     border: 1px solid var(--border-color);
     background: transparent;
     color: var(--text-color);
@@ -225,7 +225,7 @@
     padding: 10px;
     font-size: 1rem;
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: var(--border-radius-xs);
     background-color: #2C2E4A !important;
     color: var(--text-color);
 }

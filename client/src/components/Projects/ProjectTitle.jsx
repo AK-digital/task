@@ -105,6 +105,12 @@ export default function ProjectTitle({ project }) {
         )}
       </div>
 
+      <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
+        <LucideIcons.MoreVertical size={20} />
+      </div>
+      {/* Ajout du séparateur vertical */}
+      {project?.urls.length > 0 && <div className={styles.separator}></div>}
+
       <div className={styles.actions}>
         {project?.urls.map((elt, idx) => {
           const IconComponent = LucideIcons[elt?.icon]; // Récupère l'icône dynamiquement
@@ -121,12 +127,7 @@ export default function ProjectTitle({ project }) {
             </a>
           );
         })}
-        {/* Ajout du séparateur vertical */}
-        {project?.urls.length > 0 && <div className={styles.separator}></div>}
 
-        <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
-          <LucideIcons.MoreVertical size={20} />
-        </div>
       </div>
       {modalOpen && (
         <ProjectOptionsModal

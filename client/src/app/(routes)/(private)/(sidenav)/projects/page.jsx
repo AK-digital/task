@@ -6,7 +6,6 @@ import Image from "next/image";
 import { isNotEmpty } from "@/utils/utils";
 import { ListTodo, Users } from "lucide-react";
 import Link from "next/link";
-import ProjectHeader from "@/layouts/ProjectHeader";
 
 export default async function Projects() {
   const projects = await getProjects();

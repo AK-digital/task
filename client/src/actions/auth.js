@@ -48,12 +48,12 @@ export async function signUp(prevState, formData) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
+      "Une erreur est survenue lors de la création d'un nouvel utilisateur"
     );
     if (err.message.includes("E11000")) {
       return {
         status: "failure",
-        message: "Cette adresse mail est déjà utilisée",
+        message: "Cette adresse e-mail est déjà utilisée",
         errors: null,
       };
     }
@@ -139,14 +139,14 @@ export async function signIn(prevState, formData) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
+      "Une erreur est survenue lors de la création d'un nouvel utilisateur"
     );
     if (err.message.includes("mail")) {
       return {
         status: "failure",
         message: err?.message,
         errors: {
-          email: "Cette adresse mail n'existe pas",
+          email: "Cette adresse e-mail n'existe pas",
         },
       };
     }
@@ -173,14 +173,14 @@ export async function sendResetCode(prevState, formData) {
     if (!email) {
       return {
         status: "failure",
-        errors: { email: "Veuillez renseigner votre adresse mail" },
+        errors: { email: "Veuillez renseigner votre adresse e-mail" },
       };
     }
 
     if (!regex.email.test(email)) {
       return {
         status: "failure",
-        errors: { email: "Adresse mail invalide" },
+        errors: { email: "adresse e-mail invalide" },
       };
     }
 
@@ -197,7 +197,7 @@ export async function sendResetCode(prevState, formData) {
     if (res.status === 404) {
       return {
         status: "failure",
-        errors: { email: "Aucun utilisateur trouvé ave cette adresse mail" },
+        errors: { email: "Aucun utilisateur trouvé ave cette adresse e-mail" },
       };
     }
 
@@ -207,7 +207,7 @@ export async function sendResetCode(prevState, formData) {
 
     return {
       status: "success",
-      message: "Un code de réinitialisation a été envoyé à votre adresse mail",
+      message: "Un code de réinitialisation a été envoyé à votre adresse e-mail",
     };
   } catch (err) {
     return {
@@ -269,7 +269,7 @@ export async function resetForgotPassword(prevState, formData) {
     if (
       !response.success &&
       response?.message ===
-        "Le nouveau mot de passe doit être différent de l'ancien"
+      "Le nouveau mot de passe doit être différent de l'ancien"
     ) {
       return {
         status: "failure",

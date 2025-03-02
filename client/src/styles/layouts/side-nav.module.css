@@ -1,6 +1,6 @@
 .container {
-    min-width: 80px;
-    width: 80px;
+    min-width: var(--aside-width);
+    width: var(--aside-width);
     transition: width linear 150ms, min-width linear 150ms;
     user-select: none;
 }
@@ -13,15 +13,25 @@
 .wrapper {
     position: fixed;
     top: 0;
-    min-width: 81px;
+    min-width: var(--aside-width);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 81px;
-    padding: 12px 0px 12px 19px;
-    background-color: var(--side-background-color);
+    width: var(--aside-width);
+    padding: 22px 0px 32px calc(var(--aside-width) / 7);
     height: 100%;
     transition: width linear 150ms, min-width linear 150ms;
+}
+
+.wrapper:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #2a3730f6;
+    z-index: -1;
 }
 
 .container[data-open="true"] .wrapper {
@@ -112,14 +122,15 @@
 
 .openArrow {
     color: var(--text-color);
-    margin-bottom: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 
 
 .createProjectButton,
 .openProjects {
-    background-color: #525474;
+    background-color: #E1DDCA;
     color: var(--side-background-color);
 }
 
@@ -145,10 +156,5 @@
 }
 
 .actions a svg {
-    transition: all linear 150ms;
-}
-
-.actions a[data-active="true"] svg {
-    color: var(--text-color);
     transition: all linear 150ms;
 }

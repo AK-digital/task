@@ -33,7 +33,7 @@ export default function Verification() {
     if (data?.success) {
       setSuccess(true);
       setText(
-        "Votre adresse mail a été vérifié avec succès. Vous pouvez maintenant vous connecter."
+        "Votre adresse e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter."
       );
 
       const timeout = setTimeout(() => {
@@ -52,7 +52,7 @@ export default function Verification() {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <h1>Vérification de votre adresse mail</h1>
+        <h1>Vérification de votre adresse e-mail</h1>
         <p>{text}</p>
         {success && <p>Redirection en cours...</p>}
       </div>
