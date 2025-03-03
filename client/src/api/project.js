@@ -1,23 +1,16 @@
 "use server";
+import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export async function getProject(id) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/project/${id}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-      },
-      { next: { tags: ["project"] } }
+    const res = await useAuthFetch(
+      `project/${id}`,
+      "GET",
+      "application/json",
+      null,
+      "project"
     );
 
     const response = await res.json();
@@ -36,24 +29,19 @@ export async function getProject(id) {
 }
 
 export async function revalidateProject(id) {
-  revalidateTag(`project-${id}`);
+  revalidateTag(`project`);
   revalidateTag("project-invitations");
 }
 
 export async function getProjects() {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(`${process.env.API_URL}/project`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.value}`,
-      },
-      next: { tags: ["projects"] },
-    });
+    const res = await useAuthFetch(
+      "project",
+      "GET",
+      "application/json",
+      null,
+      "projects"
+    );
 
     const response = await res.json();
 
@@ -72,9 +60,6 @@ export async function getProjects() {
 
 export async function updateProjectLogo(projectId, logo) {
   try {
-    const cookie = await cookies();
-    const session = cookie?.get("session");
-
     if (!logo || logo.size === 0) {
       return {
         status: "failure",
@@ -93,16 +78,11 @@ export async function updateProjectLogo(projectId, logo) {
     const formDataToSend = new FormData();
     formDataToSend.append("logo", logo);
 
-    const res = await fetch(
-      `${process.env.API_URL}/project/${projectId}/logo`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${session?.value}`,
-        },
-        body: formDataToSend,
-      }
+    const res = await useAuthFetch(
+      `project/${projectId}/logo`,
+      "PATCH",
+      "multipart/form-data",
+      formDataToSend
     );
 
     const response = await res.json();
@@ -132,17 +112,7 @@ export async function updateProjectLogo(projectId, logo) {
 
 export async function deleteProject(projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(`${process.env.API_URL}/project/${projectId}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.value}`,
-      },
-    });
+    const res = await useAuthFetch(`project/${projectId}`, "DELETE");
 
     const response = await res.json();
 

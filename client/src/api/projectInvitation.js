@@ -1,22 +1,14 @@
 "use server";
-
-import { cookies } from "next/headers";
+import { useAuthFetch } from "@/utils/api";
 
 export async function getProjectInvitations(projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/project-invitation/${projectId}?projectId=${projectId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`,
-        },
-      },
-      { next: { tags: ["project-invitations"] } }
+    const res = await useAuthFetch(
+      `project-invitation/${projectId}?projectId=${projectId}`,
+      "GET",
+      "application/json",
+      null,
+      "project-invitations"
     );
 
     const response = await res.json();

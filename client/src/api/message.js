@@ -1,62 +1,19 @@
 "use server";
-import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
-
-export async function getMessages(projectId, taskId) {
-  try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/message?projectId=${projectId}&taskId=${taskId}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-      },
-      { next: { tags: ["messages"] } }
-    );
-
-    const response = await res.json();
-
-    if (!response?.success) {
-      throw new Error(response?.message || "Une erreur est survenue");
-    }
-    console.log(response);
-    return response;
-  } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des messages"
-    );
-  }
-}
+import { useAuthFetch } from "@/utils/api";
 
 export async function saveMessage(projectId, taskId, message, taggedUsers) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawData = {
       taskId: taskId,
       message: message,
       taggedUsers: taggedUsers,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/message?projectId=${projectId}`,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `message?projectId=${projectId}`,
+      "POST",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
@@ -74,6 +31,31 @@ export async function saveMessage(projectId, taskId, message, taggedUsers) {
   }
 }
 
+export async function getMessages(projectId, taskId) {
+  try {
+    const res = await useAuthFetch(
+      `message?projectId=${projectId}&taskId=${taskId}`,
+      "GET",
+      "application/json",
+      null,
+      "messages"
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des messages"
+    );
+  }
+}
+
 export async function updateMessage(
   projectId,
   messageId,
@@ -81,25 +63,16 @@ export async function updateMessage(
   taggedUsers
 ) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawData = {
       message: message,
       taggedUsers: taggedUsers,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/message/${messageId}?projectId=${projectId}`,
-      {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `message/${messageId}?projectId=${projectId}`,
+      "PUT",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
@@ -119,19 +92,10 @@ export async function updateMessage(
 
 export async function deleteMessage(projectId, messageId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/message/${messageId}?projectId=${projectId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-      }
+    const res = await useAuthFetch(
+      `message/${messageId}?projectId=${projectId}`,
+      "DELETE",
+      "application/json"
     );
 
     const response = await res.json();

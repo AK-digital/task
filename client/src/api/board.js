@@ -1,23 +1,15 @@
 "use server";
+import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export async function getBoards(projectId, archived) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/board?projectId=${projectId}&archived=${archived}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-      },
-      { next: { tags: ["boards"] } }
+    const res = await useAuthFetch(
+      `board?projectId=${projectId}&archived=${archived}`,
+      "GET",
+      "application/json",
+      null,
+      "boards"
     );
 
     const response = await res.json();
@@ -37,23 +29,15 @@ export async function getBoards(projectId, archived) {
 
 export async function addBoardToArchive(boardId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     if (!boardId) {
       throw new Error("L'id du tableau est requis");
     }
 
-    const res = await fetch(
-      `${process.env.API_URL}/board/${boardId}/add-archive?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-      }
+    const res = await useAuthFetch(
+      `board/${boardId}/add-archive?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      null
     );
 
     const response = await res.json();
@@ -74,23 +58,15 @@ export async function addBoardToArchive(boardId, projectId) {
 
 export async function removeBoardFromArchive(boardId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     if (!boardId) {
       throw new Error("L'id du tableau est requis");
     }
 
-    const res = await fetch(
-      `${process.env.API_URL}/board/${boardId}/remove-archive?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-      }
+    const res = await useAuthFetch(
+      `board/${boardId}/remove-archive?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      null
     );
 
     const response = await res.json();

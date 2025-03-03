@@ -1,27 +1,22 @@
 "use server";
 
+import { useAuthFetch } from "@/utils/api";
 import { regex } from "@/utils/regex";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export async function saveProject(prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawFormData = {
       name: formData.get("project-name"),
     };
 
-    const res = await fetch(`${process.env.API_URL}/project`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`,
-      },
-      body: JSON.stringify(rawFormData),
-    });
+    const res = await useAuthFetch(
+      `project`,
+      "POST",
+      "application/json",
+      rawFormData
+    );
 
     const response = await res.json();
 
@@ -52,9 +47,6 @@ export async function sendProjectInvitationToGuest(
   formData
 ) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const email = formData.get("email");
     const validation = regex.email.test(email);
 
@@ -72,17 +64,11 @@ export async function sendProjectInvitationToGuest(
       email: email,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/project/${projectId}/send-invitation`,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `project/${projectId}/send-invitation`,
+      "POST",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
@@ -120,8 +106,6 @@ export async function sendProjectInvitationToGuest(
 export async function acceptProjectInvitation(invitationId) {
   const cookie = await cookies();
   try {
-    const session = cookie.get("session");
-
     if (!invitationId) {
       throw new Error("Paramètre manquant");
     }
@@ -130,17 +114,11 @@ export async function acceptProjectInvitation(invitationId) {
       invitationId: invitationId,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/project/accept-invitation`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `project/accept-invitation`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     if (res.status === 401) {
@@ -188,9 +166,6 @@ export async function acceptProjectInvitation(invitationId) {
 
 export async function removeGuest(projectId, prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const guestId = formData.get("guest-id");
 
     if (!guestId) {
@@ -198,20 +173,14 @@ export async function removeGuest(projectId, prevState, formData) {
     }
 
     const rawData = {
-      guestId: formData.get("guest-id"),
+      guestId: guestId,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/project/${projectId}/remove-guest`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `project/${projectId}/remove-guest`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
@@ -239,8 +208,6 @@ export async function removeGuest(projectId, prevState, formData) {
 
 export async function updateProject(prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");
     const note = formData.get("note");
@@ -287,15 +254,12 @@ export async function updateProject(prevState, formData) {
       );
     }
 
-    const res = await fetch(`${process.env.API_URL}/project/${projectId}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.value}`,
-      },
-      body: JSON.stringify(rawFormData),
-    });
+    const res = await useAuthFetch(
+      `project/${projectId}`,
+      "PUT",
+      "application/json",
+      rawFormData
+    );
 
     const response = await res.json();
 
@@ -325,17 +289,12 @@ export async function updateProject(prevState, formData) {
 
 export async function updateProjectsOrder(projects) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(`${process.env.API_URL}/project/reorder`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.value}`,
-      },
-      body: JSON.stringify({ projects }),
-    });
+    const res = await useAuthFetch(
+      `project/reorder`,
+      "PATCH",
+      "application/json",
+      { projects }
+    );
 
     const response = await res.json();
     return response; // Retourne la réponse complète

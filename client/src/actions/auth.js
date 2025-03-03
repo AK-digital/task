@@ -1,7 +1,7 @@
 "use server";
+import { useFetch } from "@/utils/api";
 import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
-import { redirect } from "next/dist/server/api-utils";
 import { cookies } from "next/headers";
 
 export async function signUp(prevState, formData) {
@@ -26,14 +26,12 @@ export async function signUp(prevState, formData) {
       };
     }
 
-    const res = await fetch(`${process.env.API_URL}/auth/sign-up`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(rawFormData),
-    });
+    const res = await useFetch(
+      "auth/sign-up",
+      "POST",
+      "application/json",
+      rawFormData
+    );
 
     const response = await res.json();
 
@@ -48,7 +46,7 @@ export async function signUp(prevState, formData) {
   } catch (err) {
     console.log(
       err.message ||
-      "Une erreur est survenue lors de la création d'un nouvel utilisateur"
+        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
     );
     if (err.message.includes("E11000")) {
       return {
@@ -85,14 +83,12 @@ export async function signIn(prevState, formData) {
       };
     }
 
-    const res = await fetch(`${process.env.API_URL}/auth/sign-in`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(rawFormData),
-    });
+    const res = await useFetch(
+      "auth/sign-in",
+      "POST",
+      "application/json",
+      rawFormData
+    );
 
     const response = await res.json();
 
@@ -139,7 +135,7 @@ export async function signIn(prevState, formData) {
   } catch (err) {
     console.log(
       err.message ||
-      "Une erreur est survenue lors de la création d'un nouvel utilisateur"
+        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
     );
     if (err.message.includes("mail")) {
       return {
@@ -184,12 +180,8 @@ export async function sendResetCode(prevState, formData) {
       };
     }
 
-    const res = await fetch(`${process.env.API_URL}/auth/reset-code`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
+    const res = await useFetch("auth/reset-code", "POST", "application/json", {
+      email,
     });
 
     const response = await res.json();
@@ -207,7 +199,8 @@ export async function sendResetCode(prevState, formData) {
 
     return {
       status: "success",
-      message: "Un code de réinitialisation a été envoyé à votre adresse e-mail",
+      message:
+        "Un code de réinitialisation a été envoyé à votre adresse e-mail",
     };
   } catch (err) {
     return {
@@ -224,8 +217,6 @@ export async function resetForgotPassword(prevState, formData) {
     const resetCode = formData.get("reset-code");
     const newPassword = formData.get("newPassword");
     const confirmPassword = formData.get("confirmPassword");
-
-    console.log(newPassword, confirmPassword);
 
     if (!newPassword || !confirmPassword) {
       return {
@@ -251,25 +242,19 @@ export async function resetForgotPassword(prevState, formData) {
       };
     }
 
-    const res = await fetch(
-      `${process.env.API_URL}/auth/reset-forgot-password`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ resetCode, newPassword }),
-      }
+    const res = useFetch(
+      "auth/reset-forgot-password",
+      "PATCH",
+      "application/json",
+      { resetCode, newPassword }
     );
 
     const response = await res.json();
 
-    console.log(response);
-
     if (
       !response.success &&
       response?.message ===
-      "Le nouveau mot de passe doit être différent de l'ancien"
+        "Le nouveau mot de passe doit être différent de l'ancien"
     ) {
       return {
         status: "failure",

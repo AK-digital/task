@@ -1,28 +1,18 @@
 "use server";
 
+import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export async function deleteProjectInvitation(prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");
 
-    console.log(projectId);
-
-    const res = await fetch(
-      `${process.env.API_URL}/project-invitation/${projectInvitationId}?projectId=${projectId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`,
-        },
-      }
+    const res = await useAuthFetch(
+      `project-invitation/${projectInvitationId}?projectId=${projectId}`,
+      "DELETE",
+      "application/json"
     );
-
     const response = await res.json();
 
     if (!response.success) {

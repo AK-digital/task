@@ -1,23 +1,15 @@
 "use server";
+import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export async function getTasks(projectId, boardId, archived) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/task?projectId=${projectId}&boardId=${boardId}&archived=${archived}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-      },
-      { next: { tags: ["tasks"] } }
+    const res = await useAuthFetch(
+      `task?projectId=${projectId}&boardId=${boardId}&archived=${archived}`,
+      "GET",
+      "application/json",
+      null,
+      "tasks"
     );
 
     const response = await res.json();
@@ -37,20 +29,12 @@ export async function getTasks(projectId, boardId, archived) {
 
 export async function getTask(taskId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}?projectId=${projectId}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-      },
-      { next: { tags: ["task"] } }
+    await useAuthFetch(
+      `task/${taskId}?projectId=${projectId}`,
+      "GET",
+      "application/json",
+      null,
+      "task"
     );
 
     const response = await res.json();
@@ -70,24 +54,15 @@ export async function getTask(taskId, projectId) {
 
 export async function addTaskToArchive(tasksIds, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     if (tasksIds.length <= 0) {
       throw new Error("Aucune tâche n'a été séléctionnée");
     }
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/add-archive?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify({ tasks: tasksIds }),
-      }
+    const res = await useAuthFetch(
+      `task/add-archive?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { tasks: tasksIds }
     );
 
     const response = await res.json();
@@ -108,24 +83,15 @@ export async function addTaskToArchive(tasksIds, projectId) {
 
 export async function removeTaskFromArchive(tasksIds, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     if (tasksIds.length <= 0) {
       throw new Error("Aucune tâche n'a été séléctionnée");
     }
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/remove-archive?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify({ tasks: tasksIds }),
-      }
+    const res = await useAuthFetch(
+      `task/remove-archive?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { tasks: tasksIds }
     );
 
     const response = await res.json();
@@ -146,24 +112,15 @@ export async function removeTaskFromArchive(tasksIds, projectId) {
 
 export async function deleteTask(tasksIds, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     if (tasksIds.length <= 0) {
       throw new Error("Aucune tâche n'a été séléctionnée");
     }
 
-    const res = await fetch(
-      `${process.env.API_URL}/task?projectId=${projectId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify({ tasks: tasksIds }),
-      }
+    const res = await useAuthFetch(
+      `task?projectId=${projectId}`,
+      "DELETE",
+      "application/json",
+      { tasks: tasksIds }
     );
 
     const response = await res.json();
@@ -185,29 +142,18 @@ export async function deleteTask(tasksIds, projectId) {
 
 export async function addResponsible(taskId, responsibleId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawData = {
       responsibleId: responsibleId,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/add-responsible?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/add-responsible?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
@@ -226,29 +172,18 @@ export async function addResponsible(taskId, responsibleId, projectId) {
 
 export async function removeResponsible(taskId, responsibleId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawData = {
       responsibleId: responsibleId,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/remove-responsible?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/remove-responsible?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
@@ -272,30 +207,19 @@ export async function updateDescription(
   taggedUsers
 ) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawData = {
       description: content,
       taggedUsers: taggedUsers,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/description?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/description?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
@@ -314,24 +238,15 @@ export async function updateDescription(
 
 export async function updateTaskOrder(tasks, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawData = {
       tasks: tasks,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/reorder?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `task/reorder?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
@@ -351,25 +266,14 @@ export async function updateTaskOrder(tasks, projectId) {
 
 export async function updateTaskBoard(taskId, boardId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/update-board?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify({ boardId: boardId }),
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/update-board?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { boardId: boardId }
     );
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
@@ -386,19 +290,11 @@ export async function updateTaskBoard(taskId, boardId, projectId) {
 
 export async function taskStartTimer(taskId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/start-timer?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/start-timer?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      null
     );
 
     const response = await res.json();
@@ -419,19 +315,11 @@ export async function taskStartTimer(taskId, projectId) {
 
 export async function taskEndTimer(taskId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/end-timer?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/end-timer?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      null
     );
 
     const response = await res.json();
@@ -452,20 +340,11 @@ export async function taskEndTimer(taskId, projectId) {
 
 export async function removeTaskSession(taskId, projectId, sessionId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/remove-session?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify({ sessionId: sessionId }),
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/remove-session?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { sessionId: sessionId }
     );
 
     const response = await res.json();

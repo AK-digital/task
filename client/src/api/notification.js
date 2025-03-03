@@ -1,18 +1,10 @@
 "use server";
-import { cookies } from "next/headers";
+
+import { useAuthFetch } from "@/utils/api";
 
 export default async function getNotifications() {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(`${process.env.API_URL}/notification`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.value}`, // Pass the Access Token to authenticate the request
-      },
-    });
+    const res = await useAuthFetch("notification", "GET");
 
     const response = await res.json();
 

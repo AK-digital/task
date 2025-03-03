@@ -1,4 +1,5 @@
 "use server";
+import { useAuthFetch, useFetch } from "@/utils/api";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -108,13 +109,11 @@ export async function refreshToken(token) {
 
 export async function verification(id) {
   try {
-    const res = await fetch(`${process.env.API_URL}/auth/verification/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await useFetch(
+      `auth/verification/${id}`,
+      "PATCH",
+      "application/json"
+    );
 
     const response = await res.json();
 
@@ -139,14 +138,14 @@ export async function verification(id) {
 
 export async function reSendVerificationEmail(email) {
   try {
-    const res = await fetch(`${process.env.API_URL}/auth/verification`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
+    const res = await useFetch(
+      "auth/verification",
+      "POST",
+      "application/json",
+      {
+        email,
+      }
+    );
 
     const response = await res.json();
 
@@ -179,18 +178,15 @@ export async function logout() {
       throw new Error("Paramètres manquants");
     }
 
-    const res = await fetch(`${process.env.API_URL}/auth/logout`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken?.value}`,
-      },
-      body: JSON.stringify({
+    const res = await useAuthFetch(
+      "auth/logout",
+      "DELETE",
+      "application/json",
+      {
         accessToken: accessToken?.value,
         refreshToken: refreshToken?.value,
-      }),
-    });
+      }
+    );
 
     const response = await res.json();
 

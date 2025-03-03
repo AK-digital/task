@@ -23,13 +23,10 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     if (data) {
       const response = data;
-      if (!response?.success) {
-        router.push("/");
-      } else {
-        setUid(response?.data?._id);
-        setUser(response?.data);
-        socket.emit("logged in", response?.data?._id);
-      }
+
+      setUid(response?.data?._id);
+      setUser(response?.data);
+      socket.emit("logged in", response?.data?._id);
     }
   }, [data, router]);
 

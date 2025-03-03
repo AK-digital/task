@@ -1,35 +1,25 @@
 "use server";
+import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
-
 
 export async function saveBoard(projectId, prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawFormData = {
       title: formData.get("title"),
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/board?projectId=${projectId}`,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawFormData),
-      }
+    const res = await useAuthFetch(
+      `board?projectId=${projectId}`,
+      "POST",
+      "application/json",
+      rawFormData
     );
 
     const response = await res.json();
 
-    console.log(response);
-
     revalidateTag("boards");
+
+    return response;
   } catch (err) {
     console.log(
       err.message || "Une erreur est survenue lors de la création du tableau"
@@ -39,30 +29,19 @@ export async function saveBoard(projectId, prevState, formData) {
 
 export async function updateBoard(boardId, projectId, color, title) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
+    const rawFormData = {
+      title: title,
+      color: color,
+    };
 
-    const rawFormData = {};
-
-    rawFormData.title = title;
-    rawFormData.color = color;
-
-    const res = await fetch(
-      `${process.env.API_URL}/board/${boardId}?projectId=${projectId}`,
-      {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawFormData),
-      }
+    const res = await useAuthFetch(
+      `board/${boardId}?projectId=${projectId}`,
+      "PUT",
+      "application/json",
+      rawFormData
     );
 
     const response = await res.json();
-
-    console.log(response);
 
     revalidateTag("boards");
 
@@ -76,27 +55,18 @@ export async function updateBoard(boardId, projectId, color, title) {
 
 export async function deleteBoard(boardId, projectId) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const res = await fetch(
-      `${process.env.API_URL}/board/${boardId}?projectId=${projectId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`,
-        },
-      }
+    const res = await useAuthFetch(
+      `board/${boardId}?projectId=${projectId}`,
+      "DELETE",
+      "application/json"
     );
 
     const response = await res.json();
 
-    console.log(response);
-
     revalidateTag("boards");
     revalidateTag("tasks");
+
+    return response;
   } catch (err) {
     console.log(
       err.message || "Une erreur est survenue lors de la suppression du tableau"

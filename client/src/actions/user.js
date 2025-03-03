@@ -1,11 +1,9 @@
 "use server";
-import { cookies } from "next/headers";
 import { userUpdateValidation } from "@/utils/zod";
+import { useAuthFetch } from "@/utils/api";
 
 export async function updateUserProfile(prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie?.get("session");
     const userId = formData.get("userId");
 
     const rawData = {
@@ -26,15 +24,12 @@ export async function updateUserProfile(prevState, formData) {
       };
     }
 
-    const res = await fetch(`${process.env.API_URL}/user/${userId}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.value}`,
-      },
-      body: JSON.stringify(rawData),
-    });
+    const res = await useAuthFetch(
+      `user/${userId}`,
+      "PUT",
+      "application/json",
+      rawData
+    );
 
     const response = await res.json();
 
@@ -57,8 +52,6 @@ export async function updateUserProfile(prevState, formData) {
 
 export async function updateUserPicture(prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie?.get("session");
     const userId = formData.get("userId");
     const pictureFile = formData.get("picture");
 
@@ -74,18 +67,14 @@ export async function updateUserPicture(prevState, formData) {
     const formDataUpload = new FormData();
     formDataUpload.append("picture", pictureFile);
 
-    const res = await fetch(`${process.env.API_URL}/user/${userId}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        Authorization: `Bearer ${session.value}`,
-      },
-      body: formDataUpload,
-    });
+    const res = await useAuthFetch(
+      `user/${userId}`,
+      "PATCH",
+      "multipart/form-data",
+      formDataUpload
+    );
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response.success) {
       throw new Error(response?.message);

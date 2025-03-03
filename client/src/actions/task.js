@@ -1,33 +1,29 @@
 "use server";
+import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export async function saveTask(projectId, prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const rawFormData = {
       boardId: formData.get("board-id"),
       text: formData.get("new-task"),
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task?projectId=${projectId}`,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawFormData),
-      }
+    const res = await useAuthFetch(
+      `task?projectId=${projectId}`,
+      "POST",
+      "application/json",
+      rawFormData
     );
 
     const response = await res.json();
 
-    console.log(response);
+    if (!response?.success) {
+      throw new Error(
+        response?.message ||
+          "Une erreur est survenue lors de la création de la tâche"
+      );
+    }
 
     revalidateTag("tasks");
 
@@ -38,73 +34,10 @@ export async function saveTask(projectId, prevState, formData) {
     console.log(
       err.message || "Une erreur est survenue lors de la création du tableau"
     );
-  }
-}
-
-export async function updateTask(taskId, projectId, prevState, formData) {
-  try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
-    const data = new FormData();
-
-    const statuses = [
-      "En attente",
-      "À faire",
-      "En cours",
-      "Bloquée",
-      "Terminée",
-    ];
-
-    const priorities = ["Basse", "Moyenne", "Haute", "Urgent"];
-
-    const selectedStatus = statuses.find((status) => formData.get(status));
-    if (selectedStatus) {
-      data.append("status", selectedStatus);
-    }
-
-    const selectedPriority = priorities.find((priority) =>
-      formData.get(priority)
-    );
-    if (selectedPriority) {
-      data.append("priority", selectedPriority);
-    }
-
-    data.append("text", formData.get("text"));
-    data.append("deadline", formData.get("deadline"));
-    data.append("description");
-
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}?projectId=${projectId}`,
-      {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: data, // Utilisez l'objet FormData comme body
-      }
-    );
-
-    const response = await res.json();
-
-    if (!response.success) {
-      throw new Error(response?.message);
-    }
-
-    revalidateTag("tasks");
-
-    return {
-      status: "success",
-    };
-  } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
-    );
 
     return {
       status: "failure",
+      message: err.message,
     };
   }
 }
@@ -112,9 +45,6 @@ export async function updateTask(taskId, projectId, prevState, formData) {
 // Update the text of a given task
 export async function updateTaskText(taskId, projectId, prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const text = formData.get("text");
 
     if (!text) {
@@ -125,23 +55,17 @@ export async function updateTaskText(taskId, projectId, prevState, formData) {
       text: text,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/text?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/text?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message);
+      throw new Error(response?.message || "Une erreur s'est produite");
     }
 
     revalidateTag("tasks");
@@ -165,9 +89,6 @@ export async function updateTaskText(taskId, projectId, prevState, formData) {
 // Update the status of a given task
 export async function updateTaskStatus(taskId, projectId, status) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const allowedStatus = [
       "En attente",
       "À faire",
@@ -182,17 +103,11 @@ export async function updateTaskStatus(taskId, projectId, status) {
       status: status,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/status?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/status?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
@@ -222,9 +137,6 @@ export async function updateTaskStatus(taskId, projectId, status) {
 // Update the priority of a given task
 export async function updateTaskPriority(taskId, projectId, priority) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const allowedPriorities = ["Basse", "Moyenne", "Haute", "Urgent"];
 
     if (!allowedPriorities.includes(priority)) {
@@ -235,17 +147,11 @@ export async function updateTaskPriority(taskId, projectId, priority) {
       priority: priority,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/priority?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/priority?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
@@ -279,9 +185,6 @@ export async function updateTaskDeadline(
   formData
 ) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const deadline = formData.get("deadline");
 
     if (!deadline) throw new Error("Paramètre manquant");
@@ -290,26 +193,18 @@ export async function updateTaskDeadline(
       deadline: deadline,
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/deadline?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`, // Pass the Access Token to authenticate the request
-        },
-        body: JSON.stringify(rawData), // Utilisez l'objet FormData comme body
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/deadline?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message);
+      throw new Error(response?.message || "Une erreur s'est produite");
     }
-
-    console.log(response);
 
     revalidateTag("tasks");
 
@@ -331,9 +226,6 @@ export async function updateTaskDeadline(
 
 export async function addTaskSession(taskId, projectId, prevState, formData) {
   try {
-    const cookie = await cookies();
-    const session = cookie.get("session");
-
     const date = formData.get("date");
     const startTime = formData.get("start-time");
     const endTime = formData.get("end-time");
@@ -346,17 +238,11 @@ export async function addTaskSession(taskId, projectId, prevState, formData) {
       endTime: endDateTime.getTime(),
     };
 
-    const res = await fetch(
-      `${process.env.API_URL}/task/${taskId}/add-session?projectId=${projectId}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.value}`,
-        },
-        body: JSON.stringify(rawData),
-      }
+    const res = await useAuthFetch(
+      `task/${taskId}/add-session?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
     );
 
     const response = await res.json();
