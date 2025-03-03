@@ -90,7 +90,7 @@ export default function SignIn() {
         </div>
       )}
       <form className={styles.form} action={formAction}>
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label
             htmlFor="email"
             className={styles.emailLabel}
@@ -109,7 +109,7 @@ export default function SignIn() {
             required
           />
         </div>
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label
             htmlFor="password"
             className={styles.passwordLabel}

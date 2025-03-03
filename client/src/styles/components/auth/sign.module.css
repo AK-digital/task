@@ -10,56 +10,20 @@
     box-shadow: 0 0 40px 0 #121e1f34;
 }
 
-
 .title {
     font-size: 1.9rem;
     font-weight: bold;
     margin-bottom: 60px;
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
-
-.formGroup {
-    position: relative;
-}
-
 .form label {
-    position: absolute;
-    top: 10px;
-    font-size: 1.1rem;
     color: var(--text-lighter-color);
-    transition: all ease-in-out 120ms;
-    cursor: text;
-}
-
-.form:has(.email:focus) .emailLabel,
-.form:has(.password:focus) .passwordLabel,
-.form:has(.confirmPassword:focus) .confirmPasswordLabel,
-.form:has(.lastName:focus) .lastNameLabel,
-.form:has(.firstName:focus) .firstNameLabel {
-    transition: all ease-in-out 120ms;
-    font-size: var(--text-size-small);
-    top: -15px;
-}
-
-.form label[data-active="true"] {
-    font-size: var(--text-size-small);
-    top: -15px;
 }
 
 .form input {
-    background-color: transparent;
-    border: none;
-    border-radius: 0;
     border-bottom: 1px solid var(--text-lighter-color);
-    padding-left: 0;
-    font-size: var(--text-size-medium);
-    font-weight: 300;
     color: var(--text-lighter-color);
+    font-size: var(--text-size-medium);
 }
 
 .password {
@@ -82,19 +46,13 @@
 }
 
 /* Errors messages */
-
 .form i {
     display: block;
     margin-top: 4px;
 }
 
 .buttons {
-    /* margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px; */
     margin-left: auto;
-    margin-top: 32px;
 }
 
 .google {

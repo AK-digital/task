@@ -21,6 +21,12 @@ export default function ProfileForm() {
   );
   const [popUp, setPopup] = useState(null);
 
+  // Ajout des états pour gérer les champs actifs
+  const [lastName, setLastName] = useState(user?.lastName || "");
+  const [firstName, setFirstName] = useState(user?.firstName || "");
+  const [company, setCompany] = useState(user?.company || "");
+  const [position, setPosition] = useState(user?.position || "");
+
   useEffect(() => {
     // Mutate the session data if the update was successful
     if (state?.status === "success") {
@@ -46,60 +52,75 @@ export default function ProfileForm() {
     return () => clearTimeout(timeout);
   }, [state]);
 
+  // Mettre à jour les états avec les valeurs de l'utilisateur lorsque les données sont chargées
+  useEffect(() => {
+    if (user) {
+      setLastName(user.lastName || "");
+      setFirstName(user.firstName || "");
+      setCompany(user.company || "");
+      setPosition(user.position || "");
+    }
+  }, [user]);
+
   return (
     <>
       <form action={formAction}>
         <input type="hidden" name="userId" defaultValue={user?._id} />
-        <div className={styles.formGroup}>
-          <label htmlFor="lastName">Nom</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            defaultValue={user?.lastName || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
-          />
-          {state?.errors?.lastName && (
-            <span className={styles.error}>{state.errors.lastName}</span>
-          )}
-        </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="firstName">Prénom</label>
+        <div className="form-group">
+          <label htmlFor="firstName" data-active={firstName ? true : false}>Prénom</label>
           <input
             type="text"
             id="firstName"
             name="firstName"
             defaultValue={user?.firstName || ""}
             className={`${bricolageGrostesque.className} ${styles.input}`}
+            onChange={(e) => setFirstName(e.target.value)}
           />
           {state?.errors?.firstName && (
             <span className={styles.error}>{state.errors.firstName}</span>
           )}
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="company">Entreprise</label>
+        <div className="form-group">
+          <label htmlFor="lastName" data-active={lastName ? true : false}>Nom</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            defaultValue={user?.lastName || ""}
+            className={`${bricolageGrostesque.className} ${styles.input}`}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+          {state?.errors?.lastName && (
+            <span className={styles.error}>{state.errors.lastName}</span>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="company" data-active={company ? true : false}>Entreprise</label>
           <input
             type="text"
             id="company"
             name="company"
             defaultValue={user?.company || ""}
             className={`${bricolageGrostesque.className} ${styles.input}`}
+            onChange={(e) => setCompany(e.target.value)}
           />
           {state?.errors?.company && (
             <span className={styles.error}>{state.errors.company}</span>
           )}
         </div>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="position">Poste</label>
+        <div className="form-group">
+          <label htmlFor="position" data-active={position ? true : false}>Poste</label>
           <input
             type="text"
             id="position"
             name="position"
             defaultValue={user?.position || ""}
             className={`${bricolageGrostesque.className} ${styles.input}`}
+            onChange={(e) => setPosition(e.target.value)}
           />
           {state?.errors?.position && (
             <span className={styles.error}>{state.errors.position}</span>

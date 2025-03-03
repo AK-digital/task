@@ -138,28 +138,6 @@ ul {
   list-style-type: none;
 }
 
-input,
-textarea {
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  color: var(--text-darker-color);
-  letter-spacing: var(--letter-spacing-normal);
-  outline: none;
-  font-family: inherit;
-  padding: 12px 0 12px 0;
-  border-bottom: 1px solid var(--text-lighter-color);
-}
-
-/* Prevent the background of the autocomplete */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  transition: background-color 5000s ease-in-out 0s;
-  -webkit-text-fill-color: white !important;
-}
-
 i {
   margin-top: -5px;
   color: #DC3545;
@@ -181,7 +159,6 @@ button {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(168, 126, 81, 0.2);
   background-size: 300% 300%;
   background-position: 0% 0%;
   z-index: 1;
@@ -190,21 +167,7 @@ button {
 button:hover,
 button:active {
   background-color: var(--accent-color-hover);
-  box-shadow: 0 5px 20px rgba(151, 112, 69, 0.35);
-}
-
-button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  opacity: 0;
-  border-radius: 100%;
-  transform: scale(1, 1) translate(-50%, -50%);
-  transform-origin: 50% 50%;
+  box-shadow: 0 5px 20px rgba(151, 112, 69, 0.15);
 }
 
 button[data-disabled="true"] {
@@ -217,6 +180,59 @@ button[data-disabled="true"] {
 p {
   line-height: 1.5rem;
   letter-spacing: var(--letter-spacing-normal);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.form-group {
+  position: relative;
+  width: 100%;
+}
+
+form label {
+  position: absolute;
+  top: 10px;
+  font-size: inherit;
+  transition: all ease-in-out 120ms;
+  cursor: text;
+}
+
+.form-group:has(input:focus) label {
+  transition: all ease-in-out 120ms;
+  font-size: var(--text-size-small);
+  top: -15px;
+}
+
+form label[data-active="true"] {
+  font-size: var(--text-size-small);
+  top: -15px;
+}
+
+input,
+textarea {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  color: var(--text-darker-color);
+  letter-spacing: var(--letter-spacing-normal);
+  border-bottom: 1px solid var(--text-medium-color);
+  outline: none;
+  font-family: inherit;
+  padding: 12px 0 12px 0;
+}
+
+/* Prevent the background of the autocomplete */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: white !important;
 }
 
 #overlay-hidden {

@@ -49,7 +49,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
       )}
       {state?.status !== "success" && (
         <form className={styles.form} action={formAction}>
-          <div className={styles.formGroup}>
+          <div className="form-group">
             <label
               htmlFor="newPassword"
               className={styles.passwordLabel}
@@ -79,7 +79,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             )}
             {state?.errors?.newPassword && <i>{state?.errors?.newPassword}</i>}
           </div>
-          <div className={styles.formGroup}>
+          <div className="form-group">
             <label
               htmlFor="confirmPassword"
               className={styles.confirmPasswordLabel}

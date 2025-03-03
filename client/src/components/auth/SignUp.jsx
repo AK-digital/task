@@ -62,7 +62,7 @@ export default function SignUp() {
             </div>
           )}
           <form className={styles.form} action={formAction}>
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label
                 htmlFor="last-name"
                 className={styles.lastNameLabel}
@@ -82,7 +82,7 @@ export default function SignUp() {
               />
               {state?.errors?.lastName && <i>{state?.errors?.lastName}</i>}
             </div>
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label
                 htmlFor="first-name"
                 className={styles.firstNameLabel}
@@ -102,7 +102,7 @@ export default function SignUp() {
               />
               {state?.errors?.firstName && <i>{state?.errors?.firstName}</i>}
             </div>
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label
                 htmlFor="email"
                 className={styles.emailLabel}
@@ -122,7 +122,7 @@ export default function SignUp() {
               />
               {state?.errors?.email && <i>{state?.errors?.email}</i>}
             </div>
-            <div className={styles.formGroup}>
+            <div className="form-group">
               <label
                 htmlFor="password"
                 className={styles.passwordLabel}

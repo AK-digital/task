@@ -208,7 +208,7 @@ export default function ProjectOptionsModal({ project, setOpenModal, uid }) {
                   </div>
                   {links.map((link, linksIdx) => {
                     return (
-                      <div className={styles.formGroup} key={linksIdx}>
+                      <div className="form-group" key={linksIdx}>
                         <div className={styles.inputWrapper}>
                           <div
                             className={styles.icon}

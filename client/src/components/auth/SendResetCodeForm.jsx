@@ -39,7 +39,7 @@ export default function SendResetCodeForm() {
         </div>
       )}
       <form className={styles.form} action={formAction}>
-        <div className={styles.formGroup}>
+        <div className="form-group">
           <label
             htmlFor="email"
             className={styles.emailLabel}
