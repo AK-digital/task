@@ -1,6 +1,6 @@
 .container {
     position: relative;
-    padding: 12px var(--layout-gap) 0 var(--layout-gap);
+    /* padding: 12px var(--layout-gap) 0 var(--layout-gap); */
     background-color: var(--secondary-background-color);
     border-radius: var(--border-radius-medium);
     box-shadow: var(--box-shadow-small);
@@ -12,11 +12,12 @@
 .headerWrapper {
     position: sticky;
     top: 0;
-    /* Ajustement pour tenir compte du dégradé en haut de .boards */
     z-index: 5;
+    padding: 12px 16px;
     background-color: var(--secondary-background-color);
-    padding-top: 12px;
-    padding-bottom: 12px;
+    border-top-left-radius: calc(var(--border-radius-medium) - 1px);
+    border-top-right-radius: calc(var(--border-radius-medium) - 1px);
+    border-left: 1px solid inherit;
 }
 
 .content {

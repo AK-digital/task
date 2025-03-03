@@ -1,6 +1,6 @@
 .container {
     position: relative;
-    /* z-index: 2; */
+    padding-inline: 16px;
 }
 
 .container ul {
@@ -20,6 +20,7 @@
     display: flex;
     align-items: center;
     gap: 2px;
+    height: 54px;
 }
 
 .add {
