@@ -6,6 +6,8 @@
     padding-right: 16px;
     padding-bottom: var(--layout-gap);
     position: relative;
+    border-top-left-radius: var(--border-radius-medium);
+    border-top-right-radius: var(--border-radius-medium);
 }
 
 .archiveTitle {
