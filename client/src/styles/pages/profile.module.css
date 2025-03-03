@@ -1,5 +1,4 @@
 .main {
-    margin-inline: 20px;
     height: 100%;
     width: 100%;
 }
@@ -9,16 +8,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: var(--layou);
     height: 100%;
     width: 100%;
 }
 
 .wrapper {
-    background-color: var(--primary-background-color);
-    padding: 32px;
-    border-radius: var(--border-radius-small);
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-medium);
     width: 100%;
-    max-width: 600px;
-
+    padding: 44px;
+    max-width: 540px;
 }

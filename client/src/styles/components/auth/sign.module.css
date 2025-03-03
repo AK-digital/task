@@ -76,16 +76,9 @@
 }
 
 .forgotPassword {
-    position: absolute;
-    right: 2px;
-    bottom: -25px;
-    color: var(--text-accent-color);
-    font-size: 0.875rem;
-    cursor: pointer;
-}
-
-.forgotPassword:hover {
-    text-decoration: underline;
+    float: right;
+    margin-top: 12px;
+    font-size: var(--text-size-small);
 }
 
 /* Errors messages */

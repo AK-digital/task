@@ -1,6 +1,6 @@
 :root {
-  --accent-color: #BE9161;
-  --accent-color-hover: #9E754A;
+  --accent-color: #a87e51;
+  --accent-color-hover: #977045;
   --primary-background-color: #DAD6C7;
   --secondary-background-color: #F9F7EF;
   --third-background-color: #eae7de;
@@ -124,15 +124,19 @@ h1 {
 }
 
 a {
-  color: inherit;
+  color: var(--accent-color);
   text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  color: var(--accent-color-hover);
+  text-decoration: underline;
 }
 
 ul {
   list-style-type: none;
 }
-
-
 
 input,
 textarea {
@@ -147,9 +151,7 @@ textarea {
   border-bottom: 1px solid var(--text-lighter-color);
 }
 
-
 /* Prevent the background of the autocomplete */
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -166,28 +168,50 @@ i {
 }
 
 button {
-  padding: .75rem 2.2rem;
+  border-radius: var(--border-radius-large);
+  font-size: var(--text-size-medium);
+  letter-spacing: var(--letter-spacing-normal);
   background-color: var(--accent-color);
+  padding: .85rem 2.5rem;
   border: none;
   outline: none;
-  border-radius: var(--border-radius-large);
   color: white;
-  font-size: var(--text-size-normal);
-  letter-spacing: var(--letter-spacing-normal);
   font-family: inherit;
-  transition: 120ms all linear;
+  transition: all 200ms ease-in-out;
   cursor: pointer;
-  font-size: var(--text-size-medium);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(168, 126, 81, 0.2);
+  background-size: 300% 300%;
+  background-position: 0% 0%;
+  z-index: 1;
 }
 
-button:hover {
-  transition: 120ms all linear;
+button:hover,
+button:active {
   background-color: var(--accent-color-hover);
+  box-shadow: 0 5px 20px rgba(151, 112, 69, 0.35);
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
 }
 
 button[data-disabled="true"] {
   pointer-events: none;
   background-color: var(--accent-color-hover);
+  opacity: 0.7;
+  box-shadow: none;
 }
 
 p {

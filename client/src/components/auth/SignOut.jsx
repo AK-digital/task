@@ -1,8 +1,9 @@
 "use client";
 import { logout } from "@/api/auth";
-import { deleteCookie, setCookie } from "cookies-next";
+import styles from "@/styles/components/profile/profile-form.module.css";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 
 export default function SignOut() {
   const router = useRouter();
@@ -15,5 +16,10 @@ export default function SignOut() {
 
     router.push("/");
   }
-  return <LogOut onClick={handleLogout} size={24} cursor={"pointer"} />;
+  return (
+    <a className={styles.signOut} onClick={handleLogout} >
+      <LogOut size={18} /> {' '}
+      Se déconnecter
+    </a >
+  );
 }

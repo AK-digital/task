@@ -116,21 +116,22 @@
     min-height: 42px;
 }
 
-.createProjectButton:hover,
-.openArrow:hover {
-    cursor: pointer;
-}
-
 .openArrow {
     color: var(--text-color);
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
-.createProjectButton,
+.createProjectButton a,
 .openProjects {
-    background-color: #E1DDCA;
+    background-color: var(--secondary-background-color);
     color: var(--side-background-color);
+}
+
+.createProjectButton a:hover,
+.openArrow:hover {
+    color: var(--accent-color-hover);
+    cursor: pointer;
 }
 
 .create-project__buttons button:nth-child(2) {

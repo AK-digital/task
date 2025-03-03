@@ -27,23 +27,16 @@
 }
 
 .submitBtn {
-    width: 100%;
-    padding: 12px;
-    color: white;
-    border-radius: var(--border-radius-xs);
+    float: right;
+    margin-top: 24px;
+}
+
+.signOut {
+    margin-top: var(--layout-gap);
+    margin-bottom: var(--layout-gap);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
-    font-size: var(--text-size-medium);
-    margin-top: 12px;
-}
-
-.error {
-    color: #dc3545;
-    font-size: 0.85rem;
-}
-
-.success {
-    color: #28a745;
-    font-size: 0.85rem;
-    text-align: center;
-    margin-top: 12px;
 }

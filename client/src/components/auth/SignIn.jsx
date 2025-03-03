@@ -138,12 +138,12 @@ export default function SignIn() {
               onClick={(e) => setHiddenPassword(true)}
             />
           )}
-          <span
+          <a
             className={styles.forgotPassword}
             onClick={handleForgotPassword}
           >
             Mot de passe oublié ?
-          </span>
+          </a>
         </div>
 
         <div className={styles.buttons}>
