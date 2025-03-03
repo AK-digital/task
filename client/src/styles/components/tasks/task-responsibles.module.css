@@ -78,7 +78,7 @@
     align-items: center;
     gap: 4px;
     font-size: var(--text-size-small);
-    background-color: var(--border-color);
+    background-color: var(--primary-background-color);
     width: fit-content;
     padding: 6px;
     border-radius: 20px;
@@ -92,7 +92,7 @@
 }
 
 .responsibles__list li:hover {
-    background-color: var(--primary-background-color);
+    background-color: var(--accent-color);
     cursor: pointer;
     transition: 120ms all linear;
 }

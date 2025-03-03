@@ -12,6 +12,10 @@
     width: 100%;
 }
 
+.list>div:nth-last-child(2) {
+    border-bottom: none;
+}
+
 .add {
     display: flex;
     align-items: center;

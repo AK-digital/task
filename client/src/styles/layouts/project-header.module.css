@@ -78,11 +78,6 @@
     color: var(--accent-color);
 }
 
-.optionsBtn svg {
-    width: 30px;
-    height: auto;
-}
-
 /* Search styles */
 .searchContainer {
     flex: 1;

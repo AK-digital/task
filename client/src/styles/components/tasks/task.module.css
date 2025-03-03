@@ -8,12 +8,6 @@
     transition: all 150ms ease-in-out;
 }
 
-
-
-.container:last-child .container:has(.dragging) {
-    background-color: red;
-}
-
 .dragging {
     opacity: 0;
 }

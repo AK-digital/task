@@ -1,0 +1,129 @@
+.container {
+    background-color: var(--primary-background-transparent);
+    border-radius: var(--border-radius-medium) 0 0 0;
+    height: 100%;
+    padding: 32px;
+    color: var(--text-dark-color);
+}
+
+.columns,
+.column {
+    display: flex;
+    gap: 40px;
+}
+
+.columns {
+    justify-content: center;
+}
+
+.column {
+    flex-direction: column;
+    width: 40%;
+}
+
+.column:last-child {
+    position: relative;
+    top: 94px;
+    width: 20%;
+    min-width: 400px;
+}
+
+
+.column:last-child .wrapper {
+    height: 675px;
+}
+
+.wrapper {
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-medium);
+    padding: 32px;
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.infos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.8rem;
+    color: var(--text-color-muted);
+}
+
+.title {
+    font-size: var(--text-size-large);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    margin-top: 20px;
+}
+
+.picture {
+    position: relative;
+    width: fit-content;
+}
+
+.editPicture {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    min-width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.editPicture svg {
+    color: white;
+}
+
+.projectName {
+    font-size: 1.2rem;
+    padding-left: 4px;
+    border-bottom: 2px solid var(--text-dark-color);
+}
+
+.footer {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.counts {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.archive {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.archive a {
+    text-decoration: underline;
+}
+
+.delete {
+    padding: 0;
+    width: fit-content;
+    background: transparent;
+    color: var(--text-color-red);
+    text-decoration: underline;
+}
+
+.delete:hover {
+    background: transparent;
+}

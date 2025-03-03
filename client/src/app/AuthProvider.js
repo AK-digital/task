@@ -1,5 +1,4 @@
 "use client";
-
 import { getSession } from "@/api/auth";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
@@ -13,7 +12,7 @@ export default function AuthProvider({ children }) {
   const router = useRouter();
 
   const { data, error } = useSWR("/auth/session", getSession, {
-    refreshInterval: 5 * 60 * 1000, // Refresh every 5 minutes
+    refreshInterval: 15 * 60 * 1000, // Refresh every 5 minutes
     revalidateOnMount: true, // Revalidate everytime componenets are mounted
     revalidateOnFocus: true, // Revalidate everytime the user focus the page
     refreshWhenHidden: true, // The request will be refreshed even if the user is not on the page

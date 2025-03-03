@@ -28,7 +28,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   // Transformer les résultats en un objet avec les tâches par board
-  const initialTasksData = tasksData.reduce((acc, tasksArray, index) => {
+  const initialTasksData = tasksData?.reduce((acc, tasksArray, index) => {
     if (tasksArray) {
       acc[boards[index]._id] = tasksArray;
     }

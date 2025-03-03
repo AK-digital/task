@@ -25,24 +25,22 @@ export async function decryptToken(session) {
 
     const response = await res.json();
 
-    if (!response.success) {
-      if (
-        response.message.includes("expired") ||
-        response.message.includes("expiré")
-      ) {
-        const cookie = await cookies();
-        const token = cookie.get("rtk")?.value;
+    if (res.status === 401) {
+      const cookie = await cookies();
+      const token = cookie.get("rtk")?.value;
 
-        if (!token) {
-          throw new Error(response?.message);
-        }
-
-        return await refreshToken(token);
-      } else {
+      if (!token) {
         throw new Error(response?.message);
       }
+
+      return await refreshToken(token);
     }
 
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    console.log("Session decrypted:", response);
     return response;
   } catch (err) {
     console.log("Erreur dans decryptToken:", err.message);

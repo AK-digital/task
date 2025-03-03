@@ -24,11 +24,6 @@ const templateSchema = new Schema(
       ref: "Project", // Permet de dupliquer la structure d'un projet existant
       required: false,
     },
-    board: {
-      type: Schema.Types.ObjectId,
-      ref: "Board",
-      required: false,
-    },
   },
   {
     timestamps: true,

@@ -6,6 +6,7 @@ import { useDebouncedCallback } from "use-debounce";
 import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
+import Link from "next/link";
 
 const initialState = {
   status: "pending",
@@ -105,8 +106,10 @@ export default function ProjectTitle({ project }) {
         )}
       </div>
 
-      <div className={styles.optionsBtn} onClick={() => setModalOpen(true)}>
-        <LucideIcons.MoreVertical size={20} />
+      <div className={styles.optionsBtn}>
+        <Link href={`/projects/${project?._id}/options`}>
+          <LucideIcons.MoreVertical size={20} />
+        </Link>
       </div>
       {/* Ajout du séparateur vertical */}
       {project?.urls.length > 0 && <div className={styles.separator}></div>}
@@ -127,7 +130,6 @@ export default function ProjectTitle({ project }) {
             </a>
           );
         })}
-
       </div>
       {modalOpen && (
         <ProjectOptionsModal

@@ -17,6 +17,9 @@
 
   /* REWORKED COLORS & VARS 02/03/25 */
 
+  /* BACKGROUNDS */
+  --primary-background-transparent: rgba(218, 214, 199, 0.6);
+
   /* COLORS */
   --text-darker-color: #1F312D;
   --text-dark-color: #3A4344;
@@ -76,7 +79,6 @@ body {
 }
 
 body {
-  overflow: hidden;
   background-image: url("/backgrounds/background.jpg");
   background-repeat: no-repeat;
   background-position: 50% 80%;
@@ -130,24 +132,21 @@ ul {
   list-style-type: none;
 }
 
-input {
-  line-height: 42px;
-}
+
 
 input,
 textarea {
   width: 100%;
-  background-color: var(--secondary-background-color);
+  background-color: transparent;
   border: none;
   color: var(--text-darker-color);
   letter-spacing: var(--letter-spacing-normal);
   outline: none;
   font-family: inherit;
+  padding: 12px 0 12px 0;
+  border-bottom: 1px solid var(--text-lighter-color);
 }
 
-input:focus {
-  border: 1px solid var(--accent-color);
-}
 
 /* Prevent the background of the autocomplete */
 

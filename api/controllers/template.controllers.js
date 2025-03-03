@@ -8,6 +8,8 @@ export async function saveTemplate(req, res, next) {
     const authUser = res.locals.user;
     const { name, description, projectId } = req.body;
 
+    console.log(projectId);
+
     // Check if the required fields are provided
     if (!name || !projectId) {
       return res.status(400).send({
@@ -20,7 +22,7 @@ export async function saveTemplate(req, res, next) {
       name: name,
       description: description,
       author: authUser?._id,
-      projectId: projectId,
+      project: projectId,
     });
 
     const savedTemplate = await newTemplate.save();
@@ -226,14 +228,6 @@ export async function getTemplates(req, res, next) {
           from: "tasks",
           localField: "project",
           foreignField: "projectId",
-          as: "tasks",
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "board",
-          foreignField: "boardId",
           as: "tasks",
         },
       },
