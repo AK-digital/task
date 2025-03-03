@@ -32,8 +32,8 @@
 
 .eye {
     position: absolute;
-    right: 12px;
-    top: 7px;
+    right: 20px;
+    top: 11px;
     width: 20px;
     cursor: pointer;
     color: var(--text-lighter-color);

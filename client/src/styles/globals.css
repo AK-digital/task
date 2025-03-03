@@ -200,6 +200,7 @@ form label {
   font-size: inherit;
   transition: all ease-in-out 120ms;
   cursor: text;
+  color: var(--text-medium-color);
 }
 
 .form-group:has(input:focus) label {
@@ -231,8 +232,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  transition: background-color 5000s ease-in-out 0s;
-  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s linear 0s;
 }
 
 #overlay-hidden {
