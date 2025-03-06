@@ -5,6 +5,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import "./config/db.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import passport from "passport";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
@@ -29,7 +30,7 @@ const io = new Server(server, {
   transports: ["websocket", "polling"],
   cors: {
     origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   },
@@ -37,7 +38,7 @@ const io = new Server(server, {
 
 const corsOptions = {
   origin: process.env.CLIENT_URL,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
@@ -46,6 +47,7 @@ app.use(cors(corsOptions));
 
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
 app.use(express.json({ limit: "100mb" }));
+app.use(cookieParser());
 
 app.use(passport.initialize());
 

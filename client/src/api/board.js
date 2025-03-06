@@ -1,6 +1,7 @@
 "use server";
-import { useAuthFetch } from "@/utils/api";
+
 import { revalidateTag } from "next/cache";
+import { useAuthFetch } from "@/utils/api";
 
 export async function getBoards(projectId, archived) {
   try {

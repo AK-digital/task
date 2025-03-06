@@ -26,12 +26,16 @@ export async function signUp(prevState, formData) {
       };
     }
 
-    const res = await useFetch(
-      "auth/sign-up",
-      "POST",
-      "application/json",
-      rawFormData
-    );
+    const options = {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(rawFormData),
+    };
+
+    const res = await useFetch("auth/sign-up", options);
 
     const response = await res.json();
 
@@ -83,12 +87,16 @@ export async function signIn(prevState, formData) {
       };
     }
 
-    const res = await useFetch(
-      "auth/sign-in",
-      "POST",
-      "application/json",
-      rawFormData
-    );
+    const options = {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(rawFormData),
+    };
+
+    const res = await useFetch("auth/sign-in", options);
 
     const response = await res.json();
 
@@ -180,9 +188,16 @@ export async function sendResetCode(prevState, formData) {
       };
     }
 
-    const res = await useFetch("auth/reset-code", "POST", "application/json", {
-      email,
-    });
+    const options = {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    };
+
+    const res = await useFetch("auth/reset-code", options);
 
     const response = await res.json();
 

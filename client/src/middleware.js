@@ -1,19 +1,11 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { handleAuth } from "./middlewares/authMiddleware";
 
+// Le middleware gère l'authentification et l'autorisation
 export async function middleware(request) {
-  const cookie = await cookies();
-
-  // Verify if a cookie named session exist
-  if (!cookie.get("session")) {
-    // If not redirect the user to the auth page
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  // Else continue if the user is authentified
-  return NextResponse.next();
+  return await handleAuth(request, NextResponse);
 }
 
 export const config = {
-  matcher: ["/projects", "/projects/:path*", "/profile", "/new-project/:path*"], // Protected routes
+  matcher: ["/projects", "/projects/:path*", "/profile", "/new-project/:path*"], // Routes protégées
 };

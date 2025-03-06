@@ -4,6 +4,11 @@
     height: 100%;
     padding: 32px;
     color: var(--text-dark-color);
+
+}
+
+.columns {
+    width: 100%;
 }
 
 .columns,

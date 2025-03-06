@@ -3,38 +3,11 @@ import { useAuthFetch, useFetch } from "@/utils/api";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-function handleRedirect(path) {
-  redirect(path);
-}
-
-export async function getSession() {
-  const cookie = await cookies();
-  const session = cookie.get("session");
-  return await decryptToken(session);
-}
-
-export async function decryptToken(session) {
+export async function decryptToken() {
   try {
-    const res = await fetch(`${process.env.API_URL}/auth/session`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Authorization: `Bearer ${session?.value}`,
-      },
-    });
+    const res = await useAuthFetch(`auth/session`, "GET", "application/json");
 
     const response = await res.json();
-
-    if (res.status === 401) {
-      const cookie = await cookies();
-      const token = cookie.get("rtk")?.value;
-
-      if (!token) {
-        throw new Error(response?.message);
-      }
-
-      return await refreshToken(token);
-    }
 
     if (!response.success) {
       throw new Error(response?.message);
@@ -54,15 +27,23 @@ export async function decryptToken(session) {
   }
 }
 
-export async function refreshToken(token) {
+export async function refreshTokens() {
   try {
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get("rtk")?.value;
+
+    if (!refreshToken) {
+      throw new Error("Refresh token manquant");
+    }
+
     const res = await fetch(`${process.env.API_URL}/auth/refresh-token`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token: token }),
+      cache: "no-cache",
+      body: JSON.stringify({ token: refreshToken }),
     });
 
     const response = await res.json();
@@ -71,30 +52,28 @@ export async function refreshToken(token) {
       throw new Error(response?.message);
     }
 
-    const cookie = await cookies();
     const newAccessToken = response.data.newAccessToken;
     const newRefreshToken = response.data.newRefreshToken;
 
-    cookie.set("session", newAccessToken, {
+    cookieStore.set("session", newAccessToken, {
       secure: true,
       httpOnly: true,
       sameSite: "lax",
       expires: new Date(Date.now() + 30 * 60 * 1000),
     });
 
-    cookie.set("rtk", newRefreshToken, {
+    cookieStore.set("rtk", newRefreshToken, {
       secure: true,
       httpOnly: true,
       sameSite: "lax",
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
-    const newSessionToken = cookie.get("session");
-
     console.log("Tokens refreshed:", response);
 
-    return await decryptToken(newSessionToken);
+    return response;
   } catch (err) {
+    // await handleDeleteCookies();
     console.log("Erreur dans refreshToken:", err.message);
     return {
       success: false,
@@ -107,11 +86,15 @@ export async function refreshToken(token) {
 
 export async function verification(id) {
   try {
-    const res = await useFetch(
-      `auth/verification/${id}`,
-      "PATCH",
-      "application/json"
-    );
+    const options = {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const res = await useFetch(`auth/verification/${id}`, options);
 
     const response = await res.json();
 
@@ -136,14 +119,18 @@ export async function verification(id) {
 
 export async function reSendVerificationEmail(email) {
   try {
-    const res = await useFetch(
-      "auth/verification",
-      "POST",
-      "application/json",
-      {
+    const options = {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         email,
-      }
-    );
+      }),
+    };
+
+    const res = await useFetch("auth/verification", options);
 
     const response = await res.json();
 
@@ -166,43 +153,34 @@ export async function reSendVerificationEmail(email) {
   }
 }
 
-export async function logout() {
+// C'est l'user qui se déconnecte de lui-même
+export async function userLogout() {
   try {
     const cookie = await cookies();
-    const refreshToken = cookie.get("rtk");
-    const accessToken = cookie.get("session");
+    // const accessToken = cookie.get("session")?.value;
+    // const refreshToken = cookie.get("rtk")?.value;
 
-    if (!accessToken || !refreshToken) {
-      throw new Error("Paramètres manquants");
-    }
+    // if (!accessToken) {
+    //   throw new Error("Paramètres manquants");
+    // }
 
-    const res = await useAuthFetch(
-      "auth/logout",
-      "DELETE",
-      "application/json",
-      {
-        accessToken: accessToken?.value,
-        refreshToken: refreshToken?.value,
-      }
-    );
+    // const res = await useAuthFetch(
+    //   "auth/logout",
+    //   "DELETE",
+    //   "application/json",
+    //   {
+    //     accessToken: accessToken,
+    //     refreshToken: refreshToken,
+    //   }
+    // );
 
-    const response = await res.json();
+    // const response = await res.json();
 
-    if (!response.success) {
-      throw new Error(response?.message);
-    }
+    console.log("User logged out:");
 
-    // Options de base pour les cookies
-    const cookieOptions = {
-      secure: true,
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-    };
-
-    // Double vérification avec delete
-    cookie.delete("session", cookieOptions);
-    cookie.delete("rtk", cookieOptions);
+    // if (!response.success) {
+    //   throw new Error(response?.message);
+    // }
 
     return response;
   } catch (err) {
@@ -217,5 +195,27 @@ export async function logout() {
         err.message ||
         "Une erreur est survenue lors de la déconnexion d'un utilisateur",
     };
+  }
+}
+
+export async function handleDeleteCookies() {
+  try {
+    const cookieStore = await cookies();
+
+    // Options de base pour les cookies
+    const options = {
+      secure: true,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+    };
+
+    cookieStore.delete("session", options);
+
+    cookieStore.delete("rtk", options);
+
+    console.log("Cookies deleted");
+  } catch (err) {
+    console.log("Erreur dans pendant la suppression des cookies");
   }
 }

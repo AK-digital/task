@@ -400,6 +400,21 @@ export async function refreshAccessToken(req, res, next) {
             }
           );
 
+          // Définir les cookies dans la réponse
+          res.cookie("session", newAccessToken, {
+            secure: true, // Assurez-vous que votre application fonctionne en HTTPS
+            httpOnly: true,
+            sameSite: "lax",
+            expires: new Date(Date.now() + 30 * 60 * 1000), // expire dans 30 minutes
+          });
+
+          res.cookie("rtk", newRefreshToken, {
+            secure: true, // Assurez-vous que votre application fonctionne en HTTPS
+            httpOnly: true,
+            sameSite: "lax",
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // expire dans 7 jours
+          });
+
           return res.status(200).send({
             success: true,
             message: "Les tokens ont été rafraîchis avec succès",
@@ -554,9 +569,7 @@ export async function logout(req, res, next) {
   try {
     const { refreshToken, accessToken } = req.body;
 
-    console.log(accessToken, refreshToken);
-
-    if (!accessToken || !refreshToken) {
+    if (!accessToken) {
       return res
         .status(400)
         .send({ success: false, message: "Paramètres manquants" });
@@ -568,9 +581,11 @@ export async function logout(req, res, next) {
 
     await newTokenBlackListModel.save();
 
-    await RefreshTokenModel.findOneAndDelete({
-      refreshToken: refreshToken,
-    });
+    if (refreshToken) {
+      await RefreshTokenModel.findOneAndDelete({
+        refreshToken: refreshToken,
+      });
+    }
 
     return res.status(200).send({
       success: true,

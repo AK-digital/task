@@ -27,7 +27,7 @@ export default async function ProjectPage({ params }) {
   ]);
 
   const tasks =
-    boards.length > 0
+    boards?.length > 0
       ? await Promise?.all(
           boards?.map(async (board) => {
             return await getTasks(id, board?._id, archive);

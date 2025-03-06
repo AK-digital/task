@@ -1,28 +1,11 @@
 "use server";
-
-import { getSession } from "@/api/auth";
-import { cookies } from "next/headers";
+import { handleDeleteCookies, logout, refreshToken } from "@/api/auth";
+import { getAccessToken, getRefreshToken } from "./getCookies";
 
 // Function to perform a fetch request without authentication
-export async function useFetch(
-  endpoint,
-  method = "GET",
-  type = "application/json",
-  body = null
-) {
+export async function useFetch(endpoint, options = {}) {
   // Build the API URL
   const url = `${process.env.API_URL}/${endpoint}`;
-
-  // Request options
-  const options = {
-    method: method,
-    headers: {
-      "Content-Type": type,
-    },
-  };
-
-  // If a body is provided, add it to the options
-  if (body !== null) options.body = JSON.stringify(body);
 
   // Perform the fetch request
   const res = await fetch(url, options);
@@ -40,51 +23,30 @@ export async function useAuthFetch(
   revalidatePath
 ) {
   // Fonction interne pour effectuer la requête
-  const fetchData = async () => {
-    // Get the cookies
-    const cookie = await cookies();
-    const session = cookie.get("session")?.value;
+  const accessToken = await getAccessToken();
 
-    // If no session is found, return null
-    if (!session) return null;
+  const url = `${process.env.API_URL}/${endpoint}`;
 
-    // Build the API URL
-    const url = `${process.env.API_URL}/${endpoint}`;
-
-    // Request options
-    const options = {
-      method: method,
-      credentials: "include",
-      headers: {
-        ...(type === "application/json" && { "Content-Type": type }),
-        Authorization: `Bearer ${session}`,
-      },
-    };
-
-    // If a body is provided, add it to the options
-    if (type === "multipart/form-data") {
-      options.body = body;
-    } else if (body !== null) {
-      options.body = JSON.stringify(body);
-    }
-
-    // Perform the fetch request
-    const res = await fetch(
-      url,
-      options,
-      revalidatePath ? { next: { tags: [revalidatePath] } } : undefined
-    );
-
-    return res;
+  const options = {
+    method: method,
+    credentials: "include",
+    headers: {
+      ...(type === "application/json" && { "Content-Type": type }),
+      Authorization: `Bearer ${accessToken}`,
+    },
   };
 
-  let response = await fetchData();
-
-  // Si on obtient une 401, rafraîchir la session et rejouer la requête
-  if (response.status === 401) {
-    await getSession(); // Rafraîchir la session
-    response = await fetchData(); // Rejouer la requête avec la nouvelle session
+  if (type === "multipart/form-data") {
+    options.body = body;
+  } else if (body !== null) {
+    options.body = JSON.stringify(body);
   }
 
-  return response;
+  const res = await fetch(
+    url,
+    options,
+    revalidatePath ? { next: { tags: [revalidatePath] } } : undefined
+  );
+
+  return res;
 }

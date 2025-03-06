@@ -1,5 +1,5 @@
 "use client";
-import { getSession } from "@/api/auth";
+import { decryptToken, refreshToken } from "@/api/auth";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  const { data, error } = useSWR("/auth/session", getSession, {
+  const { data, error } = useSWR("/auth/session", decryptToken, {
     refreshInterval: 15 * 60 * 1000, // Refresh every 5 minutes
     revalidateOnMount: true, // Revalidate everytime componenets are mounted
     revalidateOnFocus: true, // Revalidate everytime the user focus the page
