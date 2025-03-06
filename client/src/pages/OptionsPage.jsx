@@ -2,21 +2,32 @@
 import styles from "@/styles/pages/options.module.css";
 import moment from "moment/moment";
 import "moment/locale/fr";
-import { useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import Image from "next/image";
-import { Archive, Pencil } from "lucide-react";
+import { Archive, Figma, Github, Globe, Layout, Pencil } from "lucide-react";
 import Link from "next/link";
 import { bricolageGrostesque } from "@/utils/font";
-import { deleteProject } from "@/api/project";
+import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
+import { updateProject } from "@/actions/project";
+import { useDebouncedCallback } from "use-debounce";
 moment.locale("fr");
+
+const initialState = {
+  success: null,
+  message: "",
+  error: null,
+};
 
 export default function OptionsPage({ project }) {
   const router = useRouter();
+  const formRef = useRef(null);
+  const [state, formAction, pending] = useActionState(
+    updateProject,
+    initialState
+  );
   const [editImg, setEditImg] = useState(false);
-  const [projectName, setProjectName] = useState(project?.name);
   const [isPictLoading, setIsPictLoading] = useState(false);
-  const [pending, setPending] = useState(false);
 
   const author = project?.author;
   const createdAt = moment(project?.createdAt).format("DD/MM/YYYY");
@@ -26,8 +37,6 @@ export default function OptionsPage({ project }) {
 
     const response = await updateProjectLogo(project?._id, e.target.files[0]);
   }
-
-  console.log(project);
 
   async function handleDeleteProject(e) {
     e.preventDefault();
@@ -45,9 +54,22 @@ export default function OptionsPage({ project }) {
     }
   }
 
+  const debounceChange = useDebouncedCallback(async (e) => {
+    const form = formRef.current;
+
+    form.requestSubmit();
+  }, 1500);
+
+  console.log(state);
+
   return (
     <div className={styles.container}>
-      <form action="" className={styles.form}>
+      <form
+        action={formAction}
+        className={styles.form}
+        ref={formRef}
+        onChange={debounceChange}
+      >
         <input type="hidden" name="project-id" defaultValue={project?._id} />
 
         {/* Columns container */}
@@ -55,7 +77,6 @@ export default function OptionsPage({ project }) {
           {/* Left Column */}
           <div className={styles.column}>
             <h1>Options de projet</h1>
-
             {/* Informations */}
             <div className={styles.wrapper}>
               {/* Wrapper header */}
@@ -110,16 +131,14 @@ export default function OptionsPage({ project }) {
                     id="project-name"
                     name="project-name"
                     className={styles.projectName}
-                    value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)}
-                    disabled={pending}
+                    defaultValue={project?.name}
                   />
                 </div>
 
                 <div className={styles.footer}>
                   <div className={styles.counts}>
-                    <span>3 Tableaux</span>
-                    <span>48 tâches</span>
+                    <span>{project?.boardsCount} Tableaux</span>
+                    <span>{project?.tasksCount} tâches</span>
                   </div>
                   {/* Project archive */}
                   <div className={styles.archive}>
@@ -131,15 +150,62 @@ export default function OptionsPage({ project }) {
                 </div>
               </div>
             </div>
-
-            {/* Links */}
+            {/*  Links  */}
             <div className={styles.wrapper}>
               <div className={styles.title}>
-                <span>Liens rapide</span>
+                <span>Liens rapides</span>
               </div>
-              <div></div>
+              <div className={styles.content}>
+                <div className={styles.link}>
+                  <div className={styles.icon}>
+                    <Globe size={20} />
+                  </div>
+                  <input
+                    type="text"
+                    id="website-url"
+                    name="website-url"
+                    placeholder="https://www.exemple.com"
+                    defaultValue={project?.urls?.website}
+                  />
+                </div>
+                <div className={styles.link}>
+                  <div className={styles.icon}>
+                    <Layout size={20} />
+                  </div>
+                  <input
+                    type="text"
+                    id="admin-url"
+                    name="admin-url"
+                    placeholder="https://www.exemple.com/wp-admin"
+                    defaultValue={project?.urls?.admin}
+                  />
+                </div>
+                <div className={styles.link}>
+                  <div className={styles.icon}>
+                    <Figma size={20} />
+                  </div>
+                  <input
+                    type="text"
+                    id="figma-url"
+                    name="figma-url"
+                    placeholder="https://figma.com"
+                    defaultValue={project?.urls?.figma}
+                  />
+                </div>
+                <div className={styles.link}>
+                  <div className={styles.icon}>
+                    <Github size={20} />
+                  </div>
+                  <input
+                    type="text"
+                    id="github-url"
+                    name="github-url"
+                    placeholder="https://github.com"
+                    defaultValue={project?.urls?.github}
+                  />
+                </div>
+              </div>
             </div>
-
             {/* Delete project */}
             <button
               type="button"
@@ -156,7 +222,15 @@ export default function OptionsPage({ project }) {
               <div className={styles.title}>
                 <span>Notes</span>
               </div>
-              <div></div>
+              <div className={styles.content}>
+                <textarea
+                  name="note"
+                  id="note"
+                  className={`${styles.note} ${bricolageGrostesque.className}`}
+                  defaultValue={project?.note}
+                  placeholder="Ajouter une note..."
+                ></textarea>
+              </div>
             </div>
           </div>
         </div>

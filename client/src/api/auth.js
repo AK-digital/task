@@ -1,5 +1,6 @@
 "use server";
 import { useAuthFetch, useFetch } from "@/utils/api";
+import { getAccessToken, getRefreshToken } from "@/utils/getCookies";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -156,31 +157,32 @@ export async function reSendVerificationEmail(email) {
 // C'est l'user qui se déconnecte de lui-même
 export async function userLogout() {
   try {
-    const cookie = await cookies();
-    // const accessToken = cookie.get("session")?.value;
-    // const refreshToken = cookie.get("rtk")?.value;
+    const accessToken = await getAccessToken();
+    const refreshToken = await getRefreshToken();
 
-    // if (!accessToken) {
-    //   throw new Error("Paramètres manquants");
-    // }
+    if (!accessToken && !refreshToken) {
+      throw new Error("Paramètres manquants");
+    }
 
-    // const res = await useAuthFetch(
-    //   "auth/logout",
-    //   "DELETE",
-    //   "application/json",
-    //   {
-    //     accessToken: accessToken,
-    //     refreshToken: refreshToken,
-    //   }
-    // );
+    const res = await useAuthFetch(
+      "auth/logout",
+      "DELETE",
+      "application/json",
+      {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      }
+    );
 
-    // const response = await res.json();
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    await handleDeleteCookies();
 
     console.log("User logged out:");
-
-    // if (!response.success) {
-    //   throw new Error(response?.message);
-    // }
 
     return response;
   } catch (err) {

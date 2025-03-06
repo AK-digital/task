@@ -1,10 +1,10 @@
 .container {
     background-color: var(--primary-background-transparent);
     border-radius: var(--border-radius-medium) 0 0 0;
-    height: 100%;
     padding: 32px;
     color: var(--text-dark-color);
-
+    height: 100%;
+    overflow: hidden;
 }
 
 .columns {
@@ -39,7 +39,7 @@
 }
 
 .wrapper {
-    background-color: var(--secondary-background-color);
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: var(--border-radius-medium);
     padding: 32px;
 }
@@ -119,6 +119,37 @@
 
 .archive a {
     text-decoration: underline;
+    color: var(--text-dark-color);
+    font-size: var(--text-size-small);
+}
+
+/* LINKS */
+
+.content:has(.link) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    /* gap: 8px; */
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--text-medium-color);
+    height: 45px;
+    width: 45px;
+}
+
+.link input {
+    position: relative;
+    top: 2px;
+    padding-left: 8px;
 }
 
 .delete {
@@ -131,4 +162,17 @@
 
 .delete:hover {
     background: transparent;
+}
+
+/* RIGHT SIDE */
+
+.column:nth-child(2) .content {
+    height: 100%;
+}
+
+.note {
+    height: 90%;
+    resize: none;
+    border: none;
+    font-size: var(--text-size-normal);
 }

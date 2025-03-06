@@ -569,7 +569,9 @@ export async function logout(req, res, next) {
   try {
     const { refreshToken, accessToken } = req.body;
 
-    if (!accessToken) {
+    console.log(accessToken, refreshToken);
+
+    if (!accessToken && !refreshToken) {
       return res
         .status(400)
         .send({ success: false, message: "Paramètres manquants" });
@@ -581,11 +583,9 @@ export async function logout(req, res, next) {
 
     await newTokenBlackListModel.save();
 
-    if (refreshToken) {
-      await RefreshTokenModel.findOneAndDelete({
-        refreshToken: refreshToken,
-      });
-    }
+    await RefreshTokenModel.findOneAndDelete({
+      refreshToken: refreshToken,
+    });
 
     return res.status(200).send({
       success: true,

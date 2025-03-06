@@ -138,37 +138,72 @@ export async function getProjects(req, res, next) {
 
 export async function getProject(req, res, next) {
   try {
-    let query = {};
+    const project = await ProjectModel.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(req.params.id) },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      { $unwind: "$author" }, // Transforme author en objet unique
+      {
+        $lookup: {
+          from: "users",
+          localField: "guests",
+          foreignField: "_id",
+          as: "guests",
+        },
+      },
+      {
+        $lookup: {
+          from: "boards",
+          localField: "_id",
+          foreignField: "projectId",
+          as: "boards",
+        },
+      },
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "boards._id",
+          foreignField: "boardId",
+          as: "tasks",
+        },
+      },
+      {
+        $addFields: {
+          boardsCount: { $size: "$boards" },
+          tasksCount: { $size: "$tasks" },
+        },
+      },
+      {
+        $project: {
+          "author.password": 0, // Suppression des infos sensibles
+          "guests.password": 0,
+          boards: 0,
+          tasks: 0,
+        },
+      },
+    ]);
 
-    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      query._id = req.params.id;
-    } else {
-      query.name = {
-        $regex: req.params.id.replaceAll("-", " "),
-        $options: "i",
-      };
-    }
+    console.log(project);
 
-    const project = await ProjectModel.findOne(query)
-      .populate({
-        path: "guests author",
-        select: "lastName firstName email picture _id socketId",
-      })
-      .exec();
-
-    if (!project) {
+    if (!project.length) {
       return res.status(404).send({
         success: false,
         message: "Aucun projet n'a été trouvé dans la base de données",
       });
     }
 
-    // const
-
     return res.status(200).send({
       success: true,
       message: "Projet trouvé",
-      data: project,
+      data: project[0], // On renvoie le premier (et unique) élément du tableau
     });
   } catch (err) {
     return res.status(500).send({

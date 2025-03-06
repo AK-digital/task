@@ -1,5 +1,4 @@
 "use client";
-import * as LucideIcons from "lucide-react";
 import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect, useContext, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -7,6 +6,7 @@ import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
 import Link from "next/link";
+import { Figma, Github, Globe, Layout, MoreVertical } from "lucide-react";
 
 const initialState = {
   status: "pending",
@@ -108,28 +108,57 @@ export default function ProjectTitle({ project }) {
 
       <div className={styles.optionsBtn}>
         <Link href={`/projects/${project?._id}/options`}>
-          <LucideIcons.MoreVertical size={20} />
+          <MoreVertical size={20} />
         </Link>
       </div>
       {/* Ajout du séparateur vertical */}
       {project?.urls.length > 0 && <div className={styles.separator}></div>}
 
       <div className={styles.actions}>
-        {project?.urls.map((elt, idx) => {
-          const IconComponent = LucideIcons[elt?.icon]; // Récupère l'icône dynamiquement
-          return (
-            <a
-              href={elt?.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.linkIcon}
-              title="Voir le site"
-              key={idx}
-            >
-              {IconComponent && <IconComponent size={20} />}
-            </a>
-          );
-        })}
+        {project?.urls.website && (
+          <a
+            href={project?.urls.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.linkIcon}
+            title="Voir le site"
+          >
+            <Globe size={20} />
+          </a>
+        )}
+        {project?.urls.admin && (
+          <a
+            href={project?.urls.admin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.linkIcon}
+            title="Voir le site"
+          >
+            <Layout size={20} />
+          </a>
+        )}
+        {project?.urls.figma && (
+          <a
+            href={project?.urls.figma}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.linkIcon}
+            title="Voir le site"
+          >
+            <Figma size={20} />
+          </a>
+        )}
+        {project?.urls.github && (
+          <a
+            href={project?.urls.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.linkIcon}
+            title="Voir le site"
+          >
+            <Github size={20} />
+          </a>
+        )}
       </div>
       {modalOpen && (
         <ProjectOptionsModal

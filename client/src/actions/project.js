@@ -211,22 +211,33 @@ export async function updateProject(prevState, formData) {
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");
     const note = formData.get("note");
-    const urls = formData.getAll("url");
-    const icons = formData.getAll("icon");
+    // const urls = formData.getAll("url");
+    // const icons = formData.getAll("icon");
+    const websiteUrl = formData.get("website-url");
+    const adminUrl = formData.get("admin-url");
+    const figmaUrl = formData.get("figma-url");
+    const githubUrl = formData.get("github-url");
 
-    for (var i = 0; i < urls.length; i++) {
-      if (urls[i] === "") {
-        return {
-          status: "failure",
-          message: "L'URL ne peut pas être vide",
-        };
-      }
-    }
+    const urlsObject = {
+      website: websiteUrl,
+      admin: adminUrl,
+      figma: figmaUrl,
+      github: githubUrl,
+    };
 
-    const urlsArray = urls.map((url, index) => ({
-      icon: icons[index] || "Globe", // Utilise l'icône correspondante ou "Globe" par défaut
-      url: url,
-    }));
+    // for (var i = 0; i < urls.length; i++) {
+    //   if (urls[i] === "") {
+    //     return {
+    //       status: "failure",
+    //       message: "L'URL ne peut pas être vide",
+    //     };
+    //   }
+    // }
+
+    // const urlsArray = urls.map((url, index) => ({
+    //   icon: icons[index] || "Globe", // Utilise l'icône correspondante ou "Globe" par défaut
+    //   url: url,
+    // }));
 
     if (!name) {
       return {
@@ -238,21 +249,21 @@ export async function updateProject(prevState, formData) {
     const rawFormData = {
       name: name,
       note: note,
-      urls: urlsArray,
+      urls: urlsObject,
     };
 
-    const urlWordpress = formData.get("url-wordpress");
-    const urlBackofficeWordpress = formData.get("url-backoffice-wordpress");
+    // const urlWordpress = formData.get("url-wordpress");
+    // const urlBackofficeWordpress = formData.get("url-backoffice-wordpress");
 
-    if (urlWordpress) {
-      rawFormData.urlWordpress = urlWordpress;
-    }
+    // if (urlWordpress) {
+    //   rawFormData.urlWordpress = urlWordpress;
+    // }
 
-    if (urlBackofficeWordpress) {
-      rawFormData.urlBackofficeWordpress = formData.get(
-        "url-backoffice-wordpress"
-      );
-    }
+    // if (urlBackofficeWordpress) {
+    //   rawFormData.urlBackofficeWordpress = formData.get(
+    //     "url-backoffice-wordpress"
+    //   );
+    // }
 
     const res = await useAuthFetch(
       `project/${projectId}`,
@@ -268,8 +279,6 @@ export async function updateProject(prevState, formData) {
     }
 
     revalidateTag("projects");
-    revalidateTag("project");
-    revalidateTag("boards"); // Ajout de la revalidation du tag project
 
     return {
       status: "success",

@@ -27,19 +27,24 @@ const projectSchema = new Schema(
       ref: "User",
     },
     urls: {
-      type: [
-        {
-          icon: {
-            type: String,
-            required: false,
-          },
-          url: {
-            type: String,
-            required: false,
-          },
+      type: {
+        website: {
+          type: String,
+          required: false,
         },
-      ],
-      required: false,
+        admin: {
+          type: String,
+          required: false,
+        },
+        figma: {
+          type: String,
+          required: false,
+        },
+        github: {
+          type: String,
+          required: false,
+        },
+      },
     },
     order: {
       type: Number,
