@@ -6,6 +6,8 @@ import Messages from "../messages/Messages";
 import Image from "next/image";
 import moment from "moment";
 import { X } from "lucide-react";
+import Tiptap from "../RichTextEditor/TipTap";
+
 moment.locale("fr");
 
 export default function TaskMore({ task, project, setOpennedTask, archive }) {
@@ -183,7 +185,8 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
         <div className={styles.conversation}>
           <span className={styles.conversationTitle}>Conversation</span>
           <Messages task={task} project={project} />
-          <RichTextEditor
+          <Tiptap />
+          {/* <RichTextEditor
             placeholder={"Écrire un message"}
             type="conversation"
             task={task}
@@ -192,7 +195,7 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
             edit={null}
             setEdit={null}
             project={project}
-          />
+          /> */}
         </div>
       </div>
       {open && <div onClick={handleClose} id="task-modal-layout"></div>}

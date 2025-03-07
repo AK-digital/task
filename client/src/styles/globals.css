@@ -332,3 +332,19 @@ input:-webkit-autofill:active {
 #modal-layout-opacity {
   background-color: transparent;
 }
+
+/* Tiptap */
+
+.ProseMirror {
+  height: 100%;
+  border: none;
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: var(--text-dark-color);
+  content: attr(data-placeholder);
+
+  float: left;
+  pointer-events: none;
+}

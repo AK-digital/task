@@ -1,0 +1,96 @@
+/* Conteneur principal */
+.container {
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius-small);
+    background: var(--third-background-color);
+    width: 100%;
+    cursor: text;
+}
+
+
+
+/* Barre d'outils */
+.toolbar {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Boutons de la barre d'outils */
+.toolbar button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 8px;
+    margin: 0 4px;
+    color: #333;
+    transition: background 0.2s;
+    border-radius: 4px;
+}
+
+.toolbar button:hover {
+    background: #ddd;
+}
+
+/* Séparateur entre groupes de boutons */
+.separator {
+    width: 1px;
+    height: 24px;
+    background: var(--third-background-color);
+    margin: 0 8px;
+}
+
+/* Contenu de l'éditeur */
+.content {
+    min-height: 150px;
+    padding: 15px;
+    font-size: 16px;
+    outline: none;
+    border-radius: 0 0 8px 8px;
+}
+
+/* Style des blocs de code */
+
+.content ul {
+    padding-left: 15px;
+    list-style-type: inherit !important;
+}
+
+.content pre {
+    background: #282c34;
+    color: #abb2bf;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    width: fit-content;
+}
+
+.content img {
+    width: max-content;
+    height: fit-content;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+.submit {
+    margin-left: auto;
+}
+
+.submit button {
+    padding: 12px 24px !important;
+    border: 2px solid var(--accent-color);
+    transition: all 80ms linear;
+}
+
+.submit button[data-disabled="true"] {
+    pointer-events: none;
+    background-color: transparent;
+    border: 2px solid var(--text-color-muted);
+    color: var(--text-color-muted);
+}
