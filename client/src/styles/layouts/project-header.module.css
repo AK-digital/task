@@ -65,13 +65,14 @@
 }
 
 .optionsBtn {
-    display: flex;
-    align-items: center;
+    position: relative;
+    top: 2px;
     cursor: pointer;
-    padding: 2px;
     transition: background-color 0.2s ease;
     border-radius: var(--border-radius-small);
 }
+
+
 
 .optionsBtn:hover {
     background-color: #ffffff08;

@@ -31,12 +31,6 @@ export async function saveProject(req, res, next) {
       author: authUser?._id,
       name: name,
       order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
-      urls: [
-        {
-          icon: "Globe",
-          url: "",
-        },
-      ],
     });
 
     const savedProject = await newProject.save();

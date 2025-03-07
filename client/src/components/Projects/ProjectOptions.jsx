@@ -1,8 +1,9 @@
 "use client";
+
+import { useActionState, useRef, useState } from "react";
 import styles from "@/styles/pages/options.module.css";
 import moment from "moment/moment";
 import "moment/locale/fr";
-import { useActionState, useRef, useState } from "react";
 import Image from "next/image";
 import { Archive, Figma, Github, Globe, Layout, Pencil } from "lucide-react";
 import Link from "next/link";
@@ -14,12 +15,12 @@ import { useDebouncedCallback } from "use-debounce";
 moment.locale("fr");
 
 const initialState = {
-  success: null,
+  status: "pending",
   message: "",
-  error: null,
+  errors: null,
 };
 
-export default function OptionsPage({ project }) {
+export default function ProjectOptions({ project }) {
   const router = useRouter();
   const formRef = useRef(null);
   const [state, formAction, pending] = useActionState(
@@ -35,7 +36,7 @@ export default function OptionsPage({ project }) {
   async function handleUpdateLogo(e) {
     e.preventDefault();
 
-    const response = await updateProjectLogo(project?._id, e.target.files[0]);
+    await updateProjectLogo(project?._id, e.target.files[0]);
   }
 
   async function handleDeleteProject(e) {
@@ -161,7 +162,7 @@ export default function OptionsPage({ project }) {
                     <Globe size={20} />
                   </div>
                   <input
-                    type="text"
+                    type="url"
                     id="website-url"
                     name="website-url"
                     placeholder="https://www.exemple.com"
@@ -173,7 +174,7 @@ export default function OptionsPage({ project }) {
                     <Layout size={20} />
                   </div>
                   <input
-                    type="text"
+                    type="url"
                     id="admin-url"
                     name="admin-url"
                     placeholder="https://www.exemple.com/wp-admin"
@@ -185,7 +186,7 @@ export default function OptionsPage({ project }) {
                     <Figma size={20} />
                   </div>
                   <input
-                    type="text"
+                    type="url"
                     id="figma-url"
                     name="figma-url"
                     placeholder="https://figma.com"
@@ -197,7 +198,7 @@ export default function OptionsPage({ project }) {
                     <Github size={20} />
                   </div>
                   <input
-                    type="text"
+                    type="url"
                     id="github-url"
                     name="github-url"
                     placeholder="https://github.com"

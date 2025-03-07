@@ -399,13 +399,12 @@ export async function updateTaskDescription(req, res, next) {
       }
     );
 
-    const link =
-      "/projects/" + updatedTask?.projectId + "/task/" + updatedTask?._id;
+    const link = `${process.env.CLIENT_URL}/projects/${updatedTask?.projectId}/task/${updatedTask?._id}`;
 
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
 
-      const template = emailDescription(user, updatedTask, link);
+      const template = emailDescription(authUser, updatedTask, link);
 
       if (user) {
         await sendEmail(
@@ -502,7 +501,7 @@ export async function addResponsible(req, res, next) {
     if (authUser?._id.toString() !== responsibleId) {
       const projectLink = `${process.env.CLIENT_URL}/project/${updatedTask.projectId._id}`;
 
-      const template = emailTaskAssigned(updatedTask, projectLink);
+      const template = emailTaskAssigned(updatedTask, authUser, projectLink);
       await sendEmail(
         "task@akdigital.fr",
         responsible?.email,

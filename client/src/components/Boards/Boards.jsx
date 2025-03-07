@@ -22,15 +22,13 @@ import { revalidateBoards } from "@/api/board";
 import Task from "../tasks/Task";
 import socket from "@/utils/socket";
 import AddBoard from "@/components/Boards/AddBoard";
-import { isNotEmpty } from "@/utils/utils";
-
 export default function Boards({ boards, project, tasksData, archive }) {
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   // Transformer les résultats en un objet avec les tâches par board
   const initialTasksData = tasksData?.reduce((acc, tasksArray, index) => {
     if (tasksArray) {
-      acc[boards[index]._id] = tasksArray;
+      acc[boards[index]?._id] = tasksArray;
     }
     return acc;
   }, {});
@@ -72,7 +70,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
   const findBoardByTaskId = useCallback(
     (taskId) => {
       return Object.entries(tasks).find(([_, boardTasks]) =>
-        boardTasks?.some((task) => task._id === taskId)
+        boardTasks?.some((task) => task?._id === taskId)
       )?.[0];
     },
     [tasks]
@@ -107,7 +105,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
         const overBoard = [...(prev[overBoardId] || [])]; // S'assurer que overBoard est un tableau même s'il est vide
 
         const activeTaskIndex = activeBoard.findIndex(
-          (task) => task._id === activeTaskId
+          (task) => task?._id === activeTaskId
         );
         const activeTask = activeBoard[activeTaskIndex];
 
@@ -126,7 +124,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
 
         // Sinon on insère à la position spécifique
         const insertIndex = overBoard.findIndex(
-          (task) => task._id === overTaskId
+          (task) => task?._id === overTaskId
         );
 
         const newOverBoard = [...overBoard];
@@ -169,7 +167,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
           const overBoard = [...(prev[overBoardId] || [])]; // Protection pour les tableaux vides
 
           const activeTaskIndex = activeBoard.findIndex(
-            (task) => task._id === activeTaskId
+            (task) => task?._id === activeTaskId
           );
           const activeTask = {
             ...activeBoard[activeTaskIndex],
@@ -191,7 +189,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
           }
 
           const insertIndex =
-            over.data?.current?.sortable?.index ?? overBoard.length;
+            over.data?.current?.sortable?.index ?? overBoard?.length;
 
           const newOverBoard = [...overBoard];
           newOverBoard.splice(insertIndex, 0, activeTask);
@@ -209,10 +207,10 @@ export default function Boards({ boards, project, tasksData, archive }) {
         setTasks((prev) => {
           const activeBoard = [...prev[activeBoardId]];
           const oldIndex = activeBoard.findIndex(
-            (task) => task._id === activeTaskId
+            (task) => task?._id === activeTaskId
           );
           const newIndex = activeBoard.findIndex(
-            (task) => task._id === overTaskId
+            (task) => task?._id === overTaskId
           );
 
           newTasks = {
@@ -231,9 +229,9 @@ export default function Boards({ boards, project, tasksData, archive }) {
       if (newTasks) {
         const updatedTasks = Object.values(newTasks)
           .flat()
-          .map((task, index) => ({ _id: task._id, order: index }));
+          .map((task, index) => ({ _id: task?._id, order: index }));
 
-        await updateTaskOrder(updatedTasks, project._id);
+        await updateTaskOrder(updatedTasks, project?._id);
       }
 
       socket.emit("update task", project?._id);
@@ -249,7 +247,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
             <span>Archives du projet</span>
           </div>
 
-          {Object.values(tasks).flat().length === 0 && (
+          {Object.values(tasks).flat()?.length === 0 && (
             <div>
               <p>Aucune archive disponible actuellement</p>
             </div>
@@ -265,14 +263,14 @@ export default function Boards({ boards, project, tasksData, archive }) {
       >
         {boards
           ?.filter((board) =>
-            archive ? tasks[board._id] && tasks[board._id].length > 0 : true
+            archive ? tasks[board?._id] && tasks[board?._id]?.length > 0 : true
           )
           ?.map((board) => {
             return (
-              <div key={board._id} data-board-id={board._id}>
+              <div key={board?._id} data-board-id={board?._id}>
                 <SortableContext
-                  id={board._id}
-                  items={tasks[board._id]?.map((task) => task._id) || []}
+                  id={board?._id}
+                  items={tasks[board._id]?.map((task) => task?._id) || []}
                   strategy={verticalListSortingStrategy}
                 >
                   <Board
@@ -294,7 +292,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
               id={activeId}
               task={Object.values(tasks)
                 .flat()
-                .find((task) => task._id === activeId)}
+                .find((task) => task?._id === activeId)}
               project={project}
               archive={archive}
             />

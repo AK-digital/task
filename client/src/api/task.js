@@ -12,6 +12,10 @@ export async function getTasks(projectId, boardId, archived) {
       "tasks"
     );
 
+    if (res.status === 404) {
+      return [];
+    }
+
     const response = await res.json();
 
     if (!response.success) {

@@ -313,6 +313,8 @@ export default function RichTextEditor({
     "strike",
     "blockquote",
     "list",
+    "ordered",
+    "bullet", // Ajout de bullet
     "indent",
     "link",
     "image",

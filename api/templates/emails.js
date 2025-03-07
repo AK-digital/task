@@ -6,20 +6,20 @@ const emailStyles = {
     "font-size: 28px; max-width: 450px; margin-inline: auto; font-weight: 500;",
   paragraph:
     "font-size: 20px; font-weight: 300; text-align: center; margin-bottom:30px;",
-  content: "font-size: 20px; font-weight: 300;",
+  content: "font-size: 20px; font-weight: 300; margin-bottom: 20px;",
   button:
     "background-color: #777AE4; outline: none; border: none; border-radius: 32px; padding: 16px 24px; color: #FFFFFF; font-weight: 500; font-size:18px; text-decoration: none;",
   highlight: "color: #777AE4;",
 };
 
-export function emailDescription(user, task, link) {
+export function emailDescription(sender, task, link) {
   const templates = {
     subjet: `Vous avez été identifié dans une description`,
     text: `
       <div style="${emailStyles.container}">
       <h1 style="${emailStyles.title}">Hey ! Par ici 🙋‍♂️</h1>
       <h2 style="${emailStyles.subtitle}">${
-      user?.firstName + " " + user?.lastName
+      sender?.firstName + " " + sender?.lastName
     } vous a mentionné dans <span style="${
       emailStyles.highlight
     }">cette description</span></h2>
@@ -27,7 +27,7 @@ export function emailDescription(user, task, link) {
         "${task?.description?.text}"
       </div>
       <div>
-       <a href="${link}" style="${emailStyles.button}">
+       <a href=${link} style="${emailStyles.button}">
             Accéder à la description
        </a>
       </div>
@@ -37,25 +37,24 @@ export function emailDescription(user, task, link) {
   return templates;
 }
 
-export function emailMessage(user, message, link) {
+export function emailMessage(sender, message, link) {
   const templates = {
     subjet: `Vous avez été identifié dans une conversation`,
     text: `
       <div style="${emailStyles.container}">
       <h1 style="${emailStyles.title}">Hey ! Par ici 🙋‍♂️</h1>
       <p style="${emailStyles.paragraph}">${
-      user?.firstName + " " + user?.lastName
+      sender?.firstName + " " + sender?.lastName
     } vous a mentionné dans <span style="${
       emailStyles.highlight
     }">cette conversation</span></p>
       <div style="${emailStyles.content}">
-        "${message?.message}"
+        ${message?.message}
       </div>
-      <div>
-       <a href="${link}" style="${emailStyles.button}">
-            Accéder à la conversation
-       </a>
-      </div>
+        <a href=${link} style="display:inline-block;width:auto;background-color: #777AE4; outline:none; border:none; border-radius:32px; padding:16px 24px; color: #FFFFFF;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:8px;font-size:16px;">
+          Accéder à la conversation
+      </a>
+    
       </div>
       `,
   };
@@ -82,13 +81,19 @@ export function emailProjectInvitation(project, sender, link) {
   return templates;
 }
 
-export function emailTaskAssigned(task, projectLink) {
+export function emailTaskAssigned(task, sender, projectLink) {
   const templates = {
     subjet: `Vous avez été assigné à une tâche dans le projet ${task?.projectId?.name}`,
     text: `
       <div style="${emailStyles.container}">
       <h1 style="${emailStyles.title}">Une tâche vous a été assignée</h1>
-      <p style="${emailStyles.content}">Vous avez été assigné à la tâche <span style="${emailStyles.highlight}">${task?.text}</span> sur le projet <span style="${emailStyles.highlight}">${task?.projectId?.name}</span>.</p>
+      <p style="${emailStyles.content}">${
+      sender?.firstName + " " + sender?.lastName
+    } vous a assigné à la tâche <span style="${emailStyles.highlight}">${
+      task?.text
+    }</span> sur le projet <span style="${emailStyles.highlight}">${
+      task?.projectId?.name
+    }</span>.</p>
        <a href=${projectLink} style="display:inline-block;width:auto;background-color: #777AE4; outline:none; border:none; border-radius:32px; padding:16px 24px; color: #FFFFFF;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:8px;font-size:16px;">
           Accéder au projet
       </a>

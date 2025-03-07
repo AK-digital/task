@@ -14,7 +14,6 @@ const boardSchema = new Schema(
     colors: {
       type: [String], // Tableau de chaînes
       default: [
-        "#ffffff",
         "#007bff",
         "#28a745",
         "#ffc107",

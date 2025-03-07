@@ -2,7 +2,6 @@
 import styles from "@/styles/layouts/project-header.module.css";
 import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
-import SearchForm from "@/components/Projects/SearchForm";
 import { Archive, Layout, UserPlus2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";

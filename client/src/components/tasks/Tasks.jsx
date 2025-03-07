@@ -53,12 +53,12 @@ export default function Tasks({
       suppressHydrationWarning
       data-board-id={boardId}
     >
-      {tasks && tasks.length > 0 && <TasksHeader />}
+      {tasks && tasks?.length > 0 && <TasksHeader />}
 
       <div className={styles.list} ref={setNodeRef}>
         {tasks?.map((task) => (
           <Task
-            key={task._id}
+            key={task?._id}
             task={task}
             project={project}
             isDragging={task?._id === activeId}
@@ -107,7 +107,7 @@ export default function Tasks({
           </p>
         </div>
       )}
-      {selectedTasks.length > 0 && (
+      {selectedTasks?.length > 0 && (
         <SelectedTasks
           project={project}
           tasks={selectedTasks}

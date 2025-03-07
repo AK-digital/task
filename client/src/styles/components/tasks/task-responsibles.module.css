@@ -93,6 +93,7 @@
 
 .responsibles__list li:hover {
     background-color: var(--accent-color);
+    color: var(--text-lighter-color);
     cursor: pointer;
     transition: 120ms all linear;
 }
@@ -118,8 +119,7 @@
 }
 
 .guests__list li:hover {
-    background-color: var(--border-color);
-
+    background-color: var(--primary-background-color);
 }
 
 .email {

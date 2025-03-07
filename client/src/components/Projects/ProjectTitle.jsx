@@ -2,7 +2,6 @@
 import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect, useContext, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import ProjectOptionsModal from "@/components/Modals/ProjectOptionsModal";
 import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
 import Link from "next/link";
@@ -23,7 +22,6 @@ export default function ProjectTitle({ project }) {
   );
   const [isEditing, setIsEditing] = useState(false);
   const [projectName, setProjectName] = useState(project?.name);
-  const [projectMore, setProjectMore] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const formRef = useRef(null);
   const inputRef = useRef(null);
@@ -112,10 +110,10 @@ export default function ProjectTitle({ project }) {
         </Link>
       </div>
       {/* Ajout du séparateur vertical */}
-      {project?.urls.length > 0 && <div className={styles.separator}></div>}
+      {/* {project?.urls > 0 && <div className={styles.separator}></div>} */}
 
       <div className={styles.actions}>
-        {project?.urls.website && (
+        {project?.urls?.website && (
           <a
             href={project?.urls.website}
             target="_blank"
@@ -126,9 +124,9 @@ export default function ProjectTitle({ project }) {
             <Globe size={20} />
           </a>
         )}
-        {project?.urls.admin && (
+        {project?.urls?.admin && (
           <a
-            href={project?.urls.admin}
+            href={project?.urls?.admin}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.linkIcon}
@@ -137,9 +135,9 @@ export default function ProjectTitle({ project }) {
             <Layout size={20} />
           </a>
         )}
-        {project?.urls.figma && (
+        {project?.urls?.figma && (
           <a
-            href={project?.urls.figma}
+            href={project?.urls?.figma}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.linkIcon}
@@ -148,9 +146,9 @@ export default function ProjectTitle({ project }) {
             <Figma size={20} />
           </a>
         )}
-        {project?.urls.github && (
+        {project?.urls?.github && (
           <a
-            href={project?.urls.github}
+            href={project?.urls?.github}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.linkIcon}

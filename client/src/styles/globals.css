@@ -251,6 +251,10 @@ input:-webkit-autofill:active {
 
 }
 
+.ql-editor li[data-list="bullet"] {
+  list-style-type: disc;
+}
+
 .ql-editor {
   font-size: var(--text-size-normal);
   letter-spacing: 0.01rem;

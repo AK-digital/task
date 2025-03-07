@@ -7,13 +7,14 @@ import { getProjectInvitations } from "@/api/projectInvitation";
 import { notFound } from "next/navigation";
 import Project from "@/components/Projects/Project";
 import { getTasks } from "@/api/task";
-import OptionsPage from "@/pages/OptionsPage";
+import Options from "@/components/Projects/ProjectOptions";
+import ProjectOptions from "@/components/Projects/ProjectOptions";
 
 export default async function ProjectPage({ params }) {
   const { slug } = await params;
   const id = slug[0];
 
-  const archive = slug.length > 1 && slug[1] === "archive";
+  const archive = slug?.length > 1 && slug[1] === "archive";
   const options = slug?.length > 1 && slug[1] === "options";
 
   const projectData = getProject(id);
@@ -26,14 +27,11 @@ export default async function ProjectPage({ params }) {
     boardsData,
   ]);
 
-  const tasks =
-    boards?.length > 0
-      ? await Promise?.all(
-          boards?.map(async (board) => {
-            return await getTasks(id, board?._id, archive);
-          })
-        )
-      : null;
+  const tasks = boards?.length
+    ? await Promise.all(
+        boards.map((board) => getTasks(id, board?._id, archive))
+      )
+    : [];
 
   if (!project) return notFound(); // 404
 
@@ -48,7 +46,7 @@ export default async function ProjectPage({ params }) {
           archive={archive}
         />
       ) : (
-        <OptionsPage project={project} />
+        <ProjectOptions project={project} />
       )}
     </main>
   );
