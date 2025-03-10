@@ -9,6 +9,7 @@ import socket from "@/utils/socket";
 
 export default function Messages({ task, project }) {
   const messagesWithIds = getMessages.bind(null, task.projectId, task._id);
+
   const { data, isLoading, mutate } = useSWR(
     `/message?projectId=${task?.projectId}&taskId=${task?._id}`,
     messagesWithIds
@@ -26,19 +27,18 @@ export default function Messages({ task, project }) {
     };
   }, [socket]);
 
+  if (!isNotEmpty(messages)) return null; // Returb null if there is no messages
+
   return (
     <div className={styles.container}>
-      {isNotEmpty(messages) &&
-        messages?.map((message) => {
-          return (
-            <Message
-              message={message}
-              mutate={mutate}
-              project={project}
-              key={message?._id}
-            />
-          );
-        })}
+      {messages?.map((message) => (
+        <Message
+          message={message}
+          mutate={mutate}
+          project={project}
+          key={message?._id}
+        />
+      ))}
     </div>
   );
 }

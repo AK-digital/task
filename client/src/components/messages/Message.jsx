@@ -10,12 +10,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { deleteMessage } from "@/api/message";
-import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
+import Tiptap from "../RichTextEditor/Tiptap";
 
 export default function Message({ message, project, mutate }) {
   const { uid } = useContext(AuthContext);
+  const [optimisticMessage, setOptimisticMessage] = useState(message?.message);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
@@ -42,19 +43,26 @@ export default function Message({ message, project, mutate }) {
   return (
     <>
       {edit ? (
-        <RichTextEditor
-          type={"conversation"}
-          message={message}
-          task={null}
-          project={project}
-          setEditDescription={null}
-          edit={edit}
-          setEdit={setEdit}
-          setConvLoading={setIsLoading}
-          placeholder={null}
+        <Tiptap
+          type="message"
           mutateMessage={mutate}
+          setConvOpen={setEdit}
+          editMessage={true}
+          message={message}
         />
       ) : (
+        // <RichTextEditor
+        //   type={"conversation"}
+        //   message={message}
+        //   task={null}
+        //   project={project}
+        //   setEditDescription={null}
+        //   edit={edit}
+        //   setEdit={setEdit}
+        //   setConvLoading={setIsLoading}
+        //   placeholder={null}
+        //   mutateMessage={mutate}
+        // />
         <>
           <div className={styles.container} data-loading={isLoading}>
             {/* Author informations */}

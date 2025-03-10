@@ -4,7 +4,7 @@ import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/modals/tagged-users-modal.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 export default function TaggedUsersModal({
   project,

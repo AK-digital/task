@@ -18,6 +18,8 @@ export async function saveMessage(projectId, taskId, message, taggedUsers) {
 
     const response = await res.json();
 
+    console.log(response);
+
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
@@ -28,6 +30,11 @@ export async function saveMessage(projectId, taskId, message, taggedUsers) {
       err.message ||
         "Une erreur est survenue lors de l'enregistrement du message"
     );
+
+    return {
+      success: false,
+      message: err.message || "Une erreur est survenue",
+    };
   }
 }
 
