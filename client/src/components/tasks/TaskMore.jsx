@@ -5,23 +5,28 @@ import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
 import Image from "next/image";
 import moment from "moment";
-import { X } from "lucide-react";
+import { MessagesSquareIcon, PanelTop, X } from "lucide-react";
 import Tiptap from "../RichTextEditor/TipTap";
+import socket from "@/utils/socket";
+import { bricolageGrostesque } from "@/utils/font";
+import { updateTaskDescription } from "@/api/task";
 
 moment.locale("fr");
 
 export default function TaskMore({ task, project, setOpennedTask, archive }) {
+  const [pending, setPending] = useState(false);
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
+  const [convOpen, setConvOpen] = useState(false);
+  const [optimisticDescription, setOptimisticDescription] = useState(
+    task?.description?.text
+  );
   const [editDescription, setEditDescription] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [startX, setStartX] = useState(null);
   const [startWidth, setStartWidth] = useState(null);
 
   const descriptionAuthor = task?.description?.author;
-
-  const isUpdated =
-    task?.description?.createdAt !== task?.description?.updatedAt;
 
   const date = moment(task?.description?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
@@ -76,6 +81,31 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleRemoveDescription = async () => {
+    setPending(true);
+
+    const response = await updateTaskDescription(
+      task?._id,
+      task?.projectId,
+      "",
+      []
+    );
+
+    // Handle error
+    if (!response?.success) {
+      setOptimisticDescription("");
+      setPending(false);
+      return;
+    }
+
+    setEditDescription(true);
+    setOptimisticDescription(""); // Optimistic update
+    setPending(false);
+
+    // Update description for every guests
+    socket.emit("update task", task?.projectId);
+  };
+
   const handleClose = () => {
     const container = containerRef.current;
     if (!container) return;
@@ -102,100 +132,103 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
 
   return (
     <>
-      <div className={styles.container} ref={containerRef}>
+      <div className={styles.container} ref={containerRef} id="task-more">
         <div className={styles.resizer} onMouseDown={startResizing}></div>
-        <div>
-          <X size={22} onClick={handleClose} cursor={"pointer"} />
-        </div>
         {/* Description */}
         <div className={styles.header}>
-          <div className={styles.text}>
-            <span>{task?.text}</span>
-          </div>
-          <div className={styles.taskAuthor}>
+          <p className={styles.task}>{task?.text}</p>
+          <span className={styles.author}>
+            Par{" "}
             <Image
               src={task?.author?.picture || "/default-pfp.webp"}
-              width={30}
-              height={30}
+              width={20}
+              height={20}
               alt={`Photo de profil de ${task?.author?.firstName}`}
               style={{
                 borderRadius: "50%",
               }}
-            />
-            <div className={styles.authorInfo}>
-              {task?.author ? (
-                <span>
-                  {task?.author?.firstName + " " + task?.author?.lastName}
-                </span>
-              ) : (
-                <span>Compte supprimé</span>
-              )}
-              <span>{moment(task?.createdAt).format("DD/MM/YYYY")}</span>
-            </div>
-          </div>
+            />{" "}
+            {task?.author
+              ? task?.author?.firstName + " " + task?.author?.lastName
+              : "Ancien utilisateur"}{" "}
+            le {moment(task?.createdAt).format("DD/MM/YYYY")}
+          </span>
         </div>
-        <div className={styles.description}>
-          <span>Description</span>
-          {task?.description?.text && !editDescription ? (
-            <div
-              onClick={(e) => setEditDescription(true)}
-              className={styles.edit}
-            >
-              <div className={styles.user}>
-                <Image
-                  src={descriptionAuthor?.picture || "/default-pfp.webp"}
-                  width={35}
-                  height={35}
-                  alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
-                  style={{ borderRadius: "50%" }}
-                />
-                <span className={styles.names}>
-                  {descriptionAuthor?.firstName +
-                    " " +
-                    descriptionAuthor?.lastName}
-                </span>
-                {task?.description?.createdAt && (
-                  <>
-                    <span className={styles.date}>{formattedDate}</span>
-                    {isUpdated && (
-                      <span className={styles.updated}>Modifié</span>
-                    )}
-                  </>
-                )}
-              </div>
+        <div className={styles.wrapper}>
+          <span className={styles.title}>
+            <PanelTop size={16} /> Description
+          </span>
+          {optimisticDescription && !editDescription ? (
+            <div className={styles.description}>
               <div
                 className={styles.preview}
-                dangerouslySetInnerHTML={{ __html: task?.description?.text }}
-              ></div>
+                onClick={(e) => setEditDescription(true)}
+              >
+                <div className={styles.user}>
+                  <Image
+                    src={descriptionAuthor?.picture || "/default-pfp.webp"}
+                    width={24}
+                    height={24}
+                    alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
+                    style={{ borderRadius: "50%" }}
+                  />
+                  <span className={styles.names}>
+                    {descriptionAuthor?.firstName +
+                      " " +
+                      descriptionAuthor?.lastName}
+                  </span>
+                  {task?.description?.createdAt && (
+                    <span className={styles.date}>{formattedDate}</span>
+                  )}
+                </div>
+                <div
+                  className={styles.content}
+                  dangerouslySetInnerHTML={{ __html: optimisticDescription }}
+                ></div>
+              </div>
+              <div className={styles.actions}>
+                <button
+                  className={bricolageGrostesque.className}
+                  data-disabled={pending}
+                  disabled={pending}
+                  onClick={handleRemoveDescription}
+                >
+                  Effacer la description
+                </button>
+              </div>
             </div>
           ) : (
-            <RichTextEditor
-              placeholder={"Ajouter une description à cette tâche"}
-              type="description"
-              task={task}
-              setEditDescription={setEditDescription}
-              message={null}
-              edit={null}
-              setEdit={null}
+            <Tiptap
               project={project}
+              task={task}
+              type="description"
+              setEditDescription={setEditDescription}
+              optimisticDescription={optimisticDescription}
+              setOptimisticDescription={setOptimisticDescription}
             />
           )}
         </div>
         {/* Conversation */}
-        <div className={styles.conversation}>
-          <span className={styles.conversationTitle}>Conversation</span>
+        <div className={styles.wrapper}>
+          <span className={styles.title}>
+            <MessagesSquareIcon size={18} /> Conversation
+          </span>
           <Messages task={task} project={project} />
-          <Tiptap />
-          {/* <RichTextEditor
-            placeholder={"Écrire un message"}
-            type="conversation"
-            task={task}
-            setEditDescription={setEditDescription}
-            message={null}
-            edit={null}
-            setEdit={null}
-            project={project}
-          /> */}
+          {convOpen ? (
+            <Tiptap
+              project={project}
+              task={task}
+              type="message"
+              setConvOpen={setConvOpen}
+            />
+          ) : (
+            <div
+              className={styles.conversation}
+              onClick={() => setConvOpen(true)}
+            >
+              <p>Rédiger une réponse et mentionner des utilisateurs avec @</p>
+            </div>
+          )}
         </div>
       </div>
       {open && <div onClick={handleClose} id="task-modal-layout"></div>}

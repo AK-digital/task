@@ -1,10 +1,10 @@
 /* Conteneur principal */
 .container {
+    position: relative;
     border: 1px solid #ddd;
     border-radius: var(--border-radius-small);
     background: var(--third-background-color);
     width: 100%;
-    cursor: text;
 }
 
 
@@ -27,11 +27,17 @@
     border: none;
     cursor: pointer;
     font-size: 18px;
-    padding: 8px;
-    margin: 0 4px;
+    padding: 8px !important;
+    margin: auto;
     color: #333;
     transition: background 0.2s;
     border-radius: 4px;
+
+}
+
+.toolbar button svg {
+    min-width: 16px;
+    min-height: 16px;
 }
 
 .toolbar button:hover {
@@ -53,6 +59,7 @@
     font-size: 16px;
     outline: none;
     border-radius: 0 0 8px 8px;
+    cursor: text;
 }
 
 /* Style des blocs de code */
@@ -78,19 +85,38 @@
     object-fit: cover;
 }
 
-.submit {
+.actions {
     margin-left: auto;
 }
 
-.submit button {
-    padding: 12px 24px !important;
+.actions button {
     border: 2px solid var(--accent-color);
     transition: all 80ms linear;
 }
 
-.submit button[data-disabled="true"] {
+.actions button:hover {
+    border-color: var(--accent-color-hover);
+}
+
+.actions button[data-disabled="true"] {
     pointer-events: none;
     background-color: transparent;
     border: 2px solid var(--text-color-muted);
     color: var(--text-color-muted);
+}
+
+.cancel {
+    padding: 0 !important;
+    background-color: transparent;
+    border: none !important;
+    color: var(--text-dark-color);
+    font-weight: 400;
+    font-size: var(--text-size-normal);
+    margin-right: 12px;
+}
+
+.cancel:hover {
+    color: var(--accent-color);
+    background-color: transparent;
+    box-shadow: none;
 }

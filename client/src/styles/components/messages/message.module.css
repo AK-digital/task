@@ -3,9 +3,9 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 14px;
-    padding: 14px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-xs);
+    padding: 16px 24px;
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-small);
     transition: 50ms all linear;
     position: relative;
 }
@@ -23,6 +23,7 @@
 
 .header svg {
     cursor: pointer;
+
 }
 
 .user {
@@ -48,9 +49,9 @@
     width: fit-content;
     padding: 8px;
     background-color: var(--secondary-background-color);
-    right: 4px;
+    right: 24px;
     border-radius: var(--border-radius-xs);
-    box-shadow: -4px 10px 10px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--box-shadow-medium);
 }
 
 .more ul li {
@@ -58,7 +59,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: var(--text-size-normal);
+    font-size: var(--text-size-small);
     cursor: pointer;
     transition: 120ms all linear;
 }
@@ -68,19 +69,24 @@
     max-height: 14px;
 }
 
+.more li:last-child {
+    color: var(--text-color-red);
+}
+
 .more li:hover {
-    background-color: var(--accent-color-hover);
+    background-color: var(--third-background-color);
     border-radius: var(--border-radius-xs);
     transition: 120ms all linear;
 }
 
 .text {
-    padding-inline: 10px;
-}
-
-.text p {
+    font-weight: 300;
     font-size: var(--text-size-normal);
 }
+
+/* .text p {
+    font-size: var(--text-size-normal);
+} */
 
 .text img {
     max-width: 800px;

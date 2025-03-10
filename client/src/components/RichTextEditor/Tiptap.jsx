@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "@/styles/components/tiptap/tiptap.module.css";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, ReactRenderer } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -18,7 +18,7 @@ import Image from "@tiptap/extension-image";
 import CodeBlock from "@tiptap/extension-code-block";
 import Code from "@tiptap/extension-code";
 import Blockquote from "@tiptap/extension-blockquote";
-import Mention from "@tiptap/extension-mention";
+
 import {
   BoldIcon,
   Code2,
@@ -38,9 +38,31 @@ import {
 } from "lucide-react";
 import { bricolageGrostesque } from "@/utils/font";
 import { useState } from "react";
+import { updateTaskDescription } from "@/api/task";
+import socket from "@/utils/socket";
+import { saveMessage, updateMessage } from "@/api/message";
+import { mutate } from "swr";
+import MentionsList from "./MentionsList";
 
-export default function Tiptap() {
-  const [value, setValue] = useState("");
+export default function Tiptap({
+  project,
+  task,
+  type,
+  setEditDescription,
+  optimisticDescription,
+  setOptimisticDescription,
+  setConvOpen,
+  message,
+  editMessage,
+  mutateMessage,
+}) {
+  const [pending, setPending] = useState(false);
+  const [plainText, setPlainText] = useState("");
+  const [isTaggedUsers, setIsTaggedUsers] = useState(false);
+  const [taggedUsers, setTaggedUsers] = useState([]);
+  const [value, setValue] = useState(
+    type === "description" ? optimisticDescription : message?.message
+  );
 
   const editor = useEditor({
     extensions: [
@@ -64,23 +86,110 @@ export default function Tiptap() {
       CodeBlock,
       Code,
       Blockquote,
-      Mention.configure({
-        HTMLAttributes: {
-          class: styles.mention,
-        },
-      }),
       Placeholder.configure({
-        placeholder: "Entrez votre message et mentionnez les autres avec @",
+        placeholder: `Entrez votre ${type} et mentionnez les autres avec @`,
       }),
     ],
+    content: value,
     onUpdate({ editor }) {
-      setValue(editor.getText());
+      handleChange(editor);
     },
   });
 
   if (!editor) {
     return null;
   }
+
+  const handleChange = (editor) => {
+    setPlainText(editor.getHTML());
+    setValue(editor.getText());
+    const text = editor.getText();
+
+    const mentionRegex = /(?:^|\s)@([\w]*)$/;
+    const match = mentionRegex.test(text);
+
+    if (match) {
+      setIsTaggedUsers(true);
+    } else {
+      setIsTaggedUsers(false);
+    }
+  };
+
+  const handleSaveDescription = async () => {
+    setPending(true);
+    setOptimisticDescription(plainText); // Optimistic update
+
+    const response = await updateTaskDescription(
+      task?._id,
+      task?.projectId,
+      plainText,
+      []
+    );
+
+    // Handle error
+    if (!response?.success) {
+      setPlainText("");
+      setPending(false);
+      return;
+    }
+
+    // Reset editor
+    setPlainText("");
+    setEditDescription(false);
+    setPending(false);
+
+    // Update description for every guests
+    socket.emit("update task", task?.projectId);
+  };
+
+  const handleMessage = async () => {
+    setPending(true);
+
+    let response;
+
+    if (!editMessage) {
+      response = await saveMessage(task?.projectId, task?._id, plainText, []);
+    } else {
+      response = await updateMessage(
+        message?.projectId,
+        message?._id,
+        plainText,
+        []
+      );
+    }
+
+    // Handle error
+    if (!response?.success) {
+      setPlainText("");
+      setValue("");
+      setPending(false);
+      setConvOpen(false);
+
+      return;
+    }
+
+    if (!editMessage) {
+      await mutate(`/message?projectId=${task?.projectId}&taskId=${task?._id}`);
+    } else {
+      await mutateMessage();
+    }
+
+    // Reset editor
+    setPlainText("");
+    setValue("");
+    setPending(false);
+    setConvOpen(false);
+
+    // Update description for every guests
+    socket.emit("update message", task?.projectId || message?.projectId);
+  };
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+
+    setConvOpen(false);
+  };
+
   const handleDrop = (e) => {
     e.preventDefault();
 
@@ -238,15 +347,37 @@ export default function Tiptap() {
 
         {/* Contenu de l'éditeur */}
         <EditorContent editor={editor} className={styles.content} />
+        {isTaggedUsers && <MentionsList project={project} />}
       </div>
-      <div className={styles.submit}>
-        <button
-          className={bricolageGrostesque.className}
-          data-disabled={value.length === 0}
-          disabled={value.length === 0}
-        >
-          Envoyer le message
-        </button>
+      <div className={styles.actions}>
+        {type === "description" && (
+          <button
+            className={bricolageGrostesque.className}
+            data-disabled={value?.length === 0 || pending}
+            disabled={value?.length === 0 || pending}
+            onClick={handleSaveDescription}
+          >
+            Enregistrer la description
+          </button>
+        )}
+        {type === "message" && (
+          <>
+            <button
+              className={`${bricolageGrostesque.className} ${styles.cancel}`}
+              onClick={handleCancel}
+            >
+              Annuler
+            </button>
+            <button
+              className={bricolageGrostesque.className}
+              data-disabled={value?.length === 0 || pending}
+              disabled={value?.length === 0 || pending}
+              onClick={handleMessage}
+            >
+              {editMessage ? "Modifier" : "Envoyer"} le message
+            </button>
+          </>
+        )}
       </div>
     </>
   );

@@ -204,7 +204,7 @@ export async function removeResponsible(taskId, responsibleId, projectId) {
   }
 }
 
-export async function updateDescription(
+export async function updateTaskDescription(
   taskId,
   projectId,
   content,
@@ -237,6 +237,11 @@ export async function updateDescription(
       err.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
     );
+
+    return {
+      success: false,
+      message: err.message,
+    };
   }
 }
 
