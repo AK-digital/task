@@ -17,6 +17,10 @@
     overflow: hidden;
 }
 
+.container a {
+    text-decoration: none !important;
+}
+
 /* Ajout du header avec les contrôles de défilement */
 .header {
     display: flex;
@@ -93,15 +97,12 @@
     background-color: var(--secondary-background-color);
     padding: 24px;
     border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
-    box-shadow: var(--box-shadow-small);
+    /* box-shadow: var(--box-shadow-small); */
     overflow: visible;
-    /* Permettre au pseudo-élément de déborder */
-    transition: transform 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
     cursor: pointer;
     margin-top: 24px;
-    /* Correspond à la hauteur du :before */
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    text-decoration: none;
 }
 
 .element:before {
@@ -119,7 +120,8 @@
 }
 
 .element:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-medium);
 }
 
 .infos {
@@ -170,9 +172,10 @@
 }
 
 .newProject:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
     background-color: var(--accent-color);
     border-color: var(--accent-color);
+    box-shadow: var(--box-shadow-medium);
 }
 
 .newProject:hover:before {

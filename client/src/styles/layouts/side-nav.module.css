@@ -17,8 +17,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 28px;
     width: var(--aside-width);
-    padding: 22px 0px 32px calc(var(--aside-width) / 7);
+    padding: 22px 0px 32px 11px;
     height: 100%;
     transition: width linear 150ms, min-width linear 150ms;
     background-color: #2a3730;
@@ -29,27 +30,25 @@
     width: 220px;
 }
 
+
 .nav {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 50vh;
+    max-height: 65svh;
     overflow-y: auto;
     scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-bottom: 0;
-    /* Modifié: suppression du padding qui peut causer des décalages */
-    scroll-padding: 0;
-    /* Assurer qu'il n'y a pas de padding de défilement */
-    scroll-snap-type: y mandatory;
-    /* Aide à aligner le défilement sur les éléments */
+
 }
 
 .nav::-webkit-scrollbar {
     display: none;
+    /* background-color: transparent;
+    width: 4px; */
 }
+
+
 
 .project {
     position: relative;
@@ -60,10 +59,12 @@
     transition: all linear 150ms;
     color: var(--text-lighter-color);
     scroll-snap-align: start;
+
     /* Aide à aligner le défilement sur les projets */
 }
 
 .project img {
+
     border: 2px solid transparent;
 }
 
@@ -78,7 +79,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: calc(100% - 2px);
+    width: 100%;
     height: 100%;
     background-color: #f9d6ac0d;
     border-right: 2px solid var(--accent-color);
@@ -87,15 +88,16 @@
 }
 
 .project span {
-    font-size: var(--text-size-normal);
+    font-size: var(--text-size-small);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-right: 20px;
+    font-weight: 300;
 }
 
 .project[data-active="true"] span {
-    color: var(--text-color);
+    font-weight: 400;
     transition: all linear 150ms;
 }
 
@@ -122,13 +124,13 @@
     margin-bottom: 20px;
 }
 
-.createProjectButton a,
+.createProjectButton,
 .openProjects {
-    background-color: var(--secondary-background-color);
+    background-color: var(--primary-background-color);
     color: var(--side-background-color);
 }
 
-.createProjectButton a:hover,
+.createProjectButton:hover,
 .openArrow:hover {
     color: var(--accent-color-hover);
     cursor: pointer;
@@ -139,15 +141,17 @@
 }
 
 .actions {
-    margin-bottom: 44px;
+    /* margin-bottom: 44px; */
 }
 
 .actions a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 42px;
-    height: 42px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
     border-radius: 50%;
 }
 

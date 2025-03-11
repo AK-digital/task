@@ -4,16 +4,10 @@ import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "@/styles/layouts/side-nav.module.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-export default function SortableProject({
-  project,
-  open,
-  projectId,
-  isActive,
-}) {
+export default function SortableProject({ project, open, isActive }) {
   const router = useRouter();
-  const [isDragging, setIsDragging] = useState(false);
   const mouseDownTime = useRef(null);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: project._id });
@@ -35,8 +29,15 @@ export default function SortableProject({
       // Si le clic dure moins de 200ms
       router.push(`/projects/${project._id}`);
     }
-    setIsDragging(false);
   };
+
+  useEffect(() => {
+    document.querySelector(`[data-active="true"]`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  }, [isActive]);
 
   return (
     <div
@@ -51,8 +52,8 @@ export default function SortableProject({
     >
       <Image
         src={project?.logo || "/default-project-logo.webp"}
-        width={46}
-        height={46}
+        width={42}
+        height={42}
         alt="project logo"
         style={{ borderRadius: "50%" }}
         data-active={isActive} // Ajout de data-active sur l'image aussi
