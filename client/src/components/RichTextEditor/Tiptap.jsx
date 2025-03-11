@@ -367,6 +367,19 @@ export default function Tiptap({
 
   console.log(value);
 
+  const checkIfDisabled = () => {
+    const imgRegex = /<img[^>]*>/i;
+
+    if (plainText && imgRegex.test(plainText)) {
+      return false;
+    }
+    if (value.length <= 0 || pending) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <>
       <div
@@ -476,8 +489,8 @@ export default function Tiptap({
         {type === "description" && (
           <button
             className={bricolageGrostesque.className}
-            data-disabled={value?.length === 0 || pending}
-            disabled={value?.length === 0 || pending}
+            data-disabled={checkIfDisabled()}
+            disabled={checkIfDisabled()}
             onClick={handleSaveDescription}
           >
             Enregistrer la description
@@ -493,8 +506,8 @@ export default function Tiptap({
             </button>
             <button
               className={bricolageGrostesque.className}
-              data-disabled={value?.length === 0 || pending}
-              disabled={value?.length === 0 || pending}
+              data-disabled={checkIfDisabled()}
+              disabled={checkIfDisabled()}
               onClick={handleMessage}
             >
               {editMessage ? "Modifier" : "Envoyer"} le message
