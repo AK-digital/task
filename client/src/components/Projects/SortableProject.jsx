@@ -50,14 +50,16 @@ export default function SortableProject({ project, open, isActive }) {
       {...attributes}
       {...listeners}
     >
-      <Image
-        src={project?.logo || "/default-project-logo.webp"}
-        width={42}
-        height={42}
-        alt="project logo"
-        style={{ borderRadius: "50%" }}
-        data-active={isActive} // Ajout de data-active sur l'image aussi
-      />
+      <div className={styles.projectLogo}>
+        <Image
+          src={project?.logo || "/default-project-logo.webp"}
+          width={42}
+          height={42}
+          alt="project logo"
+          style={{ borderRadius: "50%" }}
+          data-active={isActive} // Ajout de data-active sur l'image aussi
+        />
+      </div>
       {open && <span>{project?.name}</span>}
     </div>
   );

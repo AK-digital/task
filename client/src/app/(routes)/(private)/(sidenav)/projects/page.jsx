@@ -26,9 +26,9 @@ export default function Projects() {
           <div className={styles.elements}>
             {/* Projets existants */}
             {projects?.map((project) => (
-              <div>
+              <div key={project?._id}>
                 <Link href={`/projects/${project?._id}`}>
-                  <div key={project?._id} className={styles.element}>
+                  <div className={styles.element}>
                     <Image
                       className={styles.logo}
                       src={project?.logo || "/default-project-logo.webp"}
