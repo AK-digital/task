@@ -85,6 +85,12 @@
     object-fit: cover;
 }
 
+
+
+.content span {
+    color: var(--accent-color) !important;
+}
+
 .actions {
     margin-left: auto;
 }

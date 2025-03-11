@@ -95,3 +95,8 @@
     object-fit: cover;
     margin: 10px 0 10px 0;
 }
+
+.text span {
+    color: var(--accent-color);
+    font-weight: 500;
+}

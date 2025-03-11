@@ -122,6 +122,15 @@ export async function updateMessage(req, res, next) {
 
     const messageToUpdate = await MessageModel.findById({ _id: req.params.id });
 
+    if (!messageToUpdate) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier une réponse qui n'existe pas",
+      });
+    }
+
+    console.log(messageToUpdate);
+
     if (authUser?._id.toString() !== messageToUpdate?.author.toString()) {
       return res.status(403).send({
         success: false,
