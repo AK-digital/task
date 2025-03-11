@@ -107,6 +107,12 @@ export default function MentionsList({
     };
   }, [guests.length, selectedIdx]); // Ajout de guests.length pour éviter les erreurs
 
+  const resetIdxOnMouseEnter = (e) => {
+    e.preventDefault();
+
+    setSelectedIdx(null);
+  };
+
   return (
     <div
       className={styles.container}
@@ -114,6 +120,7 @@ export default function MentionsList({
         top: mentionPosition?.top,
         left: mentionPosition?.left,
       }}
+      onMouseEnter={resetIdxOnMouseEnter}
     >
       {isNotEmpty(guests) && (
         <div className={styles.guests}>

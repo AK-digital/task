@@ -373,7 +373,7 @@ export default function Tiptap({
     if (plainText && imgRegex.test(plainText)) {
       return false;
     }
-    if (value.length <= 0 || pending) {
+    if (value?.length <= 0 || pending) {
       return true;
     }
 
