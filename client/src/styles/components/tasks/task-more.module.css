@@ -132,6 +132,11 @@
     margin: 10px 0 10px 0;
 }
 
+.content span {
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
 .actions {
     display: flex;
     justify-content: flex-end;

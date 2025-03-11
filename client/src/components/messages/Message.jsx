@@ -14,7 +14,7 @@ import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import Tiptap from "../RichTextEditor/Tiptap";
 
-export default function Message({ message, project, mutate }) {
+export default function Message({ task, message, project, mutate }) {
   const { uid } = useContext(AuthContext);
   const [optimisticMessage, setOptimisticMessage] = useState(message?.message);
   const [edit, setEdit] = useState(false);
@@ -44,6 +44,8 @@ export default function Message({ message, project, mutate }) {
     <>
       {edit ? (
         <Tiptap
+          project={project}
+          task={task}
           type="message"
           mutateMessage={mutate}
           setConvOpen={setEdit}
@@ -51,18 +53,6 @@ export default function Message({ message, project, mutate }) {
           message={message}
         />
       ) : (
-        // <RichTextEditor
-        //   type={"conversation"}
-        //   message={message}
-        //   task={null}
-        //   project={project}
-        //   setEditDescription={null}
-        //   edit={edit}
-        //   setEdit={setEdit}
-        //   setConvLoading={setIsLoading}
-        //   placeholder={null}
-        //   mutateMessage={mutate}
-        // />
         <>
           <div className={styles.container} data-loading={isLoading}>
             {/* Author informations */}

@@ -1,15 +1,14 @@
 "use client";
 import styles from "@/styles/components/tasks/task-more.module.css";
 import { useRef, useState, useEffect, useCallback } from "react";
-import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import Messages from "../messages/Messages";
 import Image from "next/image";
 import moment from "moment";
-import { MessagesSquareIcon, PanelTop, X } from "lucide-react";
-import Tiptap from "../RichTextEditor/TipTap";
+import { MessagesSquareIcon, PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
 import { bricolageGrostesque } from "@/utils/font";
 import { updateTaskDescription } from "@/api/task";
+import Tiptap from "../RichTextEditor/Tiptap";
 
 moment.locale("fr");
 

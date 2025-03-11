@@ -33,6 +33,7 @@ export default function Messages({ task, project }) {
     <div className={styles.container}>
       {messages?.map((message) => (
         <Message
+          task={task}
           message={message}
           mutate={mutate}
           project={project}
