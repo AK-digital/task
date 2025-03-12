@@ -3,6 +3,7 @@ import { removeTaskSession, taskEndTimer, taskStartTimer } from "@/api/task";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import socket from "@/utils/socket";
+import { isNotEmpty } from "@/utils/utils";
 import { CirclePause, CirclePlay } from "lucide-react";
 import { MinusCircle } from "lucide-react";
 import moment from "moment";
@@ -66,15 +67,9 @@ export default function TaskTimer({ task }) {
     <div className={styles.container} data-running={isRunning}>
       <span className={styles.timer}>
         {isRunning ? (
-          <CirclePause
-            data-running={isRunning}
-            onClick={handlePauseTimer}
-          />
+          <CirclePause data-running={isRunning} onClick={handlePauseTimer} />
         ) : (
-          <CirclePlay
-            data-running={isRunning}
-            onClick={handlePlayTimer}
-          />
+          <CirclePlay data-running={isRunning} onClick={handlePlayTimer} />
         )}
         <span onClick={() => setMore(true)}>{formatTime(timer)}</span>
       </span>
@@ -101,11 +96,13 @@ export default function TaskTimer({ task }) {
                     Ajouter une session
                   </button>
                 </div>
-                <TimeTrackingSessions
-                  task={task}
-                  sessions={sessions}
-                  formatTime={formatTime}
-                />
+                {isNotEmpty(sessions) && (
+                  <TimeTrackingSessions
+                    task={task}
+                    sessions={sessions}
+                    formatTime={formatTime}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -146,8 +143,6 @@ export function TimeTrackingForm({ task, formatTime }) {
     }
   }, [state]);
 
-  console.log(state);
-
   const calculateTimeDifference = (startTime, endTime) => {
     if (!startTime || !endTime) return;
 
@@ -185,7 +180,7 @@ export function TimeTrackingForm({ task, formatTime }) {
   return (
     <div className={styles.content}>
       <form action={formAction} className={styles.form}>
-        <div>
+        <div className={styles.dateInput}>
           <label>Date de début</label>
           <input
             type="date"

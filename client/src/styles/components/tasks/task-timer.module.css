@@ -20,10 +20,6 @@
     color: var(--accent-color);
 }
 
-.container[data-running="false"] span {
-    color: var(--text-medium-color);
-}
-
 .container[data-running="true"] {
     color: inherit;
 }
@@ -52,6 +48,7 @@
     border-radius: 4px !important;
     max-height: 300px;
     overflow: hidden;
+    box-shadow: var(--box-shadow-small) !important;
 }
 
 .title {
@@ -60,13 +57,13 @@
     align-items: center;
     font-size: 1.1rem;
     font-weight: 500;
-    background-color: var(--primary-background-color);
+    background-color: var(--third-background-color);
     padding: 8px;
     border-radius: 4px 4px 0 0;
 }
 
 .title span:nth-child(1) {
-    color: var(--text-color) !important;
+    color: var(--text-dark-color);
 }
 
 .title span:nth-child(2) {
@@ -87,6 +84,7 @@
     overflow-x: auto;
     max-height: 200px;
     font-size: 0.85em;
+    color: var(--text-dark-color);
 }
 
 .sessions[data-overflow='true'] {
@@ -101,6 +99,8 @@
 
 .addTime button {
     width: 100%;
+    padding: 8px !important;
+    border-radius: 4px;
 }
 
 .more ul {
@@ -134,19 +134,14 @@
     margin-left: 10px;
     display: flex;
     cursor: pointer;
-
 }
 
 .delete svg {
-    color: var(--text-color-muted);
+    color: var(--text-color-red);
 }
 
 .delete svg:hover {
     color: var(--blocked-color);
-}
-
-.more li span {
-    color: white !important;
 }
 
 .form {
@@ -156,6 +151,7 @@
 }
 
 .form label {
+    position: inherit;
     font-size: 14px;
     color: var(--text-color-muted);
     font-size: var(--text-size-normal);
@@ -163,14 +159,32 @@
     display: block;
 }
 
+.dateInput {
+    margin-inline: auto;
+}
+
+.dateInput input {
+    border: none;
+}
+
 .form .timeInputs {
     display: flex;
     justify-content: space-evenly;
+    width: 100%;
     gap: 8px;
 }
 
+.timeInputs div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
 .form .timeInputs input {
-    width: 100px;
+    width: 65px !important;
+    border: none;
+    padding: 0px !important;
 }
 
 .buttons {
@@ -178,6 +192,14 @@
     justify-content: space-evenly;
     align-items: center;
     margin-bottom: 4px;
+    margin-top: 12px;
+    width: 100%;
+
+}
+
+.buttons button {
+    padding: 8px !important;
+    border-radius: 4px;
 }
 
 /* .form input[type="date"]::-webkit-inner-spin-button,
