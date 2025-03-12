@@ -11,13 +11,18 @@
 
 .header {
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: var(--text-size-normal);
 }
+
 
 .notifications {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100%;
+    overflow-y: auto;
+padding-right: 6px;
+    margin-right: 6px;
 }
 
 .notification a {

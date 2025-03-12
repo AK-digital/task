@@ -62,6 +62,7 @@
 
   /* BOX SHADOW */
   --box-shadow-small: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --box-shadow-medium: 0 0 10px rgba(0, 0, 0, 0.15);
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -305,7 +306,7 @@ input:-webkit-autofill:active {
   position: absolute;
   z-index: 2001;
   background-color: var(--secondary-background-color);
-  box-shadow: var(--danger-color);
+  box-shadow: var(--box-shadow-medium);
   padding: 24px;
   border-radius: var(--border-radius-small);
 }

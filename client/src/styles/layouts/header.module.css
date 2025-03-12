@@ -36,10 +36,10 @@
 }
 
 .bell:hover {
-    fill: white;
+    fill: var(--text-darker-color);
     cursor: pointer;
 }
 
 .bell[data-open="true"] {
-    fill: white;
+    fill: var(--text-darker-color);;
 }

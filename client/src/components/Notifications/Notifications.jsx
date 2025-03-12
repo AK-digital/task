@@ -37,7 +37,6 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
         <div className={styles.header}>
           <span>Notifications</span>
         </div>
-        <div>
           {!isNotEmpty(notifications) ? (
             <div className={styles.empty}>
               <span>Vous n'avez aucune notification pour le moment</span>
@@ -82,7 +81,6 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
             </ul>
           )}
         </div>
-      </div>
       <div id="modal-layout-opacity" onClick={(e) => setNotifOpen(false)}></div>
     </>
   );
