@@ -3,12 +3,17 @@ import styles from "@/styles/components/notifications/notifications.module.css";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import NoPicture from "../User/NoPicture";
 import moment from "moment";
 import Link from "next/link";
+import { markAsRead, markAllAsRead } from "@/api/notification";
+import { useRouter } from "next/navigation";
 
 export default function Notifications({ setNotifOpen, notifications, mutate }) {
+  const router = useRouter();
+  const [processing, setProcessing] = useState(false);
+
   // Calculer le nombre de notifications non lues
   const unreadCount = useMemo(() => {
     return notifications?.filter(notif => !notif.read).length || 0;
@@ -37,14 +42,73 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
     };
   }, [socket]);
 
+  // Fonction pour gérer le clic sur une notification
+  const handleNotificationClick = async (notification, e) => {
+    e.preventDefault();
+    
+    if (!notification.read) {
+      setProcessing(true);
+      try {
+        const result = await markAsRead(notification._id);
+        
+        if (result.success) {
+          // Actualiser les notifications
+          mutate();
+          
+          // Émettre un événement pour informer les autres clients
+          socket.emit("notification read", notification._id);
+        }
+      } catch (error) {
+        console.error("Erreur lors du marquage de la notification comme lue:", error);
+      } finally {
+        setProcessing(false);
+      }
+    }
+    
+    // Rediriger vers la page cible
+    router.push(notification.link);
+    setNotifOpen(false);
+  };
+
+  // Fonction pour marquer toutes les notifications comme lues
+  const handleMarkAllAsRead = async () => {
+    if (unreadCount === 0) return;
+    
+    setProcessing(true);
+    try {
+      const result = await markAllAsRead();
+      
+      if (result.success) {
+        // Actualiser les notifications
+        mutate();
+        
+        // Émettre un événement pour informer les autres clients
+        socket.emit("all notifications read");
+      }
+    } catch (error) {
+      console.error("Erreur lors du marquage de toutes les notifications comme lues:", error);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   return (
     <>
       <div className={styles.container} id="popover">
         <div className={styles.header}>
           <span>Notifications</span>
           {unreadCount > 0 && (
-            <div className={styles.unreadCount}>
-              {unreadCount} non {unreadCount === 1 ? 'lue' : 'lues'}
+            <div className={styles.headerActions}>
+              <div className={styles.unreadCount}>
+                {unreadCount} non {unreadCount === 1 ? 'lue' : 'lues'}
+              </div>
+              <button 
+                className={styles.readAllButton}
+                onClick={handleMarkAllAsRead}
+                disabled={processing}
+              >
+                Tout marquer comme lu
+              </button>
             </div>
           )}
         </div>
@@ -63,7 +127,10 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
                   className={`${styles.notification} ${!notif.read ? styles.unread : ''}`}
                   key={idx}
                 >
-                  <Link href={`${notif?.link}`}>
+                  <a 
+                    href={notif?.link} 
+                    onClick={(e) => handleNotificationClick(notif, e)}
+                  >
                     <div className={styles.left}>
                       {notif?.senderId?.picture ? (
                         <Image
@@ -91,9 +158,9 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
                     </div>
                     <div className={styles.right}>
                       <div className={styles.date}>{dateFromNow}</div>
-                      <div className={styles.bullet}></div>
+                      {!notif.read && <div className={styles.bullet}></div>}
                     </div>
-                  </Link>
+                  </a>
                 </li>
               );
             })}

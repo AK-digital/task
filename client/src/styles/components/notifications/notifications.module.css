@@ -133,3 +133,28 @@
     color: var(--text-color-muted);
     font-style: italic;
 }
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.readAllButton {
+  background: transparent;
+  color: var(--accent-color);
+  padding: 4px 8px;
+  font-size: var(--text-size-small);
+  border-radius: var(--border-radius-xs);
+  box-shadow: none;
+}
+
+.readAllButton:hover {
+  background-color: rgba(168, 126, 81, 0.1);
+  box-shadow: none;
+}
+
+.readAllButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
