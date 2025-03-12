@@ -93,20 +93,20 @@ body {
 
 ::-webkit-scrollbar {
   width: 8px;
-  background-color: #c2c2b7;
+  background-color: #c2c2b723;
   border-radius: var(--border-radius-small);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background-color: #9e9e96;
+  background-color: #9e9e9649;
   border-radius: var(--border-radius-small);
   cursor: pointer;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(117, 117, 112);
+  background-color: rgba(138, 138, 134, 0.645);
 }
 
 ::placeholder {
