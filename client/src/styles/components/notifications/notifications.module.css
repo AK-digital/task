@@ -88,6 +88,24 @@
     gap: 4px;
 }
 
+.right{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+.unread .title {
+    font-weight: 600;
+    background-color:#ffffff82;
+}
+
+.unread .bullet{
+    width:12px;
+    height:12px;
+    border-radius: 50%;
+    background-color: var(--text-color-muted);
+}
+
 .title {
     font-size: var(--text-size-normal);
     font-weight: 500;
