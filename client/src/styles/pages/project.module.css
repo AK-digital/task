@@ -2,7 +2,7 @@
     margin-left: var(--layout-gap);
     width: 100%;
     min-width: 0;
-    min-height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
 }
 
 .container {
@@ -15,7 +15,7 @@
     padding-top: var(--layout-gap);
     padding-left: var(--layout-gap);
     padding-bottom: 0;
-    padding-right: 13px;
+
 }
 
 .header {

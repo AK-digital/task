@@ -14,28 +14,34 @@ export default function TaskDeadline({ task, project }) {
   const [hover, setHover] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+  useEffect(() => {
+    // Update deadline when task is updated (from another user)
+    setDeadline(task?.deadline?.split("T")[0] || "");
+  }, [task.deadline]);
+
   const calculateProgress = () => {
     if (!deadline) return "0%";
 
+    // Get current date and deadline
     const now = moment();
     const deadlineDate = moment(deadline);
 
-    // Si la date est dépassée, on retourne 100%
+    // If deadline is in the past or today (100%)
     if (now.isAfter(deadlineDate)) {
       return "100%";
     }
 
-    // Si la date est dans le futur
+    // If deadline is in the future
     const taskCreatedDate = task?.createdAt
       ? moment(task.createdAt)
       : moment().subtract(1, "day");
     const totalDuration = deadlineDate.diff(taskCreatedDate, "hours");
     const elapsedDuration = now.diff(taskCreatedDate, "hours");
 
-    // Calcul du pourcentage d'avancement
+    // Calculate progress percentage
     let progressPercentage = (elapsedDuration / totalDuration) * 100;
 
-    // Limiter entre 0 et 100%
+    // Limit progress percentage between 0% and 100%
     progressPercentage = Math.min(Math.max(progressPercentage, 0), 100);
 
     return `${progressPercentage.toFixed(0)}%`;
@@ -46,21 +52,20 @@ export default function TaskDeadline({ task, project }) {
   }, [deadline]);
 
   async function handleUpdateDate(e) {
-    const date = e.target.value || null;
+    const date = e.target.value;
 
     const response = await updateTaskDeadline(task?._id, project?._id, date);
 
-    if (response.success) {
+    if (response?.success) {
       setDeadline(date);
       socket.emit("update task", task?.projectId);
-      // setIsEditing(false);
     }
   }
 
   const removeDeadline = async () => {
     const response = await updateTaskDeadline(task?._id, project?._id, null);
 
-    if (response.success) {
+    if (response?.success) {
       setDeadline("");
       socket.emit("update task", task?.projectId);
     }

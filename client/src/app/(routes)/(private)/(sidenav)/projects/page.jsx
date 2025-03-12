@@ -4,17 +4,22 @@ import styles from "@/styles/pages/projects.module.css";
 import { getProjects } from "@/api/project";
 import Image from "next/image";
 import { isNotEmpty } from "@/utils/utils";
-import { ListTodo, Users, Plus } from "lucide-react";
+import { ListTodo, Users, Plus, ArrowLeftCircle } from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";
+import { useRouter } from "next/navigation";
 
 export default function Projects() {
+  const router = useRouter();
   const { data, isLoading } = useSWR("/api/project", getProjects);
   const projects = data;
 
   return (
     <main className={styles.main}>
       <div className={styles.container}>
+        <div className={styles.back} onClick={() => router.back()}>
+          <ArrowLeftCircle size={32} />
+        </div>
         <div className={styles.header}>
           <h1>Vos projets</h1>
           <div className={styles.projectCount}>

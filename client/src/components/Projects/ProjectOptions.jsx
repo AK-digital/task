@@ -5,7 +5,15 @@ import styles from "@/styles/pages/options.module.css";
 import moment from "moment/moment";
 import "moment/locale/fr";
 import Image from "next/image";
-import { Archive, Figma, Github, Globe, Layout, Pencil } from "lucide-react";
+import {
+  Archive,
+  ArrowLeftCircle,
+  Figma,
+  Github,
+  Globe,
+  Layout,
+  Pencil,
+} from "lucide-react";
 import Link from "next/link";
 import { bricolageGrostesque } from "@/utils/font";
 import { deleteProject, updateProjectLogo } from "@/api/project";
@@ -65,6 +73,9 @@ export default function ProjectOptions({ project }) {
 
   return (
     <div className={styles.container}>
+      <div className={styles.back} onClick={() => router.back()}>
+        <ArrowLeftCircle size={32} />
+      </div>
       <form
         action={formAction}
         className={styles.form}
