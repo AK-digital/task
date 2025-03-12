@@ -297,6 +297,37 @@ export async function updateTaskBoard(taskId, boardId, projectId) {
   }
 }
 
+export async function updateTaskDeadline(taskId, projectId, deadline) {
+  try {
+    const res = await useAuthFetch(
+      `task/${taskId}/deadline?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { deadline: deadline }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message || "Une erreur s'est produite");
+    }
+
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+
+    return {
+      success: false,
+      message: err?.message,
+    };
+  }
+}
+
 export async function taskStartTimer(taskId, projectId) {
   try {
     const res = await useAuthFetch(

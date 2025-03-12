@@ -178,52 +178,6 @@ export async function updateTaskPriority(taskId, projectId, priority) {
   }
 }
 
-export async function updateTaskDeadline(
-  taskId,
-  projectId,
-  prevState,
-  formData
-) {
-  try {
-    const deadline = formData.get("deadline");
-
-    if (!deadline) throw new Error("Paramètre manquant");
-
-    const rawData = {
-      deadline: deadline,
-    };
-
-    const res = await useAuthFetch(
-      `task/${taskId}/deadline?projectId=${projectId}`,
-      "PATCH",
-      "application/json",
-      rawData
-    );
-
-    const response = await res.json();
-
-    if (!response.success) {
-      throw new Error(response?.message || "Une erreur s'est produite");
-    }
-
-    revalidateTag("tasks");
-
-    return {
-      status: "success",
-    };
-  } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
-    );
-
-    return {
-      status: "failure",
-      message: err?.message,
-    };
-  }
-}
-
 export async function addTaskSession(taskId, projectId, prevState, formData) {
   try {
     const date = formData.get("date");

@@ -102,7 +102,7 @@ export default function Task({
             <TaskStatus task={task} project={project} />
             <TaskPriority task={task} project={project} />
           </div>
-          <TaskDeadline task={task} />
+          <TaskDeadline task={task} project={project} />
           {!archive && <TaskTimer task={task} />}
           <TaskRemove task={task} />
         </div>

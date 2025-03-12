@@ -294,13 +294,6 @@ export async function updateTaskDeadline(req, res, next) {
   try {
     const { deadline } = req.body;
 
-    if (!deadline) {
-      return res.status(400).send({
-        success: false,
-        message: "Paramètres manquants",
-      });
-    }
-
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
       {

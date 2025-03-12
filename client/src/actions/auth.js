@@ -257,12 +257,16 @@ export async function resetForgotPassword(prevState, formData) {
       };
     }
 
-    const res = useFetch(
-      "auth/reset-forgot-password",
-      "PATCH",
-      "application/json",
-      { resetCode, newPassword }
-    );
+    const options = {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ resetCode: resetCode, newPassword: newPassword }),
+    };
+
+    const res = await useFetch("auth/reset-forgot-password", options);
 
     const response = await res.json();
 
