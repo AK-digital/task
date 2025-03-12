@@ -118,7 +118,7 @@
 }
 
 .guests__list li:hover {
-    background-color: var(--border-color);
+    background-color: var(--text-light-color);
 
 }
 
