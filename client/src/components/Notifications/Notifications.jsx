@@ -3,12 +3,17 @@ import styles from "@/styles/components/notifications/notifications.module.css";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import NoPicture from "../User/NoPicture";
 import moment from "moment";
 import Link from "next/link";
 
 export default function Notifications({ setNotifOpen, notifications, mutate }) {
+  // Calculer le nombre de notifications non lues
+  const unreadCount = useMemo(() => {
+    return notifications?.filter(notif => !notif.read).length || 0;
+  }, [notifications]);
+
   useEffect(() => {
     const getUnreadNotifications = () => {
       return notifications?.filter((notif) => !notif.read);
@@ -31,11 +36,17 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
       socket.off("notifications read", handleReadNotifications);
     };
   }, [socket]);
+  
   return (
     <>
       <div className={styles.container} id="popover">
         <div className={styles.header}>
           <span>Notifications</span>
+          {unreadCount > 0 && (
+            <div className={styles.unreadCount}>
+              {unreadCount} non {unreadCount === 1 ? 'lue' : 'lues'}
+            </div>
+          )}
         </div>
           {!isNotEmpty(notifications) ? (
             <div className={styles.empty}>
@@ -45,8 +56,13 @@ export default function Notifications({ setNotifOpen, notifications, mutate }) {
             <ul className={styles.notifications}>
               {notifications?.map((notif, idx) => {
                 const dateFromNow = moment(notif?.createdAt).fromNow();
+                const isLastItem = idx === notifications.length - 1;
+                
                 return (
-                  <li className={styles.notification} key={idx}>
+                  <li 
+                    className={`${styles.notification} ${!notif.read ? styles.unread : ''}`} 
+                    key={idx}
+                  >
                     <Link href={`${notif?.link}`}>
                       <div className={styles.left}>
                         {notif?.senderId?.picture ? (
