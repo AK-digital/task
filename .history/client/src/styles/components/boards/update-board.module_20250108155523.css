@@ -1,7 +1,0 @@
-.update-board__title {
-    display: flex;
-}
-
-.update-board__title span:last-child {
-    background-color: red;
-}

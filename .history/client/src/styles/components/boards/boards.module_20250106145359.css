@@ -1,7 +1,0 @@
-.boards {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    height: calc(100svh - 180px);
-    overflow-y: auto;
-}

@@ -1,9 +1,0 @@
-.tasks ul {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.tasks li {
-    max-width: 800px;
-}

@@ -1,8 +1,0 @@
-.private-layout {
-    display: flex;
-    background-color: red;
-}
-
-.private-layout__main {
-    background-color: blue;
-}
