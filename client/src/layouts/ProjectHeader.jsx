@@ -3,35 +3,15 @@ import styles from "@/styles/layouts/project-header.module.css";
 import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import { Archive, Layout, UserPlus2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import NoPicture from "@/components/User/NoPicture";
-import getNotifications from "@/api/notification";
-import useSWR from "swr";
-import socket from "@/utils/socket";
 import Link from "next/link";
 import AddTemplate from "@/components/Templates/AddTemplate";
 
 export default function ProjectHeader({ project, projectInvitations }) {
   const [addTemplate, setAddTemplate] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  const { data, mutate } = useSWR(
-    `${process.env.API_URL}/notification`,
-    getNotifications
-  );
-
-  useEffect(() => {
-    const handleNewNotification = () => {
-      mutate();
-    };
-
-    socket.on("new notification", handleNewNotification);
-
-    return () => {
-      socket.off("new notification", handleNewNotification);
-    };
-  }, [socket, mutate]);
 
   return (
     <>

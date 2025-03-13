@@ -61,7 +61,13 @@ export default function Tiptap({
   const containerRef = useRef(null);
   const { user } = useContext(AuthContext);
   const [pending, setPending] = useState(false);
-  const [plainText, setPlainText] = useState("");
+  const [plainText, setPlainText] = useState(
+    message
+      ? message?.message
+      : type === "description"
+      ? optimisticDescription
+      : ""
+  );
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
   const [taggedUsers, setTaggedUsers] = useState([]);
   const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });

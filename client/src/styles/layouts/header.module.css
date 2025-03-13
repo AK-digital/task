@@ -10,10 +10,16 @@
     height: 100%;
 }
 
+
+
 .nav,
 .actions {
     display: flex;
     align-items: center;
+}
+
+.nav {
+    justify-content: flex-end;
 }
 
 .logo {
@@ -35,11 +41,26 @@
     align-items: center;
 }
 
+.action:nth-child(1) {
+    position: relative;
+}
+
 .bell:hover {
     fill: var(--text-darker-color);
     cursor: pointer;
 }
 
 .bell[data-open="true"] {
-    fill: var(--text-darker-color);;
+    fill: var(--text-darker-color);
+}
+
+
+.unread {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 12px;
+    left: 12px;
+    border-radius: 50%;
+    background-color: var(--danger-color);
 }

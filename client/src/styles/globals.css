@@ -1,5 +1,6 @@
 :root {
   --accent-color: #a87e51;
+  --accent-color-transparent: rgba(168, 126, 81, 0.3);
   --accent-color-hover: #977045;
   --primary-background-color: #DAD6C7;
   --secondary-background-color: #F9F7EF;

@@ -5,6 +5,7 @@
     right: 50px;
     width: 560px;
     padding: 0 !important;
+    padding-right: 8px !important;
     max-height: 400px;
     overflow-y: auto;
     border-radius: var(--border-radius-medium);
@@ -34,16 +35,22 @@
 }
 
 .notifications {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     height: 100%;
     overflow-y: auto;
-    list-style-type: none;
+
 }
 
+
 .notification {
-    border-bottom: 1px solid var(--text-color-medium);
+    display: flex;
+    gap: 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between !important;
+    text-decoration: none;
+    width: 100%;
+    color: var(--text-color-medium);
     transition: background-color 0.2s ease;
 }
 
@@ -51,24 +58,15 @@
     border-bottom: none;
 }
 
-.notification.unread {
-    background-color: rgba(var(--accent-color-rgb), 0.1);
+.notification[data-read="false"] {
+    background-color: var(--accent-color-transparent)
+        /* background-color: var(--third-background-color); */
 }
 
 .notification:hover {
-    background-color: var(--hover-background-color);
+    background-color: var(--third-background-color);
 }
 
-.notification a {
-    display: flex;
-    gap: 4px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    text-decoration: none;
-    color: var(--text-color-medium);
-}
 
 .left {
     display: flex;
@@ -78,7 +76,7 @@
 .header,
 .messsage,
 .empty,
-.notification a {
+.notification {
     padding: 14px;
 }
 
@@ -88,23 +86,13 @@
     gap: 4px;
 }
 
-.right{
+.right {
     display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: flex-end;
 }
-.unread .title {
-    font-weight: 600;
-    background-color:#ffffff82;
-}
 
-.unread .bullet{
-    width:12px;
-    height:12px;
-    border-radius: 50%;
-    background-color: var(--text-color-muted);
-}
 
 .title {
     font-size: var(--text-size-normal);
@@ -135,26 +123,27 @@
 }
 
 .headerActions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .readAllButton {
-  background: transparent;
-  color: var(--accent-color);
-  padding: 4px 8px;
-  font-size: var(--text-size-small);
-  border-radius: var(--border-radius-xs);
-  box-shadow: none;
+    background: transparent;
+    color: var(--accent-color);
+    padding: 4px 8px;
+    font-size: var(--text-size-small);
+    border-radius: var(--border-radius-xs);
+    box-shadow: none;
 }
 
 .readAllButton:hover {
-  background-color: rgba(168, 126, 81, 0.1);
-  box-shadow: none;
+    background-color: rgba(168, 126, 81, 0.1);
+    box-shadow: none;
 }
 
-.readAllButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.readAllButton[data-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: rgba(168, 126, 81, 0.1);
 }

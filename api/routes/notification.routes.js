@@ -5,4 +5,16 @@ import * as notificationControllers from "../controllers/notification.controller
 
 router.get("/", authMiddlewares.auth, notificationControllers.getNotifications);
 
+router.patch(
+  "/read/:id",
+  authMiddlewares.auth,
+  notificationControllers.readNotification
+);
+
+router.patch(
+  "/read-all",
+  authMiddlewares.auth,
+  notificationControllers.readNotifications
+);
+
 export default router;

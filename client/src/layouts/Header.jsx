@@ -1,24 +1,25 @@
 "use client";
 
 import styles from "@/styles/layouts/header.module.css";
-import getNotifications from "@/api/notification";
 import Notifications from "@/components/Notifications/Notifications";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
-import { Bell, MoreHorizontal, MoreVertical } from "lucide-react";
+import { Bell } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
+import { getNotifications } from "@/api/notification";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
   const [notifOpen, setNotifOpen] = useState(false);
 
-  const { data, mutate } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     `${process.env.API_URL}/notification`,
     getNotifications
   );
+  const notificationsData = data?.data;
 
   useEffect(() => {
     const handleNewNotification = () => {
@@ -32,25 +33,28 @@ export default function Header() {
     };
   }, [socket, mutate]);
 
-  const hasUnread = data?.data?.some((notif) => !notif.read);
+  // Count the number of unread notifications
+  const unreadNotifications = notificationsData?.filter((notif) => !notif.read);
+  const unreadCount = unreadNotifications?.length;
 
   return (
     <header className={styles.container}>
       <nav className={styles.nav}>
-        <div></div>
         <ul className={styles.actions}>
-          <li>
+          <li className={styles.action}>
             <Bell
               size={22}
               onClick={(e) => setNotifOpen(true)}
               data-open={notifOpen}
               className={styles.bell}
             />
-            {hasUnread && <div className={styles.unread}></div>}
+            {unreadCount > 0 && <div className={styles.unread}></div>}
             {notifOpen && (
               <Notifications
                 setNotifOpen={setNotifOpen}
-                notifications={data?.data}
+                notifications={notificationsData}
+                unreadNotifications={unreadNotifications}
+                unreadCount={unreadCount}
                 mutate={mutate}
               />
             )}

@@ -2,7 +2,7 @@
 
 import { useAuthFetch } from "@/utils/api";
 
-export default async function getNotifications() {
+export async function getNotifications() {
   try {
     const res = await useAuthFetch("notification", "GET");
 
@@ -15,40 +15,73 @@ export default async function getNotifications() {
     return response;
   } catch (err) {
     console.log(err?.message || "Une erreur est survenue");
-    return { success: false, message: err?.message || "Une erreur est survenue" };
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue",
+    };
   }
 }
 
-export async function markAsRead(notificationId) {
+export async function readNotification(notificationId) {
   try {
-    const res = await useAuthFetch(`notification/${notificationId}/read`, "PUT");
-    
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData?.message || "Échec de la mise à jour de la notification");
+    // Check if the notificationId is missing
+    if (!notificationId) {
+      throw new Error("Paramètre manquant");
     }
-    
+
+    const res = await useAuthFetch(
+      `notification/read/${notificationId}`,
+      "PATCH"
+    );
+
     const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message);
+    }
+
     return response;
   } catch (err) {
-    console.error(err?.message || "Une erreur est survenue lors du marquage de la notification");
-    return { success: false, message: err?.message || "Une erreur est survenue" };
+    console.log(err?.message || "Une erreur est survenue");
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue",
+    };
   }
 }
 
-export async function markAllAsRead() {
+export async function readNotifications(notificationIds) {
   try {
-    const res = await useAuthFetch("notification/read-all", "PUT");
-    
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData?.message || "Échec de la mise à jour des notifications");
+    const isArray = Array.isArray(notificationIds);
+
+    // Check if the notificationIds is an array and if it's empty
+    if (!isArray && notificationIds?.length === 0) {
+      throw new Error("Paramètre manquants");
     }
-    
+
+    const res = await useAuthFetch(
+      "notification/read-all",
+      "PATCH",
+      "application/json",
+      {
+        notificationIds,
+      }
+    );
+
     const response = await res.json();
+
+    console.log(response, "fril gere");
+
+    if (!response?.success) {
+      throw new Error(response?.message);
+    }
+
     return response;
   } catch (err) {
-    console.error(err?.message || "Une erreur est survenue lors du marquage des notifications");
-    return { success: false, message: err?.message || "Une erreur est survenue" };
+    console.log(err?.message || "Une erreur est survenue");
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue",
+    };
   }
 }
