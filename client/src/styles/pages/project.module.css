@@ -14,6 +14,7 @@
     height: 100%;
     padding-top: var(--layout-gap);
     padding-left: var(--layout-gap);
+    padding-right: 12px;
     padding-bottom: 0;
 }
 
