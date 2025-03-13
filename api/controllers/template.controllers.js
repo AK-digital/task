@@ -8,8 +8,6 @@ export async function saveTemplate(req, res, next) {
     const authUser = res.locals.user;
     const { name, description, projectId } = req.body;
 
-    console.log(projectId);
-
     // Check if the required fields are provided
     if (!name || !projectId) {
       return res.status(400).send({

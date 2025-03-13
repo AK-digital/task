@@ -123,7 +123,7 @@ export async function signIn(prevState, formData) {
       secure: true,
       httpOnly: true,
       sameSite: "lax",
-      expires: new Date(Date.now() + 30 * 60 * 1000),
+      expires: new Date(Date.now() + (12 * 60 + 30) * 60 * 1000), // 12h30 en millisecondes
     });
 
     cookie.set("rtk", refreshToken, {

@@ -77,6 +77,13 @@ router.patch(
 );
 
 router.patch(
+  "/:id/estimate",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  taskControllers.updateTaskEstimation
+);
+
+router.patch(
   "/:id/start-timer",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,

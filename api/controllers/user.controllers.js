@@ -30,9 +30,9 @@ export async function getUsers(req, res, next) {
 // Admin only
 export async function getUser(req, res, next) {
   try {
-    const user = await userModel
-      .findById({ _id: req.params.id })
-      .select("-password");
+    const user = await UserModel.findById({ _id: req.params.id }).select(
+      "-password"
+    );
 
     if (!user) {
       return res.status(404).send({

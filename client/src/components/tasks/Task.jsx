@@ -15,6 +15,7 @@ import TaskTimer from "./TaskTimer";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
+import TaskEstimate from "./TaskEstimate";
 
 export default function Task({
   task,
@@ -103,6 +104,7 @@ export default function Task({
             <TaskPriority task={task} project={project} />
           </div>
           <TaskDeadline task={task} project={project} />
+          <TaskEstimate task={task} project={project} />
           {!archive && <TaskTimer task={task} />}
           <TaskRemove task={task} />
         </div>

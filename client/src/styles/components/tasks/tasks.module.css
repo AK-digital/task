@@ -1,6 +1,5 @@
 .container {
     position: relative;
-    padding-inline: 16px;
 }
 
 .container ul {
@@ -21,19 +20,17 @@
     align-items: center;
     gap: 2px;
     height: 54px;
+    padding-inline: 12px;
 }
 
 .add {
     max-width: 900px;
 }
 
-.add svg {
-    width: 15px;
-    height: 15px;
-}
 
-.add svg path {
-    fill: var(--text-color-muted);
+
+.add svg {
+    color: var(--text-color-muted);
 }
 
 .add form {

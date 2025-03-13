@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from '@/styles/components/tasks/tasks-header.module.css';
+import React from "react";
+import styles from "@/styles/components/tasks/tasks-header.module.css";
 
 export default function TasksHeader() {
   return (
@@ -14,6 +14,7 @@ export default function TasksHeader() {
           <div className={styles.status}>Statut</div>
           <div className={styles.priority}>Priorité</div>
           <div className={styles.deadline}>Échéance</div>
+          <div className={styles.estimation}>Estimation</div>
           <div className={styles.timer}>Temps</div>
           <div className={styles.actions}></div>
         </div>

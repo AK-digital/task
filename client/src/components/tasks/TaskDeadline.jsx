@@ -90,6 +90,8 @@ export default function TaskDeadline({ task, project }) {
 
   const pastDeadline =
     moment().isAfter(moment(deadline)) && task?.status !== "Terminée";
+  const isToday =
+    moment().isSame(moment(deadline), "day") && task?.status !== "Terminée";
 
   return (
     <div className={styles.container} onMouseLeave={() => setHover(false)}>
@@ -99,6 +101,7 @@ export default function TaskDeadline({ task, project }) {
         onClick={() => setIsEditing(true)}
         style={{ "--progress": `${deadline ? progress : "0%"}` }}
         data-past-deadline={pastDeadline}
+        data-past-today={isToday}
       >
         <div>
           {isEditing && (

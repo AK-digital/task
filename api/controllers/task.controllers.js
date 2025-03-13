@@ -328,6 +328,46 @@ export async function updateTaskDeadline(req, res, next) {
   }
 }
 
+export async function updateTaskEstimation(req, res, next) {
+  try {
+    const { estimation } = req.body;
+
+    console.log(estimation);
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          estimation: estimation,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de modifier l'estimation d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Estimation modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function updateTaskDescription(req, res, next) {
   try {
     const authUser = res.locals.user;

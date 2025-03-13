@@ -75,7 +75,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px;
+    width: 100%;
+    max-width: 150px;
+}
+
+.estimation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 120px;
 }
 
 .timer {

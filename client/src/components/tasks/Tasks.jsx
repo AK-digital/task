@@ -9,6 +9,7 @@ import { useDroppable } from "@dnd-kit/core";
 import socket from "@/utils/socket";
 import SelectedTasks from "./SelectedTasks";
 import TasksHeader from "./TasksHeader"; // Assurez-vous que cette importation existe
+import { Plus } from "lucide-react";
 
 const initialState = {
   status: "pending",
@@ -68,7 +69,7 @@ export default function Tasks({
         ))}
         {!archive && (
           <div className={styles.add}>
-            <FontAwesomeIcon icon={faPlus} />
+            <Plus size={18} />
             <form action={formAction}>
               <input
                 type="text"

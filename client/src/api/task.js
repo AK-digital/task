@@ -318,7 +318,42 @@ export async function updateTaskDeadline(taskId, projectId, deadline) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
+        "Une erreur est survenue lors de la mise à jour de la date limite"
+    );
+
+    return {
+      success: false,
+      message: err?.message,
+    };
+  }
+}
+
+export async function updateTaskEstimate(taskId, projectId, estimation) {
+  try {
+    console.log(estimation);
+
+    const res = await useAuthFetch(
+      `task/${taskId}/estimate?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { estimation: estimation }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message || "Une erreur s'est produite");
+    }
+
+    console.log(response);
+
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la mise à jour de l'estimation"
     );
 
     return {
@@ -343,8 +378,6 @@ export async function taskStartTimer(taskId, projectId) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
-    revalidateTag("tasks");
-
     return response;
   } catch (err) {
     console.log(
@@ -367,8 +400,6 @@ export async function taskEndTimer(taskId, projectId) {
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
-    revalidateTag("tasks");
 
     return response;
   } catch (err) {

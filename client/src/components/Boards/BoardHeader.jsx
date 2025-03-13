@@ -1,15 +1,9 @@
 "use client";
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
-import {
-  Archive,
-  ChevronDown,
-  ChevronRight,
-  EllipsisVertical,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, EllipsisVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import DeleteBoard from "./DeleteBoard";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
 import BoardMore from "./BoardMore";

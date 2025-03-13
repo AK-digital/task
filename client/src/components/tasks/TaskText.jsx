@@ -64,7 +64,7 @@ export default function TaskText({ isHeader, task, project }) {
             id="text"
             value={inputValue}
             onChange={handleChange}
-            className={bricolageGrostesque.className}
+            className={`${bricolageGrostesque.className} ${styles.input}`}
             onBlur={(e) => setEdit(false)}
             autoFocus
           />

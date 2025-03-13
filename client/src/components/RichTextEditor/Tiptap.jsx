@@ -159,22 +159,24 @@ export default function Tiptap({
     // Regex to match all span tags with data-id attribute
     const regex = /<span[^>]*data-id="([^"]*)"[^>]*>.*?<\/span>/g;
 
-    const matchAll = plainText.matchAll(regex); // Get all matches
-    const matches = Array.from(matchAll); // Set all matches to an array
+    if (plainText) {
+      const matchAll = plainText?.matchAll(regex); // Get all matches
+      const matches = Array?.from(matchAll); // Set all matches to an array
 
-    setTaggedUsers([]); // Reset taggedUsers
+      setTaggedUsers([]); // Reset taggedUsers
 
-    matches.forEach((match) => {
-      const dataId = match[1]; // match[1] is the data-id attribute
+      matches.forEach((match) => {
+        const dataId = match[1]; // match[1] is the data-id attribute
 
-      // Checks if the dataId is already in the taggedUsers array
-      setTaggedUsers((prev) => {
-        if (!prev.includes(dataId)) {
-          return [...prev, dataId]; // If not, we add it
-        }
-        return prev; // Else we return the previous state
+        // Checks if the dataId is already in the taggedUsers array
+        setTaggedUsers((prev) => {
+          if (!prev.includes(dataId)) {
+            return [...prev, dataId]; // If not, we add it
+          }
+          return prev; // Else we return the previous state
+        });
       });
-    });
+    }
   }, [plainText]);
 
   if (!editor) {

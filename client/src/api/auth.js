@@ -2,7 +2,6 @@
 import { useAuthFetch, useFetch } from "@/utils/api";
 import { getAccessToken, getRefreshToken } from "@/utils/getCookies";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function decryptToken() {
   try {
@@ -60,7 +59,7 @@ export async function refreshTokens() {
       secure: true,
       httpOnly: true,
       sameSite: "lax",
-      expires: new Date(Date.now() + 30 * 60 * 1000),
+      expires: new Date(Date.now() + (12 * 60 + 30) * 60 * 1000), // 12h30 en millisecondes
     });
 
     cookieStore.set("rtk", newRefreshToken, {

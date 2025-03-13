@@ -1,15 +1,18 @@
 .container {
-    position: relative;
+    position: sticky;
+    top: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
     font-weight: 500;
     user-select: none;
+    border-top-left-radius: var(--border-radius-medium);
+    border-top-right-radius: var(--border-radius-medium);
     background-color: var(--secondary-background-color);
     width: 100%;
     z-index: 10;
     flex-wrap: wrap;
+    padding: 13px 16px;
 }
 
 .container svg {

@@ -28,7 +28,6 @@ const taskSchema = new Schema(
       },
       text: {
         type: String,
-        minlength: 2,
         maxlength: 1250,
       },
       createdAt: {
@@ -69,10 +68,6 @@ const taskSchema = new Schema(
         },
       ],
     },
-    estimationTime: {
-      type: String, // Temps estimé pour la tâche (en millisecondes)
-      default: 0,
-    },
     status: {
       type: String,
       enum: ["En cours", "En attente", "Terminée", "À faire", "bloquée"],
@@ -85,6 +80,9 @@ const taskSchema = new Schema(
     },
     deadline: {
       type: Date,
+    },
+    estimation: {
+      type: String,
     },
     taggedUsers: {
       type: [Schema.Types.ObjectId],

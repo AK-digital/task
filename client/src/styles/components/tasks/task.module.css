@@ -6,6 +6,7 @@
     width: 100%;
     height: 42px;
     transition: all 150ms ease-in-out;
+    padding-inline: 12px;
 }
 
 .dragging {
@@ -18,7 +19,6 @@
 
 .container:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
 }
 
 .container:hover .task__remove {
