@@ -14,7 +14,7 @@
     padding-bottom: 55px;
 }
 
-.container:before {
+/* .container:before {
     content: "";
     display: block;
     bottom: 0;
@@ -26,4 +26,4 @@
     width: 100%;
     border-bottom-left-radius: calc(var(--border-radius-medium) - 1px);
     border-bottom-right-radius: calc(var(--border-radius-medium) - 1px);
-}
+} */

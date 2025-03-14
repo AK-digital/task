@@ -6,17 +6,14 @@ export default function TasksHeader() {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.wrapper}>
-          <div className={styles.checkbox}></div>
-          <div className={styles.drag}></div>
           <div className={styles.text}>Tâches</div>
-          <div className={styles.comment}></div>
           <div className={styles.responsibles}>Admin</div>
           <div className={styles.status}>Statut</div>
           <div className={styles.priority}>Priorité</div>
           <div className={styles.deadline}>Échéance</div>
           <div className={styles.estimation}>Estimation</div>
           <div className={styles.timer}>Temps</div>
-          <div className={styles.actions}></div>
+          <div className={styles.space}></div>
         </div>
       </div>
     </div>

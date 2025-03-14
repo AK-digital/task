@@ -12,7 +12,7 @@ import TaskResponsibles from "./TaskResponsibles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskTimer from "./TaskTimer";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
 import TaskEstimate from "./TaskEstimate";

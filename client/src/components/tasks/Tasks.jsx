@@ -55,7 +55,6 @@ export default function Tasks({
       data-board-id={boardId}
     >
       {tasks && tasks?.length > 0 && <TasksHeader />}
-
       <div className={styles.list} ref={setNodeRef}>
         {tasks?.map((task) => (
           <Task
