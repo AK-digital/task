@@ -7,12 +7,22 @@
     font-weight: 500;
     user-select: none;
     border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
     background-color: var(--secondary-background-color);
     width: 100%;
     z-index: 10;
     flex-wrap: wrap;
-    padding: 13px 16px;
+    padding: 13px 12px;
+}
+
+.container::before {
+    position: absolute;
+    content: "";
+    left: 0;
+    margin-left: -3px;
+    border-top-left-radius: var(--border-radius-medium);
+    border-left: 3px solid var(--border-color);
+    width: 100%;
+    height: 100%;
 }
 
 .container svg {

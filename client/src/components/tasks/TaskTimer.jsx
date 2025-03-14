@@ -19,17 +19,19 @@ import {
 
 export default function TaskTimer({ task }) {
   const [timer, setTimer] = useState(
-    Math.floor((task?.timeTracking?.totalTime || 0) / 1000)
+    Math.floor(task?.timeTracking?.totalTime / 1000) || 0
   );
+  const [sessions, setSessions] = useState(task?.timeTracking?.sessions || []);
   const [more, setMore] = useState(false);
   const [addingSession, setAddingSession] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
 
-  const sessions = task?.timeTracking?.sessions || [];
-
   useEffect(() => {
-    setTimer(Math.floor((task?.timeTracking?.totalTime || 0) / 1000));
-  }, [task]);
+    const durations = sessions.map((session) => session.duration);
+    const totalDuration = durations.reduce((acc, curr) => acc + curr, 0);
+
+    setTimer(Math.floor(totalDuration / 1000));
+  }, [sessions]);
 
   useEffect(() => {
     let intervalId;
@@ -43,7 +45,15 @@ export default function TaskTimer({ task }) {
 
   const handlePauseTimer = async () => {
     setIsRunning(false);
-    await taskEndTimer(task?._id, task?.projectId);
+    const res = await taskEndTimer(task?._id, task?.projectId);
+
+    const newSessions = res?.data?.timeTracking?.sessions || [];
+
+    setSessions(newSessions);
+
+    if (!res.success) {
+      setSessions(task?.timeTracking?.sessions || []);
+    }
 
     socket.emit("update task", task?.projectId);
   };
@@ -65,6 +75,7 @@ export default function TaskTimer({ task }) {
 
   return (
     <div className={styles.container} data-running={isRunning}>
+      {/* TIMER */}
       <span className={styles.timer}>
         {isRunning ? (
           <CirclePause data-running={isRunning} onClick={handlePauseTimer} />
@@ -100,6 +111,7 @@ export default function TaskTimer({ task }) {
                   <TimeTrackingSessions
                     task={task}
                     sessions={sessions}
+                    setSessions={setSessions}
                     formatTime={formatTime}
                   />
                 )}
@@ -124,6 +136,7 @@ export function TimeTrackingForm({ task, formatTime }) {
     data: null,
     errors: null,
   };
+
   const addTaskSessionWithIds = addTaskSession.bind(
     null,
     task._id,
@@ -221,10 +234,21 @@ export function TimeTrackingForm({ task, formatTime }) {
   );
 }
 
-export function TimeTrackingSessions({ task, sessions, formatTime }) {
+export function TimeTrackingSessions({
+  task,
+  sessions,
+  setSessions,
+  formatTime,
+}) {
   const { uid } = useContext(AuthContext);
   async function handleDeleteSession(sessionId) {
-    await removeTaskSession(task._id, task.projectId, sessionId);
+    setSessions((prev) => prev.filter((session) => session._id !== sessionId));
+
+    const res = await removeTaskSession(task._id, task.projectId, sessionId);
+
+    if (!res.success) {
+      setSessions(task?.timeTracking?.sessions || []);
+    }
 
     socket.emit("update task", task.projectId);
   }

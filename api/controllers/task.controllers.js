@@ -678,10 +678,17 @@ export async function endTimer(req, res, next) {
 
     await task.save();
 
+    const taskData = await TaskModel.findById({ _id: req.params.id })
+      .populate({
+        path: "timeTracking.sessions.userId", // Accès à userId dans sessions
+        select: "-password -role", // Exclure les champs sensibles
+      })
+      .exec();
+
     return res.status(200).send({
       success: true,
       message: "Le tracking du temps de la tâche est terminée",
-      data: task,
+      data: taskData,
     });
   } catch (err) {
     return res.status(500).send({

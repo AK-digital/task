@@ -218,6 +218,38 @@ export async function updateProject(prevState, formData) {
     const figmaUrl = formData.get("figma-url");
     const githubUrl = formData.get("github-url");
 
+    function isValidUrl(url) {
+      return regex.url.test(url);
+    }
+
+    if (websiteUrl && !isValidUrl(websiteUrl)) {
+      return {
+        status: "failure",
+        message: "L'URL du site web est invalide",
+      };
+    }
+
+    if (adminUrl && !isValidUrl(adminUrl)) {
+      return {
+        status: "failure",
+        message: "L'URL du back-office est invalide",
+      };
+    }
+
+    if (figmaUrl && !isValidUrl(figmaUrl)) {
+      return {
+        status: "failure",
+        message: "L'URL de Figma est invalide",
+      };
+    }
+
+    if (githubUrl && !isValidUrl(githubUrl)) {
+      return {
+        status: "failure",
+        message: "L'URL de Github est invalide",
+      };
+    }
+
     const urlsObject = {
       website: websiteUrl,
       admin: adminUrl,

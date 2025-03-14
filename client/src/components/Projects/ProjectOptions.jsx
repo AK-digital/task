@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import styles from "@/styles/pages/options.module.css";
 import moment from "moment/moment";
 import "moment/locale/fr";
@@ -20,6 +20,8 @@ import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
 import { useDebouncedCallback } from "use-debounce";
+import { set } from "zod";
+import PopupMessage from "@/layouts/PopupMessage";
 moment.locale("fr");
 
 const initialState = {
@@ -31,6 +33,7 @@ const initialState = {
 export default function ProjectOptions({ project }) {
   const router = useRouter();
   const formRef = useRef(null);
+  const [popup, setPopup] = useState(null);
   const [state, formAction, pending] = useActionState(
     updateProject,
     initialState
@@ -40,6 +43,33 @@ export default function ProjectOptions({ project }) {
 
   const author = project?.author;
   const createdAt = moment(project?.createdAt).format("DD/MM/YYYY");
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      setPopup({
+        title: "Modifications enregistrées",
+        message: "Les modifications ont été enregistrées avec succès",
+      });
+      return;
+    }
+    if (state?.status === "failure") {
+      setPopup({
+        title: "Une erreur est survenue",
+        message: state?.message,
+      });
+      return;
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (popup) {
+      const timeout = setTimeout(() => {
+        setPopup(null);
+      }, 4000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [popup]);
 
   async function handleUpdateLogo(e) {
     e.preventDefault();
@@ -247,6 +277,13 @@ export default function ProjectOptions({ project }) {
           </div>
         </div>
       </form>
+      {popup && (
+        <PopupMessage
+          status={state?.status}
+          title={popup?.title}
+          message={popup?.message}
+        />
+      )}
     </div>
   );
 }

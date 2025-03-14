@@ -406,6 +406,13 @@ export async function taskEndTimer(taskId, projectId) {
     console.log(
       err.message || "Une erreur est survenue lors de l'enregistrement du timer"
     );
+
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de l'enregistrement du timer",
+    };
   }
 }
 
@@ -431,5 +438,12 @@ export async function removeTaskSession(taskId, projectId, sessionId) {
     console.log(
       err.message || "Une erreur est survenue lors de la suppression du timer"
     );
+
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de la suppression de la session",
+    };
   }
 }

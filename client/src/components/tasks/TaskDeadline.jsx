@@ -26,25 +26,26 @@ export default function TaskDeadline({ task, project }) {
     const now = moment();
     const deadlineDate = moment(deadline);
 
-    // If deadline is in the past or today (100%)
-    if (now.isAfter(deadlineDate)) {
+    // If deadline is today or past, return 100%
+    if (now.isSame(deadlineDate, "day") || now.isAfter(deadlineDate, "day")) {
       return "100%";
     }
 
-    // If deadline is in the future
-    const taskCreatedDate = task?.createdAt
-      ? moment(task.createdAt)
-      : moment().subtract(1, "day");
-    const totalDuration = deadlineDate.diff(taskCreatedDate, "hours");
-    const elapsedDuration = now.diff(taskCreatedDate, "hours");
+    // Calculate days until deadline
+    const daysUntilDeadline = deadlineDate.diff(now, "days");
 
-    // Calculate progress percentage
-    let progressPercentage = (elapsedDuration / totalDuration) * 100;
+    const maxDays = 30; // Maximum number of days to display progress
 
-    // Limit progress percentage between 0% and 100%
-    progressPercentage = Math.min(Math.max(progressPercentage, 0), 100);
+    if (daysUntilDeadline === 0) {
+      // If deadline is tomorrow (0 full days remaining)
+      return "90%";
+    } else {
+      // Calculate progress percentage
+      const progressPercentage =
+        100 - (Math.min(daysUntilDeadline, maxDays) / maxDays) * 80 - 10;
 
-    return `${progressPercentage.toFixed(0)}%`;
+      return `${progressPercentage.toFixed(0)}%`;
+    }
   };
 
   useEffect(() => {

@@ -112,7 +112,12 @@ export default function BoardHeader({
   }, [selectedTasks]);
 
   return (
-    <div className={styles.container} data-open={open} data-archive={archive}>
+    <div
+      className={styles.container}
+      data-open={open}
+      data-archive={archive}
+      style={{ "--border-color": `${board?.color}` }}
+    >
       <div className={styles.actions}>
         {/* Display if tasks is not empty and if there is at least 2 task */}
         {isNotEmpty(tasks) && tasks?.length > 1 && (
