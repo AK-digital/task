@@ -27,7 +27,7 @@ export default function TaskTimer({ task }) {
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
-    const durations = sessions.map((session) => session.duration);
+    const durations = sessions.map((session) => session?.duration);
     const totalDuration = durations.reduce((acc, curr) => acc + curr, 0);
 
     setTimer(Math.floor(totalDuration / 1000));
@@ -99,7 +99,11 @@ export default function TaskTimer({ task }) {
               )}
             </div>
             {addingSession ? (
-              <TimeTrackingForm task={task} formatTime={formatTime} />
+              <TimeTrackingForm
+                task={task}
+                formatTime={formatTime}
+                setSessions={setSessions}
+              />
             ) : (
               <div className={styles.content}>
                 <div className={styles.addTime}>
@@ -125,7 +129,7 @@ export default function TaskTimer({ task }) {
   );
 }
 
-export function TimeTrackingForm({ task, formatTime }) {
+export function TimeTrackingForm({ task, formatTime, setSessions }) {
   const [startTime, setStartTime] = useState(moment().format("HH:mm"));
   const [endTime, setEndTime] = useState("");
   const [timeExpected, setTimeExpected] = useState("00:00:00");
@@ -152,6 +156,9 @@ export function TimeTrackingForm({ task, formatTime }) {
       setStartTime(moment().format("HH:mm"));
       setEndTime("");
       setTimeExpected("00:00:00");
+      const newSessions = state?.data?.timeTracking?.sessions;
+      setSessions([...newSessions]);
+
       socket.emit("update task", task?.projectId);
     }
   }, [state]);

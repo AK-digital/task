@@ -1,6 +1,6 @@
 "use client";
 import styles from "@/styles/components/tasks/task-more.module.css";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useContext } from "react";
 import Messages from "../messages/Messages";
 import Image from "next/image";
 import moment from "moment";
@@ -9,10 +9,13 @@ import socket from "@/utils/socket";
 import { bricolageGrostesque } from "@/utils/font";
 import { updateTaskDescription } from "@/api/task";
 import Tiptap from "../RichTextEditor/Tiptap";
+import { AuthContext } from "@/context/auth";
+import { set } from "zod";
 
 moment.locale("fr");
 
 export default function TaskMore({ task, project, setOpennedTask, archive }) {
+  const { uid } = useContext(AuthContext);
   const [pending, setPending] = useState(false);
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
@@ -29,6 +32,10 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
 
   const date = moment(task?.description?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
+
+  useEffect(() => {
+    setOptimisticDescription(task?.description?.text);
+  }, [task?.description?.text]);
 
   const startResizing = useCallback((e) => {
     setIsResizing(true);
@@ -185,16 +192,18 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
                   dangerouslySetInnerHTML={{ __html: optimisticDescription }}
                 ></div>
               </div>
-              <div className={styles.actions}>
-                <button
-                  className={bricolageGrostesque.className}
-                  data-disabled={pending}
-                  disabled={pending}
-                  onClick={handleRemoveDescription}
-                >
-                  Effacer la description
-                </button>
-              </div>
+              {task?.author?._id === uid && (
+                <div className={styles.actions}>
+                  <button
+                    className={bricolageGrostesque.className}
+                    data-disabled={pending}
+                    disabled={pending}
+                    onClick={handleRemoveDescription}
+                  >
+                    Effacer la description
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <Tiptap

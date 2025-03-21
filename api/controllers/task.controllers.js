@@ -373,8 +373,6 @@ export async function updateTaskDescription(req, res, next) {
     const authUser = res.locals.user;
     const { description, taggedUsers } = req.body;
 
-    console.log(typeof description);
-
     let updatedDescription = description;
 
     const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
@@ -382,8 +380,6 @@ export async function updateTaskDescription(req, res, next) {
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
     const matches = getMatches(description, imgRegex);
-
-    console.log(matches);
 
     if (matches.length > 0) {
       for (const match of matches) {
@@ -532,7 +528,7 @@ export async function addResponsible(req, res, next) {
     }
 
     if (authUser?._id.toString() !== responsibleId) {
-      const projectLink = `${process.env.CLIENT_URL}/project/${updatedTask.projectId._id}`;
+      const projectLink = `${process.env.CLIENT_URL}/projects/${updatedTask.projectId._id}`;
 
       const template = emailTaskAssigned(updatedTask, authUser, projectLink);
       await sendEmail(
@@ -729,7 +725,12 @@ export async function addTaskSession(req, res, next) {
         new: true,
         setDefaultsOnInsert: true,
       }
-    );
+    )
+      .populate({
+        path: "timeTracking.sessions.userId", // Accès à userId dans sessions
+        select: "-password -role", // Exclure les champs sensibles
+      })
+      .exec();
 
     if (!updatedTask) {
       return res.status(404).send({

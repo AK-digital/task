@@ -59,7 +59,7 @@ export default function Tiptap({
   mutateMessage,
 }) {
   const containerRef = useRef(null);
-  const { user } = useContext(AuthContext);
+  const { user, uid } = useContext(AuthContext);
   const [pending, setPending] = useState(false);
   const [plainText, setPlainText] = useState(
     message
@@ -213,6 +213,8 @@ export default function Tiptap({
   };
 
   const handleSaveDescription = async () => {
+    if (task?.author?._id !== uid) return;
+
     setPending(true);
     setOptimisticDescription(plainText); // Optimistic update
 
