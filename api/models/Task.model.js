@@ -44,30 +44,6 @@ const taskSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "User",
     },
-    timeTracking: {
-      totalTime: {
-        type: Number, // Temps total passé sur la tâche (en millisecondes)
-        default: 0,
-      },
-      sessions: [
-        {
-          userId: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-          },
-          startTime: {
-            type: Date, // Début de la session
-          },
-          endTime: {
-            type: Date, // Fin de la session
-          },
-          duration: {
-            type: Number, // Durée en millisecondes
-            default: 0, // Calculé automatiquement si endTime est fourni
-          },
-        },
-      ],
-    },
     status: {
       type: String,
       enum: ["En cours", "En attente", "Terminée", "À faire", "bloquée"],
@@ -77,6 +53,10 @@ const taskSchema = new Schema(
       type: String,
       enum: ["Basse", "Moyenne", "Haute", "Urgent"],
       default: "Moyenne",
+    },
+    timeTrackings: {
+      type: [Schema.Types.ObjectId],
+      ref: "TimeTracking",
     },
     deadline: {
       type: Date,

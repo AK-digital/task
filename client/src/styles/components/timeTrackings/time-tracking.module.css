@@ -1,0 +1,25 @@
+.container {
+    background-color: var(--secondary-background-color);
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.container:last-child {
+    border-bottom: none;
+}
+
+.container,
+.container>div span {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.container>div span {
+    gap: 4px;
+}
+
+.text {
+    width: 100%;
+    max-width: 700px;
+}

@@ -114,6 +114,10 @@
     font-size: var(--text-size-normal);
 }
 
+.content p:empty {
+    margin: 12px 0;
+}
+
 .content ol,
 .content ul {
     padding: 16px;

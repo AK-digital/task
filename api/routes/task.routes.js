@@ -84,20 +84,6 @@ router.patch(
 );
 
 router.patch(
-  "/:id/start-timer",
-  authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
-  taskControllers.startTimer
-);
-
-router.patch(
-  "/:id/end-timer",
-  authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
-  taskControllers.endTimer
-);
-
-router.patch(
   "/:id/add-session",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,

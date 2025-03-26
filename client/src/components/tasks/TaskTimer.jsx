@@ -1,5 +1,11 @@
-import { addTaskSession } from "@/actions/task";
-import { removeTaskSession, taskEndTimer, taskStartTimer } from "@/api/task";
+import { saveTimeTracking } from "@/actions/timeTracking";
+import { removeTaskSession } from "@/api/task";
+import {
+  deleteTimeTracking,
+  getTimeTrackings,
+  timeTrackingStart,
+  timeTrackingStop,
+} from "@/api/timeTracking";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import socket from "@/utils/socket";
@@ -18,10 +24,10 @@ import {
 } from "react";
 
 export default function TaskTimer({ task }) {
-  const [timer, setTimer] = useState(
-    Math.floor(task?.timeTracking?.totalTime / 1000) || 0
-  );
-  const [sessions, setSessions] = useState(task?.timeTracking?.sessions || []);
+  const totalTaskDuration =
+    task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0;
+  const [timer, setTimer] = useState(Math.floor(totalTaskDuration / 1000) || 0);
+  const [sessions, setSessions] = useState(task?.timeTrackings || []);
   const [more, setMore] = useState(false);
   const [addingSession, setAddingSession] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -45,14 +51,14 @@ export default function TaskTimer({ task }) {
 
   const handlePauseTimer = async () => {
     setIsRunning(false);
-    const res = await taskEndTimer(task?._id, task?.projectId);
+    const res = await timeTrackingStop(task?._id, task?.projectId);
 
-    const newSessions = res?.data?.timeTracking?.sessions || [];
+    const newSessions = res?.data || [];
 
-    setSessions(newSessions);
+    setSessions((prev) => [...prev, newSessions]);
 
     if (!res.success) {
-      setSessions(task?.timeTracking?.sessions || []);
+      setSessions(task?.timeTrackings || []);
     }
 
     socket.emit("update task", task?.projectId);
@@ -60,7 +66,7 @@ export default function TaskTimer({ task }) {
 
   const handlePlayTimer = async () => {
     setIsRunning(true);
-    await taskStartTimer(task?._id, task?.projectId);
+    await timeTrackingStart(task?._id, task?.projectId);
   };
 
   const formatTime = useCallback((totalSeconds) => {
@@ -141,13 +147,13 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
     errors: null,
   };
 
-  const addTaskSessionWithIds = addTaskSession.bind(
+  const saveTimeTrackingWithIds = saveTimeTracking.bind(
     null,
     task._id,
     task.projectId
   );
   const [state, formAction, pending] = useActionState(
-    addTaskSessionWithIds,
+    saveTimeTrackingWithIds,
     initialState
   );
 
@@ -156,8 +162,8 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
       setStartTime(moment().format("HH:mm"));
       setEndTime("");
       setTimeExpected("00:00:00");
-      const newSessions = state?.data?.timeTracking?.sessions;
-      setSessions([...newSessions]);
+      const newSession = state?.data;
+      setSessions((prev) => [...prev, newSession]);
 
       socket.emit("update task", task?.projectId);
     }
@@ -251,10 +257,10 @@ export function TimeTrackingSessions({
   async function handleDeleteSession(sessionId) {
     setSessions((prev) => prev.filter((session) => session._id !== sessionId));
 
-    const res = await removeTaskSession(task._id, task.projectId, sessionId);
+    const res = await deleteTimeTracking(sessionId, task.projectId);
 
     if (!res.success) {
-      setSessions(task?.timeTracking?.sessions || []);
+      setSessions(task?.timeTrackings || []);
     }
 
     socket.emit("update task", task.projectId);
@@ -270,7 +276,7 @@ export function TimeTrackingSessions({
           const hoursEnd = moment(session?.endTime).format("HH:mm");
 
           return (
-            <li key={session._id}>
+            <li key={session?._id}>
               <div className={styles.monthDay}>
                 <Image
                   src={user?.picture || "/default-pfp.webp"}

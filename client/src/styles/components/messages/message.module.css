@@ -84,9 +84,9 @@
     font-size: var(--text-size-normal);
 }
 
-/* .text p {
-    font-size: var(--text-size-normal);
-} */
+.text p:empty {
+    margin: 12px 0;
+}
 
 .text img {
     max-width: 800px;

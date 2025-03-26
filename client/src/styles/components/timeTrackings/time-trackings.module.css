@@ -1,0 +1,26 @@
+.container {
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.header h1 {
+    margin-bottom: inherit;
+    min-width: fit-content;
+}
+
+.content {
+    margin-top: 12px;
+}
+
+.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 1.5rem;
+}

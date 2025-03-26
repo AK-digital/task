@@ -7,7 +7,6 @@ import { getProjectInvitations } from "@/api/projectInvitation";
 import { notFound } from "next/navigation";
 import Project from "@/components/Projects/Project";
 import { getTasks } from "@/api/task";
-import Options from "@/components/Projects/ProjectOptions";
 import ProjectOptions from "@/components/Projects/ProjectOptions";
 
 export default async function ProjectPage({ params }) {
@@ -16,6 +15,7 @@ export default async function ProjectPage({ params }) {
 
   const archive = slug?.length > 1 && slug[1] === "archive";
   const options = slug?.length > 1 && slug[1] === "options";
+  const timeTracking = slug?.length > 1 && slug[1] === "time-tracking";
 
   const projectData = getProject(id);
   const projectInvitationsData = getProjectInvitations(id);
@@ -37,7 +37,7 @@ export default async function ProjectPage({ params }) {
 
   return (
     <main className={styles.main}>
-      {!options ? (
+      {!options && !timeTracking && (
         <Project
           project={project}
           projectInvitations={projectInvitations}
@@ -45,9 +45,9 @@ export default async function ProjectPage({ params }) {
           tasks={tasks}
           archive={archive}
         />
-      ) : (
-        <ProjectOptions project={project} />
       )}
+      {options && <ProjectOptions project={project} />}
+      {timeTracking && <ProjectTimeTracking project={project} />}
     </main>
   );
 }

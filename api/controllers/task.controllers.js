@@ -70,8 +70,11 @@ export async function getTasks(req, res, next) {
         select: "-password -role", // Exclure les champs sensibles
       })
       .populate({
-        path: "timeTracking.sessions.userId", // Accès à userId dans sessions
-        select: "-password -role", // Exclure les champs sensibles
+        path: "timeTrackings",
+        populate: {
+          path: "userId",
+          select: "-password -role",
+        },
       })
       .exec();
 
@@ -590,47 +593,6 @@ export async function removeResponsible(req, res, next) {
       data: updatedTask,
     });
   } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message: err.message || "Une erreur inattendue est survenue",
-    });
-  }
-}
-
-export async function startTimer(req, res, next) {
-  try {
-    const authUser = res.locals.user;
-
-    const updatedTask = await TaskModel.findByIdAndUpdate(
-      { _id: req.params.id },
-      {
-        // Each startTimer request we push a new session which contains the uid, and the starting time
-        $push: {
-          "timeTracking.sessions": {
-            userId: authUser._id,
-            startTime: new Date(),
-          },
-        },
-      },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
-
-    if (!updatedTask) {
-      return res.status(404).send({
-        success: false,
-        message: "Impossible de suivre le temps d'une tâche qui n'existe pas",
-      });
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: "Le tracking du temps de la tâche commence",
-      data: updatedTask,
-    });
-  } catch (error) {
     return res.status(500).send({
       success: false,
       message: err.message || "Une erreur inattendue est survenue",
