@@ -12,7 +12,8 @@ export async function getTimeTrackings(queries) {
       `time-tracking${queryString}`,
       "GET",
       "application/json",
-      null
+      null,
+      "trackers"
     );
 
     const response = await res.json();

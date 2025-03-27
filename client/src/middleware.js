@@ -22,5 +22,6 @@ export const config = {
     "/projects/:path*",
     "/profile",
     "/new-project/:path*",
+    "/time-trackings",
   ], // Routes protégées
 };

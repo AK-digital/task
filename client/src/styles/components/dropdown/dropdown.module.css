@@ -15,6 +15,7 @@
     justify-content: center;
     background-color: var(--secondary-background-color);
     padding: 6px 0;
+    height: 35px;
     width: 180px;
     border-radius: var(--border-radius-large);
     font-size: var(--text-size-normal);
@@ -33,6 +34,7 @@
 
 .options {
     position: absolute;
+    z-index: 999;
     top: 40px;
     left: 0;
     width: 100%;

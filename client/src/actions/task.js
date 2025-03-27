@@ -72,6 +72,7 @@ export async function updateTaskText(taskId, projectId, prevState, formData) {
 
     return {
       status: "success",
+      message: "Le texte de la tâche a été mis à jour avec succès",
     };
   } catch (err) {
     console.log(

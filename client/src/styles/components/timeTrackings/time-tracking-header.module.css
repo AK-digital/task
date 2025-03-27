@@ -1,8 +1,13 @@
 .container {
+    position: sticky;
+    top: 0;
     background-color: var(--secondary-background-color);
     border-bottom: 1px solid var(--text-light-color);
-    font-size: var(--text-size-normal);
-    height: 42px;
+    font-size: .85rem;
+    height: 38px;
+    color: var(--text-color-muted);
+    font-weight: 500;
+    border-radius: var(--border-radius-small) var(--border-radius-small) 0 0;
 }
 
 .container:last-child {
@@ -26,9 +31,30 @@
 .row {
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
+    gap: 8px;
     cursor: default;
+}
+
+.row>div {
+    display: flex;
+    flex-direction: column;
+}
+
+.row>div svg[data-sort="true"] {
+    color: var(--accent-color);
+}
+
+.row>div svg:nth-child(1) {
+    position: relative;
+    top: 4px;
+}
+
+.row>div svg:nth-child(2) {
+    position: relative;
+    top: -2px;
 }
 
 .selection {
@@ -37,34 +63,13 @@
 }
 
 .selection input {
-    width: 14px;
-    cursor: pointer;
+    width: 16px;
 }
 
 .text {
     width: 100%;
     min-width: 200px;
     max-width: 700px;
-    cursor: text;
-}
-
-.text form {
-    position: relative;
-    left: -6px;
-}
-
-.text input {
-    border: none;
-    padding: 6px !important;
-    background-color: var(--third-background-color);
-    border-radius: var(--border-radius-xs);
-    font-size: 14.8px;
-    color: var(--text-medium-color);
-    animation: 150ms backgroundAppear linear;
-}
-
-.text span {
-    justify-content: flex-start !important;
 }
 
 .user {
@@ -84,16 +89,4 @@
     max-width: 100px;
     min-width: 100px;
     border-right: 1px solid var(--text-light-color);
-}
-
-@keyframes backgroundAppear {
-    from {
-        background-color: var(--secondary-background-color);
-        color: var(--text-dark-color);
-    }
-
-    to {
-        background-color: var(--third-background-color);
-        color: var(--text-medium-color);
-    }
 }

@@ -2,7 +2,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    width: 100%;
 }
 
 .date {
@@ -12,8 +11,9 @@
     position: relative;
     background-color: var(--secondary-background-color);
     border-radius: var(--border-radius-large);
-    padding: 9px 0;
-    width: 180px;
+    padding: 6px 0;
+    width: 130px;
+    height: 35px;
 }
 
 
@@ -21,7 +21,7 @@
 .date label {
     position: absolute;
     top: -16px;
-    left: 20px;
+    left: 18px;
     font-size: 0.70rem;
     display: block;
     width: 100%;
@@ -29,6 +29,6 @@
 
 .date input {
     padding: 0 !important;
-    max-width: 140px;
+    max-width: 100px;
     border: none;
 }

@@ -11,5 +11,6 @@
     background-color: rgba(218, 214, 199, 0.6);
     border-top-left-radius: var(--border-radius-medium);
     height: 100%;
-    padding: var(--layout-gap) var(--layout-gap) 0 var(--layout-gap);
+    padding: var(--layout-gap) 0 0 var(--layout-gap);
+    overflow: hidden;
 }

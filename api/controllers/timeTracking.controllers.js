@@ -71,15 +71,36 @@ export async function getTimeTrackings(req, res, next) {
     }
 
     if (startingDate) {
+      const startDate = new Date(startingDate);
+      startDate.setHours(0, 0, 0, 0); // Set to beginning of the day
+
+      let endDate;
+      if (endingDate) {
+        endDate = new Date(endingDate);
+        endDate.setHours(23, 59, 59, 999); // Set to end of the day
+      } else {
+        endDate = new Date(); // Current time
+        endDate.setHours(23, 59, 59, 999); // Set to end of the day
+      }
+
       filters.startTime = {
-        $gte: new Date(startingDate),
-        $lt: endingDate ? new Date(endingDate) : new Date(),
+        $gte: startDate,
+        $lte: endDate,
+      };
+    } else if (!startingDate && endingDate) {
+      let endDate = new Date(endingDate);
+      endDate.setHours(23, 59, 59, 999); // Set to end of the day
+
+      filters.startTime = {
+        $gte: new Date(new Date().setHours(0, 0, 0, 0)), // Beginning of the day
+        $lte: endDate, // End of the day
       };
     }
 
     const timeTrackings = await TimeTrackingModel.find(filters)
+      .populate("projectId", "_id author guests")
       .populate("userId", "_id firstName lastName picture")
-      .populate("taskId", "_id text")
+      .populate("taskId", "_id text projectId")
       .exec();
 
     console.log(timeTrackings, "test");

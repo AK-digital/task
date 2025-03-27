@@ -159,7 +159,7 @@ io.on("connection", (socket) => {
   // Task update
   socket.on("task text update", async (guests, taskId, value) => {
     guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest._id });
+      const user = await UserModel.findById({ _id: guest._id || guest });
       io.to(user?.socketId).emit("task text updated", taskId, value);
       io.to(user?.socketId).emit("task updated");
     });
