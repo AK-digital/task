@@ -321,6 +321,18 @@ input:-webkit-autofill:active {
   border-radius: var(--border-radius-small);
 }
 
+#more {
+  position: absolute;
+  z-index: 2001;
+  background-color: var(--secondary-background-color);
+  border-radius: var(--border-radius-xs);
+  box-shadow: var(--box-shadow-medium);
+  padding: 8px;
+  font-size: var(--text-size-small);
+  color: var(--text-color-dark);
+  user-select: none;
+}
+
 #modal-layout,
 #task-modal-layout,
 #modal-layout-opacity {

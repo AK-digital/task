@@ -28,7 +28,7 @@ router.patch(
 );
 
 router.delete(
-  "/:id",
+  "/",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
   timeTrackingControllers.deleteTimeTracking

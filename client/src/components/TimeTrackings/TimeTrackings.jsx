@@ -5,9 +5,11 @@ import TimeTracking from "./TimeTracking";
 import Filters from "./Filters";
 import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useState } from "react";
+import SelectedTimeTrackings from "./SelectedTimeTrackings";
 
 export default function TimeTrackings({ trackers, projects, project }) {
   const [filteredTrackers, setFilteredTrackers] = useState(trackers || []);
+  const [selectedTrackers, setSelectedTrackers] = useState([]);
   const totalDuration = trackers?.reduce((acc, tracker) => {
     return acc + Math.floor(tracker?.duration / 1000) * 1000;
   }, 0);
@@ -15,6 +17,8 @@ export default function TimeTrackings({ trackers, projects, project }) {
   useEffect(() => {
     setFilteredTrackers(trackers);
   }, [trackers]);
+
+  console.log(selectedTrackers);
 
   return (
     <div className={styles.container}>
@@ -38,11 +42,24 @@ export default function TimeTrackings({ trackers, projects, project }) {
               <TimeTrackingHeader
                 trackers={trackers}
                 setFilteredTrackers={setFilteredTrackers}
+                setSelectedTrackers={setSelectedTrackers}
               />
-
               {filteredTrackers?.map((tracker) => {
-                return <TimeTracking tracker={tracker} key={tracker?._id} />;
+                return (
+                  <TimeTracking
+                    tracker={tracker}
+                    setSelectedTrackers={setSelectedTrackers}
+                    key={tracker?._id}
+                  />
+                );
               })}
+              {selectedTrackers.length > 0 && (
+                <SelectedTimeTrackings
+                  selectedTrackers={selectedTrackers}
+                  setSelectedTrackers={setSelectedTrackers}
+                  project={project}
+                />
+              )}
             </div>
           )}
         </>

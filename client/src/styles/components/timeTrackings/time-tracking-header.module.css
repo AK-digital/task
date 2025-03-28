@@ -64,6 +64,7 @@
 
 .selection input {
     width: 16px;
+    cursor: pointer;
 }
 
 .text {

@@ -92,12 +92,13 @@ export async function timeTrackingStop(taskId, projectId) {
   }
 }
 
-export async function deleteTimeTracking(id, projectId) {
+export async function deleteTimeTracking(trackersIds, projectId) {
   try {
     const res = await useAuthFetch(
-      `time-tracking/${id}?projectId=${projectId}`,
+      `time-tracking?projectId=${projectId}`,
       "DELETE",
-      "application/json"
+      "application/json",
+      { trackersIds: trackersIds }
     );
 
     const response = await res.json();
@@ -107,6 +108,7 @@ export async function deleteTimeTracking(id, projectId) {
     }
 
     revalidateTag("tasks");
+    revalidateTag("trackers");
 
     return response;
   } catch (err) {

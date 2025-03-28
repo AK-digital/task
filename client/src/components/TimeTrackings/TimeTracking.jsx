@@ -8,6 +8,8 @@ import "moment/locale/fr";
 import { updateTaskText } from "@/actions/task";
 import socket from "@/utils/socket";
 import { useDebouncedCallback } from "use-debounce";
+import { MoreVerticalIcon } from "lucide-react";
+import TimeTrackingMore from "./TimeTrackingMore";
 
 const initialState = {
   status: "pending",
@@ -16,9 +18,11 @@ const initialState = {
   errors: null,
 };
 
-export default function TimeTracking({ tracker }) {
+export default function TimeTracking({ tracker, setSelectedTrackers }) {
   const [inputValue, setInputValue] = useState(tracker?.taskId?.text || "");
   const [isEditing, setIsEditing] = useState(false);
+  const [isHover, setIsHover] = useState(false);
+  const [isMore, setIsMore] = useState(false);
   const formRef = useRef(null);
   const updateTaskTextWithIds = updateTaskText.bind(
     null,
@@ -49,11 +53,31 @@ export default function TimeTracking({ tracker }) {
     formRef?.current?.requestSubmit();
   }, 500);
 
+  const handleSelectTracker = (e) => {
+    const checked = e.target.checked;
+    const value = e.target.value;
+    if (checked) {
+      setSelectedTrackers((prev) => [...prev, value]);
+    } else {
+      setSelectedTrackers((prev) => prev.filter((id) => id !== value));
+    }
+  };
+
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+    >
       {/* Element selection */}
       <div className={`${styles.selection} ${styles.row}`}>
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          name="tracker"
+          id={`tracker-${tracker?._id}`}
+          defaultValue={tracker?._id}
+          onClick={handleSelectTracker}
+        />
       </div>
       {/* Task text */}
       <div className={styles.text}>
@@ -102,6 +126,23 @@ export default function TimeTracking({ tracker }) {
       <div className={`${styles.duration} ${styles.row}`}>
         <span>{formatTime(Math.floor(tracker?.duration / 1000))}</span>
       </div>
+      {isHover && (
+        <div className={`${styles.more} ${styles.row}`}>
+          <MoreVerticalIcon
+            size={18}
+            cursor={"pointer"}
+            onClick={() => setIsMore(true)}
+          />
+          {isMore && (
+            <TimeTrackingMore
+              tracker={tracker}
+              setIsEditing={setIsEditing}
+              setIsMore={setIsMore}
+              setIsHover={setIsHover}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

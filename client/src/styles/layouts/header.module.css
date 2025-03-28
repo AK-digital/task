@@ -6,20 +6,22 @@
 
 .nav {
     justify-content: space-between;
-    margin-inline: 84px 40px;
+    margin-inline: 120px 40px;
     height: 100%;
 }
 
+/* .links {
 
+} */
+
+.links svg {
+    color: var(--text-dark-color);
+}
 
 .nav,
 .actions {
     display: flex;
     align-items: center;
-}
-
-.nav {
-    justify-content: flex-end;
 }
 
 .logo {

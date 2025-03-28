@@ -223,11 +223,13 @@ export async function stopTimer(req, res, next) {
 
 export async function deleteTimeTracking(req, res, next) {
   try {
-    const timeTracking = await TimeTrackingModel.findByIdAndDelete(
-      req.params.id
-    );
+    const { trackersIds } = req.body;
 
-    if (!timeTracking) {
+    const deletedTimeTracking = await TimeTrackingModel.deleteMany({
+      _id: { $in: trackersIds },
+    });
+
+    if (!deletedTimeTracking) {
       return res.status(404).send({
         success: false,
         message: "Aucun temps de suivi trouvé",
@@ -237,7 +239,7 @@ export async function deleteTimeTracking(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Le temps de suivi a été supprimé",
-      data: timeTracking,
+      data: deletedTimeTracking,
     });
   } catch (err) {
     return res.status(500).send({

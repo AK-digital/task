@@ -2,7 +2,11 @@ import styles from "@/styles/components/timeTrackings/time-tracking-header.modul
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function TimeTrackingHeader({ trackers, setFilteredTrackers }) {
+export default function TimeTrackingHeader({
+  trackers,
+  setFilteredTrackers,
+  setSelectedTrackers,
+}) {
   const [userSort, setUserSort] = useState("");
   const [dateSort, setDateSort] = useState("");
   const [durationSort, setDurationSort] = useState("");
@@ -78,9 +82,33 @@ export default function TimeTrackingHeader({ trackers, setFilteredTrackers }) {
     }
   };
 
+  const handleSelectAllTrackers = (e) => {
+    const isChecked = e.target.checked;
+    const checkboxes = document.querySelectorAll("input[name=tracker]");
+    let selectedTrackers = [];
+
+    checkboxes.forEach((checkbox) => {
+      if (isChecked) {
+        selectedTrackers.push(checkbox.value);
+      } else {
+        selectedTrackers = [];
+      }
+      checkbox.checked = isChecked ? true : false;
+    });
+
+    setSelectedTrackers(selectedTrackers);
+  };
+
   return (
     <div className={styles.container}>
-      <div className={`${styles.selection} ${styles.row}`}></div>
+      <div className={`${styles.selection} ${styles.row}`}>
+        <input
+          type="checkbox"
+          id="trackers"
+          name="trackers"
+          onClick={handleSelectAllTrackers}
+        />
+      </div>
       <div className={styles.text}>
         <span>Description</span>
       </div>

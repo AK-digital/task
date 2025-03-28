@@ -4,7 +4,7 @@ import styles from "@/styles/layouts/header.module.css";
 import Notifications from "@/components/Notifications/Notifications";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
-import { Bell } from "lucide-react";
+import { Bell, Timer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
@@ -40,6 +40,11 @@ export default function Header() {
   return (
     <header className={styles.container}>
       <nav className={styles.nav}>
+        <div className={styles.links}>
+          <Link href={"/time-trackings"}>
+            <Timer size={24} cursor={"pointer"} />
+          </Link>
+        </div>
         <ul className={styles.actions}>
           <li className={styles.action}>
             <Bell

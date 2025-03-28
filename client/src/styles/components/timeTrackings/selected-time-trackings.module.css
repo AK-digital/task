@@ -1,0 +1,57 @@
+.container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-small);
+    box-shadow: var(--box-shadow-small);
+    gap: 8px;
+    overflow: hidden;
+    padding-right: 8px;
+    animation: forwards 150ms slideIn;
+}
+
+.container,
+.selected,
+.delete {
+    display: flex;
+    align-items: center;
+}
+
+.selected {
+    background-color: var(--text-accent-color);
+    height: 80px;
+    width: 80px;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+}
+
+.text {
+    font-size: 1.4rem;
+}
+
+.border {
+    width: 1px;
+    background-color: var(--text-light-color);
+    height: 50px;
+    margin-inline: 12px;
+}
+
+.delete {
+    color: var(--text-color-red);
+    gap: 4px;
+    cursor: pointer;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+
+}
