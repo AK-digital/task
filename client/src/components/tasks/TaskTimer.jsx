@@ -272,8 +272,14 @@ export function TimeTrackingSessions({
         {sessions.map((session, index) => {
           const user = session?.userId;
           const endDate = moment(session?.endTime).format("D MMM");
-          const hoursStart = moment(session?.startTime).format("HH:mm");
-          const hoursEnd = moment(session?.endTime).format("HH:mm");
+          const hoursStart = moment
+            .utc(session?.startTime)
+            .locale("fr")
+            .format("HH:mm");
+          const hoursEnd = moment
+            .utc(session?.endTime)
+            .locale("fr")
+            .format("HH:mm");
 
           return (
             <li key={session?._id}>

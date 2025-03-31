@@ -10,8 +10,10 @@ export async function saveTimeTracking(taskId, projectId, prevState, formData) {
     const startTime = formData.get("start-time");
     const endTime = formData.get("end-time");
 
-    const startDateTime = moment(`${date}T${startTime}`).format();
-    const endDateTime = moment(`${date}T${endTime}`).format();
+    const startDateTime = moment.utc(`${date}T${startTime}`).format();
+    const endDateTime = moment.utc(`${date}T${endTime}`).format();
+
+    console.log("startDateTime", startDateTime);
 
     const rawData = {
       taskId: taskId,

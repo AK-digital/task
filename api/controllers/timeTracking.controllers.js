@@ -1,7 +1,5 @@
 import TaskModel from "../models/Task.model.js";
 import TimeTrackingModel from "../models/TimeTracking.model.js";
-import UserModel from "../models/User.model.js";
-import mongoose from "mongoose";
 
 export async function saveTimeTracking(req, res, next) {
   const authUser = res.locals.user;
