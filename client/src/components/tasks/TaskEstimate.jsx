@@ -56,6 +56,7 @@ export default function TaskEstimate({ task, project }) {
   };
 
   const handleCustomeEstimation = async (e) => {
+    console.log("sent");
     e.preventDefault();
     setEdit(false);
     setHover(false);
@@ -138,31 +139,41 @@ export default function TaskEstimate({ task, project }) {
             </div>
             <div className={styles.custom}>
               <form className={styles.form} onSubmit={handleCustomeEstimation}>
-                <input
-                  type="number"
-                  id="number"
-                  name="number"
-                  value={number}
-                  onChange={(e) => setNumber(e.target.value)}
-                  min={1}
-                  max={99}
-                  className={bricolageGrostesque.className}
-                />
-                <select
-                  name=""
-                  id=""
-                  className={bricolageGrostesque.className}
-                  onChange={(e) => setWeek(e.target.value)}
-                >
-                  <option value="minutes">Minutes</option>
-                  <option value="heures">Heures</option>
-                  <option value="jours">Jours</option>
-                  <option value="semaines">Semaines</option>
-                </select>
+                <div className={styles.row}>
+                  <input
+                    type="number"
+                    id="number"
+                    name="number"
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
+                    step={0.1}
+                    min={1}
+                    max={99}
+                    className={bricolageGrostesque.className}
+                  />
+                  <select
+                    name=""
+                    id=""
+                    className={bricolageGrostesque.className}
+                    onChange={(e) => setWeek(e.target.value)}
+                  >
+                    <option value="minutes">Minutes</option>
+                    <option value="heures">Heures</option>
+                    <option value="jours">Jours</option>
+                    <option value="semaines">Semaines</option>
+                  </select>
+                </div>
+                {number >= 1 && (
+                  <div className={styles.buttons}>
+                    <button
+                      className={bricolageGrostesque.className}
+                      type="submit"
+                    >
+                      Valider
+                    </button>
+                  </div>
+                )}
               </form>
-              {/* <button>
-                <Plus size={16} /> définir
-              </button> */}
             </div>
           </div>
           <div id="modal-layout-opacity" onClick={() => setEdit(false)}></div>

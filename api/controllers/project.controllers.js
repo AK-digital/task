@@ -87,6 +87,23 @@ export async function getProjects(req, res, next) {
       },
       {
         $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      { $unwind: "$author" }, // Transforme author en objet unique
+      {
+        $lookup: {
+          from: "users",
+          localField: "guests",
+          foreignField: "_id",
+          as: "guests",
+        },
+      },
+      {
+        $lookup: {
           from: "tasks",
           localField: "_id",
           foreignField: "projectId",
@@ -184,8 +201,6 @@ export async function getProject(req, res, next) {
         },
       },
     ]);
-
-    console.log(project);
 
     if (!project.length) {
       return res.status(404).send({
@@ -358,7 +373,24 @@ export async function sendProjectInvitationToGuest(req, res, next) {
 
     const project = await ProjectModel.findById({
       _id: req.params.id,
-    });
+    })
+      .populate("author", "-password")
+      .populate("guests", "-password")
+      .exec();
+
+    if (project?.author?.email === email) {
+      return res.status(400).send({
+        success: false,
+        message: "Vous ne pouvez pas vous inviter vous-même",
+      });
+    }
+
+    if (project?.guests?.some((guest) => guest.email === email)) {
+      return res.status(400).send({
+        success: false,
+        message: "Cet utilisateur a déjà été invité",
+      });
+    }
 
     if (!project) {
       return res.status(404).send({

@@ -76,7 +76,6 @@ export async function readNotifications(req, res, next) {
   try {
     const authUser = res.locals.user;
     const { notificationIds } = req.body;
-    console.log(notificationIds);
 
     const notifications = await NotificationModel.updateMany(
       {

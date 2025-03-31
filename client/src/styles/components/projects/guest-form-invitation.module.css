@@ -1,3 +1,11 @@
+.container input:-webkit-autofill,
+.container input:-webkit-autofill:hover,
+.container input:-webkit-autofill:focus,
+.container input:-webkit-autofill:active {
+    transition: background-color 5000s linear 0s;
+    -webkit-text-fill-color: var(--text-dark-color) !important;
+}
+
 .container button {
     margin-top: 10px;
     width: 100%;

@@ -1,6 +1,8 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
+import "moment/locale/fr";
+import moment from "moment";
 
 export async function saveTimeTracking(taskId, projectId, prevState, formData) {
   try {
@@ -8,13 +10,13 @@ export async function saveTimeTracking(taskId, projectId, prevState, formData) {
     const startTime = formData.get("start-time");
     const endTime = formData.get("end-time");
 
-    const startDateTime = new Date(`${date}T${startTime}`);
-    const endDateTime = new Date(`${date}T${endTime}`);
+    const startDateTime = moment(`${date}T${startTime}`).format();
+    const endDateTime = moment(`${date}T${endTime}`).format();
 
     const rawData = {
       taskId: taskId,
-      startTime: startDateTime.getTime(),
-      endTime: endDateTime.getTime(),
+      startTime: startDateTime,
+      endTime: endDateTime,
     };
 
     const res = await useAuthFetch(

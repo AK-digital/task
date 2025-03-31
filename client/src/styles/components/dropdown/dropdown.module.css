@@ -5,7 +5,12 @@
     user-select: none;
 }
 
-.container span {
+.container[data-active="true"] {
+    z-index: 9999;
+}
+
+.container span,
+.label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -24,7 +29,20 @@
 }
 
 .current span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     max-width: 140px;
+}
+
+.count {
+    display: flex;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
+    background-color: var(--primary-background-color);
+    border-radius: 50%;
+    font-size: var(--text-size-small);
 }
 
 .current:hover {
@@ -48,23 +66,34 @@
 }
 
 .option {
-    padding: 6px 12px;
     cursor: pointer;
     transition: 150ms all ease-in-out;
-    max-width: 200px;
+    padding-inline: 6px;
 }
 
 .option:hover {
     background-color: var(--third-background-color);
 }
 
-.option:first-child {
-    justify-content: center;
-}
-
 .current,
-.option {
+.option,
+.label {
     display: flex;
     align-items: center;
     gap: 4px;
+}
+
+.checkbox {
+    width: 14px;
+}
+
+.label {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: 6px 0;
+}
+
+.label span {
+    width: 100%;
 }

@@ -249,8 +249,6 @@ export async function getTemplates(req, res, next) {
       });
     }
 
-    console.log(templates);
-
     return res.status(200).send({
       success: true,
       message: "Modèles récupérés avec succès",

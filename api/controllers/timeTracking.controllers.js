@@ -1,5 +1,6 @@
 import TaskModel from "../models/Task.model.js";
 import TimeTrackingModel from "../models/TimeTracking.model.js";
+import UserModel from "../models/User.model.js";
 import mongoose from "mongoose";
 
 export async function saveTimeTracking(req, res, next) {
@@ -53,6 +54,8 @@ export async function getTimeTrackings(req, res, next) {
     const startingDate = req.query.startingDate;
     const endingDate = req.query.endingDate;
 
+    console.log(projectId.split(" "));
+
     if (!projectId) {
       return res.status(400).send({
         success: false,
@@ -63,11 +66,11 @@ export async function getTimeTrackings(req, res, next) {
     const filters = {};
 
     if (projectId) {
-      filters.projectId = projectId;
+      filters.projectId = { $in: projectId.split(" ") };
     }
 
     if (userId) {
-      filters.userId = userId;
+      filters.userId = { $in: userId.split(" ") };
     }
 
     if (startingDate) {
@@ -103,7 +106,6 @@ export async function getTimeTrackings(req, res, next) {
       .populate("taskId", "_id text projectId")
       .exec();
 
-    console.log(timeTrackings, "test");
     if (timeTrackings.length <= 0) {
       return res.status(404).send({
         success: false,

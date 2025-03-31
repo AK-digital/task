@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useActionState, useContext, useEffect, useState } from "react";
 import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
-import socket from "@/utils/socket";
 import { AuthContext } from "@/context/auth";
 import { deleteProjectInvitation } from "@/actions/projectInvitation";
 import NoPicture from "../User/NoPicture";

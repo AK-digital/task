@@ -76,6 +76,14 @@
 
 .form {
     display: flex !important;
+    flex-direction: column !important;
+    justify-content: inherit !important;
+    align-items: inherit !important;
+    gap: 0px;
+}
+
+.row {
+    display: flex !important;
     flex-direction: row !important;
     justify-content: inherit !important;
     align-items: inherit !important;
@@ -116,4 +124,13 @@
     border-radius: var(--border-radius-medium);
     border-top-left-radius: inherit;
     border-bottom-left-radius: inherit;
+}
+
+.custom button {
+    margin-top: 8px;
+    font-size: var(--text-size-small);
+    font-weight: 400;
+    padding: 6px !important;
+    width: 100%;
+    color: white;
 }

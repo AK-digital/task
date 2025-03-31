@@ -241,7 +241,10 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition: background-color 5000s linear 0s;
   -webkit-text-fill-color: white !important;
+}
 
+input[type="checkbox"] {
+  accent-color: var(--accent-color);
 }
 
 #overlay-hidden {

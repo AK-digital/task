@@ -4,6 +4,7 @@ import { sendProjectInvitationToGuest } from "@/actions/project";
 import socket from "@/utils/socket";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
+import { bricolageGrostesque } from "@/utils/font";
 
 const initialState = {
   status: "pending",
@@ -68,6 +69,7 @@ export default function GuestFormInvitation({ project, setIsPopup }) {
             placeholder="Inviter par e-mail"
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            className={bricolageGrostesque.className}
           />
           {errors && <i>{errors?.email}</i>}
           <button type="submit" data-disabled={pending}>

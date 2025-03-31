@@ -4,71 +4,76 @@ import { useEffect, useState } from "react";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function Filters({ projects, project }) {
+export default function Filters({ projects, selectedProjects }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queries = new URLSearchParams(searchParams);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
-  let usersOptions = [];
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [projectsOptions, setProjectsOptions] = useState(
+    projects?.map((project) => {
+      return {
+        id: project?._id,
+        picture: project?.logo,
+        label: project?.name,
+      };
+    }) || []
+  );
+  const [usersOptions, setUsersOptions] = useState([]);
 
   useEffect(() => {
-    if (searchParams.get("projectId")) {
-      const projectInfo = projects?.find(
-        (project) => project?._id === searchParams.get("projectId")
-      );
-      setSelectedProject({
-        id: searchParams.get("projectId"),
-        label: projectInfo?.name,
-        picture: projectInfo?.logo,
-      });
-    } else {
-      setSelectedProject(null);
-    }
+    // If the query parameter userId is present in the URL, we need to set the selectedUsers state
+    if (searchParams.get("userId")) {
+      // Split the userId query parameter into an array of userIds
+      const userIds = queries.get("userId")?.split(" ");
+      if (userIds?.length > 0) {
+        // Map the userIds to the corresponding user objects from usersOptions
+        const users = userIds?.map((userId) => {
+          return usersOptions.find((user) => user.id === userId);
+        });
+        // Filter out undefined values from the users array
+        // This is to avoid having undefined values in the selectedUsers array
+        const filteredUsers = users.filter((user) => user !== undefined);
+        const hasUndefined = users.some((user) => user === undefined);
 
-    if (project && searchParams.get("userId")) {
-      const users = [project?.author, ...project?.guests];
-      const user = users?.find(
-        (user) => user?._id === searchParams.get("userId")
-      );
+        // If there are undefined values, we need to handle them
+        if (hasUndefined) {
+          // Remove the undefined values from the query parameter
+          queries.set("userId", filteredUsers.map((user) => user.id).join(" "));
+          router.push(`${pathname}?${queries.toString()}`);
+        }
 
-      // If user is not found, remove the query parameter
-      if (!user) {
-        queries.delete("userId");
-        setSelectedUser(null);
-        router.push(`${pathname}?${queries.toString()}`);
-        return;
+        // Set the selectedUsers state with the filtered users
+        setSelectedUsers(filteredUsers);
       }
-
-      setSelectedUser({
-        id: user?._id,
-        label: user?.firstName + " " + user?.lastName,
-        picture: user?.picture,
-      });
     } else {
-      setSelectedUser(null);
+      setSelectedUsers([]);
     }
-  }, [searchParams]);
+  }, [searchParams, selectedProjects, usersOptions]);
 
-  const projectsOptions = projects?.map((project) => {
-    return {
-      id: project?._id,
-      picture: project?.logo,
-      label: project?.name,
-    };
-  });
+  useEffect(() => {
+    const users = [];
+    const userIds = new Set();
 
-  if (project) {
-    const users = [project?.author, ...project?.guests];
-    usersOptions = users?.map((guest) => {
-      return {
-        id: guest?._id,
-        picture: guest?.picture,
-        label: guest?.firstName + " " + guest?.lastName,
-      };
-    });
-  }
+    for (const selectedProject of selectedProjects) {
+      const allUsers = [selectedProject?.author, ...selectedProject?.guests];
+
+      for (const user of allUsers) {
+        if (user && !userIds.has(user._id)) {
+          userIds.add(user._id);
+          users.push(user);
+        }
+      }
+    }
+
+    setUsersOptions(
+      users.map((user) => ({
+        id: user._id,
+        picture: user.picture,
+        label: `${user.firstName} ${user.lastName}`,
+      }))
+    );
+  }, [selectedProjects]);
 
   const handleStartingDate = (e) => {
     e.preventDefault();
@@ -102,16 +107,16 @@ export default function Filters({ projects, project }) {
       {/* Filter by project */}
       <Dropdown
         defaultValue={"Choisir un projet"}
-        selected={selectedProject}
+        selected={selectedProjects}
         options={projectsOptions}
         query={"projectId"}
       />
       {/* Filter by user */}
-      {project && (
+      {selectedProjects?.length > 0 && (
         <>
           <Dropdown
-            defaultValue={"Choisir un membre"}
-            selected={selectedUser}
+            defaultValue={"Tous les membres"}
+            selected={selectedUsers}
             options={usersOptions}
             query={"userId"}
           />

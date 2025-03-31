@@ -129,11 +129,10 @@
 }
 
 .content img {
-    max-width: calc(100% - 80px);
-    width: 100%;
-    max-height: 400px;
+    width: max-content;
+    height: 800px;
+    max-width: 100%;
     object-fit: cover;
-    margin: 10px 0 10px 0;
 }
 
 .content span {

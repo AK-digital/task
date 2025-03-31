@@ -97,7 +97,7 @@ export async function sendProjectInvitationToGuest(
 
     return {
       status: "failure",
-      message: "Une erreur est survenue",
+      message: err?.message || "Une erreur est survenue",
       errors: null,
     };
   }

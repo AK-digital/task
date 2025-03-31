@@ -92,27 +92,30 @@ io.on("connection", (socket) => {
 
   socket.on("create notification", async (sender, receiver, message, link) => {
     const senderUser = await UserModel.findById({ _id: sender?._id });
-    let receiverUser = null;
 
-    if (receiver.includes("@")) {
-      receiverUser = await UserModel.findOne({
-        email: receiver,
+    if (senderUser) {
+      let receiverUser = null;
+
+      if (receiver.includes("@")) {
+        receiverUser = await UserModel.findOne({
+          email: receiver,
+        });
+      } else {
+        receiverUser = await UserModel.findById({ _id: receiver });
+      }
+
+      // Create a new notification for the user
+      const newNotification = new NotificationModel({
+        userId: receiverUser?._id,
+        senderId: senderUser?._id,
+        message: message,
+        link: link,
       });
-    } else {
-      receiverUser = await UserModel.findById({ _id: receiver });
+
+      await newNotification.save();
+
+      io.to(receiverUser?.socketId).emit("new notification");
     }
-
-    // Create a new notification for the user
-    const newNotification = new NotificationModel({
-      userId: receiverUser?._id,
-      senderId: senderUser?._id,
-      message: message,
-      link: link,
-    });
-
-    await newNotification.save();
-
-    io.to(receiverUser?.socketId).emit("new notification");
   });
 
   socket.on("unread notifications", async (unreadNotifications) => {

@@ -5,6 +5,11 @@
     border-radius: var(--border-radius-small);
     background: var(--third-background-color);
     width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 250px;
+    overflow: auto;
+    resize: both;
 }
 
 
@@ -80,7 +85,7 @@
 
 .content img {
     width: max-content;
-    height: fit-content;
+    height: 800px;
     max-width: 100%;
     object-fit: cover;
 }

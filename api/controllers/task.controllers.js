@@ -222,8 +222,6 @@ export async function updateTaskStatus(req, res, next) {
       });
     }
 
-    console.log(updatedTask);
-
     return res.status(200).send({
       success: true,
       message: "Status modifié avec succès",
@@ -334,8 +332,6 @@ export async function updateTaskDeadline(req, res, next) {
 export async function updateTaskEstimation(req, res, next) {
   try {
     const { estimation } = req.body;
-
-    console.log(estimation);
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },

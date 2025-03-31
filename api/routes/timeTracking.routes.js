@@ -30,7 +30,6 @@ router.patch(
 router.delete(
   "/",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
   timeTrackingControllers.deleteTimeTracking
 );
 

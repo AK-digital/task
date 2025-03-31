@@ -129,8 +129,6 @@ export async function updateMessage(req, res, next) {
       });
     }
 
-    console.log(messageToUpdate);
-
     if (authUser?._id.toString() !== messageToUpdate?.author.toString()) {
       return res.status(403).send({
         success: false,

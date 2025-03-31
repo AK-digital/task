@@ -6,8 +6,12 @@ import Filters from "./Filters";
 import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useState } from "react";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
+import { useSearchParams } from "next/navigation";
 
-export default function TimeTrackings({ trackers, projects, project }) {
+export default function TimeTrackings({ trackers, projects }) {
+  const searchParams = useSearchParams();
+  const queries = new URLSearchParams(searchParams);
+  const [selectedProjects, setSelectedProjects] = useState([]);
   const [filteredTrackers, setFilteredTrackers] = useState(trackers || []);
   const [selectedTrackers, setSelectedTrackers] = useState([]);
   const totalDuration = trackers?.reduce((acc, tracker) => {
@@ -18,14 +22,24 @@ export default function TimeTrackings({ trackers, projects, project }) {
     setFilteredTrackers(trackers);
   }, [trackers]);
 
-  console.log(selectedTrackers);
+  useEffect(() => {
+    const projectIds = queries?.get("projectId")?.split(" ");
+
+    if (projectIds?.length > 0) {
+      setSelectedProjects(
+        projects.filter((project) => projectIds.includes(project?._id))
+      );
+    } else {
+      setSelectedProjects([]);
+    }
+  }, [searchParams]);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Suivi du temps</h1>
         {/* Filters */}
-        <Filters projects={projects} project={project} />
+        <Filters projects={projects} selectedProjects={selectedProjects} />
         {/* Total duration */}
 
         {totalDuration && (
@@ -35,7 +49,7 @@ export default function TimeTrackings({ trackers, projects, project }) {
         )}
       </div>
       {/* Time tracking list */}
-      {project ? (
+      {selectedProjects?.length > 0 ? (
         <>
           {isNotEmpty(filteredTrackers) && (
             <div className={styles.content}>
@@ -57,7 +71,6 @@ export default function TimeTrackings({ trackers, projects, project }) {
                 <SelectedTimeTrackings
                   selectedTrackers={selectedTrackers}
                   setSelectedTrackers={setSelectedTrackers}
-                  project={project}
                 />
               )}
             </div>

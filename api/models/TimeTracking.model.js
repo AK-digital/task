@@ -11,6 +11,7 @@ const timeTrackingSchema = new Schema(
     projectId: {
       type: Schema.Types.ObjectId,
       ref: "Project",
+      required: true,
     },
     taskId: {
       type: Schema.Types.ObjectId,

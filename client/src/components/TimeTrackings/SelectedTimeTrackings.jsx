@@ -6,10 +6,9 @@ import { Trash } from "lucide-react";
 export default function SelectedTimeTrackings({
   selectedTrackers,
   setSelectedTrackers,
-  project,
 }) {
   const handleDeleteTrackers = async () => {
-    const response = await deleteTimeTracking(selectedTrackers, project?._id);
+    const response = await deleteTimeTracking(selectedTrackers);
     if (!response.success) {
       return;
     }
