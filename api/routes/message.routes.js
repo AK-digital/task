@@ -12,6 +12,13 @@ router.post(
   reponseControllers.saveMessage
 );
 
+router.post(
+  "/draft",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  reponseControllers.saveDraftMessage
+);
+
 router.get(
   "/",
   authMiddlewares.auth,

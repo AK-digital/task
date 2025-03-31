@@ -136,6 +136,13 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
     });
   };
 
+  const handleEditDescription = () => {
+    if (task?.description?.author?._id !== uid) {
+      return;
+    }
+
+    setEditDescription(true);
+  };
   return (
     <>
       <div className={styles.container} ref={containerRef} id="task-more">
@@ -166,10 +173,7 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
           </span>
           {optimisticDescription && !editDescription ? (
             <div className={styles.description}>
-              <div
-                className={styles.preview}
-                onClick={(e) => setEditDescription(true)}
-              >
+              <div className={styles.preview} onClick={handleEditDescription}>
                 <div className={styles.user}>
                   <Image
                     src={descriptionAuthor?.picture || "/default-pfp.webp"}
@@ -192,7 +196,7 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
                   dangerouslySetInnerHTML={{ __html: optimisticDescription }}
                 ></div>
               </div>
-              {task?.author?._id === uid && (
+              {task?.description?.author?._id === uid && (
                 <div className={styles.actions}>
                   <button
                     className={bricolageGrostesque.className}

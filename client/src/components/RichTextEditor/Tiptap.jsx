@@ -213,7 +213,9 @@ export default function Tiptap({
   };
 
   const handleSaveDescription = async () => {
-    if (task?.author?._id !== uid) return;
+    const currentAuthor = task?.description?.author;
+
+    if (currentAuthor?._id !== uid) return;
 
     setPending(true);
     setOptimisticDescription(plainText); // Optimistic update

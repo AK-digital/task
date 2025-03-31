@@ -43,7 +43,9 @@ export async function saveMessage(req, res, next) {
       taskId: taskId,
       author: authUser?._id,
       message: messageWithImg ?? message,
+      draft: "",
       taggedUsers: uniqueTaggedUsers,
+      sent: true,
     });
 
     const savedMessage = await newMessage.save();
@@ -75,6 +77,58 @@ export async function saveMessage(req, res, next) {
     return res.status(500).send({
       success: false,
       message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function saveDraftMessage(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { projectId, taskId, message } = req.body;
+
+    if (!taskId || !message) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Paramètres manquants" });
+    }
+
+    const messageToUpdate = await MessageModel.findById({ _id: taskId });
+
+    if (!messageToUpdate) {
+      const newMessage = new MessageModel({
+        projectId: projectId,
+        taskId: taskId,
+        author: authUser?._id,
+        message: "",
+        draft: message,
+        sent: false,
+      });
+
+      await newMessage.save();
+    }
+
+    const updatedMessage = await MessageModel.findByIdAndUpdate(
+      { _id: taskId },
+      {
+        $set: {
+          draft: message,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    return res.status(200).send({
+      success: true,
+      message: "Brouillon enregistré avec succès",
+      data: updatedMessage,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
     });
   }
 }

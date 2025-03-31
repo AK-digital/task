@@ -1,5 +1,6 @@
 import TaskModel from "../models/Task.model.js";
 import TimeTrackingModel from "../models/TimeTracking.model.js";
+import moment from "moment";
 
 export async function saveTimeTracking(req, res, next) {
   const authUser = res.locals.user;
@@ -12,12 +13,13 @@ export async function saveTimeTracking(req, res, next) {
     });
   }
 
+  console.log(moment.utc(startTime).subtract(2, "hours").format());
   const newTimeTracking = new TimeTrackingModel({
     userId: authUser._id,
     projectId: req.query.projectId,
     taskId: taskId,
-    startTime: new Date(startTime),
-    endTime: new Date(endTime),
+    startTime: moment.utc(startTime).subtract(2, "hours").format(),
+    endTime: moment.utc(endTime).subtract(2, "hours").format(),
     duration: new Date(endTime) - new Date(startTime),
   });
 
@@ -199,7 +201,7 @@ export async function stopTimer(req, res, next) {
         isRunning: true,
       },
       {
-        endTime: new Date(),
+        endTime: moment().format(),
         duration: new Date() - timeTracking.startTime, // Calculate the duration
         isRunning: false, // Very important to set the isRunning to false
       },

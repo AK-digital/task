@@ -1,7 +1,7 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
-
+import moment from "moment";
 export async function getTimeTrackings(queries) {
   try {
     const queryString = queries
@@ -39,11 +39,18 @@ export async function getTimeTrackings(queries) {
 
 export async function timeTrackingStart(taskId, projectId) {
   try {
+    const startTime = moment.utc().locale("fr").format();
+
+    const rawData = {
+      taskId: taskId,
+      startTime: startTime,
+    };
+
     const res = await useAuthFetch(
       `time-tracking/start?projectId=${projectId}`,
       "POST",
       "application/json",
-      { taskId: taskId }
+      rawData
     );
 
     const response = await res.json();
