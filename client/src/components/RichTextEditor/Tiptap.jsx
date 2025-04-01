@@ -228,12 +228,6 @@ export default function Tiptap({
   const handleSaveDescription = async () => {
     const currentAuthor = task?.description?.author;
 
-    console.log(
-      currentAuthor &&
-        currentAuthor?._id !== uid &&
-        task?.description?.text.length > 0
-    );
-
     if (
       currentAuthor &&
       currentAuthor?._id !== uid &&
@@ -292,7 +286,6 @@ export default function Tiptap({
         taggedUsers
       );
     } else {
-      console.log(message?._id);
       response = await updateMessage(
         task?.projectId,
         message?._id,

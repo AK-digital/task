@@ -6,6 +6,8 @@ import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
 import socket from "@/utils/socket";
+import useSWR from "swr";
+import { getTasks } from "@/api/task";
 
 const initialState = {
   status: "pending",

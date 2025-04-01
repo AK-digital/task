@@ -18,10 +18,11 @@ import {
 } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useState } from "react";
 import { updateTaskBoard, updateTaskOrder } from "@/api/task";
-import { revalidateBoards } from "@/api/board";
+import { getBoards, revalidateBoards } from "@/api/board";
 import Task from "../tasks/Task";
 import socket from "@/utils/socket";
 import AddBoard from "@/components/Boards/AddBoard";
+
 export default function Boards({ boards, project, tasksData, archive }) {
   const [selectedTasks, setSelectedTasks] = useState([]);
 
@@ -48,10 +49,11 @@ export default function Boards({ boards, project, tasksData, archive }) {
       socket.off("task updated", handleBoardUpdate);
       socket.off("update task", handleBoardUpdate);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (initialTasksData) {
+      console.log("played");
       setTasks(initialTasksData);
     }
   }, [boards]);

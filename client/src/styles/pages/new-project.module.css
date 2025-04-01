@@ -2,7 +2,6 @@
     margin: 0 0 0 20px;
     width: 100%;
     height: calc(100svh - 60px);
-
 }
 
 .container {
@@ -14,6 +13,7 @@
     border-radius: 8px 0 0 0;
     height: 100%;
     width: 100%;
+    color: var(--text-dark-color);
 }
 
 .wrapper {
@@ -39,6 +39,18 @@
     gap: 24px;
 }
 
+.input {
+    text-align: center;
+    margin-inline: auto;
+    width: 100%;
+}
+
+.input input {
+    border-bottom: inherit;
+    text-align: center;
+    font-size: var(--text-size-medium);
+}
+
 .wrapper,
 .form,
 .buttons {
@@ -48,6 +60,7 @@
 
 .buttons {
     gap: 12px;
+    width: 100%;
 }
 
 .buttons button {
@@ -70,19 +83,21 @@
 .disabled {
     pointer-events: none;
     background: transparent !important;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--text-color-muted);
     color: var(--text-color-muted);
 }
 
 .template {
     background: transparent;
     border: 2px solid var(--accent-color);
+    color: var(--accent-color);
 }
 
 .template:hover {
     background: transparent;
-    color: var(--accent-color);
+    color: white;
     border: 2px solid var(--text-color);
+    box-shadow: inherit !important;
 }
 
 .back {
@@ -97,5 +112,5 @@
 .back:hover {
     background: transparent;
     box-shadow: none;
-    color: var(--text-color);
+    color: var(--accent-color-hover);
 }

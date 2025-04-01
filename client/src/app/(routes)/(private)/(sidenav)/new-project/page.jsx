@@ -45,7 +45,7 @@ export default function NewProject() {
           </div>
           <div className={styles.content}>
             <form action={formAction} className={styles.form}>
-              <div>
+              <div className={styles.input}>
                 <label htmlFor="project-name" hidden></label>
                 <input
                   type="text"

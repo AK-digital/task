@@ -231,7 +231,7 @@ export async function updateTaskDescription(
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
-    revalidateTag("tasks");
+    // revalidateTag("tasks");
 
     return response;
   } catch (err) {

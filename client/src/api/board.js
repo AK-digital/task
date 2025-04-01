@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { useAuthFetch } from "@/utils/api";
 
 export async function getBoards(projectId, archived) {
@@ -87,8 +87,7 @@ export async function removeBoardFromArchive(boardId, projectId) {
 }
 
 export async function revalidateBoards() {
-  console.log("revalidate played");
-  revalidateTag("projects");
+  revalidateTag("tasks");
   revalidateTag("boards");
   revalidateTag("trackers");
 }

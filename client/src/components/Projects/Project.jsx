@@ -5,6 +5,7 @@ import Boards from "@/components/Boards/Boards";
 import { useEffect } from "react";
 import socket from "@/utils/socket";
 import { revalidateProject } from "@/api/project";
+import TaskMore from "../tasks/TaskMore";
 
 export default function Project({
   project,

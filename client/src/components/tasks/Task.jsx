@@ -12,7 +12,7 @@ import TaskResponsibles from "./TaskResponsibles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskTimer from "./TaskTimer";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
 import TaskEstimate from "./TaskEstimate";
@@ -25,7 +25,8 @@ export default function Task({
   archive,
 }) {
   const pathname = usePathname();
-  const [opennedTask, setOpennedTask] = useState(null);
+  const taskId = pathname.split("/").pop();
+  const [openedTask, setOpenedTask] = useState(taskId);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task?._id });
@@ -35,22 +36,25 @@ export default function Task({
     transition,
   };
 
-  const handleTaskClick = (e) => {
-    e.preventDefault();
+  const handleTaskClick = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    window.history.pushState(
-      {},
-      "",
-      archive
-        ? `/projects/${project?._id}/archive/task/${task?._id}`
-        : `/projects/${project?._id}/task/${task?._id}`
-    );
-  };
+      window.history.pushState(
+        {},
+        "",
+        archive
+          ? `/projects/${project?._id}/archive/task/${task?._id}`
+          : `/projects/${project?._id}/task/${task?._id}`
+      );
+    },
+    [archive, project?._id, task?._id]
+  );
 
   useEffect(() => {
     if (pathname?.includes("/task/")) {
       const taskId = pathname.split("/").pop();
-      setOpennedTask(taskId);
+      setOpenedTask(taskId);
     }
   }, [pathname]);
 
@@ -70,7 +74,7 @@ export default function Task({
       style={style}
       className={`${styles.container} ${isDragging ? styles.dragging : ""}`}
       suppressHydrationWarning
-      data-openned={opennedTask === task?._id}
+      data-openned={openedTask === task?._id}
       data-done={task?.status === "Terminée"}
     >
       <div className={styles.content}>
@@ -109,11 +113,11 @@ export default function Task({
           <TaskRemove task={task} />
         </div>
       </div>
-      {opennedTask === task?._id && (
+      {openedTask === task?._id && (
         <TaskMore
           task={task}
           project={project}
-          setOpennedTask={setOpennedTask}
+          setOpennedTask={setOpenedTask}
           archive={archive}
         />
       )}

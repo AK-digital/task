@@ -1,63 +1,86 @@
 import { saveTimeTracking } from "@/actions/timeTracking";
-import { removeTaskSession } from "@/api/task";
 import {
   deleteTimeTracking,
-  getTimeTrackings,
   timeTrackingStart,
   timeTrackingStop,
 } from "@/api/timeTracking";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import socket from "@/utils/socket";
-import { isNotEmpty } from "@/utils/utils";
+import { formatTime, isNotEmpty } from "@/utils/utils";
 import { CirclePause, CirclePlay } from "lucide-react";
 import { MinusCircle } from "lucide-react";
 import moment from "moment";
 moment.locale("fr");
 import Image from "next/image";
-import {
-  useEffect,
-  useState,
-  useCallback,
-  useActionState,
-  useContext,
-} from "react";
+import { useEffect, useState, useActionState, useContext, useRef } from "react";
+import { useStopwatch } from "react-timer-hook";
 
 export default function TaskTimer({ task }) {
-  const totalTaskDuration =
-    task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0;
-  const [timer, setTimer] = useState(Math.floor(totalTaskDuration / 1000) || 0);
+  const [totalTaskDuration, setTotalTaskDuration] = useState(
+    task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0
+  );
+  const [stopwatchOffset, setStopwatchOffset] = useState(() => {
+    const offset = new Date();
+    offset.setTime(offset.getTime() + totalTaskDuration);
+    return offset;
+  });
   const [sessions, setSessions] = useState(task?.timeTrackings || []);
   const [more, setMore] = useState(false);
   const [addingSession, setAddingSession] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  // Référence pour stocker l'objet stopwatch
+  const stopwatchRef = useRef(null);
 
   useEffect(() => {
-    const durations = sessions.map((session) => session?.duration);
-    const totalDuration = durations.reduce((acc, curr) => acc + curr, 0);
+    const newTotalDuration = sessions.reduce(
+      (acc, curr) => acc + curr.duration,
+      0
+    );
+    setTotalTaskDuration(newTotalDuration);
 
-    setTimer(Math.floor(totalDuration / 1000));
+    const newOffset = new Date();
+    newOffset.setTime(newOffset.getTime() + newTotalDuration);
+    setStopwatchOffset(newOffset);
+
+    // Si on a une référence au stopwatch, on peut le réinitialiser avec le nouvel offset
+    if (stopwatchRef.current && !isRunning) {
+      stopwatchRef.current.reset(newOffset, false);
+    }
   }, [sessions]);
 
+  const {
+    hours,
+    minutes,
+    seconds,
+    start,
+    pause,
+    reset, // On récupère la fonction reset
+  } = useStopwatch({
+    autoStart: false,
+    offsetTimestamp: stopwatchOffset,
+    interval: 20,
+  });
+
+  // On stocke les fonctions du stopwatch dans la référence
   useEffect(() => {
-    let intervalId;
-    if (isRunning) {
-      intervalId = setInterval(() => {
-        setTimer((prevTimer) => prevTimer + 1);
-      }, 1000);
-    }
-    return () => clearInterval(intervalId);
-  }, [isRunning]);
+    stopwatchRef.current = { reset };
+  }, [reset]);
+
+  const formattedHours = String(hours).padStart(2, "0");
+  const formattedMinutes = String(minutes).padStart(2, "0");
+  const formattedSeconds = String(seconds).padStart(2, "0");
 
   const handlePauseTimer = async () => {
+    pause();
     setIsRunning(false);
+
     const res = await timeTrackingStop(task?._id, task?.projectId);
 
-    const newSessions = res?.data || [];
-
-    setSessions((prev) => [...prev, newSessions]);
-
-    if (!res.success) {
+    if (res?.success && res?.data) {
+      const newSession = res.data;
+      setSessions((prev) => [...prev, newSession]);
+    } else {
       setSessions(task?.timeTrackings || []);
     }
 
@@ -65,19 +88,12 @@ export default function TaskTimer({ task }) {
   };
 
   const handlePlayTimer = async () => {
+    // On réinitialise le timer avec l'offset actuel avant de démarrer
+    reset(stopwatchOffset);
+    start();
     setIsRunning(true);
     await timeTrackingStart(task?._id, task?.projectId);
   };
-
-  const formatTime = useCallback((totalSeconds) => {
-    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
-      2,
-      "0"
-    );
-    const seconds = String(totalSeconds % 60).padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  }, []);
 
   return (
     <div className={styles.container} data-running={isRunning}>
@@ -88,7 +104,9 @@ export default function TaskTimer({ task }) {
         ) : (
           <CirclePlay data-running={isRunning} onClick={handlePlayTimer} />
         )}
-        <span onClick={() => setMore(true)}>{formatTime(timer)}</span>
+        <span onClick={() => setMore(true)}>
+          {formattedHours + ":" + formattedMinutes + ":" + formattedSeconds}
+        </span>
       </span>
       {more && (
         <>

@@ -10,8 +10,6 @@ import { bricolageGrostesque } from "@/utils/font";
 import { updateTaskDescription } from "@/api/task";
 import Tiptap from "../RichTextEditor/Tiptap";
 import { AuthContext } from "@/context/auth";
-import { set } from "zod";
-
 moment.locale("fr");
 
 export default function TaskMore({ task, project, setOpennedTask, archive }) {
