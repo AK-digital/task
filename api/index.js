@@ -15,6 +15,7 @@ import projectInvitations from "./routes/projectInvitation.routes.js";
 import boardRouter from "./routes/board.routes.js";
 import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
+import draftRouter from "./routes/draft.routes.js";
 import timeTrackingRouter from "./routes/timeTracking.routes.js";
 
 import UserModel from "./models/User.model.js";
@@ -61,6 +62,7 @@ app.use("/api/project-invitation", projectInvitations);
 app.use("/api/board", boardRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/message", messageRouter);
+app.use("/api/draft", draftRouter);
 app.use("/api/time-tracking", timeTrackingRouter);
 
 // SOCKET LOGIC

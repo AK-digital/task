@@ -25,13 +25,6 @@ const messageSchema = new Schema(
     files: {
       type: [String],
     },
-    draft: {
-      type: String,
-    },
-    sent: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,

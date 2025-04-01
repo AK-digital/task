@@ -43,9 +43,7 @@ export async function saveMessage(req, res, next) {
       taskId: taskId,
       author: authUser?._id,
       message: messageWithImg ?? message,
-      draft: "",
       taggedUsers: uniqueTaggedUsers,
-      sent: true,
     });
 
     const savedMessage = await newMessage.save();
@@ -81,70 +79,6 @@ export async function saveMessage(req, res, next) {
   }
 }
 
-export async function saveDraftMessage(req, res, next) {
-  try {
-    const authUser = res.locals.user;
-    const { messageId, taskId, message } = req.body;
-
-    if (!taskId || !message) {
-      return res
-        .status(400)
-        .send({ success: false, message: "Paramètres manquants" });
-    }
-
-    let messageToUpdate;
-    if (messageId) {
-      messageToUpdate = await MessageModel.findById({ _id: messageId });
-    }
-
-    let updatedMessage = null;
-
-    if (!messageToUpdate) {
-      const newMessage = new MessageModel({
-        projectId: req.query.projectId,
-        taskId: taskId,
-        author: authUser?._id,
-        message: "",
-        draft: message,
-        sent: false,
-      });
-
-      updatedMessage = await newMessage.save();
-    } else {
-      if (messageToUpdate?.author.toString() !== authUser?._id.toString()) {
-        return res.status(403).send({
-          success: false,
-          message: "Impossible de modifier un message qui n'est pas le votre",
-        });
-      }
-
-      updatedMessage = await MessageModel.findByIdAndUpdate(
-        { _id: messageId },
-        {
-          $set: {
-            draft: message,
-          },
-        },
-        {
-          new: true,
-          setDefaultsOnInsert: true,
-        }
-      );
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: "Brouillon enregistré avec succès",
-      data: updatedMessage,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message: err?.message || "Une erreur inattendue est survenue",
-    });
-  }
-}
-
 export async function getMessages(req, res, next) {
   try {
     const { taskId } = req.query;
@@ -156,10 +90,8 @@ export async function getMessages(req, res, next) {
       });
     }
 
-    // Fetch only sent messages
     const messages = await MessageModel.find({
       taskId: taskId,
-      sent: true,
     }).populate({
       path: "author",
       select: "lastName firstName picture",
@@ -176,36 +108,6 @@ export async function getMessages(req, res, next) {
       success: true,
       message: "Messages trouvés",
       data: messages,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message: err.message || "Une erreur inattendue est survenue",
-    });
-  }
-}
-
-export async function getDraftMessage(req, res, next) {
-  try {
-    const authUser = res.locals.user;
-
-    const draftedMessage = await MessageModel.findOne({
-      taskId: req.params.taskId,
-      author: authUser?._id,
-      sent: false,
-    });
-
-    if (!draftedMessage) {
-      return res.status(404).send({
-        success: false,
-        message: "Aucun brouillon trouvé",
-      });
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: "Brouillon trouvé",
-      data: draftedMessage,
     });
   } catch (err) {
     return res.status(500).send({
