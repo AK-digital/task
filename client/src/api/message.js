@@ -38,6 +38,38 @@ export async function saveMessage(projectId, taskId, message, taggedUsers) {
   }
 }
 
+export async function saveDraftMessage(projectId, taskId, messageId, message) {
+  try {
+    const rawData = {
+      messageId: messageId,
+      taskId: taskId,
+      message: message,
+    };
+
+    const res = await useAuthFetch(
+      `message/draft?projectId=${projectId}`,
+      "POST",
+      "application/json",
+      rawData
+    );
+
+    const response = await res.json();
+
+    console.log(response);
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de l'enregistrement du message"
+    );
+  }
+}
+
 export async function getMessages(projectId, taskId) {
   try {
     const res = await useAuthFetch(
@@ -59,6 +91,29 @@ export async function getMessages(projectId, taskId) {
     console.log(
       err.message ||
         "Une erreur est survenue lors de la récupération des messages"
+    );
+  }
+}
+
+export async function getDraftMessage(projectId, taskId) {
+  try {
+    const res = await useAuthFetch(
+      `message/draft/${taskId}?projectId=${projectId}`,
+      "GET",
+      "application/json"
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération du brouillon"
     );
   }
 }

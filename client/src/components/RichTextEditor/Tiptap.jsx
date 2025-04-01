@@ -41,7 +41,7 @@ import { bricolageGrostesque } from "@/utils/font";
 import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
 import socket from "@/utils/socket";
-import { saveMessage, updateMessage } from "@/api/message";
+import { saveDraftMessage, saveMessage, updateMessage } from "@/api/message";
 import { mutate } from "swr";
 import MentionsList from "./MentionsList";
 import { AuthContext } from "@/context/auth";
@@ -183,10 +183,23 @@ export default function Tiptap({
     return null;
   }
 
-  const handleChange = (editor) => {
+  const handleChange = async (editor) => {
     setPlainText(editor.getHTML());
     setValue(editor.getText());
     const text = editor.getText();
+
+    // if (type === "description") {
+    //   // Use debouce to save a draft of the description every 1 seconds
+    // }
+
+    // if (type === "message") {
+    //   await saveDraftMessage(
+    //     project?._id,
+    //     task?._id,
+    //     !editMessage ? null : message?._id,
+    //     editor.getHTML()
+    //   );
+    // }
 
     const mentionRegex = /(?:^|\s)@([\w]*)$/;
     const match = mentionRegex.exec(text);
@@ -215,7 +228,19 @@ export default function Tiptap({
   const handleSaveDescription = async () => {
     const currentAuthor = task?.description?.author;
 
-    if (currentAuthor?._id !== uid) return;
+    console.log(
+      currentAuthor &&
+        currentAuthor?._id !== uid &&
+        task?.description?.text.length > 0
+    );
+
+    if (
+      currentAuthor &&
+      currentAuthor?._id !== uid &&
+      task?.description?.text
+    ) {
+      return;
+    }
 
     setPending(true);
     setOptimisticDescription(plainText); // Optimistic update

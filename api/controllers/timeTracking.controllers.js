@@ -54,8 +54,6 @@ export async function getTimeTrackings(req, res, next) {
     const startingDate = req.query.startingDate;
     const endingDate = req.query.endingDate;
 
-    console.log(projectId.split(" "));
-
     if (!projectId) {
       return res.status(400).send({
         success: false,

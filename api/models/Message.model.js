@@ -17,7 +17,6 @@ const messageSchema = new Schema(
     },
     message: {
       type: String,
-      required: true,
     },
     taggedUsers: {
       type: [Schema.Types.ObjectId],

@@ -26,6 +26,13 @@ router.get(
   reponseControllers.getMessages
 );
 
+router.get(
+  "/draft/:taskId",
+  authMiddlewares.auth,
+  projectMiddlewares.isAuthorOrGuests,
+  reponseControllers.getDraftMessage
+);
+
 router.put(
   "/:id",
   authMiddlewares.auth,
