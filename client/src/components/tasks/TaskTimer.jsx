@@ -32,6 +32,35 @@ export default function TaskTimer({ task }) {
   // Référence pour stocker l'objet stopwatch
   const stopwatchRef = useRef(null);
 
+  // Restaurer l'état du chronomètre lors du chargement du composant
+  useEffect(() => {
+    const savedState = localStorage.getItem(`taskTimer_${task._id}`);
+
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+
+      if (parsedState.isRunning) {
+        // Calculer le temps écoulé depuis le dernier démarrage
+        const elapsedTime =
+          Math.floor((new Date().getTime() - parsedState.startTime) / 1000) *
+          1000;
+        const newOffset = new Date();
+        newOffset.setTime(
+          newOffset.getTime() + totalTaskDuration + elapsedTime
+        );
+        setStopwatchOffset(newOffset);
+
+        // Démarrer automatiquement le chronomètre
+        setTimeout(() => {
+          if (stopwatchRef.current) {
+            stopwatchRef.current.reset(newOffset, true); // true pour autostart
+            setIsRunning(true);
+          }
+        }, 100);
+      }
+    }
+  }, [task._id]);
+
   useEffect(() => {
     const newTotalDuration = sessions.reduce(
       (acc, curr) => acc + curr.duration,
@@ -64,8 +93,8 @@ export default function TaskTimer({ task }) {
 
   // On stocke les fonctions du stopwatch dans la référence
   useEffect(() => {
-    stopwatchRef.current = { reset };
-  }, [reset]);
+    stopwatchRef.current = { reset, start, pause };
+  }, [reset, start, pause]);
 
   const formattedHours = String(hours).padStart(2, "0");
   const formattedMinutes = String(minutes).padStart(2, "0");
@@ -80,6 +109,7 @@ export default function TaskTimer({ task }) {
     if (res?.success && res?.data) {
       const newSession = res.data;
       setSessions((prev) => [...prev, newSession]);
+      localStorage.removeItem(`taskTimer_${task._id}`);
     } else {
       setSessions(task?.timeTrackings || []);
     }
@@ -92,7 +122,13 @@ export default function TaskTimer({ task }) {
     reset(stopwatchOffset);
     start();
     setIsRunning(true);
+
     await timeTrackingStart(task?._id, task?.projectId);
+
+    localStorage.setItem(
+      `taskTimer_${task._id}`,
+      JSON.stringify({ isRunning: true, startTime: new Date().getTime() })
+    );
   };
 
   return (
@@ -293,8 +329,14 @@ export function TimeTrackingSessions({
           const hoursStart = moment(session?.startTime).format("HH:mm");
           const hoursEnd = moment(session?.endTime).format("HH:mm");
 
+          //  Not showing the session if it's running
+          if (session?.isRunning === true) return null;
+
           return (
-            <li key={session?._id}>
+            <li
+              key={`session-${session?._id}-${index}`}
+              className={styles.session}
+            >
               <div className={styles.monthDay}>
                 <Image
                   src={user?.picture || "/default-pfp.webp"}

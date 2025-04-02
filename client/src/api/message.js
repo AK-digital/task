@@ -63,6 +63,29 @@ export async function getMessages(projectId, taskId) {
   }
 }
 
+export async function getMessagesCount(projectId, taskId) {
+  try {
+    const res = await useAuthFetch(
+      `message/count?projectId=${projectId}&taskId=${taskId}`,
+      "GET",
+      "application/json"
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des messages"
+    );
+  }
+}
+
 export async function updateMessage(
   projectId,
   messageId,

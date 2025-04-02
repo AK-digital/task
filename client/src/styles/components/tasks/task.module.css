@@ -88,6 +88,7 @@
 }
 
 .comment {
+    position: relative;
     display: flex;
     align-items: center;
     margin-right: 8px;
@@ -101,6 +102,23 @@
 
 .comment svg path {
     fill: var(--text-medium-color);
+}
+
+.count {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 8px;
+    right: 0px;
+    /* padding: 4px; */
+    width: 14px;
+    height: 14px;
+    background-color: var(--primary-background-color);
+    border-radius: 50%;
+    font-size: var(--text-size-small);
+    color: var(--text-dark-color);
+    font-weight: 500;
 }
 
 .options {

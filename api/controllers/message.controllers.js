@@ -117,6 +117,34 @@ export async function getMessages(req, res, next) {
   }
 }
 
+export async function getMessagesCount(req, res, next) {
+  try {
+    const { taskId } = req.query;
+
+    if (!taskId) {
+      return res.status(500).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const messages = await MessageModel.countDocuments({
+      taskId: taskId,
+    });
+
+    return res.status(200).send({
+      success: true,
+      message: "Messages trouvés",
+      data: messages,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function updateMessage(req, res, next) {
   try {
     const authUser = res.locals.user;
