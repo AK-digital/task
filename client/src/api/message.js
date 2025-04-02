@@ -1,5 +1,6 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { revalidateTag } from "next/cache";
 
 export async function saveMessage(projectId, taskId, message, taggedUsers) {
   try {
@@ -24,6 +25,8 @@ export async function saveMessage(projectId, taskId, message, taggedUsers) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
+    revalidateTag("tasks");
+
     return response;
   } catch (err) {
     console.log(
@@ -46,29 +49,6 @@ export async function getMessages(projectId, taskId) {
       "application/json",
       null,
       "messages"
-    );
-
-    const response = await res.json();
-
-    if (!response?.success) {
-      throw new Error(response?.message || "Une erreur est survenue");
-    }
-
-    return response;
-  } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des messages"
-    );
-  }
-}
-
-export async function getMessagesCount(projectId, taskId) {
-  try {
-    const res = await useAuthFetch(
-      `message/count?projectId=${projectId}&taskId=${taskId}`,
-      "GET",
-      "application/json"
     );
 
     const response = await res.json();
@@ -135,6 +115,8 @@ export async function deleteMessage(projectId, messageId) {
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
+
+    revalidateTag("tasks");
 
     return response;
   } catch (err) {

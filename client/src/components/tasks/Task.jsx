@@ -16,8 +16,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
 import TaskEstimate from "./TaskEstimate";
-import { getMessagesCount } from "@/api/message";
-import useSWR from "swr";
 
 export default function Task({
   task,
@@ -26,12 +24,6 @@ export default function Task({
   setSelectedTasks,
   archive,
 }) {
-  const fetcher = getMessagesCount.bind(null, project?._id, task?._id);
-  const { data: messages } = useSWR(
-    `/message/count?projectId=${task?.projectId}&taskId=${task?._id}`,
-    fetcher
-  );
-
   const pathname = usePathname();
   const taskId = pathname.split("/").pop();
   const [openedTask, setOpenedTask] = useState(taskId);
@@ -106,8 +98,8 @@ export default function Task({
 
           <div className={styles.comment} onClick={handleTaskClick}>
             <FontAwesomeIcon icon={faComment} />
-            {messages?.data > 0 && (
-              <span className={styles.count}>{messages?.data}</span>
+            {task?.messages?.length > 0 && (
+              <span className={styles.count}>{task?.messages?.length}</span>
             )}
           </div>
 

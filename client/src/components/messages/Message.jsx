@@ -39,9 +39,6 @@ export default function Message({ task, message, project, mutateMessage }) {
     await mutateMessage();
     socket.emit("update message", message?.projectId);
     setIsLoading(false);
-    await mutate(
-      `/message/count?projectId=${project?._id}&taskId=${task?._id}`
-    );
   }
 
   return (

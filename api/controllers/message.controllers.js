@@ -1,6 +1,7 @@
 import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import MessageModel from "../models/Message.model.js";
+import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailMessage } from "../templates/emails.js";
 import { getMatches } from "../utils/utils.js";
@@ -66,6 +67,17 @@ export async function saveMessage(req, res, next) {
       }
     }
 
+    await TaskModel.findByIdAndUpdate(
+      { _id: taskId },
+      {
+        $addToSet: { messages: savedMessage._id },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
     return res.status(201).send({
       success: true,
       message: "Message créée avec succès",
@@ -103,34 +115,6 @@ export async function getMessages(req, res, next) {
         message: "Aucun messages trouvé pour cette tâche",
       });
     }
-
-    return res.status(200).send({
-      success: true,
-      message: "Messages trouvés",
-      data: messages,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message: err.message || "Une erreur inattendue est survenue",
-    });
-  }
-}
-
-export async function getMessagesCount(req, res, next) {
-  try {
-    const { taskId } = req.query;
-
-    if (!taskId) {
-      return res.status(500).send({
-        success: false,
-        message: "Paramètres manquants",
-      });
-    }
-
-    const messages = await MessageModel.countDocuments({
-      taskId: taskId,
-    });
 
     return res.status(200).send({
       success: true,
@@ -298,6 +282,17 @@ export async function deleteMessage(req, res, next) {
     const deletedMessage = await MessageModel.findByIdAndDelete({
       _id: req.params.id,
     });
+
+    await TaskModel.findByIdAndUpdate(
+      { _id: message?.taskId },
+      {
+        $pull: { messages: deletedMessage?._id },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
 
     return res.status(200).send({
       success: true,

@@ -37,6 +37,10 @@ const taskSchema = new Schema(
         type: Date,
       },
     },
+    messages: {
+      type: [Schema.Types.ObjectId],
+      ref: "Message",
+    },
     files: {
       type: [String],
     },

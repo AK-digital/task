@@ -19,13 +19,6 @@ router.get(
   reponseControllers.getMessages
 );
 
-router.get(
-  "/count",
-  authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
-  reponseControllers.getMessagesCount
-);
-
 router.put(
   "/:id",
   authMiddlewares.auth,

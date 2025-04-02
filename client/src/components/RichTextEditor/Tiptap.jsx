@@ -364,9 +364,6 @@ export default function Tiptap({
     setValue("");
     setPending(false);
     setConvOpen(false);
-    await mutate(
-      `/message/count?projectId=${project?._id}&taskId=${task?._id}`
-    );
   };
 
   const handleCancel = (e) => {
