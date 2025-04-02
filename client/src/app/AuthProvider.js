@@ -11,12 +11,8 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  const { data, error } = useSWR("/auth/session", decryptToken, {
+  const { data, error, isLoading } = useSWR("/auth/session", decryptToken, {
     refreshInterval: 15 * 60 * 1000, // Refresh every 5 minutes
-    revalidateOnMount: true, // Revalidate everytime componenets are mounted
-    revalidateOnFocus: true, // Revalidate everytime the user focus the page
-    refreshWhenHidden: true, // The request will be refreshed even if the user is not on the page
-    refreshWhenOffline: true,
   });
 
   useEffect(() => {
@@ -46,7 +42,7 @@ export default function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{ uid, setUid, user, setUser }}>
-      {children}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 }

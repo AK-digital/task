@@ -32,7 +32,6 @@ export default function Task({
     fetcher
   );
 
-  console.log(messages?.data?.length);
   const pathname = usePathname();
   const taskId = pathname.split("/").pop();
   const [openedTask, setOpenedTask] = useState(taskId);

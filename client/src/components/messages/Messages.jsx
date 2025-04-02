@@ -55,7 +55,7 @@ export default function Messages({ task, project }) {
           <Message
             task={task}
             message={message}
-            mutate={mutate}
+            mutateMessage={mutate}
             project={project}
             key={message?._id}
           />

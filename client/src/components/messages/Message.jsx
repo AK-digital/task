@@ -13,8 +13,9 @@ import { deleteMessage } from "@/api/message";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import Tiptap from "../RichTextEditor/Tiptap";
+import { mutate } from "swr";
 
-export default function Message({ task, message, project, mutate }) {
+export default function Message({ task, message, project, mutateMessage }) {
   const { uid } = useContext(AuthContext);
   const [optimisticMessage, setOptimisticMessage] = useState(message?.message);
   const [edit, setEdit] = useState(false);
@@ -35,9 +36,12 @@ export default function Message({ task, message, project, mutate }) {
     if (!response?.success) {
       setIsLoading(false);
     }
-    await mutate();
+    await mutateMessage();
     socket.emit("update message", message?.projectId);
     setIsLoading(false);
+    await mutate(
+      `/message/count?projectId=${project?._id}&taskId=${task?._id}`
+    );
   }
 
   return (
@@ -47,7 +51,7 @@ export default function Message({ task, message, project, mutate }) {
           project={project}
           task={task}
           type="message"
-          mutateMessage={mutate}
+          mutateMessage={mutateMessage}
           setConvOpen={setEdit}
           editMessage={true}
           message={message}
