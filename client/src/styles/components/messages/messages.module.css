@@ -3,3 +3,24 @@
     flex-direction: column;
     gap: 14px;
 }
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-size-large);
+    color: var(--text-dark-color);
+    font-weight: 500;
+}
+
+.title svg {
+    color: var(--color-text-muted);
+}
+
+.empty {
+    border: 1.5px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: var(--border-radius-small);
+    font-size: var(--text-size-small);
+    cursor: pointer;
+}

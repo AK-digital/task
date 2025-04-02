@@ -87,6 +87,7 @@ export async function removeBoardFromArchive(boardId, projectId) {
 }
 
 export async function revalidateBoards() {
+  console.log("revalidateBoards played");
   revalidateTag("tasks");
   revalidateTag("boards");
   revalidateTag("trackers");

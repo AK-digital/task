@@ -44,6 +44,8 @@ export async function saveDraft(req, res) {
     // Check if the user already has a draft of the same type
     const draft = await DraftModel.findOne({
       authorId: authUser?._id,
+      projectId: projectId,
+      taskId: taskId,
       type: type,
     });
 
@@ -51,6 +53,7 @@ export async function saveDraft(req, res) {
       return res.status(400).send({
         success: false,
         message: "Draft already exists",
+        data: draft,
       });
     }
 
@@ -77,15 +80,16 @@ export async function saveDraft(req, res) {
   }
 }
 
-export async function getDrafts(req, res) {
+export async function getDraft(req, res) {
   try {
     const authUser = res.locals.user;
-    const { projectId, type } = req.query;
+    const { projectId, taskId, type } = req.query;
+
     const filters = {};
 
     filters.authorId = authUser?._id;
 
-    if (!projectId && !type) {
+    if (!projectId || !taskId || !type) {
       return res.status(400).send({
         success: false,
         message: "Missing required parameters",
@@ -103,24 +107,28 @@ export async function getDrafts(req, res) {
       filters.projectId = projectId;
     }
 
+    if (taskId) {
+      filters.taskId = taskId;
+    }
+
     if (type) {
       filters.type = type;
     }
 
-    const drafts = await DraftModel.find(filters);
+    const draft = await DraftModel.findOne(filters);
 
-    if (drafts.length <= 0) {
+    if (!draft) {
       return res.status(404).send({
         success: false,
         message: "No drafts found",
-        data: drafts,
+        data: draft,
       });
     }
 
     return res.status(200).send({
       success: true,
       message: "Drafts retrieved successfully",
-      data: drafts,
+      data: draft,
     });
   } catch (err) {
     return res.status(500).send({

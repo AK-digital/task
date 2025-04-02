@@ -15,7 +15,7 @@ router.get(
   "/",
   authMiddlewares.auth,
   projectMiddlewares.isAuthorOrGuests,
-  draftControllers.getDrafts
+  draftControllers.getDraft
 );
 
 router.put(

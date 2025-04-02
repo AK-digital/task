@@ -19,7 +19,6 @@ import CodeBlock from "@tiptap/extension-code-block";
 import Code from "@tiptap/extension-code";
 import Blockquote from "@tiptap/extension-blockquote";
 import Mention from "@tiptap/extension-mention";
-
 import {
   BoldIcon,
   Code2,
@@ -41,31 +40,68 @@ import { bricolageGrostesque } from "@/utils/font";
 import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
 import socket from "@/utils/socket";
-import { saveDraftMessage, saveMessage, updateMessage } from "@/api/message";
-import { mutate } from "swr";
+import { saveMessage, updateMessage } from "@/api/message";
+import useSWR, { mutate } from "swr";
 import MentionsList from "./MentionsList";
 import { AuthContext } from "@/context/auth";
+import { deleteDraft, saveDraft, updateDraft } from "@/api/draft";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function Tiptap({
   project,
   task,
   type,
   setEditDescription,
-  optimisticDescription,
+  description,
   setOptimisticDescription,
   setConvOpen,
   message,
   editMessage,
   mutateMessage,
+  draft,
+  mutateDraft,
 }) {
+  // Utilisation de useDebouncedCallback pour sauvegarder le draft avec un délai
+  const debouncedHandleDraft = useDebouncedCallback(async (htmlContent) => {
+    const response = await saveDraft(
+      project?._id,
+      task?._id,
+      type,
+      htmlContent
+    );
+
+    // Handle error
+    if (!response?.success) {
+      // If the draft already exists, update it
+      if (response?.message === "Draft already exists") {
+        if (value?.length <= 0) {
+          setPlainText("");
+          setValue("");
+          await deleteDraft(response?.data?._id, project?._id);
+          await mutateDraft();
+        } else {
+          await updateDraft(response?.data?._id, project?._id, htmlContent);
+          await mutateDraft();
+        }
+      } else {
+        setPlainText("");
+        setValue("");
+        return;
+      }
+    }
+
+    // If the draft is created successfully, we mutate it
+    await mutateDraft();
+  }, 500); // Délai de 1 seconde
+
   const containerRef = useRef(null);
   const { user, uid } = useContext(AuthContext);
   const [pending, setPending] = useState(false);
   const [plainText, setPlainText] = useState(
     message
-      ? message?.message
+      ? message?.message || message
       : type === "description"
-      ? optimisticDescription
+      ? description
       : ""
   );
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
@@ -73,9 +109,9 @@ export default function Tiptap({
   const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
   const [value, setValue] = useState(
     message
-      ? message?.message
+      ? message?.message || message
       : type === "description"
-      ? optimisticDescription
+      ? description
       : ""
   );
 
@@ -96,7 +132,9 @@ export default function Tiptap({
         defaultProtocol: "https",
         protocols: ["http", "https"],
       }),
-      Image,
+      Image.configure({
+        allowBase64: true,
+      }),
       Dropcursor,
       CodeBlock,
       Code,
@@ -188,36 +226,28 @@ export default function Tiptap({
     setValue(editor.getText());
     const text = editor.getText();
 
-    // if (type === "description") {
-    //   // Use debouce to save a draft of the description every 1 seconds
-    // }
+    if (draft) {
+      debouncedHandleDraft(editor.getHTML());
+    }
 
-    // if (type === "message") {
-    //   await saveDraftMessage(
-    //     project?._id,
-    //     task?._id,
-    //     !editMessage ? null : message?._id,
-    //     editor.getHTML()
-    //   );
-    // }
-
+    // Gérer les mentions
     const mentionRegex = /(?:^|\s)@([\w]*)$/;
     const match = mentionRegex.exec(text);
 
     if (match) {
       setIsTaggedUsers(true);
 
-      // Get caret position
+      // Récupérer la position du caret
       const { from } = editor.state.selection;
       const coords = editor.view.coordsAtPos(from);
 
-      // Get editor container's position
+      // Récupérer la position de l'éditeur
       const editorElement = editor.view.dom.closest(`.${styles.container}`);
       const editorRect = editorElement.getBoundingClientRect();
 
-      // Calculate position relative to the container
+      // Calculer la position relative à l'éditeur
       setMentionPosition({
-        top: coords.top - editorRect.top + 20, // Adding a small offset for better positioning
+        top: coords.top - editorRect.top + 20, // Ajouter un petit décalage pour un meilleur affichage
         left: coords.left - editorRect.left,
       });
     } else {
@@ -227,17 +257,19 @@ export default function Tiptap({
 
   const handleSaveDescription = async () => {
     const currentAuthor = task?.description?.author;
+    const isAuthor = currentAuthor?._id === uid;
 
-    if (
-      currentAuthor &&
-      currentAuthor?._id !== uid &&
-      task?.description?.text
-    ) {
+    if (currentAuthor && !isAuthor && task?.description?.text) {
       return;
     }
 
     setPending(true);
     setOptimisticDescription(plainText); // Optimistic update
+
+    if (draft?.success) {
+      await deleteDraft(draft?.data?._id, project?._id);
+      await mutateDraft();
+    }
 
     const response = await updateTaskDescription(
       task?._id,
@@ -275,6 +307,11 @@ export default function Tiptap({
 
   const handleMessage = async () => {
     setPending(true);
+
+    if (draft?.success) {
+      await deleteDraft(draft?.data?._id, project?._id);
+      await mutateDraft();
+    }
 
     let response;
 
@@ -394,8 +431,6 @@ export default function Tiptap({
       alert(e.message);
     }
   };
-
-  console.log(value);
 
   const checkIfDisabled = () => {
     const imgRegex = /<img[^>]*>/i;

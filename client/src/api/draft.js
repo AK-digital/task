@@ -2,15 +2,22 @@
 
 import { useAuthFetch } from "@/utils/api";
 
-export async function getDrafts(projectId, type) {
+export async function getDrafts(projectId, taskId, type) {
   try {
     const response = await useAuthFetch(
-      `/draft?projectId=${projectId}&type=${type}`,
+      `draft?projectId=${projectId}&taskId=${taskId}&type=${type}`,
       "GET",
       "application/json",
       null,
       "drafts"
     );
+
+    if (response.status === 404) {
+      return {
+        success: false,
+        message: "Aucun brouillon trouvé",
+      };
+    }
 
     const data = await response.json();
 
@@ -39,7 +46,7 @@ export async function saveDraft(projectId, taskId, type, content) {
     }
 
     const response = await useAuthFetch(
-      `/draft?projectId=${projectId}`,
+      `draft?projectId=${projectId}`,
       "POST",
       "application/json",
       { type: type, taskId: taskId, content: content }
@@ -48,6 +55,9 @@ export async function saveDraft(projectId, taskId, type, content) {
     const data = await response.json();
 
     if (!data.success) {
+      if (data?.message === "Draft already exists") {
+        return data;
+      }
       throw new Error(data?.message);
     }
 
@@ -60,7 +70,7 @@ export async function saveDraft(projectId, taskId, type, content) {
 
     return {
       success: false,
-      message: "  Une erreur est survenue lors de la sauvegarde du brouillon",
+      message: "Une erreur est survenue lors de la sauvegarde du brouillon",
     };
   }
 }
@@ -72,8 +82,8 @@ export async function updateDraft(draftId, projectId, content) {
     }
 
     const response = await useAuthFetch(
-      `/draft/${draftId}?projectId=${projectId}`,
-      "PATCH",
+      `draft/${draftId}?projectId=${projectId}`,
+      "PUT",
       "application/json",
       { content: content }
     );
@@ -105,13 +115,15 @@ export async function deleteDraft(draftId, projectId) {
     }
 
     const response = await useAuthFetch(
-      `/draft/${draftId}?projectId=${projectId}`,
+      `draft/${draftId}?projectId=${projectId}`,
       "DELETE",
       "application/json",
       null
     );
 
     const data = await response.json();
+
+    console.log(data);
 
     if (!data.success) {
       throw new Error(data?.message);
