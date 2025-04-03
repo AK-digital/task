@@ -3,6 +3,7 @@ import { updateTaskText } from "@/actions/task";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
+import { checkRole } from "@/utils/utils";
 
 const initialState = {
   status: "pending",
@@ -11,7 +12,7 @@ const initialState = {
   errors: null,
 };
 
-export default function TaskText({ isHeader, task, project }) {
+export default function TaskText({ task, project, uid }) {
   const formRef = useRef(null);
   const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState(task?.text || "");
@@ -53,9 +54,21 @@ export default function TaskText({ isHeader, task, project }) {
     };
   }, [inputValue]);
 
+  function handleEdit() {
+    const isAuthorized = checkRole(
+      project,
+      ["owner", "manager", "team", "customer"],
+      uid
+    );
+
+    if (!isAuthorized) return;
+
+    setEdit(true);
+  }
+
   return (
     <div className={styles.container}>
-      {!edit && <p onClick={(e) => setEdit(true)}>{inputValue}</p>}
+      {!edit && <p onClick={handleEdit}>{inputValue}</p>}
       {edit && (
         <form action={formAction} ref={formRef}>
           <input

@@ -234,11 +234,11 @@ io.on("connection", (socket) => {
 
     if (!project) return;
 
-    const guests = [...project?.guests, project?.author];
-
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest });
-      io.to(user?.socketId).emit("task updated");
+    project?.members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
+      if (user) {
+        io.to(user?.socketId).emit("task updated");
+      }
     });
   });
 
@@ -247,11 +247,11 @@ io.on("connection", (socket) => {
 
     if (!project) return;
 
-    const guests = [...project?.guests, project?.author];
-
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest });
-      io.to(user?.socketId).emit("message updated");
+    project?.members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
+      if (user) {
+        io.to(user?.socketId).emit("message updated");
+      }
     });
   });
 });

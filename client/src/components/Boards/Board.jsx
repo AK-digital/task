@@ -1,13 +1,15 @@
 "use client";
 import styles from "@/styles/components/boards/board.module.css";
 import Tasks from "../tasks/Tasks";
-import { useState, useEffect, useRef, useActionState } from "react";
+import { useState, useEffect, useRef, useActionState, useContext } from "react";
 import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
 import socket from "@/utils/socket";
 import useSWR from "swr";
 import { getTasks } from "@/api/task";
+import { AuthContext } from "@/context/auth";
+import { checkRole } from "@/utils/utils";
 
 const initialState = {
   status: "pending",
@@ -25,6 +27,7 @@ export default function Board({
   setSelectedTasks,
   archive,
 }) {
+  const { uid } = useContext(AuthContext);
   const inputRef = useRef(null);
   const [open, setOpen] = useState(true);
   const [isWritting, setIsWritting] = useState(false);
@@ -66,6 +69,7 @@ export default function Board({
           open={open}
           setOpen={setOpen}
           tasks={tasks}
+          project={project}
           setOptimisticColor={setOptimisticColor}
           optimisticColor={optimisticColor}
           selectedTasks={selectedTasks}
@@ -87,47 +91,49 @@ export default function Board({
           />
         )}
       </div>
-      <div className={styles.footer}>
-        {!archive && (
-          <div className={styles.add}>
-            <Plus size={18} />
-            <form action={formAction}>
-              <input
-                type="text"
-                name="board-id"
-                id="board-id"
-                defaultValue={board?._id}
-                hidden
-              />
-              <input
-                type="text"
-                name="new-task"
-                id="new-task"
-                placeholder=" Ajouter une tâche"
-                autoComplete="off"
-                ref={inputRef}
-                onChange={(e) => {
-                  if (e.target.value.length > 0) {
-                    setIsWritting(true);
-                  } else {
-                    setIsWritting(false);
-                  }
-                }}
-              />
-              <button type="submit" hidden>
-                Ajouter une tâche
-              </button>
-            </form>
-          </div>
-        )}
-        {isWritting && (
-          <div className={styles.info}>
-            <p>
-              Appuyer sur <span>entrée</span> pour ajouter une tâche
-            </p>
-          </div>
-        )}
-      </div>
+      {checkRole(project, ["owner", "manager", "team", "customer"], uid) && (
+        <div className={styles.footer}>
+          {!archive && (
+            <div className={styles.add}>
+              <Plus size={18} />
+              <form action={formAction}>
+                <input
+                  type="text"
+                  name="board-id"
+                  id="board-id"
+                  defaultValue={board?._id}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="new-task"
+                  id="new-task"
+                  placeholder=" Ajouter une tâche"
+                  autoComplete="off"
+                  ref={inputRef}
+                  onChange={(e) => {
+                    if (e.target.value.length > 0) {
+                      setIsWritting(true);
+                    } else {
+                      setIsWritting(false);
+                    }
+                  }}
+                />
+                <button type="submit" hidden>
+                  Ajouter une tâche
+                </button>
+              </form>
+            </div>
+          )}
+          {isWritting && (
+            <div className={styles.info}>
+              <p>
+                Appuyer sur <span>entrée</span> pour ajouter une tâche
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

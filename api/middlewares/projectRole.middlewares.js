@@ -118,7 +118,7 @@ export function checkRole(requiredRoles) {
 
       // Check if the authenticate user is a member of the project
       const member = project?.members?.find(
-        (member) => member.user.toString() === authUser._id.toString()
+        (member) => member?.user?.toString() === authUser?._id?.toString()
       );
 
       // If not a member, return 403

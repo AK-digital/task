@@ -3,12 +3,12 @@ import { updateTaskEstimate } from "@/api/task";
 import styles from "@/styles/components/tasks/task-estimate.module.css";
 import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
-import { faL } from "@fortawesome/free-solid-svg-icons";
-import { Plus, X, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { checkRole } from "@/utils/utils";
+import { XCircle } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
-export default function TaskEstimate({ task, project }) {
-  const [edit, setEdit] = useState(false);
+export default function TaskEstimate({ task, project, uid }) {
+  const [isEditing, setIsEditing] = useState(false);
   const [number, setNumber] = useState(1);
   const [week, setWeek] = useState("minutes");
   const [estimation, setEstimation] = useState(task?.estimation || "-");
@@ -22,7 +22,7 @@ export default function TaskEstimate({ task, project }) {
 
   const handleUpdateTaskEstimate = async (e) => {
     e.preventDefault();
-    setEdit(false);
+    setIsEditing(false);
     setHover(false);
 
     const value = e.target.innerText;
@@ -52,13 +52,12 @@ export default function TaskEstimate({ task, project }) {
 
     socket.emit("update task", task?.projectId);
 
-    setEdit(false);
+    setIsEditing(false);
   };
 
   const handleCustomeEstimation = async (e) => {
-    console.log("sent");
     e.preventDefault();
-    setEdit(false);
+    setIsEditing(false);
     setHover(false);
 
     const value = `${number} ${week}`;
@@ -78,16 +77,32 @@ export default function TaskEstimate({ task, project }) {
     socket.emit("update task", task?.projectId);
   };
 
+  const handleHover = useCallback(() => {
+    const isAuthorized = checkRole(project, ["owner", "manager", "team"], uid);
+
+    if (!isAuthorized) return;
+
+    setHover(true);
+  }, [project, uid]);
+
+  const handleIsEditing = useCallback(() => {
+    const isAuthorized = checkRole(project, ["owner", "manager", "team"], uid);
+
+    if (!isAuthorized) return;
+
+    setIsEditing((prev) => !prev);
+  }, [project, uid]);
+
   return (
     <div
       className={styles.container}
-      onMouseEnter={() => setHover(true)}
+      onMouseEnter={handleHover}
       onMouseLeave={() => setHover(false)}
     >
       <div
         data-estimation={hasEstimation}
         className={styles.wrapper}
-        onClick={() => setEdit(!edit)}
+        onClick={handleIsEditing}
       >
         <span>{estimation}</span>
       </div>
@@ -96,7 +111,7 @@ export default function TaskEstimate({ task, project }) {
           <XCircle size={16} />
         </div>
       )}
-      {edit && (
+      {isEditing && (
         <>
           <div className={styles.edit} id="popover">
             <div className={styles.suggestions}>
@@ -176,7 +191,10 @@ export default function TaskEstimate({ task, project }) {
               </form>
             </div>
           </div>
-          <div id="modal-layout-opacity" onClick={() => setEdit(false)}></div>
+          <div
+            id="modal-layout-opacity"
+            onClick={() => setIsEditing(false)}
+          ></div>
         </>
       )}
     </div>

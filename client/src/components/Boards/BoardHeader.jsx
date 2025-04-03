@@ -2,11 +2,12 @@
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
 import { ChevronDown, ChevronRight, EllipsisVertical } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
-import { isNotEmpty } from "@/utils/utils";
+import { checkRole, isNotEmpty } from "@/utils/utils";
 import BoardMore from "./BoardMore";
+import { AuthContext } from "@/context/auth";
 
 export default function BoardHeader({
   board,
@@ -18,7 +19,9 @@ export default function BoardHeader({
   selectedTasks,
   setSelectedTasks,
   archive,
+  project,
 }) {
+  const { uid } = useContext(AuthContext);
   const [more, setMore] = useState(false);
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
@@ -120,19 +123,21 @@ export default function BoardHeader({
     >
       <div className={styles.actions}>
         {/* Display if tasks is not empty and if there is at least 2 task */}
-        {isNotEmpty(tasks) && tasks?.length > 1 && (
-          <div
-            className={styles.actionCheckbox}
-            title="Sélectionner toutes les tâches"
-          >
-            <input
-              type="checkbox"
-              name="board"
-              className={styles.checkbox}
-              onClick={handleCheckBoard}
-            />
-          </div>
-        )}
+        {isNotEmpty(tasks) &&
+          tasks?.length > 1 &&
+          checkRole(project, ["owner", "manager", "team", "customer"], uid) && (
+            <div
+              className={styles.actionCheckbox}
+              title="Sélectionner toutes les tâches"
+            >
+              <input
+                type="checkbox"
+                name="board"
+                className={styles.checkbox}
+                onClick={handleCheckBoard}
+              />
+            </div>
+          )}
         <div>
           {open ? (
             <ChevronDown

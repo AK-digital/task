@@ -7,16 +7,23 @@ import {
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-timer.module.css";
 import socket from "@/utils/socket";
-import { formatTime, isNotEmpty } from "@/utils/utils";
+import { checkRole, formatTime, isNotEmpty } from "@/utils/utils";
 import { CirclePause, CirclePlay } from "lucide-react";
 import { MinusCircle } from "lucide-react";
 import moment from "moment";
 moment.locale("fr");
 import Image from "next/image";
-import { useEffect, useState, useActionState, useContext, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useActionState,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import { useStopwatch } from "react-timer-hook";
 
-export default function TaskTimer({ task }) {
+export default function TaskTimer({ task, project, uid }) {
   const [totalTaskDuration, setTotalTaskDuration] = useState(
     task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0
   );
@@ -134,11 +141,21 @@ export default function TaskTimer({ task }) {
   return (
     <div className={styles.container} data-running={isRunning}>
       {/* TIMER */}
-      <span className={styles.timer}>
-        {isRunning ? (
-          <CirclePause data-running={isRunning} onClick={handlePauseTimer} />
-        ) : (
-          <CirclePlay data-running={isRunning} onClick={handlePlayTimer} />
+      <span
+        className={styles.timer}
+        data-center={!checkRole(project, ["owner", "manager", "team"], uid)}
+      >
+        {checkRole(project, ["owner", "manager", "team"], uid) && (
+          <>
+            {isRunning ? (
+              <CirclePause
+                data-running={isRunning}
+                onClick={handlePauseTimer}
+              />
+            ) : (
+              <CirclePlay data-running={isRunning} onClick={handlePlayTimer} />
+            )}
+          </>
         )}
         <span onClick={() => setMore(true)}>
           {formattedHours + ":" + formattedMinutes + ":" + formattedSeconds}
@@ -166,11 +183,13 @@ export default function TaskTimer({ task }) {
               />
             ) : (
               <div className={styles.content}>
-                <div className={styles.addTime}>
-                  <button onClick={() => setAddingSession(true)}>
-                    Ajouter une session
-                  </button>
-                </div>
+                {checkRole(project, ["owner", "manager", "team"], uid) && (
+                  <div className={styles.addTime}>
+                    <button onClick={() => setAddingSession(true)}>
+                      Ajouter une session
+                    </button>
+                  </div>
+                )}
                 {isNotEmpty(sessions) && (
                   <TimeTrackingSessions
                     task={task}

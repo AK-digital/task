@@ -72,8 +72,7 @@ export async function timeTrackingStop(taskId, projectId) {
     const res = await useAuthFetch(
       `time-tracking/stop/${taskId}?projectId=${projectId}`,
       "PATCH",
-      "application/json",
-      null
+      "application/json"
     );
 
     const response = await res.json();

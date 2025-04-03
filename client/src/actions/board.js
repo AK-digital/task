@@ -17,6 +17,13 @@ export async function saveBoard(projectId, prevState, formData) {
 
     const response = await res.json();
 
+    if (!response.success) {
+      throw new Error(
+        response?.message ||
+          "Une erreur est survenue lors de la création du tableau"
+      );
+    }
+
     revalidateTag("boards");
 
     return response;

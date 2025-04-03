@@ -1,8 +1,10 @@
 "use client";
 import { saveBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/add-board.module.css";
-import { useActionState } from "react";
+import { useActionState, useContext } from "react";
 import { Plus } from "lucide-react";
+import { AuthContext } from "@/context/auth";
+import { checkRole } from "@/utils/utils";
 
 const initialState = {
   status: "pending",
@@ -11,12 +13,20 @@ const initialState = {
   errors: null,
 };
 
-export default function AddBoard({ projectId }) {
-  const saveBoardWithProjectId = saveBoard.bind(null, projectId);
+export default function AddBoard({ project }) {
+  const { uid } = useContext(AuthContext);
+  const saveBoardWithProjectId = saveBoard.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
     saveBoardWithProjectId,
     initialState
   );
+  const isAuthorized = checkRole(
+    project,
+    ["owner", "manager", "team", "customer"],
+    uid
+  );
+
+  if (!isAuthorized) return null;
 
   return (
     <div className={styles["container"]}>

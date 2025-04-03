@@ -128,7 +128,7 @@ router.patch(
 router.delete(
   "/",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team"]), // projectId query is required
+  checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
   taskControllers.deleteTask
 );
 

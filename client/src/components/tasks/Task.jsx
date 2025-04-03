@@ -12,10 +12,12 @@ import TaskResponsibles from "./TaskResponsibles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskTimer from "./TaskTimer";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
 import TaskEstimate from "./TaskEstimate";
+import { AuthContext } from "@/context/auth";
+import { checkRole } from "@/utils/utils";
 
 export default function Task({
   task,
@@ -24,6 +26,7 @@ export default function Task({
   setSelectedTasks,
   archive,
 }) {
+  const { uid, user } = useContext(AuthContext);
   const pathname = usePathname();
   const taskId = pathname.split("/").pop();
   const [openedTask, setOpenedTask] = useState(taskId);
@@ -79,22 +82,30 @@ export default function Task({
     >
       <div className={styles.content}>
         <div className={styles.wrapper}>
-          <div>
-            <input
-              type="checkbox"
-              name="task"
-              id={`task-${task?._id}`}
-              data-value={task?._id}
-              defaultValue={task?._id}
-              className={styles.checkbox}
-              onClick={handleSelectedTask}
-            />
-          </div>
-          <div {...attributes} {...listeners} suppressHydrationWarning>
-            {/* <GripVertical width={60} height={60} /> */}
-            <FontAwesomeIcon icon={faGripVertical} />
-          </div>
-          <TaskText task={task} project={project} />
+          {checkRole(
+            project,
+            ["owner", "manager", "team", "customer"],
+            uid
+          ) && (
+            <div>
+              <input
+                type="checkbox"
+                name="task"
+                id={`task-${task?._id}`}
+                data-value={task?._id}
+                defaultValue={task?._id}
+                className={styles.checkbox}
+                onClick={handleSelectedTask}
+              />
+            </div>
+          )}
+          {checkRole(project, ["owner", "manager", "team"], uid) && (
+            <div {...attributes} {...listeners} suppressHydrationWarning>
+              {/* <GripVertical width={60} height={60} /> */}
+              <FontAwesomeIcon icon={faGripVertical} />
+            </div>
+          )}
+          <TaskText task={task} project={project} uid={uid} />
 
           <div className={styles.comment} onClick={handleTaskClick}>
             <FontAwesomeIcon icon={faComment} />
@@ -105,13 +116,13 @@ export default function Task({
 
           <TaskResponsibles task={task} project={project} archive={archive} />
           <div className={styles.options}>
-            <TaskStatus task={task} project={project} />
-            <TaskPriority task={task} project={project} />
+            <TaskStatus task={task} project={project} uid={uid} />
+            <TaskPriority task={task} project={project} uid={uid} />
           </div>
-          <TaskDeadline task={task} project={project} />
-          <TaskEstimate task={task} project={project} />
-          {!archive && <TaskTimer task={task} />}
-          <TaskRemove task={task} />
+          <TaskDeadline task={task} project={project} uid={uid} />
+          <TaskEstimate task={task} project={project} uid={uid} />
+          {!archive && <TaskTimer task={task} project={project} uid={uid} />}
+          <TaskRemove task={task} project={project} uid={uid} />
         </div>
       </div>
       {openedTask === task?._id && (
@@ -120,6 +131,7 @@ export default function Task({
           project={project}
           setOpennedTask={setOpenedTask}
           archive={archive}
+          uid={uid}
         />
       )}
     </div>

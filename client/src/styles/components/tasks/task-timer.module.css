@@ -32,6 +32,11 @@
     cursor: pointer;
 }
 
+.timer[data-center="true"] {
+    width: 100%;
+    justify-content: center;
+}
+
 /* .more {
     position: absolute;
     background-color: var();

@@ -4,11 +4,11 @@ import { AuthContext } from "@/context/auth";
 import Modal from "@/layouts/Modal";
 import styles from "@/styles/components/tasks/task-responsibles.module.css";
 import socket from "@/utils/socket";
-import { isNotEmpty } from "@/utils/utils";
+import { checkRole, isNotEmpty } from "@/utils/utils";
 import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export default function TaskResponsibles({ task, project, archive }) {
   const { user, uid } = useContext(AuthContext);
@@ -100,13 +100,19 @@ export default function TaskResponsibles({ task, project, archive }) {
     });
   }
 
-  function handleOpenModal(e) {
-    e.preventDefault();
-
+  const handleModal = useCallback(() => {
     if (archive) return;
 
+    const isAuthorized = checkRole(
+      project,
+      ["owner", "manager", "team", "customer"],
+      uid
+    );
+
+    if (!isAuthorized) return;
+
     setOpenModal(!openModal);
-  }
+  }, [project, uid]);
 
   useEffect(() => {
     function handleResponsibleUpdate(taskId, updateData) {
@@ -132,7 +138,7 @@ export default function TaskResponsibles({ task, project, archive }) {
   return (
     <div className={styles.container}>
       {isNotEmpty(optimisticResponsibles) ? (
-        <ul className={styles.list} onClick={handleOpenModal}>
+        <ul className={styles.list} onClick={handleModal}>
           {optimisticResponsibles.slice(0, 3).map((responsible) => (
             <li key={responsible?._id}>
               <Image
@@ -156,7 +162,7 @@ export default function TaskResponsibles({ task, project, archive }) {
           )}
         </ul>
       ) : (
-        <div className={styles.plus} onClick={handleOpenModal}>
+        <div className={styles.plus} onClick={handleModal}>
           <FontAwesomeIcon icon={faPlus} />
         </div>
       )}
