@@ -28,9 +28,14 @@ export async function saveProject(req, res, next) {
       .select("order");
 
     const newProject = new ProjectModel({
-      author: authUser?._id,
       name: name,
       order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
+      members: [
+        {
+          user: authUser._id,
+          role: "owner",
+        },
+      ],
     });
 
     const savedProject = await newProject.save();
@@ -463,7 +468,10 @@ export async function acceptProjectInvitation(req, res, next) {
       },
       {
         $addToSet: {
-          guests: user?._id,
+          members: {
+            user: user?._id,
+            role: "guest",
+          },
         },
       },
       {
@@ -508,7 +516,7 @@ export async function removeGuest(req, res, next) {
       },
       {
         $pull: {
-          guests: guestId,
+          "members.user": guestId,
         },
       },
       {
