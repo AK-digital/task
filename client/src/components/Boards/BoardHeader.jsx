@@ -2,7 +2,7 @@
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
 import { ChevronDown, ChevronRight, EllipsisVertical } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
 import { checkRole, isNotEmpty } from "@/utils/utils";
@@ -94,6 +94,17 @@ export default function BoardHeader({
     setEdit(!edit);
   }
 
+  const handleEdit = useCallback(() => {
+    const isAuthorized = checkRole(
+      project,
+      ["owner", "manager", "team", "customer"],
+      uid
+    );
+    if (!isAuthorized) return;
+
+    setEdit(!edit);
+  }, [project, uid]);
+
   const handleCheckBoard = (e) => {
     if (e.target.checked) {
       setSelectedTasks((prev) => [...prev, ...tasks?.map((task) => task?._id)]);
@@ -162,12 +173,17 @@ export default function BoardHeader({
               defaultValue={title}
               onChange={handleTitleChange}
             />
-            <div id="modal-layout-opacity" onClick={handleEditState}></div>
+            <div id="modal-layout-opacity" onClick={handleEdit}></div>
           </div>
         ) : (
-          <div onClick={handleEditState}>
+          <div onClick={handleEdit}>
             <span
               className={styles.title}
+              data-authorized={checkRole(
+                project,
+                ["owner", "manager", "team", "customer"],
+                uid
+              )}
               style={{ color: `${optimisticColor}` }}
             >
               {title}
