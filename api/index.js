@@ -220,10 +220,8 @@ io.on("connection", (socket) => {
 
     if (!project || !board) return;
 
-    const guests = [...project?.guests, project?.author];
-
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest });
+    project?.members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
 
       io.to(user?.socketId).emit("board updated", board);
     });

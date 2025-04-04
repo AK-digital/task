@@ -25,7 +25,7 @@
     color: var(--text-color-dark);
 }
 
-.item:last-child {
+.delete {
     color: var(--text-color-red);
 }
 
@@ -33,6 +33,6 @@
     color: var(--text-color-dark);
 }
 
-.item:last-child svg {
+.delete svg {
     color: var(--text-color-red);
 }

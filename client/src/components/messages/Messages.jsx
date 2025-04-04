@@ -4,11 +4,12 @@ import { getMessages } from "@/api/message";
 import useSWR from "swr";
 import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { MessagesSquareIcon } from "lucide-react";
 import Tiptap from "../RichTextEditor/Tiptap";
 import { getDrafts } from "@/api/draft";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function Messages({ task, project }) {
   const fetcher = getDrafts.bind(null, task?.projectId, task?._id, "message");
@@ -28,6 +29,13 @@ export default function Messages({ task, project }) {
 
   const messages = data?.data;
 
+  const isAuthorized = useUserRole(project, [
+    "admin",
+    "manager",
+    "team",
+    "customer",
+  ]);
+
   useEffect(() => {
     socket.on("message updated", () => {
       mutate();
@@ -44,6 +52,12 @@ export default function Messages({ task, project }) {
       setMessage(draft?.data?.content);
     }
   });
+
+  const handleIsOpen = useCallback(() => {
+    if (!isAuthorized) return;
+
+    setIsOpen(true);
+  }, [project]);
 
   return (
     <div className={styles.container}>
@@ -72,8 +86,16 @@ export default function Messages({ task, project }) {
         />
       )}
       {!isOpen && (
-        <div className={styles.empty} onClick={() => setIsOpen(true)}>
-          <p>Rédiger une réponse et mentionner des utilisateurs avec @</p>
+        <div
+          className={styles.empty}
+          onClick={handleIsOpen}
+          data-role={isAuthorized}
+        >
+          {isAuthorized ? (
+            <p>Rédiger une réponse et mentionner des utilisateurs avec @</p>
+          ) : (
+            <p>Impossible de rédiger un message en tant qu'invité</p>
+          )}
         </div>
       )}
     </div>

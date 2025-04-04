@@ -9,6 +9,7 @@ import socket from "@/utils/socket";
 import useSWR from "swr";
 import { getDrafts } from "@/api/draft";
 import { checkRole } from "@/utils/utils";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function TaskDescription({ project, task, uid }) {
   const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
@@ -23,11 +24,12 @@ export default function TaskDescription({ project, task, uid }) {
 
   const descriptionAuthor = task?.description?.author;
   const isAuthor = descriptionAuthor?._id === uid;
-  const isAuthorized = checkRole(
-    project,
-    ["owner", "manager", "team", "customer"],
-    uid
-  );
+  const isAuthorized = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
 
   const date = moment(task?.description?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
@@ -137,11 +139,15 @@ export default function TaskDescription({ project, task, uid }) {
       )}
       {/* If not editing and description empty */}
       {!isEditing && !description && (
-        <div className={styles.empty} onClick={handleEditDescription}>
+        <div
+          className={styles.empty}
+          onClick={handleEditDescription}
+          data-role={isAuthorized}
+        >
           {isAuthorized ? (
             <p>Ajouter une description</p>
           ) : (
-            <p>Vous ne pouvez pas ajouter de description en tant qu'invité</p>
+            <p>L'ajout de description est désactivé en tant qu'invité</p>
           )}
         </div>
       )}
