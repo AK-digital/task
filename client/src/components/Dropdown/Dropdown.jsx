@@ -19,6 +19,7 @@ export function DropDown({ defaultValue, options, project, member }) {
     const role = e?.currentTarget?.getAttribute("data-value");
     setCurrent(role);
 
+    setIsOpen(false);
     const res = await updateProjectRole(project?._id, memberId, role);
 
     if (!res.success) {
@@ -26,8 +27,6 @@ export function DropDown({ defaultValue, options, project, member }) {
     }
 
     socket.emit("update-project-role", memberId);
-
-    setIsOpen(false);
   }
 
   return (
