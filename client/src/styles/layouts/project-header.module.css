@@ -199,7 +199,7 @@
 }
 
 /* Guests styles */
-.guests {
+.members {
     display: flex;
     justify-content: center;
     align-items: center;

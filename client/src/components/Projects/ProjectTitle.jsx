@@ -6,6 +6,7 @@ import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
 import Link from "next/link";
 import { Figma, Github, Globe, Layout, MoreVertical } from "lucide-react";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 const initialState = {
   status: "pending",
@@ -25,6 +26,8 @@ export default function ProjectTitle({ project }) {
   const [modalOpen, setModalOpen] = useState(false);
   const formRef = useRef(null);
   const inputRef = useRef(null);
+
+  const canEdit = useUserRole(project, ["owner", "manager"]);
 
   const debouncedUpdate = useDebouncedCallback(async (newName) => {
     if (newName !== project?.name) {
@@ -49,14 +52,6 @@ export default function ProjectTitle({ project }) {
     }
   }, [state]);
 
-  const handleClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleBlur = () => {
-    setIsEditing(false);
-  };
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       formRef?.current?.requestSubmit();
@@ -73,6 +68,12 @@ export default function ProjectTitle({ project }) {
     const newName = e.target.value;
     setProjectName(newName);
     debouncedUpdate(newName);
+  };
+
+  const handleIsEditing = (e) => {
+    if (!canEdit) return;
+
+    setIsEditing((prev) => !prev);
   };
 
   return (
@@ -93,22 +94,24 @@ export default function ProjectTitle({ project }) {
               id="project-name"
               name="project-name"
               onChange={handleChange}
-              onBlur={handleBlur}
+              onBlur={handleIsEditing}
               onKeyDown={handleKeyDown}
               defaultValue={projectName}
               className={styles.titleInput}
             />
           </form>
         ) : (
-          <span onClick={handleClick}>{projectName}</span>
+          <span onClick={handleIsEditing}>{projectName}</span>
         )}
       </div>
 
-      <div className={styles.optionsBtn}>
-        <Link href={`/projects/${project?._id}/options`}>
-          <MoreVertical size={20} />
-        </Link>
-      </div>
+      {canEdit && (
+        <div className={styles.optionsBtn}>
+          <Link href={`/projects/${project?._id}/options`}>
+            <MoreVertical size={20} />
+          </Link>
+        </div>
+      )}
       {/* Ajout du séparateur vertical */}
       {/* {project?.urls > 0 && <div className={styles.separator}></div>} */}
 

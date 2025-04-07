@@ -55,6 +55,13 @@ router.patch(
 );
 
 router.patch(
+  "/:id/update-role",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager"]),
+  projectControllers.updateProjectRole
+);
+
+router.patch(
   "/:id/remove-guest",
   authMiddlewares.auth,
   checkRole(["owner", "manager"]),

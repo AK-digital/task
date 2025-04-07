@@ -1,15 +1,20 @@
 import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
-import * as projectMiddlewares from "../middlewares/projectRole.middlewares.js";
+import { checkRole } from "../middlewares/projectRole.middlewares.js";
 import * as templateControllers from "../controllers/template.controllers.js";
 
-router.post("/", authMiddlewares.auth, templateControllers.saveTemplate);
+router.post(
+  "/",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager"]),
+  templateControllers.saveTemplate
+);
 
 router.post(
   "/board",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
+  checkRole(["owner", "manager"]),
   templateControllers.saveBoardTemplate
 );
 

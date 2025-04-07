@@ -22,6 +22,7 @@ import { updateProject } from "@/actions/project";
 import { useDebouncedCallback } from "use-debounce";
 import { set } from "zod";
 import PopupMessage from "@/layouts/PopupMessage";
+import { useUserRole } from "@/app/hooks/useUserRole";
 moment.locale("fr");
 
 const initialState = {
@@ -40,8 +41,13 @@ export default function ProjectOptions({ project }) {
   );
   const [editImg, setEditImg] = useState(false);
   const [isPictLoading, setIsPictLoading] = useState(false);
+  const canEdit = useUserRole(project, ["owner", "manager"]);
 
-  const author = project?.author;
+  if (!canEdit) {
+    router.push("/projects");
+  }
+
+  const author = project?.members.find((member) => member?.role === "owner");
   const createdAt = moment(project?.createdAt).format("DD/MM/YYYY");
 
   useEffect(() => {
@@ -126,7 +132,9 @@ export default function ProjectOptions({ project }) {
                 <span className={styles.title}>Informations générales</span>
                 <div className={styles.infos}>
                   <span>Créée le {createdAt}</span>
-                  <span>Par {author?.firstName + " " + author?.lastName}</span>
+                  <span>
+                    Par {author?.user?.firstName + " " + author?.user?.lastName}
+                  </span>
                 </div>
               </div>
               {/* Wrapper content */}

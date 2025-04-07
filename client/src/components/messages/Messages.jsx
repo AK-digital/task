@@ -30,7 +30,7 @@ export default function Messages({ task, project }) {
   const messages = data?.data;
 
   const isAuthorized = useUserRole(project, [
-    "admin",
+    "owner",
     "manager",
     "team",
     "customer",

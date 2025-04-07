@@ -8,10 +8,15 @@ import GuestsModal from "@/components/Modals/GuestsModal";
 import NoPicture from "@/components/User/NoPicture";
 import Link from "next/link";
 import AddTemplate from "@/components/Templates/AddTemplate";
+import { isNotEmpty } from "@/utils/utils";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function ProjectHeader({ project, projectInvitations }) {
   const [addTemplate, setAddTemplate] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const members = project?.members;
+  const canPost = useUserRole(project, ["owner", "manager"]);
 
   return (
     <>
@@ -20,15 +25,17 @@ export default function ProjectHeader({ project, projectInvitations }) {
           <ProjectTitle project={project} />
 
           <div className={styles.actions}>
-            <div className={styles.template} title="Ajouter un template">
-              <Layout size={24} onClick={(e) => setAddTemplate(true)} />
-              {addTemplate && (
-                <AddTemplate
-                  project={project}
-                  setAddTemplate={setAddTemplate}
-                />
-              )}
-            </div>
+            {canPost && (
+              <div className={styles.template} title="Ajouter un template">
+                <Layout size={24} onClick={(e) => setAddTemplate(true)} />
+                {addTemplate && (
+                  <AddTemplate
+                    project={project}
+                    setAddTemplate={setAddTemplate}
+                  />
+                )}
+              </div>
+            )}
             <div className={styles.archive} title="Archive du projet">
               <Link href={`/projects/${project._id}/archive`}>
                 <Archive size={24} />
@@ -36,34 +43,28 @@ export default function ProjectHeader({ project, projectInvitations }) {
             </div>
             <div className={styles.separator}></div>
             {/* Guests avatars */}
-            <div className={styles.guests}>
-              {project?.guests?.map((guest) => (
-                <div key={guest._id} className={styles.guestAvatar}>
-                  {guest?.picture ? (
-                    <Image
-                      src={guest?.picture || "/default-pfp.webp"}
-                      alt={`${guest.firstName} ${guest.lastName}`}
-                      width={32}
-                      height={32}
-                      className={styles.avatar}
-                    />
-                  ) : (
-                    <NoPicture user={guest} width={"32px"} height={"32px"} />
-                  )}
-                </div>
-              ))}
-              {/* Project author */}
-              <div className={styles.guestAvatar}>
-                <Link href={"/profile"}>
-                  <Image
-                    src={project?.author?.picture || "/default-pfp.webp"}
-                    alt={`${project?.author?.firstName} ${project?.author?.lastName}`}
-                    width={32}
-                    height={32}
-                    className={styles.avatar}
-                  />
-                </Link>
-              </div>
+
+            <div className={styles.members}>
+              {isNotEmpty(members) &&
+                members?.map((member) => (
+                  <div key={member?.user?._id} className={styles.guestAvatar}>
+                    {member?.user?.picture ? (
+                      <Image
+                        src={member?.user?.picture || "/default-pfp.webp"}
+                        alt={`${member?.user?.firstName} ${member?.user?.lastName}`}
+                        width={32}
+                        height={32}
+                        className={styles.avatar}
+                      />
+                    ) : (
+                      <NoPicture
+                        user={member?.user}
+                        width={"32px"}
+                        height={"32px"}
+                      />
+                    )}
+                  </div>
+                ))}
             </div>
             <div
               className={styles.addGuestBtn}

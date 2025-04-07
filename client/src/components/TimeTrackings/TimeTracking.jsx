@@ -38,12 +38,12 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
 
   useEffect(() => {
     if (state?.status === "success") {
-      const guests = [
-        tracker?.projectId?.author,
-        ...tracker?.projectId?.guests,
-      ];
-
-      socket.emit("task text update", guests, tracker?.taskId?._id, inputValue);
+      socket.emit(
+        "task text update",
+        tracker?.projectId?._id,
+        tracker?.taskId?._id,
+        inputValue
+      );
     } else {
       setInputValue(tracker?.taskId?.text);
     }

@@ -1,9 +1,9 @@
 "use client";
-import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/richTextEditor/mentions-list.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import NoPicture from "../User/NoPicture";
 
 export default function MentionsList({
   project,
@@ -11,13 +11,11 @@ export default function MentionsList({
   editor,
   setIsTaggedUsers,
 }) {
-  console.log(mentionPosition);
-  const { uid } = useContext(AuthContext);
-  const guests = [project?.author, ...project?.guests];
+  const members = project?.members || [];
   const [selectedIdx, setSelectedIdx] = useState(null);
 
   // Dans MentionsList.jsx, modifiez la fonction addMention comme suit:
-  const addMention = (guest) => {
+  const addMention = (member) => {
     if (!editor) return;
 
     // Trouver la position de l'arobase
@@ -48,8 +46,8 @@ export default function MentionsList({
         .insertContent({
           type: "mention",
           attrs: {
-            id: guest._id,
-            label: guest.firstName + " " + guest.lastName,
+            id: member?._id,
+            label: member?.firstName + " " + member?.lastName,
           },
         })
         .run();
@@ -61,8 +59,8 @@ export default function MentionsList({
         .insertContent({
           type: "mention",
           attrs: {
-            id: guest._id,
-            label: guest.firstName,
+            id: member?._id,
+            label: member?.firstName,
           },
         })
         .run();
@@ -80,21 +78,21 @@ export default function MentionsList({
           if (prevIdx === null) {
             return 0;
           } else {
-            return prevIdx === guests.length - 1 ? 0 : prevIdx + 1;
+            return prevIdx === members.length - 1 ? 0 : prevIdx + 1;
           }
         });
       } else if (e.key === "ArrowUp") {
         setSelectedIdx((prevIdx) => {
           if (prevIdx === null) {
-            return guests.length - 1;
+            return members.length - 1;
           } else {
-            return prevIdx === 0 ? guests.length - 1 : prevIdx - 1;
+            return prevIdx === 0 ? members.length - 1 : prevIdx - 1;
           }
         });
       }
       if (e.key === "Enter" && selectedIdx !== null) {
         e.preventDefault();
-        addMention(guests[selectedIdx]);
+        addMention(members[selectedIdx]?.user);
       } else if (e.key === "Escape") {
         setIsTaggedUsers(false);
       }
@@ -105,7 +103,7 @@ export default function MentionsList({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [guests.length, selectedIdx]); // Ajout de guests.length pour éviter les erreurs
+  }, [members.length, selectedIdx]); // Ajout de guests.length pour éviter les erreurs
 
   const resetIdxOnMouseEnter = (e) => {
     e.preventDefault();
@@ -122,26 +120,29 @@ export default function MentionsList({
       }}
       onMouseEnter={resetIdxOnMouseEnter}
     >
-      {isNotEmpty(guests) && (
+      {isNotEmpty(members) && (
         <div className={styles.guests}>
           <ul className={styles.items}>
-            {guests?.map((guest, idx) => {
-              // if (guest?._id === uid) return;
+            {members?.map((member, idx) => {
               return (
                 <li
                   className={styles.item}
-                  key={guest?._id}
+                  key={member?.user?._id}
                   data-active={idx === selectedIdx}
-                  onClick={() => addMention(guest)}
+                  onClick={() => addMention(member?.user)}
                 >
-                  <Image
-                    src={guest?.picture || "/default-pfp.webp"}
-                    width={22}
-                    height={22}
-                    alt={`Photo de profil de ${guest?.firstName}`}
-                    style={{ borderRadius: "50%" }}
-                  />
-                  {guest?.firstName + " " + guest?.lastName}
+                  {member?.user?.picture ? (
+                    <Image
+                      src={member?.user?.picture || "/default-pfp.webp"}
+                      width={22}
+                      height={22}
+                      alt={`Photo de profil de ${member?.user?.firstName}`}
+                      style={{ borderRadius: "50%" }}
+                    />
+                  ) : (
+                    <NoPicture user={member?.user} width={22} height={22} />
+                  )}
+                  {member?.user?.firstName + " " + member?.user?.lastName}
                 </li>
               );
             })}

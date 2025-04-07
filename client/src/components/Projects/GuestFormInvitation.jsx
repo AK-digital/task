@@ -73,7 +73,7 @@ export default function GuestFormInvitation({ project, setIsPopup }) {
           />
           {errors && <i>{errors?.email}</i>}
           <button type="submit" data-disabled={pending}>
-            Inviter
+            Envoyer une invitation
           </button>
         </form>
       </div>

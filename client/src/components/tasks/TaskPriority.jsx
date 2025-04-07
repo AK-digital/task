@@ -26,11 +26,7 @@ export default function TaskPriority({ task, project, uid }) {
       return;
     }
 
-    const guests = project?.guests;
-
-    guests.push(project?.author);
-
-    socket.emit("task priority update", guests, task?._id, value);
+    socket.emit("task priority update", project?._id, task?._id, value);
   }
 
   useEffect(() => {

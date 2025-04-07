@@ -1,3 +1,5 @@
+import { Crown } from "lucide-react";
+
 export function isNotEmpty(arr) {
   return Array.isArray(arr) && arr.length > 0;
 }
@@ -20,4 +22,22 @@ export function checkRole(project, roles, uid) {
   if (!member) return false;
 
   return roles?.includes(member?.role);
+}
+
+export function memberRole(role) {
+  if (role === "owner") {
+    return "👑 Créateur";
+  }
+  if (role === "manager") {
+    return "👨‍💼 Manager";
+  }
+  if (role === "team") {
+    return "🙏 Équipe";
+  }
+  if (role === "customer") {
+    return "👤Client";
+  }
+  if (role === "guest") {
+    return "🙋‍♂️ Invité";
+  }
 }

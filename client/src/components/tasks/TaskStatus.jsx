@@ -3,8 +3,6 @@ import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
-import { revalidateBoards } from "@/api/board";
-import { set } from "zod";
 import { checkRole } from "@/utils/utils";
 
 const status = ["En attente", "À faire", "En cours", "Bloquée", "Terminée"];
@@ -25,9 +23,7 @@ export default function TaskStatus({ task, project, uid }) {
       return;
     }
 
-    const guests = [...project?.guests, project?.author];
-
-    socket.emit("task status update", guests, task?._id, value);
+    socket.emit("task status update", project?._id, task?._id, value);
   }
 
   useEffect(() => {

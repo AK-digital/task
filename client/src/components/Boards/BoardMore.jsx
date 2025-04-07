@@ -13,6 +13,7 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function BoardMore({ project, board, setMore, archive }) {
   const isBoardArchived = board?.archived;
+  const canPost = useUserRole(project, ["owner", "manager"]);
   const canDelete = useUserRole(project, ["owner", "manager"]);
 
   const handleAddArchive = async (e) => {
@@ -53,10 +54,12 @@ export default function BoardMore({ project, board, setMore, archive }) {
               Restaurer le tableau
             </li>
           )}
-          <li className={styles.item} onClick={handleAddBoardTemplate}>
-            <Save size={16} />
-            Enregistrer comme modèle
-          </li>
+          {canPost && (
+            <li className={styles.item} onClick={handleAddBoardTemplate}>
+              <Save size={16} />
+              Enregistrer comme modèle
+            </li>
+          )}
           {!archive && canDelete && (
             <li
               className={`${styles.item} ${styles.delete}`}

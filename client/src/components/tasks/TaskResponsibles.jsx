@@ -9,6 +9,7 @@ import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useCallback, useContext, useEffect, useState } from "react";
+import NoPicture from "../User/NoPicture";
 
 export default function TaskResponsibles({ task, project, archive }) {
   const { user, uid } = useContext(AuthContext);
@@ -16,20 +17,27 @@ export default function TaskResponsibles({ task, project, archive }) {
     task?.responsibles || []
   );
   const [openModal, setOpenModal] = useState(false);
+  const members = project?.members || [];
   const responsibles = task?.responsibles || [];
-  const guests = project?.guests || [];
-  const author = project?.author;
-
-  // Retourne les invités qui ne sont pas encore responsables
-  const filteredGuests = guests.filter(
-    (guest) =>
-      !responsibles.some((responsible) => responsible?._id === guest?._id)
+  const [filteredMembers, setFilteredMembers] = useState(
+    members.filter(
+      (member) =>
+        !responsibles.some(
+          (responsible) => responsible?._id === member?.user?._id
+        )
+    )
   );
 
-  // Vérifie si l'auteur est déjà responsable
-  const filteredAuthor = responsibles.some(
-    (responsible) => responsible?._id === author?._id
-  );
+  useEffect(() => {
+    const newMembers = members.filter(
+      (member) =>
+        !optimisticResponsibles.some(
+          (responsible) => responsible?._id === member?.user?._id
+        )
+    );
+
+    setFilteredMembers(newMembers);
+  }, [optimisticResponsibles, members]);
 
   async function handleAddResponsible(responsible) {
     const previousResponsibles = [...optimisticResponsibles];
@@ -51,11 +59,9 @@ export default function TaskResponsibles({ task, project, archive }) {
       return;
     }
 
-    const updatedGuests = [...guests, author];
-
     socket.emit(
       "task responsible update",
-      updatedGuests,
+      project?._id,
       task?._id,
       responsible
     );
@@ -92,9 +98,7 @@ export default function TaskResponsibles({ task, project, archive }) {
       return;
     }
 
-    const updatedGuests = [...guests, author];
-
-    socket.emit("task responsible update", updatedGuests, task?._id, {
+    socket.emit("task responsible update", project?._id, task?._id, {
       removed: true,
       responsible,
     });
@@ -141,18 +145,22 @@ export default function TaskResponsibles({ task, project, archive }) {
         <ul className={styles.list} onClick={handleModal}>
           {optimisticResponsibles.slice(0, 3).map((responsible) => (
             <li key={responsible?._id}>
-              <Image
-                src={responsible?.picture || "/default-pfp.webp"}
-                width={30}
-                height={30}
-                quality={100}
-                style={{
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                  cursor: "pointer",
-                }}
-                alt={`Photo de profil de ${responsible?.firstName}`}
-              />
+              {responsible?.picture ? (
+                <Image
+                  src={responsible?.picture || "/default-pfp.webp"}
+                  width={30}
+                  height={30}
+                  quality={100}
+                  style={{
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                  }}
+                  alt={`Photo de profil de ${responsible?.firstName}`}
+                />
+              ) : (
+                <NoPicture user={responsible} width={30} height={30} />
+              )}
             </li>
           ))}
           {optimisticResponsibles.length > 3 && (
@@ -163,7 +171,7 @@ export default function TaskResponsibles({ task, project, archive }) {
         </ul>
       ) : (
         <div className={styles.plus} onClick={handleModal}>
-          <FontAwesomeIcon icon={faPlus} />
+          <FontAwesomeIcon icon={faPlus} cursor={"pointer"} />
         </div>
       )}
 
@@ -194,40 +202,32 @@ export default function TaskResponsibles({ task, project, archive }) {
                 </ul>
               </div>
             )}
-
-            {(!filteredAuthor || isNotEmpty(filteredGuests)) && (
+            {isNotEmpty(filteredMembers) && (
               <div className={styles["guests__container"]}>
                 <span className={styles["guests__title"]}>
                   Personnes à inviter
                 </span>
                 <ul className={styles["guests__list"]}>
-                  {!filteredAuthor && (
-                    <li onClick={() => handleAddResponsible(author)}>
-                      <Image
-                        src={author?.picture || "/default-pfp.webp"}
-                        width={25}
-                        height={25}
-                        quality={100}
-                        style={{ objectFit: "fill", borderRadius: "50%" }}
-                        alt={`Photo de profil de ${author?.firstName}`}
-                      />
-                      <span className={styles.email}>{author?.email}</span>
-                    </li>
-                  )}
-                  {filteredGuests.map((guest) => (
+                  {filteredMembers.map((member) => (
                     <li
-                      key={guest?._id}
-                      onClick={() => handleAddResponsible(guest)}
+                      key={member?.user?._id}
+                      onClick={() => handleAddResponsible(member?.user)}
                     >
-                      <Image
-                        src={guest?.picture || "/default-pfp.webp"}
-                        width={25}
-                        height={25}
-                        quality={100}
-                        style={{ objectFit: "fill", borderRadius: "50%" }}
-                        alt={`Photo de profil de ${guest?.firstName}`}
-                      />
-                      <span className={styles.email}>{guest?.email}</span>
+                      {member?.user?.picture ? (
+                        <Image
+                          src={member?.user?.picture || "/default-pfp.webp"}
+                          width={25}
+                          height={25}
+                          quality={100}
+                          style={{ objectFit: "fill", borderRadius: "50%" }}
+                          alt={`Photo de profil de ${member?.user?.firstName}`}
+                        />
+                      ) : (
+                        <NoPicture user={member?.user} width={25} height={25} />
+                      )}
+                      <span className={styles.email}>
+                        {member?.user?.email}
+                      </span>
                     </li>
                   ))}
                 </ul>

@@ -35,9 +35,7 @@ export default function TaskText({ task, project, uid }) {
 
   useEffect(() => {
     if (state?.status === "success") {
-      const guests = [...project?.guests, project?.author];
-
-      socket.emit("task text update", guests, task?._id, inputValue);
+      socket.emit("task text update", project?._id, task?._id, inputValue);
     }
   }, [state]);
 

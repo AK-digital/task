@@ -1,7 +1,7 @@
 "use client";
 import styles from "@/styles/components/timeTrackings/filters.module.css";
 import { useEffect, useState } from "react";
-import { Dropdown } from "../Dropdown/Dropdown";
+import { Dropdown } from "./Dropdown";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function Filters({ projects, selectedProjects }) {
