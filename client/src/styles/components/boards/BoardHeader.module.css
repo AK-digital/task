@@ -110,7 +110,7 @@
     cursor: text;
 }
 
-.container[data-archive="false"] .title:hover {
+.container[data-archive="false"] .title[data-authorized="true"]:hover {
     border: 1px solid var(--border-color);
     cursor: inherit !important;
 }

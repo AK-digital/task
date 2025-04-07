@@ -9,22 +9,25 @@ import {
 import { deleteBoard } from "@/actions/board";
 import { addBoardToArchive, removeBoardFromArchive } from "@/api/board";
 import { saveBoardTemplate } from "@/api/template";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
-export default function BoardMore({ projectId, board, setMore, archive }) {
+export default function BoardMore({ project, board, setMore, archive }) {
   const isBoardArchived = board?.archived;
+  const canPost = useUserRole(project, ["owner", "manager"]);
+  const canDelete = useUserRole(project, ["owner", "manager"]);
 
   const handleAddArchive = async (e) => {
     e.preventDefault();
-    await addBoardToArchive(board?._id, projectId);
+    await addBoardToArchive(board?._id, project?._id);
   };
 
   const handleRestoreBoard = async (e) => {
     e.preventDefault();
-    await removeBoardFromArchive(board?._id, projectId);
+    await removeBoardFromArchive(board?._id, project?._id);
   };
 
   const handleAddBoardTemplate = async (e) => {
-    await saveBoardTemplate(board?._id, projectId);
+    await saveBoardTemplate(board?._id, project?._id);
     e.preventDefault();
   };
 
@@ -33,7 +36,7 @@ export default function BoardMore({ projectId, board, setMore, archive }) {
 
     if (!confirmed) return;
 
-    await deleteBoard(board?._id, projectId);
+    await deleteBoard(board?._id, project?._id);
   }
 
   return (
@@ -51,12 +54,17 @@ export default function BoardMore({ projectId, board, setMore, archive }) {
               Restaurer le tableau
             </li>
           )}
-          <li className={styles.item} onClick={handleAddBoardTemplate}>
-            <Save size={16} />
-            Enregistrer comme modèle
-          </li>
-          {!archive && (
-            <li className={styles.item} onClick={handleDeleteBoard}>
+          {canPost && (
+            <li className={styles.item} onClick={handleAddBoardTemplate}>
+              <Save size={16} />
+              Enregistrer comme modèle
+            </li>
+          )}
+          {!archive && canDelete && (
+            <li
+              className={`${styles.item} ${styles.delete}`}
+              onClick={handleDeleteBoard}
+            >
               <Trash size={16} />
               Supprimer le tableau
             </li>

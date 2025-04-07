@@ -303,7 +303,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
       </DndContext>
       {!archive && (
         <div className={styles.options}>
-          <AddBoard projectId={project?._id} />
+          <AddBoard project={project} />
         </div>
       )}
     </div>

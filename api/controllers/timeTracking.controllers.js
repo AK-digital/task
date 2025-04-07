@@ -192,6 +192,7 @@ export async function stopTimer(req, res, next) {
         message: "Aucun suivi de temps en cours pour cette tâche",
       });
     }
+
     const updatedTimeTracking = await TimeTrackingModel.findOneAndUpdate(
       {
         userId: res.locals.user._id,

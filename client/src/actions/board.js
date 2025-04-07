@@ -17,6 +17,13 @@ export async function saveBoard(projectId, prevState, formData) {
 
     const response = await res.json();
 
+    if (!response.success) {
+      throw new Error(
+        response?.message ||
+          "Une erreur est survenue lors de la création du tableau"
+      );
+    }
+
     revalidateTag("boards");
 
     return response;
@@ -43,13 +50,26 @@ export async function updateBoard(boardId, projectId, color, title) {
 
     const response = await res.json();
 
+    if (!response.success) {
+      throw new Error(
+        response?.message ||
+          "Une erreur est survenue lors de la mise à jour du tableau"
+      );
+    }
+
     revalidateTag("boards");
 
     return response;
   } catch (err) {
     console.log(
-      err.message || "Une erreur est survenue lors de la création du tableau"
+      err.message || "Une erreur est survenue lors de la mise à jour du tableau"
     );
+    return {
+      success: false,
+      message:
+        err.message ||
+        "Une erreur est survenue lors de la mise à jour du tableau",
+    };
   }
 }
 

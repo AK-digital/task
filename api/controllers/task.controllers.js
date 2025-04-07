@@ -489,14 +489,15 @@ export async function addResponsible(req, res, next) {
 
     const project = await ProjectModel.findById({ _id: req.query.projectId });
 
-    if (
-      project.author.toString() !== responsibleId &&
-      !project.guests.includes(responsibleId)
-    ) {
-      return res.status(400).send({
+    const isProjectMember = project?.members.find(
+      (member) => member?.user?.toString() === responsibleId
+    );
+
+    if (!isProjectMember) {
+      return res.status(404).send({
         success: false,
         message:
-          "Impossible de nommer un utilisateur qui n'est pas dans le projet responsable d'une tâche",
+          "Impossible de nommer responsable d'une tâche un utilisateur qui n'est pas dans le projet",
       });
     }
 

@@ -1,13 +1,14 @@
 "use client";
 import styles from "@/styles/components/tasks/task-deadline.module.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import "moment/locale/fr";
 import socket from "@/utils/socket";
 import { updateTaskDeadline } from "@/api/task";
 import { CircleX } from "lucide-react";
+import { checkRole } from "@/utils/utils";
 
-export default function TaskDeadline({ task, project }) {
+export default function TaskDeadline({ task, project, uid }) {
   const inputRef = useRef(null);
   const [progress, setProgress] = useState("0%");
   const [deadline, setDeadline] = useState(task?.deadline?.split("T")[0] || "");
@@ -94,12 +95,36 @@ export default function TaskDeadline({ task, project }) {
   const isToday =
     moment().isSame(moment(deadline), "day") && task?.status !== "Terminée";
 
+  const handleHover = useCallback(() => {
+    const isAuthorized = checkRole(
+      project,
+      ["owner", "manager", "team", "customer"],
+      uid
+    );
+
+    if (!isAuthorized) return;
+
+    setHover(true);
+  }, [project, uid]);
+
+  const handleIsEditing = useCallback(() => {
+    const isAuthorized = checkRole(
+      project,
+      ["owner", "manager", "team", "customer"],
+      uid
+    );
+
+    if (!isAuthorized) return;
+
+    setIsEditing((prev) => !prev);
+  }, [project, uid]);
+
   return (
     <div className={styles.container} onMouseLeave={() => setHover(false)}>
       <div
         className={styles.wrapper}
-        onMouseEnter={() => setHover(true)}
-        onClick={() => setIsEditing(true)}
+        onMouseEnter={handleHover}
+        onClick={handleIsEditing}
         style={{ "--progress": `${deadline ? progress : "0%"}` }}
         data-past-deadline={pastDeadline}
         data-past-today={isToday}

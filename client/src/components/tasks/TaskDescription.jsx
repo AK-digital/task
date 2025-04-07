@@ -1,29 +1,35 @@
 import { updateTaskDescription } from "@/api/task";
-import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/task-description.module.css";
 import moment from "moment";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Tiptap from "../RichTextEditor/Tiptap";
 import { PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
 import useSWR from "swr";
 import { getDrafts } from "@/api/draft";
+import { checkRole } from "@/utils/utils";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
-export default function TaskDescription({ project, task }) {
+export default function TaskDescription({ project, task, uid }) {
   const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
   const { data: draft, mutate } = useSWR(
     `/draft?projectId=${project?._id}&taskId=${task?._id}&type=description`,
     fetcher
   );
 
-  const { uid } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [pending, setPending] = useState(false);
   const [description, setDescription] = useState(task?.description?.text);
 
   const descriptionAuthor = task?.description?.author;
   const isAuthor = descriptionAuthor?._id === uid;
+  const isAuthorized = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
 
   const date = moment(task?.description?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
@@ -37,6 +43,8 @@ export default function TaskDescription({ project, task }) {
   }, [draft]);
 
   const handleEditDescription = () => {
+    if (!isAuthorized) return;
+
     if (descriptionAuthor?._id && !isAuthor) {
       return;
     }
@@ -46,6 +54,8 @@ export default function TaskDescription({ project, task }) {
 
   const handleRemoveDescription = async () => {
     setPending(true);
+
+    if (!isAuthorized) return;
 
     const response = await updateTaskDescription(
       task?._id,
@@ -113,7 +123,7 @@ export default function TaskDescription({ project, task }) {
               dangerouslySetInnerHTML={{ __html: description }}
             ></div>
           </div>
-          {isAuthor && (
+          {isAuthor && isAuthorized && (
             <div className={styles.actions}>
               <button
                 className={styles.button}
@@ -129,8 +139,16 @@ export default function TaskDescription({ project, task }) {
       )}
       {/* If not editing and description empty */}
       {!isEditing && !description && (
-        <div className={styles.empty} onClick={handleEditDescription}>
-          <p>Ajouter une description</p>
+        <div
+          className={styles.empty}
+          onClick={handleEditDescription}
+          data-role={isAuthorized}
+        >
+          {isAuthorized ? (
+            <p>Ajouter une description</p>
+          ) : (
+            <p>L'ajout de description est désactivé en tant qu'invité</p>
+          )}
         </div>
       )}
     </div>

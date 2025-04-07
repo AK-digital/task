@@ -152,67 +152,106 @@ io.on("connection", (socket) => {
 
     if (!project) return; // If the project doesn't exist, return
 
-    const guests = [...project?.guests, project?.author];
+    const members = project?.members;
 
     // Emit to all the guests of the project that a new member has joined
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest });
+    members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
+
+      if (!user) return; // If the user doesn't exist, return
+
       io.to(user?.socketId).emit("accepted project invitation", project?._id);
     });
   });
 
   // Task update
-  socket.on("task text update", async (guests, taskId, value) => {
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest._id || guest });
+  socket.on("task text update", async (projectId, taskId, value) => {
+    const project = await ProjectModel.findById({ _id: projectId });
+
+    if (!project) return; // If the project doesn't exist, return
+
+    const members = project?.members;
+
+    members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
+
+      if (!user) return; // If the user doesn't exist, return
+
       io.to(user?.socketId).emit("task text updated", taskId, value);
       io.to(user?.socketId).emit("task updated");
     });
   });
 
-  socket.on("task responsible update", async (guests, taskId, responsible) => {
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest._id });
-      io.to(user?.socketId).emit(
-        "task responsible updated",
-        taskId,
-        responsible
-      );
-      io.to(user?.socketId).emit("task updated");
-    });
-  });
+  socket.on(
+    "task responsible update",
+    async (projectId, taskId, responsible) => {
+      const project = await ProjectModel.findById({ _id: projectId });
 
-  socket.on("task status update", async (guests, taskId, optimisticValue) => {
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest._id });
-      io.to(user?.socketId).emit(
-        "task status updated",
-        taskId,
-        optimisticValue
-      );
-      io.to(user?.socketId).emit("task updated");
-    });
-  });
+      if (!project) return; // If the project doesn't exist, return
+      const members = project?.members;
 
-  socket.on("task priority update", (guests, taskId, optimisticValue) => {
-    // Emit to all the guests of the project that a task has been updated
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest._id });
-      io.to(user?.socketId).emit(
-        "task priority updated",
-        taskId,
-        optimisticValue
-      );
-      io.to(user?.socketId).emit("task updated");
-    });
-  });
-  // task deadline
-  socket.on("task deadline update", async (guests) => {
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest._id });
-      io.to(user?.socketId).emit("task updated");
-    });
-  });
+      members?.forEach(async (member) => {
+        const user = await UserModel.findById({ _id: member?.user });
+
+        if (!user) return; // If the user doesn't exist, return
+
+        io.to(user?.socketId).emit(
+          "task responsible updated",
+          taskId,
+          responsible
+        );
+        io.to(user?.socketId).emit("task updated");
+      });
+    }
+  );
+
+  socket.on(
+    "task status update",
+    async (projectId, taskId, optimisticValue) => {
+      const project = await ProjectModel?.findById({ _id: projectId });
+
+      if (!project) return; // If the project doesn't exist, return
+
+      const members = project?.members;
+
+      members?.forEach(async (member) => {
+        const user = await UserModel.findById({ _id: member?.user });
+
+        if (!user) return; // If the user doesn't exist, return
+
+        io.to(user?.socketId).emit(
+          "task status updated",
+          taskId,
+          optimisticValue
+        );
+        io.to(user?.socketId).emit("task updated");
+      });
+    }
+  );
+
+  socket.on(
+    "task priority update",
+    async (projectId, taskId, optimisticValue) => {
+      const project = await ProjectModel?.findById({ _id: projectId });
+
+      if (!project) return; // If the project doesn't exist, return
+
+      const members = project?.members;
+
+      members?.forEach(async (member) => {
+        const user = await UserModel.findById({ _id: member?.user });
+
+        if (!user) return; // If the user doesn't exist, return
+
+        io.to(user?.socketId).emit(
+          "task priority updated",
+          taskId,
+          optimisticValue
+        );
+        io.to(user?.socketId).emit("task updated");
+      });
+    }
+  );
 
   socket.on("update board", async (boardId, projectId) => {
     const project = await ProjectModel.findById({ _id: projectId });
@@ -220,10 +259,10 @@ io.on("connection", (socket) => {
 
     if (!project || !board) return;
 
-    const guests = [...project?.guests, project?.author];
+    project?.members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
 
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest });
+      if (!user) return; // If the user doesn't exist, return
 
       io.to(user?.socketId).emit("board updated", board);
     });
@@ -234,11 +273,11 @@ io.on("connection", (socket) => {
 
     if (!project) return;
 
-    const guests = [...project?.guests, project?.author];
-
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest });
-      io.to(user?.socketId).emit("task updated");
+    project?.members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
+      if (user) {
+        io.to(user?.socketId).emit("task updated");
+      }
     });
   });
 
@@ -247,12 +286,20 @@ io.on("connection", (socket) => {
 
     if (!project) return;
 
-    const guests = [...project?.guests, project?.author];
-
-    guests?.forEach(async (guest) => {
-      const user = await UserModel.findById({ _id: guest });
-      io.to(user?.socketId).emit("message updated");
+    project?.members?.forEach(async (member) => {
+      const user = await UserModel.findById({ _id: member?.user });
+      if (user) {
+        io.to(user?.socketId).emit("message updated");
+      }
     });
+  });
+
+  socket.on("update-project-role", async (memberId) => {
+    const user = await UserModel.findById({ _id: memberId });
+
+    if (user) {
+      io.to(user?.socketId).emit("updated-project-role");
+    }
   });
 });
 

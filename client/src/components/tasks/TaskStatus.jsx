@@ -1,14 +1,13 @@
 "use client";
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskStatus } from "@/actions/task";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
-import { revalidateBoards } from "@/api/board";
-import { set } from "zod";
+import { checkRole } from "@/utils/utils";
 
 const status = ["En attente", "À faire", "En cours", "Bloquée", "Terminée"];
 
-export default function TaskStatus({ task, project }) {
+export default function TaskStatus({ task, project, uid }) {
   const [optimisticCurrent, setOptimisticCurrent] = useState(task?.status);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,9 +23,7 @@ export default function TaskStatus({ task, project }) {
       return;
     }
 
-    const guests = [...project?.guests, project?.author];
-
-    socket.emit("task status update", guests, task?._id, value);
+    socket.emit("task status update", project?._id, task?._id, value);
   }
 
   useEffect(() => {
@@ -43,12 +40,24 @@ export default function TaskStatus({ task, project }) {
     };
   }, [optimisticCurrent]);
 
+  const handleIsOpen = useCallback(() => {
+    const isAuthorized = checkRole(
+      project,
+      ["owner", "manager", "team", "customer"],
+      uid
+    );
+
+    if (!isAuthorized) return;
+
+    setIsOpen((prev) => !prev);
+  }, [project, uid]);
+
   return (
     <div className={styles["dropdown"]}>
       <div
         className={styles["dropdown__current"]}
         data-current={optimisticCurrent}
-        onClick={(e) => setIsOpen(!isOpen)}
+        onClick={handleIsOpen}
       >
         <span>{optimisticCurrent}</span>
       </div>

@@ -9,7 +9,13 @@ import Tiptap from "../RichTextEditor/Tiptap";
 import TaskDescription from "./TaskDescription";
 moment.locale("fr");
 
-export default function TaskMore({ task, project, setOpennedTask, archive }) {
+export default function TaskMore({
+  task,
+  project,
+  setOpennedTask,
+  archive,
+  uid,
+}) {
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
   const [isResizing, setIsResizing] = useState(false);
@@ -115,7 +121,7 @@ export default function TaskMore({ task, project, setOpennedTask, archive }) {
           </span>
         </div>
         <div className={styles.wrapper}>
-          <TaskDescription project={project} task={task} />
+          <TaskDescription project={project} task={task} uid={uid} />
         </div>
         {/* Conversation */}
         <div className={styles.wrapper}>

@@ -3,10 +3,6 @@ const { Schema } = mongoose;
 
 const projectSchema = new Schema(
   {
-    author: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
     name: {
       type: String,
       required: true,
@@ -22,9 +18,20 @@ const projectSchema = new Schema(
       type: String,
       required: false,
     },
-    guests: {
-      type: [Schema.Types.ObjectId],
-      ref: "User",
+    members: {
+      type: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+          },
+          role: {
+            type: String,
+            enum: ["owner", "manager", "team", "customer", "guest"],
+            default: "guest",
+          },
+        },
+      ],
     },
     urls: {
       type: {

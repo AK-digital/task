@@ -2,11 +2,13 @@
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
 import { ChevronDown, ChevronRight, EllipsisVertical } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
-import { isNotEmpty } from "@/utils/utils";
+import { checkRole, isNotEmpty } from "@/utils/utils";
 import BoardMore from "./BoardMore";
+import { AuthContext } from "@/context/auth";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function BoardHeader({
   board,
@@ -18,11 +20,18 @@ export default function BoardHeader({
   selectedTasks,
   setSelectedTasks,
   archive,
+  project,
 }) {
   const [more, setMore] = useState(false);
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
   const [title, setTitle] = useState(board?.title);
+  const canEdit = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
 
   const colors = board?.colors;
 
@@ -83,13 +92,17 @@ export default function BoardHeader({
     };
   }, [socket]);
 
-  function handleEditState(e) {
-    e.preventDefault();
-
-    if (archive) return;
+  const handleEdit = useCallback(() => {
+    if (!canEdit) return;
 
     setEdit(!edit);
-  }
+  }, [project]);
+
+  const handleEditColors = useCallback(() => {
+    if (!canEdit) return;
+
+    setOpenColors(!openColors);
+  }, [project]);
 
   const handleCheckBoard = (e) => {
     if (e.target.checked) {
@@ -120,7 +133,7 @@ export default function BoardHeader({
     >
       <div className={styles.actions}>
         {/* Display if tasks is not empty and if there is at least 2 task */}
-        {isNotEmpty(tasks) && tasks?.length > 1 && (
+        {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
           <div
             className={styles.actionCheckbox}
             title="Sélectionner toutes les tâches"
@@ -157,24 +170,25 @@ export default function BoardHeader({
               defaultValue={title}
               onChange={handleTitleChange}
             />
-            <div id="modal-layout-opacity" onClick={handleEditState}></div>
+            <div id="modal-layout-opacity" onClick={handleEdit}></div>
           </div>
         ) : (
-          <div onClick={handleEditState}>
+          <div onClick={handleEdit}>
             <span
               className={styles.title}
+              data-authorized={canEdit}
               style={{ color: `${optimisticColor}` }}
             >
               {title}
             </span>
           </div>
         )}
-        {!archive && (
+        {!archive && canEdit && (
           <div>
             <span
               className={styles.bullet}
               style={{ backgroundColor: `${optimisticColor}` }}
-              onClick={(e) => setOpenColors(true)}
+              onClick={handleEditColors}
             ></span>
           </div>
         )}
@@ -187,17 +201,19 @@ export default function BoardHeader({
             </span>
           </div>
         )}
-        <div className={styles.actionMore}>
-          <EllipsisVertical size={18} onClick={(e) => setMore(true)} />
-          {more && (
-            <BoardMore
-              board={board}
-              projectId={board?.projectId}
-              setMore={setMore}
-              archive={archive}
-            />
-          )}
-        </div>
+        {useUserRole(project, ["owner", "manager", "team"]) && (
+          <div className={styles.actionMore}>
+            <EllipsisVertical size={18} onClick={(e) => setMore(true)} />
+            {more && (
+              <BoardMore
+                board={board}
+                project={project}
+                setMore={setMore}
+                archive={archive}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       {openColors && (

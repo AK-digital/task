@@ -28,9 +28,14 @@ export async function saveProject(req, res, next) {
       .select("order");
 
     const newProject = new ProjectModel({
-      author: authUser?._id,
       name: name,
       order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
+      members: [
+        {
+          user: authUser._id,
+          role: "owner",
+        },
+      ],
     });
 
     const savedProject = await newProject.save();
@@ -82,24 +87,55 @@ export async function getProjects(req, res, next) {
       {
         // Filtrer les projets où l'auteur ou un invité est l'utilisateur connecté
         $match: {
-          $or: [{ author: authUser?._id }, { guests: authUser?._id }],
+          "members.user": new mongoose.Types.ObjectId(authUser?._id),
         },
       },
+      // On effectue d'abord le lookup pour obtenir les informations des utilisateurs
       {
         $lookup: {
           from: "users",
-          localField: "author",
+          localField: "members.user",
           foreignField: "_id",
-          as: "author",
+          as: "membersData",
         },
       },
-      { $unwind: "$author" }, // Transforme author en objet unique
+      // Ensuite on restructure le tableau members pour remplacer l'ObjectId par les données utilisateur tout en gardant le rôle
       {
-        $lookup: {
-          from: "users",
-          localField: "guests",
-          foreignField: "_id",
-          as: "guests",
+        $addFields: {
+          members: {
+            $map: {
+              input: "$members",
+              as: "member",
+              in: {
+                // On conserve le rôle de la structure originale
+                role: "$$member.role",
+                // On remplace l'ObjectId par l'objet utilisateur complet (sans le mot de passe)
+                user: {
+                  $arrayElemAt: [
+                    {
+                      $map: {
+                        input: {
+                          $filter: {
+                            input: "$membersData",
+                            as: "userData",
+                            cond: { $eq: ["$$userData._id", "$$member.user"] },
+                          },
+                        },
+                        as: "filteredUser",
+                        in: {
+                          $mergeObjects: [
+                            "$$filteredUser",
+                            { password: "$$REMOVE" },
+                          ],
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+              },
+            },
+          },
         },
       },
       {
@@ -151,23 +187,56 @@ export async function getProject(req, res, next) {
   try {
     const project = await ProjectModel.aggregate([
       {
-        $match: { _id: new mongoose.Types.ObjectId(req.params.id) },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "author",
-          foreignField: "_id",
-          as: "author",
+        $match: {
+          _id: new mongoose.Types.ObjectId(req.params.id),
         },
       },
-      { $unwind: "$author" }, // Transforme author en objet unique
+      // On effectue d'abord le lookup pour obtenir les informations des utilisateurs
       {
         $lookup: {
           from: "users",
-          localField: "guests",
+          localField: "members.user",
           foreignField: "_id",
-          as: "guests",
+          as: "membersData",
+        },
+      },
+      // Ensuite on restructure le tableau members pour remplacer l'ObjectId par les données utilisateur tout en gardant le rôle
+      {
+        $addFields: {
+          members: {
+            $map: {
+              input: "$members",
+              as: "member",
+              in: {
+                // On conserve le rôle de la structure originale
+                role: "$$member.role",
+                // On remplace l'ObjectId par l'objet utilisateur complet (sans le mot de passe)
+                user: {
+                  $arrayElemAt: [
+                    {
+                      $map: {
+                        input: {
+                          $filter: {
+                            input: "$membersData",
+                            as: "userData",
+                            cond: { $eq: ["$$userData._id", "$$member.user"] },
+                          },
+                        },
+                        as: "filteredUser",
+                        in: {
+                          $mergeObjects: [
+                            "$$filteredUser",
+                            { password: "$$REMOVE" },
+                          ],
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+              },
+            },
+          },
         },
       },
       {
@@ -194,8 +263,8 @@ export async function getProject(req, res, next) {
       },
       {
         $project: {
-          "author.password": 0, // Suppression des infos sensibles
-          "guests.password": 0,
+          "author.password": 0,
+          membersData: 0,
           boards: 0,
           tasks: 0,
         },
@@ -212,7 +281,7 @@ export async function getProject(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Projet trouvé",
-      data: project[0], // On renvoie le premier (et unique) élément du tableau
+      data: project[0],
     });
   } catch (err) {
     return res.status(500).send({
@@ -374,21 +443,17 @@ export async function sendProjectInvitationToGuest(req, res, next) {
     const project = await ProjectModel.findById({
       _id: req.params.id,
     })
-      .populate("author", "-password")
-      .populate("guests", "-password")
+      .populate("members.user", "-password")
       .exec();
 
-    if (project?.author?.email === email) {
-      return res.status(400).send({
-        success: false,
-        message: "Vous ne pouvez pas vous inviter vous-même",
-      });
-    }
+    const members = project?.members || [];
 
-    if (project?.guests?.some((guest) => guest.email === email)) {
+    const isMember = members?.some((member) => member?.user?.email === email);
+
+    if (isMember) {
       return res.status(400).send({
         success: false,
-        message: "Cet utilisateur a déjà été invité",
+        message: "Cet utilisateur est déjà membre du projet",
       });
     }
 
@@ -463,7 +528,10 @@ export async function acceptProjectInvitation(req, res, next) {
       },
       {
         $addToSet: {
-          guests: user?._id,
+          members: {
+            user: user?._id,
+            role: "guest",
+          },
         },
       },
       {
@@ -497,6 +565,67 @@ export async function acceptProjectInvitation(req, res, next) {
   }
 }
 
+export async function updateProjectRole(req, res, next) {
+  try {
+    const { memberId, role } = req.body;
+    const rolesEnum = ["owner", "manager", "team", "customer", "guest"]; // Enum of roles based on the model
+
+    // Body validation
+    if (!memberId || !role) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    // Check if the given role is valid
+    if (!rolesEnum.includes(role)) {
+      return res.status(400).send({
+        success: false,
+        messsage: "Rôle invalide",
+      });
+    }
+
+    const project = await ProjectModel.findById({ _id: req.params.id });
+
+    if (!project) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier le rôle d'un projet inexistant",
+      });
+    }
+
+    // Get the member to update based on the memberId
+    const member = project?.members?.find(
+      (member) => member.user.toString() === memberId.toString()
+    );
+
+    if (!member) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier le rôle d'un utilisateur inexistant",
+      });
+    }
+
+    // Update the role of the member
+    member.role = role;
+
+    // Save the project with the updated member role
+    await project?.save();
+
+    return res.status(200).send({
+      success: true,
+      message: "Rôle de l'utilisateur mis à jour avec succès",
+      data: project,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 // Only the author can remove a guest
 export async function removeGuest(req, res, next) {
   try {
@@ -508,7 +637,9 @@ export async function removeGuest(req, res, next) {
       },
       {
         $pull: {
-          guests: guestId,
+          members: {
+            user: guestId,
+          },
         },
       },
       {
@@ -531,6 +662,7 @@ export async function removeGuest(req, res, next) {
       data: updatedProject,
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).send({
       success: false,
       message: err.message || "Une erreur inattendue est survenue",

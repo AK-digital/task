@@ -1,11 +1,12 @@
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskPriority } from "@/actions/task";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
+import { checkRole } from "@/utils/utils";
 
 const priorities = ["Basse", "Moyenne", "Haute", "Urgent"];
 
-export default function TaskPriority({ task, project }) {
+export default function TaskPriority({ task, project, uid }) {
   const [optimisticCurrent, setOptimisticCurrent] = useState(task?.priority);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,19 +21,16 @@ export default function TaskPriority({ task, project }) {
       value
     );
 
-    if (response?.status === "failure") setOptimisticCurrent(task?.priority);
+    if (response?.status === "failure") {
+      setOptimisticCurrent(task?.priority);
+      return;
+    }
 
-    const guests = project?.guests;
-
-    guests.push(project?.author);
-
-    socket.emit("task priority update", guests, task?._id, value);
+    socket.emit("task priority update", project?._id, task?._id, value);
   }
 
   useEffect(() => {
     function onTaskUpdated(taskId, optimisticValue) {
-      console.log("played");
-      console.log(taskId, optimisticValue);
       if (task?._id === taskId) {
         setOptimisticCurrent(optimisticValue);
       }
@@ -45,12 +43,24 @@ export default function TaskPriority({ task, project }) {
     };
   }, [optimisticCurrent]);
 
+  const handleIsOpen = useCallback(() => {
+    const isAuthorized = checkRole(
+      project,
+      ["owner", "manager", "team", "customer"],
+      uid
+    );
+
+    if (!isAuthorized) return;
+
+    setIsOpen((prev) => !prev);
+  });
+
   return (
     <div className={styles["dropdown"]}>
       <div
         className={styles["dropdown__current"]}
         data-current={optimisticCurrent}
-        onClick={(e) => setIsOpen(!isOpen)}
+        onClick={handleIsOpen}
       >
         <span>{optimisticCurrent}</span>
       </div>

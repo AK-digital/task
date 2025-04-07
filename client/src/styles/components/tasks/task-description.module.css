@@ -95,5 +95,8 @@
     padding: 12px 24px;
     border-radius: var(--border-radius-small);
     font-size: var(--text-size-small);
+}
+
+.empty[data-role="true"] {
     cursor: pointer;
 }

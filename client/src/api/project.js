@@ -1,7 +1,6 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
-import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function getProject(id) {
   try {
@@ -18,6 +17,8 @@ export async function getProject(id) {
     if (!response.success) {
       throw new Error(response?.message);
     }
+
+    console.log(response?.data?.members);
 
     return response.data;
   } catch (err) {
@@ -110,6 +111,38 @@ export async function updateProjectLogo(projectId, logo) {
   }
 }
 
+export async function updateProjectRole(projectId, memberId, role) {
+  try {
+    const res = await useAuthFetch(
+      `project/${projectId}/update-role`,
+      "PATCH",
+      "application/json",
+      { memberId, role }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(
+        response?.message || "Une erreur inattendue est survenue"
+      );
+    }
+
+    revalidateTag("projects");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de la mise à jour du rôle"
+    );
+
+    return {
+      status: "failure",
+      message: err?.message || "Une erreur est survenue lors de la mise à jour",
+    };
+  }
+}
+
 export async function deleteProject(projectId) {
   try {
     const res = await useAuthFetch(`project/${projectId}`, "DELETE");
@@ -129,4 +162,9 @@ export async function deleteProject(projectId) {
         "Une erreur est survenue lors de la récupération des tableaux"
     );
   }
+}
+
+export async function revalidatePage() {
+  revalidatePath("/projects");
+  revalidatePath("/time-trackings");
 }

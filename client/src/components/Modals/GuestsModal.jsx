@@ -1,7 +1,7 @@
 "use client";
 import { removeGuest } from "@/actions/project";
 import styles from "@/styles/components/modals/guests-modal.module.css";
-import { isNotEmpty } from "@/utils/utils";
+import { isNotEmpty, memberRole } from "@/utils/utils";
 import Image from "next/image";
 import { useActionState, useContext, useEffect, useState } from "react";
 import GuestFormInvitation from "../Projects/GuestFormInvitation";
@@ -9,6 +9,8 @@ import PopupMessage from "@/layouts/PopupMessage";
 import { AuthContext } from "@/context/auth";
 import { deleteProjectInvitation } from "@/actions/projectInvitation";
 import NoPicture from "../User/NoPicture";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import { DropDown } from "../Dropdown/Dropdown";
 
 export default function GuestsModal({
   project,
@@ -29,8 +31,11 @@ export default function GuestsModal({
     removeGuestWithId,
     initialState
   );
-  const author = project?.author;
-  const guests = project?.guests;
+  const canInvite = useUserRole(project, ["owner", "manager"]);
+  const canRemove = useUserRole(project, ["owner", "manager"]);
+  const canEditRole = useUserRole(project, ["owner", "manager"]);
+
+  const members = project?.members;
 
   useEffect(() => {
     if (isPopup) {
@@ -59,77 +64,80 @@ export default function GuestsModal({
     }
   }, [state]);
 
+  const options = ["owner", "manager", "team", "customer", "guest"];
+
   return (
     <>
       <div className={styles.container} id="modal">
         <div className={styles.heading}>
           <span>Inviter d'autres utilisateurs</span>
         </div>
-        <GuestFormInvitation project={project} setIsPopup={setIsPopup} />
+        {canInvite && (
+          <GuestFormInvitation project={project} setIsPopup={setIsPopup} />
+        )}
         {/* Guests list */}
-        {isNotEmpty(guests) && (
+        {isNotEmpty(members) && (
           <div className={styles.guests}>
             <ul>
-              <>
-                <li>
-                  <div>
-                    {author?.picture ? (
-                      <Image
-                        src={author?.picture || "/default-pfp.webp"}
-                        width={32}
-                        height={32}
-                        alt={`Photo de profil de ${author?.firstName}`}
-                        style={{
-                          borderRadius: "50%",
-                        }}
-                      />
-                    ) : (
-                      <NoPicture user={author} width={32} height={32} />
-                    )}
-                    <span>{author?.email}</span>
-                  </div>
-                </li>
-                {guests.map((guest) => {
-                  return (
-                    <li key={guest?._id}>
-                      <div>
-                        {guest?.picture ? (
-                          <Image
-                            src={guest?.picture || "/default-pfp.webp"}
-                            width={32}
-                            height={32}
-                            alt={`Photo de profil de ${guest?.firstName}`}
-                            style={{
-                              borderRadius: "50%",
-                            }}
-                          />
-                        ) : (
-                          <NoPicture user={guest} width={32} height={32} />
-                        )}
-                        <span>{guest?.email}</span>
-                      </div>
-                      {uid === project?.author?._id && (
-                        <form action={formAction}>
-                          <input
-                            type="text"
-                            name="guest-id"
-                            id="guest-id"
-                            defaultValue={guest?._id}
-                            hidden
-                          />
-                          <button
-                            type="submit"
-                            data-disabled={pending}
-                            disabled={pending}
-                          >
-                            Révoquer
-                          </button>
-                        </form>
+              {members.map((member) => {
+                return (
+                  <li key={member?.user?._id} className={styles.member}>
+                    <div className={styles.user}>
+                      {member?.user?.picture ? (
+                        <Image
+                          src={member?.user?.picture || "/default-pfp.webp"}
+                          width={32}
+                          height={32}
+                          alt={`Photo de profil de ${member?.firstName}`}
+                          style={{
+                            borderRadius: "50%",
+                          }}
+                        />
+                      ) : (
+                        <NoPicture user={member?.user} width={32} height={32} />
                       )}
-                    </li>
-                  );
-                })}
-              </>
+                      <span
+                        className={styles.email}
+                        title={member?.user?.email}
+                      >
+                        {member?.user?.email}
+                      </span>
+                      {canEditRole &&
+                      member?.user?._id !== uid &&
+                      member?.role !== "owner" ? (
+                        <DropDown
+                          defaultValue={member?.role}
+                          options={options}
+                          project={project}
+                          member={member}
+                        />
+                      ) : (
+                        <div className={styles.role}>
+                          <span>{memberRole(member?.role)}</span>
+                        </div>
+                      )}
+                    </div>
+                    {canRemove && member?.role !== "owner" && (
+                      <form action={formAction}>
+                        <input
+                          type="text"
+                          name="guest-id"
+                          id="guest-id"
+                          defaultValue={member?.user?._id}
+                          hidden
+                        />
+                        <button
+                          type="submit"
+                          data-disabled={pending}
+                          disabled={pending}
+                        >
+                          Révoquer
+                        </button>
+                      </form>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}

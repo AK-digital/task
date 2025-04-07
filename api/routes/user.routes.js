@@ -10,6 +10,7 @@ router.get(
   authMiddlewares.isAdmin,
   userControllers.getUsers
 );
+
 router.get(
   "/:id",
   authMiddlewares.auth,

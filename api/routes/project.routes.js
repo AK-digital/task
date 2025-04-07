@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
-import * as projectMiddlewares from "../middlewares/projectRole.middlewares.js";
+import { checkRole } from "../middlewares/projectRole.middlewares.js";
 import * as projectControllers from "../controllers/project.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 
@@ -12,14 +12,14 @@ router.get("/", authMiddlewares.auth, projectControllers.getProjects);
 router.get(
   "/:id",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
+  checkRole(["owner", "manager", "team", "customer", "guest"]),
   projectControllers.getProject
 );
 
 router.put(
   "/:id",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
+  checkRole(["owner", "manager"]),
   upload.single("logo"),
   projectControllers.updateProject
 );
@@ -27,7 +27,7 @@ router.put(
 router.patch(
   "/:id/logo",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
+  checkRole(["owner", "manager"]),
   upload.single("logo"),
   projectControllers.updateProjectLogo
 );
@@ -35,7 +35,7 @@ router.patch(
 router.delete(
   "/:id",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthor,
+  checkRole(["owner"]),
   projectControllers.deleteProject
 );
 
@@ -43,7 +43,7 @@ router.delete(
 router.post(
   "/:id/send-invitation",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
+  checkRole(["owner", "manager"]),
   projectControllers.sendProjectInvitationToGuest
 );
 
@@ -55,9 +55,16 @@ router.patch(
 );
 
 router.patch(
+  "/:id/update-role",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager"]),
+  projectControllers.updateProjectRole
+);
+
+router.patch(
   "/:id/remove-guest",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthor,
+  checkRole(["owner", "manager"]),
   projectControllers.removeGuest
 );
 

@@ -5,8 +5,11 @@ import {
   deleteTask,
   removeTaskFromArchive,
 } from "@/api/task";
+import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/selected-tasks.module.css";
+import { checkRole } from "@/utils/utils";
 import { Archive, ArchiveRestore, Trash, X } from "lucide-react";
+import { useContext } from "react";
 
 export default function SelectedTasks({
   project,
@@ -14,6 +17,7 @@ export default function SelectedTasks({
   setSelectedTasks,
   archive,
 }) {
+  const { uid } = useContext(AuthContext);
   function handleClose(e) {
     e.preventDefault();
 
@@ -87,22 +91,29 @@ export default function SelectedTasks({
         {/* actions */}
         <div className={styles.actions}>
           {/* action */}
-          {!archive && (
-            <div className={styles.action} onClick={handleAddToArchive}>
-              <Archive size={20} />
-              <span>Archiver</span>
-            </div>
-          )}
-          {archive && (
+          {!archive &&
+            checkRole(project, ["owner", "manager", "team"], uid) && (
+              <div className={styles.action} onClick={handleAddToArchive}>
+                <Archive size={20} />
+                <span>Archiver</span>
+              </div>
+            )}
+          {archive && checkRole(project, ["owner", "manager", "team"], uid) && (
             <div className={styles.action} onClick={handleRemoveFromArchive}>
               <ArchiveRestore size={20} />
               <span>Restaurer</span>
             </div>
           )}
-          <div className={styles.action} onClick={handleDelete}>
-            <Trash size={20} />
-            <span>Supprimer</span>
-          </div>
+          {checkRole(
+            project,
+            ["owner", "manager", "team", "customer"],
+            uid
+          ) && (
+            <div className={styles.action} onClick={handleDelete}>
+              <Trash size={20} />
+              <span>Supprimer</span>
+            </div>
+          )}
           <div className={styles.action} onClick={handleClose}>
             <X size={22} />
           </div>

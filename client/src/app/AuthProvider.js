@@ -1,5 +1,6 @@
 "use client";
 import { decryptToken, refreshToken } from "@/api/auth";
+import { revalidatePage } from "@/api/project";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import { useRouter } from "next/navigation";
@@ -28,6 +29,10 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     socket.on("logged in", (data) => {
       setUser(data);
+    });
+
+    socket.on("updated-project-role", () => {
+      revalidatePage();
     });
 
     return () => {

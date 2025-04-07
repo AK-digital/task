@@ -435,6 +435,10 @@ export default function Tiptap({
   const checkIfDisabled = () => {
     const imgRegex = /<img[^>]*>/i;
 
+    if (!plainText && !value) {
+      return true;
+    }
+
     if (plainText && imgRegex.test(plainText)) {
       return false;
     }

@@ -1,20 +1,20 @@
 import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
-import * as projectMiddlewares from "../middlewares/projectRole.middlewares.js";
+import { checkRole } from "../middlewares/projectRole.middlewares.js";
 import * as projectInvitationControllers from "../controllers/projectInvitation.controllers.js";
 
 router.get(
   "/:projectId",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthorOrGuests,
+  checkRole(["owner", "manager", "team", "customer", "guest"]),
   projectInvitationControllers.getProjectInvitations
 );
 
 router.delete(
   "/:id",
   authMiddlewares.auth,
-  projectMiddlewares.isAuthor,
+  checkRole(["owner", "manager"]),
   projectInvitationControllers.deleteProjectInvitation
 );
 
