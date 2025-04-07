@@ -42,10 +42,6 @@
     gap: 8px;
 }
 
-.pending {
-    color: var(--text-color-muted);
-}
-
 .user img {
     min-width: 32px;
     min-height: 32px;
@@ -68,13 +64,15 @@
     color: var(--text-color-muted);
 }
 
-.member button {
+.member button,
+.pending button {
     border-radius: var(--border-radius-xs);
     padding: 8px !important;
     font-size: var(--text-size-small);
     background-color: var(--danger-color);
 }
 
-.member button:hover {
+.member button:hover,
+.pending button:hover {
     background-color: var(--text-color-red);
 }

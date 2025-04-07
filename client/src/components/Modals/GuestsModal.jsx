@@ -181,6 +181,8 @@ export function ProjectInvitationsList({
     initialState
   );
 
+  const canDelete = useUserRole(project, ["owner", "manager"]);
+
   useEffect(() => {
     if (state?.status === "success") {
       console.log("played");
@@ -220,7 +222,7 @@ export function ProjectInvitationsList({
               />
               <span>{inv?.guestEmail}</span>
             </div>
-            {uid === project?.author?._id && (
+            {canDelete && (
               <form action={formAction}>
                 <input
                   type="text"
