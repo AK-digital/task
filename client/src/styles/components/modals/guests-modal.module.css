@@ -76,3 +76,7 @@
 .pending button:hover {
     background-color: var(--text-color-red);
 }
+
+.pending {
+    color: var(--text-color-muted);
+}
