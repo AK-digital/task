@@ -63,7 +63,6 @@ export default function GuestsModal({
       });
     }
   }, [state]);
-
   const options = ["owner", "manager", "team", "customer", "guest"];
 
   return (
