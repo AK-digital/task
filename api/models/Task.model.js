@@ -50,7 +50,14 @@ const taskSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["En cours", "En attente", "Terminée", "À faire", "bloquée"],
+      enum: [
+        "En cours",
+        "En attente",
+        "Terminée",
+        "À faire",
+        "À vérifier",
+        "bloquée",
+      ],
       default: "En attente",
     },
     priority: {

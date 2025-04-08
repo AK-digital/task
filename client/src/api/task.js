@@ -2,10 +2,10 @@
 import { useAuthFetch } from "@/utils/api";
 import { revalidateTag } from "next/cache";
 
-export async function getTasks(projectId, boardId, archived) {
+export async function getTasks(projectId, archived) {
   try {
     const res = await useAuthFetch(
-      `task?projectId=${projectId}&boardId=${boardId}&archived=${archived}`,
+      `task?projectId=${projectId}&archived=${archived}`,
       "GET",
       "application/json",
       null,
@@ -133,9 +133,7 @@ export async function deleteTask(tasksIds, projectId) {
       throw new Error(response?.message);
     }
 
-    revalidateTag("tasks");
-
-    return response.data;
+    return response;
   } catch (err) {
     console.log(
       err.message ||
@@ -162,8 +160,6 @@ export async function addResponsible(taskId, responsibleId, projectId) {
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
-    revalidateTag("project");
 
     return response;
   } catch (err) {
@@ -192,8 +188,6 @@ export async function removeResponsible(taskId, responsibleId, projectId) {
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
-    revalidateTag("project");
 
     return response;
   } catch (err) {
@@ -225,13 +219,9 @@ export async function updateTaskDescription(
 
     const response = await res.json();
 
-    console.log(response);
-
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
-    // revalidateTag("tasks");
 
     return response;
   } catch (err) {

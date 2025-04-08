@@ -12,6 +12,9 @@
 }
 
 .archiveTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-weight: 600;
     font-size: var(--text-size-large);
     margin-bottom: -20px;
@@ -29,4 +32,10 @@
     padding: 1rem;
     background: white;
     border-radius: var(--border-radius-xs);
+}
+
+.back {
+    position: relative;
+    top: 3px;
+    cursor: pointer;
 }

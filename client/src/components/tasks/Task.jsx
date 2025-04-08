@@ -105,7 +105,7 @@ export default function Task({
               <FontAwesomeIcon icon={faGripVertical} />
             </div>
           )}
-          <TaskText task={task} project={project} uid={uid} />
+          <TaskText task={task} project={project} uid={uid} archive={archive} />
 
           <div className={styles.comment} onClick={handleTaskClick}>
             <FontAwesomeIcon icon={faComment} />
@@ -122,7 +122,12 @@ export default function Task({
           <TaskDeadline task={task} project={project} uid={uid} />
           <TaskEstimate task={task} project={project} uid={uid} />
           {!archive && <TaskTimer task={task} project={project} uid={uid} />}
-          <TaskRemove task={task} project={project} uid={uid} />
+          <TaskRemove
+            task={task}
+            project={project}
+            uid={uid}
+            archive={archive}
+          />
         </div>
       </div>
       {openedTask === task?._id && (

@@ -53,9 +53,12 @@ export async function saveTask(req, res, next) {
 // Only authors and guets will be able to get the tasks
 export async function getTasks(req, res, next) {
   try {
-    const { boardId, archived } = req.query;
+    const { archived } = req.query;
 
-    const tasks = await TaskModel.find({ boardId: boardId, archived: archived })
+    const tasks = await TaskModel.find({
+      projectId: req.query.projectId,
+      archived: archived,
+    })
       .sort({ order: "asc" })
       .populate({
         path: "responsibles",
@@ -81,7 +84,7 @@ export async function getTasks(req, res, next) {
     if (tasks.length <= 0) {
       return res.status(404).send({
         success: false,
-        message: "Aucune tâche trouvé dans ce tableau",
+        message: "Aucune tâche trouvé dans ce projet",
       });
     }
 
@@ -182,7 +185,8 @@ export async function updateTaskStatus(req, res, next) {
       "En attente",
       "Terminée",
       "À faire",
-      "Bloquée",
+      "À vérifier",
+      "bloquée",
     ];
 
     if (!status) {

@@ -41,7 +41,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
 import socket from "@/utils/socket";
 import { saveMessage, updateMessage } from "@/api/message";
-import useSWR, { mutate } from "swr";
+import { mutate } from "swr";
 import MentionsList from "./MentionsList";
 import { AuthContext } from "@/context/auth";
 import { deleteDraft, saveDraft, updateDraft } from "@/api/draft";
@@ -61,38 +61,46 @@ export default function Tiptap({
   draft,
   mutateDraft,
 }) {
+  const [isSent, setIsSent] = useState(false);
+  const [isDraftSaved, setIsDraftSaved] = useState(false);
+  const [isLoadingDraft, setIsLoadingDraft] = useState(false);
   // Utilisation de useDebouncedCallback pour sauvegarder le draft avec un délai
   const debouncedHandleDraft = useDebouncedCallback(async (htmlContent) => {
-    const response = await saveDraft(
-      project?._id,
-      task?._id,
-      type,
-      htmlContent
-    );
+    if (isSent === false) {
+      setIsLoadingDraft(true);
+      const response = await saveDraft(
+        project?._id,
+        task?._id,
+        type,
+        htmlContent
+      );
 
-    // Handle error
-    if (!response?.success) {
-      // If the draft already exists, update it
-      if (response?.message === "Draft already exists") {
-        if (value?.length <= 0) {
+      // Handle error
+      if (!response?.success) {
+        // If the draft already exists, update it
+        if (response?.message === "Draft already exists") {
+          if (value?.length <= 0) {
+            setPlainText("");
+            setValue("");
+            await deleteDraft(response?.data?._id, project?._id);
+            await mutateDraft();
+          } else {
+            await updateDraft(response?.data?._id, project?._id, htmlContent);
+            await mutateDraft();
+          }
+        } else {
           setPlainText("");
           setValue("");
-          await deleteDraft(response?.data?._id, project?._id);
-          await mutateDraft();
-        } else {
-          await updateDraft(response?.data?._id, project?._id, htmlContent);
-          await mutateDraft();
+          return;
         }
-      } else {
-        setPlainText("");
-        setValue("");
-        return;
       }
-    }
 
-    // If the draft is created successfully, we mutate it
-    await mutateDraft();
-  }, 500); // Délai de 1 seconde
+      // If the draft is created successfully, we mutate it
+      await mutateDraft();
+      setIsLoadingDraft(false);
+      setIsDraftSaved(true);
+    }
+  }, 2000); // Délai de 2 secondes
 
   const containerRef = useRef(null);
   const { user, uid } = useContext(AuthContext);
@@ -268,7 +276,6 @@ export default function Tiptap({
 
     if (draft?.success) {
       await deleteDraft(draft?.data?._id, project?._id);
-      await mutateDraft();
     }
 
     const response = await updateTaskDescription(
@@ -284,6 +291,9 @@ export default function Tiptap({
       setPending(false);
       return;
     }
+
+    setIsSent(true);
+    await mutate(`/task?projectId=${project?._id}&archived=false`);
 
     // Update description for every guests
     socket.emit("update task", task?.projectId);
@@ -308,6 +318,7 @@ export default function Tiptap({
   const handleMessage = async () => {
     setPending(true);
 
+    setConvOpen(false);
     if (draft?.success) {
       await deleteDraft(draft?.data?._id, project?._id);
       await mutateDraft();
@@ -340,11 +351,15 @@ export default function Tiptap({
       return;
     }
 
+    setIsSent(true);
+
     if (!editMessage) {
       await mutate(`/message?projectId=${task?.projectId}&taskId=${task?._id}`);
     } else {
       await mutateMessage();
     }
+
+    await mutate(`/task?projectId=${project?._id}&archived=false`);
 
     socket.emit("update message", task?.projectId);
 
@@ -363,7 +378,6 @@ export default function Tiptap({
     setPlainText("");
     setValue("");
     setPending(false);
-    setConvOpen(false);
   };
 
   const handleCancel = (e) => {
@@ -446,7 +460,43 @@ export default function Tiptap({
       return true;
     }
 
+    if (isLoadingDraft) return true;
+
     return false;
+  };
+
+  const handleOnClickDraftSave = async () => {
+    if (isLoadingDraft) return;
+
+    setIsLoadingDraft(true);
+
+    const response = await saveDraft(project?._id, task?._id, type, plainText);
+
+    // Handle error
+    if (!response?.success) {
+      // If the draft already exists, update it
+      if (response?.message === "Draft already exists") {
+        if (value?.length <= 0) {
+          setPlainText("");
+          setValue("");
+          await deleteDraft(response?.data?._id, project?._id);
+          await mutateDraft();
+        } else {
+          await updateDraft(response?.data?._id, project?._id, plainText);
+          await mutateDraft();
+        }
+      } else {
+        setPlainText("");
+        setValue("");
+        setIsLoadingDraft(false);
+        return;
+      }
+    }
+
+    // If the draft is created successfully, we mutate it
+    await mutateDraft();
+    setIsLoadingDraft(false);
+    setIsDraftSaved(true);
   };
 
   return (
@@ -553,8 +603,29 @@ export default function Tiptap({
             setIsTaggedUsers={setIsTaggedUsers}
           />
         )}
+        {isLoadingDraft && (
+          <div className={styles.draft}>
+            <span>Brouillon en cours d'enregistrement...</span>
+          </div>
+        )}
+        {isDraftSaved && !isLoadingDraft && (
+          <div className={styles.draft}>
+            <span>Brouillon enregistré</span>
+          </div>
+        )}
       </div>
+
       <div className={styles.actions}>
+        {value?.length > 0 && !editMessage && (
+          <button
+            className={`${bricolageGrostesque.className} ${styles.saveDraft}`}
+            onClick={handleOnClickDraftSave}
+            data-disabled={isLoadingDraft}
+            disabled={isLoadingDraft}
+          >
+            Enregistrer le brouillon
+          </button>
+        )}
         {type === "description" && (
           <button
             className={bricolageGrostesque.className}
@@ -567,12 +638,12 @@ export default function Tiptap({
         )}
         {type === "message" && (
           <>
-            <button
+            {/* <button
               className={`${bricolageGrostesque.className} ${styles.cancel}`}
               onClick={handleCancel}
             >
               Annuler
-            </button>
+            </button> */}
             <button
               className={bricolageGrostesque.className}
               data-disabled={checkIfDisabled()}

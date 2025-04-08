@@ -5,7 +5,14 @@ import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 
-const status = ["En attente", "À faire", "En cours", "Bloquée", "Terminée"];
+const status = [
+  "En attente",
+  "À faire",
+  "En cours",
+  "À vérifier",
+  "Bloquée",
+  "Terminée",
+];
 
 export default function TaskStatus({ task, project, uid }) {
   const [optimisticCurrent, setOptimisticCurrent] = useState(task?.status);

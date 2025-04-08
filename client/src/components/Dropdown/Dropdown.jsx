@@ -5,6 +5,7 @@ import styles from "@/styles/components/dropdown/dropdown.module.css";
 import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
 import { useState } from "react";
+import { mutate } from "swr";
 
 export function DropDown({ defaultValue, options, project, member }) {
   const [current, setCurrent] = useState(defaultValue);
@@ -25,6 +26,8 @@ export function DropDown({ defaultValue, options, project, member }) {
     if (!res.success) {
       setCurrent(defaultValue);
     }
+
+    mutate(`/project/${project?._id}`);
 
     socket.emit("update-project-role", memberId);
   }

@@ -16,30 +16,52 @@ import {
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { updateTaskBoard, updateTaskOrder } from "@/api/task";
-import { getBoards, revalidateBoards } from "@/api/board";
 import Task from "../tasks/Task";
 import socket from "@/utils/socket";
 import AddBoard from "@/components/Boards/AddBoard";
+import { mutate } from "swr";
+import { ArrowLeftCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Boards({ boards, project, tasksData, archive }) {
+  const router = useRouter();
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   // Transformer les résultats en un objet avec les tâches par board
-  const initialTasksData = tasksData?.reduce((acc, tasksArray, index) => {
-    if (tasksArray) {
-      acc[boards[index]?._id] = tasksArray;
-    }
-    return acc;
-  }, {});
+  const initialTasksData = useMemo(() => {
+    return tasksData.reduce((acc, task) => {
+      const boardId = task.boardId.toString();
+      if (!acc[boardId]) acc[boardId] = [];
+      acc[boardId].push(task);
+      return acc;
+    }, {});
+  }, [tasksData]);
 
   const [tasks, setTasks] = useState(initialTasksData || {});
   const [activeId, setActiveId] = useState(null);
 
+  // Mettre à jour l'état local quand les données tasksData changent
+  useEffect(() => {
+    if (tasksData?.length > 0) {
+      // Mettre à jour l'état local avec les données provenant de SWR
+      const updatedTasksByBoard = tasksData.reduce((acc, task) => {
+        const boardId = task.boardId.toString();
+        if (!acc[boardId]) acc[boardId] = [];
+        acc[boardId].push(task);
+        return acc;
+      }, {});
+
+      setTasks(updatedTasksByBoard);
+    }
+  }, [tasksData]);
+
   useEffect(() => {
     const handleBoardUpdate = async () => {
-      await revalidateBoards();
+      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+      mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+      mutate(`/project/${project?._id}`);
     };
 
     socket.on("task updated", handleBoardUpdate);
@@ -236,6 +258,8 @@ export default function Boards({ boards, project, tasksData, archive }) {
         await updateTaskOrder(updatedTasks, project?._id);
       }
 
+      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+
       socket.emit("update task", project?._id);
     },
     [findBoardByTaskId, project]
@@ -246,6 +270,9 @@ export default function Boards({ boards, project, tasksData, archive }) {
       {archive && (
         <>
           <div className={styles.archiveTitle}>
+            <div className={styles.back} onClick={() => router.back()}>
+              <ArrowLeftCircle size={32} />
+            </div>
             <span>Archives du projet</span>
           </div>
 

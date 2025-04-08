@@ -20,34 +20,31 @@ export default async function ProjectPage({ params }) {
   const projectData = getProject(id);
   const projectInvitationsData = getProjectInvitations(id);
   const boardsData = getBoards(id, archive);
+  const tasksData = getTasks(id, archive);
 
-  const [project, projectInvitations, boards] = await Promise.all([
-    projectData,
-    projectInvitationsData,
-    boardsData,
-  ]);
+  const [initialProject, projectInvitations, initialBoards, initialTasks] =
+    await Promise.all([
+      projectData,
+      projectInvitationsData,
+      boardsData,
+      tasksData,
+    ]);
 
-  const tasks = boards?.length
-    ? await Promise.all(
-        boards.map((board) => getTasks(id, board?._id, archive))
-      )
-    : [];
-
-  if (!project) return notFound(); // 404
+  if (!initialProject) return notFound(); // 404
 
   return (
     <main className={styles.main}>
       {!options && !timeTracking && (
         <Project
-          project={project}
+          initialProject={initialProject}
           projectInvitations={projectInvitations}
-          boards={boards}
-          tasks={tasks}
+          initialBoards={initialBoards}
+          initialTasks={initialTasks}
           archive={archive}
         />
       )}
-      {options && <ProjectOptions project={project} />}
-      {timeTracking && <ProjectTimeTracking project={project} />}
+      {options && <ProjectOptions project={initialProject} />}
+      {timeTracking && <ProjectTimeTracking project={initialProject} />}
     </main>
   );
 }

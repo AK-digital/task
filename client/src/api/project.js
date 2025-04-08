@@ -128,8 +128,6 @@ export async function updateProjectRole(projectId, memberId, role) {
       );
     }
 
-    revalidateTag("projects");
-
     return response;
   } catch (err) {
     console.log(

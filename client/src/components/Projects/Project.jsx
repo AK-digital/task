@@ -5,15 +5,22 @@ import Boards from "@/components/Boards/Boards";
 import { useEffect } from "react";
 import socket from "@/utils/socket";
 import { revalidateProject } from "@/api/project";
-import TaskMore from "../tasks/TaskMore";
+import { useProject } from "@/app/hooks/useProject";
+import { useTasks } from "@/app/hooks/useTasks";
+import { useBoards } from "@/app/hooks/useBoards";
 
 export default function Project({
-  project,
+  initialProject,
   projectInvitations,
-  boards,
-  tasks,
+  initialBoards,
+  initialTasks,
   archive,
 }) {
+  // Fetch data using SWR and passing initial data as fallback
+  const { project } = useProject(initialProject._id, initialProject);
+  const { boards } = useBoards(initialProject._id, archive, initialBoards);
+  const { tasks } = useTasks(initialProject._id, archive, initialTasks);
+
   useEffect(() => {
     function handleRevalidate(projectId) {
       revalidateProject(projectId);

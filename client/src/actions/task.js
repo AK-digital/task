@@ -25,7 +25,7 @@ export async function saveTask(projectId, prevState, formData) {
       );
     }
 
-    revalidateTag("tasks");
+    // revalidateTag("tasks");
 
     return {
       status: "success",
@@ -68,8 +68,6 @@ export async function updateTaskText(taskId, projectId, prevState, formData) {
       throw new Error(response?.message || "Une erreur s'est produite");
     }
 
-    revalidateTag("tasks");
-
     return {
       status: "success",
       message: "Le texte de la tâche a été mis à jour avec succès",
@@ -91,11 +89,12 @@ export async function updateTaskText(taskId, projectId, prevState, formData) {
 export async function updateTaskStatus(taskId, projectId, status) {
   try {
     const allowedStatus = [
-      "En attente",
-      "À faire",
       "En cours",
-      "Bloquée",
+      "En attente",
       "Terminée",
+      "À faire",
+      "À vérifier",
+      "bloquée",
     ];
 
     if (!allowedStatus.includes(status)) throw new Error("Paramètre invalide");
@@ -116,8 +115,6 @@ export async function updateTaskStatus(taskId, projectId, status) {
     if (!response.success) {
       throw new Error(response?.message);
     }
-
-    revalidateTag("tasks");
 
     return {
       status: "success",
@@ -160,8 +157,6 @@ export async function updateTaskPriority(taskId, projectId, priority) {
     if (!response.success) {
       throw new Error(response?.message);
     }
-
-    revalidateTag("tasks");
 
     return {
       status: "success",

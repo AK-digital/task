@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
+import { mutate } from "swr";
 
 const initialState = {
   status: "pending",
@@ -12,7 +13,7 @@ const initialState = {
   errors: null,
 };
 
-export default function TaskText({ task, project, uid }) {
+export default function TaskText({ task, project, uid, archive }) {
   const formRef = useRef(null);
   const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState(task?.text || "");
@@ -35,6 +36,8 @@ export default function TaskText({ task, project, uid }) {
 
   useEffect(() => {
     if (state?.status === "success") {
+      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+
       socket.emit("task text update", project?._id, task?._id, inputValue);
     }
   }, [state]);

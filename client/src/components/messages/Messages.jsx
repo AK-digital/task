@@ -47,11 +47,17 @@ export default function Messages({ task, project }) {
   }, [socket]);
 
   useEffect(() => {
+    setIsOpen(false);
     if (draft?.success) {
       setIsOpen(true);
       setMessage(draft?.data?.content);
     }
-  });
+
+    if (!draft?.success) {
+      setMessage("");
+      setIsOpen(false);
+    }
+  }, [draft]);
 
   const handleIsOpen = useCallback(() => {
     if (!isAuthorized) return;

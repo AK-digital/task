@@ -5,12 +5,17 @@ import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
+import { mutate } from "swr";
 
-export default function TaskRemove({ task, project, uid }) {
+export default function TaskRemove({ task, project, uid, archive }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   async function handleDeleteTask() {
-    await deleteTask([task?._id], task?.projectId);
+    const res = await deleteTask([task?._id], task?.projectId);
+
+    if (!res.success) return;
+
+    mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
     socket.emit("update task", task?.projectId);
   }

@@ -7,9 +7,11 @@ import {
 } from "@/api/task";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/tasks/selected-tasks.module.css";
+import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { Archive, ArchiveRestore, Trash, X } from "lucide-react";
 import { useContext } from "react";
+import { mutate } from "swr";
 
 export default function SelectedTasks({
   project,
@@ -43,6 +45,10 @@ export default function SelectedTasks({
     // Tasks is an array of task ids
     await addTaskToArchive(tasks, project?._id);
 
+    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+
+    socket.emit("update task", project?._id);
+
     setSelectedTasks([]);
   };
 
@@ -58,6 +64,10 @@ export default function SelectedTasks({
     // Tasks is an array of task ids
     await removeTaskFromArchive(tasks, project?._id);
 
+    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+
+    socket.emit("update task", project?._id);
+
     setSelectedTasks([]);
   };
 
@@ -71,7 +81,13 @@ export default function SelectedTasks({
     if (!confirmed) return;
 
     // Tasks is an array of task ids
-    await deleteTask(tasks, project?._id);
+    const res = await deleteTask(tasks, project?._id);
+
+    if (!res.success) return;
+
+    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+
+    socket.emit("update task", project?._id);
 
     setSelectedTasks([]);
   }

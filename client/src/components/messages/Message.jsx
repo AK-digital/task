@@ -17,7 +17,6 @@ import { mutate } from "swr";
 
 export default function Message({ task, message, project, mutateMessage }) {
   const { uid } = useContext(AuthContext);
-  const [optimisticMessage, setOptimisticMessage] = useState(message?.message);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
@@ -37,6 +36,7 @@ export default function Message({ task, message, project, mutateMessage }) {
       setIsLoading(false);
     }
     await mutateMessage();
+    mutate(`/task?projectId=${project?._id}&archived=false`);
     socket.emit("update message", message?.projectId);
     setIsLoading(false);
   }

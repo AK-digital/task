@@ -45,6 +45,12 @@
     background-color: var(--finished-color);
 }
 
+.dropdown__current[data-current="À vérifier"],
+.dropdown__list ul li[data-value="À vérifier"] {
+    background-color: var(--checking-color);
+}
+
+
 /* priority  */
 .dropdown__current[data-current="Basse"],
 .dropdown__list ul li[data-value="Basse"] {

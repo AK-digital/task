@@ -53,7 +53,7 @@ export default function Projects() {
                         </span>
                         <span>
                           <Users size={16} />
-                          {project?.guests?.length + 1}
+                          {project?.members?.length}
                         </span>
                       </div>
                     </div>

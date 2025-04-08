@@ -25,8 +25,6 @@ export async function saveMessage(projectId, taskId, message, taggedUsers) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
-    revalidateTag("tasks");
-
     return response;
   } catch (err) {
     console.log(
@@ -87,8 +85,6 @@ export async function updateMessage(
 
     const response = await res.json();
 
-    console.log(response);
-
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
@@ -115,8 +111,6 @@ export async function deleteMessage(projectId, messageId) {
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
-    revalidateTag("tasks");
 
     return response;
   } catch (err) {

@@ -6,8 +6,7 @@ import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
 import socket from "@/utils/socket";
-import useSWR from "swr";
-import { getTasks } from "@/api/task";
+import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
 import { checkRole } from "@/utils/utils";
 
@@ -51,6 +50,7 @@ export default function Board({
     if (state?.status === "success") {
       inputRef?.current?.focus();
       setIsWritting(false);
+      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
       socket.emit("update task", project?._id);
     }

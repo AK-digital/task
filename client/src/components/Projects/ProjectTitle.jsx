@@ -7,6 +7,7 @@ import { updateProject } from "@/actions/project";
 import Link from "next/link";
 import { Figma, Github, Globe, Layout, MoreVertical } from "lucide-react";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { mutate } from "swr";
 
 const initialState = {
   status: "pending",
@@ -47,6 +48,10 @@ export default function ProjectTitle({ project }) {
   }, [isEditing]);
 
   useEffect(() => {
+    if (state?.status === "success") {
+      mutate(`/project/${project?._id}`);
+      setIsEditing(false);
+    }
     if (state?.status === "failure") {
       setProjectName(project?.name);
     }

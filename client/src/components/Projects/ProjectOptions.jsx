@@ -23,6 +23,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { set } from "zod";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { mutate } from "swr";
 moment.locale("fr");
 
 const initialState = {
@@ -52,10 +53,12 @@ export default function ProjectOptions({ project }) {
 
   useEffect(() => {
     if (state?.status === "success") {
+      mutate(`/project/${project?._id}`);
       setPopup({
         title: "Modifications enregistrées",
         message: "Les modifications ont été enregistrées avec succès",
       });
+
       return;
     }
     if (state?.status === "failure") {
@@ -81,6 +84,8 @@ export default function ProjectOptions({ project }) {
     e.preventDefault();
 
     await updateProjectLogo(project?._id, e.target.files[0]);
+
+    mutate(`/project/${project?._id}`);
   }
 
   async function handleDeleteProject(e) {
@@ -97,6 +102,8 @@ export default function ProjectOptions({ project }) {
       router.refresh();
       router.push("/projects");
     }
+
+    mutate(`/project/${project?._id}`);
   }
 
   const debounceChange = useDebouncedCallback(async (e) => {
@@ -104,8 +111,6 @@ export default function ProjectOptions({ project }) {
 
     form.requestSubmit();
   }, 1500);
-
-  console.log(state);
 
   return (
     <div className={styles.container}>

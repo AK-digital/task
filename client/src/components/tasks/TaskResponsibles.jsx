@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useCallback, useContext, useEffect, useState } from "react";
 import NoPicture from "../User/NoPicture";
+import { mutate } from "swr";
 
 export default function TaskResponsibles({ task, project, archive }) {
   const { user, uid } = useContext(AuthContext);
@@ -58,6 +59,8 @@ export default function TaskResponsibles({ task, project, archive }) {
       setOptimisticResponsibles(previousResponsibles);
       return;
     }
+
+    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
     socket.emit(
       "task responsible update",

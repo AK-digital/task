@@ -2,16 +2,17 @@ import { updateTaskDescription } from "@/api/task";
 import styles from "@/styles/components/tasks/task-description.module.css";
 import moment from "moment";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Tiptap from "../RichTextEditor/Tiptap";
 import { PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
 import useSWR from "swr";
 import { getDrafts } from "@/api/draft";
-import { checkRole } from "@/utils/utils";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { AuthContext } from "@/context/auth";
 
 export default function TaskDescription({ project, task, uid }) {
+  const { user } = useContext(AuthContext);
   const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
   const { data: draft, mutate } = useSWR(
     `/draft?projectId=${project?._id}&taskId=${task?._id}&type=description`,
@@ -35,10 +36,14 @@ export default function TaskDescription({ project, task, uid }) {
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
   useEffect(() => {
-    mutate();
     if (draft?.success) {
       setIsEditing(true);
       setDescription(draft?.data?.content);
+    }
+
+    if (!draft?.success) {
+      setDescription(task?.description?.text);
+      setIsEditing(false);
     }
   }, [draft]);
 
@@ -103,16 +108,20 @@ export default function TaskDescription({ project, task, uid }) {
           <div className={styles.preview} onClick={handleEditDescription}>
             <div className={styles.user}>
               <Image
-                src={descriptionAuthor?.picture || "/default-pfp.webp"}
+                src={
+                  descriptionAuthor?.picture ||
+                  user?.picture ||
+                  "/default-pfp.webp"
+                }
                 width={24}
                 height={24}
                 alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
                 style={{ borderRadius: "50%" }}
               />
               <span className={styles.names}>
-                {descriptionAuthor?.firstName +
+                {(descriptionAuthor?.firstName || user?.firstName) +
                   " " +
-                  descriptionAuthor?.lastName}
+                  (descriptionAuthor?.lastName || user?.lastName)}
               </span>
               {task?.description?.createdAt && (
                 <span className={styles.date}>{formattedDate}</span>
