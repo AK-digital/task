@@ -186,7 +186,7 @@ export async function updateTaskStatus(req, res, next) {
       "Terminée",
       "À faire",
       "À vérifier",
-      "bloquée",
+      "Bloquée",
     ];
 
     if (!status) {

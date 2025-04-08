@@ -94,7 +94,7 @@ export async function updateTaskStatus(taskId, projectId, status) {
       "Terminée",
       "À faire",
       "À vérifier",
-      "bloquée",
+      "Bloquée",
     ];
 
     if (!allowedStatus.includes(status)) throw new Error("Paramètre invalide");

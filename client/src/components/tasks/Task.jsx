@@ -26,7 +26,7 @@ export default function Task({
   setSelectedTasks,
   archive,
 }) {
-  const { uid, user } = useContext(AuthContext);
+  const { uid } = useContext(AuthContext);
   const pathname = usePathname();
   const taskId = pathname.split("/").pop();
   const [openedTask, setOpenedTask] = useState(taskId);
@@ -42,24 +42,15 @@ export default function Task({
   const handleTaskClick = useCallback(
     (e) => {
       e.preventDefault();
+      const taskPath = archive
+        ? `/projects/${project?._id}/archive/task/${task?._id}`
+        : `/projects/${project?._id}/task/${task?._id}`;
 
-      window.history.pushState(
-        {},
-        "",
-        archive
-          ? `/projects/${project?._id}/archive/task/${task?._id}`
-          : `/projects/${project?._id}/task/${task?._id}`
-      );
+      window.history.pushState({}, "", taskPath);
+      setOpenedTask(task?._id); // <== Ici on gère localement
     },
     [archive, project?._id, task?._id]
   );
-
-  useEffect(() => {
-    if (pathname?.includes("/task/")) {
-      const taskId = pathname.split("/").pop();
-      setOpenedTask(taskId);
-    }
-  }, [pathname]);
 
   function handleSelectedTask(e) {
     setSelectedTasks((prev) => {

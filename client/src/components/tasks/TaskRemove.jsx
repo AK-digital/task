@@ -15,7 +15,7 @@ export default function TaskRemove({ task, project, uid, archive }) {
 
     if (!res.success) return;
 
-    mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
     socket.emit("update task", task?.projectId);
   }

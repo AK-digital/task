@@ -465,40 +465,6 @@ export default function Tiptap({
     return false;
   };
 
-  const handleOnClickDraftSave = async () => {
-    if (isLoadingDraft) return;
-
-    setIsLoadingDraft(true);
-
-    const response = await saveDraft(project?._id, task?._id, type, plainText);
-
-    // Handle error
-    if (!response?.success) {
-      // If the draft already exists, update it
-      if (response?.message === "Draft already exists") {
-        if (value?.length <= 0) {
-          setPlainText("");
-          setValue("");
-          await deleteDraft(response?.data?._id, project?._id);
-          await mutateDraft();
-        } else {
-          await updateDraft(response?.data?._id, project?._id, plainText);
-          await mutateDraft();
-        }
-      } else {
-        setPlainText("");
-        setValue("");
-        setIsLoadingDraft(false);
-        return;
-      }
-    }
-
-    // If the draft is created successfully, we mutate it
-    await mutateDraft();
-    setIsLoadingDraft(false);
-    setIsDraftSaved(true);
-  };
-
   return (
     <>
       <div
@@ -556,9 +522,7 @@ export default function Tiptap({
           <button onClick={() => editor.chain().focus().toggleStrike().run()}>
             <StrikethroughIcon size={16} />
           </button>
-
           <div className={styles.separator}></div>
-
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
@@ -578,9 +542,7 @@ export default function Tiptap({
           <button onClick={handleAddImage}>
             <ImageIcon size={16} />
           </button>
-
           <div className={styles.separator}></div>
-
           <button
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
           >
@@ -592,7 +554,6 @@ export default function Tiptap({
             <Code2 size={16} />
           </button>
         </div>
-
         {/* Contenu de l'éditeur */}
         <EditorContent editor={editor} className={styles.content} />
         {isTaggedUsers && (
@@ -614,18 +575,7 @@ export default function Tiptap({
           </div>
         )}
       </div>
-
       <div className={styles.actions}>
-        {value?.length > 0 && !editMessage && (
-          <button
-            className={`${bricolageGrostesque.className} ${styles.saveDraft}`}
-            onClick={handleOnClickDraftSave}
-            data-disabled={isLoadingDraft}
-            disabled={isLoadingDraft}
-          >
-            Enregistrer le brouillon
-          </button>
-        )}
         {type === "description" && (
           <button
             className={bricolageGrostesque.className}

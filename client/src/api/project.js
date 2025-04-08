@@ -8,8 +8,7 @@ export async function getProject(id) {
       `project/${id}`,
       "GET",
       "application/json",
-      null,
-      "project"
+      null
     );
 
     const response = await res.json();
@@ -17,8 +16,6 @@ export async function getProject(id) {
     if (!response.success) {
       throw new Error(response?.message);
     }
-
-    console.log(response?.data?.members);
 
     return response.data;
   } catch (err) {

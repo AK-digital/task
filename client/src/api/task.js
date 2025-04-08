@@ -75,8 +75,6 @@ export async function addTaskToArchive(tasksIds, projectId) {
       throw new Error(response?.message);
     }
 
-    revalidateTag("tasks");
-
     return response;
   } catch (err) {
     console.log(
@@ -103,8 +101,6 @@ export async function removeTaskFromArchive(tasksIds, projectId) {
     if (!response.success) {
       throw new Error(response?.message);
     }
-
-    revalidateTag("tasks");
 
     return response;
   } catch (err) {
@@ -304,8 +300,6 @@ export async function updateTaskDeadline(taskId, projectId, deadline) {
       throw new Error(response?.message || "Une erreur s'est produite");
     }
 
-    revalidateTag("tasks");
-
     return response;
   } catch (err) {
     console.log(
@@ -336,10 +330,6 @@ export async function updateTaskEstimate(taskId, projectId, estimation) {
     if (!response.success) {
       throw new Error(response?.message || "Une erreur s'est produite");
     }
-
-    console.log(response);
-
-    revalidateTag("tasks");
 
     return response;
   } catch (err) {

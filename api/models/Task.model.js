@@ -56,7 +56,7 @@ const taskSchema = new Schema(
         "Terminée",
         "À faire",
         "À vérifier",
-        "bloquée",
+        "Bloquée",
       ],
       default: "En attente",
     },

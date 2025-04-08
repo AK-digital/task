@@ -58,24 +58,19 @@ export default function Boards({ boards, project, tasksData, archive }) {
   }, [tasksData]);
 
   useEffect(() => {
-    const handleBoardUpdate = async () => {
+    const handleTaskUpdate = async () => {
       mutate(`/task?projectId=${project?._id}&archived=${archive}`);
-      mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
-      mutate(`/project/${project?._id}`);
     };
 
-    socket.on("task updated", handleBoardUpdate);
-    socket.on("update task", handleBoardUpdate);
+    socket.on("task updated", handleTaskUpdate);
 
     return () => {
-      socket.off("task updated", handleBoardUpdate);
-      socket.off("update task", handleBoardUpdate);
+      socket.off("task updated", handleTaskUpdate);
     };
   }, [socket]);
 
   useEffect(() => {
     if (initialTasksData) {
-      console.log("played");
       setTasks(initialTasksData);
     }
   }, [boards]);
