@@ -110,6 +110,8 @@ export default function Board({
                   id="new-task"
                   placeholder=" Ajouter une tâche"
                   autoComplete="off"
+                  minLength={2}
+                  maxLength={255}
                   ref={inputRef}
                   onChange={(e) => {
                     if (e.target.value.length > 0) {

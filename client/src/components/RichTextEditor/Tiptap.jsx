@@ -123,6 +123,16 @@ export default function Tiptap({
       : ""
   );
 
+  useEffect(() => {
+    if (isDraftSaved) {
+      const timer = setTimeout(() => {
+        setIsDraftSaved(false);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isDraftSaved]);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -588,12 +598,12 @@ export default function Tiptap({
         )}
         {type === "message" && (
           <>
-            {/* <button
+            <button
               className={`${bricolageGrostesque.className} ${styles.cancel}`}
               onClick={handleCancel}
             >
               Annuler
-            </button> */}
+            </button>
             <button
               className={bricolageGrostesque.className}
               data-disabled={checkIfDisabled()}
