@@ -64,7 +64,7 @@
     background-color: var(--background-color);
 }
 
-.optionsBtn {
+.more {
     position: relative;
     top: 2px;
     cursor: pointer;
@@ -73,11 +73,11 @@
 }
 
 
-
-.optionsBtn:hover {
+/* 
+.more:hover {
     background-color: #ffffff08;
     color: var(--accent-color);
-}
+} */
 
 /* Search styles */
 .searchContainer {

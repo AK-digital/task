@@ -1,6 +1,7 @@
 import BoardModel from "../models/Board.model.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
+import MessageModel from "../models/Message.model.js";
 
 export async function saveBoard(req, res, next) {
   try {
@@ -230,7 +231,14 @@ export async function deleteBoard(req, res, next) {
       });
     }
 
-    await TaskModel.deleteMany({ boardId: deletedBoard._id });
+    const tasks = await TaskModel.find({ boardId: deletedBoard._id });
+
+    if (tasks?.length >= 1) {
+      tasks.forEach(async (task) => {
+        await TaskModel.findOneAndDelete({ _id: task._id });
+        await MessageModel.findOneAndDelete({ taskId: task._id });
+      });
+    }
 
     return res.status(200).send({
       success: true,

@@ -30,22 +30,12 @@ export default function TaskStatus({ task, project, uid }) {
       return;
     }
 
-    socket.emit("task status update", project?._id, task?._id, value);
+    socket.emit("update task", project?._id);
   }
 
   useEffect(() => {
-    function onTaskUpdated(taskId, optimisticValue) {
-      if (task?._id === taskId) {
-        setOptimisticCurrent(optimisticValue);
-      }
-    }
-
-    socket.on("task status updated", onTaskUpdated);
-
-    return () => {
-      socket.off("task status updated", onTaskUpdated);
-    };
-  }, [optimisticCurrent]);
+    setOptimisticCurrent(task?.status);
+  }, [task?.status]);
 
   const handleIsOpen = useCallback(() => {
     const isAuthorized = checkRole(

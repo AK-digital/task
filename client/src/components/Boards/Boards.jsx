@@ -265,7 +265,10 @@ export default function Boards({ boards, project, tasksData, archive }) {
       {archive && (
         <>
           <div className={styles.archiveTitle}>
-            <div className={styles.back} onClick={() => router.back()}>
+            <div
+              className={styles.back}
+              onClick={() => router.push(`/projects/${project?._id}`)}
+            >
               <ArrowLeftCircle size={32} />
             </div>
             <span>Archives du projet</span>

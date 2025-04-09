@@ -320,8 +320,6 @@ input[type="checkbox"] {
   position: absolute;
   z-index: 2001;
   background-color: var(--secondary-background-color);
-  box-shadow: var(--danger-color);
-  padding: 24px;
   border-radius: var(--border-radius-small);
 }
 

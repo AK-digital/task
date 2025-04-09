@@ -1,13 +1,10 @@
 import styles from "@/styles/components/boards/board-more.module.css";
+import { Archive, ArchiveRestore, Save, Trash } from "lucide-react";
 import {
-  Archive,
-  ArchiveRestore,
-  Save,
-  Settings2Icon,
-  Trash,
-} from "lucide-react";
-import { deleteBoard } from "@/actions/board";
-import { addBoardToArchive, removeBoardFromArchive } from "@/api/board";
+  addBoardToArchive,
+  deleteBoard,
+  removeBoardFromArchive,
+} from "@/api/board";
 import { saveBoardTemplate } from "@/api/template";
 import { useUserRole } from "@/app/hooks/useUserRole";
 

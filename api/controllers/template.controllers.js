@@ -40,44 +40,6 @@ export async function saveTemplate(req, res, next) {
   }
 }
 
-export async function saveBoardTemplate(req, res, next) {
-  try {
-    const authUser = res.locals.user;
-    const { boardId } = req.body;
-
-    // Check if the required fields are provided
-    if (!boardId) {
-      return res.status(400).send({
-        success: false,
-        message: "Paramètres manquants",
-      });
-    }
-
-    const board = await BoardModel.findById({ _id: boardId });
-
-    const newTemplate = new TemplateModel({
-      name: board?.title,
-      author: authUser?._id,
-      boardId: boardId,
-    });
-
-    const savedTemplate = await newTemplate.save();
-
-    return res.status(201).send({
-      success: true,
-      message: "Modèle de tableau enregistré avec succès",
-      data: savedTemplate,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de l'enregistrement du modèle",
-    });
-  }
-}
-
 export async function useTemplate(req, res, next) {
   try {
     const authUser = res.locals.user;
@@ -102,8 +64,13 @@ export async function useTemplate(req, res, next) {
 
     // Then we need to create a new project with the same structure as the template
     const newProject = new ProjectModel({
-      author: authUser?._id,
-      name: project?.name,
+      members: [
+        {
+          user: authUser?._id,
+          role: "owner",
+        },
+      ],
+      name: template?.name,
       note: project?.note,
     });
 

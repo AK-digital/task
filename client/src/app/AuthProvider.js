@@ -13,7 +13,8 @@ export default function AuthProvider({ children }) {
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR("/auth/session", decryptToken, {
-    refreshInterval: 15 * 60 * 1000, // Refresh every 5 minutes
+    refreshInterval: 12 * 60 * 60 * 1000, // Refresh every 12 hours
+    revalidateOnFocus: false,
   });
 
   useEffect(() => {

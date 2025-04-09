@@ -1,4 +1,9 @@
-.addButton {
+.container {
+    display: flex;
+    gap: 12px;
+}
+
+.container button {
     display: flex;
     justify-content: center;
     align-items: center;

@@ -1,7 +1,40 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { useAuthFetch } from "@/utils/api";
+
+export async function saveBoard(projectId) {
+  try {
+    const res = await useAuthFetch(
+      `board?projectId=${projectId}`,
+      "POST",
+      "application/json",
+      { title: "Nouveau tableau" }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(
+        response?.message ||
+          "Une erreur est survenue lors de la création du tableau"
+      );
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de la création du tableau"
+    );
+
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de la création du tableau",
+    };
+  }
+}
 
 export async function getBoards(projectId, archived) {
   try {
@@ -37,8 +70,7 @@ export async function addBoardToArchive(boardId, projectId) {
     const res = await useAuthFetch(
       `board/${boardId}/add-archive?projectId=${projectId}`,
       "PATCH",
-      "application/json",
-      null
+      "application/json"
     );
 
     const response = await res.json();
@@ -46,8 +78,6 @@ export async function addBoardToArchive(boardId, projectId) {
     if (!response.success) {
       throw new Error(response?.message);
     }
-
-    revalidateTag("projects");
 
     return response;
   } catch (err) {
@@ -66,17 +96,16 @@ export async function removeBoardFromArchive(boardId, projectId) {
     const res = await useAuthFetch(
       `board/${boardId}/remove-archive?projectId=${projectId}`,
       "PATCH",
-      "application/json",
-      null
+      "application/json"
     );
 
     const response = await res.json();
 
+    revalidateTag("projects");
+
     if (!response.success) {
       throw new Error(response?.message);
     }
-
-    revalidateTag("projects");
 
     return response;
   } catch (err) {
@@ -86,9 +115,31 @@ export async function removeBoardFromArchive(boardId, projectId) {
   }
 }
 
-export async function revalidateBoards() {
-  console.log("revalidateBoards played");
-  revalidateTag("tasks");
-  revalidateTag("boards");
-  revalidateTag("trackers");
+export async function deleteBoard(boardId, projectId) {
+  try {
+    if (!boardId) throw new Error("Paramètres manquants");
+
+    const res = await useAuthFetch(
+      `board/${boardId}?projectId=${projectId}`,
+      "DELETE",
+      "application/json"
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de la suppression"
+    );
+
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue lors de la suppression",
+    };
+  }
 }

@@ -38,22 +38,13 @@ export default function TaskText({ task, project, uid, archive }) {
     if (state?.status === "success") {
       mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
-      socket.emit("task text update", project?._id, task?._id, inputValue);
+      socket.emit("update task", project?._id);
     }
   }, [state]);
 
   useEffect(() => {
-    async function handleTextUpdate(taskId, value) {
-      if (task?._id !== taskId) return;
-      setInputValue(value);
-    }
-
-    socket.on("task text updated", handleTextUpdate);
-
-    return () => {
-      socket.off("task text updated", handleTextUpdate);
-    };
-  }, [inputValue]);
+    setInputValue(task?.text);
+  }, [task?.text]);
 
   function handleEdit() {
     const isAuthorized = checkRole(

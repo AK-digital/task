@@ -40,6 +40,10 @@ export default function TaskResponsibles({ task, project, archive }) {
     setFilteredMembers(newMembers);
   }, [optimisticResponsibles, members]);
 
+  useEffect(() => {
+    setOptimisticResponsibles(task?.responsibles || []);
+  }, [task?.responsibles]);
+
   async function handleAddResponsible(responsible) {
     const previousResponsibles = [...optimisticResponsibles];
 
@@ -62,12 +66,7 @@ export default function TaskResponsibles({ task, project, archive }) {
 
     await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
-    socket.emit(
-      "task responsible update",
-      project?._id,
-      task?._id,
-      responsible
-    );
+    socket.emit("update task", project?._id);
 
     // Ne pas envoyer de notification si c'est l'utilisateur qui s'ajoute lui-même
     if (responsible?._id === uid) return;
@@ -101,10 +100,7 @@ export default function TaskResponsibles({ task, project, archive }) {
       return;
     }
 
-    socket.emit("task responsible update", project?._id, task?._id, {
-      removed: true,
-      responsible,
-    });
+    socket.emit("update task", project?._id);
   }
 
   const handleModal = useCallback(() => {

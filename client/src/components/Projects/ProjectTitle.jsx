@@ -1,13 +1,25 @@
 "use client";
 import styles from "@/styles/layouts/project-header.module.css";
-import { useState, useRef, useEffect, useContext, useActionState } from "react";
+import { useState, useRef, useEffect, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { AuthContext } from "@/context/auth";
 import { updateProject } from "@/actions/project";
-import Link from "next/link";
-import { Figma, Github, Globe, Layout, MoreVertical } from "lucide-react";
+import {
+  Archive,
+  Figma,
+  Github,
+  Globe,
+  Layout,
+  MoreVertical,
+  Save,
+  Settings2,
+  Trash2,
+} from "lucide-react";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
+import { useRouter } from "next/navigation";
+import { deleteProject } from "@/api/project";
+import AddTemplate from "../Templates/AddTemplate";
+import { MoreMenu } from "../Dropdown/MoreMenu";
 
 const initialState = {
   status: "pending",
@@ -17,18 +29,73 @@ const initialState = {
 };
 
 export default function ProjectTitle({ project }) {
-  const { uid } = useContext(AuthContext);
+  const router = useRouter();
   const [state, formAction, pending] = useActionState(
     updateProject,
     initialState
   );
+
   const [isEditing, setIsEditing] = useState(false);
   const [projectName, setProjectName] = useState(project?.name);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [addTemplate, setAddTemplate] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const formRef = useRef(null);
   const inputRef = useRef(null);
 
-  const canEdit = useUserRole(project, ["owner", "manager"]);
+  const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
+
+  async function handleDeleteProject(e) {
+    e.preventDefault();
+    const isConfirmed = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer le projet "${project?.name}" ?`
+    );
+
+    if (!isConfirmed) return;
+
+    const response = await deleteProject(project?._id);
+
+    if (response?.success) {
+      router.refresh();
+      router.push("/projects");
+    }
+
+    mutate(`/project/${project?._id}`);
+    setIsMoreOpen(false);
+  }
+
+  function handleAddTemplate(e) {
+    e.preventDefault();
+
+    setAddTemplate((prev) => !prev);
+    setIsMoreOpen(false);
+  }
+
+  const options = [
+    {
+      authorized: isOwnerOrManager,
+      link: `/projects/${project?._id}/options`,
+      icon: <Settings2 size={16} />,
+      name: "Options du projet",
+    },
+    {
+      link: `/projects/${project?._id}/archive`,
+      icon: <Archive size={16} />,
+      name: "Archives du projet",
+    },
+    {
+      authorized: isOwnerOrManager,
+      function: handleAddTemplate,
+      icon: <Save size={16} />,
+      name: "Enregistrer le projet comme modèle",
+    },
+    {
+      authorized: isOwnerOrManager,
+      function: handleDeleteProject,
+      icon: <Trash2 size={16} />,
+      name: "Supprimer le projet",
+      remove: true,
+    },
+  ];
 
   const debouncedUpdate = useDebouncedCallback(async (newName) => {
     if (newName !== project?.name) {
@@ -110,15 +177,16 @@ export default function ProjectTitle({ project }) {
         )}
       </div>
 
-      {canEdit && (
-        <div className={styles.optionsBtn}>
-          <Link href={`/projects/${project?._id}/options`}>
-            <MoreVertical size={20} />
-          </Link>
-        </div>
-      )}
-      {/* Ajout du séparateur vertical */}
-      {/* {project?.urls > 0 && <div className={styles.separator}></div>} */}
+      <div className={styles.more}>
+        <MoreVertical size={20} onClick={() => setIsMoreOpen(true)} />
+        {isMoreOpen && (
+          <MoreMenu
+            isOpen={isMoreOpen}
+            setIsOpen={setIsMoreOpen}
+            options={options}
+          />
+        )}
+      </div>
 
       <div className={styles.actions}>
         {project?.urls?.website && (
@@ -166,12 +234,8 @@ export default function ProjectTitle({ project }) {
           </a>
         )}
       </div>
-      {modalOpen && (
-        <ProjectOptionsModal
-          project={project}
-          setOpenModal={setModalOpen}
-          uid={uid}
-        />
+      {addTemplate && (
+        <AddTemplate project={project} setAddTemplate={setAddTemplate} />
       )}
     </div>
   );

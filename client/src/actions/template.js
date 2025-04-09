@@ -6,16 +6,14 @@ export async function saveTemplate(prevState, formData) {
     const projectId = formData.get("project-id");
     const name = formData.get("template-name");
 
-    const rawData = {
-      projectId: projectId,
-      name: name,
-    };
-
     const res = await useAuthFetch(
-      "template",
+      `template?projectId=${projectId}`,
       "POST",
       "application/json",
-      rawData
+      {
+        projectId: projectId,
+        name: name,
+      }
     );
 
     const data = await res.json();
@@ -26,8 +24,6 @@ export async function saveTemplate(prevState, formData) {
         message: data.message || "Une erreur s'est produite",
       };
     }
-
-    console.log(data);
 
     return {
       success: true,

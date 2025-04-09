@@ -19,7 +19,7 @@ const templateSchema = new Schema(
       ref: "User",
       required: true,
     },
-    board: {
+    boardId: {
       type: Schema.Types.ObjectId,
       ref: "Board",
       required: false,
@@ -30,4 +30,4 @@ const templateSchema = new Schema(
   }
 );
 
-export default mongoose.model("Template", templateSchema);
+export default mongoose.model("BoardTemplate", templateSchema);

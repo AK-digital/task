@@ -26,22 +26,12 @@ export default function TaskPriority({ task, project, uid }) {
       return;
     }
 
-    socket.emit("task priority update", project?._id, task?._id, value);
+    socket.emit("update task", project?._id);
   }
 
   useEffect(() => {
-    function onTaskUpdated(taskId, optimisticValue) {
-      if (task?._id === taskId) {
-        setOptimisticCurrent(optimisticValue);
-      }
-    }
-
-    socket.on("task priority updated", onTaskUpdated);
-
-    return () => {
-      socket.off("task priority updated", onTaskUpdated);
-    };
-  }, [optimisticCurrent]);
+    setOptimisticCurrent(task?.priority);
+  }, [task?.priority]);
 
   const handleIsOpen = useCallback(() => {
     const isAuthorized = checkRole(

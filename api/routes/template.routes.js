@@ -4,6 +4,8 @@ import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import { checkRole } from "../middlewares/projectRole.middlewares.js";
 import * as templateControllers from "../controllers/template.controllers.js";
 
+router.get("/", authMiddlewares.auth, templateControllers.getTemplates);
+
 router.post(
   "/",
   authMiddlewares.auth,
@@ -12,24 +14,10 @@ router.post(
 );
 
 router.post(
-  "/board",
-  authMiddlewares.auth,
-  checkRole(["owner", "manager"]),
-  templateControllers.saveBoardTemplate
-);
-
-router.post(
   "/use/project/:id",
   authMiddlewares.auth,
   templateControllers.useTemplate
 );
-router.post(
-  "/use/board/:id",
-  authMiddlewares.auth,
-  templateControllers.useBoardTemplate
-);
-
-router.get("/", authMiddlewares.auth, templateControllers.getTemplates);
 
 router.put("/:id", authMiddlewares.auth, templateControllers.updateTemplate);
 

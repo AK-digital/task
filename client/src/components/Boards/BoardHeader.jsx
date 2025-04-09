@@ -1,14 +1,28 @@
 "use client";
 import { updateBoard } from "@/actions/board";
 import styles from "@/styles/components/boards/BoardHeader.module.css";
-import { ChevronDown, ChevronRight, EllipsisVertical } from "lucide-react";
-import { useCallback, useContext, useEffect, useState } from "react";
+import {
+  Archive,
+  ArchiveRestore,
+  ChevronDown,
+  ChevronRight,
+  EllipsisVertical,
+  Save,
+  Trash2,
+} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
-import { checkRole, isNotEmpty } from "@/utils/utils";
-import BoardMore from "./BoardMore";
-import { AuthContext } from "@/context/auth";
+import { isNotEmpty } from "@/utils/utils";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { MoreMenu } from "../Dropdown/MoreMenu";
+import {
+  addBoardToArchive,
+  deleteBoard,
+  removeBoardFromArchive,
+} from "@/api/board";
+import { mutate } from "swr";
+import AddBoardTemplate from "../Templates/AddBoardTemplate";
 
 export default function BoardHeader({
   board,
@@ -22,7 +36,8 @@ export default function BoardHeader({
   archive,
   project,
 }) {
-  const [more, setMore] = useState(false);
+  const [addBoardTemplate, setAddBoardTemplate] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
   const [title, setTitle] = useState(board?.title);
@@ -32,6 +47,75 @@ export default function BoardHeader({
     "team",
     "customer",
   ]);
+  const canArchive = useUserRole(project, ["owner", "manager", "team"]);
+  const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
+
+  async function handleAddBoardTemplate(e) {
+    e.preventDefault();
+
+    setIsMoreOpen(false);
+    setAddBoardTemplate((prev) => !prev);
+  }
+
+  async function handleAddArchive(e) {
+    e.preventDefault();
+    await addBoardToArchive(board?._id, project?._id);
+
+    await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+  }
+
+  async function handleRestoreArchive(e) {
+    e.preventDefault();
+    await removeBoardFromArchive(board?._id, project?._id);
+  }
+
+  async function handleDeleteBoard(e) {
+    e.preventDefault();
+
+    const isConfirmed = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer le tableau "${board?.title}" ?`
+    );
+
+    if (!isConfirmed) return;
+
+    const response = await deleteBoard(board?._id, project?._id);
+
+    if (!response?.success) return;
+
+    await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+  }
+
+  const options = [
+    {
+      authorized: isOwnerOrManager,
+      function: handleAddBoardTemplate,
+      icon: <Save size={16} />,
+      name: "Enregistrer le tableau comme modèle",
+    },
+    {
+      authorized: isOwnerOrManager,
+      function: handleDeleteBoard,
+      icon: <Trash2 size={16} />,
+      name: "Supprimer le tableau",
+      remove: true,
+    },
+  ];
+
+  if (!archive) {
+    options.splice(1, 0, {
+      authorized: canArchive,
+      function: handleAddArchive,
+      icon: <Archive size={16} />,
+      name: "Archiver le tableau",
+    });
+  } else {
+    options.splice(1, 0, {
+      authorized: canArchive,
+      function: handleRestoreArchive,
+      icon: <ArchiveRestore size={16} />,
+      name: "Restaurer le tableau",
+    });
+  }
 
   const colors = board?.colors;
 
@@ -201,15 +285,14 @@ export default function BoardHeader({
             </span>
           </div>
         )}
-        {useUserRole(project, ["owner", "manager", "team"]) && (
+        {canArchive && (
           <div className={styles.actionMore}>
-            <EllipsisVertical size={18} onClick={(e) => setMore(true)} />
-            {more && (
-              <BoardMore
-                board={board}
-                project={project}
-                setMore={setMore}
-                archive={archive}
+            <EllipsisVertical size={18} onClick={(e) => setIsMoreOpen(true)} />
+            {isMoreOpen && (
+              <MoreMenu
+                isOpen={isMoreOpen}
+                setIsOpen={setIsMoreOpen}
+                options={options}
               />
             )}
           </div>
@@ -235,6 +318,13 @@ export default function BoardHeader({
             onClick={(e) => setOpenColors(false)}
           ></div>
         </>
+      )}
+      {addBoardTemplate && (
+        <AddBoardTemplate
+          project={project}
+          board={board}
+          setAddTemplate={setAddBoardTemplate}
+        />
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { saveTemplate } from "@/actions/template";
+import { saveBoardTemplate } from "@/actions/boardTemplate";
 import PopupMessage from "@/layouts/PopupMessage";
 import styles from "@/styles/components/templates/add-template.module.css";
 import { bricolageGrostesque } from "@/utils/font";
@@ -11,10 +11,10 @@ const initialState = {
   errors: null,
 };
 
-export default function AddTemplate({ project, setAddTemplate }) {
+export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   const [popup, setPopup] = useState(false);
   const [state, formAction, pending] = useActionState(
-    saveTemplate,
+    saveBoardTemplate,
     initialState
   );
 
@@ -43,7 +43,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <span>Ajouter un template</span>
+          <span>Ajouter un tableau comme template</span>
         </div>
         <form action={formAction} className={styles.form}>
           <input
@@ -55,11 +55,17 @@ export default function AddTemplate({ project, setAddTemplate }) {
           />
           <input
             type="text"
+            id="board-id"
+            name="board-id"
+            defaultValue={board?._id}
+            hidden
+          />
+          <input
+            type="text"
             id="template-name"
             name="template-name"
             placeholder="Nom du template"
           />
-
           <button
             className={bricolageGrostesque.className}
             disabled={pending}
