@@ -22,6 +22,12 @@
     margin-top: 24px;
 }
 
+.templates {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 .template {
     justify-content: space-between;
 }

@@ -27,10 +27,10 @@ export async function getBoardsTemplates() {
   }
 }
 
-export async function useBoardTemplate(templateId) {
+export async function useBoardTemplate(templateId, projectId) {
   try {
     const res = await useAuthFetch(
-      `board-template/use/${templateId}`,
+      `board-template/use/${templateId}?projectId=${projectId}`,
       "POST",
       "application/json"
     );

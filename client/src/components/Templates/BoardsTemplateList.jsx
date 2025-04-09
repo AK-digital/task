@@ -18,7 +18,9 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
   async function handleUseBoardTemplate(e, templateId) {
     e.preventDefault();
 
-    const response = await useBoardTemplate(templateId);
+    const response = await useBoardTemplate(templateId, project?._id);
+
+    console.log(response);
 
     if (!response.success) return;
 
