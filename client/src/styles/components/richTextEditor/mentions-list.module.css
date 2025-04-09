@@ -1,6 +1,6 @@
 .container {
-    position: absolute;
-    z-index: 2002;
+    position: fixed;
+    z-index: 9999;
     background-color: var(--secondary-background-color);
     box-shadow: var(--box-shadow-small);
     border-radius: var(--border-radius-small);
