@@ -89,7 +89,7 @@ export async function useBoardTemplate(req, res, next) {
     }
 
     const newBoard = new BoardModel({
-      projectId: template?.boardId?.projectId,
+      projectId: req.query.projectId,
       title: template?.name,
       color: template?.boardId?.color,
     });
@@ -103,7 +103,7 @@ export async function useBoardTemplate(req, res, next) {
     if (tasks.length > 0) {
       tasks.forEach(async (task) => {
         const newTask = new TaskModel({
-          projectId: template?.boardId?.projectId,
+          projectId: req.query.projectId,
           boardId: savedBoard?._id,
           author: authUser?._id,
           text: task?.text,
