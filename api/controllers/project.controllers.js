@@ -78,19 +78,41 @@ export async function saveProject(req, res, next) {
   }
 }
 
-// Only authors and guests will be able to see the projects
 export async function getProjects(req, res, next) {
   try {
     const authUser = res.locals.user;
 
     const projects = await ProjectModel.aggregate([
       {
-        // Filtrer les projets où l'auteur ou un invité est l'utilisateur connecté
         $match: {
-          "members.user": new mongoose.Types.ObjectId(authUser?._id),
+          "members.user": new mongoose.Types.ObjectId(authUser._id),
         },
       },
-      // On effectue d'abord le lookup pour obtenir les informations des utilisateurs
+      {
+        // Extraire uniquement le member correspondant à l'utilisateur connecté
+        $addFields: {
+          currentUserMember: {
+            $first: {
+              $filter: {
+                input: "$members",
+                as: "member",
+                cond: {
+                  $eq: [
+                    "$$member.user",
+                    new mongoose.Types.ObjectId(authUser._id),
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        // Ajouter un champ temporaire 'userOrder' pour trier
+        $addFields: {
+          userOrder: "$currentUserMember.order",
+        },
+      },
       {
         $lookup: {
           from: "users",
@@ -99,7 +121,6 @@ export async function getProjects(req, res, next) {
           as: "membersData",
         },
       },
-      // Ensuite on restructure le tableau members pour remplacer l'ObjectId par les données utilisateur tout en gardant le rôle
       {
         $addFields: {
           members: {
@@ -107,9 +128,8 @@ export async function getProjects(req, res, next) {
               input: "$members",
               as: "member",
               in: {
-                // On conserve le rôle de la structure originale
                 role: "$$member.role",
-                // On remplace l'ObjectId par l'objet utilisateur complet (sans le mot de passe)
+                order: "$$member.order",
                 user: {
                   $arrayElemAt: [
                     {
@@ -154,11 +174,13 @@ export async function getProjects(req, res, next) {
       {
         $project: {
           tasks: 0,
+          currentUserMember: 0,
+          membersData: 0,
         },
       },
       {
         $sort: {
-          order: 1,
+          userOrder: 1,
         },
       },
     ]);
@@ -672,13 +694,21 @@ export async function removeGuest(req, res, next) {
 
 export const updateProjectsOrder = async (req, res) => {
   try {
+    const authUser = res.locals.user;
     const { projects } = req.body;
 
-    // Mise à jour en masse des ordres
+    // Mise à jour de l'ordre spécifique à ce user dans chaque projet
     const bulkOps = projects.map((project, index) => ({
       updateOne: {
-        filter: { _id: project._id },
-        update: { $set: { order: index } },
+        filter: {
+          _id: project._id,
+          "members.user": authUser._id,
+        },
+        update: {
+          $set: {
+            "members.$.order": index,
+          },
+        },
       },
     }));
 
@@ -686,7 +716,7 @@ export const updateProjectsOrder = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Ordre des projets mis à jour",
+      message: "Ordre des projets mis à jour pour l'utilisateur",
     });
   } catch (error) {
     return res.status(500).json({
