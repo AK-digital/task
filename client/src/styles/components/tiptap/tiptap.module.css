@@ -69,10 +69,15 @@
 
 /* Style des blocs de code */
 
+.content ul,
+.content ol {
+    margin-left: 25px;
+}
+
 .content ul {
-    padding-left: 15px;
     list-style-type: inherit !important;
 }
+
 
 .content pre {
     background: #282c34;

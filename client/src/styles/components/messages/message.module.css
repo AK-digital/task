@@ -100,3 +100,12 @@
     color: var(--accent-color);
     font-weight: 500;
 }
+
+.text ul {
+    list-style-type: disc;
+}
+
+.text ul,
+.text ol {
+    margin-left: 25px;
+}

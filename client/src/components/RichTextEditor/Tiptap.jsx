@@ -167,6 +167,7 @@ export default function Tiptap({
       }),
     ],
     content: value,
+    immediatelyRender: false,
     editorProps: {
       handleKeyDown: (view, e) => {
         // If the user is tagging someone, prevent the arrow keys from moving the cursor

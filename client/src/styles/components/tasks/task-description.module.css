@@ -50,9 +50,13 @@
     margin: 12px 0;
 }
 
-.content ol,
 .content ul {
-    padding: 16px;
+    list-style-type: disc;
+}
+
+.content ul,
+.content ol {
+    margin-left: 25px;
 }
 
 .content a {
