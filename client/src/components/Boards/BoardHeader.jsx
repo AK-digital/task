@@ -136,6 +136,10 @@ export default function BoardHeader({
   }
 
   const debouncedUpdateTask = useDebouncedCallback(async (value) => {
+    await handleSaveTitle(value);
+  }, 600);
+
+  async function handleSaveTitle(value) {
     const response = await updateBoard(
       board?._id,
       board?.projectId,
@@ -146,11 +150,16 @@ export default function BoardHeader({
     if (!response?.success) setTitle(board?.title);
 
     socket.emit("update board", board?._id, board?.projectId);
-  }, 600);
+  }
 
   const handleTitleChange = (e) => {
     const value = e.target.value;
     setTitle(value);
+
+    if (e.key === "Enter") {
+      setEdit(false);
+    }
+
     debouncedUpdateTask(value);
   };
 
@@ -252,9 +261,10 @@ export default function BoardHeader({
               name="title"
               id="title"
               defaultValue={title}
-              onChange={handleTitleChange}
+              autoFocus
+              onBlur={() => setEdit(false)}
+              onKeyDown={handleTitleChange}
             />
-            <div id="modal-layout-opacity" onClick={handleEdit}></div>
           </div>
         ) : (
           <div onClick={handleEdit}>
