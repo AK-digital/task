@@ -24,6 +24,7 @@ import AddBoard from "@/components/Boards/AddBoard";
 import { mutate } from "swr";
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function Boards({ boards, project, tasksData, archive }) {
   const router = useRouter();
@@ -260,6 +261,13 @@ export default function Boards({ boards, project, tasksData, archive }) {
     [findBoardByTaskId, project]
   );
 
+  const canPost = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
+
   return (
     <div className={styles["boards"]}>
       {archive && (
@@ -326,7 +334,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
           ) : null}
         </DragOverlay>
       </DndContext>
-      {!archive && (
+      {!archive && canPost && (
         <div className={styles.options}>
           <AddBoard project={project} />
         </div>

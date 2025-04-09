@@ -30,6 +30,9 @@ const projectSchema = new Schema(
             enum: ["owner", "manager", "team", "customer", "guest"],
             default: "guest",
           },
+          order: {
+            type: Number,
+          },
         },
       ],
     },
@@ -52,10 +55,6 @@ const projectSchema = new Schema(
           required: false,
         },
       },
-    },
-    order: {
-      type: Number,
-      default: 0,
     },
   },
   {

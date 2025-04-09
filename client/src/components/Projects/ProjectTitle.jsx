@@ -143,7 +143,7 @@ export default function ProjectTitle({ project }) {
   };
 
   const handleIsEditing = (e) => {
-    if (!canEdit) return;
+    if (!isOwnerOrManager) return;
 
     setIsEditing((prev) => !prev);
   };
