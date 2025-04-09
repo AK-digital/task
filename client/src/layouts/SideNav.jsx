@@ -72,8 +72,6 @@ export default function SideNav({ projects }) {
       try {
         const response = await updateProjectsOrder(newItems);
 
-        console.log("response", response);
-
         if (!response.success) {
           setProjectItems(projectItems);
           console.error(
