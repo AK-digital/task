@@ -1,15 +1,14 @@
 "use client";
 import styles from "@/styles/components/timeTrackings/dropdown.module.css";
 import { isNotEmpty } from "@/utils/utils";
-import { ChevronDown, ChevronDownCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Options is an array of objects, which contains the following properties:
 // - id: string
 // - label: string
-
 export function Dropdown({ defaultValue, selected, options, query }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -99,7 +98,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
           {selected.length > 4 && (
             <span className={styles.count}>+{selected.length - 4}</span>
           )}
-          <span className={styles.chevron} data-isOpen={isOpen}>
+          <span className={styles.chevron}>
             <ChevronDown size={16} />
           </span>
         </div>

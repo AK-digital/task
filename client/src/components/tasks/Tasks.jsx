@@ -1,14 +1,12 @@
 "use client";
 import styles from "@/styles/components/tasks/tasks.module.css";
 import Task from "./Task";
-import { useDroppable } from "@dnd-kit/core";
 import SelectedTasks from "./SelectedTasks";
 import TasksHeader from "./TasksHeader";
 
 export default function Tasks({
   tasks,
   project,
-  boardId,
   activeId,
   selectedTasks,
   setSelectedTasks,
@@ -29,7 +27,6 @@ export default function Tasks({
           />
         ))}
       </div>
-
       {selectedTasks?.length > 0 && (
         <SelectedTasks
           project={project}

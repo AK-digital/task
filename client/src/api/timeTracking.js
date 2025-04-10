@@ -37,6 +37,40 @@ export async function getTimeTrackings(queries) {
   }
 }
 
+export async function updateTimeTrackingText(trackingId, projectId, text) {
+  try {
+    if (!trackingId || !projectId || !text) {
+      throw new Error("Paramètres manquants");
+    }
+
+    const res = await useAuthFetch(
+      `time-tracking/${trackingId}?projectId=${projectId}`,
+      "PUT",
+      "application/json",
+      { text: text }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de la mise à jour du timer"
+    );
+
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de la mise à jour du timer",
+    };
+  }
+}
+
 export async function timeTrackingStart(taskId, projectId) {
   try {
     const startTime = moment.utc().locale("fr").format();

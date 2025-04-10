@@ -2,14 +2,16 @@
 import styles from "@/styles/components/timeTrackings/time-tracking.module.css";
 import { formatTime } from "@/utils/utils";
 import Image from "next/image";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/fr";
-import { updateTaskText } from "@/actions/task";
 import socket from "@/utils/socket";
 import { useDebouncedCallback } from "use-debounce";
 import { MoreVerticalIcon } from "lucide-react";
 import TimeTrackingMore from "./TimeTrackingMore";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import { updateTaskText } from "@/api/task";
+import { updateTimeTrackingText } from "@/api/timeTracking";
 
 const initialState = {
   status: "pending",
@@ -18,40 +20,66 @@ const initialState = {
   errors: null,
 };
 
-export default function TimeTracking({ tracker, setSelectedTrackers }) {
-  const [inputValue, setInputValue] = useState(tracker?.taskId?.text || "");
+export default function TimeTracking({
+  tracker,
+  setSelectedTrackers,
+  projects,
+}) {
+  const [inputValue, setInputValue] = useState(
+    tracker?.taskId?.text || tracker?.taskText || ""
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [isHover, setIsHover] = useState(false);
   const [isMore, setIsMore] = useState(false);
-  const formRef = useRef(null);
-  const updateTaskTextWithIds = updateTaskText.bind(
-    null,
-    tracker?.taskId?._id,
-    tracker?.taskId?.projectId
+
+  const project = projects?.find(
+    (project) => project?._id === tracker?.projectId?._id
   );
-  const [state, formAction, pending] = useActionState(
-    updateTaskTextWithIds,
-    initialState
-  );
+  const canPut = useUserRole(project, ["owner", "manager", "team", "customer"]);
 
   const date = moment(tracker?.startTime).format("DD/MM/YYYY");
 
-  useEffect(() => {
-    if (state?.status === "success") {
-      socket.emit(
-        "task text update",
-        tracker?.projectId?._id,
-        tracker?.taskId?._id,
+  function handleChange(e) {
+    const value = e.target.value;
+    setInputValue(value);
+    handleDebouncedChange(value);
+  }
+
+  const handleDebouncedChange = useDebouncedCallback((value) => {
+    handleUpdateTaskText(value);
+  }, 600);
+
+  async function handleUpdateTaskText(value) {
+    let response;
+
+    if (tracker?.taskId?.text) {
+      const taskId = tracker?.taskId?._id;
+      const projectId = tracker?.projectId?._id;
+
+      response = await updateTaskText(taskId, projectId, inputValue);
+
+      if (response?.success) {
+        socket.emit(
+          "task text update",
+          tracker?.projectId?._id,
+          tracker?.taskId?._id,
+          inputValue
+        );
+      }
+    } else if (tracker?.taskText) {
+      const projectId = tracker?.projectId?._id;
+
+      response = await updateTimeTrackingText(
+        tracker?._id,
+        projectId,
         inputValue
       );
-    } else {
+    }
+
+    if (!response?.success) {
       setInputValue(tracker?.taskId?.text);
     }
-  }, [state]);
-
-  const handleDebouncedChange = useDebouncedCallback((e) => {
-    formRef?.current?.requestSubmit();
-  }, 500);
+  }
 
   const handleSelectTracker = (e) => {
     const checked = e.target.checked;
@@ -64,7 +92,7 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
   };
 
   function handleIsEditing(e) {
-    if (!tracker?.taskId?.text) return;
+    if (!canPut) return;
 
     setIsEditing((prev) => !prev);
   }
@@ -88,24 +116,17 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
       {/* Task text */}
       <div className={styles.text}>
         {isEditing ? (
-          <form action={formAction} ref={formRef}>
-            <input
-              type="text"
-              id="task"
-              name="text"
-              value={inputValue}
-              onBlur={handleIsEditing}
-              onChange={(e) => {
-                setInputValue(e.target.value);
-                handleDebouncedChange(e);
-              }}
-              autoFocus
-            />
-          </form>
+          <input
+            type="text"
+            id="task"
+            name="text"
+            value={inputValue}
+            onBlur={handleIsEditing}
+            onChange={handleChange}
+            autoFocus
+          />
         ) : (
-          <span onClick={handleIsEditing}>
-            {tracker?.taskId?.text || tracker?.taskText}
-          </span>
+          <span onClick={handleIsEditing}>{inputValue}</span>
         )}
       </div>
       {/* user */}

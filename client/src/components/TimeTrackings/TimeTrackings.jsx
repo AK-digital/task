@@ -62,6 +62,7 @@ export default function TimeTrackings({ trackers, projects }) {
                 return (
                   <TimeTracking
                     tracker={tracker}
+                    projects={projects}
                     setSelectedTrackers={setSelectedTrackers}
                     key={tracker?._id}
                   />

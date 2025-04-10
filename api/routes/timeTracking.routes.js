@@ -11,12 +11,7 @@ router.post(
   timeTrackingControllers.saveTimeTracking
 );
 
-router.get(
-  "/",
-  authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer", "guest"]),
-  timeTrackingControllers.getTimeTrackings
-);
+router.get("/", authMiddlewares.auth, timeTrackingControllers.getTimeTrackings);
 
 router.put(
   "/:id",

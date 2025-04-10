@@ -83,6 +83,42 @@ export async function addTaskToArchive(tasksIds, projectId) {
   }
 }
 
+// Update the text of a given task
+export async function updateTaskText(taskId, projectId, text) {
+  try {
+    if (!text) {
+      throw new Error("Paramètres manquants");
+    }
+
+    const res = await useAuthFetch(
+      `task/${taskId}/text?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { text: text }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message || "Une erreur s'est produite");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+
+    return {
+      success: false,
+      message:
+        err.message ||
+        "Une erreur est survenue lors de la mise à jour de la tâche",
+    };
+  }
+}
+
 export async function removeTaskFromArchive(tasksIds, projectId) {
   try {
     if (tasksIds.length <= 0) {

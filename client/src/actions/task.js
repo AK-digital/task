@@ -42,49 +42,6 @@ export async function saveTask(projectId, prevState, formData) {
   }
 }
 
-// Update the text of a given task
-export async function updateTaskText(taskId, projectId, prevState, formData) {
-  try {
-    const text = formData.get("text");
-
-    if (!text) {
-      throw new Error("Paramètres manquants");
-    }
-
-    const rawData = {
-      text: text,
-    };
-
-    const res = await useAuthFetch(
-      `task/${taskId}/text?projectId=${projectId}`,
-      "PATCH",
-      "application/json",
-      rawData
-    );
-
-    const response = await res.json();
-
-    if (!response.success) {
-      throw new Error(response?.message || "Une erreur s'est produite");
-    }
-
-    return {
-      status: "success",
-      message: "Le texte de la tâche a été mis à jour avec succès",
-    };
-  } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
-    );
-
-    return {
-      status: "failure",
-      message: err?.message,
-    };
-  }
-}
-
 // Update the status of a given task
 export async function updateTaskStatus(taskId, projectId, status) {
   try {

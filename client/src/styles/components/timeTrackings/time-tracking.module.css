@@ -48,12 +48,9 @@
     cursor: text;
 }
 
-.text form {
+.text input {
     position: relative;
     left: -6px;
-}
-
-.text input {
     border: none;
     padding: 6px !important;
     background-color: var(--third-background-color);

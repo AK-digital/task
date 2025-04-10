@@ -1,51 +1,35 @@
 import styles from "@/styles/components/tasks/task-text.module.css";
-import { updateTaskText } from "@/actions/task";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
-import { mutate } from "swr";
 import { useDebouncedCallback } from "use-debounce";
-
-const initialState = {
-  status: "pending",
-  payload: null,
-  message: "",
-  errors: null,
-};
+import { updateTaskText } from "@/api/task";
+import { mutate } from "swr";
 
 export default function TaskText({ task, project, uid, archive }) {
-  const formRef = useRef(null);
   const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState(task?.text || "");
-  const updateTaskTextWithIds = updateTaskText.bind(
-    null,
-    task?._id,
-    task?.projectId
-  );
 
-  const [state, formAction, pending] = useActionState(
-    updateTaskTextWithIds,
-    initialState
-  );
+  async function handleUpdateTaskText(value) {
+    const response = await updateTaskText(task?._id, project?._id, value);
 
-  const debouncedSend = useDebouncedCallback((e) => {
-    formRef?.current?.requestSubmit();
+    if (!response.success) return;
+
+    mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+
+    socket.emit("update task", project?._id);
+  }
+
+  const debouncedSend = useDebouncedCallback((value) => {
+    handleUpdateTaskText(value);
   }, 1000);
 
   const handleChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    debouncedSend(e);
+    debouncedSend(value);
   };
-
-  useEffect(() => {
-    if (state?.status === "success") {
-      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
-
-      socket.emit("update task", project?._id);
-    }
-  }, [state]);
 
   useEffect(() => {
     setInputValue(task?.text);
@@ -67,18 +51,16 @@ export default function TaskText({ task, project, uid, archive }) {
     <div className={styles.container}>
       {!edit && <p onClick={handleEdit}>{inputValue}</p>}
       {edit && (
-        <form action={formAction} ref={formRef}>
-          <input
-            type="text"
-            name="text"
-            id="text"
-            value={inputValue}
-            onChange={handleChange}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
-            onBlur={(e) => setEdit(false)}
-            autoFocus
-          />
-        </form>
+        <input
+          type="text"
+          name="text"
+          id="text"
+          value={inputValue}
+          onChange={handleChange}
+          className={`${bricolageGrostesque.className} ${styles.input}`}
+          onBlur={(e) => setEdit(false)}
+          autoFocus
+        />
       )}
     </div>
   );

@@ -137,10 +137,13 @@
 }
 
 .modal {
-    left: 0;
+    left: 12px;
     top: 40px;
     width: max-content;
     max-width: 234px;
+    padding: 16px;
+    background-color: var(--secondary-background-color);
+    box-shadow: var(--box-shadow-medium);
 }
 
 .modal ul {
