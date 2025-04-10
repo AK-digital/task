@@ -42,7 +42,7 @@ router.patch(
 router.delete(
   "/:id",
   authMiddlewares.auth,
-  checkRole(["owner", "manager"]), // projectId query is required
+  checkRole(["owner", "manager", "team"]), // projectId query is required
   boardControllers.deleteBoard
 );
 

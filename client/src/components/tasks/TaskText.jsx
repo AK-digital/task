@@ -5,6 +5,7 @@ import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { mutate } from "swr";
+import { useDebouncedCallback } from "use-debounce";
 
 const initialState = {
   status: "pending",
@@ -28,10 +29,14 @@ export default function TaskText({ task, project, uid, archive }) {
     initialState
   );
 
+  const debouncedSend = useDebouncedCallback((e) => {
+    formRef?.current?.requestSubmit();
+  }, 1000);
+
   const handleChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    formRef?.current?.requestSubmit();
+    debouncedSend(e);
   };
 
   useEffect(() => {

@@ -13,11 +13,22 @@ export async function saveTimeTracking(req, res, next) {
     });
   }
 
-  console.log(moment.utc(startTime).subtract(2, "hours").format());
+  const task = await TaskModel.findById({ _id: taskId });
+
+  console.log("task", task);
+
+  if (!task) {
+    return res.status(404).send({
+      success: false,
+      message: "Aucune tâche trouvée",
+    });
+  }
+
   const newTimeTracking = new TimeTrackingModel({
     userId: authUser._id,
     projectId: req.query.projectId,
     taskId: taskId,
+    taskText: task.text,
     startTime: moment.utc(startTime).subtract(2, "hours").format(),
     endTime: moment.utc(endTime).subtract(2, "hours").format(),
     duration: new Date(endTime) - new Date(startTime),
@@ -124,6 +135,52 @@ export async function getTimeTrackings(req, res, next) {
   }
 }
 
+export async function updateTimeTrackingText(req, res, next) {
+  try {
+    const { text } = req.body;
+
+    if (!text) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const updatedTimeTracking = await TimeTrackingModel.findByIdAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: {
+          taskText: text,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTimeTracking) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucun temps de suivi trouvé",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Le texte de la tâche a été mis à jour",
+      data: updatedTimeTracking,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function startTimer(req, res, next) {
   try {
     const authUser = res.locals.user;
@@ -136,10 +193,20 @@ export async function startTimer(req, res, next) {
       });
     }
 
+    const task = await TaskModel.findById({ _id: taskId });
+
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucune tâche trouvée",
+      });
+    }
+
     const newTimeTracking = new TimeTrackingModel({
       userId: authUser._id,
       projectId: req.query.projectId,
       taskId: taskId,
+      taskText: task.text,
       startTime: new Date(),
       isRunning: true,
     });

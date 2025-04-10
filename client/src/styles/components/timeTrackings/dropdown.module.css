@@ -17,7 +17,9 @@
 }
 
 .current {
+    position: relative;
     justify-content: center;
+    align-items: center;
     background-color: var(--secondary-background-color);
     padding: 6px 0;
     height: 35px;
@@ -33,6 +35,16 @@
     align-items: center;
     gap: 4px;
     max-width: 140px;
+}
+
+.chevron {
+    position: absolute;
+    right: 8px;
+    transition: 200ms all linear;
+}
+
+.chevron[data-isOpen="true"] {
+    transform: rotate(180deg);
 }
 
 .count {

@@ -29,12 +29,20 @@
 .form input {
     border: none;
     background-color: var(--third-background-color);
+    border: 1px solid var(--third-background-color);
     width: 100% !important;
     max-width: inherit !important;
     padding: 8px;
     color: var(--text-color-muted);
     font-weight: 500;
     text-align: center;
+    transition: all 150ms linear;
+}
+
+.form input:focus {
+    outline: none;
+    border: 1px solid var(--primary-background-color);
+    box-shadow: var(--box-shadow-small);
 }
 
 .form button {

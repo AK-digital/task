@@ -18,6 +18,13 @@ router.get(
   timeTrackingControllers.getTimeTrackings
 );
 
+router.put(
+  "/:id",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer"]),
+  timeTrackingControllers.updateTimeTrackingText
+);
+
 router.post(
   "/start",
   authMiddlewares.auth,

@@ -93,7 +93,7 @@ export default function BoardHeader({
       name: "Enregistrer le tableau comme modèle",
     },
     {
-      authorized: isOwnerOrManager,
+      authorized: canArchive,
       function: handleDeleteBoard,
       icon: <Trash2 size={16} />,
       name: "Supprimer le tableau",

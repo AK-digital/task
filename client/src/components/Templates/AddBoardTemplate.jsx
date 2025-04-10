@@ -43,7 +43,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <span>Ajouter un tableau comme template</span>
+          <span>Enregistrer ce tableau comme modèle</span>
         </div>
         <form action={formAction} className={styles.form}>
           <input
@@ -64,7 +64,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
             type="text"
             id="template-name"
             name="template-name"
-            placeholder="Nom du template"
+            placeholder="Nom du modèle"
           />
           <button
             className={bricolageGrostesque.className}

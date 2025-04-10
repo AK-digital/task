@@ -63,6 +63,12 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
     }
   };
 
+  function handleIsEditing(e) {
+    if (!tracker?.taskId?.text) return;
+
+    setIsEditing((prev) => !prev);
+  }
+
   return (
     <div
       className={styles.container}
@@ -88,7 +94,7 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
               id="task"
               name="text"
               value={inputValue}
-              onBlur={() => setIsEditing(false)}
+              onBlur={handleIsEditing}
               onChange={(e) => {
                 setInputValue(e.target.value);
                 handleDebouncedChange(e);
@@ -97,8 +103,8 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
             />
           </form>
         ) : (
-          <span onClick={() => setIsEditing(true)}>
-            {tracker?.taskId?.text}
+          <span onClick={handleIsEditing}>
+            {tracker?.taskId?.text || tracker?.taskText}
           </span>
         )}
       </div>

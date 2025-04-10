@@ -43,7 +43,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <span>Ajouter un template</span>
+          <span>Enregistrer ce projet comme modèle</span>
         </div>
         <form action={formAction} className={styles.form}>
           <input
@@ -57,7 +57,8 @@ export default function AddTemplate({ project, setAddTemplate }) {
             type="text"
             id="template-name"
             name="template-name"
-            placeholder="Nom du template"
+            placeholder="Nom du modèle"
+            autoFocus
           />
 
           <button

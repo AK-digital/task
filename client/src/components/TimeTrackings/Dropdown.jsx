@@ -1,6 +1,7 @@
 "use client";
 import styles from "@/styles/components/timeTrackings/dropdown.module.css";
 import { isNotEmpty } from "@/utils/utils";
+import { ChevronDown, ChevronDownCircle } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -63,7 +64,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
             selected.slice(0, 4).map((element, idx) => {
               if (selected.length > 1) {
                 return (
-                  <span key={`${element?.id}-${idx}`}>
+                  <span className={styles.item} key={`${element?.id}-${idx}`}>
                     <Image
                       src={
                         element?.logo || element?.picture || "/default-pfp.webp"
@@ -77,7 +78,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                 );
               } else {
                 return (
-                  <span key={`${element?.id}-${idx}`}>
+                  <span className={styles.item} key={`${element?.id}-${idx}`}>
                     <Image
                       src={
                         element?.logo || element?.picture || "/default-pfp.webp"
@@ -93,11 +94,14 @@ export function Dropdown({ defaultValue, selected, options, query }) {
               }
             })
           ) : (
-            <span>{defaultValue}</span>
+            <span className={styles.item}>{defaultValue}</span>
           )}
           {selected.length > 4 && (
             <span className={styles.count}>+{selected.length - 4}</span>
           )}
+          <span className={styles.chevron} data-isOpen={isOpen}>
+            <ChevronDown size={16} />
+          </span>
         </div>
         {/* List */}
         {isOpen && (

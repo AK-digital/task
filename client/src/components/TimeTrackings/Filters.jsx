@@ -56,11 +56,11 @@ export default function Filters({ projects, selectedProjects }) {
     const userIds = new Set();
 
     for (const selectedProject of selectedProjects) {
-      const allUsers = [selectedProject?.author, ...selectedProject?.guests];
+      const allUsers = selectedProject?.members || [];
 
       for (const user of allUsers) {
-        if (user && !userIds.has(user._id)) {
-          userIds.add(user._id);
+        if (user && !userIds.has(user?.user)) {
+          userIds.add(user?.user);
           users.push(user);
         }
       }
@@ -68,9 +68,9 @@ export default function Filters({ projects, selectedProjects }) {
 
     setUsersOptions(
       users.map((user) => ({
-        id: user._id,
-        picture: user.picture,
-        label: `${user.firstName} ${user.lastName}`,
+        id: user?.user?._id,
+        picture: user?.user?.picture,
+        label: `${user?.user?.firstName} ${user?.user?.lastName}`,
       }))
     );
   }, [selectedProjects]);

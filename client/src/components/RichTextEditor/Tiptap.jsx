@@ -64,6 +64,8 @@ export default function Tiptap({
   const [isSent, setIsSent] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
+  const imgRegex = /<img[^>]*>/i;
+
   // Utilisation de useDebouncedCallback pour sauvegarder le draft avec un délai
   const debouncedHandleDraft = useDebouncedCallback(async (htmlContent) => {
     if (isSent === false) {
@@ -243,21 +245,35 @@ export default function Tiptap({
   const handleChange = async (editor) => {
     setPlainText(editor.getHTML());
     setValue(editor.getText());
-    const text = editor.getText();
+    setIsSent(false);
 
+    const hasImg = imgRegex.test(editor.getHTML());
     if (draft) {
-      debouncedHandleDraft(editor.getHTML());
+      if (!hasImg && !editor.getText()) {
+        await deleteDraft(draft?.data?._id, project?._id);
+        setIsSent(true);
+      } else {
+        debouncedHandleDraft(editor.getHTML());
+      }
     }
 
-    // Gérer les mentions
-    const mentionRegex = /(?:^|\s)@([\w]*)$/;
-    const match = mentionRegex.exec(text);
+    // Gérer les mentions - Utiliser la position du curseur pour détecter les mentions
+    const { from } = editor.state.selection;
+
+    // Récupérer le texte autour de la position du curseur
+    const textBeforeCursor = editor.state.doc.textBetween(
+      Math.max(0, from - 20), // Limiter à 20 caractères avant le curseur
+      from
+    );
+
+    // Vérifier si il y a un @ suivi de caractères avant le curseur
+    const mentionRegex = /@(\w*)$/;
+    const match = mentionRegex.exec(textBeforeCursor);
 
     if (match) {
       setIsTaggedUsers(true);
 
       // Récupérer la position du caret
-      const { from } = editor.state.selection;
       const coords = editor.view.coordsAtPos(from);
 
       // Récupérer la position de l'éditeur
@@ -458,8 +474,6 @@ export default function Tiptap({
   };
 
   const checkIfDisabled = () => {
-    const imgRegex = /<img[^>]*>/i;
-
     if (!plainText && !value) {
       return true;
     }

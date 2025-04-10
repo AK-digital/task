@@ -18,6 +18,10 @@ const timeTrackingSchema = new Schema(
       ref: "Task",
       required: true,
     },
+    taskText: {
+      type: String,
+      required: true,
+    },
     startTime: {
       type: Date,
       required: true,

@@ -4,7 +4,6 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import "./config/db.js";
-import "./socket.js";
 import cors from "cors";
 import passport from "passport";
 import authRouter from "./routes/auth.routes.js";

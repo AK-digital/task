@@ -9,6 +9,8 @@ import socket from "@/utils/socket";
 import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
 import { checkRole } from "@/utils/utils";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import { useDroppable } from "@dnd-kit/core";
 
 const initialState = {
   status: "pending",
@@ -31,6 +33,13 @@ export default function Board({
   const [open, setOpen] = useState(true);
   const [isWritting, setIsWritting] = useState(false);
   const [optimisticColor, setOptimisticColor] = useState(board?.color);
+
+  const canPost = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
 
   // Load the stored value after component mounts
   useEffect(() => {
@@ -56,11 +65,17 @@ export default function Board({
     }
   }, [state]);
 
+  const { setNodeRef } = useDroppable({
+    id: board?._id,
+  });
+
   return (
     <div
       className={styles.container}
       data-board={board?._id}
       style={{ borderLeft: `solid 3px ${board?.color}` }}
+      ref={setNodeRef}
+      data-board-id={board?._id}
     >
       {/* Board header - Utilisation de la classe sticky */}
       <div className={styles.wrapper}>
@@ -91,7 +106,7 @@ export default function Board({
           />
         )}
       </div>
-      {checkRole(project, ["owner", "manager", "team", "customer"], uid) && (
+      {canPost && (
         <div className={styles.footer}>
           {!archive && (
             <div className={styles.add}>

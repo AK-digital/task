@@ -14,17 +14,10 @@ export default function Tasks({
   setSelectedTasks,
   archive,
 }) {
-  const { setNodeRef } = useDroppable({
-    id: boardId,
-  });
   return (
-    <div
-      className={styles.container}
-      suppressHydrationWarning
-      data-board-id={boardId}
-    >
+    <div className={styles.container} suppressHydrationWarning>
       {tasks && tasks?.length > 0 && <TasksHeader />}
-      <div className={styles.list} ref={setNodeRef}>
+      <div className={styles.list}>
         {tasks?.map((task) => (
           <Task
             key={task?._id}
