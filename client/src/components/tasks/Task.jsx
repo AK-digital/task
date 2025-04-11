@@ -1,8 +1,5 @@
 "use client";
 import styles from "@/styles/components/tasks/task.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
-import { faComment } from "@fortawesome/free-regular-svg-icons";
 import TaskStatus from "./TaskStatus";
 import TaskPriority from "./TaskPriority";
 import TaskDeadline from "./TaskDeadline";
@@ -17,7 +14,8 @@ import { usePathname } from "next/navigation";
 import TaskMore from "./TaskMore";
 import TaskEstimate from "./TaskEstimate";
 import { AuthContext } from "@/context/auth";
-import { checkRole } from "@/utils/utils";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import { GripVertical, MessageCircle } from "lucide-react";
 
 export default function Task({
   task,
@@ -30,6 +28,14 @@ export default function Task({
   const pathname = usePathname();
   const taskId = pathname.split("/").pop();
   const [openedTask, setOpenedTask] = useState(taskId);
+
+  const canEdit = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
+  const canDrag = useUserRole(project, ["owner", "manager", "team"]);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task?._id });
@@ -71,56 +77,45 @@ export default function Task({
       data-openned={openedTask === task?._id}
       data-done={task?.status === "Terminée"}
     >
-      <div className={styles.content}>
-        <div className={styles.wrapper}>
-          {checkRole(
-            project,
-            ["owner", "manager", "team", "customer"],
-            uid
-          ) && (
-            <div>
-              <input
-                type="checkbox"
-                name="task"
-                id={`task-${task?._id}`}
-                data-value={task?._id}
-                defaultValue={task?._id}
-                className={styles.checkbox}
-                onClick={handleSelectedTask}
-              />
-            </div>
-          )}
-          {checkRole(project, ["owner", "manager", "team"], uid) && (
-            <div {...attributes} {...listeners} suppressHydrationWarning>
-              {/* <GripVertical width={60} height={60} /> */}
-              <FontAwesomeIcon icon={faGripVertical} />
-            </div>
-          )}
-          <TaskText task={task} project={project} uid={uid} archive={archive} />
-
-          <div className={styles.comment} onClick={handleTaskClick}>
-            <FontAwesomeIcon icon={faComment} />
-            {task?.messages?.length > 0 && (
-              <span className={styles.count}>{task?.messages?.length}</span>
-            )}
-          </div>
-
-          <TaskResponsibles task={task} project={project} archive={archive} />
-          <div className={styles.options}>
-            <TaskStatus task={task} project={project} uid={uid} />
-            <TaskPriority task={task} project={project} uid={uid} />
-          </div>
-          <TaskDeadline task={task} project={project} uid={uid} />
-          <TaskEstimate task={task} project={project} uid={uid} />
-          {!archive && <TaskTimer task={task} project={project} uid={uid} />}
-          <TaskRemove
-            task={task}
-            project={project}
-            uid={uid}
-            archive={archive}
+      {canEdit && (
+        <div className={`${styles.checkbox} ${styles.row}`}>
+          <input
+            type="checkbox"
+            name="task"
+            id={`task-${task?._id}`}
+            data-value={task?._id}
+            defaultValue={task?._id}
+            onClick={handleSelectedTask}
           />
         </div>
+      )}
+      {canDrag && (
+        <div
+          {...attributes}
+          {...listeners}
+          suppressHydrationWarning
+          className={`${styles.grip} ${styles.row}`}
+        >
+          <GripVertical size={20} />
+        </div>
+      )}
+      <TaskText task={task} project={project} uid={uid} archive={archive} />
+      <div
+        className={`${styles.comment} ${styles.row}`}
+        onClick={handleTaskClick}
+      >
+        <MessageCircle size={24} fillOpacity={0} />
+        {task?.messages?.length > 0 && (
+          <span className={styles.count}>{task?.messages?.length}</span>
+        )}
       </div>
+      <TaskResponsibles task={task} project={project} archive={archive} />
+      <TaskStatus task={task} project={project} uid={uid} />
+      <TaskPriority task={task} project={project} uid={uid} />
+      <TaskDeadline task={task} project={project} uid={uid} />
+      <TaskEstimate task={task} project={project} uid={uid} />
+      {!archive && <TaskTimer task={task} project={project} uid={uid} />}
+      <TaskRemove task={task} project={project} uid={uid} archive={archive} />
       {openedTask === task?._id && (
         <TaskMore
           task={task}

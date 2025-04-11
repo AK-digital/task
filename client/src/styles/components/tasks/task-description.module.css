@@ -19,8 +19,9 @@
 }
 
 .preview {
-    border: 1.5px solid var(--text-color-muted);
+    position: relative;
     border-radius: var(--border-radius-small);
+    box-shadow: var(--box-shadow-small);
     padding: 16px;
     font-size: var(--text-size-normal);
     cursor: pointer;
@@ -57,6 +58,10 @@
 .content ul,
 .content ol {
     margin-left: 25px;
+}
+
+.content strong {
+    font-weight: bold;
 }
 
 .content a {

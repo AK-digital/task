@@ -3,17 +3,3 @@
     border-radius: 20px;
 
 }
-
-.container ul {
-    display: flex;
-    flex-direction: column;
-}
-
-.container li form {
-    width: 100%;
-}
-
-
-.list>div:nth-last-child(1) {
-    border-bottom: none;
-}

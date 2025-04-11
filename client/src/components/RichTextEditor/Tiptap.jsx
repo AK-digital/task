@@ -282,8 +282,8 @@ export default function Tiptap({
 
       // Calculer la position relative à l'éditeur
       setMentionPosition({
-        top: coords.top - editorRect.top + 280, // Ajouter un petit décalage pour un meilleur affichage
-        left: coords.left - editorRect.left + 20,
+        top: coords.top - editorRect.top, // Ajouter un petit décalage pour un meilleur affichage
+        left: coords.left - editorRect.left,
       });
     } else {
       setIsTaggedUsers(false);

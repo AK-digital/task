@@ -14,19 +14,17 @@ export default function Tasks({
 }) {
   return (
     <div className={styles.container} suppressHydrationWarning>
-      {tasks && tasks?.length > 0 && <TasksHeader />}
-      <div className={styles.list}>
-        {tasks?.map((task) => (
-          <Task
-            key={task?._id}
-            task={task}
-            project={project}
-            isDragging={task?._id === activeId}
-            setSelectedTasks={setSelectedTasks}
-            archive={archive}
-          />
-        ))}
-      </div>
+      {tasks && tasks?.length > 0 && <TasksHeader project={project} />}
+      {tasks?.map((task) => (
+        <Task
+          key={task?._id}
+          task={task}
+          project={project}
+          isDragging={task?._id === activeId}
+          setSelectedTasks={setSelectedTasks}
+          archive={archive}
+        />
+      ))}
       {selectedTasks?.length > 0 && (
         <SelectedTasks
           project={project}

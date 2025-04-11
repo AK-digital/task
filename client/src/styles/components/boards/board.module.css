@@ -5,6 +5,7 @@
     border-bottom-left-radius: var(--border-radius-medium);
     display: flex;
     flex-direction: column;
+
 }
 
 .wrapper {

@@ -1,6 +1,5 @@
 "use server";
-import { handleDeleteCookies, logout, refreshToken } from "@/api/auth";
-import { getAccessToken, getRefreshToken } from "./getCookies";
+import { getAccessToken } from "./getCookies";
 
 // Function to perform a fetch request without authentication
 export async function useFetch(endpoint, options = {}) {
