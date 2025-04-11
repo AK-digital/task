@@ -1,5 +1,4 @@
 .container {
     position: relative;
-    border-radius: 20px;
-
+    background-color: var(--secondary-background-color);
 }

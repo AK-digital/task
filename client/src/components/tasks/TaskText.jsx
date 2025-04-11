@@ -1,4 +1,4 @@
-import styles from "@/styles/components/tasks/task.module.css";
+import styles from "@/styles/components/tasks/task-text.module.css";
 import { useEffect, useState } from "react";
 import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
@@ -48,7 +48,7 @@ export default function TaskText({ task, project, uid, archive }) {
   }
 
   return (
-    <div className={`${styles.text}`}>
+    <div className={`${styles.container}`}>
       {!edit && <span onClick={handleEdit}>{inputValue}</span>}
       {edit && (
         <input

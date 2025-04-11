@@ -1,19 +1,20 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
-import { revalidateTag } from "next/cache";
 
 export async function saveTask(projectId, prevState, formData) {
   try {
-    const rawFormData = {
-      boardId: formData.get("board-id"),
-      text: formData.get("new-task"),
-    };
+    const boardId = formData.get("board-id");
+    const text = formData.get("new-task");
+
+    if (!projectId || !boardId || !text) {
+      throw new Error("Paramètres manquants");
+    }
 
     const res = await useAuthFetch(
       `task?projectId=${projectId}`,
       "POST",
       "application/json",
-      rawFormData
+      { boardId: boardId, text: text }
     );
 
     const response = await res.json();
@@ -25,19 +26,17 @@ export async function saveTask(projectId, prevState, formData) {
       );
     }
 
-    // revalidateTag("tasks");
-
-    return {
-      status: "success",
-    };
+    return response;
   } catch (err) {
     console.log(
-      err.message || "Une erreur est survenue lors de la création du tableau"
+      err.message || "Une erreur est survenue lors de la création de la tâche"
     );
 
     return {
-      status: "failure",
-      message: err.message,
+      success: false,
+      message:
+        err.message ||
+        "Une erreur est survenue lors de la création de la tâche",
     };
   }
 }

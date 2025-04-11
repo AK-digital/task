@@ -1,19 +1,18 @@
 "use client";
 import styles from "@/styles/components/boards/board.module.css";
 import Tasks from "../tasks/Tasks";
-import { useState, useEffect, useRef, useActionState, useContext } from "react";
+import { useState, useEffect, useRef, useActionState } from "react";
 import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
 import socket from "@/utils/socket";
 import { mutate } from "swr";
-import { AuthContext } from "@/context/auth";
-import { checkRole } from "@/utils/utils";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { useDroppable } from "@dnd-kit/core";
+import { TaskPending } from "../tasks/TaskPending";
 
 const initialState = {
-  status: "pending",
+  success: null,
   payload: null,
   message: "",
   errors: null,
@@ -28,8 +27,12 @@ export default function Board({
   setSelectedTasks,
   archive,
 }) {
-  const { uid } = useContext(AuthContext);
+  const { setNodeRef } = useDroppable({
+    id: board?._id,
+  });
   const inputRef = useRef(null);
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [isWritting, setIsWritting] = useState(false);
   const [optimisticColor, setOptimisticColor] = useState(board?.color);
@@ -56,18 +59,17 @@ export default function Board({
   );
 
   useEffect(() => {
-    if (state?.status === "success") {
+    if (state?.success === true) {
+      setIsLoading(true);
       inputRef?.current?.focus();
       setIsWritting(false);
-      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
-      socket.emit("update task", project?._id);
+      mutate(`/task?projectId=${project?._id}&archived=${archive}`).then(() => {
+        socket.emit("update task", project?._id);
+        setIsLoading(false);
+      });
     }
   }, [state]);
-
-  const { setNodeRef } = useDroppable({
-    id: board?._id,
-  });
 
   return (
     <div
@@ -78,34 +80,32 @@ export default function Board({
       data-board-id={board?._id}
     >
       {/* Board header - Utilisation de la classe sticky */}
-      <div className={styles.wrapper}>
-        <BoardHeader
-          board={board}
-          open={open}
-          setOpen={setOpen}
+      <BoardHeader
+        board={board}
+        open={open}
+        setOpen={setOpen}
+        tasks={tasks}
+        project={project}
+        setOptimisticColor={setOptimisticColor}
+        optimisticColor={optimisticColor}
+        selectedTasks={selectedTasks}
+        setSelectedTasks={setSelectedTasks}
+        archive={archive}
+      />
+      {/* Board content */}
+      {open && (
+        <Tasks
           tasks={tasks}
           project={project}
-          setOptimisticColor={setOptimisticColor}
+          boardId={board?._id}
+          activeId={activeId}
           optimisticColor={optimisticColor}
           selectedTasks={selectedTasks}
           setSelectedTasks={setSelectedTasks}
           archive={archive}
         />
-
-        {/* Board content */}
-        {open && (
-          <Tasks
-            tasks={tasks}
-            project={project}
-            boardId={board?._id}
-            activeId={activeId}
-            optimisticColor={optimisticColor}
-            selectedTasks={selectedTasks}
-            setSelectedTasks={setSelectedTasks}
-            archive={archive}
-          />
-        )}
-      </div>
+      )}
+      {isLoading && <TaskPending text={inputValue} />}
       {canPost && (
         <div className={styles.footer}>
           {!archive && (
@@ -129,6 +129,7 @@ export default function Board({
                   maxLength={255}
                   ref={inputRef}
                   onChange={(e) => {
+                    setInputValue(e.target.value);
                     if (e.target.value.length > 0) {
                       setIsWritting(true);
                     } else {

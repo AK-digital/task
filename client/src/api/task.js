@@ -1,6 +1,5 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
-import { revalidateTag } from "next/cache";
 
 export async function getTasks(projectId, archived) {
   try {
