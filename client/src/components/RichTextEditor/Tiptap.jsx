@@ -389,6 +389,7 @@ export default function Tiptap({
     await mutate(`/task?projectId=${project?._id}&archived=false`);
 
     socket.emit("update message", task?.projectId);
+    socket.emit("update task", task?.projectId);
 
     const messageNotif = {
       title: `${user?.firstName} vous a mentionné(e) dans une conversation`,

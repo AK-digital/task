@@ -35,6 +35,7 @@ export default function Message({ task, message, project, mutateMessage }) {
     if (!response?.success) {
       setIsLoading(false);
     }
+
     await mutateMessage();
     mutate(`/task?projectId=${project?._id}&archived=false`);
     socket.emit("update message", message?.projectId);
