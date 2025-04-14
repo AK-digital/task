@@ -32,4 +32,11 @@ router.delete(
   reponseControllers.deleteMessage
 );
 
+router.patch(
+  "/:id/read",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer", "guest"]),
+  reponseControllers.updateReadBy
+);
+
 export default router;
