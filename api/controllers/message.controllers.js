@@ -312,7 +312,7 @@ export async function updateReadBy(req, res, next) {
   try {
     const authUser = res.locals.user;
 
-    const updatedMessage = MessageModel.findByIdAndUpdate(
+    const updatedMessage = await MessageModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $addToSet: { readBy: authUser?._id },

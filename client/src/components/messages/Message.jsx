@@ -31,11 +31,9 @@ export default function Message({ task, message, project, mutateMessage }) {
     handleReadBy();
   }, [])
 
-  console.log(message);
   async function handleReadBy() {
-    if(uid !== author?._id || message?.readBy?.includes(uid)){
+    if(uid !== author?._id && !message?.readBy?.includes(uid)){
       const response = await updateReadBy(project?._id, message?._id);
-      console.log(response);
     }
   }
 
