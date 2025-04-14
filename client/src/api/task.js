@@ -30,6 +30,35 @@ export async function getTasks(projectId, archived) {
   }
 }
 
+export async function getMyTasks(){
+  try {
+    const res = await useAuthFetch(
+      `task?myTasks=true`,
+      "GET",
+      "application/json",
+      null,
+      "tasks"
+    );
+
+    if (res.status === 404) {
+      return [];
+    }
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response?.data;
+  } catch (err) {
+    console.log(
+      err.message ||
+        "Une erreur est survenue lors de la récupération des projets"
+    );
+  }
+}
+
 export async function getTask(taskId, projectId) {
   try {
     await useAuthFetch(
