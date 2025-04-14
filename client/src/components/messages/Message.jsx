@@ -1,6 +1,6 @@
 "use client";
 import styles from "@/styles/components/messages/message.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -22,25 +22,26 @@ export default function Message({ task, message, project, mutateMessage }) {
   const [more, setMore] = useState(false);
   moment.locale("fr");
   const author = message?.author;
-  const isUpdated = message?.createdAt !== message?.updatedAt;
+  // const isUpdated = message?.createdAt !== message?.updatedAt;
 
   const date = moment(message?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
-  useEffect(() => {
-    handleReadBy();
-  }, [])
+  const handleReadBy = useCallback(async () => {
+    if (uid === author?._id) return;
 
-  async function handleReadBy() {
-    if(uid !== author?._id && !message?.readBy?.includes(uid)){
+    if (!message?.readBy?.includes(uid)) {
       const response = await updateReadBy(project?._id, message?._id);
-      if(!response.success) return 
-
-      mutate(`/task?projectId=${project?._id}&archived=false`);
+      console.log(response);
+      if (!response.success) return;
 
       socket.emit("update task", project?._id);
     }
-  }
+  }, [uid, author?._id, message?.readBy]);
+
+  useEffect(() => {
+    handleReadBy();
+  }, []);
 
   async function handleDeleteMessage() {
     setMore(false);
@@ -52,8 +53,9 @@ export default function Message({ task, message, project, mutateMessage }) {
     }
 
     await mutateMessage();
-    mutate(`/task?projectId=${project?._id}&archived=false`);
+
     socket.emit("update message", message?.projectId);
+    socket.emit("update task", project?._id);
     setIsLoading(false);
   }
 
@@ -86,7 +88,7 @@ export default function Message({ task, message, project, mutateMessage }) {
                   {author?.firstName + " " + author?.lastName}
                 </span>
                 <span className={styles.date}>{formattedDate}</span>
-                {isUpdated && <span className={styles.updated}>Modifié</span>}
+                {/* {isUpdated && <span className={styles.updated}>Modifié</span>} */}
               </div>
               <div className={styles.ellipsis}>
                 {uid === author?._id && (

@@ -20,7 +20,6 @@ import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
 import { useDebouncedCallback } from "use-debounce";
-import { set } from "zod";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
@@ -269,6 +268,7 @@ export default function ProjectOptions({ project }) {
             >
               Supprimer ce projet
             </button>
+            <button>Enregistrer</button>
           </div>
 
           {/* Right Column */}

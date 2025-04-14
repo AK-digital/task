@@ -140,7 +140,7 @@
     z-index: 1000;
 }
 
-.messageIcon[data-is-read="false"] {
+.messageIcon[data-is-unread="true"] {
     background-color: var(--accent-color);
-    color: var(--text-lighter-color);
+    color: white;
 }

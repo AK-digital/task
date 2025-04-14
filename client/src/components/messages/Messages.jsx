@@ -24,6 +24,10 @@ export default function Messages({ task, project }) {
     messagesWithIds
   );
 
+  useEffect(() => {
+    mutate();
+  }, []);
+
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
