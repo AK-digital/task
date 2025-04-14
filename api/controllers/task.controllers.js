@@ -79,6 +79,10 @@ export async function getTasks(req, res, next) {
           select: "-password -role",
         },
       })
+      .populate({
+        path: "messages",
+        select: "readBy",
+      })
       .exec();
 
     if (tasks.length <= 0) {

@@ -97,28 +97,6 @@ export async function updateMessage(
   }
 }
 
-export async function deleteMessage(projectId, messageId) {
-  try {
-    const res = await useAuthFetch(
-      `message/${messageId}?projectId=${projectId}`,
-      "DELETE",
-      "application/json"
-    );
-
-    const response = await res.json();
-
-    if (!response?.success) {
-      throw new Error(response?.message || "Une erreur est survenue");
-    }
-
-    return response;
-  } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la suppression du message"
-    );
-  }
-}
-
 export async function updateReadBy(
   projectId, 
   messageId,
@@ -145,5 +123,27 @@ export async function updateReadBy(
       success: false,
       message: err.message || "Une erreur est survenue",
     }
+  }
+}
+
+export async function deleteMessage(projectId, messageId) {
+  try {
+    const res = await useAuthFetch(
+      `message/${messageId}?projectId=${projectId}`,
+      "DELETE",
+      "application/json"
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de la suppression du message"
+    );
   }
 }

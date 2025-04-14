@@ -34,6 +34,11 @@ export default function Message({ task, message, project, mutateMessage }) {
   async function handleReadBy() {
     if(uid !== author?._id && !message?.readBy?.includes(uid)){
       const response = await updateReadBy(project?._id, message?._id);
+      if(!response.success) return 
+
+      mutate(`/task?projectId=${project?._id}&archived=false`);
+
+      socket.emit("update task", project?._id);
     }
   }
 

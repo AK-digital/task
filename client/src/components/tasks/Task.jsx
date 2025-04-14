@@ -37,6 +37,14 @@ export default function Task({
   ]);
   const canDrag = useUserRole(project, ["owner", "manager", "team"]);
 
+  let messagesRead = true;
+  task.messages.forEach((message) => {
+    console.log(message);
+    if(!message.readBy.includes(uid)){
+      messagesRead = false;
+    }
+  })
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task?._id });
 
@@ -106,7 +114,7 @@ export default function Task({
       >
         <MessageCircle size={24} fillOpacity={0} />
         {task?.messages?.length > 0 && (
-          <span className={styles.count}>{task?.messages?.length}</span>
+          <span className={`${styles.count} ${styles.messageIcon}`} data-is-read={messagesRead}>{task?.messages?.length}</span>
         )}
       </div>
       <TaskResponsibles task={task} project={project} archive={archive} />

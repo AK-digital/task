@@ -25,18 +25,18 @@ router.put(
   reponseControllers.updateMessage
 );
 
-router.delete(
-  "/:id",
-  authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
-  reponseControllers.deleteMessage
-);
-
 router.patch(
   "/:id/read",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer", "guest"]),
   reponseControllers.updateReadBy
+);
+
+router.delete(
+  "/:id",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
+  reponseControllers.deleteMessage
 );
 
 export default router;
