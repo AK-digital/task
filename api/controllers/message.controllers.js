@@ -45,6 +45,7 @@ export async function saveMessage(req, res, next) {
       author: authUser?._id,
       message: messageWithImg ?? message,
       taggedUsers: uniqueTaggedUsers,
+      readBy: [authUser._id],
     });
 
     const savedMessage = await newMessage.save();
@@ -314,7 +315,7 @@ export async function updateReadBy(req, res, next) {
     const updatedMessage = MessageModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
-        $addToSet: { readBy: authUser._id },
+        $addToSet: { readBy: authUser?._id },
       },
       {
         new: true,
