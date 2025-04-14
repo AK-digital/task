@@ -15,7 +15,6 @@ router.post(
 router.get(
   "/",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer", "guest"]), // projectId query is required
   taskControllers.getTasks
 );
 

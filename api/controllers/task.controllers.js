@@ -53,37 +53,53 @@ export async function saveTask(req, res, next) {
 // Only authors and guets will be able to get the tasks
 export async function getTasks(req, res, next) {
   try {
-    const { archived } = req.query;
+    const { archived, myTasks, projectId } = req.query;
 
-    const tasks = await TaskModel.find({
-      projectId: req.query.projectId,
-      archived: archived,
-    })
-      .sort({ order: "asc" })
-      .populate({
-        path: "responsibles",
-        select: "-password -role", // Exclure le champ `password` des responsibles
+    let tasks;
+    if(!myTasks){
+      if(!archived || !projectId){
+        return res.status(400).send({
+          success: false,
+          message: "Paramètres manquants",
+        })
+      }
+
+      tasks = await TaskModel.find({
+        projectId: projectId,
+        archived: archived,
       })
-      .populate({
-        path: "author",
-        select: "-password -role", // Exclure le champ `password` des responsibles
-      })
-      .populate({
-        path: "description.author", // Accès à l'auteur de la description
-        select: "-password -role", // Exclure les champs sensibles
-      })
-      .populate({
-        path: "timeTrackings",
-        populate: {
-          path: "userId",
-          select: "-password -role",
-        },
-      })
-      .populate({
-        path: "messages",
-        select: "readBy",
-      })
-      .exec();
+        .sort({ order: "asc" })
+        .populate({
+          path: "responsibles",
+          select: "-password -role", // Exclure le champ `password` des responsibles
+        })
+        .populate({
+          path: "author",
+          select: "-password -role", // Exclure le champ `password` des responsibles
+        })
+        .populate({
+          path: "description.author", // Accès à l'auteur de la description
+          select: "-password -role", // Exclure les champs sensibles
+        })
+        .populate({
+          path: "timeTrackings",
+          populate: {
+            path: "userId",
+            select: "-password -role",
+          },
+        })
+        .populate({
+          path: "messages",
+          select: "readBy",
+        })
+        .exec();
+    } else{
+      const authUser = res.locals.user;
+
+      tasks = await TaskModel.find({
+        responsibles : authUser._id,
+      });
+    }
 
     if (tasks.length <= 0) {
       return res.status(404).send({
