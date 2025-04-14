@@ -19,8 +19,6 @@ import { bricolageGrostesque } from "@/utils/font";
 import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
-import { useDebouncedCallback } from "use-debounce";
-import { set } from "zod";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
@@ -106,12 +104,6 @@ export default function ProjectOptions({ project }) {
     mutate(`/project/${project?._id}`);
   }
 
-  const debounceChange = useDebouncedCallback(async (e) => {
-    const form = formRef.current;
-
-    form.requestSubmit();
-  }, 1500);
-
   return (
     <div className={styles.container}>
       <div className={styles.back} onClick={() => router.back()}>
@@ -121,7 +113,6 @@ export default function ProjectOptions({ project }) {
         action={formAction}
         className={styles.form}
         ref={formRef}
-        onChange={debounceChange}
       >
         <input type="hidden" name="project-id" defaultValue={project?._id} />
 
@@ -262,13 +253,21 @@ export default function ProjectOptions({ project }) {
               </div>
             </div>
             {/* Delete project */}
-            <button
-              type="button"
-              onClick={handleDeleteProject}
-              className={`${styles.delete} ${bricolageGrostesque.className}`}
-            >
-              Supprimer ce projet
-            </button>
+            <div className={styles.updateButtons}>
+              <button
+                type="button"
+                onClick={handleDeleteProject}
+                className={`${styles.delete} ${bricolageGrostesque.className}`}
+              >
+                Supprimer ce projet
+              </button>
+              <button
+                type="submit"
+                className={`${styles.save} ${bricolageGrostesque.className}`}
+              >
+                Enregistrer les modifications
+              </button>
+            </div>
           </div>
 
           {/* Right Column */}

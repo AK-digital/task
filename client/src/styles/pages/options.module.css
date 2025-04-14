@@ -172,6 +172,11 @@
     background: transparent;
 }
 
+.updateButtons {
+    display: flex;
+    justify-content: space-between;
+}
+
 /* RIGHT SIDE */
 
 .column:nth-child(2) .content {
