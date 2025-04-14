@@ -45,6 +45,7 @@ export async function saveMessage(req, res, next) {
       author: authUser?._id,
       message: messageWithImg ?? message,
       taggedUsers: uniqueTaggedUsers,
+      readBy: [authUser._id],
     });
 
     const savedMessage = await newMessage.save();
@@ -234,6 +235,41 @@ export async function updateMessage(req, res, next) {
       success: true,
       message: "Réponse modifié avec succès",
       data: updatedMessage,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateReadBy(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+
+    const updatedMessage = await MessageModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $addToSet: { readBy: authUser?._id },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    )
+
+    if (!updatedMessage) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier une réponse qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "ReadBy du message mis à jour correctement",
+      data: updateMessage,
     });
   } catch (err) {
     return res.status(500).send({

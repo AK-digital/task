@@ -25,6 +25,10 @@ const messageSchema = new Schema(
     files: {
       type: [String],
     },
+    readBy: {
+      type: [Schema.Types.ObjectId],
+      ref: "User"
+    },
   },
   {
     timestamps: true,

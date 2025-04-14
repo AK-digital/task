@@ -1,6 +1,6 @@
 "use client";
 import styles from "@/styles/components/messages/message.module.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,7 +9,7 @@ import {
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { deleteMessage } from "@/api/message";
+import { deleteMessage, updateReadBy } from "@/api/message";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import Tiptap from "../RichTextEditor/Tiptap";
@@ -26,6 +26,21 @@ export default function Message({ task, message, project, mutateMessage }) {
 
   const date = moment(message?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
+
+  useEffect(() => {
+    handleReadBy();
+  }, [])
+
+  async function handleReadBy() {
+    if(uid !== author?._id && !message?.readBy?.includes(uid)){
+      const response = await updateReadBy(project?._id, message?._id);
+      if(!response.success) return 
+
+      mutate(`/task?projectId=${project?._id}&archived=false`);
+
+      socket.emit("update task", project?._id);
+    }
+  }
 
   async function handleDeleteMessage() {
     setMore(false);

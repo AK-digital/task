@@ -25,6 +25,13 @@ router.put(
   reponseControllers.updateMessage
 );
 
+router.patch(
+  "/:id/read",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer", "guest"]),
+  reponseControllers.updateReadBy
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,
