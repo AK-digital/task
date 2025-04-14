@@ -115,6 +115,20 @@ export async function removeBoardFromArchive(boardId, projectId) {
   }
 }
 
+export async function updateBoardOrder() {
+  try {
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de la mise à jour des tâches"
+    );
+
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue lors de la suppression",
+    };
+  }
+}
+
 export async function deleteBoard(boardId, projectId) {
   try {
     if (!boardId) throw new Error("Paramètres manquants");

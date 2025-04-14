@@ -218,6 +218,36 @@ export async function removeBoardFromArchive(req, res, next) {
   }
 }
 
+export async function updateBoardOrder(req, res, next) {
+  try {
+    const { boards } = req.body;
+
+    if (boards?.length < 1) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Paramètres manquants" });
+    }
+
+    const bulkOps = boards.map((board) => ({
+      updateOne: {
+        filter: { _id: board._id },
+        update: { $set: { order: board.order } },
+      },
+    }));
+
+    return res.status(200).send({
+      success: true,
+      message: "Ordre des tableaux mis à jour avec succès",
+      data: bulkOps,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function deleteBoard(req, res, next) {
   try {
     const deletedBoard = await BoardModel.findByIdAndDelete({
