@@ -97,10 +97,7 @@ export async function updateMessage(
   }
 }
 
-export async function updateReadBy(
-  projectId, 
-  messageId,
-){
+export async function updateReadBy(projectId, messageId) {
   try {
     const res = await useAuthFetch(
       `message/${messageId}/read?projectId=${projectId}`,
@@ -122,7 +119,7 @@ export async function updateReadBy(
     return {
       success: false,
       message: err.message || "Une erreur est survenue",
-    }
+    };
   }
 }
 
@@ -145,5 +142,10 @@ export async function deleteMessage(projectId, messageId) {
     console.log(
       err.message || "Une erreur est survenue lors de la suppression du message"
     );
+
+    return {
+      success: false,
+      message: err.message || "Une erreur est survenue",
+    };
   }
 }

@@ -26,11 +26,6 @@ export async function getProject(id) {
   }
 }
 
-export async function revalidateProject(id) {
-  revalidateTag(`project`);
-  revalidateTag("project-invitations");
-}
-
 export async function getProjects() {
   try {
     const res = await useAuthFetch(

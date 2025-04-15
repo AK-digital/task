@@ -9,13 +9,13 @@ import TaskResponsibles from "./TaskResponsibles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskTimer from "./TaskTimer";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import React, { useCallback, useContext } from "react";
 import TaskMore from "./TaskMore";
 import TaskEstimate from "./TaskEstimate";
 import { AuthContext } from "@/context/auth";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { GripVertical, MessageCircle } from "lucide-react";
+import { useTaskContext } from "@/context/TaskContext";
 
 export default function Task({
   task,
@@ -25,9 +25,7 @@ export default function Task({
   archive,
 }) {
   const { uid } = useContext(AuthContext);
-  const pathname = usePathname();
-  const taskId = pathname.split("/").pop();
-  const [openedTask, setOpenedTask] = useState(taskId);
+  const { openedTask, openTask } = useTaskContext();
 
   const canEdit = useUserRole(project, [
     "owner",
@@ -37,13 +35,9 @@ export default function Task({
   ]);
   const canDrag = useUserRole(project, ["owner", "manager", "team"]);
 
-  let messagesRead = true;
-  task.messages.forEach((message) => {
-    console.log(message);
-    if(!message.readBy.includes(uid)){
-      messagesRead = false;
-    }
-  })
+  const hasUnreadMessages = task?.messages?.some(
+    (message) => !message.readBy.includes(uid)
+  );
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task?._id });
@@ -56,12 +50,7 @@ export default function Task({
   const handleTaskClick = useCallback(
     (e) => {
       e.preventDefault();
-      const taskPath = archive
-        ? `/projects/${project?._id}/archive/task/${task?._id}`
-        : `/projects/${project?._id}/task/${task?._id}`;
-
-      window.history.pushState({}, "", taskPath);
-      setOpenedTask(task?._id); // <== Ici on gère localement
+      openTask(task?._id, archive, project?._id);
     },
     [archive, project?._id, task?._id]
   );
@@ -114,7 +103,12 @@ export default function Task({
       >
         <MessageCircle size={24} fillOpacity={0} />
         {task?.messages?.length > 0 && (
-          <span className={`${styles.count} ${styles.messageIcon}`} data-is-read={messagesRead}>{task?.messages?.length}</span>
+          <span
+            className={`${styles.count} ${styles.messageIcon}`}
+            data-is-unread={hasUnreadMessages}
+          >
+            {task?.messages?.length}
+          </span>
         )}
       </div>
       <TaskResponsibles task={task} project={project} archive={archive} />
@@ -125,13 +119,7 @@ export default function Task({
       {!archive && <TaskTimer task={task} project={project} uid={uid} />}
       <TaskRemove task={task} project={project} uid={uid} archive={archive} />
       {openedTask === task?._id && (
-        <TaskMore
-          task={task}
-          project={project}
-          setOpennedTask={setOpenedTask}
-          archive={archive}
-          uid={uid}
-        />
+        <TaskMore task={task} project={project} archive={archive} uid={uid} />
       )}
     </div>
   );

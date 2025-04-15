@@ -25,10 +25,18 @@ import { mutate } from "swr";
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { SortableBoard } from "./SortableBoard"; // Nous allons créer ce composant
+import { updateBoardOrder } from "@/api/board"; // Vous devrez créer cette fonction API
 
-export default function Boards({ boards, project, tasksData, archive }) {
+export default function Boards({
+  boards: initialBoards,
+  project,
+  tasksData,
+  archive,
+}) {
   const router = useRouter();
   const [selectedTasks, setSelectedTasks] = useState([]);
+  const [boards, setBoards] = useState(initialBoards || []);
 
   // Transformer les résultats en un objet avec les tâches par board
   const initialTasksData = useMemo(() => {
@@ -42,6 +50,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
 
   const [tasks, setTasks] = useState(initialTasksData || {});
   const [activeId, setActiveId] = useState(null);
+  const [activeType, setActiveType] = useState(null); // 'task' ou 'board'
 
   // Mettre à jour l'état local quand les données tasksData changent
   useEffect(() => {
@@ -58,23 +67,36 @@ export default function Boards({ boards, project, tasksData, archive }) {
     }
   }, [tasksData]);
 
+  // Mettre à jour l'état local quand initialBoards change
+  useEffect(() => {
+    if (initialBoards) {
+      setBoards(initialBoards);
+    }
+  }, [initialBoards]);
+
   useEffect(() => {
     const handleTaskUpdate = async () => {
       mutate(`/task?projectId=${project?._id}&archived=${archive}`);
     };
 
+    const handleBoardUpdate = async () => {
+      mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+    };
+
     socket.on("task updated", handleTaskUpdate);
+    socket.on("board updated", handleBoardUpdate);
 
     return () => {
       socket.off("task updated", handleTaskUpdate);
+      socket.off("board updated", handleBoardUpdate);
     };
-  }, [socket]);
+  }, [socket, project, archive]);
 
   useEffect(() => {
     if (initialTasksData) {
       setTasks(initialTasksData);
     }
-  }, [boards]);
+  }, [initialTasksData]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -100,11 +122,18 @@ export default function Boards({ boards, project, tasksData, archive }) {
     const { active } = event;
     const { id } = active;
 
+    // Déterminer si on déplace une tâche ou un board
+    const isBoard = boards.some((board) => board._id === id);
+
     setActiveId(id);
+    setActiveType(isBoard ? "board" : "task");
   }
 
   const handleDragOver = useCallback(
     (event) => {
+      // Si c'est un board qui est déplacé, on ne fait rien ici
+      if (activeType === "board") return;
+
       const { active, over } = event;
       if (!over) return;
 
@@ -161,7 +190,7 @@ export default function Boards({ boards, project, tasksData, archive }) {
         };
       });
     },
-    [findBoardByTaskId]
+    [findBoardByTaskId, activeType]
   );
 
   const handleDragEnd = useCallback(
@@ -169,96 +198,124 @@ export default function Boards({ boards, project, tasksData, archive }) {
       const { active, over } = event;
       if (!over) return;
 
-      const activeTaskId = active.id;
-      const overTaskId = over.id;
+      // Si c'est un board qui est déplacé
+      if (activeType === "board") {
+        const oldIndex = boards.findIndex((board) => board._id === active.id);
+        const newIndex = boards.findIndex((board) => board._id === over.id);
 
-      const activeBoardId = findBoardByTaskId(activeTaskId);
-      const overBoardId =
-        over.data?.current?.sortable?.containerId ||
-        findBoardByTaskId(overTaskId) ||
-        over.id; // Ajout de over.id comme fallback
+        if (oldIndex !== newIndex) {
+          // Mettre à jour l'ordre des boards localement
+          const newBoards = arrayMove(boards, oldIndex, newIndex);
+          setBoards(newBoards);
 
-      let newTasks;
+          // Mettre à jour l'ordre des boards côté serveur
+          const updatedBoards = newBoards.map((board, index) => ({
+            _id: board._id,
+            order: index,
+          }));
 
-      if (activeBoardId !== overBoardId) {
-        // Déplacement vers un autre board
-        setTasks((prev) => {
-          const activeBoard = [...prev[activeBoardId]];
-          const overBoard = [...(prev[overBoardId] || [])]; // Protection pour les tableaux vides
+          await updateBoardOrder(updatedBoards, project?._id);
 
-          const activeTaskIndex = activeBoard.findIndex(
-            (task) => task?._id === activeTaskId
-          );
-          const activeTask = {
-            ...activeBoard[activeTaskIndex],
-            boardId: overBoardId,
-          };
+          socket.emit("update board", project?._id);
 
-          const newActiveBoard = activeBoard.filter(
-            (_, index) => index !== activeTaskIndex
-          );
+          // Rafraîchir les données
+          mutate(`/board?projectId=${project?._id}&archived=${archive}`);
+        }
+      } else {
+        // Logique existante pour les tâches
+        const activeTaskId = active.id;
+        const overTaskId = over.id;
 
-          // Si on dépose sur un tableau vide, on ajoute à la fin
-          if (!overTaskId || overTaskId === overBoardId) {
+        const activeBoardId = findBoardByTaskId(activeTaskId);
+        const overBoardId =
+          over.data?.current?.sortable?.containerId ||
+          findBoardByTaskId(overTaskId) ||
+          over.id; // Ajout de over.id comme fallback
+
+        let newTasks;
+
+        if (activeBoardId !== overBoardId) {
+          // Déplacement vers un autre board
+          setTasks((prev) => {
+            const activeBoard = [...prev[activeBoardId]];
+            const overBoard = [...(prev[overBoardId] || [])]; // Protection pour les tableaux vides
+
+            const activeTaskIndex = activeBoard.findIndex(
+              (task) => task?._id === activeTaskId
+            );
+            const activeTask = {
+              ...activeBoard[activeTaskIndex],
+              boardId: overBoardId,
+            };
+
+            const newActiveBoard = activeBoard.filter(
+              (_, index) => index !== activeTaskIndex
+            );
+
+            // Si on dépose sur un tableau vide, on ajoute à la fin
+            if (!overTaskId || overTaskId === overBoardId) {
+              newTasks = {
+                ...prev,
+                [activeBoardId]: newActiveBoard,
+                [overBoardId]: [...overBoard, activeTask],
+              };
+              return newTasks;
+            }
+
+            const insertIndex =
+              over.data?.current?.sortable?.index ?? overBoard?.length;
+
+            const newOverBoard = [...overBoard];
+            newOverBoard.splice(insertIndex, 0, activeTask);
+
             newTasks = {
               ...prev,
               [activeBoardId]: newActiveBoard,
-              [overBoardId]: [...overBoard, activeTask],
+              [overBoardId]: newOverBoard,
             };
+
             return newTasks;
-          }
+          });
+        } else {
+          // Réorganisation dans la même board
+          setTasks((prev) => {
+            const activeBoard = [...prev[activeBoardId]];
+            const oldIndex = activeBoard.findIndex(
+              (task) => task?._id === activeTaskId
+            );
+            const newIndex = activeBoard.findIndex(
+              (task) => task?._id === overTaskId
+            );
 
-          const insertIndex =
-            over.data?.current?.sortable?.index ?? overBoard?.length;
+            newTasks = {
+              ...prev,
+              [activeBoardId]: arrayMove(activeBoard, oldIndex, newIndex),
+            };
 
-          const newOverBoard = [...overBoard];
-          newOverBoard.splice(insertIndex, 0, activeTask);
+            return newTasks;
+          });
+        }
 
-          newTasks = {
-            ...prev,
-            [activeBoardId]: newActiveBoard,
-            [overBoardId]: newOverBoard,
-          };
+        // Appel API pour mettre à jour boardId
+        await updateTaskBoard(activeTaskId, overBoardId, project?._id);
+        if (newTasks) {
+          const updatedTasks = Object.values(newTasks)
+            .flat()
+            .map((task, index) => ({ _id: task?._id, order: index }));
 
-          return newTasks;
-        });
-      } else {
-        // Réorganisation dans la même board
-        setTasks((prev) => {
-          const activeBoard = [...prev[activeBoardId]];
-          const oldIndex = activeBoard.findIndex(
-            (task) => task?._id === activeTaskId
-          );
-          const newIndex = activeBoard.findIndex(
-            (task) => task?._id === overTaskId
-          );
+          await updateTaskOrder(updatedTasks, project?._id);
+        }
 
-          newTasks = {
-            ...prev,
-            [activeBoardId]: arrayMove(activeBoard, oldIndex, newIndex),
-          };
+        mutate(`/task?projectId=${project?._id}&archived=${archive}`);
 
-          return newTasks;
-        });
+        socket.emit("update task", project?._id);
       }
 
+      // Réinitialiser l'état actif
       setActiveId(null);
-
-      // Appel API pour mettre à jour boardId
-      await updateTaskBoard(activeTaskId, overBoardId, project?._id);
-      if (newTasks) {
-        const updatedTasks = Object.values(newTasks)
-          .flat()
-          .map((task, index) => ({ _id: task?._id, order: index }));
-
-        await updateTaskOrder(updatedTasks, project?._id);
-      }
-
-      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
-
-      socket.emit("update task", project?._id);
+      setActiveType(null);
     },
-    [findBoardByTaskId, project]
+    [findBoardByTaskId, project, boards, activeType, archive]
   );
 
   const canPost = useUserRole(project, [
@@ -267,6 +324,9 @@ export default function Boards({ boards, project, tasksData, archive }) {
     "team",
     "customer",
   ]);
+
+  // Calculer les IDs des boards pour SortableContext
+  const boardIds = useMemo(() => boards.map((board) => board._id), [boards]);
 
   return (
     <div className={styles["boards"]}>
@@ -296,33 +356,48 @@ export default function Boards({ boards, project, tasksData, archive }) {
         onDragEnd={handleDragEnd}
         modifiers={[restrictToVerticalAxis]}
       >
-        {boards
-          ?.filter((board) =>
-            archive ? tasks[board?._id] && tasks[board?._id]?.length > 0 : true
-          )
-          ?.map((board) => {
-            return (
-              <div key={board?._id} data-board-id={board?._id}>
-                <SortableContext
-                  id={board?._id}
-                  items={tasks[board._id]?.map((task) => task?._id) || []}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <Board
-                    tasks={tasks[board._id] || []}
-                    project={project}
+        {/* Contexte pour les boards */}
+        <SortableContext
+          items={boardIds}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className={styles.boardsContainer}>
+            {boards
+              ?.filter((board) =>
+                archive
+                  ? tasks[board?._id] && tasks[board?._id]?.length > 0
+                  : true
+              )
+              ?.map((board) => {
+                return (
+                  <SortableBoard
+                    key={board?._id}
                     board={board}
-                    activeId={activeId}
-                    selectedTasks={selectedTasks}
-                    setSelectedTasks={setSelectedTasks}
-                    archive={archive}
-                  />
-                </SortableContext>
-              </div>
-            );
-          })}
+                    data-board-id={board?._id}
+                  >
+                    {/* Contexte pour les tâches à l'intérieur du board */}
+                    <SortableContext
+                      id={board?._id}
+                      items={tasks[board._id]?.map((task) => task?._id) || []}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <Board
+                        tasks={tasks[board._id] || []}
+                        project={project}
+                        board={board}
+                        activeId={activeId}
+                        selectedTasks={selectedTasks}
+                        setSelectedTasks={setSelectedTasks}
+                        archive={archive}
+                      />
+                    </SortableContext>
+                  </SortableBoard>
+                );
+              })}
+          </div>
+        </SortableContext>
         <DragOverlay>
-          {activeId ? (
+          {activeId && activeType === "task" ? (
             <Task
               id={activeId}
               task={Object.values(tasks)
@@ -331,6 +406,16 @@ export default function Boards({ boards, project, tasksData, archive }) {
               project={project}
               archive={archive}
             />
+          ) : activeId && activeType === "board" ? (
+            <div className={styles.boardOverlay}>
+              <Board
+                tasks={tasks[activeId] || []}
+                project={project}
+                board={boards.find((board) => board._id === activeId)}
+                isOverlay={true}
+                archive={archive}
+              />
+            </div>
           ) : null}
         </DragOverlay>
       </DndContext>

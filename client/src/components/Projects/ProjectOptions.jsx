@@ -283,7 +283,7 @@ export default function ProjectOptions({ project }) {
               </div>
             </div>
             {/* Delete project */}
-            <div className={styles.updateButtons}>
+  <div className={styles.updateButtons}>
               <button
                 type="button"
                 onClick={handleDeleteProject}

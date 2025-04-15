@@ -11,8 +11,7 @@ import { useRouter } from "next/navigation";
 
 export default function Projects() {
   const router = useRouter();
-  const { data, isLoading } = useSWR("/api/project", getProjects);
-  const projects = data;
+  const { data: projects } = useSWR("/api/project", getProjects);
 
   return (
     <main className={styles.main}>

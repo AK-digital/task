@@ -8,6 +8,7 @@ export function useBoards(projectId, archived, initialBoards) {
     fetcher,
     {
       fallbackData: initialBoards,
+      revalidateOnFocus: false,
     }
   );
 

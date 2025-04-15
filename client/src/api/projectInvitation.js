@@ -6,9 +6,7 @@ export async function getProjectInvitations(projectId) {
     const res = await useAuthFetch(
       `project-invitation/${projectId}?projectId=${projectId}`,
       "GET",
-      "application/json",
-      null,
-      "project-invitations"
+      "application/json"
     );
 
     const response = await res.json();

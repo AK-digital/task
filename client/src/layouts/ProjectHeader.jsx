@@ -8,9 +8,8 @@ import GuestsModal from "@/components/Modals/GuestsModal";
 import NoPicture from "@/components/User/NoPicture";
 import { isNotEmpty } from "@/utils/utils";
 
-export default function ProjectHeader({ project, projectInvitations }) {
+export default function ProjectHeader({ project }) {
   const [isOpen, setIsOpen] = useState(false);
-
   const members = project?.members;
 
   return (
@@ -50,13 +49,7 @@ export default function ProjectHeader({ project, projectInvitations }) {
           </div>
         </nav>
       </header>
-      {isOpen && (
-        <GuestsModal
-          project={project}
-          projectInvitations={projectInvitations}
-          setIsOpen={setIsOpen}
-        />
-      )}
+      {isOpen && <GuestsModal project={project} setIsOpen={setIsOpen} />}
     </>
   );
 }

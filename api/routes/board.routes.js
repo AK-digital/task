@@ -39,6 +39,13 @@ router.patch(
   boardControllers.removeBoardFromArchive
 );
 
+router.patch(
+  "/order",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team"]),
+  boardControllers.updateBoardOrder
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

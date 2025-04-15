@@ -1,7 +1,6 @@
 "use server";
 
 import { useAuthFetch } from "@/utils/api";
-import { revalidateTag } from "next/cache";
 
 export async function deleteProjectInvitation(prevState, formData) {
   try {
@@ -18,8 +17,6 @@ export async function deleteProjectInvitation(prevState, formData) {
     if (!response.success) {
       throw new Error(response?.message || "Une erreur s'est produite");
     }
-
-    revalidateTag("project-invitations");
 
     return {
       status: "success",

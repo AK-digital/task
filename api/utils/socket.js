@@ -84,18 +84,17 @@ export default function socketHandler(io) {
       );
     });
 
-    socket.on("update board", async (boardId, projectId) => {
+    socket.on("update board", async (projectId) => {
       const project = await ProjectModel.findById({ _id: projectId });
-      const board = await BoardModel.findById({ _id: boardId });
 
-      if (!project || !board) return;
+      if (!project) return;
 
       project?.members?.forEach(async (member) => {
         const user = await UserModel.findById({ _id: member?.user });
 
         if (!user) return;
 
-        io.to(user?.socketId).emit("board updated", board);
+        io.to(user?.socketId).emit("board updated");
       });
     });
 
