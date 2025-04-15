@@ -54,6 +54,7 @@ export async function handleTokenRotation(accessToken, request, NextResponse) {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
+    console.log("Tokens refreshed successfully");
     return redirect;
   }
 

@@ -11,12 +11,9 @@ import { deleteProjectInvitation } from "@/actions/projectInvitation";
 import NoPicture from "../User/NoPicture";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
+import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
 
-export default function GuestsModal({
-  project,
-  projectInvitations,
-  setIsOpen,
-}) {
+export default function GuestsModal({ project, setIsOpen }) {
   const initialState = {
     status: "pending",
     message: "",
@@ -24,6 +21,9 @@ export default function GuestsModal({
     guestId: null,
   };
 
+  const { projectInvitations, mutateProjectInvitation } = useProjectInvitation(
+    project?._id
+  );
   const { uid } = useContext(AuthContext);
   const [isPopup, setIsPopup] = useState(null);
   const removeGuestWithId = removeGuest.bind(null, project?._id);
@@ -55,6 +55,7 @@ export default function GuestsModal({
         message: state?.message,
       });
     }
+
     if (state?.status === "failure" && state?.errors === null) {
       setIsPopup({
         status: state?.status,
@@ -72,7 +73,11 @@ export default function GuestsModal({
           <span>Inviter d'autres utilisateurs</span>
         </div>
         {canInvite && (
-          <GuestFormInvitation project={project} setIsPopup={setIsPopup} />
+          <GuestFormInvitation
+            project={project}
+            setIsPopup={setIsPopup}
+            mutateProjectInvitation={mutateProjectInvitation}
+          />
         )}
         {/* Guests list */}
         {isNotEmpty(members) && (
@@ -146,8 +151,8 @@ export default function GuestsModal({
               <ProjectInvitationsList
                 projectInvitations={projectInvitations}
                 setIsPopup={setIsPopup}
-                uid={uid}
                 project={project}
+                mutateProjectInvitation={mutateProjectInvitation}
               />
             </ul>
           </div>
@@ -168,8 +173,8 @@ export default function GuestsModal({
 export function ProjectInvitationsList({
   projectInvitations,
   setIsPopup,
-  uid,
   project,
+  mutateProjectInvitation,
 }) {
   const initialState = {
     status: "pending",
@@ -185,7 +190,7 @@ export function ProjectInvitationsList({
 
   useEffect(() => {
     if (state?.status === "success") {
-      console.log("played");
+      mutateProjectInvitation();
       setIsPopup({
         status: state?.status,
         title: "Invitation annulée avec succès",
@@ -202,8 +207,6 @@ export function ProjectInvitationsList({
       });
     }
   }, [state]);
-
-  console.log(state);
 
   return (
     <>

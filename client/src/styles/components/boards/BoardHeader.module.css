@@ -50,7 +50,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
 }
 
 .actions div {
@@ -76,11 +76,15 @@
     color: var(--text-color);
 }
 
+.grip {
+    color: var(--text-light-color);
+}
+
 .checkbox {
     position: relative;
     z-index: 1;
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     appearance: none;
     background: transparent;
     border: 1px solid var(--text-medium-color);

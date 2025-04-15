@@ -115,16 +115,36 @@ export async function removeBoardFromArchive(boardId, projectId) {
   }
 }
 
-export async function updateBoardOrder() {
+export async function updateBoardOrder(boards, projectId) {
   try {
+    if (!projectId || boards.length === 0) {
+      throw new Error("Paramètres manquants");
+    }
+    const res = await useAuthFetch(
+      `board/order?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { boards: boards }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
   } catch (err) {
     console.log(
-      err.message || "Une erreur est survenue lors de la mise à jour des tâches"
+      err.message ||
+        "Une erreur est survenue lors de la mise à jour de l'ordre des tableaux"
     );
 
     return {
       success: false,
-      message: err?.message || "Une erreur est survenue lors de la suppression",
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de la mise à jour de l'ordre des tableaux",
     };
   }
 }

@@ -13,7 +13,11 @@ const initialState = {
   errors: null,
 };
 
-export default function GuestFormInvitation({ project, setIsPopup }) {
+export default function GuestFormInvitation({
+  project,
+  setIsPopup,
+  mutateProjectInvitation,
+}) {
   const { user } = useContext(AuthContext);
   const [value, setValue] = useState("");
   const sendProjectInvitationToGuestWithId = sendProjectInvitationToGuest.bind(
@@ -28,6 +32,7 @@ export default function GuestFormInvitation({ project, setIsPopup }) {
 
   useEffect(() => {
     if (state?.status === "success") {
+      mutateProjectInvitation();
       setValue("");
       setIsPopup({
         status: state?.status,

@@ -3,7 +3,6 @@
 import { getProject } from "@/api/project";
 import { getBoards } from "@/api/board";
 import styles from "@/styles/pages/project.module.css";
-import { getProjectInvitations } from "@/api/projectInvitation";
 import { notFound } from "next/navigation";
 import Project from "@/components/Projects/Project";
 import { getTasks } from "@/api/task";
@@ -18,17 +17,14 @@ export default async function ProjectPage({ params }) {
   const timeTracking = slug?.length > 1 && slug[1] === "time-tracking";
 
   const projectData = getProject(id);
-  const projectInvitationsData = getProjectInvitations(id);
   const boardsData = getBoards(id, archive);
   const tasksData = getTasks(id, archive);
 
-  const [initialProject, projectInvitations, initialBoards, initialTasks] =
-    await Promise.all([
-      projectData,
-      projectInvitationsData,
-      boardsData,
-      tasksData,
-    ]);
+  const [initialProject, initialBoards, initialTasks] = await Promise.all([
+    projectData,
+    boardsData,
+    tasksData,
+  ]);
 
   if (!initialProject) return notFound(); // 404
 
@@ -37,7 +33,6 @@ export default async function ProjectPage({ params }) {
       {!options && !timeTracking && (
         <Project
           initialProject={initialProject}
-          projectInvitations={projectInvitations}
           initialBoards={initialBoards}
           initialTasks={initialTasks}
           archive={archive}

@@ -9,13 +9,7 @@ import Tiptap from "../RichTextEditor/Tiptap";
 import TaskDescription from "./TaskDescription";
 moment.locale("fr");
 
-export default function TaskMore({
-  task,
-  project,
-  setOpennedTask,
-  archive,
-  uid,
-}) {
+export default function TaskMore({ task, project, archive, uid }) {
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
   const [isResizing, setIsResizing] = useState(false);
@@ -87,7 +81,6 @@ export default function TaskMore({
           ? `/projects/${project?._id}/archive`
           : `/projects/${project?._id}`
       );
-      setOpennedTask(null);
       setOpen(false);
     };
 

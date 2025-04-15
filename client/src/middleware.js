@@ -8,9 +8,11 @@ export async function middleware(request) {
     const accessToken = await getAccessToken();
 
     if (accessToken) {
+      console.log("Access token found, redirecting to /projects");
       return NextResponse.redirect(new URL("/projects", request.url));
     }
   } else {
+    console.log("Middleware triggered for path: handleAuth");
     return await handleAuth(request, NextResponse);
   }
 }

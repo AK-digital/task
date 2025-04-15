@@ -70,7 +70,7 @@ export async function getBoards(req, res, next) {
       boards = await BoardModel.find({
         projectId: projectId,
         archived: false,
-      });
+      }).sort({ order: "asc" });
     }
 
     if (!boards) {
@@ -235,10 +235,12 @@ export async function updateBoardOrder(req, res, next) {
       },
     }));
 
+    const updatedBoards = await BoardModel.bulkWrite(bulkOps);
+
     return res.status(200).send({
       success: true,
       message: "Ordre des tableaux mis à jour avec succès",
-      data: bulkOps,
+      data: updatedBoards,
     });
   } catch (err) {
     return res.status(500).send({

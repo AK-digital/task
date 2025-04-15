@@ -26,6 +26,7 @@ export default function Board({
   selectedTasks,
   setSelectedTasks,
   archive,
+  isOverlay = false, // Nouvelle prop pour indiquer si le board est dans un DragOverlay
 }) {
   const { setNodeRef } = useDroppable({
     id: board?._id,
@@ -46,11 +47,14 @@ export default function Board({
 
   // Load the stored value after component mounts
   useEffect(() => {
-    const storedValue = localStorage.getItem(`board-${board?._id}`);
-    if (storedValue !== null) {
-      setOpen(JSON.parse(storedValue));
+    // Ne pas charger l'état du localStorage si c'est un overlay
+    if (!isOverlay) {
+      const storedValue = localStorage.getItem(`board-${board?._id}`);
+      if (storedValue !== null) {
+        setOpen(JSON.parse(storedValue));
+      }
     }
-  }, [board?._id]);
+  }, [board?._id, isOverlay]);
 
   const saveTaskWithProjectId = saveTask.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
@@ -71,11 +75,22 @@ export default function Board({
     }
   }, [state]);
 
+  useEffect(() => {
+    if (isOverlay === true) {
+      setOpen(false);
+    }
+  }, [isOverlay]);
+
+  // Appliquer une classe spéciale si c'est un overlay
+  const boardClasses = `${styles.container} ${
+    isOverlay ? styles.overlayBoard : ""
+  }`;
+
   return (
     <div
-      className={styles.container}
+      className={boardClasses}
       data-board={board?._id}
-      style={{ borderLeft: `solid 3px ${board?.color}` }}
+      style={{ borderLeft: `solid 3px ${optimisticColor}` }}
       ref={setNodeRef}
       data-board-id={board?._id}
     >
@@ -91,9 +106,10 @@ export default function Board({
         selectedTasks={selectedTasks}
         setSelectedTasks={setSelectedTasks}
         archive={archive}
+        isOverlay={isOverlay}
       />
       {/* Board content */}
-      {open && (
+      {open && !isOverlay && (
         <Tasks
           tasks={tasks}
           project={project}
@@ -106,43 +122,41 @@ export default function Board({
         />
       )}
       {isLoading && <TaskPending text={inputValue} />}
-      {canPost && (
+      {canPost && !archive && (
         <div className={styles.footer}>
-          {!archive && (
-            <div className={styles.add}>
-              <Plus size={18} />
-              <form action={formAction}>
-                <input
-                  type="text"
-                  name="board-id"
-                  id="board-id"
-                  defaultValue={board?._id}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="new-task"
-                  id="new-task"
-                  placeholder=" Ajouter une tâche"
-                  autoComplete="off"
-                  minLength={2}
-                  maxLength={255}
-                  ref={inputRef}
-                  onChange={(e) => {
-                    setInputValue(e.target.value);
-                    if (e.target.value.length > 0) {
-                      setIsWritting(true);
-                    } else {
-                      setIsWritting(false);
-                    }
-                  }}
-                />
-                <button type="submit" hidden>
-                  Ajouter une tâche
-                </button>
-              </form>
-            </div>
-          )}
+          <div className={styles.add}>
+            <Plus size={18} />
+            <form action={formAction}>
+              <input
+                type="text"
+                name="board-id"
+                id="board-id"
+                defaultValue={board?._id}
+                hidden
+              />
+              <input
+                type="text"
+                name="new-task"
+                id="new-task"
+                placeholder=" Ajouter une tâche"
+                autoComplete="off"
+                minLength={2}
+                maxLength={255}
+                ref={inputRef}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  if (e.target.value.length > 0) {
+                    setIsWritting(true);
+                  } else {
+                    setIsWritting(false);
+                  }
+                }}
+              />
+              <button type="submit" hidden>
+                Ajouter une tâche
+              </button>
+            </form>
+          </div>
           {isWritting && (
             <div className={styles.info}>
               <p>

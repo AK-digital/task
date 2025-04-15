@@ -77,8 +77,6 @@ export async function sendProjectInvitationToGuest(
       throw new Error(response?.message);
     }
 
-    revalidateTag("project-invitations");
-
     return {
       status: "success",
       message: `Invitation envoyé à ${email} avec succès`,

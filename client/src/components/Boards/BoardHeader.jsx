@@ -7,6 +7,8 @@ import {
   ChevronDown,
   ChevronRight,
   EllipsisVertical,
+  FlipVertical,
+  GripVertical,
   Save,
   Trash2,
 } from "lucide-react";
@@ -23,6 +25,9 @@ import {
 } from "@/api/board";
 import { mutate } from "swr";
 import AddBoardTemplate from "../Templates/AddBoardTemplate";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { set } from "zod";
 
 export default function BoardHeader({
   board,
@@ -49,6 +54,27 @@ export default function BoardHeader({
   ]);
   const canArchive = useUserRole(project, ["owner", "manager", "team"]);
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: board._id,
+    data: {
+      type: "board",
+      board,
+    },
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   async function handleAddBoardTemplate(e) {
     e.preventDefault();
@@ -132,7 +158,7 @@ export default function BoardHeader({
 
     if (!response?.success) setOptimisticColor(board?.color);
 
-    socket.emit("update board", board?._id, board?.projectId);
+    socket.emit("update board", board?.projectId);
   }
 
   const debouncedUpdateTask = useDebouncedCallback(async (value) => {
@@ -149,7 +175,7 @@ export default function BoardHeader({
 
     if (!response?.success) setTitle(board?.title);
 
-    socket.emit("update board", board?._id, board?.projectId);
+    socket.emit("update board", board?.projectId);
   }
 
   const handleTitleChange = (e) => {
@@ -169,21 +195,6 @@ export default function BoardHeader({
     }
     setOpen(!open);
   }
-
-  useEffect(() => {
-    function handleBoardUpdate(updatedBoard) {
-      if (updatedBoard?._id === board?._id) {
-        setTitle(updatedBoard?.title);
-        setOptimisticColor(updatedBoard?.color);
-      }
-    }
-
-    socket.on("board updated", handleBoardUpdate);
-
-    return () => {
-      socket.off("board updated", handleBoardUpdate);
-    };
-  }, [socket]);
 
   const handleEdit = useCallback(() => {
     if (!canEdit) return;
@@ -213,9 +224,14 @@ export default function BoardHeader({
     const inputs = document?.getElementsByName("task");
 
     for (const input of inputs) {
-      input.checked = selectedTasks.includes(input.value);
+      input.checked = selectedTasks?.includes(input?.value);
     }
   }, [selectedTasks]);
+
+  useEffect(() => {
+    setTitle(board?.title);
+    setOptimisticColor(board?.color);
+  }, [board?.title, board?.color]);
 
   return (
     <div
@@ -237,6 +253,17 @@ export default function BoardHeader({
               className={styles.checkbox}
               onClick={handleCheckBoard}
             />
+          </div>
+        )}
+        {canArchive && (
+          <div ref={setNodeRef} style={style} className={styles.grip}>
+            <div
+              className={styles.boardDragHandle}
+              {...attributes}
+              {...listeners}
+            >
+              <GripVertical size={20} />
+            </div>
           </div>
         )}
         <div>
@@ -308,7 +335,6 @@ export default function BoardHeader({
           </div>
         )}
       </div>
-
       {openColors && (
         <>
           <div className={styles.modal} id="popover">

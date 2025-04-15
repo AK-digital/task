@@ -10,7 +10,6 @@ import { useBoards } from "@/app/hooks/useBoards";
 
 export default function Project({
   initialProject,
-  projectInvitations,
   initialBoards,
   initialTasks,
   archive,
@@ -37,11 +36,7 @@ export default function Project({
 
   return (
     <div className={styles.container}>
-      <ProjectHeader
-        project={project}
-        projectInvitations={projectInvitations}
-        tasks={tasks}
-      />
+      <ProjectHeader project={project} tasks={tasks} />
       <Boards
         boards={boards}
         project={project}
