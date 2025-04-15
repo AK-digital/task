@@ -31,8 +31,18 @@ const initialState = {
 };
 
 export default function ProjectOptions({ project }) {
+
   const router = useRouter();
   const formRef = useRef(null);
+  const [initialProject, setInitialProject] = useState({
+    name: project?.name,
+    website: project?.urls?.website,
+    admin: project?.urls?.admin,
+    figma: project?.urls?.figma,
+    github: project?.urls?.github,
+    note: project?.note,
+  });
+  const [hasChange, setHasChange] = useState(true);
   const [popup, setPopup] = useState(null);
   const [state, formAction, pending] = useActionState(
     updateProject,
@@ -51,6 +61,7 @@ export default function ProjectOptions({ project }) {
 
   useEffect(() => {
     if (state?.status === "success") {
+      setHasChange(true);
       mutate(`/project/${project?._id}`);
       setPopup({
         title: "Modifications enregistrées",
@@ -77,6 +88,24 @@ export default function ProjectOptions({ project }) {
       return () => clearTimeout(timeout);
     }
   }, [popup]);
+
+  async function handleHasChange() {
+    const currentValues = {
+      name: document.getElementById("project-name").value,
+      website: document.getElementById("website-url").value,
+      admin: document.getElementById("admin-url").value,
+      figma: document.getElementById("figma-url").value,
+      github: document.getElementById("github-url").value,
+      note: document.getElementById("note").value,
+    }
+    const isDifferent = Object.keys(currentValues).some((key) => currentValues[key] !== initialProject[key]);
+
+    if(isDifferent){
+      setHasChange(false);
+    } else{
+      setHasChange(true);
+    }
+  }
 
   async function handleUpdateLogo(e) {
     e.preventDefault();
@@ -113,6 +142,7 @@ export default function ProjectOptions({ project }) {
         action={formAction}
         className={styles.form}
         ref={formRef}
+        onChange={handleHasChange}
       >
         <input type="hidden" name="project-id" defaultValue={project?._id} />
 
@@ -264,6 +294,8 @@ export default function ProjectOptions({ project }) {
               <button
                 type="submit"
                 className={`${styles.save} ${bricolageGrostesque.className}`}
+                data-disabled={hasChange}
+                disabled={hasChange}
               >
                 Enregistrer les modifications
               </button>
