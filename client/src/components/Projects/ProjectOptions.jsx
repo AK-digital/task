@@ -13,6 +13,9 @@ import {
   Globe,
   Layout,
   Pencil,
+  Youtube,
+  Gitlab,
+
 } from "lucide-react";
 import Link from "next/link";
 import { bricolageGrostesque } from "@/utils/font";
@@ -30,19 +33,46 @@ const initialState = {
   errors: null,
 };
 
-export default function ProjectOptions({ project }) {
+const icons = [
+  {
+    name: "Globe",
+    icon: <Globe size={20} />,
+  },
+  {
+    name: "Layout",
+    icon: <Layout size={20} />,
+  },
+  {
+    name: "Figma",
+    icon: <Figma size={20} />,
+  },
+  {
+    name: "Github",
+    icon: <Github size={20} />,
+  },
+  {
+    name: "Youtube",
+    icon: <Youtube size={20} />,
+  },
+  {
+    name: "Gitlab",
+    icon: <Gitlab size={20} />,
+  },
+];
 
+export default function ProjectOptions({ project }) {
   const router = useRouter();
-  const formRef = useRef(null);
+  const [moreIcons, setMoreIcons] = useState(null)
+  const [hasChange, setHasChange] = useState(true);
+  const [firstIcon, setFirstIcon] = useState(project?.urls[0]?.name || icons[0]?.name);
+  const [secondIcon, setSecondIcon] = useState(project?.urls[1]?.name || icons[1]?.name);
+  const [thirdIcon, setThirdIcon] = useState(project?.urls[2]?.name || icons[2]?.name);
+  const [fourthIcon, setFourthIcon] = useState(project?.urls[3]?.name || icons[3]?.name);
   const [initialProject, setInitialProject] = useState({
     name: project?.name,
-    website: project?.urls?.website,
-    admin: project?.urls?.admin,
-    figma: project?.urls?.figma,
-    github: project?.urls?.github,
     note: project?.note,
+    urls: project?.urls,
   });
-  const [hasChange, setHasChange] = useState(true);
   const [popup, setPopup] = useState(null);
   const [state, formAction, pending] = useActionState(
     updateProject,
@@ -91,20 +121,21 @@ export default function ProjectOptions({ project }) {
 
   async function handleHasChange() {
     const currentValues = {
-      name: document.getElementById("project-name").value,
-      website: document.getElementById("website-url").value,
-      admin: document.getElementById("admin-url").value,
-      figma: document.getElementById("figma-url").value,
-      github: document.getElementById("github-url").value,
-      note: document.getElementById("note").value,
-    }
-    const isDifferent = Object.keys(currentValues).some((key) => currentValues[key] !== initialProject[key]);
-
-    if(isDifferent){
-      setHasChange(false);
-    } else{
-      setHasChange(true);
-    }
+      name: document.getElementById("project-name")?.value,
+      note: document.getElementById("note")?.value,
+      urls: Array.from(document.getElementsByClassName("url")).map((el) => el.value),
+    };
+  
+    const initialUrls = initialProject?.urls?.map((u) => u.url) || [];
+  
+    const isDifferent = (
+      currentValues.name !== initialProject.name ||
+      currentValues.note !== initialProject.note ||
+      currentValues.urls.length !== initialUrls.length ||
+      currentValues.urls.some((url, index) => url !== initialUrls[index])
+    );
+  
+    setHasChange(!isDifferent);
   }
 
   async function handleUpdateLogo(e) {
@@ -133,6 +164,22 @@ export default function ProjectOptions({ project }) {
     mutate(`/project/${project?._id}`);
   }
 
+  const handleMoreIcon = (num) => {
+    setMoreIcons(num);
+  }
+
+  function displayIcon(icon) {
+    const iconMap = {
+      Globe: <Globe size={20} />,
+      Layout: <Layout size={20} />,
+      Figma: <Figma size={20} />,
+      Github: <Github size={20} />,
+      Youtube: <Youtube size={20} />,
+      Gitlab: <Gitlab size={20} />,
+    };
+    return iconMap[icon] || null;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.back} onClick={() => router.back()}>
@@ -141,7 +188,6 @@ export default function ProjectOptions({ project }) {
       <form
         action={formAction}
         className={styles.form}
-        ref={formRef}
         onChange={handleHasChange}
       >
         <input type="hidden" name="project-id" defaultValue={project?._id} />
@@ -233,51 +279,179 @@ export default function ProjectOptions({ project }) {
               </div>
               <div className={styles.content}>
                 <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Globe size={20} />
+                  <div className={styles.icon} onClick={()=> handleMoreIcon(1)}>
+                    {displayIcon(firstIcon)}
+                    <input
+                      type="text"
+                      name="first-icon"
+                      id="icon"
+                      value={firstIcon}
+                      hidden
+                      readOnly
+                    />
+                    {moreIcons === 1 && (
+                      <>
+                        <div className={styles.iconModal}>
+                          {icons.map((icon, index) => (
+                            <button
+                              key={index}
+                              className={styles.iconButton}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setFirstIcon(icon?.name);
+                                setMoreIcons(null);
+                              }}
+                            >
+                              {icon?.icon}
+                            </button>
+                          ))}
+                        </div>
+                        <div id="modal-layout-opacity" onClick={(e) => {
+                          e.stopPropagation()
+                          setMoreIcons(null)
+                        }}></div>
+                      </>
+                    )}
                   </div>
                   <input
                     type="url"
-                    id="website-url"
-                    name="website-url"
+                    id="url"
+                    name="url"
+                    className="url"
                     placeholder="https://www.exemple.com"
-                    defaultValue={project?.urls?.website}
+                    defaultValue={project?.urls[0]?.url}
                   />
                 </div>
                 <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Layout size={20} />
+                  <div className={styles.icon} onClick={()=>handleMoreIcon(2)}>
+                    {displayIcon(secondIcon)}
+                    <input
+                      type="text"
+                      name="second-icon"
+                      id="icon"
+                      value={secondIcon}
+                      hidden
+                      readOnly
+                    />
+                    {moreIcons === 2 && (
+                      <>
+                        <div className={styles.iconModal}>
+                          {icons.map((icon, index) => (
+                            <button
+                              key={index}
+                              className={styles.iconButton}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setSecondIcon(icon?.name);
+                                setMoreIcons(null);
+                              }}
+                            >
+                              {icon?.icon}
+                            </button>
+                          ))}
+                        </div>
+                        <div id="modal-layout-opacity" onClick={(e) => {
+                          e.stopPropagation()
+                          setMoreIcons(null)
+                        }}></div>
+                      </>
+                    )}
                   </div>
                   <input
                     type="url"
-                    id="admin-url"
-                    name="admin-url"
+                    id="url"
+                    className="url"
+                    name="url"
                     placeholder="https://www.exemple.com/wp-admin"
-                    defaultValue={project?.urls?.admin}
+                    defaultValue={project?.urls[1]?.url}
                   />
                 </div>
                 <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Figma size={20} />
+                  <div className={styles.icon} onClick={()=>handleMoreIcon(3)}>
+                    {displayIcon(thirdIcon)}
+                    <input
+                      type="text"
+                      name="third-icon"
+                      id="icon"
+                      value={thirdIcon}
+                      hidden
+                      readOnly
+                    />
+                    {moreIcons === 3 && (
+                      <>
+                        <div className={styles.iconModal}>
+                          {icons.map((icon, index) => (
+                            <button
+                              key={index}
+                              className={styles.iconButton}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setThirdIcon(icon?.name);
+                                setMoreIcons(null);
+                              }}
+                            >
+                              {icon?.icon}
+                            </button>
+                          ))}
+                        </div>
+                        <div id="modal-layout-opacity" onClick={(e) => {
+                          e.stopPropagation()
+                          setMoreIcons(null)
+                        }}></div>
+                      </>
+                    )}
                   </div>
                   <input
                     type="url"
-                    id="figma-url"
-                    name="figma-url"
+                    id="url"
+                    className="url"
+                    name="url"
                     placeholder="https://figma.com"
-                    defaultValue={project?.urls?.figma}
+                    defaultValue={project?.urls[2]?.url}
                   />
                 </div>
                 <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Github size={20} />
+                  <div className={styles.icon} onClick={()=>handleMoreIcon(4)}>
+                    {displayIcon(fourthIcon)}
+                    <input
+                      type="text"
+                      name="fourth-icon"
+                      id="icon"
+                      value={fourthIcon}
+                      hidden
+                      readOnly
+                    />
+                    {moreIcons === 4 && (
+                      <>
+                        <div className={styles.iconModal}>
+                          {icons.map((icon, index) => (
+                            <button
+                              key={index}
+                              className={styles.iconButton}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setFourthIcon(icon?.name);
+                                setMoreIcons(null);
+                              }}
+                            >
+                              {icon?.icon}
+                            </button>
+                          ))}
+                        </div>
+                        <div id="modal-layout-opacity" onClick={(e) => {
+                          e.stopPropagation()
+                          setMoreIcons(null)
+                        }}></div>
+                      </>
+                    )}
                   </div>
                   <input
                     type="url"
-                    id="github-url"
-                    name="github-url"
+                    id="url"
+                    className="url"
+                    name="url"
                     placeholder="https://github.com"
-                    defaultValue={project?.urls?.github}
+                    defaultValue={project?.urls[3]?.url}
                   />
                 </div>
               </div>

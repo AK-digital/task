@@ -158,7 +158,7 @@ button {
   font-size: var(--text-size-medium);
   letter-spacing: var(--letter-spacing-normal);
   background-color: var(--accent-color);
-  padding: 12px 24px !important;
+  padding: 12px 24px;
   border: none;
   outline: none;
   color: white;

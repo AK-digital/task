@@ -211,65 +211,22 @@ export async function updateProject(prevState, formData) {
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");
     const note = formData.get("note");
-    // const urls = formData.getAll("url");
-    // const icons = formData.getAll("icon");
-    const websiteUrl = formData.get("website-url");
-    const adminUrl = formData.get("admin-url");
-    const figmaUrl = formData.get("figma-url");
-    const githubUrl = formData.get("github-url");
+    const urls = formData.getAll("url");
+    const firstIcon = formData.get("first-icon");
+    const secondIcon = formData.get("second-icon");
+    const thirdIcon = formData.get("third-icon");
+    const fourthIcon = formData.get("fourth-icon");
 
     function isValidUrl(url) {
       return regex.url.test(url);
     }
 
-    if (websiteUrl && !isValidUrl(websiteUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL du site web est invalide",
-      };
-    }
-
-    if (adminUrl && !isValidUrl(adminUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL du back-office est invalide",
-      };
-    }
-
-    if (figmaUrl && !isValidUrl(figmaUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL de Figma est invalide",
-      };
-    }
-
-    if (githubUrl && !isValidUrl(githubUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL de Github est invalide",
-      };
-    }
-
-    const urlsObject = {
-      website: websiteUrl,
-      admin: adminUrl,
-      figma: figmaUrl,
-      github: githubUrl,
-    };
-
-    // for (var i = 0; i < urls.length; i++) {
-    //   if (urls[i] === "") {
-    //     return {
-    //       status: "failure",
-    //       message: "L'URL ne peut pas être vide",
-    //     };
-    //   }
-    // }
-
-    // const urlsArray = urls.map((url, index) => ({
-    //   icon: icons[index] || "Globe", // Utilise l'icône correspondante ou "Globe" par défaut
-    //   url: url,
-    // }));
+    const urlsArray = [
+      { url: urls[0], icon: firstIcon },
+      { url: urls[1], icon: secondIcon },
+      { url: urls[2], icon: thirdIcon },
+      { url: urls[3], icon: fourthIcon },
+    ]
 
     if (!name) {
       return {
@@ -281,21 +238,8 @@ export async function updateProject(prevState, formData) {
     const rawFormData = {
       name: name,
       note: note,
-      urls: urlsObject,
+      urls: urlsArray,
     };
-
-    // const urlWordpress = formData.get("url-wordpress");
-    // const urlBackofficeWordpress = formData.get("url-backoffice-wordpress");
-
-    // if (urlWordpress) {
-    //   rawFormData.urlWordpress = urlWordpress;
-    // }
-
-    // if (urlBackofficeWordpress) {
-    //   rawFormData.urlBackofficeWordpress = formData.get(
-    //     "url-backoffice-wordpress"
-    //   );
-    // }
 
     const res = await useAuthFetch(
       `project/${projectId}`,
