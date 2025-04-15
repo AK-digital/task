@@ -19,7 +19,6 @@ import { bricolageGrostesque } from "@/utils/font";
 import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
-import { useDebouncedCallback } from "use-debounce";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
@@ -32,8 +31,18 @@ const initialState = {
 };
 
 export default function ProjectOptions({ project }) {
+
   const router = useRouter();
   const formRef = useRef(null);
+  const [initialProject, setInitialProject] = useState({
+    name: project?.name,
+    website: project?.urls?.website,
+    admin: project?.urls?.admin,
+    figma: project?.urls?.figma,
+    github: project?.urls?.github,
+    note: project?.note,
+  });
+  const [hasChange, setHasChange] = useState(true);
   const [popup, setPopup] = useState(null);
   const [state, formAction, pending] = useActionState(
     updateProject,
@@ -52,6 +61,7 @@ export default function ProjectOptions({ project }) {
 
   useEffect(() => {
     if (state?.status === "success") {
+      setHasChange(true);
       mutate(`/project/${project?._id}`);
       setPopup({
         title: "Modifications enregistrées",
@@ -79,6 +89,24 @@ export default function ProjectOptions({ project }) {
     }
   }, [popup]);
 
+  async function handleHasChange() {
+    const currentValues = {
+      name: document.getElementById("project-name").value,
+      website: document.getElementById("website-url").value,
+      admin: document.getElementById("admin-url").value,
+      figma: document.getElementById("figma-url").value,
+      github: document.getElementById("github-url").value,
+      note: document.getElementById("note").value,
+    }
+    const isDifferent = Object.keys(currentValues).some((key) => currentValues[key] !== initialProject[key]);
+
+    if(isDifferent){
+      setHasChange(false);
+    } else{
+      setHasChange(true);
+    }
+  }
+
   async function handleUpdateLogo(e) {
     e.preventDefault();
 
@@ -105,12 +133,6 @@ export default function ProjectOptions({ project }) {
     mutate(`/project/${project?._id}`);
   }
 
-  const debounceChange = useDebouncedCallback(async (e) => {
-    const form = formRef.current;
-
-    form.requestSubmit();
-  }, 1500);
-
   return (
     <div className={styles.container}>
       <div className={styles.back} onClick={() => router.back()}>
@@ -120,7 +142,7 @@ export default function ProjectOptions({ project }) {
         action={formAction}
         className={styles.form}
         ref={formRef}
-        onChange={debounceChange}
+        onChange={handleHasChange}
       >
         <input type="hidden" name="project-id" defaultValue={project?._id} />
 
@@ -261,14 +283,23 @@ export default function ProjectOptions({ project }) {
               </div>
             </div>
             {/* Delete project */}
-            <button
-              type="button"
-              onClick={handleDeleteProject}
-              className={`${styles.delete} ${bricolageGrostesque.className}`}
-            >
-              Supprimer ce projet
-            </button>
-            <button>Enregistrer</button>
+  <div className={styles.updateButtons}>
+              <button
+                type="button"
+                onClick={handleDeleteProject}
+                className={`${styles.delete} ${bricolageGrostesque.className}`}
+              >
+                Supprimer ce projet
+              </button>
+              <button
+                type="submit"
+                className={`${styles.save} ${bricolageGrostesque.className}`}
+                data-disabled={hasChange}
+                disabled={hasChange}
+              >
+                Enregistrer les modifications
+              </button>
+            </div>
           </div>
 
           {/* Right Column */}
