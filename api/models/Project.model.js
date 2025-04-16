@@ -37,24 +37,18 @@ const projectSchema = new Schema(
       ],
     },
     urls: {
-      type: {
-        website: {
-          type: String,
-          required: false,
+      type: [
+        {
+          url: {
+            type: String,
+            required: true,
+          },
+          icon: {
+            type: String,
+            required: true,
+          },
         },
-        admin: {
-          type: String,
-          required: false,
-        },
-        figma: {
-          type: String,
-          required: false,
-        },
-        github: {
-          type: String,
-          required: false,
-        },
-      },
+      ],
     },
   },
   {

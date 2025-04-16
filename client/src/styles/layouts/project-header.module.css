@@ -119,10 +119,23 @@
 
 
 /* Actions styles */
-.actions {
+.links {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+}
+
+.links a {
+    display: flex;
+    align-items: center;
+    background-color: var(--secondary-background-color);
+    padding: 8px;
+    border-radius: var(--border-radius-small);
+}
+
+.links svg {
+    width: 22px;
+    height: 22px;
 }
 
 .template {

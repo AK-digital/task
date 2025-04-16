@@ -5,10 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { updateProject } from "@/actions/project";
 import {
   Archive,
-  Figma,
-  Github,
   Globe,
-  Layout,
   MoreVertical,
   Save,
   Settings2,
@@ -20,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { deleteProject } from "@/api/project";
 import AddTemplate from "../Templates/AddTemplate";
 import { MoreMenu } from "../Dropdown/MoreMenu";
+import { icons, isNotEmpty } from "@/utils/utils";
 
 const initialState = {
   status: "pending",
@@ -148,6 +146,11 @@ export default function ProjectTitle({ project }) {
     setIsEditing((prev) => !prev);
   };
 
+  function displayIcon(iconName) {
+    const icon = icons.find((i) => i.name === iconName);
+    return icon.icon || <Globe size={20} />;
+  }
+
   return (
     <div className={styles.titleContainer}>
       <div className={styles.title}>
@@ -188,52 +191,19 @@ export default function ProjectTitle({ project }) {
         )}
       </div>
 
-      <div className={styles.actions}>
-        {project?.urls?.website && (
-          <a
-            href={project?.urls.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkIcon}
-            title="Voir le site"
-          >
-            <Globe size={20} />
-          </a>
-        )}
-        {project?.urls?.admin && (
-          <a
-            href={project?.urls?.admin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkIcon}
-            title="Voir le site"
-          >
-            <Layout size={20} />
-          </a>
-        )}
-        {project?.urls?.figma && (
-          <a
-            href={project?.urls?.figma}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkIcon}
-            title="Voir le site"
-          >
-            <Figma size={20} />
-          </a>
-        )}
-        {project?.urls?.github && (
-          <a
-            href={project?.urls?.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkIcon}
-            title="Voir le site"
-          >
-            <Github size={20} />
-          </a>
-        )}
-      </div>
+      {isNotEmpty(project?.urls) && (
+        <div className={styles.links}>
+          {project?.urls?.map((url, idx) => {
+            return (
+              <div key={idx}>
+                <a href={url?.url} target="_blank" rel="noopener noreferrer">
+                  {displayIcon(url?.icon)}
+                </a>
+              </div>
+            );
+          })}
+        </div>
+      )}
       {addTemplate && (
         <AddTemplate project={project} setAddTemplate={setAddTemplate} />
       )}

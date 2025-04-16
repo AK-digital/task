@@ -8,10 +8,9 @@ import Image from "next/image";
 import {
   Archive,
   ArrowLeftCircle,
-  Figma,
-  Github,
+  Cross,
+  Delete,
   Globe,
-  Layout,
   Pencil,
 } from "lucide-react";
 import Link from "next/link";
@@ -22,6 +21,7 @@ import { updateProject } from "@/actions/project";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
+import { icons } from "@/utils/utils";
 moment.locale("fr");
 
 const initialState = {
@@ -31,18 +31,13 @@ const initialState = {
 };
 
 export default function ProjectOptions({ project }) {
-
   const router = useRouter();
-  const formRef = useRef(null);
-  const [initialProject, setInitialProject] = useState({
-    name: project?.name,
-    website: project?.urls?.website,
-    admin: project?.urls?.admin,
-    figma: project?.urls?.figma,
-    github: project?.urls?.github,
-    note: project?.note,
-  });
-  const [hasChange, setHasChange] = useState(true);
+  const [links, setLinks] = useState(project?.urls || []);
+
+  const [projectName, setProjectName] = useState(project?.name);
+  const [note, setNote] = useState(project?.note);
+  const [moreIcons, setMoreIcons] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(true);
   const [popup, setPopup] = useState(null);
   const [state, formAction, pending] = useActionState(
     updateProject,
@@ -52,16 +47,12 @@ export default function ProjectOptions({ project }) {
   const [isPictLoading, setIsPictLoading] = useState(false);
   const canEdit = useUserRole(project, ["owner", "manager"]);
 
-  if (!canEdit) {
-    router.push("/projects");
-  }
-
   const author = project?.members.find((member) => member?.role === "owner");
   const createdAt = moment(project?.createdAt).format("DD/MM/YYYY");
 
   useEffect(() => {
     if (state?.status === "success") {
-      setHasChange(true);
+      setIsDisabled(true);
       mutate(`/project/${project?._id}`);
       setPopup({
         title: "Modifications enregistrées",
@@ -89,23 +80,37 @@ export default function ProjectOptions({ project }) {
     }
   }, [popup]);
 
-  async function handleHasChange() {
-    const currentValues = {
-      name: document.getElementById("project-name").value,
-      website: document.getElementById("website-url").value,
-      admin: document.getElementById("admin-url").value,
-      figma: document.getElementById("figma-url").value,
-      github: document.getElementById("github-url").value,
-      note: document.getElementById("note").value,
-    }
-    const isDifferent = Object.keys(currentValues).some((key) => currentValues[key] !== initialProject[key]);
+  useEffect(() => {
+    const nameChanged = projectName !== project.name;
+    const noteChanged = note !== project.note;
 
-    if(isDifferent){
-      setHasChange(false);
-    } else{
-      setHasChange(true);
+    const linksChanged = () => {
+      const initialLinks = project?.urls?.length
+        ? project.urls
+        : [{ url: "", icon: "Globe" }];
+
+      if (links.length !== initialLinks.length) return true;
+
+      for (let i = 0; i < links.length; i++) {
+        if (
+          links[i].url !== initialLinks[i]?.url ||
+          links[i].icon !== initialLinks[i]?.icon
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    const hasChanges = nameChanged || noteChanged || linksChanged();
+
+    if (hasChanges) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
     }
-  }
+  }, [projectName, note, links]);
 
   async function handleUpdateLogo(e) {
     e.preventDefault();
@@ -133,17 +138,36 @@ export default function ProjectOptions({ project }) {
     mutate(`/project/${project?._id}`);
   }
 
+  function displayIcon(name) {
+    const icon = icons.find((icon) => icon.name === name);
+    return icon?.icon || <Globe size={20} />;
+  }
+
+  function addLink(e) {
+    e.preventDefault();
+    if (links.length >= 6) return;
+
+    setLinks((prevLinks) => [
+      ...prevLinks,
+      {
+        url: "",
+        icon: "Globe",
+      },
+    ]);
+  }
+
+  function removeLink(e, link) {
+    e.preventDefault();
+    const updatedLinks = links.filter((l) => l !== link);
+    setLinks(updatedLinks);
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.back} onClick={() => router.back()}>
         <ArrowLeftCircle size={32} />
       </div>
-      <form
-        action={formAction}
-        className={styles.form}
-        ref={formRef}
-        onChange={handleHasChange}
-      >
+      <form action={formAction} className={styles.form}>
         <input type="hidden" name="project-id" defaultValue={project?._id} />
 
         {/* Columns container */}
@@ -207,7 +231,8 @@ export default function ProjectOptions({ project }) {
                     id="project-name"
                     name="project-name"
                     className={styles.projectName}
-                    defaultValue={project?.name}
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
                   />
                 </div>
 
@@ -232,58 +257,62 @@ export default function ProjectOptions({ project }) {
                 <span>Liens rapides</span>
               </div>
               <div className={styles.content}>
-                <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Globe size={20} />
-                  </div>
-                  <input
-                    type="url"
-                    id="website-url"
-                    name="website-url"
-                    placeholder="https://www.exemple.com"
-                    defaultValue={project?.urls?.website}
-                  />
-                </div>
-                <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Layout size={20} />
-                  </div>
-                  <input
-                    type="url"
-                    id="admin-url"
-                    name="admin-url"
-                    placeholder="https://www.exemple.com/wp-admin"
-                    defaultValue={project?.urls?.admin}
-                  />
-                </div>
-                <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Figma size={20} />
-                  </div>
-                  <input
-                    type="url"
-                    id="figma-url"
-                    name="figma-url"
-                    placeholder="https://figma.com"
-                    defaultValue={project?.urls?.figma}
-                  />
-                </div>
-                <div className={styles.link}>
-                  <div className={styles.icon}>
-                    <Github size={20} />
-                  </div>
-                  <input
-                    type="url"
-                    id="github-url"
-                    name="github-url"
-                    placeholder="https://github.com"
-                    defaultValue={project?.urls?.github}
-                  />
-                </div>
+                {links.map((link, idx) => {
+                  return (
+                    <div className={styles.link} key={idx}>
+                      <div
+                        className={styles.icon}
+                        onClick={() => setMoreIcons(idx)}
+                      >
+                        {displayIcon(link?.icon)}
+                        <input
+                          type="text"
+                          id="icon"
+                          name="icon"
+                          value={link?.icon}
+                          hidden
+                          readOnly
+                        />
+                        {moreIcons === idx && (
+                          <IconList
+                            setMoreIcons={setMoreIcons}
+                            links={links}
+                            setLinks={setLinks}
+                            idx={idx}
+                          />
+                        )}
+                      </div>
+                      <input
+                        type="url"
+                        id="url"
+                        name="url"
+                        placeholder="https://www.exemple.com"
+                        value={link?.url}
+                        onChange={(e) => {
+                          links[idx].url = e.target.value;
+                          const updatedLinks = [...links];
+                          setLinks(updatedLinks);
+                        }}
+                      />
+                      <div
+                        className={styles.remove}
+                        onClick={(e) => removeLink(e, link)}
+                      >
+                        <Delete size={20} />
+                      </div>
+                    </div>
+                  );
+                })}
+                {links.length < 6 && (
+                  <button onClick={addLink} className={styles.addLink}>
+                    Ajouter un lien
+                  </button>
+                )}
               </div>
             </div>
-            {/* Delete project */}
-  <div className={styles.updateButtons}>
+
+            {/* Project  actions */}
+            <div className={styles.updateButtons}>
               <button
                 type="button"
                 onClick={handleDeleteProject}
@@ -294,8 +323,8 @@ export default function ProjectOptions({ project }) {
               <button
                 type="submit"
                 className={`${styles.save} ${bricolageGrostesque.className}`}
-                data-disabled={hasChange}
-                disabled={hasChange}
+                data-disabled={isDisabled}
+                disabled={isDisabled}
               >
                 Enregistrer les modifications
               </button>
@@ -313,7 +342,8 @@ export default function ProjectOptions({ project }) {
                   name="note"
                   id="note"
                   className={`${styles.note} ${bricolageGrostesque.className}`}
-                  defaultValue={project?.note}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
                   placeholder="Ajouter une note..."
                 ></textarea>
               </div>
@@ -329,5 +359,36 @@ export default function ProjectOptions({ project }) {
         />
       )}
     </div>
+  );
+}
+
+export function IconList({ setMoreIcons, links, setLinks, idx }) {
+  function handleIconChange(iconName) {
+    links[idx].icon = iconName;
+    const updatedLinks = [...links];
+    setLinks(updatedLinks);
+  }
+
+  return (
+    <>
+      <div className={styles.iconList}>
+        {icons.map((icon) => (
+          <div
+            key={icon?.name}
+            className={styles.iconElement}
+            onClick={() => handleIconChange(icon?.name)}
+          >
+            {icon?.icon}
+          </div>
+        ))}
+      </div>
+      <div
+        id="modal-layout-opacity"
+        onClick={(e) => {
+          e.stopPropagation();
+          setMoreIcons(null);
+        }}
+      ></div>
+    </>
   );
 }

@@ -40,7 +40,6 @@ const boardSchema = new Schema(
     },
     order: {
       type: Number,
-      required: true,
     },
   },
   {

@@ -209,65 +209,8 @@ export async function updateProject(prevState, formData) {
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");
     const note = formData.get("note");
-    // const urls = formData.getAll("url");
-    // const icons = formData.getAll("icon");
-    const websiteUrl = formData.get("website-url");
-    const adminUrl = formData.get("admin-url");
-    const figmaUrl = formData.get("figma-url");
-    const githubUrl = formData.get("github-url");
-
-    function isValidUrl(url) {
-      return regex.url.test(url);
-    }
-
-    if (websiteUrl && !isValidUrl(websiteUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL du site web est invalide",
-      };
-    }
-
-    if (adminUrl && !isValidUrl(adminUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL du back-office est invalide",
-      };
-    }
-
-    if (figmaUrl && !isValidUrl(figmaUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL de Figma est invalide",
-      };
-    }
-
-    if (githubUrl && !isValidUrl(githubUrl)) {
-      return {
-        status: "failure",
-        message: "L'URL de Github est invalide",
-      };
-    }
-
-    const urlsObject = {
-      website: websiteUrl,
-      admin: adminUrl,
-      figma: figmaUrl,
-      github: githubUrl,
-    };
-
-    // for (var i = 0; i < urls.length; i++) {
-    //   if (urls[i] === "") {
-    //     return {
-    //       status: "failure",
-    //       message: "L'URL ne peut pas être vide",
-    //     };
-    //   }
-    // }
-
-    // const urlsArray = urls.map((url, index) => ({
-    //   icon: icons[index] || "Globe", // Utilise l'icône correspondante ou "Globe" par défaut
-    //   url: url,
-    // }));
+    const urls = formData.getAll("url");
+    const icons = formData.getAll("icon");
 
     if (!name) {
       return {
@@ -276,24 +219,44 @@ export async function updateProject(prevState, formData) {
       };
     }
 
+    if (urls.length >= 1) {
+      function isValidUrl(urls) {
+        for (const url of urls) {
+          if (!regex.url.test(url)) {
+            return false;
+          }
+
+          return true;
+        }
+      }
+
+      if (!isValidUrl(urls)) {
+        return {
+          status: "failure",
+          message: "L'URL est invalide",
+        };
+      }
+    }
+
+    for (var i = 0; i < urls.length; i++) {
+      if (urls[i] === "") {
+        return {
+          status: "failure",
+          message: "L'URL ne peut pas être vide",
+        };
+      }
+    }
+
+    const urlsArray = urls.map((url, index) => ({
+      icon: icons[index] || "Globe", // Utilise l'icône correspondante ou "Globe" par défaut
+      url: url,
+    }));
+
     const rawFormData = {
       name: name,
       note: note,
-      urls: urlsObject,
+      urls: urlsArray,
     };
-
-    // const urlWordpress = formData.get("url-wordpress");
-    // const urlBackofficeWordpress = formData.get("url-backoffice-wordpress");
-
-    // if (urlWordpress) {
-    //   rawFormData.urlWordpress = urlWordpress;
-    // }
-
-    // if (urlBackofficeWordpress) {
-    //   rawFormData.urlBackofficeWordpress = formData.get(
-    //     "url-backoffice-wordpress"
-    //   );
-    // }
 
     const res = await useAuthFetch(
       `project/${projectId}`,
@@ -303,6 +266,8 @@ export async function updateProject(prevState, formData) {
     );
 
     const response = await res.json();
+
+    console.log(response);
 
     if (!response.success) {
       throw new Error(response?.message);

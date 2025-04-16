@@ -146,12 +146,66 @@
 }
 
 .icon {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid var(--text-medium-color);
     height: 45px;
     width: 45px;
+}
+
+.iconList {
+    position: absolute;
+    z-index: 2001;
+    top: -25px;
+    right: 45px;
+    height: fit-content;
+    padding: 12px;
+    width: 175px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-small);
+    box-shadow: var(--box-shadow-small);
+    gap: 12px;
+}
+
+.iconElement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: var(--border-radius-small);
+    transition: 150ms all linear;
+}
+
+.iconElement:hover {
+    background-color: var(--third-background-color);
+    cursor: pointer;
+}
+
+.remove {
+    color: var(--text-color-red);
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+.addLink {
+    background-color: transparent;
+    color: var(--accent-color);
+    width: fit-content;
+    padding: 0 !important;
+    margin-top: 6px;
+}
+
+.addLink:hover {
+    background-color: transparent;
+    box-shadow: none;
+    text-decoration: underline;
 }
 
 .link input {
@@ -175,6 +229,10 @@
 .updateButtons {
     display: flex;
     justify-content: space-between;
+}
+
+.updateButtons button:last-child {
+    border-radius: var(--border-radius-xs);
 }
 
 /* RIGHT SIDE */

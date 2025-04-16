@@ -14,9 +14,16 @@ export async function saveBoard(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
+    const boards = await BoardModel.find({
+      projectId: projectId,
+    });
+
+    const hasBoards = boards?.length >= 1;
+
     const newBoard = new BoardModel({
       projectId: projectId,
       title: title,
+      order: hasBoards ? boards.length + 1 : 1,
     });
 
     const savedBoard = await newBoard.save();
