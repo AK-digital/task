@@ -32,6 +32,13 @@ router.patch(
   reponseControllers.updateReadBy
 );
 
+router.patch(
+  "/:id/reaction",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer"]),
+  reponseControllers.updateReactions
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

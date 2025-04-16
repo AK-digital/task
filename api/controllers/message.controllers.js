@@ -4,7 +4,7 @@ import MessageModel from "../models/Message.model.js";
 import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailMessage } from "../templates/emails.js";
-import { getMatches } from "../utils/utils.js";
+import { deleteReaction, getMatches } from "../utils/utils.js";
 
 export async function saveMessage(req, res, next) {
   try {
@@ -269,6 +269,57 @@ export async function updateReadBy(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Réponse lu avec succès",
+      data: updatedMessage,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateReactions(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { reaction } = req.body;
+
+    const validReactions = ["heart", "laugh", "sad"];
+    if (!reaction || !validReactions.includes(reaction)) {
+      return res.status(400).send({
+        success: false,
+        message: "Réaction invalide ou manquante",
+      });
+    }
+
+    const message = await MessageModel.findById({ _id: req.params.id });
+    if (!message) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier un message qui n'existe pas",
+      });
+    }
+
+    let updatedMessage;
+    if (message?.reactions[reaction]?.includes(authUser?._id)) {
+      updatedMessage = await deleteReaction(message, authUser?._id);
+    } else {
+      await deleteReaction(message, authUser?._id);
+      updatedMessage = await MessageModel.findByIdAndUpdate(
+        { _id: req.params.id },
+        {
+          $addToSet: { [`reactions.${reaction}`]: authUser?._id },
+        },
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Réaction mise à jour avec succès",
       data: updatedMessage,
     });
   } catch (err) {

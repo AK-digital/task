@@ -29,6 +29,20 @@ const messageSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "User"
     },
+    reactions: {
+      heart: {
+        type: [Schema.Types.ObjectId],
+        ref: "User",
+      },
+      laugh: {
+        type: [Schema.Types.ObjectId],
+        ref: "User",
+      },
+      sad: {
+        type: [Schema.Types.ObjectId],
+        ref: "User",
+      },
+    }
   },
   {
     timestamps: true,
