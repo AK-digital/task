@@ -1,6 +1,6 @@
 "use client";
 import styles from "@/styles/components/messages/message.module.css";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState, useRef } from "react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,13 +13,17 @@ import { deleteMessage, updateReadBy } from "@/api/message";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { mutate } from "swr";
+import EmojiPicker from "emoji-picker-react";
+import { Eye, SmilePlus } from "lucide-react";
+import { isNotEmpty } from "@/utils/utils";
 
 export default function Message({ task, message, project, mutateMessage }) {
   const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
+  const [showPeopleRead, setShowPeopleRead] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   moment.locale("fr");
   const author = message?.author;
   // const isUpdated = message?.createdAt !== message?.updatedAt;
@@ -74,51 +78,126 @@ export default function Message({ task, message, project, mutateMessage }) {
       ) : (
         <>
           <div className={styles.container} data-loading={isLoading}>
-            {/* Author informations */}
-            <div className={styles.header}>
-              <div className={styles.user}>
-                <Image
-                  src={author?.picture || "/default-pfp.webp"}
-                  width={35}
-                  height={35}
-                  alt={`Photo de profil de ${author?.firstName}`}
-                  style={{ borderRadius: "50%" }}
-                />
-                <span className={styles.names}>
-                  {author?.firstName + " " + author?.lastName}
-                </span>
-                <span className={styles.date}>{formattedDate}</span>
-                {/* {isUpdated && <span className={styles.updated}>Modifié</span>} */}
-              </div>
-              <div className={styles.ellipsis}>
-                {uid === author?._id && (
-                  <FontAwesomeIcon
-                    icon={faEllipsisH}
-                    onClick={(e) => setMore(true)}
+            <div className={styles.wrapper}>
+              {/* Author informations */}
+              <div className={styles.header}>
+                <div className={styles.user}>
+                  <Image
+                    src={author?.picture || "/default-pfp.webp"}
+                    width={35}
+                    height={35}
+                    alt={`Photo de profil de ${author?.firstName}`}
+                    style={{ borderRadius: "50%" }}
                   />
-                )}
-                {more && (
-                  <div className={styles.more}>
-                    <ul>
-                      <li
-                        onClick={(e) => {
-                          setEdit(true);
-                          setMore(false);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faPen} /> Modifier
-                      </li>
-                      <li onClick={handleDeleteMessage}>
-                        <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
-                      </li>
-                    </ul>
+                  <span className={styles.names}>
+                    {author?.firstName + " " + author?.lastName}
+                  </span>
+                  <span className={styles.date}>{formattedDate}</span>
+                  {/* {isUpdated && <span className={styles.updated}>Modifié</span>} */}
+                </div>
+                <div className={styles.ellipsis}>
+                  {uid === author?._id && (
+                    <FontAwesomeIcon
+                      icon={faEllipsisH}
+                      onClick={(e) => setMore(true)}
+                    />
+                  )}
+                  {more && (
+                    <div className={styles.more}>
+                      <ul>
+                        <li
+                          onClick={(e) => {
+                            setEdit(true);
+                            setMore(false);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPen} /> Modifier
+                        </li>
+                        <li onClick={handleDeleteMessage}>
+                          <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* text */}
+              <div className={styles.text}>
+                <div
+                  dangerouslySetInnerHTML={{ __html: message?.message }}
+                ></div>
+
+                {/* {showPickerFor === messageId && (
+                <div
+                className={styles.reactions}
+                ref={emojiRef}
+                onClick={() => {
+                  setManualPickerOpen(true);
+                  setShowPickerFor(messageId);
+                  }}
+                  >
+                  <EmojiPicker
+                  reactionsDefaultOpen={true}
+                  height={350}
+                    width={500}
+                    />
+                </div>
+                )} */}
+              </div>
+            </div>
+
+            <div className={styles.informations}>
+              {/* Read By */}
+              <div
+                className={styles.readBy}
+                onMouseEnter={() => setShowPeopleRead(true)}
+                onMouseLeave={() => setShowPeopleRead(false)}
+              >
+                <Eye size={16} />
+                <span>{message?.readBy?.length}</span>
+
+                {/* Hover */}
+                {showPeopleRead && isNotEmpty(message?.readBy) && (
+                  <div className={styles.pictures}>
+                    {message?.readBy?.slice(0, 3).map((user) => (
+                      <div key={user?._id} className={styles.picture}>
+                        <Image
+                          src={user?.picture || "/default-pfp.webp"}
+                          width={24}
+                          height={24}
+                          alt={`Photo de profil de ${user?.firstName}`}
+                          style={{ borderRadius: "50%" }}
+                        />
+                      </div>
+                    ))}
+                    {message?.readBy?.length > 3 && (
+                      <div className={styles.moreReaders}>
+                        +{message?.readBy?.length - 3}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            </div>
-            {/* text */}
-            <div className={styles.text}>
-              <div dangerouslySetInnerHTML={{ __html: message?.message }}></div>
+              {/* Reactions */}
+              <div
+                className={styles.reactions}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowEmojiPicker(true);
+                }}
+              >
+                <SmilePlus size={16} />
+                {showEmojiPicker && (
+                  <div className={styles.emojiPicker}>
+                    <EmojiPicker
+                      reactionsDefaultOpen={true}
+                      height={350}
+                      width={500}
+                      className={styles.reactionEmojiPicker}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           {more && (

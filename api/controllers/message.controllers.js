@@ -105,10 +105,16 @@ export async function getMessages(req, res, next) {
 
     const messages = await MessageModel.find({
       taskId: taskId,
-    }).populate({
-      path: "author",
-      select: "lastName firstName picture",
-    });
+    })
+      .populate({
+        path: "author",
+        select: "lastName firstName picture",
+      })
+      .populate({
+        path: "readBy",
+        select: "lastName firstName picture",
+      })
+      .exec();
 
     if (messages.length <= 0) {
       return res.status(404).send({
@@ -285,7 +291,7 @@ export async function updateReactions(req, res, next) {
     const { reaction } = req.body;
 
     const validReactions = ["heart", "laugh", "sad"];
-    
+
     if (!reaction || !validReactions.includes(reaction)) {
       return res.status(400).send({
         success: false,
@@ -294,7 +300,7 @@ export async function updateReactions(req, res, next) {
     }
 
     const message = await MessageModel.findById({ _id: req.params.id });
-    
+
     if (!message) {
       return res.status(404).send({
         success: false,

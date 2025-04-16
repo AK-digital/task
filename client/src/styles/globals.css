@@ -2,17 +2,17 @@
   --accent-color: #a87e51;
   --accent-color-transparent: rgba(168, 126, 81, 0.3);
   --accent-color-hover: #977045;
-  --primary-background-color: #DAD6C7;
-  --secondary-background-color: #F9F7EF;
+  --primary-background-color: #dad6c7;
+  --secondary-background-color: #f9f7ef;
   --third-background-color: #eae7de;
   --side-background-color: rgba(45, 63, 68, 0.9);
   --foreground: #171717;
   --border-color: #3a3d5c;
 
   --text-color: #e0e0e0;
-  --text-accent-color: #D4A979;
-  --text-color-dark: #3A4344;
-  --text-color-red: #C04747;
+  --text-accent-color: #d4a979;
+  --text-color-dark: #3a4344;
+  --text-color-red: #c04747;
 
   --danger-color: #c14854;
 
@@ -22,39 +22,45 @@
   --primary-background-transparent: rgba(218, 214, 199, 0.6);
 
   /* COLORS */
-  --text-darker-color: #1F312D;
-  --text-dark-color: #3A4344;
+  --text-darker-color: #1f312d;
+  --text-dark-color: #3a4344;
   --text-medium-color: #909490;
   --text-light-color: rgb(215, 212, 203);
-  --text-lighter-color: #E7E3D9;
+  --text-lighter-color: #e7e3d9;
   --text-color-muted: #72716f;
-  --background-gradient-dark: linear-gradient(140deg, #39545B, #2A4046 17%, #16363C 52%, #2A4046 86%, #32484E 100%);
+  --background-gradient-dark: linear-gradient(
+    140deg,
+    #39545b,
+    #2a4046 17%,
+    #16363c 52%,
+    #2a4046 86%,
+    #32484e 100%
+  );
   --border-color: #3a3d5c;
 
-  --pending-color: #B3BCC0;
-  --processing-color: #F3B158;
+  --pending-color: #b3bcc0;
+  --processing-color: #f3b158;
   --finished-color: #63a758;
-  --todo-color: #559FC6;
-  --checking-color: #9D88C2;
+  --todo-color: #559fc6;
+  --checking-color: #9d88c2;
   --blocked-color: #ca4250;
 
-  --low-color: #AFBDE9;
-  --medium-color: #879CE0;
-  --high-color: #7C67AD;
-  --urgent-color: #E17587;
+  --low-color: #afbde9;
+  --medium-color: #879ce0;
+  --high-color: #7c67ad;
+  --urgent-color: #e17587;
 
   /* TEXT */
   --text-size-large: 1.2rem;
   --text-size-medium: 1rem;
-  --text-size-normal: .95rem;
-  --text-size-small: .80rem;
+  --text-size-normal: 0.95rem;
+  --text-size-small: 0.8rem;
   --letter-spacing-normal: 0.011rem;
 
   /* SPACING */
   --header-height: 62px;
   --aside-width: 66px;
   --layout-gap: 24px;
-
 
   /* BORDER RADIUS */
   --border-radius-large: 24px;
@@ -65,7 +71,6 @@
   /* BOX SHADOW */
   --box-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.2);
   --box-shadow-small: 0 2px 4px rgba(0, 0, 0, 0.05);
-
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -74,7 +79,6 @@
     --foreground: #ededed;
   }
 } */
-
 
 html,
 body {
@@ -148,7 +152,7 @@ ul {
 
 i {
   margin-top: -5px;
-  color: #DC3545;
+  color: #dc3545;
   font-size: 0.875rem;
   text-align: left;
 }
@@ -260,7 +264,6 @@ input[type="checkbox"] {
 /* QUILL STYLES */
 .ql-container {
   font-family: inherit !important;
-
 }
 
 .ql-editor li[data-list="bullet"] {
@@ -282,12 +285,13 @@ input[type="checkbox"] {
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
+    contrast(99%);
 }
 
-
 .ql-snow.ql-toolbar button svg {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
+    contrast(99%);
 }
 
 .ql-editor.ql-blank:before {
@@ -348,7 +352,7 @@ input[type="checkbox"] {
 
 #modal-layout,
 #task-modal-layout {
-  background-color: rgba(0, 0, 0, 0.500);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 #modal-layout-opacity {
