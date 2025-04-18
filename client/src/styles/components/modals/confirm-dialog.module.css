@@ -1,11 +1,13 @@
 .container {
     position: relative;
+    ;
 }
 
 .popupConfirm {
     position: absolute;
-    background-color: #444665;
+    background-color: var(--secondary-background-color);
     border-radius: var(--border-radius-small);
+    box-shadow: var(--box-shadow-medium);
     z-index: 2002;
     right: 29px;
     top: -50px;
@@ -18,7 +20,7 @@
     right: 0;
     width: 10px;
     height: 10px;
-    background-color: #444665;
+    background-color: var(--secondary-background-color);
     transform: rotate(45deg) translateY(-50%);
 }
 
@@ -28,9 +30,7 @@
 
 .popupContent p {
     font-size: .85em;
-    color: white;
     text-align: center;
-
 }
 
 .info {

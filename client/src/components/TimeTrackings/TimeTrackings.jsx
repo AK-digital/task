@@ -7,6 +7,8 @@ import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useState } from "react";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import { useSearchParams } from "next/navigation";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function TimeTrackings({ trackers, projects }) {
   const searchParams = useSearchParams();
@@ -34,6 +36,42 @@ export default function TimeTrackings({ trackers, projects }) {
     }
   }, [searchParams]);
 
+  // function timeExportPDF() {
+  //   const data = [
+  //     {
+  //       task: "Test de tâche",
+  //       user: "Nicolas Tombal",
+  //       date: "10/04/2025",
+  //       time: "00:00:02",
+  //     },
+  //     {
+  //       task: "Test de tâche",
+  //       user: "Nicolas Tombal",
+  //       date: "10/04/2025",
+  //       time: "00:00:01",
+  //     },
+  //   ];
+
+  //   const totalTime = "00:00:03";
+  //   const projectName = "Task Dev";
+
+  //   const doc = new jsPDF();
+
+  //   doc.setFontSize(16);
+  //   doc.text(`Projet : ${projectName}`, 14, 20);
+
+  //   autoTable(doc, {
+  //     head: [["Tâche", "Utilisateur", "Date", "Temps"]],
+  //     body: data.map((item) => [item.task, item.user, item.date, item.time]),
+  //     startY: 30,
+  //   });
+
+  //   doc.setFontSize(12);
+  //   doc.text(`Temps total : ${totalTime}`, 14, doc.lastAutoTable.finalY + 10);
+
+  //   doc.save(`suivi-temps-${projectName}.pdf`);
+  // }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -47,6 +85,9 @@ export default function TimeTrackings({ trackers, projects }) {
             Temps total : {formatTime(Math.floor(totalDuration / 1000))}
           </span>
         )}
+        {/* <button className={styles.export} onClick={timeExportPDF}>
+          Exporter en PDF
+        </button> */}
       </div>
       {/* Time tracking list */}
       {selectedProjects?.length > 0 ? (

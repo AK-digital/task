@@ -21,7 +21,7 @@ import { updateProject } from "@/actions/project";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
-import { icons } from "@/utils/utils";
+import { icons, isNotEmpty } from "@/utils/utils";
 moment.locale("fr");
 
 const initialState = {
@@ -34,8 +34,8 @@ export default function ProjectOptions({ project }) {
   const router = useRouter();
   const [links, setLinks] = useState(project?.urls || []);
 
-  const [projectName, setProjectName] = useState(project?.name);
-  const [note, setNote] = useState(project?.note);
+  const [projectName, setProjectName] = useState(project?.name || "");
+  const [note, setNote] = useState(project?.note || "");
   const [moreIcons, setMoreIcons] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [popup, setPopup] = useState(null);
@@ -162,6 +162,7 @@ export default function ProjectOptions({ project }) {
     setLinks(updatedLinks);
   }
 
+  console.log(links);
   return (
     <div className={styles.container}>
       <div className={styles.back} onClick={() => router.back()}>
@@ -257,52 +258,53 @@ export default function ProjectOptions({ project }) {
                 <span>Liens rapides</span>
               </div>
               <div className={styles.content}>
-                {links.map((link, idx) => {
-                  return (
-                    <div className={styles.link} key={idx}>
-                      <div
-                        className={styles.icon}
-                        onClick={() => setMoreIcons(idx)}
-                      >
-                        {displayIcon(link?.icon)}
-                        <input
-                          type="text"
-                          id="icon"
-                          name="icon"
-                          value={link?.icon}
-                          hidden
-                          readOnly
-                        />
-                        {moreIcons === idx && (
-                          <IconList
-                            setMoreIcons={setMoreIcons}
-                            links={links}
-                            setLinks={setLinks}
-                            idx={idx}
+                {isNotEmpty(links) &&
+                  links?.map((link, idx) => {
+                    return (
+                      <div className={styles.link} key={idx}>
+                        <div
+                          className={styles.icon}
+                          onClick={() => setMoreIcons(idx)}
+                        >
+                          {displayIcon(link?.icon)}
+                          <input
+                            type="text"
+                            id="icon"
+                            name="icon"
+                            value={link?.icon}
+                            hidden
+                            readOnly
                           />
-                        )}
+                          {moreIcons === idx && (
+                            <IconList
+                              setMoreIcons={setMoreIcons}
+                              links={links}
+                              setLinks={setLinks}
+                              idx={idx}
+                            />
+                          )}
+                        </div>
+                        <input
+                          type="url"
+                          id="url"
+                          name="url"
+                          placeholder="https://www.exemple.com"
+                          value={link?.url}
+                          onChange={(e) => {
+                            links[idx].url = e.target.value;
+                            const updatedLinks = [...links];
+                            setLinks(updatedLinks);
+                          }}
+                        />
+                        <div
+                          className={styles.remove}
+                          onClick={(e) => removeLink(e, link)}
+                        >
+                          <Delete size={20} />
+                        </div>
                       </div>
-                      <input
-                        type="url"
-                        id="url"
-                        name="url"
-                        placeholder="https://www.exemple.com"
-                        value={link?.url}
-                        onChange={(e) => {
-                          links[idx].url = e.target.value;
-                          const updatedLinks = [...links];
-                          setLinks(updatedLinks);
-                        }}
-                      />
-                      <div
-                        className={styles.remove}
-                        onClick={(e) => removeLink(e, link)}
-                      >
-                        <Delete size={20} />
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
                 {links.length < 6 && (
                   <button onClick={addLink} className={styles.addLink}>
                     Ajouter un lien

@@ -76,3 +76,5 @@ export const icons = [
     icon: <Youtube size={20} />,
   },
 ];
+
+export function dataToExport(data) {}

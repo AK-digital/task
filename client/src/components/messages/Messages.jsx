@@ -1,27 +1,25 @@
 "use client";
 import styles from "@/styles/components/messages/messages.module.css";
-import { getMessages } from "@/api/message";
-import useSWR from "swr";
 import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
 import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { MessagesSquareIcon } from "lucide-react";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { getDrafts } from "@/api/draft";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { useMessages } from "@/app/hooks/useMessages";
+import { useDrafts } from "@/app/hooks/useDrafts";
+import MessagesSkeleton from "./MessagesSkeleton";
 
 export default function Messages({ task, project }) {
-  const fetcher = getDrafts.bind(null, task?.projectId, task?._id, "message");
-  const { data: draft, mutate: mutateDraft } = useSWR(
-    `/draft?projectId=${task?.projectId}&taskId=${task?._id}&type=message`,
-    fetcher
+  const { draft, mutateDraft } = useDrafts(
+    task?.projectId,
+    task?._id,
+    "message"
   );
-
-  const messagesWithIds = getMessages.bind(null, task.projectId, task._id);
-  const { data, isLoading, mutate } = useSWR(
-    `/message?projectId=${task?.projectId}&taskId=${task?._id}`,
-    messagesWithIds
+  const { messages, messageLoading, mutate } = useMessages(
+    project?._id,
+    task?._id
   );
 
   useEffect(() => {
@@ -30,8 +28,6 @@ export default function Messages({ task, project }) {
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
-  const messages = data?.data;
 
   const isAuthorized = useUserRole(project, [
     "owner",
@@ -74,7 +70,11 @@ export default function Messages({ task, project }) {
       <span className={styles.title}>
         <MessagesSquareIcon size={18} /> Conversation
       </span>
-      {isNotEmpty(messages) &&
+
+      {/* {messageLoading && <MessagesSkeleton />} */}
+
+      {!messageLoading &&
+        isNotEmpty(messages) &&
         messages?.map((message) => (
           <Message
             task={task}
@@ -84,6 +84,7 @@ export default function Messages({ task, project }) {
             key={message?._id}
           />
         ))}
+
       {isOpen && (
         <Tiptap
           project={project}

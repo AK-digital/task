@@ -211,6 +211,10 @@
     margin: 0 12px;
 }
 
+.actions {
+    display: flex;
+}
+
 /* Guests styles */
 .members {
     display: flex;

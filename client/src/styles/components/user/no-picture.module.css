@@ -5,4 +5,7 @@
     border-radius: 50% !important;
     cursor: default !important;
     user-select: none !important;
+    padding: 12px !important;
 }
+
+.container span {}

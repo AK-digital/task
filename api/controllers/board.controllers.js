@@ -104,6 +104,13 @@ export async function updateBoard(req, res, next) {
   try {
     const { title, color } = req.body;
 
+    if (title.length <= 0) {
+      return res.status(400).send({
+        success: false,
+        message: "Le titre du tableau ne peut pas être vide",
+      });
+    }
+
     if (!title && !color) {
       return res
         .status(400)

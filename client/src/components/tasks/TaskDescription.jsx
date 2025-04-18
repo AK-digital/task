@@ -10,6 +10,7 @@ import useSWR from "swr";
 import { getDrafts } from "@/api/draft";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
+import NoPicture from "../User/NoPicture";
 
 export default function TaskDescription({ project, task, uid }) {
   const { user } = useContext(AuthContext);
@@ -18,6 +19,8 @@ export default function TaskDescription({ project, task, uid }) {
     `/draft?projectId=${project?._id}&taskId=${task?._id}&type=description`,
     fetcher
   );
+
+  console.log(task?.description);
 
   const [isEditing, setIsEditing] = useState(false);
   const [pending, setPending] = useState(false);
@@ -107,17 +110,18 @@ export default function TaskDescription({ project, task, uid }) {
         <div>
           <div className={styles.preview} onClick={handleEditDescription}>
             <div className={styles.user}>
-              <Image
-                src={
-                  descriptionAuthor?.picture ||
-                  user?.picture ||
-                  "/default-pfp.webp"
-                }
-                width={24}
-                height={24}
-                alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
-                style={{ borderRadius: "50%" }}
-              />
+              {descriptionAuthor?.picture ? (
+                <Image
+                  src={descriptionAuthor?.picture || "/default-pfp.webp"}
+                  width={24}
+                  height={24}
+                  alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
+                  style={{ borderRadius: "50%" }}
+                />
+              ) : (
+                <NoPicture user={descriptionAuthor} width={24} height={24} />
+              )}
+
               <span className={styles.names}>
                 {(descriptionAuthor?.firstName || user?.firstName) +
                   " " +
