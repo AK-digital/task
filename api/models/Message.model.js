@@ -27,22 +27,15 @@ const messageSchema = new Schema(
     },
     readBy: {
       type: [Schema.Types.ObjectId],
-      ref: "User"
+      ref: "User",
     },
     reactions: {
-      heart: {
+      type: Map,
+      of: {
         type: [Schema.Types.ObjectId],
         ref: "User",
       },
-      laugh: {
-        type: [Schema.Types.ObjectId],
-        ref: "User",
-      },
-      sad: {
-        type: [Schema.Types.ObjectId],
-        ref: "User",
-      },
-    }
+    },
   },
   {
     timestamps: true,

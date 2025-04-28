@@ -123,6 +123,36 @@ export async function updateReadBy(projectId, messageId) {
   }
 }
 
+export async function updateReactions(projectId, messageId, emoji) {
+  try {
+    const rawData = { emoji };
+
+    const res = await useAuthFetch(
+      `message/${messageId}/reaction?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      rawData
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (error) {
+    console.log(
+      error.message ||
+        "Une erreur est survenue lors de la mise à jour de la réaction"
+    );
+    return {
+      success: false,
+      message: error.message || "Une erreur est survenue",
+    };
+  }
+}
+
 export async function deleteMessage(projectId, messageId) {
   try {
     const res = await useAuthFetch(

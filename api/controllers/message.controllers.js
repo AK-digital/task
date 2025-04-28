@@ -288,14 +288,12 @@ export async function updateReadBy(req, res, next) {
 export async function updateReactions(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { reaction } = req.body;
+    const { emoji } = req.body;
 
-    const validReactions = ["heart", "laugh", "sad"];
-
-    if (!reaction || !validReactions.includes(reaction)) {
+    if (!emoji) {
       return res.status(400).send({
         success: false,
-        message: "Réaction invalide ou manquante",
+        message: "Emoji manquant",
       });
     }
 
@@ -304,26 +302,29 @@ export async function updateReactions(req, res, next) {
     if (!message) {
       return res.status(404).send({
         success: false,
-        message: "Impossible de modifier un message qui n'existe pas",
+        message: "Message non trouvé",
       });
     }
 
-    let updatedMessage;
-    if (message?.reactions[reaction]?.includes(authUser?._id)) {
-      updatedMessage = await deleteReaction(message, authUser?._id);
-    } else {
-      await deleteReaction(message, authUser?._id);
-      updatedMessage = await MessageModel.findByIdAndUpdate(
-        { _id: req.params.id },
-        {
-          $addToSet: { [`reactions.${reaction}`]: authUser?._id },
-        },
-        {
-          new: true,
-          setDefaultsOnInsert: true,
-        }
-      );
+    if (!message.reactions) {
+      message.reactions = new Map();
     }
+
+    const userIdStr = authUser._id.toString();
+    const currentReaction = message.reactions.get(emoji) || [];
+
+    if (currentReaction.map(id => id.toString()).includes(userIdStr)) {
+      const updatedReaction = currentReaction.filter(id => id.toString() !== userIdStr);
+      if (updatedReaction.length > 0) {
+        message.reactions.set(emoji, updatedReaction);
+      } else {
+        message.reactions.delete(emoji);
+      }
+    } else {
+      message.reactions.set(emoji, [...currentReaction, authUser._id]);
+    }
+
+    const updatedMessage = await message.save();
 
     return res.status(200).send({
       success: true,
