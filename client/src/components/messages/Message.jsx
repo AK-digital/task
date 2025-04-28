@@ -207,6 +207,7 @@ export default function Message({ task, message, project, mutateMessage }) {
                         key={emoji}
                         className={styles.emojiReaction}
                         onClick={async () => {
+                          if (uid === author._id) return;
                           const response = await updateReactions(
                             project?._id,
                             message?._id,
@@ -229,29 +230,31 @@ export default function Message({ task, message, project, mutateMessage }) {
                 )}
 
               {/* Bouton ajouter une réaction */}
-              <div
-                className={styles.reactions}
-                ref={emojiButtonRef}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (e.target.tagName === "svg") {
-                    setShowEmojiPicker(!showEmojiPicker);
-                  }
-                }}
-              >
-                <SmilePlus size={16} />
-                {showEmojiPicker && (
-                  <div className={styles.emojiPicker} ref={emojiPickerRef}>
-                    <EmojiPicker
-                      reactionsDefaultOpen={true}
-                      height={350}
-                      width={500}
-                      className={styles.reactionEmojiPicker}
-                      onEmojiClick={handleEmojiSelect}
-                    />
-                  </div>
-                )}
-              </div>
+              {uid !== author._id && (
+                <div
+                  className={styles.reactions}
+                  ref={emojiButtonRef}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (e.target.tagName === "svg") {
+                      setShowEmojiPicker(!showEmojiPicker);
+                    }
+                  }}
+                >
+                  <SmilePlus size={16} />
+                  {showEmojiPicker && (
+                    <div className={styles.emojiPicker} ref={emojiPickerRef}>
+                      <EmojiPicker
+                        reactionsDefaultOpen={true}
+                        height={350}
+                        width={500}
+                        className={styles.reactionEmojiPicker}
+                        onEmojiClick={handleEmojiSelect}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
