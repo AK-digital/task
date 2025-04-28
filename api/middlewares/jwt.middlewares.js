@@ -77,12 +77,12 @@ export async function auth(req, res, next) {
 
 export async function authorize(req, res, next) {
   try {
-    const { role, _id } = res.locals.user;
+    const { privilege, _id } = res.locals.user;
     const authUserId = _id.toString();
     const uid = req.query.userId || req.params.id;
 
     // If user role is not an admin we verify if he can perform the action
-    if (role === "user") {
+    if (privilege === "user") {
       if (!uid) {
         return res
           .status(400)
@@ -99,7 +99,7 @@ export async function authorize(req, res, next) {
 
       next();
       // If user role is admin he can perform the action without any verification
-    } else if (role === "admin") {
+    } else if (privilege === "admin") {
       next();
     }
   } catch (err) {
@@ -113,9 +113,9 @@ export async function authorize(req, res, next) {
 // Only checks if the user who make the request is an admin
 export async function isAdmin(req, res, next) {
   try {
-    const { role } = res.locals.user;
+    const { privilege } = res.locals.user;
 
-    if (role !== "admin") {
+    if (privilege !== "admin") {
       return res.status(403).send({
         success: false,
         message:

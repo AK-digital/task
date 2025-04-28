@@ -60,60 +60,89 @@ export async function saveTimeTracking(req, res, next) {
 
 export async function getTimeTrackings(req, res, next) {
   try {
-    const projectId = req.query.projectId;
-    const userId = req.query.userId;
-    const startingDate = req.query.startingDate;
-    const endingDate = req.query.endingDate;
+    const { projects, users, startingDate, endingDate } = req.query;
 
-    if (!projectId) {
-      return res.status(400).send({
-        success: false,
-        message: "Paramètres manquants",
+    console.log("projectName", projects);
+
+    const pipeline = [
+      {
+        $lookup: {
+          from: "tasks",
+          localField: "taskId",
+          foreignField: "_id",
+          as: "task",
+        },
+      },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "projectId",
+          foreignField: "_id",
+          as: "project",
+        },
+      },
+      {
+        $unwind: "$project",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $addFields: {
+          fullName: {
+            $concat: ["$user.firstName", " ", "$user.lastName"],
+          },
+        },
+      },
+    ];
+
+    if (projects?.length > 0) {
+      pipeline.push({
+        $match: {
+          "project.name": { $in: projects?.split(",") },
+        },
       });
     }
 
-    const filters = {};
-
-    if (projectId) {
-      filters.projectId = { $in: projectId.split(" ") };
+    if (users?.length > 0) {
+      pipeline.push({
+        $match: {
+          fullName: { $in: users?.split(",") },
+        },
+      });
     }
 
-    if (userId) {
-      filters.userId = { $in: userId.split(" ") };
-    }
+    if (startingDate || endingDate) {
+      const matchStage = {};
 
-    if (startingDate) {
-      const startDate = new Date(startingDate);
-      startDate.setHours(0, 0, 0, 0); // Set to beginning of the day
-
-      let endDate;
-      if (endingDate) {
-        endDate = new Date(endingDate);
-        endDate.setHours(23, 59, 59, 999); // Set to end of the day
-      } else {
-        endDate = new Date(); // Current time
-        endDate.setHours(23, 59, 59, 999); // Set to end of the day
+      if (startingDate) {
+        const startDate = new Date(startingDate);
+        startDate.setHours(0, 0, 0, 0); // Set to beginning of the day
+        matchStage.startTime = { $gte: startDate };
       }
 
-      filters.startTime = {
-        $gte: startDate,
-        $lte: endDate,
-      };
-    } else if (!startingDate && endingDate) {
-      let endDate = new Date(endingDate);
-      endDate.setHours(23, 59, 59, 999); // Set to end of the day
+      if (endingDate) {
+        const endDate = new Date(endingDate);
+        endDate.setHours(23, 59, 59, 999); // Set to end of the day
+        matchStage.startTime = matchStage.startTime || {}; // Ensurer que l'objet existe
+        matchStage.startTime.$lte = endDate;
+      }
 
-      filters.startTime = {
-        $gte: new Date(new Date().setHours(0, 0, 0, 0)), // Beginning of the day
-        $lte: endDate, // End of the day
-      };
+      // Ajout du filtre dans le pipeline
+      pipeline.push({
+        $match: matchStage,
+      });
     }
 
-    const timeTrackings = await TimeTrackingModel.find(filters)
-      .populate("projectId", "_id author guests")
-      .populate("userId", "_id firstName lastName picture")
-      .populate("taskId", "_id text projectId")
-      .exec();
+    const timeTrackings = await TimeTrackingModel.aggregate(pipeline);
 
     if (timeTrackings.length <= 0) {
       return res.status(404).send({

@@ -8,6 +8,8 @@ export async function getTimeTrackings(queries) {
       ? `?${new URLSearchParams(queries).toString()}`
       : "";
 
+    console.log(queryString);
+
     const res = await useAuthFetch(
       `time-tracking${queryString}`,
       "GET",

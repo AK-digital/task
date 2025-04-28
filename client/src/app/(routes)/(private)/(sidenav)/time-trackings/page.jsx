@@ -8,9 +8,7 @@ export default async function TimeTrackingsPage({ searchParams }) {
   const queries = await searchParams;
 
   // Trackers are the time tracking data
-  const trackersData = queries?.projectId
-    ? await getTimeTrackings(queries)
-    : [];
+  const trackersData = queries?.projects ? await getTimeTrackings(queries) : [];
   const projects = await getProjects();
   const trackers = trackersData?.data;
 

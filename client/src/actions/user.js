@@ -68,11 +68,13 @@ export async function updateUserPicture(prevState, formData) {
     formDataUpload.append("picture", pictureFile);
 
     const res = await useAuthFetch(
-      `user/${userId}`,
+      `user/${userId}/picture`,
       "PATCH",
       "multipart/form-data",
       formDataUpload
     );
+
+    console.log("res", res);
 
     const response = await res.json();
 
@@ -86,6 +88,7 @@ export async function updateUserPicture(prevState, formData) {
       data: response.data,
     };
   } catch (err) {
+    console.log("err", err);
     return {
       status: "failure",
       message:

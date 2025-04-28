@@ -2,7 +2,7 @@
 import styles from "@/styles/components/timeTrackings/time-tracking.module.css";
 import { formatTime } from "@/utils/utils";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import moment from "moment";
 import "moment/locale/fr";
 import socket from "@/utils/socket";
@@ -13,27 +13,20 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { updateTaskText } from "@/api/task";
 import { updateTimeTrackingText } from "@/api/timeTracking";
 
-const initialState = {
-  status: "pending",
-  message: "",
-  data: null,
-  errors: null,
-};
-
 export default function TimeTracking({
   tracker,
   setSelectedTrackers,
   projects,
 }) {
   const [inputValue, setInputValue] = useState(
-    tracker?.taskId?.text || tracker?.taskText || ""
+    tracker?.task?.text || tracker?.taskText || ""
   );
   const [isEditing, setIsEditing] = useState(false);
   const [isHover, setIsHover] = useState(false);
   const [isMore, setIsMore] = useState(false);
 
   const project = projects?.find(
-    (project) => project?._id === tracker?.projectId?._id
+    (project) => project?._id === tracker?.project?._id
   );
   const canPut = useUserRole(project, ["owner", "manager", "team", "customer"]);
 
@@ -46,10 +39,10 @@ export default function TimeTracking({
   }
 
   const handleDebouncedChange = useDebouncedCallback((value) => {
-    handleUpdateTaskText(value);
+    handleUpdateTaskText();
   }, 600);
 
-  async function handleUpdateTaskText(value) {
+  async function handleUpdateTaskText() {
     let response;
 
     if (tracker?.taskId?.text) {
@@ -129,20 +122,34 @@ export default function TimeTracking({
           <span onClick={handleIsEditing}>{inputValue}</span>
         )}
       </div>
+      <div className={`${styles.project} ${styles.row}`}>
+        {project?.logo && (
+          <Image
+            src={project?.logo}
+            alt={project?.name}
+            style={{
+              borderRadius: "50%",
+            }}
+            width={22}
+            height={22}
+          />
+        )}
+        <span>{project?.name}</span>
+      </div>
       {/* user */}
       <div className={`${styles.user} ${styles.row}`}>
+        {tracker?.userId?.picture && (
+          <Image
+            src={tracker?.userId?.picture}
+            alt={tracker?.userId?.firstName}
+            style={{
+              borderRadius: "50%",
+            }}
+            width={22}
+            height={22}
+          />
+        )}
         <span>
-          {tracker?.userId?.picture && (
-            <Image
-              src={tracker?.userId?.picture}
-              alt={tracker?.userId?.firstName}
-              style={{
-                borderRadius: "50%",
-              }}
-              width={22}
-              height={22}
-            />
-          )}
           {tracker?.userId?.firstName + " " + tracker?.userId?.lastName}
         </span>
       </div>

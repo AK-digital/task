@@ -23,13 +23,13 @@ export default function Filters({ projects, selectedProjects }) {
 
   useEffect(() => {
     // If the query parameter userId is present in the URL, we need to set the selectedUsers state
-    if (searchParams.get("userId")) {
+    if (searchParams.get("users")) {
       // Split the userId query parameter into an array of userIds
-      const userIds = queries.get("userId")?.split(" ");
+      const userIds = queries.get("users")?.split(",");
       if (userIds?.length > 0) {
         // Map the userIds to the corresponding user objects from usersOptions
         const users = userIds?.map((userId) => {
-          return usersOptions.find((user) => user.id === userId);
+          return usersOptions.find((user) => user.label === userId);
         });
         // Filter out undefined values from the users array
         // This is to avoid having undefined values in the selectedUsers array
@@ -39,7 +39,10 @@ export default function Filters({ projects, selectedProjects }) {
         // If there are undefined values, we need to handle them
         if (hasUndefined) {
           // Remove the undefined values from the query parameter
-          queries.set("userId", filteredUsers.map((user) => user.id).join(" "));
+          queries.set(
+            "users",
+            filteredUsers.map((user) => user.label).join(",")
+          );
           router.push(`${pathname}?${queries.toString()}`);
         }
 
@@ -109,7 +112,7 @@ export default function Filters({ projects, selectedProjects }) {
         defaultValue={"Choisir un projet"}
         selected={selectedProjects}
         options={projectsOptions}
-        query={"projectId"}
+        query={"projects"}
       />
       {/* Filter by user */}
       {selectedProjects?.length > 0 && (
@@ -118,7 +121,7 @@ export default function Filters({ projects, selectedProjects }) {
             defaultValue={"Tous les membres"}
             selected={selectedUsers}
             options={usersOptions}
-            query={"userId"}
+            query={"users"}
           />
           <div className={styles.date}>
             <label>Date de début</label>

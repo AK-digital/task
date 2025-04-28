@@ -23,22 +23,22 @@ export function Dropdown({ defaultValue, selected, options, query }) {
     if (isChecked) {
       // Ajouter une valeur à la query
       if (hasQuery) {
-        queries.set(query, `${queries.get(query)} ${option?.id}`);
+        queries.set(query, `${queries.get(query)},${option?.label}`);
       } else {
-        queries.set(query, option?.id);
+        queries.set(query, option?.label);
       }
     } else {
       // Supprimer la valeur de la query
       const updatedQuery = queries
         .get(query)
-        .split(" ")
-        .filter((id) => id !== option?.id)
-        .join(" ");
+        .split(",")
+        .filter((name) => name !== option?.label)
+        .join(",");
 
       // If query is projectId and empty then delete every queries
-      if (query === "projectId" && !updatedQuery) {
-        queries.delete("projectId");
-        queries.delete("userId");
+      if (query === "projects" && !updatedQuery) {
+        queries.delete("projects");
+        queries.delete("users");
         queries.delete("startingDate");
         queries.delete("endingDate");
       }
@@ -114,7 +114,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                     id={`project-${option?.id}`}
                     className={styles.checkbox}
                     defaultValue={option?.id}
-                    defaultChecked={queries.get(query)?.includes(option?.id)}
+                    defaultChecked={queries.get(query)?.includes(option?.label)}
                     onChange={(e) => {
                       handleSelectOption(e, option);
                     }}

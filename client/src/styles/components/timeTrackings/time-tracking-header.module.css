@@ -73,6 +73,12 @@
     max-width: 700px;
 }
 
+.project {
+    min-width: 150px;
+    max-width: 150px;
+    border-left: 1px solid var(--text-light-color);
+}
+
 .user {
     min-width: 150px;
     max-width: 150px;

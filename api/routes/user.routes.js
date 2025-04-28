@@ -25,7 +25,7 @@ router.put(
 );
 
 router.patch(
-  "/:id",
+  "/:id/picture",
   authMiddlewares.auth,
   authMiddlewares.authorize,
   upload.single("picture"),
