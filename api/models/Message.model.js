@@ -29,13 +29,17 @@ const messageSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "User",
     },
-    reactions: {
-      type: Map,
-      of: {
-        type: [Schema.Types.ObjectId],
-        ref: "User",
+    reactions: [
+      {
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        emoji: {
+          type: String,
+        },
       },
-    },
+    ],
   },
   {
     timestamps: true,

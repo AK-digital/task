@@ -289,43 +289,37 @@ export async function updateReactions(req, res, next) {
   try {
     const authUser = res.locals.user;
     const { emoji } = req.body;
-
     if (!emoji) {
       return res.status(400).send({
         success: false,
         message: "Emoji manquant",
       });
     }
-
-    const message = await MessageModel.findById({ _id: req.params.id });
-
+    const message = await MessageModel.findById(req.params.id);
     if (!message) {
       return res.status(404).send({
         success: false,
         message: "Message non trouvé",
       });
     }
-
-    if (!message.reactions) {
-      message.reactions = new Map();
-    }
-
-    const userIdStr = authUser._id.toString();
-    const currentReaction = message.reactions.get(emoji) || [];
-
-    if (currentReaction.map(id => id.toString()).includes(userIdStr)) {
-      const updatedReaction = currentReaction.filter(id => id.toString() !== userIdStr);
-      if (updatedReaction.length > 0) {
-        message.reactions.set(emoji, updatedReaction);
-      } else {
-        message.reactions.delete(emoji);
-      }
+    
+    // Chercher spécifiquement la réaction avec cet emoji et cet utilisateur
+    const existingReactionIndex = message.reactions.findIndex(
+      (reaction) => reaction.userId.toString() === authUser._id.toString() && reaction.emoji === emoji
+    );
+    
+    if (existingReactionIndex !== -1) {
+      // L'utilisateur a déjà réagi avec cet emoji, on supprime la réaction
+      message.reactions.splice(existingReactionIndex, 1);
     } else {
-      message.reactions.set(emoji, [...currentReaction, authUser._id]);
+      // L'utilisateur n'a pas encore réagi avec cet emoji, on ajoute la réaction
+      message.reactions.push({
+        userId: authUser._id,
+        emoji,
+      });
     }
-
+    
     const updatedMessage = await message.save();
-
     return res.status(200).send({
       success: true,
       message: "Réaction mise à jour avec succès",

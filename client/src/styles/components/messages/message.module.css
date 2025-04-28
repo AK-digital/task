@@ -186,3 +186,8 @@
   gap: 4px;
   padding: 4px 4px;
 }
+
+.epr-emoji-img {
+  width: 24px;
+  height: auto;
+}

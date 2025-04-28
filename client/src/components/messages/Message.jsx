@@ -33,6 +33,25 @@ export default function Message({ task, message, project, mutateMessage }) {
   const date = moment(message?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
+  const groupedReactions =
+    Array.isArray(message?.reactions) && message.reactions.length > 0
+      ? message.reactions.reduce((acc, reaction) => {
+          if (!acc[reaction.emoji]) {
+            acc[reaction.emoji] = [];
+          }
+          acc[reaction.emoji].push(reaction.userId);
+          return acc;
+        }, {})
+      : {};
+
+  const userReaction = message?.reactions?.find(
+    (reaction) => reaction.userId === uid
+  );
+
+  const hasUserReacted = (emoji) => {
+    return userReaction && userReaction.emoji === emoji;
+  };
+
   const handleReadBy = useCallback(async () => {
     if (uid === author?._id) return;
     if (!message?.readBy?.includes(uid)) {
@@ -89,6 +108,16 @@ export default function Message({ task, message, project, mutateMessage }) {
       return "😊";
     }
   };
+
+  async function handleReactionClick(emoji) {
+    try {
+      await updateReactions(project?._id, message?._id, emoji);
+
+      socket.emit("update message", project?._id);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la réaction :", error);
+    }
+  }
 
   async function handleDeleteMessage() {
     setMore(false);
@@ -199,24 +228,23 @@ export default function Message({ task, message, project, mutateMessage }) {
               </div>
 
               {/* Réactions */}
-              {message?.reactions &&
-                Object.keys(message.reactions).length > 0 && (
+              {Array.isArray(message?.reactions) &&
+                message.reactions.length > 0 && (
                   <div className={styles.emojiReactions}>
-                    {Object.entries(message.reactions).map(([emoji, users]) => (
+                    {Object.entries(groupedReactions).map(([emoji, users]) => (
                       <div
                         key={emoji}
-                        className={styles.emojiReaction}
-                        onClick={async () => {
-                          if (uid === author._id) return;
-                          const response = await updateReactions(
-                            project?._id,
-                            message?._id,
-                            emoji
-                          );
-                          if (response.success) {
-                            socket.emit("update message", project?._id);
-                          }
-                        }}
+                        className={`${styles.emojiReaction} ${
+                          hasUserReacted(emoji) ? styles.active : ""
+                        }`}
+                        onClick={() => handleReactionClick(emoji)}
+                        title={
+                          hasUserReacted(emoji)
+                            ? "Retirer votre réaction"
+                            : userReaction
+                            ? "Changer votre réaction actuelle"
+                            : "Ajouter votre réaction"
+                        }
                       >
                         <span className={styles.emojiIcon}>
                           {unifiedToEmoji(emoji)}
@@ -236,7 +264,7 @@ export default function Message({ task, message, project, mutateMessage }) {
                   ref={emojiButtonRef}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (e.target.tagName === "svg") {
+                    if (!e.target.closest(`.${styles.emojiReaction}`)) {
                       setShowEmojiPicker(!showEmojiPicker);
                     }
                   }}
