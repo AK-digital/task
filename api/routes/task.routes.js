@@ -125,6 +125,13 @@ router.patch(
   taskControllers.removeTaskFromArchive
 );
 
+router.patch(
+  ":id/description/reactions",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer"]),
+  taskControllers.updateTaskDescriptionReactions
+);
+
 router.delete(
   "/",
   authMiddlewares.auth,

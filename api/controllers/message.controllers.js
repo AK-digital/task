@@ -302,23 +302,22 @@ export async function updateReactions(req, res, next) {
         message: "Message non trouvé",
       });
     }
-    
-    // Chercher spécifiquement la réaction avec cet emoji et cet utilisateur
+
     const existingReactionIndex = message.reactions.findIndex(
-      (reaction) => reaction.userId.toString() === authUser._id.toString() && reaction.emoji === emoji
+      (reaction) =>
+        reaction.userId.toString() === authUser._id.toString() &&
+        reaction.emoji === emoji
     );
-    
+
     if (existingReactionIndex !== -1) {
-      // L'utilisateur a déjà réagi avec cet emoji, on supprime la réaction
       message.reactions.splice(existingReactionIndex, 1);
     } else {
-      // L'utilisateur n'a pas encore réagi avec cet emoji, on ajoute la réaction
       message.reactions.push({
         userId: authUser._id,
         emoji,
       });
     }
-    
+
     const updatedMessage = await message.save();
     return res.status(200).send({
       success: true,

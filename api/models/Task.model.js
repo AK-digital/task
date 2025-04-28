@@ -36,6 +36,17 @@ const taskSchema = new Schema(
       updatedAt: {
         type: Date,
       },
+      reactions: [
+        {
+          userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+          },
+          emoji: {
+            type: String,
+          },
+        },
+      ],
     },
     messages: {
       type: [Schema.Types.ObjectId],
