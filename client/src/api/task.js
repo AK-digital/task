@@ -128,7 +128,7 @@ export async function updateTaskDescriptionReactions(taskId, projectId, emoji) {
     }
 
     const res = await useAuthFetch(
-      `task/${taskId}/description/reactions?projectId=${projectId}`,
+      `task/${taskId}/description/reaction?projectId=${projectId}`,
       "PATCH",
       "application/json",
       { emoji: emoji }

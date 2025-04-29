@@ -303,14 +303,17 @@ export async function updateReactions(req, res, next) {
       });
     }
 
-    const existingReactionIndex = message.reactions.findIndex(
-      (reaction) =>
-        reaction.userId.toString() === authUser._id.toString() &&
-        reaction.emoji === emoji
+    const existingReactionIndex = message.reactions.findIndex((reaction) =>
+      reaction.userId.equals(authUser._id)
     );
 
     if (existingReactionIndex !== -1) {
-      message.reactions.splice(existingReactionIndex, 1);
+      const existingReaction = message.reactions[existingReactionIndex];
+      if (existingReaction.emoji === emoji) {
+        message.reactions.splice(existingReactionIndex, 1);
+      } else {
+        message.reactions[existingReactionIndex].emoji = emoji;
+      }
     } else {
       message.reactions.push({
         userId: authUser._id,

@@ -1,15 +1,19 @@
-import { updateTaskDescription } from "@/api/task";
+import {
+  updateTaskDescription,
+  updateTaskDescriptionReactions,
+} from "@/api/task";
 import styles from "@/styles/components/tasks/task-description.module.css";
 import moment from "moment";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { PanelTop } from "lucide-react";
+import { PanelTop, SmilePlus, Eye } from "lucide-react";
 import socket from "@/utils/socket";
 import useSWR from "swr";
 import { getDrafts } from "@/api/draft";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
+import EmojiPicker from "emoji-picker-react";
 
 export default function TaskDescription({ project, task, uid }) {
   const { user } = useContext(AuthContext);
@@ -22,6 +26,9 @@ export default function TaskDescription({ project, task, uid }) {
   const [isEditing, setIsEditing] = useState(false);
   const [pending, setPending] = useState(false);
   const [description, setDescription] = useState(task?.description?.text);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
+  const emojiButtonRef = useRef(null);
 
   const descriptionAuthor = task?.description?.author;
   const isAuthor = descriptionAuthor?._id === uid;
@@ -35,6 +42,23 @@ export default function TaskDescription({ project, task, uid }) {
   const date = moment(task?.description?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
+  const groupedReactions =
+    task?.description?.reactions?.reduce((acc, reaction) => {
+      if (!acc[reaction.emoji]) {
+        acc[reaction.emoji] = [];
+      }
+      acc[reaction.emoji].push(reaction.userId);
+      return acc;
+    }, {}) || {};
+
+  const userReaction = task?.description?.reactions?.find(
+    (reaction) => reaction.userId === uid
+  );
+
+  const hasUserReacted = (emoji) => {
+    return userReaction && userReaction.emoji === emoji;
+  };
+
   useEffect(() => {
     if (draft?.success) {
       setIsEditing(true);
@@ -46,6 +70,26 @@ export default function TaskDescription({ project, task, uid }) {
       setIsEditing(false);
     }
   }, [draft]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        (emojiPickerRef.current &&
+          emojiPickerRef.current.contains(event.target)) ||
+        (emojiButtonRef.current &&
+          emojiButtonRef.current.contains(event.target)) ||
+        event.target.closest(".emoji-picker-react")
+      ) {
+        return;
+      }
+      setShowEmojiPicker(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleEditDescription = () => {
     if (!isAuthorized) return;
@@ -82,6 +126,43 @@ export default function TaskDescription({ project, task, uid }) {
 
     // Update description for every guests
     socket.emit("update task", project?._id);
+  };
+
+  const handleEmojiSelect = async (emojiData) => {
+    const emoji = emojiData.unified;
+    try {
+      const response = await updateTaskDescriptionReactions(
+        task?._id,
+        project?._id,
+        emoji
+      );
+      if (response.success) {
+        socket.emit("update task", project?._id);
+      }
+      setShowEmojiPicker(false);
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la réaction :", error);
+    }
+  };
+
+  const handleReactionClick = async (emoji) => {
+    try {
+      await updateTaskDescriptionReactions(task?._id, project?._id, emoji);
+
+      socket.emit("update task", project?._id);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la réaction :", error);
+    }
+  };
+
+  const unifiedToEmoji = (unified) => {
+    try {
+      return String.fromCodePoint(
+        ...unified.split("-").map((u) => parseInt("0x" + u))
+      );
+    } catch (e) {
+      return "😊";
+    }
   };
 
   return (
@@ -132,6 +213,67 @@ export default function TaskDescription({ project, task, uid }) {
               dangerouslySetInnerHTML={{ __html: description }}
             ></div>
           </div>
+
+          {/* Zone de réactions et actions */}
+          <div className={styles.informations}>
+            {/* Réactions */}
+            {Array.isArray(task?.description?.reactions) &&
+              task.description.reactions.length > 0 && (
+                <div className={styles.emojiReactions}>
+                  {Object.entries(groupedReactions).map(([emoji, users]) => (
+                    <div
+                      key={emoji}
+                      className={`${styles.emojiReaction} ${
+                        hasUserReacted(emoji) ? styles.active : ""
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleReactionClick(emoji);
+                      }}
+                      title={
+                        hasUserReacted(emoji)
+                          ? "Retirer votre réaction"
+                          : userReaction
+                          ? "Changer votre réaction actuelle"
+                          : "Ajouter votre réaction"
+                      }
+                    >
+                      <span className={styles.emojiIcon}>
+                        {unifiedToEmoji(emoji)}
+                      </span>
+                      <span className={styles.emojiCount}>{users.length}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+            {/* Bouton ajouter une réaction */}
+            <div
+              className={styles.reactions}
+              ref={emojiButtonRef}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!e.target.closest(`.${styles.emojiReaction}`)) {
+                  setShowEmojiPicker(!showEmojiPicker);
+                }
+              }}
+            >
+              <SmilePlus size={16} />
+              {showEmojiPicker && (
+                <div className={styles.emojiPicker} ref={emojiPickerRef}>
+                  <EmojiPicker
+                    reactionsDefaultOpen={true}
+                    height={350}
+                    width={500}
+                    className={styles.reactionEmojiPicker}
+                    onEmojiClick={handleEmojiSelect}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Actions (supprimer la description) */}
           {isAuthor && isAuthorized && (
             <div className={styles.actions}>
               <button

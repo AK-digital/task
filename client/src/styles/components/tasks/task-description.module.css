@@ -1,111 +1,158 @@
 /* description */
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: var(--text-size-large);
-    color: var(--text-dark-color);
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-size-large);
+  color: var(--text-dark-color);
+  font-weight: 500;
 }
 
 .title svg {
-    color: var(--color-text-muted);
+  color: var(--color-text-muted);
 }
 
 .preview {
-    position: relative;
-    border-radius: var(--border-radius-small);
-    box-shadow: var(--box-shadow-small);
-    padding: 16px;
-    font-size: var(--text-size-normal);
-    cursor: pointer;
-    background-color: var(--secondary-background-color);
-    margin-bottom: 24px;
+  position: relative;
+  border-radius: var(--border-radius-small);
+  box-shadow: var(--box-shadow-small);
+  padding: 16px;
+  font-size: var(--text-size-normal);
+  cursor: pointer;
+  background-color: var(--secondary-background-color);
+  margin-bottom: 24px;
 }
 
 .preview .user {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .date,
 .updated {
-    font-size: 0.75rem;
-    color: var(--text-color-muted);
+  font-size: 0.75rem;
+  color: var(--text-color-muted);
 }
 
 .content {
-    margin-top: 12px;
-    font-weight: 300;
-    font-size: var(--text-size-normal);
+  margin-top: 12px;
+  font-weight: 300;
+  font-size: var(--text-size-normal);
 }
 
 .content p:empty {
-    margin: 12px 0;
+  margin: 12px 0;
 }
 
 .content ul {
-    list-style-type: disc;
+  list-style-type: disc;
 }
 
 .content ul,
 .content ol {
-    margin-left: 25px;
+  margin-left: 25px;
 }
 
 .content strong {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .content a {
-    color: #1E90FF;
-    text-decoration: underline;
+  color: #1e90ff;
+  text-decoration: underline;
 }
 
 .content img {
-    width: max-content;
-    height: 800px;
-    max-width: 100%;
-    object-fit: cover;
+  width: max-content;
+  height: 800px;
+  max-width: 100%;
+  object-fit: cover;
 }
 
 .content span {
-    color: var(--accent-color);
-    font-weight: 500;
+  color: var(--accent-color);
+  font-weight: 500;
 }
 
 .actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -12px;
-    margin-right: 12px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -12px;
+  margin-right: 12px;
 }
 
 .actions button {
-    background-color: transparent;
-    color: var(--accent-color);
-    padding: 0 !important;
+  background-color: transparent;
+  color: var(--accent-color);
+  padding: 0 !important;
 }
 
 .actions button:hover {
-    color: var(--accent-color-hover);
-    box-shadow: inherit;
+  color: var(--accent-color-hover);
+  box-shadow: inherit;
 }
 
 .empty {
-    border: 1px solid var(--border-color);
-    padding: 12px 24px;
-    border-radius: var(--border-radius-small);
-    font-size: var(--text-size-small);
+  border: 1px solid var(--border-color);
+  padding: 12px 24px;
+  border-radius: var(--border-radius-small);
+  font-size: var(--text-size-small);
 }
 
 .empty[data-role="true"] {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+.informations {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 0 8px;
+}
+
+.emojiReaction {
+  display: flex;
+  align-items: center;
+  background-color: var(--background-light);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.emojiCount {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.reactions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  top: 1px;
+}
+
+.reactions:hover {
+  background-color: var(--background-hover);
+  color: var(--text-primary);
+}
+
+.emojiPicker {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  z-index: 100;
 }

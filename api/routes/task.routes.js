@@ -126,7 +126,7 @@ router.patch(
 );
 
 router.patch(
-  ":id/description/reactions",
+  "/:id/description/reaction",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]),
   taskControllers.updateTaskDescriptionReactions
