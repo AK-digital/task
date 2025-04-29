@@ -12,6 +12,7 @@ import TimeTrackingMore from "./TimeTrackingMore";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { updateTaskText } from "@/api/task";
 import { updateTimeTrackingText } from "@/api/timeTracking";
+import NoPicture from "../User/NoPicture";
 
 export default function TimeTracking({
   tracker,
@@ -19,15 +20,14 @@ export default function TimeTracking({
   projects,
 }) {
   const [inputValue, setInputValue] = useState(
-    tracker?.task?.text || tracker?.taskText || ""
+    tracker?.task[0]?.text || tracker?.taskText || ""
   );
   const [isEditing, setIsEditing] = useState(false);
   const [isHover, setIsHover] = useState(false);
   const [isMore, setIsMore] = useState(false);
 
-  const project = projects?.find(
-    (project) => project?._id === tracker?.project?._id
-  );
+  const project = tracker?.project;
+  const user = tracker?.user;
   const canPut = useUserRole(project, ["owner", "manager", "team", "customer"]);
 
   const date = moment(tracker?.startTime).format("DD/MM/YYYY");
@@ -138,20 +138,20 @@ export default function TimeTracking({
       </div>
       {/* user */}
       <div className={`${styles.user} ${styles.row}`}>
-        {tracker?.userId?.picture && (
+        {user?.picture ? (
           <Image
-            src={tracker?.userId?.picture}
-            alt={tracker?.userId?.firstName}
+            src={user?.picture}
+            alt={user?.firstName}
             style={{
               borderRadius: "50%",
             }}
             width={22}
             height={22}
           />
+        ) : (
+          <NoPicture user={user} width={22} height={22} />
         )}
-        <span>
-          {tracker?.userId?.firstName + " " + tracker?.userId?.lastName}
-        </span>
+        <span>{user?.firstName + " " + user?.lastName}</span>
       </div>
       <div className={`${styles.date} ${styles.row}`}>
         <span>{date}</span>

@@ -7,6 +7,7 @@ import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useState } from "react";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import { useSearchParams } from "next/navigation";
+import ExportPdfBtn from "./ExportPdfBtn";
 
 export default function TimeTrackings({ trackers, projects }) {
   const [selectedProjects, setSelectedProjects] = useState([]);
@@ -24,14 +25,14 @@ export default function TimeTrackings({ trackers, projects }) {
   }, [trackers]);
 
   useEffect(() => {
-    const projectIds = queries?.get("projects")?.split(",") || [];
+    const projectsNames = queries?.get("projects")?.split(",") || [];
 
-    if (projectIds?.length <= 0) {
+    if (projects?.length <= 0) {
       setSelectedProjects([]);
     }
 
     setSelectedProjects(
-      projects.filter((project) => projectIds.includes(project?.name))
+      projects.filter((project) => projectsNames.includes(project?.name))
     );
   }, [searchParams]);
 
@@ -48,6 +49,7 @@ export default function TimeTrackings({ trackers, projects }) {
             Temps total : {formatTime(Math.floor(totalDuration / 1000))}
           </span>
         )}
+        <ExportPdfBtn projects={selectedProjects} trackers={filteredTrackers} />
       </div>
       {/* Time tracking list */}
       {selectedProjects?.length > 0 && isNotEmpty(filteredTrackers) ? (

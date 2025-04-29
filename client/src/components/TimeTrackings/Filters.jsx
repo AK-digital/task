@@ -10,16 +10,12 @@ export default function Filters({ projects, selectedProjects }) {
   const searchParams = useSearchParams();
   const queries = new URLSearchParams(searchParams);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [projectsOptions, setProjectsOptions] = useState(
-    projects?.map((project) => {
-      return {
-        id: project?._id,
-        picture: project?.logo,
-        label: project?.name,
-      };
-    }) || []
-  );
   const [usersOptions, setUsersOptions] = useState([]);
+  const projectsOptions = projects?.map((project) => ({
+    id: project?._id,
+    label: project?.name,
+    picture: project?.logo,
+  }));
 
   useEffect(() => {
     // If the query parameter userId is present in the URL, we need to set the selectedUsers state
@@ -56,24 +52,25 @@ export default function Filters({ projects, selectedProjects }) {
 
   useEffect(() => {
     const users = [];
-    const userIds = new Set();
 
     for (const selectedProject of selectedProjects) {
       const allUsers = selectedProject?.members || [];
 
       for (const user of allUsers) {
-        if (user && !userIds.has(user?.user)) {
-          userIds.add(user?.user);
-          users.push(user);
-        }
+        users.push(user?.user);
       }
     }
 
+    // Remove duplicates from the users array
+    const uniqueUsers = [
+      ...new Set(users.map((user) => JSON.stringify(user))),
+    ].map((user) => JSON.parse(user));
+
     setUsersOptions(
-      users.map((user) => ({
-        id: user?.user?._id,
-        picture: user?.user?.picture,
-        label: `${user?.user?.firstName} ${user?.user?.lastName}`,
+      uniqueUsers.map((user) => ({
+        id: user?._id,
+        picture: user?.picture,
+        label: `${user?.firstName} ${user?.lastName}`,
       }))
     );
   }, [selectedProjects]);
