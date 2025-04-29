@@ -165,6 +165,13 @@ export default function TaskDescription({ project, task, uid }) {
     }
   };
 
+  const handleReactionsButtonClick = (e) => {
+    e.stopPropagation();
+    if (e.target.tagName !== "BUTTON") {
+      setShowEmojiPicker(!showEmojiPicker);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <span className={styles.title}>
@@ -251,12 +258,7 @@ export default function TaskDescription({ project, task, uid }) {
             <div
               className={styles.reactions}
               ref={emojiButtonRef}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!e.target.closest(`.${styles.emojiReaction}`)) {
-                  setShowEmojiPicker(!showEmojiPicker);
-                }
-              }}
+              onClick={handleReactionsButtonClick}
             >
               <SmilePlus size={16} />
               {showEmojiPicker && (

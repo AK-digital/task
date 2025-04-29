@@ -131,6 +131,13 @@ export default function Message({ task, message, project, mutateMessage }) {
     setIsLoading(false);
   }
 
+  const handleReactionsButtonClick = (e) => {
+    e.stopPropagation();
+    if (e.target.tagName !== "BUTTON") {
+      setShowEmojiPicker(!showEmojiPicker);
+    }
+  };
+
   return (
     <>
       {edit ? (
@@ -262,12 +269,7 @@ export default function Message({ task, message, project, mutateMessage }) {
                 <div
                   className={styles.reactions}
                   ref={emojiButtonRef}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!e.target.closest(`.${styles.emojiReaction}`)) {
-                      setShowEmojiPicker(!showEmojiPicker);
-                    }
-                  }}
+                  onClick={handleReactionsButtonClick}
                 >
                   <SmilePlus size={16} />
                   {showEmojiPicker && (
