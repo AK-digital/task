@@ -52,7 +52,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
       }
     }
 
-    router.push(`${pathname}?${queries.toString()}`);
+    router.replace(`${pathname}?${queries.toString()}`);
   };
 
   return (

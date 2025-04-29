@@ -28,64 +28,54 @@ export default function TimeTrackingHeader({
     resetStates();
     setFilteredTrackers([...trackers]);
 
-    if (sort === "asc" && projectSort !== "asc") {
-      const newTrackers = [...trackers].sort((a, b) =>
-        a.project?.name.localeCompare(b.project?.name)
-      );
-      setFilteredTrackers(newTrackers);
-      setProjectSort("asc");
-    }
+    if (projectSort === sort) return;
 
-    if (sort === "desc" && projectSort !== "desc") {
-      const newTrackers = [...trackers].sort((a, b) =>
-        b.project?.name.localeCompare(a.project?.name)
-      );
-      setFilteredTrackers(newTrackers);
-      setProjectSort("desc");
-    }
+    const newTrackers = [...trackers].sort((a, b) => {
+      if (sort === "asc") {
+        return a.project?.name.localeCompare(b.project?.name);
+      } else {
+        return b.project?.name.localeCompare(a.project?.name);
+      }
+    });
+
+    setProjectSort(sort);
+    setFilteredTrackers(newTrackers);
   };
 
   const handleUserSort = (sort) => {
     resetStates();
     setFilteredTrackers([...trackers]);
 
-    if (sort === "asc" && userSort !== "asc") {
-      const newTrackers = [...trackers].sort((a, b) =>
-        a.userId?.firstName.localeCompare(b.userId?.firstName)
-      );
-      setFilteredTrackers(newTrackers);
-      setUserSort("asc");
-    }
+    if (userSort === sort) return;
 
-    if (sort === "desc" && userSort !== "desc") {
-      const newTrackers = [...trackers].sort((a, b) =>
-        b.userId?.firstName.localeCompare(a.userId?.firstName)
-      );
-      setFilteredTrackers(newTrackers);
-      setUserSort("desc");
-    }
+    const newTrackers = [...trackers].sort((a, b) => {
+      if (sort === "asc") {
+        return a.user?.firstName.localeCompare(b.user?.firstName);
+      } else {
+        return b.user?.firstName.localeCompare(a.user?.firstName);
+      }
+    });
+
+    setUserSort(sort);
+    setFilteredTrackers(newTrackers);
   };
 
   const handleDateSort = (sort) => {
-    // Reset the trackers
     resetStates();
     setFilteredTrackers([...trackers]);
 
-    if (sort === "asc" && dateSort !== "asc") {
-      const newTrackers = [...trackers].sort(
-        (a, b) => new Date(a.startTime) - new Date(b.startTime)
-      );
-      setFilteredTrackers(newTrackers);
-      setDateSort("asc");
-    }
+    if (dateSort === sort) return;
 
-    if (sort === "desc" && dateSort !== "desc") {
-      const newTrackers = [...trackers].sort(
-        (a, b) => new Date(b.startTime) - new Date(a.startTime)
-      );
-      setFilteredTrackers(newTrackers);
-      setDateSort("desc");
-    }
+    const newTrackers = [...trackers].sort((a, b) => {
+      if (sort === "asc") {
+        return new Date(a.startTime) - new Date(b.startTime);
+      } else {
+        return new Date(b.startTime) - new Date(a.startTime);
+      }
+    });
+
+    setDateSort(sort);
+    setFilteredTrackers(newTrackers);
   };
 
   const handleDurationSort = (sort) => {

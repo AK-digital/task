@@ -5,21 +5,21 @@ import TimeTrackings from "@/components/TimeTrackings/TimeTrackings";
 import { getProjects } from "@/api/project";
 
 export default async function TimeTrackingsPage({ searchParams }) {
-  const queries = await searchParams;
+  const queryParams = await searchParams;
 
-  // Trackers are the time tracking data
-  const trackersData = queries?.projects ? await getTimeTrackings(queries) : [];
-  const projects = await getProjects();
-
-  const trackers = trackersData?.data;
+  // Get trackers based on query params, if no query params return an empty array
+  const trackers = await getTimeTrackings(queryParams);
+  console.log("trackers", trackers?.data);
+  const projects = await getProjects(); // Fetch all projects
+  projects?.sort((a, b) => a.name.localeCompare(b.name)); // Sort projects by name
 
   return (
     <main className={styles.main}>
       <div className={styles.container}>
         <TimeTrackings
-          trackers={trackers}
+          trackers={trackers?.data}
           projects={projects}
-          queries={queries}
+          searchParams={queryParams}
         />
       </div>
     </main>

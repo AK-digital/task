@@ -14,11 +14,7 @@ import { updateTaskText } from "@/api/task";
 import { updateTimeTrackingText } from "@/api/timeTracking";
 import NoPicture from "../User/NoPicture";
 
-export default function TimeTracking({
-  tracker,
-  setSelectedTrackers,
-  projects,
-}) {
+export default function TimeTracking({ tracker, setSelectedTrackers }) {
   const [inputValue, setInputValue] = useState(
     tracker?.task[0]?.text || tracker?.taskText || ""
   );

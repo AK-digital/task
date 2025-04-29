@@ -2,12 +2,18 @@
 import styles from "@/styles/components/timeTrackings/filters.module.css";
 import { useEffect, useState } from "react";
 import { Dropdown } from "./Dropdown";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import moment from "moment/moment";
 
-export default function Filters({ projects, selectedProjects }) {
+export default function Filters({
+  projects,
+  selectedProjects,
+  searchParams,
+  hasSelectedProjects,
+  projectsWithTrackers,
+}) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const queries = new URLSearchParams(searchParams);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [usersOptions, setUsersOptions] = useState([]);
@@ -18,8 +24,8 @@ export default function Filters({ projects, selectedProjects }) {
   }));
 
   useEffect(() => {
-    // If the query parameter userId is present in the URL, we need to set the selectedUsers state
-    if (searchParams.get("users")) {
+    // If the query parameter users is present in the URL, we need to set the selectedUsers state
+    if (queries.has("users")) {
       // Split the userId query parameter into an array of userIds
       const userIds = queries.get("users")?.split(",");
       if (userIds?.length > 0) {
@@ -52,12 +58,21 @@ export default function Filters({ projects, selectedProjects }) {
 
   useEffect(() => {
     const users = [];
+    if (!hasSelectedProjects) {
+      for (const project of projectsWithTrackers) {
+        const allUsers = project?.members || [];
 
-    for (const selectedProject of selectedProjects) {
-      const allUsers = selectedProject?.members || [];
+        for (const user of allUsers) {
+          users.push(user?.user);
+        }
+      }
+    } else {
+      for (const selectedProject of selectedProjects) {
+        const allUsers = selectedProject?.members || [];
 
-      for (const user of allUsers) {
-        users.push(user?.user);
+        for (const user of allUsers) {
+          users.push(user?.user);
+        }
       }
     }
 
@@ -102,6 +117,9 @@ export default function Filters({ projects, selectedProjects }) {
     router.push(`${pathname}?${queries.toString()}`);
   };
 
+  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
+  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
+
   return (
     <div className={styles.container}>
       {/* Filter by project */}
@@ -112,36 +130,32 @@ export default function Filters({ projects, selectedProjects }) {
         query={"projects"}
       />
       {/* Filter by user */}
-      {selectedProjects?.length > 0 && (
-        <>
-          <Dropdown
-            defaultValue={"Tous les membres"}
-            selected={selectedUsers}
-            options={usersOptions}
-            query={"users"}
-          />
-          <div className={styles.date}>
-            <label>Date de début</label>
-            <input
-              type="date"
-              name="startingDate"
-              id="startingDate"
-              defaultValue={queries.get("startingDate")}
-              onChange={handleStartingDate}
-            />
-          </div>
-          <div className={styles.date}>
-            <label>Date de fin</label>
-            <input
-              type="date"
-              name="endingDate"
-              id="endingDate"
-              defaultValue={queries.get("endingDate")}
-              onChange={handleEndingDate}
-            />
-          </div>
-        </>
-      )}
+      <Dropdown
+        defaultValue={"Tous les membres"}
+        selected={selectedUsers}
+        options={usersOptions}
+        query={"users"}
+      />
+      <div className={styles.date}>
+        <label>Date de début</label>
+        <input
+          type="date"
+          name="startingDate"
+          id="startingDate"
+          defaultValue={queries.get("startingDate") || firstDayOfTheMonth}
+          onChange={handleStartingDate}
+        />
+      </div>
+      <div className={styles.date}>
+        <label>Date de fin</label>
+        <input
+          type="date"
+          name="endingDate"
+          id="endingDate"
+          defaultValue={queries.get("endingDate") || lastDayOfTheMonth}
+          onChange={handleEndingDate}
+        />
+      </div>
     </div>
   );
 }
