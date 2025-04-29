@@ -232,9 +232,7 @@ export default function Message({ task, message, project, mutateMessage }) {
                 <span>{message?.readBy?.length}</span>
 
                 {showPeopleRead && isNotEmpty(message?.readBy) && (
-                  <div className={styles.pictures}>
-                    <UsersInfo users={message?.readBy} />
-                  </div>
+                  <UsersInfo users={message?.readBy} />
                 )}
               </div>
 
@@ -273,9 +271,7 @@ export default function Message({ task, message, project, mutateMessage }) {
                             {/* Affichage des avatars des utilisateurs qui ont réagi */}
                             {hoveredEmoji === emoji &&
                               isNotEmpty(usersForThisEmoji) && (
-                                <div className={styles.emojiUsers}>
-                                  <UsersInfo users={usersForThisEmoji} />
-                                </div>
+                                <UsersInfo users={usersForThisEmoji} />
                               )}
                           </div>
                         );

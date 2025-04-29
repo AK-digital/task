@@ -270,12 +270,7 @@ export default function TaskDescription({ project, task, uid }) {
 
                         {hoveredEmoji === emoji &&
                           usersForThisEmoji.length > 0 && (
-                            <div
-                              className={styles.emojiUsers}
-                              ref={emojiUsersRef}
-                            >
-                              <MessageInfo users={usersForThisEmoji} />
-                            </div>
+                            <MessageInfo users={usersForThisEmoji} />
                           )}
                       </div>
                     );
@@ -287,7 +282,7 @@ export default function TaskDescription({ project, task, uid }) {
             <div
               className={styles.reactions}
               ref={emojiButtonRef}
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              onClick={handleReactionsButtonClick}
             >
               <SmilePlus size={16} />
               {showEmojiPicker && (

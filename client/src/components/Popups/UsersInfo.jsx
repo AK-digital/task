@@ -3,21 +3,21 @@ import Image from "next/image";
 
 export default function UsersInfo({ users }) {
   return (
-    <>
-      {users.slice(0, 3).map((user, index) => (
+    <div className={styles.popupContainer}>
+      {users.map((user, index) => (
         <div key={index} className={styles.infoUser}>
           <Image
             src={user?.picture || "/default-pfp.webp"}
             width={24}
             height={24}
-            alt={"Photo de profil de " + user?.firstName}
-            style={{ borderRadius: "50%" }}
+            alt={`Photo de profil de ${user.firstName}`}
+            className={styles.profileImage}
           />
+          <span className={styles.name}>
+            {user.firstName} {user.lastName}
+          </span>
         </div>
       ))}
-      {users.length > 3 && (
-        <div className={styles.moreInfos}>+{users.length - 3}</div>
-      )}
-    </>
+    </div>
   );
 }
