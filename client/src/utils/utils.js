@@ -209,6 +209,10 @@ export function exportTimeTracking(projects, trackers) {
 
     // Sauvegarde du fichier avec nom du projet
 
-    doc.save(`releve_${project?.name || "projet"}.pdf`);
+    doc.save(
+      `${formattedStartingDate}-${formattedEndingDate}-${
+        project?.name || "projet"
+      }-temps-task.pdf`
+    );
   }
 }
