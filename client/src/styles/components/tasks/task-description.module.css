@@ -145,6 +145,15 @@
   top: 1px;
 }
 
+.reactions ul {
+  list-style-type: none;
+}
+
+.reactions button {
+  padding: 0 !important;
+  background-color: transparent !important;
+}
+
 .reactions:hover {
   background-color: var(--background-hover);
   color: var(--text-primary);

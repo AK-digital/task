@@ -152,7 +152,7 @@ export default function Message({ task, message, project, mutateMessage }) {
 
   const handleReactionsButtonClick = (e) => {
     e.stopPropagation();
-    if (e.target.tagName !== "BUTTON") {
+    if (e.target.tagName === "svg") {
       setShowEmojiPicker(!showEmojiPicker);
     }
   };

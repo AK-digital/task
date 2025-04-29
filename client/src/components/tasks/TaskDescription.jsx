@@ -182,7 +182,7 @@ export default function TaskDescription({ project, task, uid }) {
 
   const handleReactionsButtonClick = (e) => {
     e.stopPropagation();
-    if (e.target.tagName !== "BUTTON") {
+    if (e.target.tagName === "svg") {
       setShowEmojiPicker(!showEmojiPicker);
     }
   };
