@@ -17,6 +17,7 @@ import Tiptap from "../RichTextEditor/Tiptap";
 import EmojiPicker from "emoji-picker-react";
 import { Eye, SmilePlus } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
+import UsersInfo from "../Popups/UsersInfo";
 
 export default function Message({ task, message, project, mutateMessage }) {
   const { uid } = useContext(AuthContext);
@@ -48,9 +49,25 @@ export default function Message({ task, message, project, mutateMessage }) {
     (reaction) => reaction.userId === uid
   );
 
+  const getUsersByReactionEmoji = (emoji) => {
+    return message?.reactions
+      ?.filter((reaction) => reaction.emoji === emoji)
+      .map((reaction) => {
+        if (reaction.userId === author._id) {
+          return author;
+        }
+        const user = message?.readBy?.find((u) => u._id === reaction.userId);
+        return user || { _id: reaction.userId };
+      });
+  };
+
   const hasUserReacted = (emoji) => {
     return userReaction && userReaction.emoji === emoji;
   };
+
+  const [hoveredEmoji, setHoveredEmoji] = useState(null);
+
+  const emojiUsersRef = useRef(null);
 
   const handleReadBy = useCallback(async () => {
     if (uid === author?._id) return;
@@ -73,6 +90,8 @@ export default function Message({ task, message, project, mutateMessage }) {
           emojiPickerRef.current.contains(event.target)) ||
         (emojiButtonRef.current &&
           emojiButtonRef.current.contains(event.target)) ||
+        (emojiUsersRef.current &&
+          emojiUsersRef.current.contains(event.target)) ||
         event.target.closest(".emoji-picker-react")
       ) {
         return;
@@ -214,22 +233,7 @@ export default function Message({ task, message, project, mutateMessage }) {
 
                 {showPeopleRead && isNotEmpty(message?.readBy) && (
                   <div className={styles.pictures}>
-                    {message?.readBy?.slice(0, 3).map((user) => (
-                      <div key={user?._id} className={styles.picture}>
-                        <Image
-                          src={user?.picture || "/default-pfp.webp"}
-                          width={24}
-                          height={24}
-                          alt={`Photo de profil de ${user?.firstName}`}
-                          style={{ borderRadius: "50%" }}
-                        />
-                      </div>
-                    ))}
-                    {message?.readBy?.length > 3 && (
-                      <div className={styles.moreReaders}>
-                        +{message?.readBy?.length - 3}
-                      </div>
-                    )}
+                    <UsersInfo users={message?.readBy} />
                   </div>
                 )}
               </div>
@@ -238,29 +242,45 @@ export default function Message({ task, message, project, mutateMessage }) {
               {Array.isArray(message?.reactions) &&
                 message.reactions.length > 0 && (
                   <div className={styles.emojiReactions}>
-                    {Object.entries(groupedReactions).map(([emoji, users]) => (
-                      <div
-                        key={emoji}
-                        className={`${styles.emojiReaction} ${
-                          hasUserReacted(emoji) ? styles.active : ""
-                        }`}
-                        onClick={() => handleReactionClick(emoji)}
-                        title={
-                          hasUserReacted(emoji)
-                            ? "Retirer votre réaction"
-                            : userReaction
-                            ? "Changer votre réaction actuelle"
-                            : "Ajouter votre réaction"
-                        }
-                      >
-                        <span className={styles.emojiIcon}>
-                          {unifiedToEmoji(emoji)}
-                        </span>
-                        <span className={styles.emojiCount}>
-                          {users.length}
-                        </span>
-                      </div>
-                    ))}
+                    {Object.entries(groupedReactions).map(
+                      ([emoji, userIds]) => {
+                        const usersForThisEmoji =
+                          getUsersByReactionEmoji(emoji);
+                        return (
+                          <div
+                            key={emoji}
+                            className={`${styles.emojiReaction} ${
+                              hasUserReacted(emoji) ? styles.active : ""
+                            }`}
+                            onClick={() => handleReactionClick(emoji)}
+                            onMouseEnter={() => setHoveredEmoji(emoji)}
+                            onMouseLeave={() => setHoveredEmoji(null)}
+                            title={
+                              hasUserReacted(emoji)
+                                ? "Retirer votre réaction"
+                                : userReaction
+                                ? "Changer votre réaction actuelle"
+                                : "Ajouter votre réaction"
+                            }
+                          >
+                            <span className={styles.emojiIcon}>
+                              {unifiedToEmoji(emoji)}
+                            </span>
+                            <span className={styles.emojiCount}>
+                              {userIds.length}
+                            </span>
+
+                            {/* Affichage des avatars des utilisateurs qui ont réagi */}
+                            {hoveredEmoji === emoji &&
+                              isNotEmpty(usersForThisEmoji) && (
+                                <div className={styles.emojiUsers}>
+                                  <UsersInfo users={usersForThisEmoji} />
+                                </div>
+                              )}
+                          </div>
+                        );
+                      }
+                    )}
                   </div>
                 )}
 

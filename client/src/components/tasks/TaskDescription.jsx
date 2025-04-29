@@ -14,6 +14,7 @@ import { getDrafts } from "@/api/draft";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import EmojiPicker from "emoji-picker-react";
+import MessageInfo from "../Popups/UsersInfo";
 
 export default function TaskDescription({ project, task, uid }) {
   const { user } = useContext(AuthContext);
@@ -29,6 +30,8 @@ export default function TaskDescription({ project, task, uid }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef(null);
   const emojiButtonRef = useRef(null);
+  const emojiUsersRef = useRef(null);
+  const [hoveredEmoji, setHoveredEmoji] = useState(null);
 
   const descriptionAuthor = task?.description?.author;
   const isAuthor = descriptionAuthor?._id === uid;
@@ -54,6 +57,18 @@ export default function TaskDescription({ project, task, uid }) {
   const userReaction = task?.description?.reactions?.find(
     (reaction) => reaction.userId === uid
   );
+
+  const getUsersByReactionEmoji = (emoji) => {
+    return task?.description?.reactions
+      ?.filter((reaction) => reaction.emoji === emoji)
+      .map((reaction) => {
+        if (reaction.userId === user?._id) {
+          return user;
+        }
+        const readUser = task?.readBy?.find((u) => u._id === reaction.userId);
+        return readUser || { _id: reaction.userId };
+      });
+  };
 
   const hasUserReacted = (emoji) => {
     return userReaction && userReaction.emoji === emoji;
@@ -227,30 +242,44 @@ export default function TaskDescription({ project, task, uid }) {
             {Array.isArray(task?.description?.reactions) &&
               task.description.reactions.length > 0 && (
                 <div className={styles.emojiReactions}>
-                  {Object.entries(groupedReactions).map(([emoji, users]) => (
-                    <div
-                      key={emoji}
-                      className={`${styles.emojiReaction} ${
-                        hasUserReacted(emoji) ? styles.active : ""
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleReactionClick(emoji);
-                      }}
-                      title={
-                        hasUserReacted(emoji)
-                          ? "Retirer votre réaction"
-                          : userReaction
-                          ? "Changer votre réaction actuelle"
-                          : "Ajouter votre réaction"
-                      }
-                    >
-                      <span className={styles.emojiIcon}>
-                        {unifiedToEmoji(emoji)}
-                      </span>
-                      <span className={styles.emojiCount}>{users.length}</span>
-                    </div>
-                  ))}
+                  {Object.entries(groupedReactions).map(([emoji, userIds]) => {
+                    const usersForThisEmoji = getUsersByReactionEmoji(emoji);
+                    return (
+                      <div
+                        key={emoji}
+                        className={`${styles.emojiReaction} ${
+                          hasUserReacted(emoji) ? styles.active : ""
+                        }`}
+                        onClick={() => handleReactionClick(emoji)}
+                        onMouseEnter={() => setHoveredEmoji(emoji)}
+                        onMouseLeave={() => setHoveredEmoji(null)}
+                        title={
+                          hasUserReacted(emoji)
+                            ? "Retirer votre réaction"
+                            : userReaction
+                            ? "Changer votre réaction actuelle"
+                            : "Ajouter votre réaction"
+                        }
+                      >
+                        <span className={styles.emojiIcon}>
+                          {unifiedToEmoji(emoji)}
+                        </span>
+                        <span className={styles.emojiCount}>
+                          {userIds.length}
+                        </span>
+
+                        {hoveredEmoji === emoji &&
+                          usersForThisEmoji.length > 0 && (
+                            <div
+                              className={styles.emojiUsers}
+                              ref={emojiUsersRef}
+                            >
+                              <MessageInfo users={usersForThisEmoji} />
+                            </div>
+                          )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
@@ -258,7 +287,7 @@ export default function TaskDescription({ project, task, uid }) {
             <div
               className={styles.reactions}
               ref={emojiButtonRef}
-              onClick={handleReactionsButtonClick}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             >
               <SmilePlus size={16} />
               {showEmojiPicker && (

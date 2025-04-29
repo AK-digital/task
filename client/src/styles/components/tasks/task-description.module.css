@@ -156,3 +156,20 @@
   left: 0;
   z-index: 100;
 }
+
+.emojiReaction {
+  position: relative;
+}
+
+.pictures,
+.emojiUsers {
+  position: absolute;
+  display: flex;
+  gap: 4px;
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--box-shadow-medium);
+  border-radius: var(--border-radius-xs);
+  bottom: 18px;
+  left: -4px;
+  padding: 4px 8px;
+}
