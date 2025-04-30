@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: opacity 50ms linear;
 }
 
 .container[data-loading="true"] {
   opacity: 0.4;
-  transition: 50ms all linear;
 }
 
 .wrapper {
@@ -17,14 +17,18 @@
   padding: 16px 24px;
   background-color: var(--secondary-background-color);
   border-radius: var(--border-radius-small);
-  transition: 50ms all linear;
+  transition: all 50ms linear;
   position: relative;
 }
 
-.header {
+.header,
+.user {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+}
+
+.header {
+  justify-content: space-between;
 }
 
 .header svg {
@@ -32,8 +36,6 @@
 }
 
 .user {
-  display: flex;
-  align-items: center;
   gap: 8px;
 }
 
@@ -51,22 +53,28 @@
 .more {
   position: absolute;
   z-index: 2001;
+  right: 24px;
   width: fit-content;
   padding: 8px;
   background-color: var(--secondary-background-color);
-  right: 24px;
   border-radius: var(--border-radius-xs);
   box-shadow: var(--box-shadow-medium);
 }
 
+.more ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .more ul li {
-  padding: 8px 8px;
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 8px;
   font-size: var(--text-size-small);
   cursor: pointer;
-  transition: 120ms all linear;
+  transition: background-color 120ms linear;
 }
 
 .more li svg {
@@ -81,7 +89,6 @@
 .more li:hover {
   background-color: var(--third-background-color);
   border-radius: var(--border-radius-xs);
-  transition: 120ms all linear;
 }
 
 .text {
@@ -94,11 +101,11 @@
 }
 
 .text img {
-  max-width: 800px;
   width: 100%;
+  max-width: 800px;
   max-height: 400px;
   object-fit: cover;
-  margin: 10px 0 10px 0;
+  margin: 10px 0;
 }
 
 .text span {
@@ -106,13 +113,13 @@
   font-weight: 500;
 }
 
-.text ul {
-  list-style-type: disc;
-}
-
 .text ul,
 .text ol {
   margin-left: 25px;
+}
+
+.text ul {
+  list-style-type: disc;
 }
 
 .reactions {
@@ -123,12 +130,15 @@
 }
 
 .reactions ul {
-  list-style-type: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .reactions button {
   padding: 0 !important;
   background-color: transparent !important;
+  border: none;
 }
 
 .informations {
