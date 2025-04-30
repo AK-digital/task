@@ -216,3 +216,19 @@ export function exportTimeTracking(projects, trackers) {
     );
   }
 }
+
+export function groupReactionsByEmoji(reactions = []) {
+  return reactions.reduce((acc, curr) => {
+    const emoji = acc.find((item) => item.emoji === curr.emoji);
+    const total = reactions.filter(
+      (reaction) => reaction.emoji === curr.emoji
+    ).length;
+
+    if (!emoji) {
+      const newCurr = { ...curr, total };
+      return acc.concat([newCurr]);
+    } else {
+      return acc;
+    }
+  }, []);
+}

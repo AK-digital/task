@@ -83,6 +83,10 @@ export async function getTasks(req, res, next) {
         path: "messages",
         select: "readBy",
       })
+      .populate({
+        path: "description.reactions.userId",
+        select: "lastName firstName picture",
+      })
       .exec();
 
     if (tasks.length <= 0) {
@@ -463,6 +467,86 @@ export async function updateTaskDescription(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Description modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTaskDescriptionReactions(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { emoji } = req.body;
+
+    if (!emoji) {
+      return res.status(400).send({
+        success: false,
+        message: "Emoji manquant",
+      });
+    }
+
+    const task = await TaskModel.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message: "Tâche non trouvée",
+      });
+    }
+
+    if (task?.description?.author.equals(authUser._id)) {
+      return res.status(403).send({
+        success: false,
+        message: "Vous ne pouvez pas réagir à votre propre description",
+      });
+    }
+
+    if (!task.description || !task.description.text) {
+      return res.status(400).send({
+        success: false,
+        message: "Cette tâche n'a pas de description",
+      });
+    }
+
+    if (!task.description.reactions) {
+      task.description.reactions = [];
+    }
+
+    const existingReactionIndex = task.description.reactions.findIndex(
+      (reaction) => reaction.userId.equals(authUser._id)
+    );
+
+    let responseMessage = "";
+
+    if (existingReactionIndex !== -1) {
+      const existingReaction =
+        task.description.reactions[existingReactionIndex];
+      if (existingReaction.emoji === emoji) {
+        task.description.reactions.splice(existingReactionIndex, 1);
+        responseMessage = "Réaction supprimée avec succès";
+      } else {
+        task.description.reactions[existingReactionIndex].emoji = emoji;
+        responseMessage = "Réaction mise à jour avec succès";
+      }
+    } else {
+      task.description.reactions.push({
+        userId: authUser._id,
+        emoji,
+      });
+      responseMessage = "Réaction ajoutée avec succès";
+    }
+
+    task.markModified("description");
+
+    const updatedTask = await task.save();
+
+    return res.status(200).send({
+      success: true,
+      message: responseMessage,
       data: updatedTask,
     });
   } catch (err) {
