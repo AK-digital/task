@@ -71,7 +71,7 @@ export default function Messages({ task, project }) {
         <MessagesSquareIcon size={18} /> Conversation
       </span>
 
-      {/* {messageLoading && <MessagesSkeleton />} */}
+      {messageLoading && <MessagesSkeleton />}
 
       {!messageLoading &&
         isNotEmpty(messages) &&

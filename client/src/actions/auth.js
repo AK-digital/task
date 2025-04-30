@@ -245,7 +245,7 @@ export async function resetForgotPassword(prevState, formData) {
         status: "failure",
         errors: {
           newPassword:
-            "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre",
+            "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
         },
       };
     }

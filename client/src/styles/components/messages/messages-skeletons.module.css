@@ -1,0 +1,87 @@
+.container {
+    width: 100%;
+}
+
+.message {
+    padding: 16px 24px;
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-small);
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header div,
+.body div {
+    background-color: var(--third-background-color);
+}
+
+.header div:first-child {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.header div:last-child {
+    width: 120px;
+    height: 20px;
+    border-radius: var(--border-radius-small);
+}
+
+.body {
+    margin-top: 14px;
+}
+
+.body div:first-child {
+    width: 60%;
+    height: 20px;
+    border-radius: var(--border-radius-small);
+}
+
+.body div:last-child {
+    margin-top: 14px;
+    width: 40%;
+    height: 20px;
+    border-radius: var(--border-radius-small);
+}
+
+.header div,
+.body div {
+    background: linear-gradient(90deg,
+            var(--third-background-color) 25%,
+            rgba(255, 255, 255, 0.1) 50%,
+            var(--third-background-color) 75%);
+    background-size: 200% 100%;
+    animation-timing-function: ease-in-out;
+}
+
+/* Animation spécifique aux éléments du header */
+.header div:nth-child(1),
+.header div:nth-child(2) {
+    background-size: 800px 100px;
+    animation: wave-skeleton 2.5s infinite ease-in-out;
+}
+
+/* Animation spécifique pour les divs dans le body */
+.body div {
+    background-size: 800px 100px;
+    animation: wave-skeleton 2.5s infinite ease-in-out;
+}
+
+@keyframes wave-skeleton {
+    0% {
+        background-position: -468px 0;
+    }
+
+    50% {
+        background-position: 468px 0;
+    }
+
+    100% {
+        background-position: -468px 0;
+    }
+}
