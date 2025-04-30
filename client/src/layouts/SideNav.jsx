@@ -24,6 +24,7 @@ import {
   ArrowRightFromLine,
   LayoutGrid,
   Plus,
+  ClipboardList,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -103,6 +104,15 @@ export default function SideNav({ projects }) {
           >
             {isMenuOpen && <ArrowLeftFromLine size={24} />}
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
+          </div>
+          <div className={styles.myTasks}>
+            <Link
+              href={"/myTasks"}
+              className={styles.myTasksLink}
+              title="Mes tâches"
+            >
+              <ClipboardList size={24} />
+            </Link>
           </div>
           <nav className={styles.nav}>
             <DndContext
