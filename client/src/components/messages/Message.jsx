@@ -13,7 +13,6 @@ import { deleteMessage, updateReadBy } from "@/api/message";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { mutate } from "swr";
 
 export default function Message({ task, message, project, mutateMessage }) {
   const { uid } = useContext(AuthContext);
