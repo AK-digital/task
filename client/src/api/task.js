@@ -118,6 +118,39 @@ export async function updateTaskText(taskId, projectId, text) {
   }
 }
 
+export async function updateTaskDescriptionReactions(taskId, projectId, emoji) {
+  try {
+    if (!taskId || !projectId || !emoji) {
+      return {
+        success: false,
+        message: "Paramètres invalides pour la mise à jour des réactions",
+      };
+    }
+
+    const res = await useAuthFetch(
+      `task/${taskId}/description/reaction?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { emoji: emoji }
+    );
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: `Erreur HTTP: ${res.status} - ${res.statusText}`,
+      };
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour des réactions:", error);
+    return {
+      success: false,
+      message: error.message || "Une erreur est survenue",
+    };
+  }
+}
+
 export async function removeTaskFromArchive(tasksIds, projectId) {
   try {
     if (tasksIds.length <= 0) {

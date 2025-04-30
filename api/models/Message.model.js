@@ -27,8 +27,19 @@ const messageSchema = new Schema(
     },
     readBy: {
       type: [Schema.Types.ObjectId],
-      ref: "User"
+      ref: "User",
     },
+    reactions: [
+      {
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        emoji: {
+          type: String,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

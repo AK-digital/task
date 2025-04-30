@@ -2,41 +2,48 @@ import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import { checkRole } from "../middlewares/projectRole.middlewares.js";
-import * as reponseControllers from "../controllers/message.controllers.js";
+import * as messageControllers from "../controllers/message.controllers.js";
 
 router.post(
   "/",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
-  reponseControllers.saveMessage
+  messageControllers.saveMessage
 );
 
 router.get(
   "/",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer", "guest"]), // projectId query is required
-  reponseControllers.getMessages
+  messageControllers.getMessages
 );
 
 router.put(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
-  reponseControllers.updateMessage
+  messageControllers.updateMessage
 );
 
 router.patch(
   "/:id/read",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer", "guest"]),
-  reponseControllers.updateReadBy
+  messageControllers.updateReadBy
+);
+
+router.patch(
+  "/:id/reaction",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer"]),
+  messageControllers.updateReactions
 );
 
 router.delete(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
-  reponseControllers.deleteMessage
+  messageControllers.deleteMessage
 );
 
 export default router;

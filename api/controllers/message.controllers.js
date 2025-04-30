@@ -4,7 +4,7 @@ import MessageModel from "../models/Message.model.js";
 import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailMessage } from "../templates/emails.js";
-import { getMatches } from "../utils/utils.js";
+import { deleteReaction, getMatches } from "../utils/utils.js";
 
 export async function saveMessage(req, res, next) {
   try {
@@ -105,10 +105,20 @@ export async function getMessages(req, res, next) {
 
     const messages = await MessageModel.find({
       taskId: taskId,
-    }).populate({
-      path: "author",
-      select: "lastName firstName picture",
-    });
+    })
+      .populate({
+        path: "author",
+        select: "lastName firstName picture",
+      })
+      .populate({
+        path: "readBy",
+        select: "lastName firstName picture",
+      })
+      .populate({
+        path: "reactions.userId",
+        select: "lastName firstName picture",
+      })
+      .exec();
 
     if (messages.length <= 0) {
       return res.status(404).send({
@@ -269,6 +279,74 @@ export async function updateReadBy(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Réponse lu avec succès",
+      data: updatedMessage,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateReactions(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { emoji } = req.body;
+
+    if (!emoji) {
+      return res.status(400).send({
+        success: false,
+        message: "Emoji manquant",
+      });
+    }
+
+    const message = await MessageModel.findById({ _id: req.params.id });
+
+    if (message?.author?.equals(authUser?._id)) {
+      return res.status(403).send({
+        success: false,
+        message: "Impossible de réagir à son propre message",
+      });
+    }
+
+    if (!message) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible d'ajouter une réaction à un message qui n'existe pas",
+      });
+    }
+
+    let responseMessage = "";
+
+    // Check if the user has already reacted to the message by finding the index of the reaction
+    const isUserReacted = message?.reactions?.findIndex((reaction) =>
+      reaction?.userId?.equals(authUser?._id)
+    );
+
+    // If the user has not reacted yet, we add the reaction to the message
+    if (isUserReacted === -1) {
+      message?.reactions.push({ userId: authUser?._id, emoji });
+      responseMessage = "Réaction ajoutée avec succès";
+    } else {
+      // If the user has already reacted, we check if the emoji is the same as the one they previously used
+      const reaction = message?.reactions[isUserReacted];
+
+      if (reaction?.emoji === emoji) {
+        message?.reactions?.splice(isUserReacted, 1);
+        responseMessage = "Réaction supprimée avec succès";
+      } else {
+        message.reactions[isUserReacted].emoji = emoji;
+        responseMessage = "Réaction mise à jour avec succès";
+      }
+    }
+
+    const updatedMessage = await message.save();
+
+    return res.status(200).send({
+      success: true,
+      message: responseMessage,
       data: updatedMessage,
     });
   } catch (err) {
