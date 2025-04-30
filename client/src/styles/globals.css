@@ -378,3 +378,8 @@ input[type="checkbox"] {
 #task-text:last-child {
   background-color: red;
 }
+
+.epr_-6npj90 {
+  --epr-emoji-size: 18px !important;
+  --epr-category-navigation-button-size: 24px !important;
+}

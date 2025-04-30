@@ -293,7 +293,7 @@ export default function Message({ task, message, project, mutateMessage }) {
                       <EmojiPicker
                         reactionsDefaultOpen={true}
                         height={350}
-                        width={500}
+                        width={300}
                         className={styles.reactionEmojiPicker}
                         onEmojiClick={handleEmojiSelect}
                       />
