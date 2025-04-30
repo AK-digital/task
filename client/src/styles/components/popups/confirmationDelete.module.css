@@ -1,0 +1,63 @@
+.confirmationOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmationDialog {
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.confirmationDialog h3 {
+  margin-top: 0;
+  color: var(--text-color-dark, #333);
+  font-size: var(--text-size-large, 18px);
+  text-align: center;
+}
+
+.confirmationDialog p {
+  color: var(--text-color-medium, #555);
+}
+
+.confirmationButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cancelBtn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background-color: var(--accent-color-hover, #f0f0f0);
+}
+
+.confirmDeleteBtn {
+  background-color: var(--danger-color, #e74c3c);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirmDeleteBtn:hover {
+  background-color: var(--danger-color-hover, #c0392b);
+}

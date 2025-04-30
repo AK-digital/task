@@ -2,7 +2,7 @@
 import { userUpdateValidation } from "@/utils/zod";
 import { useAuthFetch } from "@/utils/api";
 
-export async function updateUserProfile(prevState, formData) {
+export async function updateUserProfile(formData) {
   try {
     const userId = formData.get("userId");
 
@@ -48,6 +48,14 @@ export async function updateUserProfile(prevState, formData) {
       message: err.message || "Une erreur est survenue lors de la mise à jour",
     };
   }
+}
+
+export async function deleteUserProfile(prevState, formData) {
+  return {
+    status: "success",
+    message: "Bien supprimé",
+    data: "Supprimé",
+  };
 }
 
 export async function updateUserPicture(prevState, formData) {

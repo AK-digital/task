@@ -1,23 +1,28 @@
 .input {
-    font-size: var(--text-size-medium);
+  font-size: var(--text-size-medium);
 }
 
 .input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-.submitBtn {
-    margin-left: auto;
-    margin-top: 24px;
+  outline: none;
+  border-color: var(--primary-color);
 }
 
 .signOut {
-    margin-top: var(--layout-gap);
-    margin-bottom: var(--layout-gap);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
+  margin-top: var(--layout-gap);
+  margin-bottom: var(--layout-gap);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btnContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.deleteBtn {
+  background-color: var(--danger-color);
 }
