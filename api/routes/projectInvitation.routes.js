@@ -11,6 +11,13 @@ router.get(
   projectInvitationControllers.getProjectInvitations
 );
 
+router.patch(
+  "/:id",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager"]),
+  projectInvitationControllers.updateRoleUserInvitation
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

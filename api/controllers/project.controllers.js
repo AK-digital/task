@@ -552,7 +552,7 @@ export async function acceptProjectInvitation(req, res, next) {
         $addToSet: {
           members: {
             user: user?._id,
-            role: "guest",
+            role: projectInvitation?.role || "guest",
           },
         },
       },

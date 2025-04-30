@@ -13,6 +13,11 @@ const projectInvitationSchema = new Schema(
       lowercase: true,
       required: "Une adresse mail est requise",
     },
+    role: {
+      type: String,
+      enum: ["owner", "manager", "team", "customer", "guest"],
+      default: "guest",
+    },
   },
   {
     timestamps: true,

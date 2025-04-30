@@ -28,6 +28,48 @@ export async function getProjectInvitations(req, res, next) {
   }
 }
 
+export async function updateRoleUserInvitation(req, res, next) {
+  try {
+    const { role } = req.body;
+
+    if (!role) {
+      return res.status(400).send({
+        success: false,
+        message: "Le rôle est requis",
+      });
+    }
+
+    const projectInvitation = await ProjectInvitationModel.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!projectInvitation) {
+      return res.status(404).send({
+        success: false,
+        message: "Invitation de projet non trouvée",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Rôle de l'utilisateur mis à jour avec succès",
+      data: projectInvitation,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur s'est produite lors de la mise à jour du rôle de l'utilisateur",
+    });
+  }
+}
+
 export async function deleteProjectInvitation(req, res, next) {
   try {
     const projectInvitation = await ProjectInvitationModel.findByIdAndDelete(
