@@ -47,6 +47,12 @@ export default function ProjectOptions({ project }) {
   const [isPictLoading, setIsPictLoading] = useState(false);
   const canEdit = useUserRole(project, ["owner", "manager"]);
 
+  const initialLinks = useRef(
+    project?.urls?.length
+      ? project.urls.map((link) => ({ ...link }))
+      : [{ url: "", icon: "Globe" }]
+  );
+
   const author = project?.members.find((member) => member?.role === "owner");
   const createdAt = moment(project?.createdAt).format("DD/MM/YYYY");
 
@@ -81,20 +87,16 @@ export default function ProjectOptions({ project }) {
   }, [popup]);
 
   useEffect(() => {
-    const nameChanged = projectName !== project.name;
-    const noteChanged = note !== project.note;
+    const nameChanged = projectName !== project?.name;
+    const noteChanged = note !== project?.note;
 
     const linksChanged = () => {
-      const initialLinks = project?.urls?.length
-        ? project.urls
-        : [{ url: "", icon: "Globe" }];
-
-      if (links.length !== initialLinks.length) return true;
+      if (links.length !== initialLinks.current.length) return true;
 
       for (let i = 0; i < links.length; i++) {
         if (
-          links[i].url !== initialLinks[i]?.url ||
-          links[i].icon !== initialLinks[i]?.icon
+          links[i].url !== initialLinks.current[i]?.url ||
+          links[i].icon !== initialLinks.current[i]?.icon
         ) {
           return true;
         }
@@ -105,11 +107,7 @@ export default function ProjectOptions({ project }) {
 
     const hasChanges = nameChanged || noteChanged || linksChanged();
 
-    if (hasChanges) {
-      setIsDisabled(false);
-    } else {
-      setIsDisabled(true);
-    }
+    setIsDisabled(!hasChanges);
   }, [projectName, note, links]);
 
   async function handleUpdateLogo(e) {
@@ -162,7 +160,6 @@ export default function ProjectOptions({ project }) {
     setLinks(updatedLinks);
   }
 
-  console.log(links);
   return (
     <div className={styles.container}>
       <div className={styles.back} onClick={() => router.back()}>
