@@ -18,7 +18,7 @@ export async function getProjectInvitations(req, res, next) {
       message: "Invitations de projet récupérées avec succès",
       data: projectsInvitations,
     });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).send({
       success: false,
       message:
@@ -39,13 +39,10 @@ export async function updateRoleUserInvitation(req, res, next) {
       });
     }
 
-    const projectInvitation = await ProjectInvitationModel.findByIdAndUpdate(
-      req.params.id,
-      { role },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
+    const projectInvitation = await ProjectInvitationModel.findOneAndUpdate(
+      { guestEmail: req.body.email },
+      { role: req.body.role },
+      { new: true }
     );
 
     if (!projectInvitation) {
@@ -60,7 +57,7 @@ export async function updateRoleUserInvitation(req, res, next) {
       message: "Rôle de l'utilisateur mis à jour avec succès",
       data: projectInvitation,
     });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).send({
       success: false,
       message:
@@ -87,7 +84,7 @@ export async function deleteProjectInvitation(req, res, next) {
       success: true,
       message: "Invitation de projet supprimée avec succès",
     });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).send({
       success: false,
       message:

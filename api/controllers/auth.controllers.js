@@ -77,7 +77,7 @@ export async function signUp(req, res, next) {
 
     return res.status(201).send({
       success: true,
-      message: "Utilisateur créée avec succès",
+      message: "Utilisateur créé avec succès",
       data: savedUser,
     });
   } catch (err) {
