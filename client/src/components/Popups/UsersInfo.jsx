@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function UsersInfo({ users }) {
   return (
-    <div className={styles.popupContainer}>
+    <div className={styles.container}>
       {users.map((user) => (
         <div key={user?._id} className={styles.infoUser}>
           <Image

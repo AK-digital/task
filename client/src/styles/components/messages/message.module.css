@@ -122,25 +122,6 @@
   list-style-type: disc;
 }
 
-.reactions {
-  display: flex;
-  position: relative;
-  top: 0.5px;
-  cursor: pointer;
-}
-
-.reactions ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.reactions button {
-  padding: 0 !important;
-  background-color: transparent !important;
-  border: none;
-}
-
 .informations {
   display: flex;
   gap: 8px;
@@ -153,32 +134,4 @@
   display: flex;
   align-items: center;
   gap: 4px;
-}
-
-.emojiPicker {
-  display: flex;
-  position: absolute;
-  z-index: 2001;
-  top: 20px;
-  left: -12px;
-}
-
-.emojiReactions {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 2px;
-  gap: 4px;
-}
-
-.epr-emoji-img {
-  width: 24px;
-  height: auto;
-}
-
-.emojiIcon {
-  cursor: pointer;
-}
-
-.emojiReaction {
-  position: relative;
 }

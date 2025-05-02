@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wrapper {
+    position: relative;
+    padding: 4px;
+    text-align: center;
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-xs);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.wrapper:hover {
+    box-shadow: var(--box-shadow-small);
+}

@@ -1,22 +1,18 @@
-import {
-  updateTaskDescription,
-  updateTaskDescriptionReactions,
-} from "@/api/task";
+import { updateTaskDescription } from "@/api/task";
 import styles from "@/styles/components/tasks/task-description.module.css";
 import moment from "moment";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { PanelTop, SmilePlus } from "lucide-react";
+import { PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { getDrafts } from "@/api/draft";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import NoPicture from "../User/NoPicture";
-import EmojiPicker from "emoji-picker-react";
-import { groupReactionsByEmoji, isNotEmpty } from "@/utils/utils";
-import UsersInfo from "../Popups/UsersInfo";
+
+import Reactions from "../Reactions/Reactions";
 
 export default function TaskDescription({ project, task, uid }) {
   const { user } = useContext(AuthContext);
@@ -29,8 +25,6 @@ export default function TaskDescription({ project, task, uid }) {
   const [isEditing, setIsEditing] = useState(false);
   const [pending, setPending] = useState(false);
   const [description, setDescription] = useState(task?.description?.text);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [hoveredEmoji, setHoveredEmoji] = useState(null);
 
   const descriptionAuthor = task?.description?.author;
   const isAuthor = descriptionAuthor?._id === uid;
@@ -43,15 +37,6 @@ export default function TaskDescription({ project, task, uid }) {
 
   const date = moment(task?.description?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
-  const hasUserReacted = task?.description?.reactions?.some(
-    (reaction) => reaction.userId === uid
-  );
-
-  const uniqueReactions = groupReactionsByEmoji(task?.description?.reactions);
-
-  const usersWhoReacted = task?.description?.reactions?.map(
-    (reaction) => reaction?.userId
-  );
 
   useEffect(() => {
     if (draft?.success) {
@@ -100,43 +85,6 @@ export default function TaskDescription({ project, task, uid }) {
 
     // Update description for every guests
     socket.emit("update task", project?._id);
-  };
-
-  async function handleReactionClick(emoji) {
-    setShowEmojiPicker(false);
-
-    const response = await updateTaskDescriptionReactions(
-      task?._id,
-      project?._id,
-      emoji
-    );
-
-    if (!response.success) return;
-
-    await mutate(`/task?projectId=${project?._id}&archived=false`);
-
-    socket.emit("update task", project?._id);
-
-    if (response?.message?.includes("ajoutée")) {
-      const messageBody = {
-        title: `${user?.firstName} a réagi à votre description`,
-        content: `${user?.firstName} a réagi à votre description avec ${emoji}`,
-      };
-
-      const link = "/projects/" + project?._id + "/task/" + task?._id;
-
-      socket.emit(
-        "create notification",
-        user,
-        [descriptionAuthor?._id],
-        messageBody,
-        link
-      );
-    }
-  }
-
-  const handleReactionsButtonClick = (e) => {
-    setShowEmojiPicker(!showEmojiPicker);
   };
 
   return (
@@ -192,62 +140,27 @@ export default function TaskDescription({ project, task, uid }) {
           {/* Zone de réactions et actions */}
           <div className={styles.informations}>
             {/* Réactions */}
-            {isNotEmpty(task?.description?.reactions) &&
-              uniqueReactions.map((reaction, idx) => {
-                const emoji = reaction?.emoji;
-                const total = reaction?.total;
+            <Reactions
+              element={task?.description}
+              project={project}
+              task={task}
+              type={"description"}
+            />
 
-                return (
-                  <div
-                    key={idx}
-                    className={styles.emojiReaction}
-                    onClick={() => handleReactionClick(emoji)}
-                    onMouseEnter={() => setHoveredEmoji(emoji)}
-                    onMouseLeave={() => setHoveredEmoji(null)}
-                    title={hasUserReacted ? "Retirer votre réaction" : ""}
-                  >
-                    <span className={styles.emojiIcon}>{emoji}</span>
-                    <span className={styles.emojiCount}>{total}</span>
-                    {/* Affichage des avatars des utilisateurs qui ont réagi */}
-                    {hoveredEmoji === emoji && (
-                      <UsersInfo users={usersWhoReacted} />
-                    )}
-                  </div>
-                );
-              })}
-
-            {/* Bouton ajouter une réaction */}
-            {uid !== descriptionAuthor?._id && isAuthorized && (
-              <div className={styles.reactions}>
-                <SmilePlus size={16} onClick={handleReactionsButtonClick} />
-                {showEmojiPicker && (
-                  <div className={styles.emojiPicker}>
-                    <EmojiPicker
-                      reactionsDefaultOpen={true}
-                      height={350}
-                      width={500}
-                      className={styles.reactionEmojiPicker}
-                      onEmojiClick={(emoji) => handleReactionClick(emoji.emoji)}
-                    />
-                  </div>
-                )}
+            {/* Actions (supprimer la description) */}
+            {isAuthor && isAuthorized && (
+              <div className={styles.actions}>
+                <button
+                  className={styles.button}
+                  data-disabled={pending}
+                  disabled={pending}
+                  onClick={handleRemoveDescription}
+                >
+                  Effacer la description
+                </button>
               </div>
             )}
           </div>
-
-          {/* Actions (supprimer la description) */}
-          {isAuthor && isAuthorized && (
-            <div className={styles.actions}>
-              <button
-                className={styles.button}
-                data-disabled={pending}
-                disabled={pending}
-                onClick={handleRemoveDescription}
-              >
-                Effacer la description
-              </button>
-            </div>
-          )}
         </div>
       )}
       {/* If not editing and description empty */}

@@ -10,45 +10,26 @@ import {
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { deleteMessage, updateReadBy, updateReactions } from "@/api/message";
+import { deleteMessage, updateReadBy } from "@/api/message";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import Tiptap from "../RichTextEditor/Tiptap";
-import EmojiPicker from "emoji-picker-react";
-import { Eye, SmilePlus } from "lucide-react";
-import { groupReactionsByEmoji, isNotEmpty } from "@/utils/utils";
+import { Eye } from "lucide-react";
+import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import Reactions from "../Reactions/Reactions";
 
 export default function Message({ task, message, project, mutateMessage }) {
-  const { user, uid } = useContext(AuthContext);
+  const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
   const [showPeopleRead, setShowPeopleRead] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [hoveredEmoji, setHoveredEmoji] = useState(null);
-
-  const canReact = useUserRole(project, [
-    "owner",
-    "manager",
-    "member",
-    "customer",
-  ]);
 
   moment.locale("fr");
   const author = message?.author;
   const date = moment(message?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
-  const hasUserReacted = message?.reactions?.some(
-    (reaction) => reaction.userId === uid
-  );
-
-  const uniqueReactions = groupReactionsByEmoji(message?.reactions);
-
-  const usersWhoReacted = message?.reactions?.map(
-    (reaction) => reaction?.userId
-  );
 
   const handleReadBy = useCallback(async () => {
     if (uid === author?._id) return;
@@ -64,39 +45,6 @@ export default function Message({ task, message, project, mutateMessage }) {
   useEffect(() => {
     handleReadBy();
   }, [handleReadBy]);
-
-  async function handleReactionClick(emoji) {
-    setShowEmojiPicker(false);
-
-    const response = await updateReactions(project?._id, message?._id, emoji);
-
-    if (!response.success) return;
-
-    socket.emit("update message", project?._id);
-
-    if (response?.message?.includes("ajoutée")) {
-      const messageBody = {
-        title: `${user?.firstName} a réagi à votre message`,
-        content: `${user?.firstName} a réagi à votre message avec ${emoji}`,
-      };
-
-      const link = "/projects/" + project?._id + "/task/" + task?._id;
-
-      socket.emit(
-        "create notification",
-        user,
-        [author?._id],
-        messageBody,
-        link
-      );
-    }
-
-    await mutateMessage();
-  }
-
-  const handleReactionsButtonClick = (e) => {
-    setShowEmojiPicker(!showEmojiPicker);
-  };
 
   async function handleDeleteMessage() {
     setMore(false);
@@ -192,49 +140,13 @@ export default function Message({ task, message, project, mutateMessage }) {
               </div>
 
               {/* Reactions */}
-              {isNotEmpty(message?.reactions) &&
-                uniqueReactions.map((reaction, idx) => {
-                  const emoji = reaction?.emoji;
-                  const total = reaction?.total;
-
-                  return (
-                    <div
-                      key={idx}
-                      className={styles.emojiReaction}
-                      onClick={() => handleReactionClick(emoji)}
-                      onMouseEnter={() => setHoveredEmoji(emoji)}
-                      onMouseLeave={() => setHoveredEmoji(null)}
-                      title={hasUserReacted ? "Retirer votre réaction" : ""}
-                    >
-                      <span className={styles.emojiIcon}>{emoji}</span>
-                      <span className={styles.emojiCount}>{total}</span>
-                      {/* Affichage des avatars des utilisateurs qui ont réagi */}
-                      {hoveredEmoji === emoji && (
-                        <UsersInfo users={usersWhoReacted} />
-                      )}
-                    </div>
-                  );
-                })}
-
-              {/* Bouton ajouter une réaction */}
-              {uid !== author?._id && canReact && (
-                <div className={styles.reactions}>
-                  <SmilePlus size={16} onClick={handleReactionsButtonClick} />
-                  {showEmojiPicker && (
-                    <div className={styles.emojiPicker}>
-                      <EmojiPicker
-                        reactionsDefaultOpen={true}
-                        height={350}
-                        width={300}
-                        className={styles.reactionEmojiPicker}
-                        onEmojiClick={(emoji) =>
-                          handleReactionClick(emoji.emoji)
-                        }
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
+              <Reactions
+                element={message}
+                project={project}
+                task={task}
+                mutateMessage={mutateMessage}
+                type={"message"}
+              />
             </div>
           </div>
 
@@ -246,28 +158,3 @@ export default function Message({ task, message, project, mutateMessage }) {
     </>
   );
 }
-
-{
-  /* <div className={styles.emojiReactions}>
-  {Object.entries(groupedReactions).map(([emoji, userIds]) => {
-    const usersForThisEmoji = getUsersByReactionEmoji(emoji); */
-}
-// return (
-//   <div
-//     key={emoji}
-//     className={styles.emojiReaction}
-//     onClick={() => handleReactionClick(emoji)}
-//     onMouseEnter={() => setHoveredEmoji(emoji)}
-//     onMouseLeave={() => setHoveredEmoji(null)}
-//     title={hasUserReacted && "Retirer votre réaction"}
-//   >
-//     <span className={styles.emojiIcon}>{emoji}</span>
-//     <span className={styles.emojiCount}>{userIds.length}</span>
-//     {/* Affichage des avatars des utilisateurs qui ont réagi */}
-//     {hoveredEmoji === emoji && isNotEmpty(usersForThisEmoji) && (
-//       <UsersInfo users={usersForThisEmoji} />
-//     )}
-//   </div>
-// );
-//   })}
-// </div>;

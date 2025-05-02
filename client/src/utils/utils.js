@@ -223,9 +223,12 @@ export function groupReactionsByEmoji(reactions = []) {
     const total = reactions.filter(
       (reaction) => reaction.emoji === curr.emoji
     ).length;
+    const usersWhoReacted = reactions
+      .filter((reaction) => reaction.emoji === curr.emoji)
+      .map((reaction) => reaction.userId);
 
     if (!emoji) {
-      const newCurr = { ...curr, total };
+      const newCurr = { ...curr, total, users: usersWhoReacted };
       return acc.concat([newCurr]);
     } else {
       return acc;
