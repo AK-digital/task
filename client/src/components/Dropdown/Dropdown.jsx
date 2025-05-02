@@ -37,7 +37,6 @@ export function DropDown({
       const res = await updateProjectInvitationRole(null, formData);
 
       if (res.status === "failure") {
-        console.log(res.message);
         setCurrent(defaultValue);
       }
 
