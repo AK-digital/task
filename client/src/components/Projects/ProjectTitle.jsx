@@ -174,6 +174,31 @@ export default function ProjectTitle({ project }) {
               defaultValue={projectName}
               className={styles.titleInput}
             />
+            <input
+              type="text"
+              name="note"
+              id="note"
+              defaultValue={project?.note}
+              hidden
+            />
+            {project.urls.map((url) => (
+              <div key={url?._id} hidden>
+                <input
+                  type="text"
+                  name="url"
+                  id={`url-${url?._id}`}
+                  defaultValue={url?.url}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="icon"
+                  id={`icon-${url?._id}`}
+                  defaultValue={url?.icon}
+                  hidden
+                />
+              </div>
+            ))}
           </form>
         ) : (
           <span onClick={handleIsEditing}>{projectName}</span>
