@@ -45,7 +45,6 @@ export default function ProjectOptions({ project }) {
   );
   const [editImg, setEditImg] = useState(false);
   const [isPictLoading, setIsPictLoading] = useState(false);
-  const canEdit = useUserRole(project, ["owner", "manager"]);
 
   const initialLinks = useRef(
     project?.urls?.length
