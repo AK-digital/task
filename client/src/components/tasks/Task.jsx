@@ -39,6 +39,10 @@ export default function Task({
     (message) => !message.readBy.includes(uid)
   );
 
+  const hasDescription = task?.description
+    ? task?.description?.text !== ""
+    : false;
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task?._id });
 
@@ -100,6 +104,7 @@ export default function Task({
       <div
         className={`${styles.comment} ${styles.row}`}
         onClick={handleTaskClick}
+        data-has-description={hasDescription}
       >
         <MessageCircle size={24} fillOpacity={0} />
         {task?.messages?.length > 0 && (
