@@ -1,10 +1,8 @@
 "use client";
 import styles from "@/styles/components/reactions/addReactions.module.css";
 import { useUserRole } from "@/app/hooks/useUserRole";
-import { AuthContext } from "@/context/auth";
 import EmojiPicker from "emoji-picker-react";
 import { SmilePlus } from "lucide-react";
-import { useContext, useState } from "react";
 
 export default function AddReactions({
   uid,
@@ -37,6 +35,7 @@ export default function AddReactions({
                 width={300}
                 className={styles.reactionEmojiPicker}
                 onEmojiClick={(emoji) => onClickFunction(emoji.emoji)}
+                emojiStyle="native"
               />
             </div>
           )}

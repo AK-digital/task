@@ -36,7 +36,11 @@ export default function Project({
 
   return (
     <div className={styles.container}>
-      <ProjectHeader project={project} tasks={tasks} />
+      <ProjectHeader
+        project={project}
+        tasks={tasks}
+        mutateProject={mutateProject}
+      />
       <Boards
         boards={boards}
         project={project}

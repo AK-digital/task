@@ -13,7 +13,7 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
 import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
 
-export default function GuestsModal({ project, setIsOpen }) {
+export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const initialState = {
     status: "pending",
     message: "",
@@ -49,6 +49,7 @@ export default function GuestsModal({ project, setIsOpen }) {
 
   useEffect(() => {
     if (state?.status === "success") {
+      mutateProject();
       setIsPopup({
         status: state?.status,
         title: "Utilisateur révoqué avec succès",
