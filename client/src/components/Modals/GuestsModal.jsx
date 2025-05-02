@@ -187,6 +187,7 @@ export function ProjectInvitationsList({
   );
 
   const canDelete = useUserRole(project, ["owner", "manager"]);
+  const canEditRole = useUserRole(project, ["owner", "manager"]);
 
   useEffect(() => {
     if (state?.status === "success") {
@@ -210,49 +211,49 @@ export function ProjectInvitationsList({
 
   return (
     <>
-      {projectInvitations.map((inv) => {
-        return (
-          <li key={inv?._id} className={styles.pending}>
-            <div>
-              <Image
-                src={"/default-pfp.webp"}
-                width={32}
-                height={32}
-                alt={`Photo de profil de ${inv?.guestEmail}`}
-                style={{
-                  borderRadius: "50%",
-                }}
+      {projectInvitations.map((inv) => (
+        <li key={inv?._id} className={styles.pending}>
+          <div>
+            <Image
+              src={"/default-pfp.webp"}
+              width={32}
+              height={32}
+              alt={`Photo de profil de ${inv?.guestEmail}`}
+              style={{ borderRadius: "50%" }}
+            />
+            <span>{inv?.guestEmail}</span>
+          </div>
+          {canEditRole && (
+            <DropDown
+              defaultValue={inv?.role}
+              options={["owner", "manager", "team", "customer", "guest"]}
+              invitation={inv}
+              project={project}
+            />
+          )}
+          {canDelete && (
+            <form action={formAction}>
+              <input
+                type="text"
+                name="project-invitation-id"
+                id="project-invitation-id"
+                defaultValue={inv?._id}
+                hidden
               />
-              <span>{inv?.guestEmail}</span>
-            </div>
-            {canDelete && (
-              <form action={formAction}>
-                <input
-                  type="text"
-                  name="project-invitation-id"
-                  id="project-invitation-id"
-                  defaultValue={inv?._id}
-                  hidden
-                />
-                <input
-                  type="text"
-                  name="project-id"
-                  id="project-id"
-                  defaultValue={inv?.projectId}
-                  hidden
-                />
-                <button
-                  type="submit"
-                  data-disabled={pending}
-                  disabled={pending}
-                >
-                  Annuler
-                </button>
-              </form>
-            )}
-          </li>
-        );
-      })}
+              <input
+                type="text"
+                name="project-id"
+                id="project-id"
+                defaultValue={inv?.projectId}
+                hidden
+              />
+              <button type="submit" data-disabled={pending} disabled={pending}>
+                Annuler
+              </button>
+            </form>
+          )}
+        </li>
+      ))}
     </>
   );
 }
