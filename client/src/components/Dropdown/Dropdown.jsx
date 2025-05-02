@@ -1,13 +1,20 @@
 "use client";
 
 import { updateProjectRole } from "@/api/project";
+import { updateProjectInvitationRole } from "@/actions/projectInvitation";
 import styles from "@/styles/components/dropdown/dropdown.module.css";
 import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
 import { useState } from "react";
 import { mutate } from "swr";
 
-export function DropDown({ defaultValue, options, project, member }) {
+export function DropDown({
+  defaultValue,
+  options,
+  project,
+  member = null,
+  invitation = null,
+}) {
   const [current, setCurrent] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -16,20 +23,37 @@ export function DropDown({ defaultValue, options, project, member }) {
   };
 
   async function handleChangeRole(e) {
-    const memberId = member?.user?._id;
     const role = e?.currentTarget?.getAttribute("data-value");
     setCurrent(role);
-
     setIsOpen(false);
-    const res = await updateProjectRole(project?._id, memberId, role);
 
-    if (!res.success) {
-      setCurrent(defaultValue);
+    if (!member) {
+      const formData = new FormData();
+      formData.append("project-id", project?._id);
+      formData.append("project-invitation-id", invitation._id);
+      formData.append("role", role);
+      formData.append("email", invitation.guestEmail);
+
+      const res = await updateProjectInvitationRole(null, formData);
+
+      if (res.status === "failure") {
+        console.log(res.message);
+        setCurrent(defaultValue);
+      }
+
+      mutate(`/project-invitations/${project?._id}`);
+    } else {
+      const memberId = member?.user?._id;
+
+      const res = await updateProjectRole(project?._id, memberId, role);
+
+      if (res.status === "failure") {
+        setCurrent(defaultValue);
+      }
+
+      mutate(`/project/${project?._id}`);
+      socket.emit("update-project-role", memberId);
     }
-
-    mutate(`/project/${project?._id}`);
-
-    socket.emit("update-project-role", memberId);
   }
 
   return (
