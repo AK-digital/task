@@ -46,6 +46,10 @@ import MentionsList from "./MentionsList";
 import { AuthContext } from "@/context/auth";
 import { deleteDraft, saveDraft, updateDraft } from "@/api/draft";
 import { useDebouncedCallback } from "use-debounce";
+import Attachment from "../Attachment/Attachment";
+import Reactions from "../Reactions/Reactions";
+import { isNotEmpty } from "@/utils/utils";
+import AttachmentsInfo from "../Popups/AttachmentsInfo";
 
 export default function Tiptap({
   project,
@@ -64,6 +68,7 @@ export default function Tiptap({
   const [isSent, setIsSent] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
+  const [attachments, setAttachments] = useState([]);
   const imgRegex = /<img[^>]*>/i;
 
   // Utilisation de useDebouncedCallback pour sauvegarder le draft avec un délai
@@ -358,7 +363,8 @@ export default function Tiptap({
         task?.projectId,
         task?._id,
         plainText,
-        taggedUsers
+        taggedUsers,
+        attachments
       );
     } else {
       response = await updateMessage(
@@ -600,6 +606,25 @@ export default function Tiptap({
             <span>Brouillon enregistré</span>
           </div>
         )}
+        <div className={styles.footer}>
+          <Attachment setAttachments={setAttachments} />
+          {isNotEmpty([...attachments]) && (
+            <AttachmentsInfo attachments={attachments} />
+          )}
+          {!isNotEmpty([...attachments]) && (
+            <Attachment
+              setAttachments={setAttachments}
+              label="Ajouter une pièce jointe"
+            />
+          )}
+          <Reactions
+            element={message}
+            project={project}
+            task={task}
+            mutateMessage={mutateMessage}
+            type={"message"}
+          />
+        </div>
       </div>
       <div className={styles.actions}>
         {type === "description" && (

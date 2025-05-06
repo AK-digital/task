@@ -18,6 +18,7 @@ import { Eye } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
 import Reactions from "../Reactions/Reactions";
+import AttachmentsInfo from "../Popups/AttachmentsInfo";
 
 export default function Message({ task, message, project, mutateMessage }) {
   const { uid } = useContext(AuthContext);
@@ -125,6 +126,10 @@ export default function Message({ task, message, project, mutateMessage }) {
             </div>
 
             <div className={styles.informations}>
+              {isNotEmpty(message.files) && (
+                <AttachmentsInfo attachments={message.files} />
+              )}
+
               {/* Lecteurs */}
               <div
                 className={styles.readBy}

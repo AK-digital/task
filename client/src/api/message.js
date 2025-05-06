@@ -1,19 +1,28 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
 
-export async function saveMessage(projectId, taskId, message, taggedUsers) {
+export async function saveMessage(
+  projectId,
+  taskId,
+  message,
+  taggedUsers,
+  attachments
+) {
   try {
-    const rawData = {
-      taskId: taskId,
-      message: message,
-      taggedUsers: taggedUsers,
-    };
+    const data = new FormData();
+    data.append("taskId", taskId);
+    data.append("message", message);
+    data.append("taggedUsers", taggedUsers);
+
+    attachments.forEach((file) => {
+      data.append("attachments", file);
+    });
 
     const res = await useAuthFetch(
       `message?projectId=${projectId}`,
       "POST",
-      "application/json",
-      rawData
+      "multipart/form-data",
+      data
     );
 
     const response = await res.json();

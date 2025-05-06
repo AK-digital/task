@@ -1,4 +1,8 @@
-import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import {
+  destroyFile,
+  uploadFile,
+  uploadFileBuffer,
+} from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import MessageModel from "../models/Message.model.js";
 import TaskModel from "../models/Task.model.js";
@@ -11,6 +15,24 @@ export async function saveMessage(req, res, next) {
     const projectId = req.query.projectId;
     const authUser = res.locals.user;
     const { taskId, message, taggedUsers } = req.body;
+    const attachments = req.files;
+    console.log(attachments);
+
+    let files = [];
+
+    if (attachments.length > 0) {
+      for (const attachment of attachments) {
+        const bufferResponse = await uploadFileBuffer(
+          "task/message",
+          attachment.buffer
+        );
+        const object = {
+          name: attachment?.originalname,
+          url: bufferResponse?.secure_url,
+        };
+        files.push(object);
+      }
+    }
 
     // Ensure that there is no duplicate value
     const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
@@ -46,6 +68,7 @@ export async function saveMessage(req, res, next) {
       message: messageWithImg ?? message,
       taggedUsers: uniqueTaggedUsers,
       readBy: [authUser?._id],
+      files: files,
     });
 
     const savedMessage = await newMessage.save();
