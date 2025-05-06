@@ -387,8 +387,10 @@ export async function updateTaskDescription(req, res, next) {
   try {
     const authUser = res.locals.user;
     const { description, taggedUsers } = req.body;
-    console.log(taggedUsers);
     const attachments = req.files || [];
+
+    const task = await TaskModel.findById({ _id: req.params.id });
+    const oldFiles = task?.description?.files || [];
 
     let files = [];
 
@@ -403,6 +405,13 @@ export async function updateTaskDescription(req, res, next) {
           url: bufferResponse?.secure_url,
         };
         files.push(object);
+      }
+    }
+
+    const newFileUrls = files.map((file) => file.url);
+    for (const oldFile of oldFiles) {
+      if (!newFileUrls.includes(oldFile.url)) {
+        await destroyFile("description", oldFile.url);
       }
     }
 
@@ -425,8 +434,6 @@ export async function updateTaskDescription(req, res, next) {
         }
       }
     } else {
-      const task = await TaskModel.findById({ _id: req.params.id });
-
       const taskDescription = task?.description?.text;
 
       if (taskDescription) {
@@ -441,8 +448,6 @@ export async function updateTaskDescription(req, res, next) {
         }
       }
     }
-
-    const task = await TaskModel.findById({ _id: req.params.id });
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
@@ -1062,6 +1067,14 @@ export async function deleteTask(req, res, next) {
           success: false,
           message: `Impossible de supprimer la tâche avec l'ID ${taskId} car elle n'existe pas`,
         });
+      }
+
+      const attachments = task?.description?.files;
+
+      if (attachments) {
+        for (const attachment of attachments) {
+          await destroyFile("description", attachment?.url);
+        }
       }
 
       // Suppression des images dans la description de la tâche

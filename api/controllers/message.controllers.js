@@ -401,6 +401,14 @@ export async function deleteMessage(req, res, next) {
       });
     }
 
+    const attachments = message.files;
+
+    if (attachments) {
+      for (const attachment of attachments) {
+        await destroyFile("message", attachment?.url);
+      }
+    }
+
     const messageContent = message?.message;
 
     if (messageContent) {

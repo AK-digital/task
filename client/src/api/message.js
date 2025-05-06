@@ -35,8 +35,6 @@ export async function saveMessage(
 
     const response = await res.json();
 
-    console.log(response);
-
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
