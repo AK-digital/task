@@ -7,7 +7,7 @@
   flex-direction: column;
   max-height: calc(5 * 20px);
   overflow-y: auto;
-  bottom: 18px;
+  bottom: 14px;
   background-color: var(--secondary-background-color);
   border-radius: var(--border-radius-xs);
   box-shadow: var(--box-shadow-small);
