@@ -1,5 +1,6 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { isNotEmpty } from "@/utils/utils";
 
 export async function saveMessage(
   projectId,
@@ -12,11 +13,18 @@ export async function saveMessage(
     const data = new FormData();
     data.append("taskId", taskId);
     data.append("message", message);
-    data.append("taggedUsers", taggedUsers);
 
-    attachments.forEach((file) => {
-      data.append("attachments", file);
-    });
+    if (isNotEmpty(taggedUsers)) {
+      taggedUsers.forEach((taggedUser) => {
+        data.append("taggedUsers", taggedUser);
+      });
+    }
+
+    if (isNotEmpty(attachments)) {
+      attachments.forEach((file) => {
+        data.append("attachments", file);
+      });
+    }
 
     const res = await useAuthFetch(
       `message?projectId=${projectId}`,

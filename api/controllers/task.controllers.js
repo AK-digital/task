@@ -1,4 +1,8 @@
-import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import {
+  destroyFile,
+  uploadFile,
+  uploadFileBuffer,
+} from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
@@ -383,6 +387,24 @@ export async function updateTaskDescription(req, res, next) {
   try {
     const authUser = res.locals.user;
     const { description, taggedUsers } = req.body;
+    console.log(taggedUsers);
+    const attachments = req.files || [];
+
+    let files = [];
+
+    if (attachments.length > 0) {
+      for (const attachment of attachments) {
+        const bufferResponse = await uploadFileBuffer(
+          "task/description",
+          attachment.buffer
+        );
+        const object = {
+          name: attachment?.originalname,
+          url: bufferResponse?.secure_url,
+        };
+        files.push(object);
+      }
+    }
 
     let updatedDescription = description;
 
@@ -430,6 +452,7 @@ export async function updateTaskDescription(req, res, next) {
           "description.text": updatedDescription,
           "description.createdAt": task?.description?.createdAt ?? Date.now(),
           "description.updatedAt": Date.now(),
+          "description.files": files,
           taggedUsers: uniqueTaggedUsers,
         },
       },

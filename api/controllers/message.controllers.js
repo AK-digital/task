@@ -15,8 +15,7 @@ export async function saveMessage(req, res, next) {
     const projectId = req.query.projectId;
     const authUser = res.locals.user;
     const { taskId, message, taggedUsers } = req.body;
-    const attachments = req.files;
-    console.log(attachments);
+    const attachments = req.files || [];
 
     let files = [];
 

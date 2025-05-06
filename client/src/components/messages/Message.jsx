@@ -126,8 +126,9 @@ export default function Message({ task, message, project, mutateMessage }) {
             </div>
 
             <div className={styles.informations}>
-              {isNotEmpty(message.files) && (
-                <AttachmentsInfo attachments={message.files} />
+              {/* Attachments */}
+              {isNotEmpty(message?.files) && (
+                <AttachmentsInfo attachments={message?.files} />
               )}
 
               {/* Lecteurs */}

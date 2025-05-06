@@ -314,7 +314,8 @@ export default function Tiptap({
       task?._id,
       task?.projectId,
       plainText,
-      taggedUsers
+      taggedUsers,
+      attachments
     );
 
     // Handle error

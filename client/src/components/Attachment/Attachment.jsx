@@ -6,8 +6,6 @@ export default function Attachment({
   label = <Paperclip size={16} />,
 }) {
   const isPaperclip = label?.type === Paperclip;
-  console.log(isPaperclip);
-  console.log(label);
 
   function handleAttachments(e) {
     const files = e.target.files;

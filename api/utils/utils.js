@@ -29,6 +29,8 @@ export async function deleteReaction(message, userId) {
 
     return updatedMessage;
   } catch (err) {
-    throw new Error("Erreur lors de la suppression de la réaction : " + err.message);
+    throw new Error(
+      "Erreur lors de la suppression de la réaction : " + err.message
+    );
   }
 }

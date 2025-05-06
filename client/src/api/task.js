@@ -1,5 +1,6 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { isNotEmpty } from "@/utils/utils";
 
 export async function getTasks(projectId, archived) {
   try {
@@ -265,20 +266,33 @@ export async function removeResponsible(taskId, responsibleId, projectId) {
 export async function updateTaskDescription(
   taskId,
   projectId,
-  content,
-  taggedUsers
+  description,
+  taggedUsers,
+  attachments
 ) {
   try {
-    const rawData = {
-      description: content,
-      taggedUsers: taggedUsers,
-    };
+    const data = new FormData();
+    data.append("taskId", taskId);
+    data.append("projectId", projectId);
+    data.append("description", description);
+
+    if (isNotEmpty(taggedUsers)) {
+      taggedUsers.forEach((taggedUser) => {
+        data.append("taggedUsers", taggedUser);
+      });
+    }
+
+    if (isNotEmpty(attachments)) {
+      attachments.forEach((file) => {
+        data.append("attachments", file);
+      });
+    }
 
     const res = await useAuthFetch(
       `task/${taskId}/description?projectId=${projectId}`,
       "PATCH",
-      "application/json",
-      rawData
+      "multipart/form-data",
+      data
     );
 
     const response = await res.json();
