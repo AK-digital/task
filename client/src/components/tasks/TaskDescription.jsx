@@ -106,6 +106,7 @@ export default function TaskDescription({ project, task, uid }) {
           setOptimisticDescription={setDescription}
           draft={draft}
           mutateDraft={mutateDraft}
+          handleRemoveDescription={handleRemoveDescription}
         />
       )}
       {/* If not editing and description is not empty */}

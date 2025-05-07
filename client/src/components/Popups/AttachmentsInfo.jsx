@@ -36,6 +36,32 @@ export default function AttachmentsInfo({
     setCheckedList(updated);
   };
 
+  const handleDelete = () => {
+    if (!setAttachments) return;
+
+    const newAttachments = attachmentsArray.filter(
+      (_, index) => !checkedList[index]
+    );
+    const newCheckedList = checkedList.filter((checked) => !checked);
+
+    setAttachments(newAttachments);
+    setCheckedList(newCheckedList);
+  };
+
+  const handleDeleteOne = (indexToRemove) => {
+    if (!setAttachments) return;
+
+    const newAttachments = attachmentsArray.filter(
+      (_, index) => index !== indexToRemove
+    );
+    const newCheckedList = checkedList.filter(
+      (_, index) => index !== indexToRemove
+    );
+
+    setAttachments(newAttachments);
+    setCheckedList(newCheckedList);
+  };
+
   return (
     <div
       className={styles.container}
@@ -85,10 +111,12 @@ export default function AttachmentsInfo({
                     <button
                       className={styles.delete}
                       data-has-background="false"
+                      onClick={() => handleDeleteOne(index)}
                     >
                       <Trash2 size={16} />
                     </button>
                   )}
+
                   {isAffichage && (
                     <button
                       className={styles.download}
@@ -108,7 +136,11 @@ export default function AttachmentsInfo({
 
             <div className={styles.actionsButtons}>
               {!isAffichage && (
-                <button className={styles.delete} data-has-background="true">
+                <button
+                  className={styles.delete}
+                  data-has-background="true"
+                  onClick={handleDelete}
+                >
                   <Trash2 size={16} />
                 </button>
               )}

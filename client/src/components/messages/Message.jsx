@@ -72,6 +72,7 @@ export default function Message({ task, message, project, mutateMessage }) {
           setConvOpen={setEdit}
           editMessage={true}
           message={message}
+          handleDeleteMessage={handleDeleteMessage}
         />
       ) : (
         <>
