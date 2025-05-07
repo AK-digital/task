@@ -165,8 +165,7 @@ export async function getMessages(req, res, next) {
 export async function updateMessage(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { message, taggedUsers } = req.body;
-
+    const { message, taggedUsers, existingFiles } = req.body;
     const messageToUpdate = await MessageModel.findById({ _id: req.params.id });
 
     if (!messageToUpdate) {
@@ -183,7 +182,12 @@ export async function updateMessage(req, res, next) {
       });
     }
 
-    if (!message && !taggedUsers && (!req.files || req.files.length === 0)) {
+    if (
+      !message &&
+      !taggedUsers &&
+      (!req.files || req.files.length === 0) &&
+      !existingFiles
+    ) {
       return res
         .status(400)
         .send({ success: false, message: "Paramètres manquants" });
@@ -218,8 +222,33 @@ export async function updateMessage(req, res, next) {
 
     const oldFiles = messageToUpdate.files || [];
     const attachments = req.files || [];
-
     let newFiles = [];
+
+    let existingFilesArray = [];
+    if (existingFiles) {
+      if (Array.isArray(existingFiles)) {
+        existingFilesArray = existingFiles.map((fileStr) =>
+          JSON.parse(fileStr)
+        );
+      } else if (typeof existingFiles === "string") {
+        try {
+          const parsed = JSON.parse(existingFiles);
+          existingFilesArray = Array.isArray(parsed) ? parsed : [parsed];
+        } catch (e) {
+          console.error("Erreur de parsing des fichiers existants:", e);
+        }
+      }
+    }
+
+    if (existingFilesArray.length > 0) {
+      existingFilesArray.forEach((file) => {
+        newFiles.push({
+          name: file.name,
+          url: file.url,
+          ...(file.id && { id: file.id }),
+        });
+      });
+    }
 
     if (attachments.length > 0) {
       for (const attachment of attachments) {
@@ -233,19 +262,20 @@ export async function updateMessage(req, res, next) {
         };
         newFiles.push(object);
       }
+    }
 
-      // Suppression des anciens fichiers non conservés
+    if (newFiles.length > 0) {
       for (const oldFile of oldFiles) {
         const stillExists = newFiles.find((file) => file.url === oldFile.url);
         if (!stillExists) {
           await destroyFile("message", oldFile.url);
         }
       }
-    } else {
-      // Si aucun fichier envoyé, on supprime tout
+    } else if (existingFiles === undefined && attachments.length === 0) {
       for (const oldFile of oldFiles) {
         await destroyFile("message", oldFile.url);
       }
+      newFiles = [];
     }
 
     const updatedMessage = await MessageModel.findByIdAndUpdate(
@@ -253,7 +283,7 @@ export async function updateMessage(req, res, next) {
       {
         $set: {
           message: messageWithImg ?? message,
-          taggedUsers: taggedUsers || [],
+          taggedUsers: uniqueTaggedUsers,
           files: newFiles,
         },
       },

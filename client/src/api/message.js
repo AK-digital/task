@@ -96,8 +96,19 @@ export async function updateMessage(
     }
 
     if (isNotEmpty(attachments)) {
-      attachments.forEach((file) => {
-        data.append("attachments", file);
+      attachments.forEach((attachment) => {
+        if (attachment instanceof File) {
+          data.append("attachments", attachment);
+        } else {
+          data.append(
+            "existingFiles",
+            JSON.stringify({
+              id: attachment.id,
+              name: attachment.name,
+              url: attachment.url,
+            })
+          );
+        }
       });
     }
 
@@ -107,13 +118,10 @@ export async function updateMessage(
       "multipart/form-data",
       data
     );
-
     const response = await res.json();
-
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
     return response;
   } catch (err) {
     console.log(

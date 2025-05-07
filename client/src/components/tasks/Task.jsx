@@ -40,13 +40,7 @@ export default function Task({
   );
 
   function hasDescription() {
-    if (task?.description && task?.description?.text) {
-      if (task?.description?.text !== "") {
-        return true;
-      }
-    } else {
-      return false;
-    }
+    return !!task?.description?.text?.trim();
   }
 
   const { attributes, listeners, setNodeRef, transform, transition } =
