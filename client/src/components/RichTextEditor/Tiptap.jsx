@@ -657,7 +657,10 @@ export default function Tiptap({
           </div>
         )}
         <div className={styles.footer}>
-          <Attachment setAttachments={setAttachments} />
+          <Attachment
+            attachments={attachments}
+            setAttachments={setAttachments}
+          />
           {isNotEmpty([...attachments]) && (
             <AttachmentsInfo
               attachments={attachments}
@@ -667,6 +670,7 @@ export default function Tiptap({
           )}
           {!isNotEmpty([...attachments]) && (
             <Attachment
+              attachments={attachments}
               setAttachments={setAttachments}
               label="Ajouter une pièce jointe"
             />

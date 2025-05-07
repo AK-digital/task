@@ -27,9 +27,11 @@ export default function AttachmentsInfo({
           <span className={styles.readonlyLabel}>{label}</span>
         ) : (
           <Attachment
+            attachments={attachments}
             setAttachments={setAttachments}
             label={label}
-          />        )}
+          />
+        )}
       </span>
 
       {showAttachments && (
