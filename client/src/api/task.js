@@ -281,8 +281,19 @@ export async function updateTaskDescription(
     }
 
     if (isNotEmpty(attachments)) {
-      attachments.forEach((file) => {
-        data.append("attachments", file);
+      attachments.forEach((attachment) => {
+        if (attachment instanceof File) {
+          data.append("attachments", attachment);
+        } else {
+          data.append(
+            "existingFiles",
+            JSON.stringify({
+              id: attachment.id,
+              name: attachment.name,
+              url: attachment.url,
+            })
+          );
+        }
       });
     }
 
