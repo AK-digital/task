@@ -1,11 +1,20 @@
 import styles from "@/styles/components/popups/attachmentsInfo.module.css";
 import { useState } from "react";
+import Attachment from "../Attachment/Attachment";
 
-export default function AttachmentsInfo({ attachments }) {
+export default function AttachmentsInfo({
+  attachments,
+  setAttachments = null,
+  disable = true,
+}) {
   const [showAttachments, setShowAttachments] = useState(false);
 
   const attachmentsLength = [...attachments].length;
   const attachmentsArray = Array.from(attachments);
+
+  const label = `${attachmentsLength} ${
+    attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"
+  }`;
 
   return (
     <div
@@ -14,8 +23,13 @@ export default function AttachmentsInfo({ attachments }) {
       onMouseLeave={() => setShowAttachments(false)}
     >
       <span className={styles.attachments}>
-        {attachmentsLength + " "}
-        {attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"}
+        {disable ? (
+          <span className={styles.readonlyLabel}>{label}</span>
+        ) : (
+          <Attachment
+            setAttachments={setAttachments}
+            label={label}
+          />        )}
       </span>
 
       {showAttachments && (
