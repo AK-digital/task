@@ -666,6 +666,7 @@ export default function Tiptap({
               attachments={attachments}
               setAttachments={setAttachments}
               disable={false}
+              type="edition"
             />
           )}
           {!isNotEmpty([...attachments]) && (
