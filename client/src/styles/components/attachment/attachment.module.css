@@ -1,3 +1,7 @@
 .label[data-label="false"] {
   color: var(--accent-color);
 }
+
+.label {
+  font-size: var(--text-size-small);
+}
