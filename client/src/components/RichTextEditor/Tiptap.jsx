@@ -372,7 +372,8 @@ export default function Tiptap({
         task?.projectId,
         message?._id,
         plainText,
-        taggedUsers
+        taggedUsers,
+        attachments
       );
     }
 

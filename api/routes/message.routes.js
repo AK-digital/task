@@ -24,6 +24,7 @@ router.put(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
+  upload.array("attachments", 10),
   messageControllers.updateMessage
 );
 

@@ -183,47 +183,69 @@ export async function updateMessage(req, res, next) {
       });
     }
 
-    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
+    if (!message && !taggedUsers && (!req.files || req.files.length === 0)) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Paramètres manquants" });
+    }
+
+    const uniqueTaggedUsers = Array.from(new Set(taggedUsers || []));
 
     let messageWithImg = message;
-
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
-
     const matches = getMatches(message, imgRegex);
 
     if (matches.length > 0) {
       for (const match of matches) {
-        const img = match[1]; // Le src est dans le premier groupe capturé
-
-        const res = await uploadFile("task/message", img);
-
-        if (res?.secure_url) {
-          messageWithImg = messageWithImg.replace(img, res.secure_url);
+        const img = match[1];
+        const resImg = await uploadFile("task/message", img);
+        if (resImg?.secure_url) {
+          messageWithImg = messageWithImg.replace(img, resImg.secure_url);
         }
       }
     } else {
-      const message = await MessageModel.findById({ _id: req.params.id });
-
-      const messageContent = message?.message;
-
+      const messageContent = messageToUpdate?.message;
       if (messageContent) {
         const messageMatches = getMatches(messageContent, imgRegex);
-
         if (messageMatches.length > 0) {
           for (const messageMatch of messageMatches) {
             const img = messageMatch[1];
-
             await destroyFile("message", img);
           }
         }
       }
     }
 
-    // If both are missing then we return a bad request
-    if (!message && !taggedUsers) {
-      return res
-        .status(400)
-        .send({ success: false, message: "Paramètres manquants" });
+    const oldFiles = messageToUpdate.files || [];
+    const attachments = req.files || [];
+
+    let newFiles = [];
+
+    if (attachments.length > 0) {
+      for (const attachment of attachments) {
+        const bufferResponse = await uploadFileBuffer(
+          "task/message",
+          attachment.buffer
+        );
+        const object = {
+          name: attachment.originalname,
+          url: bufferResponse?.secure_url,
+        };
+        newFiles.push(object);
+      }
+
+      // Suppression des anciens fichiers non conservés
+      for (const oldFile of oldFiles) {
+        const stillExists = newFiles.find((file) => file.url === oldFile.url);
+        if (!stillExists) {
+          await destroyFile("message", oldFile.url);
+        }
+      }
+    } else {
+      // Si aucun fichier envoyé, on supprime tout
+      for (const oldFile of oldFiles) {
+        await destroyFile("message", oldFile.url);
+      }
     }
 
     const updatedMessage = await MessageModel.findByIdAndUpdate(
@@ -231,7 +253,8 @@ export async function updateMessage(req, res, next) {
       {
         $set: {
           message: messageWithImg ?? message,
-          taggedUsers: taggedUsers,
+          taggedUsers: taggedUsers || [],
+          files: newFiles,
         },
       },
       {
@@ -247,16 +270,13 @@ export async function updateMessage(req, res, next) {
       });
     }
 
-    // Email Logic, basically sending an email for each tagged user
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
-
-      const template = emailMessage(user, updatedMessage);
-
       if (user) {
+        const template = emailMessage(user, updatedMessage);
         await sendEmail(
           "task@akdigital.fr",
-          user?.email,
+          user.email,
           template.subjet,
           template.text
         );
@@ -265,7 +285,7 @@ export async function updateMessage(req, res, next) {
 
     return res.status(200).send({
       success: true,
-      message: "Réponse modifié avec succès",
+      message: "Réponse modifiée avec succès",
       data: updatedMessage,
     });
   } catch (err) {

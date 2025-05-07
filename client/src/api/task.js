@@ -272,8 +272,6 @@ export async function updateTaskDescription(
 ) {
   try {
     const data = new FormData();
-    data.append("taskId", taskId);
-    data.append("projectId", projectId);
     data.append("description", description);
 
     if (isNotEmpty(taggedUsers)) {

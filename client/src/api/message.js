@@ -82,19 +82,30 @@ export async function updateMessage(
   projectId,
   messageId,
   message,
-  taggedUsers
+  taggedUsers,
+  attachments
 ) {
   try {
-    const rawData = {
-      message: message,
-      taggedUsers: taggedUsers,
-    };
+    const data = new FormData();
+    data.append("message", message);
+
+    if (isNotEmpty(taggedUsers)) {
+      taggedUsers.forEach((taggedUser) => {
+        data.append("taggedUsers", taggedUser);
+      });
+    }
+
+    if (isNotEmpty(attachments)) {
+      attachments.forEach((file) => {
+        data.append("attachments", file);
+      });
+    }
 
     const res = await useAuthFetch(
       `message/${messageId}?projectId=${projectId}`,
       "PUT",
-      "application/json",
-      rawData
+      "multipart/form-data",
+      data
     );
 
     const response = await res.json();
