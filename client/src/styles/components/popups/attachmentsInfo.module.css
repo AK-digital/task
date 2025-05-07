@@ -50,4 +50,5 @@
 
 .attachments {
   color: var(--accent-color);
+  font-size: var(--text-size-small);
 }
