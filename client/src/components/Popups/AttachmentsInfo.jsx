@@ -1,5 +1,5 @@
 import styles from "@/styles/components/popups/attachmentsInfo.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Attachment from "../Attachment/Attachment";
 import { Download, Trash2 } from "lucide-react";
 
@@ -12,11 +12,8 @@ export default function AttachmentsInfo({
   const [showAttachments, setShowAttachments] = useState(false);
 
   const attachmentsLength = [...attachments].length;
-  const attachmentsArray = Array.from(attachments);
 
-  const [checkedList, setCheckedList] = useState(
-    attachmentsArray.map(() => false)
-  );
+  const [checkedList, setCheckedList] = useState([]);
 
   const label = `${attachmentsLength} ${
     attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"
@@ -36,31 +33,42 @@ export default function AttachmentsInfo({
     setCheckedList(updated);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (type, indexToRemove = null) => {
     if (!setAttachments) return;
 
-    const newAttachments = attachmentsArray.filter(
-      (_, index) => !checkedList[index]
-    );
-    const newCheckedList = checkedList.filter((checked) => !checked);
+    let newAttachments;
+    let newCheckedList;
+
+    if (type == "delete") {
+      newAttachments = attachments.filter((_, index) => !checkedList[index]);
+      newCheckedList = checkedList.filter((checked) => !checked);
+    } else {
+      newAttachments = attachments.filter(
+        (_, index) => index !== indexToRemove
+      );
+      newCheckedList = checkedList.filter(
+        (_, index) => index !== indexToRemove
+      );
+    }
 
     setAttachments(newAttachments);
     setCheckedList(newCheckedList);
   };
 
-  const handleDeleteOne = (indexToRemove) => {
-    if (!setAttachments) return;
-
-    const newAttachments = attachmentsArray.filter(
-      (_, index) => index !== indexToRemove
-    );
-    const newCheckedList = checkedList.filter(
-      (_, index) => index !== indexToRemove
-    );
-
-    setAttachments(newAttachments);
-    setCheckedList(newCheckedList);
-  };
+  useEffect(() => {
+    // Synchroniser le tableau checkedList avec la taille de attachments
+    setCheckedList((prev) => {
+      const diff = attachments.length - prev.length;
+      if (diff > 0) {
+        // Ajoute des "false" pour les nouvelles pièces jointes
+        return [...prev, ...Array(diff).fill(false)];
+      } else if (diff < 0) {
+        // Supprime les entrées en trop si on a supprimé des fichiers
+        return prev.slice(0, attachments.length);
+      }
+      return prev;
+    });
+  }, [attachments]);
 
   return (
     <div
@@ -83,7 +91,7 @@ export default function AttachmentsInfo({
       {showAttachments && (
         <div className={styles.infosWrapper}>
           <div className={styles.infos}>
-            {attachmentsArray.map(({ name, url }, index) => {
+            {attachments.map(({ name, url }, index) => {
               const hasUrl = !!url;
               return (
                 <div key={index} className={styles.infoAttachment}>
@@ -111,7 +119,7 @@ export default function AttachmentsInfo({
                     <button
                       className={styles.delete}
                       data-has-background="false"
-                      onClick={() => handleDeleteOne(index)}
+                      onClick={() => handleDelete("deleteOne", index)}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -135,16 +143,16 @@ export default function AttachmentsInfo({
             </span>
 
             <div className={styles.actionsButtons}>
-              {!isAffichage && (
+              {!isAffichage && isAnyChecked && (
                 <button
                   className={styles.delete}
                   data-has-background="true"
-                  onClick={handleDelete}
+                  onClick={() => handleDelete("delete")}
                 >
                   <Trash2 size={16} />
                 </button>
               )}
-              {isAffichage && (
+              {isAffichage && isAnyChecked && (
                 <button className={styles.download} data-has-background="true">
                   <Download size={16} />
                 </button>
