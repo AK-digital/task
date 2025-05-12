@@ -4,14 +4,18 @@ import styles from "@/styles/components/modals/guests-modal.module.css";
 import { isNotEmpty, memberRole } from "@/utils/utils";
 import Image from "next/image";
 import { useActionState, useContext, useEffect, useState } from "react";
-import GuestFormInvitation from "../Projects/GuestFormInvitation";
+import GuestFormInvitation, {
+  GuestFormResend,
+} from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 import { AuthContext } from "@/context/auth";
 import { deleteProjectInvitation } from "@/actions/projectInvitation";
 import NoPicture from "../User/NoPicture";
 import { useUserRole } from "@/app/hooks/useUserRole";
-import { DropDown } from "../Dropdown/Dropdown";
+import { DropDownRole } from "../Dropdown/DropdownRole";
 import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
+import Dropdown from "../Dropdown/DropdownManage";
+import DropdownManage from "../Dropdown/DropdownManage";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const initialState = {
@@ -108,9 +112,9 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         {member?.user?.email}
                       </span>
                       {canEditRole &&
-                      member?.user?._id !== uid &&
-                      member?.role !== "owner" ? (
-                        <DropDown
+                        member?.user?._id !== uid &&
+                        member?.role !== "owner" ? (
+                        <DropDownRole
                           defaultValue={member?.role}
                           options={options}
                           project={project}
@@ -187,7 +191,13 @@ export function ProjectInvitationsList({
     initialState
   );
 
-  const canDelete = useUserRole(project, ["owner", "manager"]);
+  const actions = {
+    state: state,
+    formAction: formAction,
+    pending: pending,
+    initialState: initialState,
+  }
+
   const canEditRole = useUserRole(project, ["owner", "manager"]);
 
   useEffect(() => {
@@ -222,37 +232,24 @@ export function ProjectInvitationsList({
               alt={`Photo de profil de ${inv?.guestEmail}`}
               style={{ borderRadius: "50%" }}
             />
-            <span>{inv?.guestEmail}</span>
+            <span className={styles.email}>{inv?.guestEmail}</span>
           </div>
           {canEditRole && (
-            <DropDown
+            <DropDownRole
               defaultValue={inv?.role}
               options={["owner", "manager", "team", "customer", "guest"]}
               invitation={inv}
               project={project}
             />
           )}
-          {canDelete && (
-            <form action={formAction}>
-              <input
-                type="text"
-                name="project-invitation-id"
-                id="project-invitation-id"
-                defaultValue={inv?._id}
-                hidden
-              />
-              <input
-                type="text"
-                name="project-id"
-                id="project-id"
-                defaultValue={inv?.projectId}
-                hidden
-              />
-              <button type="submit" data-disabled={pending} disabled={pending}>
-                Annuler
-              </button>
-            </form>
-          )}
+          <DropdownManage
+            defaultValue={inv?.role}
+            project={project}
+            actions={actions}
+            setIsPopup={setIsPopup}
+            mutateProjectInvitation={mutateProjectInvitation}
+            email={inv?.guestEmail}
+          />
         </li>
       ))}
     </>

@@ -9,6 +9,15 @@
     z-index: 9999;
 }
 
+.manage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  position: relative;
+}
+
 .container span,
 .label {
     overflow: hidden;
@@ -28,6 +37,23 @@
     font-size: var(--text-size-normal);
     transition: 120ms all linear;
     color: var(--text-dark-color);
+}
+
+.options ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 5px;
+}
+
+.options li {
+    width: 100%;
+}
+
+.options button {
+    width: 100%;
 }
 
 .current span {
