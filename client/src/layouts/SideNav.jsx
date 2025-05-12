@@ -65,7 +65,6 @@ export default function SideNav({ projects }) {
       const newIndex = projectItems.findIndex(
         (project) => project?._id === over.id
       );
-      console.log("handleDragEnd", event);
 
       const newItems = arrayMove(projectItems, oldIndex, newIndex);
       setProjectItems(newItems);

@@ -407,8 +407,6 @@ export async function updateTaskDeadline(taskId, projectId, deadline) {
 
 export async function updateTaskEstimate(taskId, projectId, estimation) {
   try {
-    console.log(estimation);
-
     const res = await useAuthFetch(
       `task/${taskId}/estimate?projectId=${projectId}`,
       "PATCH",

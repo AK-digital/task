@@ -74,8 +74,6 @@ export async function updateUserPicture(prevState, formData) {
       formDataUpload
     );
 
-    console.log("res", res);
-
     const response = await res.json();
 
     if (!response.success) {
