@@ -55,6 +55,17 @@ export default function AttachmentsInfo({
     setCheckedList(newCheckedList);
   };
 
+  const handleDownload = async (downloadUrl, name) => {
+    const response = await fetch(downloadUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   useEffect(() => {
     // Synchroniser le tableau checkedList avec la taille de attachments
     setCheckedList((prev) => {
@@ -93,6 +104,14 @@ export default function AttachmentsInfo({
           <div className={styles.infos}>
             {attachments.map(({ name, url }, index) => {
               const hasUrl = !!url;
+
+              let downloadUrl;
+              if (hasUrl) {
+                let parts = url.split("/");
+                parts[6] = "fl_attachment";
+
+                downloadUrl = parts.join("/");
+              }
               return (
                 <div key={index} className={styles.infoAttachment}>
                   <div className={styles.file}>
@@ -129,6 +148,7 @@ export default function AttachmentsInfo({
                     <button
                       className={styles.download}
                       data-has-background="false"
+                      onClick={() => handleDownload(downloadUrl, name)}
                     >
                       <Download size={16} />
                     </button>
