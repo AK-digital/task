@@ -103,19 +103,24 @@ export default function TaskResponsibles({ task, project, archive }) {
     socket.emit("update task", project?._id);
   }
 
-  const handleModal = useCallback(() => {
-    if (archive) return;
+  const handleModal = useCallback(
+    (e) => {
+      e.stopPropagation();
 
-    const isAuthorized = checkRole(
-      project,
-      ["owner", "manager", "team", "customer"],
-      uid
-    );
+      if (archive) return;
 
-    if (!isAuthorized) return;
+      const isAuthorized = checkRole(
+        project,
+        ["owner", "manager", "team", "customer"],
+        uid
+      );
 
-    setOpenModal(!openModal);
-  }, [project, uid]);
+      if (!isAuthorized) return;
+
+      setOpenModal(!openModal);
+    },
+    [project, uid]
+  );
 
   useEffect(() => {
     function handleResponsibleUpdate(taskId, updateData) {

@@ -1,27 +1,29 @@
 .container {
-    padding: 6px;
-    width: 100%;
-    min-width: 200px;
-    max-width: 700px;
+  padding: 6px;
+  width: 100%;
+  min-width: 200px;
+  max-width: 700px;
 }
 
 .container span {
-    display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: text;
 }
 
 .input {
-    padding: 4px 6px;
-    font-size: var(--text-size-normal);
-    font-weight: 300;
-    border: none;
-    transition: 150ms background linear;
+  padding: 4px 6px;
+  font-size: var(--text-size-normal);
+  font-weight: 300;
+  border: none;
+  transition: 150ms background linear;
+  cursor: text;
 }
 
 .input:focus {
-    color: var(--text-darker-color);
-    background-color: var(--third-background-color);
-    border-radius: var(--border-radius-xs);
+  color: var(--text-darker-color);
+  background-color: var(--third-background-color);
+  border-radius: var(--border-radius-xs);
 }

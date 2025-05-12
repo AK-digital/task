@@ -37,17 +37,22 @@ export default function TaskStatus({ task, project, uid }) {
     setOptimisticCurrent(task?.status);
   }, [task?.status]);
 
-  const handleIsOpen = useCallback(() => {
-    const isAuthorized = checkRole(
-      project,
-      ["owner", "manager", "team", "customer"],
-      uid
-    );
+  const handleIsOpen = useCallback(
+    (e) => {
+      e.stopPropagation();
 
-    if (!isAuthorized) return;
+      const isAuthorized = checkRole(
+        project,
+        ["owner", "manager", "team", "customer"],
+        uid
+      );
 
-    setIsOpen((prev) => !prev);
-  }, [project, uid]);
+      if (!isAuthorized) return;
+
+      setIsOpen((prev) => !prev);
+    },
+    [project, uid]
+  );
 
   return (
     <div className={styles["dropdown"]}>
@@ -73,7 +78,10 @@ export default function TaskStatus({ task, project, uid }) {
           </div>
           <div
             id="modal-layout-opacity"
-            onClick={(e) => setIsOpen(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(false);
+            }}
           ></div>
         </>
       )}

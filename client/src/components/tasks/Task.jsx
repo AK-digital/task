@@ -1,21 +1,20 @@
-"use client";
+import React, { useCallback, useContext } from "react";
 import styles from "@/styles/components/tasks/task.module.css";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { AuthContext } from "@/context/auth";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import { GripVertical, MessageCircle } from "lucide-react";
+import { useTaskContext } from "@/context/TaskContext";
 import TaskStatus from "./TaskStatus";
 import TaskPriority from "./TaskPriority";
 import TaskDeadline from "./TaskDeadline";
 import TaskText from "./TaskText";
 import TaskRemove from "./TaskRemove";
 import TaskResponsibles from "./TaskResponsibles";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import TaskTimer from "./TaskTimer";
-import React, { useCallback, useContext } from "react";
 import TaskMore from "./TaskMore";
 import TaskEstimate from "./TaskEstimate";
-import { AuthContext } from "@/context/auth";
-import { useUserRole } from "@/app/hooks/useUserRole";
-import { GripVertical, MessageCircle } from "lucide-react";
-import { useTaskContext } from "@/context/TaskContext";
 
 export default function Task({
   task,
@@ -41,12 +40,9 @@ export default function Task({
 
   function hasDescription() {
     if (task?.description && task?.description?.text) {
-      if (task?.description?.text !== "") {
-        return true;
-      }
-    } else {
-      return false;
+      return task?.description?.text !== "";
     }
+    return false;
   }
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -81,6 +77,7 @@ export default function Task({
       style={style}
       className={`${styles.container} ${isDragging ? styles.dragging : ""}`}
       suppressHydrationWarning
+      onClick={handleTaskClick}
       data-openned={openedTask === task?._id}
       data-done={task?.status === "Terminée"}
     >
@@ -92,7 +89,7 @@ export default function Task({
             id={`task-${task?._id}`}
             data-value={task?._id}
             defaultValue={task?._id}
-            onClick={handleSelectedTask}
+            onChange={handleSelectedTask}
           />
         </div>
       )}

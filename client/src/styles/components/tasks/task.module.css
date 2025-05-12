@@ -8,6 +8,7 @@
   transition: all 150ms ease-in-out;
   font-size: var(--text-size-normal);
   padding-inline: 12px;
+  cursor: pointer;
 }
 
 .container[data-openned="true"] {
