@@ -16,6 +16,7 @@ export default function Reactions({
   task,
   mutateMessage,
   type,
+  editor,
 }) {
   const { uid, user } = useContext(AuthContext);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -38,7 +39,7 @@ export default function Reactions({
 
       socket.emit("update message", project?._id);
       await mutateMessage();
-    } else {
+    } else if (type === "description") {
       response = await updateTaskDescriptionReactions(
         task?._id,
         project?._id,
@@ -49,6 +50,9 @@ export default function Reactions({
 
       socket.emit("update task", project?._id);
       await mutate(`/task?projectId=${project?._id}&archived=false`);
+    } else if (type === "editor") {
+      editor.commands.insertContent(emoji);
+      editor.view.focus();
     }
 
     if (response?.message?.includes("ajoutée")) {
