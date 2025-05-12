@@ -2,6 +2,7 @@ import styles from "@/styles/components/popups/attachmentsInfo.module.css";
 import { useState, useEffect } from "react";
 import Attachment from "../Attachment/Attachment";
 import { Download, Trash2 } from "lucide-react";
+import { BlobWriter, ZipWriter, BlobReader } from "@zip.js/zip.js";
 
 export default function AttachmentsInfo({
   attachments,
@@ -24,13 +25,29 @@ export default function AttachmentsInfo({
   const isAnyChecked = checkedList.some((v) => v); // au moins une cochée
 
   const toggleAll = () => {
-    setCheckedList(checkedList.map(() => !isAnyChecked));
+    setCheckedList((prev) => {
+      const isAnyChecked = prev.some((v) => v);
+      return prev.map(() => !isAnyChecked);
+    });
   };
 
   const toggleCheckbox = (index) => {
-    const updated = [...checkedList];
-    updated[index] = !updated[index];
-    setCheckedList(updated);
+    setCheckedList((prev) => {
+      const updated = [...prev];
+      updated[index] = !updated[index];
+      return updated;
+    });
+  };
+
+  const getAttachmentsChecks = () => {
+    return attachments.filter((attachment, index) => checkedList[index]);
+  };
+
+  const getDownloadUrl = (url) => {
+    let parts = url.split("/");
+    parts[6] = "fl_attachment";
+
+    return parts.join("/");
   };
 
   const handleDelete = (type, indexToRemove = null) => {
@@ -64,6 +81,30 @@ export default function AttachmentsInfo({
     a.download = name;
     a.click();
     window.URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadZip = async () => {
+    const zipFileWriter = new BlobWriter();
+    const zipWriter = new ZipWriter(zipFileWriter);
+
+    const filesToDownload = getAttachmentsChecks();
+
+    for (const file of filesToDownload) {
+      const url = getDownloadUrl(file.url);
+      const response = await fetch(url);
+      const blob = await response.blob();
+      await zipWriter.add(file.name, new BlobReader(blob));
+    }
+    await zipWriter.close();
+
+    const zipFileBlob = await zipFileWriter.getData();
+    const zipUrl = URL.createObjectURL(zipFileBlob);
+
+    const a = document.createElement("a");
+    a.href = zipUrl;
+    a.download = "pièces jointes.zip";
+    a.click();
+    URL.revokeObjectURL(zipUrl);
   };
 
   useEffect(() => {
@@ -107,10 +148,7 @@ export default function AttachmentsInfo({
 
               let downloadUrl;
               if (hasUrl) {
-                let parts = url.split("/");
-                parts[6] = "fl_attachment";
-
-                downloadUrl = parts.join("/");
+                downloadUrl = getDownloadUrl(url);
               }
               return (
                 <div key={index} className={styles.infoAttachment}>
@@ -173,7 +211,11 @@ export default function AttachmentsInfo({
                 </button>
               )}
               {isAffichage && isAnyChecked && (
-                <button className={styles.download} data-has-background="true">
+                <button
+                  className={styles.download}
+                  data-has-background="true"
+                  onClick={handleDownloadZip}
+                >
                   <Download size={16} />
                 </button>
               )}
