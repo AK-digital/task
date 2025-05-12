@@ -1,6 +1,8 @@
 /* Conteneur principal */
 .container {
   position: relative;
+  display: flex;
+  flex-direction: column;
   border: 1px solid #ddd;
   border-radius: var(--border-radius-small);
   background: var(--third-background-color);
@@ -56,13 +58,12 @@
 
 /* Contenu de l'éditeur */
 .content {
-  min-height: 150px;
+  flex: 1;
   padding: 15px;
   font-size: 16px;
   outline: none;
   border-radius: 0 0 8px 8px;
   cursor: text;
-  /* height: fit-content; */
 }
 
 /* Style des blocs de code */
@@ -150,6 +151,7 @@
   gap: 8px;
   margin-left: 8px;
   margin-bottom: 8px;
+  margin-top: auto;
 }
 
 .footer label {
