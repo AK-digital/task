@@ -3,7 +3,7 @@ import styles from "@/styles/components/timeTrackings/dropdown.module.css";
 import React, { useActionState, useState } from 'react';
 import { removeGuest } from "@/actions/project";
 import { GuestFormResend } from '../Projects/GuestFormInvitation';
-import { Settings } from 'lucide-react';
+import { MoveRight, Plus, Settings, X } from 'lucide-react';
 
 export default function DropdownManage({
     project,
@@ -33,7 +33,7 @@ export default function DropdownManage({
                 {isOpen && (
                     <div className={styles.options}>
                         <ul>
-                            <li>
+                            <li className='animIconManage'>
                                 {canDelete && (
                                     <form action={formAction}>
                                         <input
@@ -55,12 +55,13 @@ export default function DropdownManage({
                                             data-disabled={pending}
                                             disabled={pending}
                                         >
-                                            Annuler
+                                            <X size={16} className="iconManage" />
+                                            <span>Annuler</span>
                                         </button>
                                     </form>
                                 )}
                             </li>
-                            <li>
+                            <li className='animIconManage'>
                                 {canInvite && (
                                     <GuestFormResend
                                         project={project}

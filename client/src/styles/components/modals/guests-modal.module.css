@@ -51,7 +51,6 @@
   font-size: var(--text-size-small);
   border-radius: var(--border-radius-small);
   max-height: 200px;
-  /* overflow: auto; */
   text-align: left;
   box-shadow: var(--box-shadow-medium);
 }
@@ -90,9 +89,9 @@
 .member button,
 .pending button {
   border-radius: var(--border-radius-xs);
-  padding: 4px !important;
+  padding: 4px;
   font-size: var(--text-size-small);
-  background-color: var(--danger-color);
+  background-color: var(--medium-color);
   height: 32px;
   width: 100%;
 }
@@ -100,7 +99,7 @@
 
 .member button:hover,
 .pending button:hover {
-  background-color: var(--text-color-red);
+  background-color: var(--medium-darker-color);
 }
 
 .pending {

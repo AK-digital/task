@@ -195,7 +195,6 @@ export function ProjectInvitationsList({
     state: state,
     formAction: formAction,
     pending: pending,
-    initialState: initialState,
   }
 
   const canEditRole = useUserRole(project, ["owner", "manager"]);
@@ -243,7 +242,7 @@ export function ProjectInvitationsList({
             />
           )}
           <DropdownManage
-            defaultValue={inv?.role}
+            inv={inv}
             project={project}
             actions={actions}
             setIsPopup={setIsPopup}

@@ -5,6 +5,7 @@ import socket from "@/utils/socket";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { bricolageGrostesque } from "@/utils/font";
+import { MoveRight, RotateCw } from "lucide-react";
 
 const initialState = {
   status: "pending",
@@ -154,7 +155,8 @@ export function GuestFormResend({
         />
         {errors && <i>{errors?.email}</i>}
         <button type="submit" data-disabled={pending}>
-          Renvoyer
+          <RotateCw size={16} className="iconManage" />
+          <p>Renvoyer</p>
         </button>
       </form>
     </>
