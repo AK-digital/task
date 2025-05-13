@@ -6,11 +6,12 @@ import { checkRole } from "@/utils/utils";
 
 const priorities = ["Basse", "Moyenne", "Haute", "Urgent"];
 
-export default function TaskPriority({ task, project, uid }) {
+export default function TaskPriority({ task, project, uid, handleStopPropa }) {
   const [optimisticCurrent, setOptimisticCurrent] = useState(task?.priority);
   const [isOpen, setIsOpen] = useState(false);
 
   async function handleUpdateStatus(e) {
+    e.stopPropagation();
     const value = e.target.dataset.value;
     setOptimisticCurrent(value);
     setIsOpen(false);
@@ -33,7 +34,8 @@ export default function TaskPriority({ task, project, uid }) {
     setOptimisticCurrent(task?.priority);
   }, [task?.priority]);
 
-  const handleIsOpen = useCallback(() => {
+  const handleIsOpen = useCallback((e) => {
+    e.stopPropagation();
     const isAuthorized = checkRole(
       project,
       ["owner", "manager", "team", "customer"],
@@ -46,7 +48,11 @@ export default function TaskPriority({ task, project, uid }) {
   });
 
   return (
-    <div className={styles["dropdown"]}>
+    <div
+      className={styles["dropdown"]}
+      data-is-open={isOpen ? "true" : "false"}
+      onClick={(e) => handleStopPropa(e, isOpen)}
+    >
       <div
         className={styles["dropdown__current"]}
         data-current={optimisticCurrent}
@@ -69,7 +75,10 @@ export default function TaskPriority({ task, project, uid }) {
           </div>
           <div
             id="modal-layout-opacity"
-            onClick={(e) => setIsOpen(false)}
+            onClick={(e) => {
+              setIsOpen(false);
+              e.stopPropagation();
+            }}
           ></div>
         </>
       )}

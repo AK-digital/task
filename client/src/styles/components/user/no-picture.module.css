@@ -1,13 +1,13 @@
 .container {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    border-radius: 50% !important;
-    cursor: default !important;
-    user-select: none !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  user-select: none !important;
 }
 
 .container span {
-    color: white !important;
-    font-size: 14px !important;
+  color: white !important;
+  font-size: 14px !important;
 }

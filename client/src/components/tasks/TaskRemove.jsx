@@ -7,7 +7,13 @@ import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { mutate } from "swr";
 
-export default function TaskRemove({ task, project, uid, archive }) {
+export default function TaskRemove({
+  task,
+  project,
+  uid,
+  archive,
+  handleStopPropa,
+}) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   async function handleDeleteTask() {
@@ -25,7 +31,7 @@ export default function TaskRemove({ task, project, uid, archive }) {
   }
 
   return (
-    <div className={styles.task__remove}>
+    <div className={styles.task__remove} onClick={handleStopPropa}>
       <Trash size={20} onClick={() => setShowConfirm(true)} />
       <ConfirmDialog
         isOpen={showConfirm}

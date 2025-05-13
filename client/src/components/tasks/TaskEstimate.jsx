@@ -7,7 +7,7 @@ import { checkRole } from "@/utils/utils";
 import { XCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-export default function TaskEstimate({ task, project, uid }) {
+export default function TaskEstimate({ task, project, uid, handleStopPropa }) {
   const [isEditing, setIsEditing] = useState(false);
   const [number, setNumber] = useState(1);
   const [week, setWeek] = useState("minutes");
@@ -21,6 +21,7 @@ export default function TaskEstimate({ task, project, uid }) {
   }, [task?.estimation]);
 
   const handleUpdateTaskEstimate = async (e) => {
+    e.stopPropagation();
     e.preventDefault();
     setIsEditing(false);
     setHover(false);
@@ -40,6 +41,7 @@ export default function TaskEstimate({ task, project, uid }) {
   };
 
   const handleDeleteEstimation = async (e) => {
+    e.stopPropagation();
     e.preventDefault();
     setEstimation("-");
 
@@ -85,17 +87,26 @@ export default function TaskEstimate({ task, project, uid }) {
     setHover(true);
   }, [project, uid]);
 
-  const handleIsEditing = useCallback(() => {
-    const isAuthorized = checkRole(project, ["owner", "manager", "team"], uid);
+  const handleIsEditing = useCallback(
+    (e) => {
+      e.stopPropagation();
+      const isAuthorized = checkRole(
+        project,
+        ["owner", "manager", "team"],
+        uid
+      );
 
-    if (!isAuthorized) return;
+      if (!isAuthorized) return;
 
-    setIsEditing((prev) => !prev);
-  }, [project, uid]);
+      setIsEditing((prev) => !prev);
+    },
+    [project, uid]
+  );
 
   return (
     <div
       className={styles.container}
+      data-is-open={isEditing ? "true" : "false"}
       onMouseEnter={handleHover}
       onMouseLeave={() => setHover(false)}
     >
@@ -113,7 +124,7 @@ export default function TaskEstimate({ task, project, uid }) {
       )}
       {isEditing && (
         <>
-          <div className={styles.edit} id="popover">
+          <div className={styles.edit} id="popover" onClick={handleStopPropa}>
             <div className={styles.suggestions}>
               <span
                 className={styles.suggestion}
@@ -154,7 +165,7 @@ export default function TaskEstimate({ task, project, uid }) {
             </div>
             <div className={styles.custom}>
               <form className={styles.form} onSubmit={handleCustomeEstimation}>
-                <div className={styles.row}>
+                <div className={styles.row} onClick={handleStopPropa}>
                   <input
                     type="number"
                     id="number"
@@ -179,7 +190,7 @@ export default function TaskEstimate({ task, project, uid }) {
                   </select>
                 </div>
                 {number >= 1 && (
-                  <div className={styles.buttons}>
+                  <div className={styles.buttons} onClick={handleStopPropa}>
                     <button
                       className={bricolageGrostesque.className}
                       type="submit"
@@ -193,7 +204,10 @@ export default function TaskEstimate({ task, project, uid }) {
           </div>
           <div
             id="modal-layout-opacity"
-            onClick={() => setIsEditing(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEditing(false);
+            }}
           ></div>
         </>
       )}

@@ -14,11 +14,12 @@ const status = [
   "Terminée",
 ];
 
-export default function TaskStatus({ task, project, uid }) {
+export default function TaskStatus({ task, project, uid, handleStopPropa }) {
   const [optimisticCurrent, setOptimisticCurrent] = useState(task?.status);
   const [isOpen, setIsOpen] = useState(false);
 
   async function handleUpdateStatus(e) {
+    e.stopPropagation();
     const value = e.target.dataset.value;
     setOptimisticCurrent(value);
     setIsOpen(false);
@@ -55,7 +56,11 @@ export default function TaskStatus({ task, project, uid }) {
   );
 
   return (
-    <div className={styles["dropdown"]}>
+    <div
+      className={styles["dropdown"]}
+      data-is-open={isOpen ? "true" : "false"}
+      onClick={(e) => handleStopPropa(e, isOpen)}
+    >
       <div
         className={styles["dropdown__current"]}
         data-current={optimisticCurrent}

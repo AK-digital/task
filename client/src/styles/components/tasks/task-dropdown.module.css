@@ -1,109 +1,112 @@
 .dropdown {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 
-    user-select: none;
-    border-right: 1px solid var(--text-light-color);
-    font-size: var(--text-size-normal);
-    color: var(--text-color);
-    min-width: 135px;
-    max-width: 150px;
-    width: 100%;
-    height: 100%;
+  user-select: none;
+  border-right: 1px solid var(--text-light-color);
+  font-size: var(--text-size-normal);
+  color: var(--text-color);
+  min-width: 135px;
+  max-width: 150px;
+  width: 100%;
+  height: 100%;
+}
+
+.dropdown[data-is-open="true"] {
+  cursor: default;
 }
 
 .dropdown__current {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-width: 110px;
-    text-align: center;
-    cursor: pointer;
-    padding: 8px 16px;
-    border-radius: var(--border-radius-large);
-    margin-inline: 12px;
-    color: white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 110px;
+  text-align: center;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-large);
+  margin-inline: 12px;
+  color: white;
 }
 
 /* Status */
 .dropdown__current[data-current="En attente"],
 .dropdown__list ul li[data-value="En attente"] {
-    background-color: var(--pending-color);
+  background-color: var(--pending-color);
 }
 
 .dropdown__current[data-current="À faire"],
 .dropdown__list ul li[data-value="À faire"] {
-    background-color: var(--todo-color);
+  background-color: var(--todo-color);
 }
 
 .dropdown__current[data-current="En cours"],
 .dropdown__list ul li[data-value="En cours"] {
-    background-color: var(--processing-color);
+  background-color: var(--processing-color);
 }
 
 .dropdown__current[data-current="Bloquée"],
 .dropdown__list ul li[data-value="Bloquée"] {
-    background-color: var(--blocked-color);
+  background-color: var(--blocked-color);
 }
 
 .dropdown__current[data-current="Terminée"],
 .dropdown__list ul li[data-value="Terminée"] {
-    background-color: var(--finished-color);
+  background-color: var(--finished-color);
 }
 
 .dropdown__current[data-current="À vérifier"],
 .dropdown__list ul li[data-value="À vérifier"] {
-    background-color: var(--checking-color);
+  background-color: var(--checking-color);
 }
-
 
 /* priority  */
 .dropdown__current[data-current="Basse"],
 .dropdown__list ul li[data-value="Basse"] {
-    background-color: var(--low-color);
+  background-color: var(--low-color);
 }
 
 .dropdown__current[data-current="Moyenne"],
 .dropdown__list ul li[data-value="Moyenne"] {
-    background-color: var(--medium-color);
+  background-color: var(--medium-color);
 }
 
 .dropdown__current[data-current="Haute"],
 .dropdown__list ul li[data-value="Haute"] {
-    background-color: var(--high-color);
+  background-color: var(--high-color);
 }
 
 .dropdown__current[data-current="Urgent"],
 .dropdown__list ul li[data-value="Urgent"] {
-    background-color: var(--urgent-color);
+  background-color: var(--urgent-color);
 }
 
 .dropdown__list {
-    position: absolute;
-    z-index: 2001;
-    top: 45px;
-    left: 0;
-    width: 100%;
-    padding: 8px;
-    background-color: var(--secondary-background-color);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25), -2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: var(--border-radius-small);
+  position: absolute;
+  z-index: 2001;
+  top: 45px;
+  left: 0;
+  width: 100%;
+  padding: 8px;
+  background-color: var(--secondary-background-color);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25), -2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: var(--border-radius-small);
 }
 
 .dropdown__list ul {
-    gap: inherit;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  gap: inherit;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .dropdown__list ul li {
-    padding: 8px 16px;
-    cursor: pointer;
-    color: white;
-    border-radius: var(--border-radius-large);
+  padding: 8px 16px;
+  cursor: pointer;
+  color: white;
+  border-radius: var(--border-radius-large);
 }

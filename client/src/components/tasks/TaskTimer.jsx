@@ -23,7 +23,7 @@ import {
 } from "react";
 import { useStopwatch } from "react-timer-hook";
 
-export default function TaskTimer({ task, project, uid }) {
+export default function TaskTimer({ task, project, uid, handleStopPropa }) {
   const [totalTaskDuration, setTotalTaskDuration] = useState(
     task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0
   );
@@ -107,7 +107,8 @@ export default function TaskTimer({ task, project, uid }) {
   const formattedMinutes = String(minutes).padStart(2, "0");
   const formattedSeconds = String(seconds).padStart(2, "0");
 
-  const handlePauseTimer = async () => {
+  const handlePauseTimer = async (e) => {
+    e.stopPropagation();
     pause();
     setIsRunning(false);
 
@@ -124,7 +125,8 @@ export default function TaskTimer({ task, project, uid }) {
     socket.emit("update task", task?.projectId);
   };
 
-  const handlePlayTimer = async () => {
+  const handlePlayTimer = async (e) => {
+    e.stopPropagation();
     // On réinitialise le timer avec l'offset actuel avant de démarrer
     reset(stopwatchOffset);
     start();
@@ -139,7 +141,12 @@ export default function TaskTimer({ task, project, uid }) {
   };
 
   return (
-    <div className={styles.container} data-running={isRunning}>
+    <div
+      className={styles.container}
+      data-is-open={more ? "true" : "false"}
+      data-running={isRunning}
+      onClick={(e) => handleStopPropa(e, more)}
+    >
       {/* TIMER */}
       <span
         className={styles.timer}
@@ -157,7 +164,12 @@ export default function TaskTimer({ task, project, uid }) {
             )}
           </>
         )}
-        <span onClick={() => setMore(true)}>
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            setMore(true);
+          }}
+        >
           {formattedHours + ":" + formattedMinutes + ":" + formattedSeconds}
         </span>
       </span>
@@ -201,7 +213,13 @@ export default function TaskTimer({ task, project, uid }) {
               </div>
             )}
           </div>
-          <div id="modal-layout-opacity" onClick={(e) => setMore(false)}></div>
+          <div
+            id="modal-layout-opacity"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMore(false);
+            }}
+          ></div>
         </>
       )}
     </div>

@@ -7,7 +7,13 @@ import { useDebouncedCallback } from "use-debounce";
 import { updateTaskText } from "@/api/task";
 import { mutate } from "swr";
 
-export default function TaskText({ task, project, uid, archive }) {
+export default function TaskText({
+  task,
+  project,
+  uid,
+  archive,
+  handleStopPropa,
+}) {
   const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState(task?.text || "");
 
@@ -35,7 +41,8 @@ export default function TaskText({ task, project, uid, archive }) {
     setInputValue(task?.text);
   }, [task?.text]);
 
-  function handleEdit() {
+  function handleEdit(e) {
+    e.stopPropagation();
     const isAuthorized = checkRole(
       project,
       ["owner", "manager", "team", "customer"],
@@ -57,6 +64,7 @@ export default function TaskText({ task, project, uid, archive }) {
           id="text"
           value={inputValue}
           onChange={handleChange}
+          onClick={handleStopPropa}
           className={`${bricolageGrostesque.className} ${styles.input}`}
           onBlur={(e) => setEdit(false)}
           autoFocus

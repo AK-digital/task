@@ -64,7 +64,8 @@ export default function TaskDeadline({ task, project, uid }) {
     }
   }
 
-  const removeDeadline = async () => {
+  const removeDeadline = async (e) => {
+    e.stopPropagation();
     const response = await updateTaskDeadline(task?._id, project?._id, null);
 
     if (response?.success) {
@@ -107,17 +108,21 @@ export default function TaskDeadline({ task, project, uid }) {
     setHover(true);
   }, [project, uid]);
 
-  const handleIsEditing = useCallback(() => {
-    const isAuthorized = checkRole(
-      project,
-      ["owner", "manager", "team", "customer"],
-      uid
-    );
+  const handleIsEditing = useCallback(
+    (e) => {
+      e.stopPropagation();
+      const isAuthorized = checkRole(
+        project,
+        ["owner", "manager", "team", "customer"],
+        uid
+      );
 
-    if (!isAuthorized) return;
+      if (!isAuthorized) return;
 
-    setIsEditing((prev) => !prev);
-  }, [project, uid]);
+      setIsEditing((prev) => !prev);
+    },
+    [project, uid]
+  );
 
   return (
     <div className={styles.container} onMouseLeave={() => setHover(false)}>

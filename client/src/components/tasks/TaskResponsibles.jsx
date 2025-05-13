@@ -12,7 +12,12 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import NoPicture from "../User/NoPicture";
 import { mutate } from "swr";
 
-export default function TaskResponsibles({ task, project, archive }) {
+export default function TaskResponsibles({
+  task,
+  project,
+  archive,
+  handleStopPropa,
+}) {
   const { user, uid } = useContext(AuthContext);
   const [optimisticResponsibles, setOptimisticResponsibles] = useState(
     task?.responsibles || []
@@ -44,7 +49,8 @@ export default function TaskResponsibles({ task, project, archive }) {
     setOptimisticResponsibles(task?.responsibles || []);
   }, [task?.responsibles]);
 
-  async function handleAddResponsible(responsible) {
+  async function handleAddResponsible(e, responsible) {
+    e.stopPropagation();
     const previousResponsibles = [...optimisticResponsibles];
 
     // Mise à jour optimiste
@@ -81,7 +87,8 @@ export default function TaskResponsibles({ task, project, archive }) {
     socket.emit("create notification", user, responsible?.email, message, link);
   }
 
-  async function handleRemoveResponsible(responsible) {
+  async function handleRemoveResponsible(e, responsible) {
+    e.stopPropagation();
     const previousResponsibles = [...optimisticResponsibles];
 
     // Mise à jour optimiste
@@ -182,14 +189,14 @@ export default function TaskResponsibles({ task, project, archive }) {
       {/* MODAL */}
       {openModal && (
         <Modal setOpenModal={setOpenModal}>
-          <div className={styles.modal}>
+          <div className={styles.modal} onClick={handleStopPropa}>
             {isNotEmpty(optimisticResponsibles) && (
               <div className={styles["responsibles__container"]}>
                 <ul className={styles["responsibles__list"]}>
                   {optimisticResponsibles.map((responsible) => (
                     <li
                       key={responsible?._id}
-                      onClick={() => handleRemoveResponsible(responsible)}
+                      onClick={(e) => handleRemoveResponsible(e, responsible)}
                     >
                       <Image
                         src={responsible?.picture || "/default-pfp.webp"}
@@ -215,7 +222,7 @@ export default function TaskResponsibles({ task, project, archive }) {
                   {filteredMembers.map((member) => (
                     <li
                       key={member?.user?._id}
-                      onClick={() => handleAddResponsible(member?.user)}
+                      onClick={(e) => handleAddResponsible(e, member?.user)}
                     >
                       {member?.user?.picture ? (
                         <Image

@@ -61,6 +61,12 @@ export default function Task({
     [archive, project?._id, task?._id]
   );
 
+  const handleStopPropa = (e, isOpen = true) => {
+    if (isOpen) {
+      e.stopPropagation();
+    }
+  };
+
   function handleSelectedTask(e) {
     setSelectedTasks((prev) => {
       if (e.target.checked) {
@@ -82,7 +88,10 @@ export default function Task({
       data-done={task?.status === "Terminée"}
     >
       {canEdit && (
-        <div className={`${styles.checkbox} ${styles.row}`}>
+        <div
+          className={`${styles.checkbox} ${styles.row}`}
+          onClick={handleStopPropa}
+        >
           <input
             type="checkbox"
             name="task"
@@ -99,11 +108,18 @@ export default function Task({
           {...listeners}
           suppressHydrationWarning
           className={`${styles.grip} ${styles.row}`}
+          onClick={handleStopPropa}
         >
           <GripVertical size={20} />
         </div>
       )}
-      <TaskText task={task} project={project} uid={uid} archive={archive} />
+      <TaskText
+        task={task}
+        project={project}
+        uid={uid}
+        archive={archive}
+        handleStopPropa={handleStopPropa}
+      />
       <div
         className={`${styles.comment} ${styles.row}`}
         onClick={handleTaskClick}
@@ -119,13 +135,46 @@ export default function Task({
           </span>
         )}
       </div>
-      <TaskResponsibles task={task} project={project} archive={archive} />
-      <TaskStatus task={task} project={project} uid={uid} />
-      <TaskPriority task={task} project={project} uid={uid} />
+      <TaskResponsibles
+        task={task}
+        project={project}
+        archive={archive}
+        handleStopPropa={handleStopPropa}
+      />
+      <TaskStatus
+        task={task}
+        project={project}
+        uid={uid}
+        handleStopPropa={handleStopPropa}
+      />
+      <TaskPriority
+        task={task}
+        project={project}
+        uid={uid}
+        handleStopPropa={handleStopPropa}
+      />
       <TaskDeadline task={task} project={project} uid={uid} />
-      <TaskEstimate task={task} project={project} uid={uid} />
-      {!archive && <TaskTimer task={task} project={project} uid={uid} />}
-      <TaskRemove task={task} project={project} uid={uid} archive={archive} />
+      <TaskEstimate
+        task={task}
+        project={project}
+        uid={uid}
+        handleStopPropa={handleStopPropa}
+      />
+      {!archive && (
+        <TaskTimer
+          task={task}
+          project={project}
+          uid={uid}
+          handleStopPropa={handleStopPropa}
+        />
+      )}
+      <TaskRemove
+        task={task}
+        project={project}
+        uid={uid}
+        archive={archive}
+        handleStopPropa={handleStopPropa}
+      />
       {openedTask === task?._id && (
         <TaskMore task={task} project={project} archive={archive} uid={uid} />
       )}
