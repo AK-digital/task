@@ -20,7 +20,7 @@
     border-bottom: none;
 }
 
-.container span {
+.container>div>span {
     display: block;
     overflow: hidden;
     white-space: nowrap;
@@ -29,4 +29,11 @@
 
 .dragging {
     opacity: 0;
+}
+
+.removeGhost {
+    position: relative;
+    padding-inline: 6px;
+    min-width: 32px;
+
 }

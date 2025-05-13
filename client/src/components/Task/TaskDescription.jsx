@@ -53,8 +53,10 @@ export default function TaskDescription({ project, task, uid }) {
   const handleEditDescription = () => {
     if (!isAuthorized) return;
 
-    if (descriptionAuthor?._id && !isAuthor) {
-      return;
+    if (description) {
+      if (descriptionAuthor?._id && !isAuthor) {
+        return;
+      }
     }
 
     setIsEditing(true);

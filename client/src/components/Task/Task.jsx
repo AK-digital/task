@@ -97,7 +97,11 @@ export default function Task({
       {/* Timer */}
       {isTimer && <TaskTimer task={task} />}
       {/* Remove */}
-      {canRemove && <TaskRemove task={task} archive={false} mutate={mutate} />}
+      {canRemove ? (
+        <TaskRemove task={task} archive={false} mutate={mutate} />
+      ) : (
+        <div className={styles.removeGhost}></div>
+      )}
 
       {openedTask === task?._id && (
         <TaskMore task={task} archive={false} uid={uid} mutateTasks={mutate} />
