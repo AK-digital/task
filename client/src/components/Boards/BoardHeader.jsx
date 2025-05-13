@@ -262,7 +262,7 @@ export default function BoardHeader({
               {...attributes}
               {...listeners}
             >
-              <GripVertical size={20} style={{ cursor: "grab" }} />
+              <GripVertical size={20} />
             </div>
           </div>
         )}
