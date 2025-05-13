@@ -1,20 +1,20 @@
 .container {
-    position: sticky;
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: 500;
-    user-select: none;
-    border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
-    /* border-bottom-left-radius: var(--border-radius-medium); */
-    background-color: var(--secondary-background-color);
-    /* border-left: 2px solid var(--border-color); */
-    width: 100%;
-    z-index: 10;
-    flex-wrap: wrap;
-    padding: 12px;
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  user-select: none;
+  border-top-left-radius: var(--border-radius-medium);
+  border-top-right-radius: var(--border-radius-medium);
+  /* border-bottom-left-radius: var(--border-radius-medium); */
+  background-color: var(--secondary-background-color);
+  /* border-left: 2px solid var(--border-color); */
+  width: 100%;
+  z-index: 10;
+  flex-wrap: wrap;
+  padding: 12px;
 }
 
 /* .container::before {
@@ -29,262 +29,262 @@
 } */
 
 .container svg {
-    max-width: 20px;
-    max-height: 20px;
+  max-width: 20px;
+  max-height: 20px;
 }
 
 .container input[type="text"] {
-    position: relative;
-    z-index: 2001;
-    width: fit-content;
-    padding: 4px;
-    border-radius: var(--border-radius-xs);
-    font-size: var(--text-size-medium);
+  position: relative;
+  z-index: 2001;
+  width: fit-content;
+  padding: 4px;
+  border-radius: var(--border-radius-xs);
+  font-size: var(--text-size-medium);
 }
 
 .container svg {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .actions {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .actions div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .actions div svg {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .actionCheckbox input {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .actionMore {
-    position: relative;
-    color: var(--text-color-muted);
+  position: relative;
+  color: var(--text-color-muted);
 }
 
-.actionMore>svg:hover {
-    color: var(--text-color);
+.actionMore > svg:hover {
+  color: var(--text-color);
 }
 
 .grip {
-    color: var(--text-light-color);
+  color: var(--text-light-color);
 }
 
 .checkbox {
-    position: relative;
-    z-index: 1;
-    width: 14px;
-    height: 14px;
-    appearance: none;
-    background: transparent;
-    border: 1px solid var(--text-medium-color);
-    border-radius: 2px;
-    cursor: pointer;
-    padding: 6px;
-    margin-left: 3px;
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--text-medium-color);
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 6px;
+  margin-left: 3px;
 }
 
 .checkbox:checked {
-    background-color: var(--accent-color);
-    position: relative;
+  background-color: var(--accent-color);
+  position: relative;
 }
 
 .checkbox:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--text-color-muted);
-    font-size: 12px;
-    color: white;
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-color-muted);
+  font-size: 12px;
+  color: white;
 }
 
 .title {
-    border: 1px solid transparent;
-    border-radius: var(--border-radius-xs);
-    font-size: var(--text-size-large);
-    font-weight: 500;
-    cursor: text;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-xs);
+  font-size: var(--text-size-large);
+  font-weight: 500;
+  cursor: text;
 }
 
 .container[data-archive="false"] .title[data-authorized="true"]:hover {
-    border: 1px solid var(--border-color);
-    cursor: inherit !important;
+  border: 1px solid var(--border-color);
+  cursor: inherit !important;
 }
 
 .bullet {
-    display: block;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    cursor: pointer;
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .count {
-    color: var(--text-color-muted);
-    font-size: var(--text-size-small);
-    font-weight: 400;
+  color: var(--text-color-muted);
+  font-size: var(--text-size-small);
+  font-weight: 400;
 }
 
 .container[data-open="false"] {
-    background-color: var(--secondary-background-color);
-    padding: 8px;
-    border-radius: var(--border-radius-xs);
-    margin-bottom: 0;
+  background-color: var(--secondary-background-color);
+  padding: 8px;
+  border-radius: var(--border-radius-xs);
+  margin-bottom: 0;
 }
 
 .modal {
-    left: 12px;
-    top: 40px;
-    width: max-content;
-    max-width: 234px;
-    padding: 16px;
-    background-color: var(--secondary-background-color);
-    box-shadow: var(--box-shadow-medium);
+  left: 12px;
+  top: 40px;
+  width: max-content;
+  max-width: 234px;
+  padding: 16px;
+  background-color: var(--secondary-background-color);
+  box-shadow: var(--box-shadow-medium);
 }
 
 .modal ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .modal li {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 80ms all linear;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 80ms all linear;
 }
 
 .modal li:hover {
-    scale: 1.1;
-    transition: 80ms all linear;
+  scale: 1.1;
+  transition: 80ms all linear;
 }
 
 .deleteIcon {
-    margin-left: auto;
-    transition: color 0.2s ease-in-out;
-    position: relative;
-    cursor: pointer;
-    color: #272b4e;
-    display: flex;
-    align-items: center;
+  margin-left: auto;
+  transition: color 0.2s ease-in-out;
+  position: relative;
+  cursor: pointer;
+  color: #272b4e;
+  display: flex;
+  align-items: center;
 }
 
 .container:hover .deleteIcon {
-    color: #353855;
+  color: #353855;
 }
 
 .trashIcon {
-    color: var(--text-color-muted);
-    cursor: pointer;
+  color: var(--text-color-muted);
+  cursor: pointer;
 }
 
 .trashIcon:hover {
-    color: var(--error);
+  color: var(--error);
 }
 
 .deleteIcon:hover .trashIcon {
-    color: var(--danger-color);
+  color: var(--danger-color);
 }
 
 .trashIcon .confirmOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .confirmModal {
-    background: white;
-    padding: 24px;
-    border-radius: var(--border-radius-small);
-    position: relative;
-    min-width: 300px;
+  background: white;
+  padding: 24px;
+  border-radius: var(--border-radius-small);
+  position: relative;
+  min-width: 300px;
 }
 
 .closeButton {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: none;
-    border: none;
-    cursor: pointer;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .confirmButtons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .cancelButton {
-    padding: 4px 12px;
-    border: 1px solid #ccc;
-    background: transparent;
-    border-radius: var(--border-radius-xs);
-    cursor: pointer;
+  padding: 4px 12px;
+  border: 1px solid #ccc;
+  background: transparent;
+  border-radius: var(--border-radius-xs);
+  cursor: pointer;
 }
 
 .popupConfirm {
-    position: absolute;
-    top: 50%;
-    right: calc(100% + 10px);
-    transform: translateY(-50%);
-    background-color: var(--secondary-background-color);
-    border-radius: var(--border-radius-xs);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 10px);
+  transform: translateY(-50%);
+  background-color: var(--secondary-background-color);
+  border-radius: var(--border-radius-xs);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
 }
 
 .arrow {
-    position: absolute;
-    right: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-    border-left: 6px solid var(--secondary-background-color);
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid var(--secondary-background-color);
 }
 
 .popupContent {
-    padding: 16px;
-    min-width: 200px;
+  padding: 16px;
+  min-width: 200px;
 }
 
 .popupContent p {
-    text-align: center;
-    font-size: .9rem;
-    color: white;
+  text-align: center;
+  font-size: 0.9rem;
+  color: white;
 }
 
 .popupContent .confirmButtons {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 
 .popupContent .confirmButtons button {
-    width: 100%;
+  width: 100%;
 }
