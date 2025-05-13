@@ -1,20 +1,21 @@
 "use client";
-import styles from "@/styles/components/tasks/task-more.module.css";
+import styles from "@/styles/components/task/task-more.module.css";
 import { useRef, useState, useEffect, useCallback } from "react";
 import Messages from "../messages/Messages";
 import Image from "next/image";
 import moment from "moment";
-import { MessagesSquareIcon, PanelTop } from "lucide-react";
-import Tiptap from "../RichTextEditor/Tiptap";
 import TaskDescription from "./TaskDescription";
+import { usePathname } from "next/navigation";
 moment.locale("fr");
 
-export default function TaskMore({ task, project, archive, uid }) {
+export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
   const [isResizing, setIsResizing] = useState(false);
   const [startX, setStartX] = useState(null);
   const [startWidth, setStartWidth] = useState(null);
+  const pathname = usePathname();
+  const project = task?.projectId;
 
   const startResizing = useCallback((e) => {
     setIsResizing(true);
@@ -74,13 +75,18 @@ export default function TaskMore({ task, project, archive, uid }) {
 
     const handleAnimationEnd = async () => {
       container.removeEventListener("animationend", handleAnimationEnd);
-      window.history.pushState(
-        {},
-        "",
-        archive
+      let path = "";
+
+      if (pathname?.includes("/projects")) {
+        path = archive
           ? `/projects/${project?._id}/archive`
-          : `/projects/${project?._id}`
-      );
+          : `/projects/${project?._id}`;
+      }
+
+      if (pathname?.includes("/tasks")) {
+        path = `/tasks`;
+      }
+      window.history.pushState({}, "", path);
       setOpen(false);
     };
 
@@ -118,7 +124,7 @@ export default function TaskMore({ task, project, archive, uid }) {
         </div>
         {/* Conversation */}
         <div className={styles.wrapper}>
-          <Messages task={task} project={project} />
+          <Messages task={task} project={project} mutateTasks={mutateTasks} />
         </div>
       </div>
       {open && <div onClick={handleClose} id="task-modal-layout"></div>}

@@ -28,15 +28,13 @@
   --text-light-color: rgb(215, 212, 203);
   --text-lighter-color: #e7e3d9;
   --text-color-muted: #72716f;
-  --background-gradient-dark: linear-gradient(
-    140deg,
-    #39545b,
-    #2a4046 17%,
-    #16363c 52%,
-    #2a4046 86%,
-    #32484e 100%
-  );
-  --border-color: #3a3d5c;
+  --background-gradient-dark: linear-gradient(140deg,
+      #39545b,
+      #2a4046 17%,
+      #16363c 52%,
+      #2a4046 86%,
+      #32484e 100%);
+  --border-color: #ACABA5;
 
   --pending-color: #b3bcc0;
   --processing-color: #f3b158;
@@ -235,7 +233,6 @@ textarea {
   letter-spacing: var(--letter-spacing-normal);
   border-bottom: 1px solid var(--text-medium-color);
   outline: none;
-  font-family: inherit;
   padding: 12px 0 12px 0;
 }
 
@@ -285,13 +282,11 @@ input[type="checkbox"] {
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
-    contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
 }
 
 .ql-snow.ql-toolbar button svg {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
-    contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
 }
 
 .ql-editor.ql-blank:before {
@@ -382,4 +377,12 @@ input[type="checkbox"] {
 .epr_-6npj90 {
   --epr-emoji-size: 18px !important;
   --epr-category-navigation-button-size: 24px !important;
+}
+
+/* Task row */
+
+#task-row {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }

@@ -10,6 +10,10 @@
     min-width: 1050px;
 }
 
+.tasks {
+    padding-inline: 20px;
+}
+
 .add {
     display: flex;
     align-items: center;

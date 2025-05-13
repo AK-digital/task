@@ -1,19 +1,21 @@
 "use client";
 import { updateTaskEstimate } from "@/api/task";
-import styles from "@/styles/components/tasks/task-estimate.module.css";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import styles from "@/styles/components/task/task-estimate.module.css";
 import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
-import { checkRole } from "@/utils/utils";
 import { XCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-export default function TaskEstimate({ task, project, uid }) {
+export default function TaskEstimate({ task, uid }) {
   const [isEditing, setIsEditing] = useState(false);
   const [number, setNumber] = useState(1);
   const [week, setWeek] = useState("minutes");
   const [estimation, setEstimation] = useState(task?.estimation || "-");
   const [hover, setHover] = useState(false);
   const hasEstimation = estimation !== "-";
+  const project = task?.projectId;
+  const canEdit = useUserRole(project, ["owner", "manager", "team"]);
 
   // Update estimation when task is updated (from another user)
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function TaskEstimate({ task, project, uid }) {
       return;
     }
 
-    socket.emit("update task", task?.projectId);
+    socket.emit("update task", project?._id);
   };
 
   const handleDeleteEstimation = async (e) => {
@@ -50,7 +52,7 @@ export default function TaskEstimate({ task, project, uid }) {
       return;
     }
 
-    socket.emit("update task", task?.projectId);
+    socket.emit("update task", project?._id);
 
     setIsEditing(false);
   };
@@ -60,7 +62,13 @@ export default function TaskEstimate({ task, project, uid }) {
     setIsEditing(false);
     setHover(false);
 
-    const value = `${number} ${week}`;
+    let value = `${number} ${week}`;
+
+    if (number <= 1) {
+      const newWeek = week.slice(0, -1);
+      setWeek(newWeek);
+      value = `${number} ${newWeek}`;
+    }
 
     setEstimation(value);
 
@@ -74,21 +82,17 @@ export default function TaskEstimate({ task, project, uid }) {
     setNumber(1);
     setWeek("minutes");
 
-    socket.emit("update task", task?.projectId);
+    socket.emit("update task", project?._id);
   };
 
   const handleHover = useCallback(() => {
-    const isAuthorized = checkRole(project, ["owner", "manager", "team"], uid);
-
-    if (!isAuthorized) return;
+    if (!canEdit) return;
 
     setHover(true);
   }, [project, uid]);
 
   const handleIsEditing = useCallback(() => {
-    const isAuthorized = checkRole(project, ["owner", "manager", "team"], uid);
-
-    if (!isAuthorized) return;
+    if (!canEdit) return;
 
     setIsEditing((prev) => !prev);
   }, [project, uid]);

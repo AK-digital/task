@@ -1,7 +1,6 @@
 import UserModel from "../models/User.model.js";
 import NotificationModel from "../models/Notification.model.js";
 import ProjectModel from "../models/Project.model.js";
-import BoardModel from "../models/Board.model.js";
 
 export default function socketHandler(io) {
   io.on("connection", (socket) => {
@@ -25,6 +24,7 @@ export default function socketHandler(io) {
     socket.on(
       "create notification",
       async (sender, receiver, message, link) => {
+        console.log(sender, receiver, message, link);
         const senderUser = await UserModel.findById({ _id: sender?._id });
 
         if (senderUser) {
@@ -99,11 +99,11 @@ export default function socketHandler(io) {
     });
 
     socket.on("update task", async (projectId) => {
-      await emitToProjectMembers(projectId, "task updated", io);
+      await emitToProjectMembers(projectId, "task updated", socket);
     });
 
     socket.on("update message", async (projectId) => {
-      await emitToProjectMembers(projectId, "message updated", io);
+      await emitToProjectMembers(projectId, "message updated", socket);
     });
 
     socket.on("update-project-role", async (memberId) => {
@@ -116,7 +116,7 @@ export default function socketHandler(io) {
   });
 }
 
-async function emitToProjectMembers(projectId, event, io, ...args) {
+async function emitToProjectMembers(projectId, event, socket, ...args) {
   const project = await ProjectModel.findById({ _id: projectId });
 
   if (!project) return;
@@ -129,9 +129,9 @@ async function emitToProjectMembers(projectId, event, io, ...args) {
     if (!user) return;
 
     if (args) {
-      io.to(user?.socketId).emit(event, ...args);
+      socket.broadcast.to(user?.socketId).emit(event, ...args);
     } else {
-      io.to(user?.socketId).emit(event);
+      socket.broadcast.to(user?.socketId).emit(event);
     }
   });
 }

@@ -11,12 +11,8 @@ import { useMessages } from "@/app/hooks/useMessages";
 import { useDrafts } from "@/app/hooks/useDrafts";
 import MessagesSkeleton from "./MessagesSkeleton";
 
-export default function Messages({ task, project }) {
-  const { draft, mutateDraft } = useDrafts(
-    task?.projectId,
-    task?._id,
-    "message"
-  );
+export default function Messages({ task, project, mutateTasks }) {
+  const { draft, mutateDraft } = useDrafts(project?._id, task?._id, "message");
   const { messages, messageLoading, mutate } = useMessages(
     project?._id,
     task?._id
@@ -81,6 +77,7 @@ export default function Messages({ task, project }) {
             message={message}
             mutateMessage={mutate}
             project={project}
+            mutateTasks={mutateTasks}
             key={message?._id}
           />
         ))}

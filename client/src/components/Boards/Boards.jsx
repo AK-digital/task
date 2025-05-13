@@ -18,7 +18,6 @@ import {
 } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { updateTaskBoard, updateTaskOrder } from "@/api/task";
-import Task from "../tasks/Task";
 import socket from "@/utils/socket";
 import AddBoard from "@/components/Boards/AddBoard";
 import { mutate } from "swr";
@@ -27,11 +26,26 @@ import { useRouter } from "next/navigation";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { SortableBoard } from "./SortableBoard"; // Nous allons créer ce composant
 import { updateBoardOrder } from "@/api/board"; // Vous devrez créer cette fonction API
+import Task from "../Task/Task";
+
+const displayedElts = {
+  isCheckbox: true,
+  isDrag: true,
+  isProject: false,
+  isBoard: false,
+  isAdmin: true,
+  isStatus: true,
+  isPriority: true,
+  isDeadline: true,
+  isEstimate: true,
+  isTimer: true,
+};
 
 export default function Boards({
   boards: initialBoards,
   project,
   tasksData,
+  mutateTasks,
   archive,
 }) {
   const router = useRouter();
@@ -41,7 +55,7 @@ export default function Boards({
   // Transformer les résultats en un objet avec les tâches par board
   const initialTasksData = useMemo(() => {
     return tasksData.reduce((acc, task) => {
-      const boardId = task.boardId.toString();
+      const boardId = task.boardId?._id.toString();
       if (!acc[boardId]) acc[boardId] = [];
       acc[boardId].push(task);
       return acc;
@@ -383,6 +397,8 @@ export default function Boards({
                     >
                       <Board
                         tasks={tasks[board._id] || []}
+                        displayedElts={displayedElts}
+                        mutateTasks={mutateTasks}
                         project={project}
                         board={board}
                         activeId={activeId}
@@ -404,6 +420,7 @@ export default function Boards({
                 .flat()
                 .find((task) => task?._id === activeId)}
               project={project}
+              displayedElts={displayedElts}
               archive={archive}
             />
           ) : activeId && activeType === "board" ? (

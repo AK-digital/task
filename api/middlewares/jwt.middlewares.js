@@ -133,7 +133,6 @@ export async function isAdmin(req, res, next) {
 }
 
 // Checks if has an account for project accept invitation
-
 export async function hasAccount(req, res, next) {
   try {
     const { invitationId } = req.body;

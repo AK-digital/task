@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    height: 50px;
+    cursor: pointer;
+    color: var(--text-color-dark);
+    transition: 120ms all ease-in-out;
+}
+
+.container[data-openned="true"] {
+    background-color: var(--accent-color);
+}
+
+.container:hover {
+    box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
+}
+
+.container:last-child {
+    border-bottom: none;
+}
+
+.container span {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.dragging {
+    opacity: 0;
+}

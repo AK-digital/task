@@ -42,12 +42,10 @@ passport.use(
 );
 
 passport.serializeUser(function (user, cb) {
-  console.log("serialize");
   return cb(null, user.id);
 });
 
 passport.deserializeUser(function (id, cb) {
-  console.log("deserialize");
   UserModel.findById(id)
     .then((user) => {
       return cb(null, user);

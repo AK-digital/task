@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/tasks/task-pending.module.css";
+import styles from "@/styles/components/task/task-pending.module.css";
 import { GripVertical, MessageCircle } from "lucide-react";
 
 export function TaskPending({ text }) {

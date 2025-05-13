@@ -28,6 +28,7 @@ export async function getProject(id) {
 
 export async function getProjects() {
   try {
+    console.log("Fetching projects...");
     const res = await useAuthFetch(
       "project",
       "GET",

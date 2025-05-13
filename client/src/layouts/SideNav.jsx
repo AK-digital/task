@@ -107,7 +107,7 @@ export default function SideNav({ projects }) {
           </div>
           <div className={styles.myTasks}>
             <Link
-              href={"/myTasks"}
+              href={"/tasks"}
               className={styles.myTasksLink}
               title="Mes tâches"
             >

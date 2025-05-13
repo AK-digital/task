@@ -4,26 +4,20 @@ import {
   timeTrackingStart,
   timeTrackingStop,
 } from "@/api/timeTracking";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
-import styles from "@/styles/components/tasks/task-timer.module.css";
+import styles from "@/styles/components/task/task-timer.module.css";
 import socket from "@/utils/socket";
-import { checkRole, formatTime, isNotEmpty } from "@/utils/utils";
+import { formatTime, isNotEmpty } from "@/utils/utils";
 import { CirclePause, CirclePlay } from "lucide-react";
 import { MinusCircle } from "lucide-react";
 import moment from "moment";
 moment.locale("fr");
 import Image from "next/image";
-import {
-  useEffect,
-  useState,
-  useActionState,
-  useContext,
-  useRef,
-  useCallback,
-} from "react";
+import { useEffect, useState, useActionState, useContext, useRef } from "react";
 import { useStopwatch } from "react-timer-hook";
 
-export default function TaskTimer({ task, project, uid }) {
+export default function TaskTimer({ task }) {
   const [totalTaskDuration, setTotalTaskDuration] = useState(
     task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0
   );
@@ -38,6 +32,9 @@ export default function TaskTimer({ task, project, uid }) {
   const [isRunning, setIsRunning] = useState(false);
   // Référence pour stocker l'objet stopwatch
   const stopwatchRef = useRef(null);
+  const project = task?.projectId;
+
+  const canAdd = useUserRole(project, ["owner", "manager", "team"]);
 
   // Restaurer l'état du chronomètre lors du chargement du composant
   useEffect(() => {
@@ -111,7 +108,7 @@ export default function TaskTimer({ task, project, uid }) {
     pause();
     setIsRunning(false);
 
-    const res = await timeTrackingStop(task?._id, task?.projectId);
+    const res = await timeTrackingStop(task?._id, project?._id);
 
     if (res?.success && res?.data) {
       const newSession = res.data;
@@ -121,7 +118,7 @@ export default function TaskTimer({ task, project, uid }) {
       setSessions(task?.timeTrackings || []);
     }
 
-    socket.emit("update task", task?.projectId);
+    socket.emit("update task", project?._id);
   };
 
   const handlePlayTimer = async () => {
@@ -130,7 +127,7 @@ export default function TaskTimer({ task, project, uid }) {
     start();
     setIsRunning(true);
 
-    await timeTrackingStart(task?._id, task?.projectId);
+    await timeTrackingStart(task?._id, project?._id);
 
     localStorage.setItem(
       `taskTimer_${task._id}`,
@@ -139,13 +136,10 @@ export default function TaskTimer({ task, project, uid }) {
   };
 
   return (
-    <div className={styles.container} data-running={isRunning}>
+    <div className={styles.container} data-running={isRunning} id="task-row">
       {/* TIMER */}
-      <span
-        className={styles.timer}
-        data-center={!checkRole(project, ["owner", "manager", "team"], uid)}
-      >
-        {checkRole(project, ["owner", "manager", "team"], uid) && (
+      <span className={styles.timer} data-center={!canAdd}>
+        {canAdd && (
           <>
             {isRunning ? (
               <CirclePause
@@ -183,7 +177,7 @@ export default function TaskTimer({ task, project, uid }) {
               />
             ) : (
               <div className={styles.content}>
-                {checkRole(project, ["owner", "manager", "team"], uid) && (
+                {canAdd && (
                   <div className={styles.addTime}>
                     <button onClick={() => setAddingSession(true)}>
                       Ajouter une session
@@ -238,7 +232,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
       const newSession = state?.data;
       setSessions((prev) => [...prev, newSession]);
 
-      socket.emit("update task", task?.projectId);
+      socket.emit("update task", task?.projectId?._id);
     }
   }, [state]);
 
@@ -330,13 +324,13 @@ export function TimeTrackingSessions({
   async function handleDeleteSession(sessionId) {
     setSessions((prev) => prev.filter((session) => session._id !== sessionId));
 
-    const res = await deleteTimeTracking(sessionId, task.projectId);
+    const res = await deleteTimeTracking(sessionId, task.projectId?._id);
 
     if (!res.success) {
       setSessions(task?.timeTrackings || []);
     }
 
-    socket.emit("update task", task.projectId);
+    socket.emit("update task", task.projectId?._id);
   }
 
   return (

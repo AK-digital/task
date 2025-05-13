@@ -1,0 +1,31 @@
+.main {
+    max-height: calc(100vh - 64px);
+    width: 100%;
+    margin-left: var(--layout-gap);
+}
+
+.container {
+    padding: 38px;
+    background-color: var(--primary-background-color);
+    height: 100%;
+    border-radius: var(--border-radius-medium) 0 0 0;
+    overflow: auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+
+.title {
+    font-size: 24px;
+}
+
+.tasks {
+    padding: 20px 20px 0px 20px;
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--box-shadow-small);
+}

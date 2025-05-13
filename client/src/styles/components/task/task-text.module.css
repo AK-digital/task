@@ -1,8 +1,11 @@
 .container {
-    padding: 6px;
     width: 100%;
     min-width: 200px;
     max-width: 700px;
+    cursor: text;
+    font-size: var(--text-size-normal);
+    padding-left: 6px;
+    margin-inline: 8px;
 }
 
 .container span {
@@ -12,15 +15,16 @@
     text-overflow: ellipsis;
 }
 
-.input {
+.container input {
+    position: relative;
+    left: -6px;
     padding: 4px 6px;
-    font-size: var(--text-size-normal);
-    font-weight: 300;
+    font-size: 14.8px;
     border: none;
     transition: 150ms background linear;
 }
 
-.input:focus {
+.container input:focus {
     color: var(--text-darker-color);
     background-color: var(--third-background-color);
     border-radius: var(--border-radius-xs);

@@ -7,12 +7,12 @@ export async function middleware(request) {
   if (request.nextUrl.pathname === "/") {
     const accessToken = await getAccessToken();
 
-    if (accessToken) {
+    if (accessToken && request.nextUrl.pathname === "/") {
       console.log("Access token found, redirecting to /projects");
-      return NextResponse.redirect(new URL("/projects", request.url));
+
+      return NextResponse.next();
     }
   } else {
-    console.log("Middleware triggered for path: handleAuth");
     return await handleAuth(request, NextResponse);
   }
 }
@@ -22,6 +22,7 @@ export const config = {
     "/",
     "/projects",
     "/projects/:path*",
+    "/tasks",
     "/profile",
     "/new-project/:path*",
     "/time-trackings",

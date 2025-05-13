@@ -3,28 +3,55 @@
     display: flex;
     align-items: center;
     width: 100%;
-
     font-size: var(--text-size-small);
     color: var(--text-color-muted);
-    padding-inline: 12px;
     padding-bottom: 12px;
 }
 
 .row {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 4px;
     width: 100%;
     cursor: default;
 }
 
+.row div {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 4px;
+}
+
+.row div svg {
+    cursor: pointer;
+}
+
+.row div svg:last-child {
+    position: relative;
+    top: -4px;
+}
+
+.row div svg:hover {
+    color: var(--text-color);
+}
+
+.sort svg[data-active="true"] {
+    color: #CC9348;
+}
+
 .selection {
-    min-width: 20px;
-    max-width: 20px;
+    min-width: 13px;
+    width: 13px;
+    height: 20px;
 }
 
 .drag {
-    min-width: 20px;
-    max-width: 20px;
+    margin-left: 6px;
+    min-width: 16px;
+    max-width: 16px;
 }
 
 .text {
@@ -32,14 +59,25 @@
     min-width: 240px;
     max-width: 740px;
     text-align: center;
+    margin-left: 9px;
 }
 
+.project {
+    min-width: 140px;
+    max-width: 180px;
+}
+
+.board {
+    width: 100%;
+    min-width: 150px;
+    max-width: 170px;
+}
 
 .responsibles {
-    padding-inline: 9px;
-    max-width: 90px;
+    width: 100%;
+    min-width: 100px;
+    max-width: 100px;
 }
-
 
 .status,
 .priority {
