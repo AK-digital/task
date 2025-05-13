@@ -31,14 +31,25 @@ export default function TaskRemove({
   }
 
   return (
-    <div className={styles.task__remove} onClick={handleStopPropa}>
-      <Trash size={20} onClick={() => setShowConfirm(true)} />
-      <ConfirmDialog
-        isOpen={showConfirm}
-        onClose={() => setShowConfirm(false)}
-        onConfirm={handleDeleteTask}
-        message="Supprimer cette tâche ?"
-      />
-    </div>
+    <>
+      <div className={styles.task__remove} onClick={handleStopPropa}>
+        <Trash size={20} onClick={() => setShowConfirm(true)} />
+        <ConfirmDialog
+          isOpen={showConfirm}
+          onClose={() => setShowConfirm(false)}
+          onConfirm={handleDeleteTask}
+          message="Supprimer cette tâche ?"
+        />
+      </div>
+      {showConfirm && (
+        <div
+          id="modal-layout-opacity"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowConfirm(false);
+          }}
+        ></div>
+      )}
+    </>
   );
 }
