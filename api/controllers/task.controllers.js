@@ -439,7 +439,8 @@ export async function updateTaskDescription(req, res, next) {
       for (const attachment of attachments) {
         const bufferResponse = await uploadFileBuffer(
           "task/description",
-          attachment.buffer
+          attachment.buffer,
+          attachment.originalname,
         );
         const object = {
           name: attachment.originalname,

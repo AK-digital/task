@@ -1,10 +1,36 @@
 import cloudinary from "../config/cloudinary.js";
 
-export async function uploadFileBuffer(path, buffer) {
+export async function uploadFileBuffer(path, buffer, originalFilename) {
   try {
+    const fileExtension = originalFilename
+      ? originalFilename.split(".").pop().toLowerCase()
+      : "";
+
+    let resourceType = "auto";
+
+    if (
+      [
+        "csv",
+        "txt",
+        "json",
+        "xml",
+        "md",
+        "rtf",
+        "doc",
+        "docx",
+        "xls",
+        "xlsx",
+        "ppt",
+        "pptx",
+      ].includes(fileExtension)
+    ) {
+      resourceType = "raw";
+    }
+
     const options = {
       folder: path,
       upload_preset: "task_preset",
+      resource_type: resourceType,
     };
 
     return await new Promise((resolve, reject) => {
@@ -35,9 +61,23 @@ export async function uploadFile(path, img) {
 
 export async function destroyFile(folder, file) {
   try {
-    const publicId = file.split("/")[9].split(".")[0]; // Retrives the public id of the img
-    await cloudinary?.uploader?.destroy(`task/${folder}/${publicId}`);
+    const segments = file.split("/");
+    const resourceType = segments[4]; // "image" ou "raw"
+    const lastSegment = segments[9];
+
+    let publicId;
+    if (lastSegment.includes(".")) {
+      publicId = lastSegment.split(".")[0];
+    } else {
+      publicId = lastSegment;
+    }
+
+    await cloudinary?.uploader?.destroy(`task/${folder}/${publicId}`, {
+      resource_type: resourceType, // "image" ou "raw" selon le type
+    });
+    console.log(`File destroyed: task/${folder}/${publicId} (${resourceType})`);
   } catch (err) {
+    console.error("Error destroying file:", err);
     throw err;
   }
 }

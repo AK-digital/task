@@ -43,6 +43,30 @@ export default function AttachmentsInfo({
     return attachments.filter((attachment, index) => checkedList[index]);
   };
 
+  function isDisplayableFile(url) {
+    const blacklistedExtensions = ["tiff", "svg"];
+
+    try {
+      const parseUrl = new URL(url);
+      const pathname = parseUrl.pathname;
+      const lastSegment = pathname.split("/").pop();
+
+      if (!lastSegment || !lastSegment.includes(".")) {
+        return false;
+      }
+
+      const extension = lastSegment.split(".").pop().toLowerCase();
+
+      if (blacklistedExtensions.includes(extension)) {
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   const getDownloadUrl = (url) => {
     let parts = url.split("/");
     parts[6] = "fl_attachment";
@@ -144,7 +168,7 @@ export default function AttachmentsInfo({
         <div className={styles.infosWrapper}>
           <div className={styles.infos}>
             {attachments.map(({ name, url }, index) => {
-              const hasUrl = !!url;
+              const hasUrl = !!url && isDisplayableFile(url);
 
               let downloadUrl;
               if (hasUrl) {
@@ -165,8 +189,12 @@ export default function AttachmentsInfo({
                       className={styles.attachmentName}
                       data-url={hasUrl ? "true" : "false"}
                       target="_blank"
-                      href={url}
-                      disabled={!hasUrl}
+                      href={hasUrl ? url : undefined}
+                      onClick={(e) => {
+                        if (!hasUrl) {
+                          e.preventDefault();
+                        }
+                      }}
                     >
                       {name}
                     </a>
