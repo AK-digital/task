@@ -329,101 +329,101 @@ export default function Boards({
   const boardIds = useMemo(() => boards.map((board) => board._id), [boards]);
 
   return (
-    <div className={styles["boards"]}>
-      {archive && (
-        <>
-          <div className={styles.archiveTitle}>
-            <div
-              className={styles.back}
-              onClick={() => router.push(`/projects/${project?._id}`)}
-            >
-              <ArrowLeftCircle size={32} />
+      <div className={styles.boards}>
+        {archive && (
+          <>
+            <div className={styles.archiveTitle}>
+              <div
+                className={styles.back}
+                onClick={() => router.push(`/projects/${project?._id}`)}
+              >
+                <ArrowLeftCircle size={32} />
+              </div>
+              <span>Archives du projet</span>
             </div>
-            <span>Archives du projet</span>
-          </div>
 
-          {Object.values(tasks).flat()?.length === 0 && (
-            <div>
-              <p>Aucune archive disponible actuellement</p>
-            </div>
-          )}
-        </>
-      )}
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-        modifiers={[restrictToVerticalAxis]}
-      >
-        {/* Contexte pour les boards */}
-        <SortableContext
-          items={boardIds}
-          strategy={verticalListSortingStrategy}
+            {Object.values(tasks).flat()?.length === 0 && (
+              <div>
+                <p>Aucune archive disponible actuellement</p>
+              </div>
+            )}
+          </>
+        )}
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis]}
         >
-          <div className={styles.boardsContainer}>
-            {boards
-              ?.filter((board) =>
-                archive
-                  ? tasks[board?._id] && tasks[board?._id]?.length > 0
-                  : true
-              )
-              ?.map((board) => {
-                return (
-                  <SortableBoard
-                    key={board?._id}
-                    board={board}
-                    data-board-id={board?._id}
-                  >
-                    {/* Contexte pour les tâches à l'intérieur du board */}
-                    <SortableContext
-                      id={board?._id}
-                      items={tasks[board._id]?.map((task) => task?._id) || []}
-                      strategy={verticalListSortingStrategy}
+          {/* Contexte pour les boards */}
+          <SortableContext
+            items={boardIds}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className={styles.boardsContainer}>
+              {boards
+                ?.filter((board) =>
+                  archive
+                    ? tasks[board?._id] && tasks[board?._id]?.length > 0
+                    : true
+                )
+                ?.map((board) => {
+                  return (
+                    <SortableBoard
+                      key={board?._id}
+                      board={board}
+                      data-board-id={board?._id}
                     >
-                      <Board
-                        tasks={tasks[board._id] || []}
-                        project={project}
-                        board={board}
-                        activeId={activeId}
-                        selectedTasks={selectedTasks}
-                        setSelectedTasks={setSelectedTasks}
-                        archive={archive}
-                      />
-                    </SortableContext>
-                  </SortableBoard>
-                );
-              })}
-          </div>
-        </SortableContext>
-        <DragOverlay>
-          {activeId && activeType === "task" ? (
-            <Task
-              id={activeId}
-              task={Object.values(tasks)
-                .flat()
-                .find((task) => task?._id === activeId)}
-              project={project}
-              archive={archive}
-            />
-          ) : activeId && activeType === "board" ? (
-            <div className={styles.boardOverlay}>
-              <Board
-                tasks={tasks[activeId] || []}
+                      {/* Contexte pour les tâches à l'intérieur du board */}
+                      <SortableContext
+                        id={board?._id}
+                        items={tasks[board._id]?.map((task) => task?._id) || []}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        <Board
+                          tasks={tasks[board._id] || []}
+                          project={project}
+                          board={board}
+                          activeId={activeId}
+                          selectedTasks={selectedTasks}
+                          setSelectedTasks={setSelectedTasks}
+                          archive={archive}
+                        />
+                      </SortableContext>
+                    </SortableBoard>
+                  );
+                })}
+            </div>
+          </SortableContext>
+          <DragOverlay>
+            {activeId && activeType === "task" ? (
+              <Task
+                id={activeId}
+                task={Object.values(tasks)
+                  .flat()
+                  .find((task) => task?._id === activeId)}
                 project={project}
-                board={boards.find((board) => board._id === activeId)}
-                isOverlay={true}
                 archive={archive}
               />
-            </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
-      {!archive && canPost && (
-        <div className={styles.options}>
-          <AddBoard project={project} />
-        </div>
-      )}
-    </div>
+            ) : activeId && activeType === "board" ? (
+              <div className={styles.boardOverlay}>
+                <Board
+                  tasks={tasks[activeId] || []}
+                  project={project}
+                  board={boards.find((board) => board._id === activeId)}
+                  isOverlay={true}
+                  archive={archive}
+                />
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+        {!archive && canPost && (
+          <div className={styles.options}>
+            <AddBoard project={project} />
+          </div>
+        )}
+      </div>
   );
 }

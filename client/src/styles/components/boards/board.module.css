@@ -1,13 +1,12 @@
 .container {
     background-color: var(--secondary-background-color);
     box-shadow: var(--box-shadow-small);
-    /* border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
-    border-bottom-left-radius: var(--border-radius-medium); */
     border-radius: var(--border-radius-medium);
+    border-right: transparent 3px solid;
     display: flex;
     flex-direction: column;
     min-width: 1050px;
+    position: relative;
 }
 
 .add {

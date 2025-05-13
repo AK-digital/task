@@ -4,11 +4,28 @@
     gap: 44px;
     height: 100%;
     overflow-y: auto;
-    padding-right: 16px;
     padding-bottom: var(--layout-gap);
     position: relative;
-    border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
+    z-index: 9999;
+    border-radius: var(--border-radius-medium);
+    border-right: 3px solid transparent;
+    padding-right: 10px;
+}
+
+.boards::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0px;
+}
+
+.boards::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.boards::-webkit-scrollbar {
+    width: 8px;
 }
 
 .archiveTitle {
