@@ -9,11 +9,39 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function TaskEstimate({ task, project, uid, handleStopPropa }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [number, setNumber] = useState(1);
-  const [week, setWeek] = useState("minutes");
   const [estimation, setEstimation] = useState(task?.estimation || "-");
   const [hover, setHover] = useState(false);
   const hasEstimation = estimation !== "-";
+
+  const [number, setNumber] = useState(1);
+  const isSingular = number <= 1;
+
+  const [week, setWeek] = useState("minutes");
+
+  const minutes = isSingular ? "minute" : "minutes";
+  const heures = isSingular ? "heure" : "heures";
+  const jours = isSingular ? "jour" : "jours";
+  const semaines = isSingular ? "semaine" : "semaines";
+
+  useEffect(() => {
+    const estimation = task?.estimation ?? "-";
+
+    const match = estimation.match(
+      /^(\d{1,2})\s*(jour|jours|minute|minutes|seconde|secondes|semaine|semaines|heure|heures)$/i
+    );
+
+    if (match) {
+      setNumber(parseInt(match[1], 10));
+      if (match[2].toLowerCase().endsWith("s")) {
+        setWeek(match[2].toLowerCase());
+      } else {
+        setWeek(match[2].toLowerCase() + "s");
+      }
+    } else {
+      setWeek("minutes");
+      setNumber(1);
+    }
+  }, [task?.estimation]);
 
   // Update estimation when task is updated (from another user)
   useEffect(() => {
@@ -62,7 +90,12 @@ export default function TaskEstimate({ task, project, uid, handleStopPropa }) {
     setIsEditing(false);
     setHover(false);
 
-    const value = `${number} ${week}`;
+    let value = `${number} ${week}`;
+    if (isSingular) {
+      const newWeek = week.slice(0, -1);
+      setWeek(newWeek);
+      value = `${number} ${newWeek}`;
+    }
 
     setEstimation(value);
 
@@ -75,8 +108,7 @@ export default function TaskEstimate({ task, project, uid, handleStopPropa }) {
 
     setNumber(1);
     setWeek("minutes");
-
-    socket.emit("update task", task?.projectId);
+    socket.emit("update task", project?._id);
   };
 
   const handleHover = useCallback(() => {
@@ -181,12 +213,13 @@ export default function TaskEstimate({ task, project, uid, handleStopPropa }) {
                     name=""
                     id=""
                     className={bricolageGrostesque.className}
+                    value={week}
                     onChange={(e) => setWeek(e.target.value)}
                   >
-                    <option value="minutes">Minutes</option>
-                    <option value="heures">Heures</option>
-                    <option value="jours">Jours</option>
-                    <option value="semaines">Semaines</option>
+                    <option value="minutes">{minutes}</option>
+                    <option value="heures">{heures}</option>
+                    <option value="jours">{jours}</option>
+                    <option value="semaines">{semaines}</option>
                   </select>
                 </div>
                 {number >= 1 && (
