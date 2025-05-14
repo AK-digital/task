@@ -8,7 +8,7 @@ import { memberRole } from "@/utils/utils";
 import { useState } from "react";
 import { mutate } from "swr";
 
-export function DropDownRole({
+export function DropDown({
   defaultValue,
   options,
   project,

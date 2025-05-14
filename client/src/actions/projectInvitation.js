@@ -46,9 +46,6 @@ export async function deleteProjectInvitation(prevState, formData) {
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");
 
-    console.log(projectId, projectInvitationId)
-    console.log("played")
-
     const res = await useAuthFetch(
       `project-invitation/${projectInvitationId}?projectId=${projectId}`,
       "DELETE",
