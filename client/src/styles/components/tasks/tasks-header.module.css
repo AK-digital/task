@@ -1,7 +1,7 @@
 /* Assurez-vous que ces couleurs s'intègrent bien avec votre design */
 .container {
     position: sticky;
-    z-index: 2000;
+    z-index: 1999;
     top: 0;
     left: 0;
     background-color: var(--secondary-background-color);
