@@ -45,7 +45,6 @@
 
   --low-color: #afbde9;
   --medium-color: #879ce0;
-  --medium-darker-color: #6b83d4;
   --high-color: #7c67ad;
   --urgent-color: #e17587;
 
@@ -381,6 +380,7 @@ input[type="checkbox"] {
 }
 
 /* Task row */
+
 #task-row {
   display: flex;
   align-items: center;

@@ -6,7 +6,6 @@
   gap: 20px;
   width: 100%;
   max-width: 500px;
-  position: relative;
 }
 
 .heading {
@@ -35,28 +34,8 @@
   gap: 12px;
 }
 
-.options {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  flex-direction: column;
-  position: absolute;
-  gap: 15px;
-  padding: 10px;
-  z-index: 999;
-  top: 40px;
-  left: 0;
-  width: 100%;
-  background-color: var(--secondary-background-color);
-  font-size: var(--text-size-small);
-  border-radius: var(--border-radius-small);
-  max-height: 200px;
-  text-align: left;
-  box-shadow: var(--box-shadow-medium);
-}
-
 .guests div,
-.invitations div:not(.manage, .options) {
+.invitations div {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -69,10 +48,9 @@
 }
 
 .email {
-  width: 150px;
+  width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .role {
@@ -89,17 +67,15 @@
 .member button,
 .pending button {
   border-radius: var(--border-radius-xs);
-  padding: 4px;
+  padding: 8px !important;
   font-size: var(--text-size-small);
-  background-color: var(--medium-color);
+  background-color: var(--danger-color);
   height: 32px;
-  width: 100%;
 }
-
 
 .member button:hover,
 .pending button:hover {
-  background-color: var(--medium-darker-color);
+  background-color: var(--text-color-red);
 }
 
 .pending {
