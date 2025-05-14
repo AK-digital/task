@@ -1,11 +1,23 @@
 /* Assurez-vous que ces couleurs s'intègrent bien avec votre design */
 .container {
+    position: sticky;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    background-color: var(--secondary-background-color);
     display: flex;
     align-items: center;
     width: 100%;
     font-size: var(--text-size-small);
     color: var(--text-color-muted);
     padding-bottom: 12px;
+    padding-top: 20px;
+}
+
+.container[data-top="true"] {
+    top: 49px;
+    padding-top: 0px;
+
 }
 
 .row {

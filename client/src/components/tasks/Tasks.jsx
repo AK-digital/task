@@ -25,7 +25,7 @@ export default function Tasks({
   }, [tasks]);
 
   return (
-    <div>
+    <div className={styles.container}>
       {tasksLoading ? (
         <TaskSkeletons displayedElts={displayedElts} />
       ) : (

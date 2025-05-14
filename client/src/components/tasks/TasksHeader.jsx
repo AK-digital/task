@@ -2,6 +2,7 @@ import styles from "@/styles/components/tasks/tasks-header.module.css";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function TasksHeader({
   project,
@@ -17,6 +18,8 @@ export default function TasksHeader({
   const [deadlineSort, setDeadlineSort] = useState(null);
   const [estimateSort, setEstimateSort] = useState(null);
   const [timerSort, setTimerSort] = useState(null);
+  const pathname = usePathname();
+  const isTaskPage = pathname.includes("tasks");
 
   const {
     isCheckbox,
@@ -176,7 +179,7 @@ export default function TasksHeader({
   // }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-top={!isTaskPage}>
       {(canEdit || isCheckbox) && (
         <div className={`${styles.selection} ${styles.row}`}></div>
       )}
