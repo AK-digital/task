@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/tasks/task-deadline.module.css";
+import styles from "@/styles/components/task/task-deadline.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import "moment/locale/fr";
@@ -8,12 +8,13 @@ import { updateTaskDeadline } from "@/api/task";
 import { CircleX } from "lucide-react";
 import { checkRole } from "@/utils/utils";
 
-export default function TaskDeadline({ task, project, uid }) {
+export default function TaskDeadline({ task, uid }) {
   const inputRef = useRef(null);
   const [progress, setProgress] = useState("0%");
   const [deadline, setDeadline] = useState(task?.deadline?.split("T")[0] || "");
   const [hover, setHover] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const project = task?.projectId;
 
   useEffect(() => {
     // Update deadline when task is updated (from another user)
@@ -60,7 +61,7 @@ export default function TaskDeadline({ task, project, uid }) {
 
     if (response?.success) {
       setDeadline(date);
-      socket.emit("update task", task?.projectId);
+      socket.emit("update task", project?._id);
     }
   }
 
@@ -69,7 +70,7 @@ export default function TaskDeadline({ task, project, uid }) {
 
     if (response?.success) {
       setDeadline("");
-      socket.emit("update task", task?.projectId);
+      socket.emit("update task", project?._id);
     }
   };
 

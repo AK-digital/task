@@ -19,7 +19,13 @@ import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
 import Reactions from "../Reactions/Reactions";
 
-export default function Message({ task, message, project, mutateMessage }) {
+export default function Message({
+  task,
+  message,
+  project,
+  mutateMessage,
+  mutateTasks,
+}) {
   const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,6 +60,7 @@ export default function Message({ task, message, project, mutateMessage }) {
     if (!response?.success) return;
 
     await mutateMessage();
+    await mutateTasks();
     socket.emit("update message", message?.projectId);
     socket.emit("update task", project?._id);
 

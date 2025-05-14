@@ -1,10 +1,11 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { generateUrlParams } from "@/utils/generateUrlParams";
 
-export async function getTasks(projectId, archived) {
+export async function getTasks(queries) {
   try {
     const res = await useAuthFetch(
-      `task?projectId=${projectId}&archived=${archived}`,
+      `task${generateUrlParams(queries)}`,
       "GET",
       "application/json",
       null,
@@ -231,6 +232,11 @@ export async function addResponsible(taskId, responsibleId, projectId) {
       err.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
     );
+
+    return {
+      success: false,
+      message: err.message || "Une erreur est survenue",
+    };
   }
 }
 
@@ -259,6 +265,11 @@ export async function removeResponsible(taskId, responsibleId, projectId) {
       err.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
     );
+
+    return {
+      success: false,
+      message: err.message || "Une erreur est survenue",
+    };
   }
 }
 
@@ -384,7 +395,11 @@ export async function updateTaskDeadline(taskId, projectId, deadline) {
 
 export async function updateTaskEstimate(taskId, projectId, estimation) {
   try {
-    console.log(estimation);
+    if (!taskId || !projectId) {
+      throw new Error(
+        "Paramètres invalides pour la mise à jour de l'estimation"
+      );
+    }
 
     const res = await useAuthFetch(
       `task/${taskId}/estimate?projectId=${projectId}`,

@@ -12,12 +12,7 @@ router.post(
   taskControllers.saveTask
 );
 
-router.get(
-  "/",
-  authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer", "guest"]), // projectId query is required
-  taskControllers.getTasks
-);
+router.get("/", authMiddlewares.auth, taskControllers.getTasks);
 
 router.get(
   "/:id",

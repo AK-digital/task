@@ -1,64 +1,70 @@
+"use client";
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
-import { updateTaskPriority } from "@/actions/task";
-import { useCallback, useEffect, useState } from "react";
+import { updateTaskStatus } from "@/actions/task";
+import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
-import { checkRole } from "@/utils/utils";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
-const priorities = ["Basse", "Moyenne", "Haute", "Urgent"];
+const statusList = [
+  "En attente",
+  "À faire",
+  "En cours",
+  "À vérifier",
+  "Bloquée",
+  "Terminée",
+];
 
-export default function TaskPriority({ task, project, uid }) {
-  const [optimisticCurrent, setOptimisticCurrent] = useState(task?.priority);
+export default function TaskStatus({ task, uid }) {
+  const [status, setStatus] = useState(task?.status);
   const [isOpen, setIsOpen] = useState(false);
+  const project = task?.projectId;
+
+  const canEdit = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
 
   async function handleUpdateStatus(e) {
     const value = e.target.dataset.value;
-    setOptimisticCurrent(value);
+    setStatus(value);
     setIsOpen(false);
 
-    const response = await updateTaskPriority(
-      task?._id,
-      task?.projectId,
-      value
-    );
+    const res = await updateTaskStatus(task?._id, project?._id, value);
 
-    if (response?.status === "failure") {
-      setOptimisticCurrent(task?.priority);
+    if (!res?.success) {
+      setStatus(task?.status);
       return;
     }
 
     socket.emit("update task", project?._id);
   }
 
-  useEffect(() => {
-    setOptimisticCurrent(task?.priority);
-  }, [task?.priority]);
-
   const handleIsOpen = useCallback(() => {
-    const isAuthorized = checkRole(
-      project,
-      ["owner", "manager", "team", "customer"],
-      uid
-    );
-
-    if (!isAuthorized) return;
+    if (!canEdit) return;
 
     setIsOpen((prev) => !prev);
-  });
+  }, [project, uid]);
+
+  useMemo(() => {
+    setStatus(task?.status);
+  }, [task?.status]);
 
   return (
     <div className={styles["dropdown"]}>
       <div
         className={styles["dropdown__current"]}
-        data-current={optimisticCurrent}
+        data-current={status}
         onClick={handleIsOpen}
       >
-        <span>{optimisticCurrent}</span>
+        <span>{status}</span>
       </div>
       {isOpen && (
         <>
           <div className={styles["dropdown__list"]}>
             <ul>
-              {priorities?.map((value, idx) => {
+              {statusList?.map((value, idx) => {
                 return (
                   <li key={idx} data-value={value} onClick={handleUpdateStatus}>
                     {value}

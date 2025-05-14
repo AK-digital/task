@@ -1,3 +1,4 @@
+import NoPicture from "@/components/User/NoPicture";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import {
@@ -9,6 +10,8 @@ import {
   Layout,
   Youtube,
 } from "lucide-react";
+import Image from "next/image";
+import socket from "./socket";
 
 export function isNotEmpty(arr) {
   return Array.isArray(arr) && arr.length > 0;
@@ -234,4 +237,28 @@ export function groupReactionsByEmoji(reactions = []) {
       return acc;
     }
   }, []);
+}
+
+export function displayPicture(user, width, height) {
+  if (user?.picture) {
+    return (
+      <Image
+        src={user?.picture}
+        width={width}
+        height={height}
+        quality={100}
+        alt={`Photo de ${user?.firstName}`}
+        style={{ borderRadius: "50%", minHeight: height, minWidth: width }}
+      />
+    );
+  } else {
+    return <NoPicture width={width} height={height} user={user} />;
+  }
+}
+
+export function sendNotification(receiver, user, uid, message, link) {
+  // Ne pas envoyer de notification si c'est l'utilisateur qui s'ajoute lui-même
+  if (receiver?._id === uid) return;
+
+  socket.emit("create notification", user, receiver?.email, message, link);
 }

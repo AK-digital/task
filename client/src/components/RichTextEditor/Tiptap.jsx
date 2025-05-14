@@ -307,7 +307,7 @@ export default function Tiptap({
 
     const response = await updateTaskDescription(
       task?._id,
-      task?.projectId,
+      task?.projectId?._id,
       plainText,
       taggedUsers
     );
@@ -323,7 +323,7 @@ export default function Tiptap({
     await mutate(`/task?projectId=${project?._id}&archived=false`);
 
     // Update description for every guests
-    socket.emit("update task", task?.projectId);
+    socket.emit("update task", task?.projectId?._id);
 
     const message = {
       title: `${user?.firstName} vous a mentionné(e) dans une description`,
@@ -355,14 +355,14 @@ export default function Tiptap({
 
     if (!editMessage) {
       response = await saveMessage(
-        task?.projectId,
+        task?.projectId?._id,
         task?._id,
         plainText,
         taggedUsers
       );
     } else {
       response = await updateMessage(
-        task?.projectId,
+        task?.projectId?._id,
         message?._id,
         plainText,
         taggedUsers
@@ -381,22 +381,24 @@ export default function Tiptap({
     setIsSent(true);
 
     if (!editMessage) {
-      await mutate(`/message?projectId=${task?.projectId}&taskId=${task?._id}`);
+      await mutate(
+        `/message?projectId=${task?.projectId?._id}&taskId=${task?._id}`
+      );
     } else {
       await mutateMessage();
     }
 
     await mutate(`/task?projectId=${project?._id}&archived=false`);
 
-    socket.emit("update message", task?.projectId);
-    socket.emit("update task", task?.projectId);
+    socket.emit("update message", task?.projectId?._id);
+    socket.emit("update task", task?.projectId?._id);
 
     const messageNotif = {
       title: `${user?.firstName} vous a mentionné(e) dans une conversation`,
       content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
     };
 
-    const link = "/projects/" + task?.projectId + "/task/" + task?._id;
+    const link = "/projects/" + task?.projectId?._id + "/task/" + task?._id;
 
     for (const taggedUser of taggedUsers) {
       socket.emit("create notification", user, taggedUser, messageNotif, link);

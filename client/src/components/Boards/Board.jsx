@@ -1,15 +1,14 @@
 "use client";
 import styles from "@/styles/components/boards/board.module.css";
-import Tasks from "../tasks/Tasks";
 import { useState, useEffect, useRef, useActionState } from "react";
 import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
 import socket from "@/utils/socket";
-import { mutate } from "swr";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { useDroppable } from "@dnd-kit/core";
-import { TaskPending } from "../tasks/TaskPending";
+import { TaskPending } from "../Task/TaskPending";
+import Tasks from "../tasks/Tasks";
 
 const initialState = {
   success: null,
@@ -20,6 +19,8 @@ const initialState = {
 
 export default function Board({
   tasks,
+  displayedElts,
+  mutateTasks,
   project,
   board,
   activeId,
@@ -63,16 +64,21 @@ export default function Board({
   );
 
   useEffect(() => {
-    if (state?.success === true) {
-      setIsLoading(true);
-      inputRef?.current?.focus();
-      setIsWritting(false);
+    async function handleTaskCreated() {
+      if (state?.success === true) {
+        setIsLoading(true);
+        inputRef?.current?.focus();
+        setIsWritting(false);
 
-      mutate(`/task?projectId=${project?._id}&archived=${archive}`).then(() => {
+        await mutateTasks();
+
         socket.emit("update task", project?._id);
+
         setIsLoading(false);
-      });
+      }
     }
+
+    handleTaskCreated();
   }, [state]);
 
   useEffect(() => {
@@ -110,16 +116,18 @@ export default function Board({
       />
       {/* Board content */}
       {open && !isOverlay && (
-        <Tasks
-          tasks={tasks}
-          project={project}
-          boardId={board?._id}
-          activeId={activeId}
-          optimisticColor={optimisticColor}
-          selectedTasks={selectedTasks}
-          setSelectedTasks={setSelectedTasks}
-          archive={archive}
-        />
+        <div className={styles.tasks}>
+          <Tasks
+            tasks={tasks}
+            project={project}
+            mutateTasks={mutateTasks}
+            activeId={activeId}
+            displayedElts={displayedElts}
+            selectedTasks={selectedTasks}
+            setSelectedTasks={setSelectedTasks}
+            archive={archive}
+          />
+        </div>
       )}
       {isLoading && <TaskPending text={inputValue} />}
       {canPost && !archive && (

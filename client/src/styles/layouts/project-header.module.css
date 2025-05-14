@@ -10,7 +10,6 @@
 }
 
 .container nav {
-    justify-content: space-between;
     align-items: center;
     padding-bottom: 16px;
 }
@@ -29,6 +28,7 @@
     flex-direction: row;
     align-items: center;
     gap: 1rem;
+    margin-right: 12px;
 }
 
 .title {
@@ -213,6 +213,7 @@
 
 .actions {
     display: flex;
+    margin-left: auto;
 }
 
 /* Guests styles */

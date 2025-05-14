@@ -11,15 +11,16 @@ import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { Archive, ArchiveRestore, Trash, X } from "lucide-react";
 import { useContext } from "react";
-import { mutate } from "swr";
 
 export default function SelectedTasks({
   project,
-  tasks,
+  selectedTasks,
   setSelectedTasks,
   archive,
+  mutate,
 }) {
   const { uid } = useContext(AuthContext);
+
   function handleClose(e) {
     e.preventDefault();
 
@@ -43,9 +44,9 @@ export default function SelectedTasks({
     if (!confirmed) return;
 
     // Tasks is an array of task ids
-    await addTaskToArchive(tasks, project?._id);
+    await addTaskToArchive(selectedTasks, project?._id);
 
-    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+    await mutate();
 
     socket.emit("update task", project?._id);
 
@@ -62,9 +63,9 @@ export default function SelectedTasks({
     if (!confirmed) return;
 
     // Tasks is an array of task ids
-    await removeTaskFromArchive(tasks, project?._id);
+    await removeTaskFromArchive(selectedTasks, project?._id);
 
-    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+    await mutate();
 
     socket.emit("update task", project?._id);
 
@@ -81,11 +82,11 @@ export default function SelectedTasks({
     if (!confirmed) return;
 
     // Tasks is an array of task ids
-    const res = await deleteTask(tasks, project?._id);
+    const res = await deleteTask(selectedTasks, project?._id);
 
     if (!res.success) return;
 
-    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+    await mutate();
 
     socket.emit("update task", project?._id);
 
@@ -97,11 +98,13 @@ export default function SelectedTasks({
       {/* Main content */}
       <div className={styles.wrapper}>
         <div className={styles.count}>
-          <span> {tasks.length}</span>
+          <span> {selectedTasks.length}</span>
         </div>
         <div className={styles.header}>
           <span>
-            {tasks?.length > 1 ? "Tâches séléctionnées" : "Tâche séléctionnée"}
+            {selectedTasks?.length > 1
+              ? "Tâches séléctionnées"
+              : "Tâche séléctionnée"}
           </span>
         </div>
         {/* actions */}

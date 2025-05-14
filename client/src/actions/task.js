@@ -72,18 +72,16 @@ export async function updateTaskStatus(taskId, projectId, status) {
       throw new Error(response?.message);
     }
 
-    return {
-      status: "success",
-    };
+    return response;
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
+        "Une erreur est survenue lors de la mise à jour du statut de la tâche"
     );
 
     return {
-      status: "failure",
-      message: err?.message,
+      success: false,
+      message: err?.message || "Une erreur est survenue",
     };
   }
 }

@@ -262,7 +262,7 @@ export default function BoardHeader({
               {...attributes}
               {...listeners}
             >
-              <GripVertical size={20} />
+              <GripVertical size={16} />
             </div>
           </div>
         )}
