@@ -217,7 +217,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
   const saveTimeTrackingWithIds = saveTimeTracking.bind(
     null,
     task._id,
-    task.projectId
+    task?.projectId?._id
   );
   const [state, formAction, pending] = useActionState(
     saveTimeTrackingWithIds,

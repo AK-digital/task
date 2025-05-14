@@ -40,7 +40,7 @@ export default function TaskText({ task }) {
     // Guests are not allowed to edit tasks
     if (!canEdit) return;
 
-    setIsEdit((prev) => !prev);
+    setIsEdit(true);
   }
 
   useEffect(() => {

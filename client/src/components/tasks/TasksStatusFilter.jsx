@@ -1,6 +1,7 @@
 import styles from "@/styles/components/tasks/tasks-status-filter.module.css";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const statusEnum = [
   "En attente",
@@ -15,6 +16,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
   const status = queries?.status;
   const hasStatus = status?.length > 0;
+  const pathname = usePathname();
 
   function handleResetStatus() {
     setQueries((prev) => ({
@@ -43,6 +45,16 @@ export default function TasksStatusFilter({ queries, setQueries }) {
       }));
     }
   }
+
+  // If we are on tasks page we want the 'En cours' and 'À faire' status to be checked by default
+  useEffect(() => {
+    if (pathname === "/tasks") {
+      setQueries((prev) => ({
+        ...prev,
+        status: ["En cours", "À faire"],
+      }));
+    }
+  }, []);
 
   return (
     <div className={styles.container}>

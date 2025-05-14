@@ -1,6 +1,6 @@
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskPriority } from "@/actions/task";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
 
@@ -41,6 +41,10 @@ export default function TaskPriority({ task }) {
 
     setIsOpen((prev) => !prev);
   });
+
+  useMemo(() => {
+    setPriority(task?.priority);
+  }, [task?.priority]);
 
   return (
     <div className={styles["dropdown"]}>

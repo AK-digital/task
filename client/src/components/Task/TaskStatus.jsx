@@ -1,7 +1,7 @@
 "use client";
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskStatus } from "@/actions/task";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
 
@@ -46,6 +46,10 @@ export default function TaskStatus({ task, uid }) {
 
     setIsOpen((prev) => !prev);
   }, [project, uid]);
+
+  useMemo(() => {
+    setStatus(task?.status);
+  }, [task?.status]);
 
   return (
     <div className={styles["dropdown"]}>

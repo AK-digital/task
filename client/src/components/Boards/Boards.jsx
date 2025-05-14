@@ -90,7 +90,7 @@ export default function Boards({
 
   useEffect(() => {
     const handleTaskUpdate = async () => {
-      mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+      await mutateTasks();
     };
 
     const handleBoardUpdate = async () => {

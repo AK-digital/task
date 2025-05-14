@@ -74,6 +74,30 @@ export default function TasksHeader({
     });
   }
 
+  function sortTaskByPriority(sort) {
+    setSortedTasks((prev) => {
+      const sortedTasks = [...prev].sort((a, b) => {
+        // Convert priority strings to numeric values
+        const priorityValues = {
+          Urgent: 4,
+          Haute: 3,
+          Moyenne: 2,
+          Basse: 1,
+        };
+
+        const priorityA = priorityValues[a.priority];
+        const priorityB = priorityValues[b.priority];
+
+        if (sort === "asc") {
+          return priorityA - priorityB;
+        } else {
+          return priorityB - priorityA;
+        }
+      });
+      return sortedTasks;
+    });
+  }
+
   function sortByProject(sort) {
     resetStates();
     if (sort === projectSort) {
@@ -115,7 +139,7 @@ export default function TasksHeader({
 
     setPrioritySort(sort);
 
-    sortTasks(sort, null, "priority");
+    sortTaskByPriority(sort);
   }
 
   function sortByDeadline(sort) {
