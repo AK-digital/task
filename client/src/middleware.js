@@ -10,6 +10,8 @@ export async function middleware(request) {
     if (accessToken && request.nextUrl.pathname === "/") {
       console.log("Access token found, redirecting to /projects");
 
+      return NextResponse.redirect(new URL("/projects", request.url));
+    } else {
       return NextResponse.next();
     }
   } else {
@@ -23,6 +25,7 @@ export const config = {
     "/projects",
     "/projects/:path*",
     "/tasks",
+    "/tasks/:path*",
     "/profile",
     "/new-project/:path*",
     "/time-trackings",
