@@ -3,8 +3,6 @@
     min-width: 200px;
     max-width: 700px;
     cursor: text;
-    font-size: var(--text-size-normal);
-    padding-left: 6px;
     margin-inline: 8px;
 }
 
@@ -13,19 +11,18 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-size: var(--text-size-normal);
+    letter-spacing: 0.01em;
 }
 
 .container input {
     position: relative;
-    left: -6px;
-    padding: 4px 6px;
-    font-size: 14.8px;
+    font-size: var(--text-size-normal);
+    letter-spacing: 0.01em;
     border: none;
-    transition: 150ms background linear;
 }
 
 .container input:focus {
     color: var(--text-darker-color);
-    background-color: var(--third-background-color);
-    border-radius: var(--border-radius-xs);
+     border-radius: var(--border-radius-xs);
 }
