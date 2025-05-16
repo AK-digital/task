@@ -49,6 +49,7 @@
     border: 1px solid var(--border-color);
     padding: 8px;
     width: 100%;
+    z-index: 9991;
 }
 
 .current,
