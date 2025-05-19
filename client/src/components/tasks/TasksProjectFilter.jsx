@@ -68,7 +68,7 @@ export default function TasksProjectFilter({ queries, setQueries }) {
                   onClick={() => handleSelectProject(project._id)}
                 >
                   <Image
-                    src={project?.logo}
+                    src={project?.logo || "/default-project-logo.webp"}
                     width={24}
                     height={24}
                     alt={`Logo de ${project?.name}`}
