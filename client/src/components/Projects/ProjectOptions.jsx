@@ -22,6 +22,7 @@ import PopupMessage from "@/layouts/PopupMessage";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
 import { icons, isNotEmpty } from "@/utils/utils";
+import ConfirmationDelete from "../Popups/ConfirmationDelete";
 moment.locale("fr");
 
 const initialState = {
@@ -45,6 +46,7 @@ export default function ProjectOptions({ project }) {
   );
   const [editImg, setEditImg] = useState(false);
   const [isPictLoading, setIsPictLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const initialLinks = useRef(
     project?.urls?.length
@@ -117,18 +119,10 @@ export default function ProjectOptions({ project }) {
     mutate(`/project/${project?._id}`);
   }
 
-  async function handleDeleteProject(e) {
-    e.preventDefault();
-    const isConfirmed = window.confirm(
-      `Êtes-vous sûr de vouloir supprimer le projet "${project?.name}" ?`
-    );
-
-    if (!isConfirmed) return;
-
+  async function handleDeleteProject() {
     const response = await deleteProject(project?._id);
 
     if (response?.success) {
-      router.refresh();
       router.push("/projects");
     }
 
@@ -313,7 +307,7 @@ export default function ProjectOptions({ project }) {
             <div className={styles.updateButtons}>
               <button
                 type="button"
-                onClick={handleDeleteProject}
+                onClick={() => setIsOpen(true)}
                 className={`${styles.delete} ${bricolageGrostesque.className}`}
               >
                 Supprimer ce projet
@@ -354,6 +348,13 @@ export default function ProjectOptions({ project }) {
           status={state?.status}
           title={popup?.title}
           message={popup?.message}
+        />
+      )}
+      {isOpen && (
+        <ConfirmationDelete
+          title={`projet ${project?.name}`}
+          onCancel={() => setIsOpen(false)}
+          onConfirm={handleDeleteProject}
         />
       )}
     </div>

@@ -96,14 +96,6 @@ export default function BoardHeader({
   }
 
   async function handleDeleteBoard(e) {
-    e.preventDefault();
-
-    const isConfirmed = window.confirm(
-      `Êtes-vous sûr de vouloir supprimer le tableau "${board?.title}" ?`
-    );
-
-    if (!isConfirmed) return;
-
     const response = await deleteBoard(board?._id, project?._id);
 
     if (!response?.success) return;
@@ -124,6 +116,7 @@ export default function BoardHeader({
       icon: <Trash2 size={16} />,
       name: "Supprimer le tableau",
       remove: true,
+      deletionName: board?.title,
     },
   ];
 
