@@ -129,22 +129,20 @@ export function exportTimeTracking(projects, trackers) {
 
     const centerX = pageWidth / 2;
 
-    if (project?.logo) {
-      doc.setDrawColor(255);
-      doc.setFillColor(255);
-      doc.addImage(
-        project?.logo,
-        "PNG",
-        centerX - 10,
-        35,
-        20,
-        20,
-        undefined,
-        "FAST"
-      );
-      doc.setLineWidth(1);
-      doc.circle(centerX, 45, 10, "S");
-    }
+    doc.setDrawColor(255);
+    doc.setFillColor(255);
+    doc.addImage(
+      project?.logo || "/default-project-logo.webp",
+      "PNG",
+      centerX - 10,
+      35,
+      20,
+      20,
+      undefined,
+      "FAST"
+    );
+    doc.setLineWidth(1);
+    doc.circle(centerX, 45, 10, "S");
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);

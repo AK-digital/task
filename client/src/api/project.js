@@ -37,6 +37,11 @@ export async function getProjects() {
       "projects"
     );
 
+    if (!res.ok) {
+      console.error(`Erreur HTTP: ${res.status}`);
+      throw new Error(`Erreur HTTP: ${res.status}`);
+    }
+
     const response = await res.json();
 
     if (!response.success) {
@@ -49,6 +54,7 @@ export async function getProjects() {
       err?.message ||
         "Une erreur est survenue lors de la récupération des projets"
     );
+    return [];
   }
 }
 
