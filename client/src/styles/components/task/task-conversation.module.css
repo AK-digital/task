@@ -21,8 +21,3 @@
     border-radius: 50%;
     font-size: var(--text-size-small);
 }
-
-.container span[data-read="false"] {
-    background-color: #CC9348;
-    color: white;
-}

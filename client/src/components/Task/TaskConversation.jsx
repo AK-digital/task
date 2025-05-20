@@ -1,6 +1,6 @@
 import { useTaskContext } from "@/context/TaskContext";
 import styles from "@/styles/components/task/task-conversation.module.css";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, MessageCircleMore } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export default function TaskConversation({ task, archive = false, uid }) {
@@ -41,7 +41,8 @@ export default function TaskConversation({ task, archive = false, uid }) {
 
   return (
     <div className={styles.container} id="task-row" onClick={handleOpenTask}>
-      <MessageCircle size={24} data-description={hasDescription()} />
+      {!hasDescription() && <MessageCircle size={24} />}
+      {hasDescription() && <MessageCircleMore size={24} />}
       {messagesCount > 0 && (
         <span data-read={hasReadMessage}>{messagesCount}</span>
       )}
