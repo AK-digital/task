@@ -225,18 +225,20 @@ export async function updateMessage(req, res, next) {
       });
     }
 
+    const link = `${process.env.CLIENT_URL}/projects/${updatedMessage.projectId}/task/${updatedMessage.taskId}`;
+
     // Email Logic, basically sending an email for each tagged user
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
 
-      const template = emailMessage(user, updatedMessage);
+      const template = emailMessage(authUser, updatedMessage, link);
 
       if (user) {
         await sendEmail(
           "task@akdigital.fr",
           user?.email,
-          template.subjet,
-          template.text
+          template?.subjet,
+          template?.text
         );
       }
     }
