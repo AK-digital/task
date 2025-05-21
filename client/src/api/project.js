@@ -28,7 +28,6 @@ export async function getProject(id) {
 
 export async function getProjects() {
   try {
-    console.log("Fetching projects...");
     const res = await useAuthFetch(
       "project",
       "GET",
@@ -36,11 +35,6 @@ export async function getProjects() {
       null,
       "projects"
     );
-
-    if (!res.ok) {
-      console.error(`Erreur HTTP: ${res.status}`);
-      throw new Error(`Erreur HTTP: ${res.status}`);
-    }
 
     const response = await res.json();
 

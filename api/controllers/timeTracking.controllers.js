@@ -66,19 +66,9 @@ export async function getTimeTrackings(req, res, next) {
 
     const { projects, users, startingDate, endingDate } = req.query;
 
-    const userProjects = await ProjectModel.aggregate([
-      {
-        $match: {
-          "members.user": new mongoose.Types.ObjectId(authUser._id),
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-        },
-      },
-    ]);
+    const userProjects = await ProjectModel.find({
+      members: authUser?._id,
+    }).select("_id name");
 
     if (userProjects.length === 0) {
       return res.status(200).send({
@@ -180,6 +170,7 @@ export async function getTimeTrackings(req, res, next) {
       return res.status(404).send({
         success: false,
         message: "Aucun temps de suivi trouvé",
+        data: [],
       });
     }
 
