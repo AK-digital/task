@@ -28,19 +28,22 @@
   --text-light-color: rgb(215, 212, 203);
   --text-lighter-color: #e7e3d9;
   --text-color-muted: #72716f;
-  --background-gradient-dark: linear-gradient(140deg,
-      #39545b,
-      #2a4046 17%,
-      #16363c 52%,
-      #2a4046 86%,
-      #32484e 100%);
-  --border-color: #ACABA5;
+  --background-gradient-dark: linear-gradient(
+    140deg,
+    #39545b,
+    #2a4046 17%,
+    #16363c 52%,
+    #2a4046 86%,
+    #32484e 100%
+  );
+  --border-color: #acaba5;
 
   --pending-color: #b3bcc0;
   --processing-color: #f3b158;
   --finished-color: #63a758;
   --todo-color: #559fc6;
   --checking-color: #9d88c2;
+  --estimating-color: #62c3b0;
   --blocked-color: #ca4250;
 
   --low-color: #afbde9;
@@ -282,11 +285,13 @@ input[type="checkbox"] {
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
+    contrast(99%);
 }
 
 .ql-snow.ql-toolbar button svg {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
+    contrast(99%);
 }
 
 .ql-editor.ql-blank:before {

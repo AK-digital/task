@@ -4,15 +4,7 @@ import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
-
-const statusList = [
-  "En attente",
-  "À faire",
-  "En cours",
-  "À vérifier",
-  "Bloquée",
-  "Terminée",
-];
+import { allowedStatus } from "@/utils/utils";
 
 export default function TaskStatus({ task, uid }) {
   const [status, setStatus] = useState(task?.status);
@@ -64,7 +56,7 @@ export default function TaskStatus({ task, uid }) {
         <>
           <div className={styles["dropdown__list"]}>
             <ul>
-              {statusList?.map((value, idx) => {
+              {allowedStatus?.map((value, idx) => {
                 return (
                   <li key={idx} data-value={value} onClick={handleUpdateStatus}>
                     {value}

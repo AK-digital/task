@@ -1,5 +1,6 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { allowedStatus } from "@/utils/utils";
 
 export async function saveTask(projectId, prevState, formData) {
   try {
@@ -44,15 +45,6 @@ export async function saveTask(projectId, prevState, formData) {
 // Update the status of a given task
 export async function updateTaskStatus(taskId, projectId, status) {
   try {
-    const allowedStatus = [
-      "En cours",
-      "En attente",
-      "Terminée",
-      "À faire",
-      "À vérifier",
-      "Bloquée",
-    ];
-
     if (!allowedStatus.includes(status)) throw new Error("Paramètre invalide");
 
     const rawData = {
