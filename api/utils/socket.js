@@ -8,6 +8,7 @@ export default function socketHandler(io) {
       if (!userId) return;
 
       const user = await UserModel.findById({ _id: userId });
+
       if (!user) {
         throw new Error("Aucun utilisateur trouvé avec cette ID : ", userId);
       }
@@ -17,6 +18,11 @@ export default function socketHandler(io) {
         { $set: { socketId: socket?.id } },
         { new: true, setDefaultsOnInsert: true }
       );
+
+      const projects = await ProjectModel.find({ "members.user": user?._id });
+      const projectIds = projects.map((project) => project._id.toString());
+
+      socket.join(projectIds);
 
       socket.emit("logged in", userWithSocketId);
     });
@@ -121,17 +127,11 @@ async function emitToProjectMembers(projectId, event, socket, ...args) {
 
   if (!project) return;
 
-  const members = project?.members;
+  const projectIdString = project?._id.toString();
 
-  members?.forEach(async (member) => {
-    const user = await UserModel.findById({ _id: member?.user });
-
-    if (!user) return;
-
-    if (args) {
-      socket.broadcast.to(user?.socketId).emit(event, ...args);
-    } else {
-      socket.broadcast.to(user?.socketId).emit(event);
-    }
-  });
+  if (args) {
+    socket.to(projectIdString).emit(event, ...args);
+  } else {
+    socket.to(projectIdString).emit(event);
+  }
 }
