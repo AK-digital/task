@@ -46,6 +46,7 @@ import MentionsList from "./MentionsList";
 import { AuthContext } from "@/context/auth";
 import { deleteDraft, saveDraft, updateDraft } from "@/api/draft";
 import { useDebouncedCallback } from "use-debounce";
+import Reactions from "../Reactions/Reactions";
 
 export default function Tiptap({
   project,
@@ -602,6 +603,9 @@ export default function Tiptap({
             <span>Brouillon enregistré</span>
           </div>
         )}
+        <div className={styles.footer}>
+          <Reactions project={project} type={"editor"} editor={editor} />
+        </div>
       </div>
       <div className={styles.actions}>
         {type === "description" && (
