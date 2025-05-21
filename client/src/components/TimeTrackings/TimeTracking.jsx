@@ -119,17 +119,15 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
         )}
       </div>
       <div className={`${styles.project} ${styles.row}`}>
-        {project?.logo && (
-          <Image
-            src={project?.logo}
-            alt={project?.name}
-            style={{
-              borderRadius: "50%",
-            }}
-            width={22}
-            height={22}
-          />
-        )}
+        <Image
+          src={project?.logo || "/default-project-logo.webp"}
+          alt={project?.name}
+          style={{
+            borderRadius: "50%",
+          }}
+          width={22}
+          height={22}
+        />
         <span>{project?.name}</span>
       </div>
       {/* user */}
