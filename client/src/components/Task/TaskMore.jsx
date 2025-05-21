@@ -11,6 +11,7 @@ moment.locale("fr");
 export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
+  const resizerRef = useRef(null);
   const [isResizing, setIsResizing] = useState(false);
   const [startX, setStartX] = useState(null);
   const [startWidth, setStartWidth] = useState(null);
@@ -53,19 +54,18 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   }, [isResizing, resize, stopResizing]);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        const currentWidth = containerRef.current.offsetWidth;
-        const maxWidth = window.innerWidth - 80;
-        if (currentWidth > maxWidth) {
-          containerRef.current.style.width = `${maxWidth}px`;
-        }
-      }
-    };
+  const updateResizerPosition = () => {
+    if (containerRef.current && resizerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      resizerRef.current.style.left = `${containerRect.left}px`;
+    }
+    requestAnimationFrame(updateResizerPosition); // loop
+  };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  updateResizerPosition();
+
+  return () => cancelAnimationFrame(updateResizerPosition);
+}, []);
 
   const handleClose = () => {
     const container = containerRef.current;
@@ -97,8 +97,12 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
 
   return (
     <>
+      <div
+        ref={resizerRef}
+        className={styles.resizer}
+        onMouseDown={startResizing}
+      ></div>
       <div className={styles.container} ref={containerRef} id="task-more">
-        <div className={styles.resizer} onMouseDown={startResizing}></div>
         {/* Description */}
         <div className={styles.header}>
           <p className={styles.task}>{task?.text}</p>
