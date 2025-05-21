@@ -1,7 +1,7 @@
 import styles from "@/styles/components/task/task-responsibles.module.css";
 import { displayPicture, isNotEmpty, sendNotification } from "@/utils/utils";
 import { PlusCircle, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
 import socket from "@/utils/socket";
@@ -80,6 +80,10 @@ export default function TaskResponsibles({ task, uid, user }) {
 
     setIsMoreOpen((prev) => !prev);
   }
+
+  useEffect(() => {
+    setResponsibles(task?.responsibles);
+  }, [task?.responsibles]);
 
   return (
     <div className={styles.container} id="task-row">
