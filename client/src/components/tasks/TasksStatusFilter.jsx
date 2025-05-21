@@ -1,16 +1,8 @@
 import styles from "@/styles/components/tasks/tasks-status-filter.module.css";
+import { allowedStatus } from "@/utils/utils";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const statusEnum = [
-  "En attente",
-  "À faire",
-  "En cours",
-  "À vérifier",
-  "Bloquée",
-  "Terminée",
-];
 
 export default function TasksStatusFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +70,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
-              {statusEnum.map((elt, idx) => (
+              {allowedStatus.map((elt, idx) => (
                 <li key={idx} className={styles.status}>
                   <input
                     type="checkbox"

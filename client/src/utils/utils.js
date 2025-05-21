@@ -13,6 +13,16 @@ import {
 import Image from "next/image";
 import socket from "./socket";
 
+export const allowedStatus = [
+  "En attente",
+  "À estimer",
+  "En cours",
+  "À faire",
+  "À vérifier",
+  "Bloquée",
+  "Terminée",
+];
+
 export function isNotEmpty(arr) {
   return Array.isArray(arr) && arr.length > 0;
 }

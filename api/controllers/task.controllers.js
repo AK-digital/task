@@ -5,7 +5,7 @@ import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailDescription } from "../templates/emails.js";
 import { regex } from "../utils/regex.js";
-import { getMatches } from "../utils/utils.js";
+import { allowedStatus, getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
 
@@ -225,15 +225,6 @@ export async function updateTaskText(req, res, next) {
 export async function updateTaskStatus(req, res, next) {
   try {
     const { status } = req.body;
-
-    const allowedStatus = [
-      "En cours",
-      "En attente",
-      "Terminée",
-      "À faire",
-      "À vérifier",
-      "Bloquée",
-    ];
 
     if (!status) {
       return res.status(400).send({
