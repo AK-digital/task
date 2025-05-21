@@ -51,8 +51,13 @@ export default function Task({
     "customer",
   ]);
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  let { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task?._id });
+
+  if (!canDrag) {
+    attributes = "";
+    listeners = "";
+  }
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -73,8 +78,10 @@ export default function Task({
         <TaskCheckbox task={task} setSelectedTasks={setSelectedTasks} />
       )}
       {/* Drag */}
-      {isDrag && canDrag && (
-        <TaskDrag attributes={attributes} listeners={listeners} />
+      {isDrag && (
+        <div className={styles.canDrag} data-drag={canDrag}>
+          <TaskDrag attributes={attributes} listeners={listeners} />
+        </div>
       )}
       {/* Name */}
       <TaskText task={task} />
