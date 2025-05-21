@@ -48,6 +48,7 @@ export async function getProjects() {
       err?.message ||
         "Une erreur est survenue lors de la récupération des projets"
     );
+    return [];
   }
 }
 

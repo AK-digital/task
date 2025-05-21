@@ -5,7 +5,7 @@ import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailDescription } from "../templates/emails.js";
 import { regex } from "../utils/regex.js";
-import { getMatches } from "../utils/utils.js";
+import { allowedStatus, getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
 
@@ -53,13 +53,51 @@ export async function saveTask(req, res, next) {
 // Only authors and guets will be able to get the tasks
 export async function getTasks(req, res, next) {
   try {
-    const { archived } = req.query;
+    const {
+      projectId,
+      boardId,
+      userId,
+      responsiblesId,
+      search,
+      status,
+      priorities,
+      archived,
+    } = req.query;
 
-    const tasks = await TaskModel.find({
-      projectId: req.query.projectId,
-      archived: archived,
-    })
+    const filters = {};
+
+    if (!projectId && !userId) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    if (projectId) filters.projectId = projectId;
+    if (boardId) filters.boardId = boardId;
+    if (archived) filters.archived = archived;
+    if (userId) filters.responsibles = userId;
+    if (responsiblesId) {
+      filters.responsibles = { $in: responsiblesId?.split(",") };
+    }
+    if (search) filters.text = { $regex: search, $options: "i" };
+    if (status) filters.status = { $in: status?.split(",") };
+    if (priorities) filters.priority = { $in: priorities?.split(",") };
+
+    const tasks = await TaskModel.find(filters)
       .sort({ order: "asc" })
+      .populate({
+        path: "projectId",
+        select: "name logo members",
+        populate: {
+          path: "members.user",
+          select: "firstName lastName picture email",
+        },
+      })
+      .populate({
+        path: "boardId",
+        select: "title color",
+      })
       .populate({
         path: "responsibles",
         select: "-password -role", // Exclure le champ `password` des responsibles
@@ -187,15 +225,6 @@ export async function updateTaskText(req, res, next) {
 export async function updateTaskStatus(req, res, next) {
   try {
     const { status } = req.body;
-
-    const allowedStatus = [
-      "En cours",
-      "En attente",
-      "Terminée",
-      "À faire",
-      "À vérifier",
-      "Bloquée",
-    ];
 
     if (!status) {
       return res.status(400).send({

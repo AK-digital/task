@@ -106,12 +106,11 @@ export default function SideNav({ projects }) {
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
           </div>
           <div className={styles.myTasks}>
-            <Link
-              href={"/myTasks"}
-              className={styles.myTasksLink}
-              title="Mes tâches"
-            >
-              <ClipboardList size={24} />
+            <Link href={"/tasks"} title="Mes tâches">
+              <div>
+                <ClipboardList size={24} />
+              </div>
+              <span>Mes tâches</span>
             </Link>
           </div>
           <nav className={styles.nav}>
@@ -144,15 +143,17 @@ export default function SideNav({ projects }) {
           </nav>
         </div>
         <div className={styles.actions}>
-          <Link
-            className={styles.openProjects}
-            href={"/projects"}
-            data-active={projectId === ""}
-          >
-            <LayoutGrid size={24} />
+          <Link href={"/projects"} data-active={projectId === ""}>
+            <div>
+              <LayoutGrid size={24} />
+            </div>
+            <span>Mes projets</span>
           </Link>
-          <Link href={"/new-project"} className={styles.createProjectButton}>
-            <Plus size={24} />
+          <Link href={"/new-project"}>
+            <div>
+              <Plus size={24} />
+            </div>
+            <span>Ajouter un projet</span>
           </Link>
         </div>
       </div>

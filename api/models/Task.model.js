@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { allowedStatus } from "../utils/utils.js";
 const { Schema } = mongoose;
 
 const taskSchema = new Schema(
@@ -61,14 +62,7 @@ const taskSchema = new Schema(
     },
     status: {
       type: String,
-      enum: [
-        "En cours",
-        "En attente",
-        "Terminée",
-        "À faire",
-        "À vérifier",
-        "Bloquée",
-      ],
+      enum: allowedStatus,
       default: "En attente",
     },
     priority: {

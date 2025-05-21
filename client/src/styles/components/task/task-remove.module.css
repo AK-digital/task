@@ -1,0 +1,11 @@
+.container {
+    cursor: pointer;
+    color: #41435f;
+    transition: color 150ms ease-in-out;
+    position: relative;
+    padding-inline: 6px;
+}
+
+.container:hover {
+    color: var(--danger-color);
+}

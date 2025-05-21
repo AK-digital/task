@@ -1,8 +1,9 @@
 .container {
-    padding: 6px;
     width: 100%;
     min-width: 200px;
     max-width: 700px;
+    cursor: text;
+    margin-inline: 8px;
 }
 
 .container span {
@@ -10,18 +11,18 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-}
-
-.input {
-    padding: 4px 6px;
     font-size: var(--text-size-normal);
-    font-weight: 300;
-    border: none;
-    transition: 150ms background linear;
+    letter-spacing: 0.01em;
 }
 
-.input:focus {
+.container input {
+    position: relative;
+    font-size: var(--text-size-normal);
+    letter-spacing: 0.01em;
+    border: none;
+}
+
+.container input:focus {
     color: var(--text-darker-color);
-    background-color: var(--third-background-color);
-    border-radius: var(--border-radius-xs);
+     border-radius: var(--border-radius-xs);
 }

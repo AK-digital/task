@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--text-color);
+  height: 46px;
+  cursor: pointer;
+  color: var(--text-color-dark);
+  transition: 120ms all ease-in-out;
+}
+
+.container[data-openned="true"] {
+  background-color: #ebded1;
+}
+
+.container:hover {
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
+}
+
+.container:last-child {
+  border-bottom: none;
+}
+
+.container > div > span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dragging {
+  opacity: 0;
+}
+
+.removeGhost {
+  position: relative;
+  padding-inline: 6px;
+  min-width: 32px;
+}
+
+.canDrag[data-drag="false"] {
+  visibility: hidden;
+  cursor: inherit !important;
+}

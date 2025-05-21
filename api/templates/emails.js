@@ -117,7 +117,6 @@ export function emailResetCode(user, resetLink) {
             Réinitialiser mon mot de passe
           </a>
         </div>
-        <p style="${emailStyles.content}">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.</p>
       </div>
     `,
   };
@@ -137,7 +136,6 @@ export function emailVerification(user, verificationLink) {
             Vérifier mon adresse email
           </a>
         </div>
-        <p style="${emailStyles.content}">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.</p>
       </div>
     `,
   };

@@ -1,5 +1,5 @@
 import { updateTaskDescription } from "@/api/task";
-import styles from "@/styles/components/tasks/task-description.module.css";
+import styles from "@/styles/components/task/task-description.module.css";
 import moment from "moment";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
@@ -53,8 +53,10 @@ export default function TaskDescription({ project, task, uid }) {
   const handleEditDescription = () => {
     if (!isAuthorized) return;
 
-    if (descriptionAuthor?._id && !isAuthor) {
-      return;
+    if (description) {
+      if (descriptionAuthor?._id && !isAuthor) {
+        return;
+      }
     }
 
     setIsEditing(true);
@@ -67,7 +69,7 @@ export default function TaskDescription({ project, task, uid }) {
 
     const response = await updateTaskDescription(
       task?._id,
-      task?.projectId,
+      project?._id,
       "",
       []
     );

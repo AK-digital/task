@@ -4,10 +4,9 @@ import { signIn } from "@/actions/auth";
 import { reSendVerificationEmail } from "@/api/auth";
 import styles from "@/styles/components/auth/sign.module.css";
 import { bricolageGrostesque } from "@/utils/font";
-import { ArrowRightCircle, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
-import { set } from "zod";
 
 const initialState = {
   status: "pending",
@@ -35,10 +34,6 @@ export default function SignIn() {
     e.preventDefault();
     router.push("/forgot-password");
   }
-  // async function handleGoogleAuth(e) {
-  //   e.preventDefault();
-  //   window.open(`http://localhost:5000/api/auth/google/`, "_self");
-  // }
 
   useEffect(() => {
     setMessage("");
@@ -53,7 +48,7 @@ export default function SignIn() {
     if (state?.status === "failure" && state?.errors === null) {
       setMessage(
         state?.message ||
-        "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
+          "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
       );
       setStatus("failure");
     }
@@ -138,10 +133,7 @@ export default function SignIn() {
               onClick={(e) => setHiddenPassword(true)}
             />
           )}
-          <a
-            className={styles.forgotPassword}
-            onClick={handleForgotPassword}
-          >
+          <a className={styles.forgotPassword} onClick={handleForgotPassword}>
             Mot de passe oublié ?
           </a>
         </div>

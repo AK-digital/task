@@ -1,0 +1,23 @@
+.container {
+    position: relative;
+    padding-right: 8px;
+}
+
+.container svg[data-description="true"] {
+    color: #7b603b;
+}
+
+.container span {
+    position: absolute;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    bottom: 8px;
+    right: 4px;
+    padding: 4px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--primary-background-color);
+    border-radius: 50%;
+    font-size: var(--text-size-small);
+}

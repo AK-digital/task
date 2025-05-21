@@ -1,31 +1,35 @@
 import { deleteTask } from "@/api/task";
-import styles from "@/styles/components/tasks/task.module.css";
+import styles from "@/styles/components/task/task-remove.module.css";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
 import socket from "@/utils/socket";
-import { checkRole } from "@/utils/utils";
-import { mutate } from "swr";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
-export default function TaskRemove({ task, project, uid, archive }) {
+export default function TaskRemove({ task, archive, mutate }) {
   const [showConfirm, setShowConfirm] = useState(false);
+  const project = task?.projectId;
+  const canDelete = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
 
   async function handleDeleteTask() {
-    const res = await deleteTask([task?._id], task?.projectId);
+    const res = await deleteTask([task?._id], project?._id);
 
     if (!res.success) return;
 
-    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+    await mutate();
 
-    socket.emit("update task", task?.projectId);
+    socket.emit("update task", project?._id);
   }
 
-  if (!checkRole(project, ["owner", "manager", "team", "customer"], uid)) {
-    return null;
-  }
+  if (!canDelete) return null;
 
   return (
-    <div className={styles.task__remove}>
+    <div className={styles.container} id="task-row">
       <Trash size={20} onClick={() => setShowConfirm(true)} />
       <ConfirmDialog
         isOpen={showConfirm}

@@ -36,13 +36,14 @@
     #2a4046 86%,
     #32484e 100%
   );
-  --border-color: #3a3d5c;
+  --border-color: #acaba5;
 
   --pending-color: #b3bcc0;
   --processing-color: #f3b158;
   --finished-color: #63a758;
   --todo-color: #559fc6;
   --checking-color: #9d88c2;
+  --estimating-color: #62c3b0;
   --blocked-color: #ca4250;
 
   --low-color: #afbde9;
@@ -235,7 +236,6 @@ textarea {
   letter-spacing: var(--letter-spacing-normal);
   border-bottom: 1px solid var(--text-medium-color);
   outline: none;
-  font-family: inherit;
   padding: 12px 0 12px 0;
 }
 
@@ -382,4 +382,12 @@ input[type="checkbox"] {
 .epr_-6npj90 {
   --epr-emoji-size: 18px !important;
   --epr-category-navigation-button-size: 24px !important;
+}
+
+/* Task row */
+
+#task-row {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }

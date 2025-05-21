@@ -1,68 +1,62 @@
 "use client";
 import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskStatus } from "@/actions/task";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
-import { checkRole } from "@/utils/utils";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import { allowedStatus } from "@/utils/utils";
 
-const status = [
-  "En attente",
-  "À faire",
-  "En cours",
-  "À vérifier",
-  "Bloquée",
-  "Terminée",
-];
-
-export default function TaskStatus({ task, project, uid }) {
-  const [optimisticCurrent, setOptimisticCurrent] = useState(task?.status);
+export default function TaskStatus({ task, uid }) {
+  const [status, setStatus] = useState(task?.status);
   const [isOpen, setIsOpen] = useState(false);
+  const project = task?.projectId;
+
+  const canEdit = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
 
   async function handleUpdateStatus(e) {
     const value = e.target.dataset.value;
-    setOptimisticCurrent(value);
+    setStatus(value);
     setIsOpen(false);
 
-    const response = await updateTaskStatus(task?._id, task?.projectId, value);
+    const res = await updateTaskStatus(task?._id, project?._id, value);
 
-    if (response?.status === "failure") {
-      setOptimisticCurrent(task?.status);
+    if (!res?.success) {
+      setStatus(task?.status);
       return;
     }
 
     socket.emit("update task", project?._id);
   }
 
-  useEffect(() => {
-    setOptimisticCurrent(task?.status);
-  }, [task?.status]);
-
   const handleIsOpen = useCallback(() => {
-    const isAuthorized = checkRole(
-      project,
-      ["owner", "manager", "team", "customer"],
-      uid
-    );
-
-    if (!isAuthorized) return;
+    if (!canEdit) return;
 
     setIsOpen((prev) => !prev);
   }, [project, uid]);
+
+  useMemo(() => {
+    setStatus(task?.status);
+  }, [task?.status]);
 
   return (
     <div className={styles["dropdown"]}>
       <div
         className={styles["dropdown__current"]}
-        data-current={optimisticCurrent}
+        data-current={status}
         onClick={handleIsOpen}
       >
-        <span>{optimisticCurrent}</span>
+        <span>{status}</span>
       </div>
       {isOpen && (
         <>
           <div className={styles["dropdown__list"]}>
             <ul>
-              {status?.map((value, idx) => {
+              {allowedStatus?.map((value, idx) => {
                 return (
                   <li key={idx} data-value={value} onClick={handleUpdateStatus}>
                     {value}
