@@ -10,7 +10,7 @@
   min-width: 100%;
   max-width: 100%;
   min-height: 250px;
-  resize: both;
+  resize: none;
 }
 
 /* Barre d'outils */
@@ -57,14 +57,14 @@
 
 /* Contenu de l'éditeur */
 .content {
-    flex: 1;
-    min-height: 150px;
-    padding: 15px;
-    font-size: 16px;
-    outline: none;
-    border-radius: 0 0 8px 8px;
-    cursor: text;
-    /* height: fit-content; */
+  flex: 1;
+  min-height: 150px;
+  padding: 15px;
+  font-size: 16px;
+  outline: none;
+  border-radius: 0 0 8px 8px;
+  cursor: text;
+  /* height: fit-content; */
 }
 
 /* Style des blocs de code */
