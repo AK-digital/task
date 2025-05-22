@@ -80,8 +80,6 @@ export default function TaskTimer({ task }) {
     if (stopwatchRef.current && !isRunning) {
       stopwatchRef.current.reset(newOffset, false);
     }
-
-    socket.emit("update task", project?._id);
   }, [sessions]);
 
   useEffect(() => {

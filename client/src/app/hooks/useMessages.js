@@ -5,7 +5,12 @@ export function useMessages(projectId, taskId) {
   const fetcher = getMessages.bind(null, projectId, taskId);
   const { data, isLoading, mutate } = useSWR(
     `/message?projectId=${projectId}&taskId=${taskId}`,
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: true,
+      revalidateOnMount: true,
+    }
   );
 
   if (!data?.success) {
