@@ -13,6 +13,8 @@ import { AuthContext } from "@/context/auth";
 import NoPicture from "../User/NoPicture";
 
 import Reactions from "../Reactions/Reactions";
+import { isNotEmpty } from "@/utils/utils";
+import AttachmentsInfo from "../Popups/AttachmentsInfo";
 
 export default function TaskDescription({ project, task, uid }) {
   const { user } = useContext(AuthContext);
@@ -71,6 +73,7 @@ export default function TaskDescription({ project, task, uid }) {
       task?._id,
       project?._id,
       "",
+      [],
       []
     );
 
@@ -105,6 +108,7 @@ export default function TaskDescription({ project, task, uid }) {
           setOptimisticDescription={setDescription}
           draft={draft}
           mutateDraft={mutateDraft}
+          handleRemoveDescription={handleRemoveDescription}
         />
       )}
       {/* If not editing and description is not empty */}
@@ -141,6 +145,11 @@ export default function TaskDescription({ project, task, uid }) {
 
           {/* Zone de réactions et actions */}
           <div className={styles.informations}>
+            {/* Attachments */}
+            {isNotEmpty(task?.description?.files) && (
+              <AttachmentsInfo attachments={task?.description?.files} />
+            )}
+
             {/* Réactions */}
             <Reactions
               element={task?.description}

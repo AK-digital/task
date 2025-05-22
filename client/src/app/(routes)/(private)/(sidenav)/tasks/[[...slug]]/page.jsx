@@ -63,16 +63,18 @@ export default function TasksPage() {
           />
         </div>
         {/* Tasks */}
-        <div className={styles.tasks}>
-          <Tasks
-            tasks={tasks}
-            tasksLoading={tasksLoading}
-            mutateTasks={mutateTasks}
-            displayedElts={displayedElts}
-            displayedFilters={displayedFilters}
-            selectedTasks={selectedTasks}
-            setSelectedTasks={setSelectedTasks}
-          />
+        <div className={styles.tasksContainer}>
+          <div className={styles.tasks}>
+            <Tasks
+              tasks={tasks}
+              tasksLoading={tasksLoading}
+              mutateTasks={mutateTasks}
+              displayedElts={displayedElts}
+              displayedFilters={displayedFilters}
+              selectedTasks={selectedTasks}
+              setSelectedTasks={setSelectedTasks}
+            />
+          </div>
         </div>
       </div>
     </main>

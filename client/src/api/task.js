@@ -1,6 +1,7 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
 import { generateUrlParams } from "@/utils/generateUrlParams";
+import { isNotEmpty } from "@/utils/utils";
 
 export async function getTasks(queries) {
   try {
@@ -276,20 +277,42 @@ export async function removeResponsible(taskId, responsibleId, projectId) {
 export async function updateTaskDescription(
   taskId,
   projectId,
-  content,
-  taggedUsers
+  description,
+  taggedUsers,
+  attachments
 ) {
   try {
-    const rawData = {
-      description: content,
-      taggedUsers: taggedUsers,
-    };
+    const data = new FormData();
+    data.append("description", description);
+
+    if (isNotEmpty(taggedUsers)) {
+      taggedUsers.forEach((taggedUser) => {
+        data.append("taggedUsers", taggedUser);
+      });
+    }
+
+    if (isNotEmpty(attachments)) {
+      attachments.forEach((attachment) => {
+        if (attachment instanceof File) {
+          data.append("attachments", attachment);
+        } else {
+          data.append(
+            "existingFiles",
+            JSON.stringify({
+              id: attachment.id,
+              name: attachment.name,
+              url: attachment.url,
+            })
+          );
+        }
+      });
+    }
 
     const res = await useAuthFetch(
       `task/${taskId}/description?projectId=${projectId}`,
       "PATCH",
-      "application/json",
-      rawData
+      "multipart/form-data",
+      data
     );
 
     const response = await res.json();

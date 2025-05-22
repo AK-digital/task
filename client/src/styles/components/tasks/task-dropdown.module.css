@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
   align-items: center;
-
   user-select: none;
   border-right: 1px solid var(--text-light-color);
   font-size: var(--text-size-normal);

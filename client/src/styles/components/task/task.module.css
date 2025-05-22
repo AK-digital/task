@@ -1,7 +1,7 @@
 .container {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--text-color);
+  border-top: 1px solid var(--text-color);
   height: 46px;
   cursor: pointer;
   color: var(--text-color-dark);
@@ -16,11 +16,7 @@
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
 }
 
-.container:last-child {
-  border-bottom: none;
-}
-
-.container > div > span {
+.container>div>span {
   display: block;
   overflow: hidden;
   white-space: nowrap;

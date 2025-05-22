@@ -52,8 +52,8 @@ router.patch(
 router.patch(
   "/:id/description",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
-  upload.fields([{ name: "medias", maxCount: 20 }]),
+  checkRole(["owner", "manager", "team", "customer"]),
+  upload.array("attachments", 10),
   taskControllers.updateTaskDescription
 );
 

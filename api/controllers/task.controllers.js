@@ -1,4 +1,8 @@
-import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import {
+  destroyFile,
+  uploadFile,
+  uploadFileBuffer,
+} from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
@@ -411,7 +415,83 @@ export async function updateTaskEstimation(req, res, next) {
 export async function updateTaskDescription(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { description, taggedUsers } = req.body;
+    const { description, taggedUsers, existingFiles } = req.body;
+
+    const task = await TaskModel.findById({ _id: req.params.id });
+
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier une tâche qui n'existe pas",
+      });
+    }
+
+    if (authUser?._id.toString() !== task?.author.toString()) {
+      return res.status(403).send({
+        success: false,
+        message:
+          "Impossible de modifier une description qui n'est pas le votre",
+      });
+    }
+
+    const oldFiles = task?.description?.files || [];
+    const attachments = req.files || [];
+    let newFiles = [];
+
+    let existingFilesArray = [];
+    if (existingFiles) {
+      if (Array.isArray(existingFiles)) {
+        existingFilesArray = existingFiles.map((fileStr) =>
+          JSON.parse(fileStr)
+        );
+      } else if (typeof existingFiles === "string") {
+        try {
+          const parsed = JSON.parse(existingFiles);
+          existingFilesArray = Array.isArray(parsed) ? parsed : [parsed];
+        } catch (e) {
+          console.error("Erreur de parsing des fichiers existants:", e);
+        }
+      }
+    }
+
+    if (existingFilesArray.length > 0) {
+      existingFilesArray.forEach((file) => {
+        newFiles.push({
+          name: file.name,
+          url: file.url,
+          ...(file.id && { id: file.id }),
+        });
+      });
+    }
+
+    if (attachments.length > 0) {
+      for (const attachment of attachments) {
+        const bufferResponse = await uploadFileBuffer(
+          "task/description",
+          attachment.buffer,
+          attachment.originalname,
+        );
+        const object = {
+          name: attachment.originalname,
+          url: bufferResponse?.secure_url,
+        };
+        newFiles.push(object);
+      }
+    }
+
+    if (newFiles.length > 0) {
+      for (const oldFile of oldFiles) {
+        const stillExists = newFiles.find((file) => file.url === oldFile.url);
+        if (!stillExists) {
+          await destroyFile("description", oldFile.url);
+        }
+      }
+    } else if (existingFiles === undefined && attachments.length === 0) {
+      for (const oldFile of oldFiles) {
+        await destroyFile("description", oldFile.url);
+      }
+      newFiles = [];
+    }
 
     let updatedDescription = description;
 
@@ -432,8 +512,6 @@ export async function updateTaskDescription(req, res, next) {
         }
       }
     } else {
-      const task = await TaskModel.findById({ _id: req.params.id });
-
       const taskDescription = task?.description?.text;
 
       if (taskDescription) {
@@ -449,8 +527,6 @@ export async function updateTaskDescription(req, res, next) {
       }
     }
 
-    const task = await TaskModel.findById({ _id: req.params.id });
-
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
@@ -459,6 +535,7 @@ export async function updateTaskDescription(req, res, next) {
           "description.text": updatedDescription,
           "description.createdAt": task?.description?.createdAt ?? Date.now(),
           "description.updatedAt": Date.now(),
+          "description.files": newFiles,
           taggedUsers: uniqueTaggedUsers,
         },
       },
@@ -1068,6 +1145,14 @@ export async function deleteTask(req, res, next) {
           success: false,
           message: `Impossible de supprimer la tâche avec l'ID ${taskId} car elle n'existe pas`,
         });
+      }
+
+      const attachments = task?.description?.files;
+
+      if (attachments) {
+        for (const attachment of attachments) {
+          await destroyFile("description", attachment?.url);
+        }
       }
 
       // Suppression des images dans la description de la tâche

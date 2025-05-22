@@ -70,8 +70,6 @@ export async function readNotifications(notificationIds) {
 
     const response = await res.json();
 
-    console.log(response, "fril gere");
-
     if (!response?.success) {
       throw new Error(response?.message);
     }

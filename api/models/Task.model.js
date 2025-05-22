@@ -48,6 +48,16 @@ const taskSchema = new Schema(
           },
         },
       ],
+      files: [
+        {
+          name: {
+            type: String,
+          },
+          url: {
+            type: String,
+          },
+        },
+      ],
     },
     messages: {
       type: [Schema.Types.ObjectId],

@@ -18,6 +18,7 @@ import { Eye } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
 import Reactions from "../Reactions/Reactions";
+import AttachmentsInfo from "../Popups/AttachmentsInfo";
 
 export default function Message({
   task,
@@ -78,6 +79,7 @@ export default function Message({
           setConvOpen={setEdit}
           editMessage={true}
           message={message}
+          handleDeleteMessage={handleDeleteMessage}
         />
       ) : (
         <>
@@ -132,6 +134,11 @@ export default function Message({
             </div>
 
             <div className={styles.informations}>
+              {/* Attachments */}
+              {isNotEmpty(message?.files) && (
+                <AttachmentsInfo attachments={message?.files} />
+              )}
+
               {/* Lecteurs */}
               <div
                 className={styles.readBy}

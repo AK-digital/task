@@ -14,10 +14,13 @@
 }
 
 .header {
+
     display: flex;
     align-items: center;
     margin-bottom: 24px;
     gap: 16px;
+    background-color: var(--primary-background-color);
+    padding: 16px;
 }
 
 .title {
@@ -25,12 +28,19 @@
     min-width: max-content;
 }
 
-.tasks {
-    padding: 0px 20px 0px 20px;
-    background-color: var(--secondary-background-color);
+.tasksContainer {
+    overflow: auto;
+    height: 90%;
+    padding-right: 20px;
+    padding: 0px 20px 0px 0px;
     border-radius: var(--border-radius-medium);
+}
+
+.tasks {
+    position: relative;
+
+    background-color: var(--secondary-background-color);
     box-shadow: var(--box-shadow-small);
+    border-radius: var(--border-radius-medium);
     min-width: max-content;
-    overflow-y: auto;
-    max-height: 94%;
 }

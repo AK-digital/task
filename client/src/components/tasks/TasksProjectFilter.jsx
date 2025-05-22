@@ -39,9 +39,9 @@ export default function TasksProjectFilter({ queries, setQueries }) {
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
       >
-        {theProject?.logo ? (
+        {theProject ? (
           <Image
-            src={theProject?.logo}
+            src={theProject?.logo || "/default-project-logo.webp"}
             width={18}
             height={18}
             quality={100}
@@ -68,7 +68,7 @@ export default function TasksProjectFilter({ queries, setQueries }) {
                   onClick={() => handleSelectProject(project._id)}
                 >
                   <Image
-                    src={project?.logo}
+                    src={project?.logo || "/default-project-logo.webp"}
                     width={24}
                     height={24}
                     alt={`Logo de ${project?.name}`}

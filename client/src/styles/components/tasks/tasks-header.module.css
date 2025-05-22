@@ -2,7 +2,7 @@
 .container {
     position: sticky;
     z-index: 1002;
-    top: 0;
+    top: 0px;
     left: 0;
     background-color: var(--secondary-background-color);
     display: flex;

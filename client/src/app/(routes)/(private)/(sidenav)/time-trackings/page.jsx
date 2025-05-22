@@ -9,7 +9,6 @@ export default async function TimeTrackingsPage({ searchParams }) {
 
   // Get trackers based on query params, if no query params return an empty array
   const trackers = await getTimeTrackings(queryParams);
-  console.log("trackers", trackers?.data);
   const projects = await getProjects(); // Fetch all projects
   projects?.sort((a, b) => a.name.localeCompare(b.name)); // Sort projects by name
 

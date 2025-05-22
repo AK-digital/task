@@ -111,8 +111,6 @@ export async function timeTrackingStop(taskId, projectId) {
 
     const response = await res.json();
 
-    console.log(response);
-
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
