@@ -87,7 +87,6 @@ export default function TaskTimer({ task }) {
       setIsLocalUpdate(false); // Reset le flag
     }
   }, [sessions, isRunning, project?._id, isLocalUpdate]);
-  }, [sessions]);
 
   // MODIFIÉ: Ne pas émettre de socket ici, juste mettre à jour l'état
   useEffect(() => {
