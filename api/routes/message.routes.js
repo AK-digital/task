@@ -3,11 +3,13 @@ const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import { checkRole } from "../middlewares/projectRole.middlewares.js";
 import * as messageControllers from "../controllers/message.controllers.js";
+import { upload } from "../middlewares/multer.middlewares.js";
 
 router.post(
   "/",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
+  upload.array("attachments", 10),
   messageControllers.saveMessage
 );
 
@@ -22,6 +24,7 @@ router.put(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
+  upload.array("attachments", 10),
   messageControllers.updateMessage
 );
 

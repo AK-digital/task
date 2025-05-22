@@ -22,9 +22,16 @@ const messageSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "User",
     },
-    files: {
-      type: [String],
-    },
+    files: [
+      {
+        name: {
+          type: String,
+        },
+        url: {
+          type: String,
+        },
+      },
+    ],
     readBy: {
       type: [Schema.Types.ObjectId],
       ref: "User",

@@ -1,4 +1,8 @@
-import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import {
+  destroyFile,
+  uploadFile,
+  uploadFileBuffer,
+} from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import MessageModel from "../models/Message.model.js";
 import TaskModel from "../models/Task.model.js";
@@ -11,6 +15,24 @@ export async function saveMessage(req, res, next) {
     const projectId = req.query.projectId;
     const authUser = res.locals.user;
     const { taskId, message, taggedUsers } = req.body;
+    const attachments = req.files || [];
+
+    let files = [];
+
+    if (attachments.length > 0) {
+      for (const attachment of attachments) {
+        const bufferResponse = await uploadFileBuffer(
+          "task/message",
+          attachment.buffer,
+          attachment.originalname
+        );
+        const object = {
+          name: attachment?.originalname,
+          url: bufferResponse?.secure_url,
+        };
+        files.push(object);
+      }
+    }
 
     // Ensure that there is no duplicate value
     const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
@@ -46,6 +68,7 @@ export async function saveMessage(req, res, next) {
       message: messageWithImg ?? message,
       taggedUsers: uniqueTaggedUsers,
       readBy: [authUser?._id],
+      files: files,
     });
 
     const savedMessage = await newMessage.save();
@@ -143,8 +166,7 @@ export async function getMessages(req, res, next) {
 export async function updateMessage(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { message, taggedUsers } = req.body;
-
+    const { message, taggedUsers, existingFiles } = req.body;
     const messageToUpdate = await MessageModel.findById({ _id: req.params.id });
 
     if (!messageToUpdate) {
@@ -161,47 +183,101 @@ export async function updateMessage(req, res, next) {
       });
     }
 
-    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
+    if (
+      !message &&
+      !taggedUsers &&
+      (!req.files || req.files.length === 0) &&
+      !existingFiles
+    ) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Paramètres manquants" });
+    }
+
+    const uniqueTaggedUsers = Array.from(new Set(taggedUsers || []));
 
     let messageWithImg = message;
-
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
-
     const matches = getMatches(message, imgRegex);
 
     if (matches.length > 0) {
       for (const match of matches) {
-        const img = match[1]; // Le src est dans le premier groupe capturé
-
-        const res = await uploadFile("task/message", img);
-
-        if (res?.secure_url) {
-          messageWithImg = messageWithImg.replace(img, res.secure_url);
+        const img = match[1];
+        const resImg = await uploadFile("task/message", img);
+        if (resImg?.secure_url) {
+          messageWithImg = messageWithImg.replace(img, resImg.secure_url);
         }
       }
     } else {
-      const message = await MessageModel.findById({ _id: req.params.id });
-
-      const messageContent = message?.message;
-
+      const messageContent = messageToUpdate?.message;
       if (messageContent) {
         const messageMatches = getMatches(messageContent, imgRegex);
-
         if (messageMatches.length > 0) {
           for (const messageMatch of messageMatches) {
             const img = messageMatch[1];
-
             await destroyFile("message", img);
           }
         }
       }
     }
 
-    // If both are missing then we return a bad request
-    if (!message && !taggedUsers) {
-      return res
-        .status(400)
-        .send({ success: false, message: "Paramètres manquants" });
+    const oldFiles = messageToUpdate.files || [];
+    const attachments = req.files || [];
+    let newFiles = [];
+
+    let existingFilesArray = [];
+    if (existingFiles) {
+      if (Array.isArray(existingFiles)) {
+        existingFilesArray = existingFiles.map((fileStr) =>
+          JSON.parse(fileStr)
+        );
+      } else if (typeof existingFiles === "string") {
+        try {
+          const parsed = JSON.parse(existingFiles);
+          existingFilesArray = Array.isArray(parsed) ? parsed : [parsed];
+        } catch (e) {
+          console.error("Erreur de parsing des fichiers existants:", e);
+        }
+      }
+    }
+
+    if (existingFilesArray.length > 0) {
+      existingFilesArray.forEach((file) => {
+        newFiles.push({
+          name: file.name,
+          url: file.url,
+          ...(file.id && { id: file.id }),
+        });
+      });
+    }
+
+    if (attachments.length > 0) {
+      for (const attachment of attachments) {
+        const bufferResponse = await uploadFileBuffer(
+          "task/message",
+          attachment.buffer,
+          attachment.originalname
+        );
+        const object = {
+          name: attachment.originalname,
+          url: bufferResponse?.secure_url,
+        };
+        newFiles.push(object);
+      }
+    }
+
+    if (newFiles.length > 0) {
+      for (const oldFile of oldFiles) {
+        const stillExists = newFiles.find((file) => file.url === oldFile.url);
+        if (!stillExists) {
+          await destroyFile("message", oldFile.url);
+        }
+      }
+    } else if (existingFiles === undefined && attachments.length === 0) {
+      for (const oldFile of oldFiles) {
+        await destroyFile("message", oldFile.url);
+      }
+      newFiles = [];
     }
 
     const updatedMessage = await MessageModel.findByIdAndUpdate(
@@ -209,7 +285,8 @@ export async function updateMessage(req, res, next) {
       {
         $set: {
           message: messageWithImg ?? message,
-          taggedUsers: taggedUsers,
+          taggedUsers: uniqueTaggedUsers,
+          files: newFiles,
         },
       },
       {
@@ -225,27 +302,22 @@ export async function updateMessage(req, res, next) {
       });
     }
 
-    const link = `${process.env.CLIENT_URL}/projects/${updatedMessage.projectId}/task/${updatedMessage.taskId}`;
-
-    // Email Logic, basically sending an email for each tagged user
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
-
-      const template = emailMessage(authUser, updatedMessage, link);
-
       if (user) {
+        const template = emailMessage(user, updatedMessage);
         await sendEmail(
           "task@akdigital.fr",
-          user?.email,
-          template?.subjet,
-          template?.text
+          user.email,
+          template.subjet,
+          template.text
         );
       }
     }
 
     return res.status(200).send({
       success: true,
-      message: "Réponse modifié avec succès",
+      message: "Réponse modifiée avec succès",
       data: updatedMessage,
     });
   } catch (err) {
@@ -379,6 +451,14 @@ export async function deleteMessage(req, res, next) {
         success: false,
         message: "Impossible de supprimer un message qui n'existe pas",
       });
+    }
+
+    const attachments = message.files;
+
+    if (attachments) {
+      for (const attachment of attachments) {
+        await destroyFile("message", attachment?.url);
+      }
     }
 
     const messageContent = message?.message;

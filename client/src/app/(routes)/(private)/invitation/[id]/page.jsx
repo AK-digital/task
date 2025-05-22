@@ -13,7 +13,6 @@ export default function Invitation() {
       try {
         const response = await acceptProjectInvitation(id);
 
-        console.log(response);
         if (!response?.success) {
           if (response?.message === "L'utilisateur n'est pas connecté") {
             router.push("/");
