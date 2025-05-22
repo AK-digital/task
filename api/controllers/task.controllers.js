@@ -426,12 +426,16 @@ export async function updateTaskDescription(req, res, next) {
       });
     }
 
-    if (authUser?._id.toString() !== task?.author.toString()) {
-      return res.status(403).send({
-        success: false,
-        message:
-          "Impossible de modifier une description qui n'est pas le votre",
-      });
+    if (task?.description?.text) {
+      if (
+        authUser?._id.toString() !== task?.description?.author?._id.toString()
+      ) {
+        return res.status(403).send({
+          success: false,
+          message:
+            "Impossible de modifier une description qui n'est pas le votre",
+        });
+      }
     }
 
     const oldFiles = task?.description?.files || [];
@@ -469,7 +473,7 @@ export async function updateTaskDescription(req, res, next) {
         const bufferResponse = await uploadFileBuffer(
           "task/description",
           attachment.buffer,
-          attachment.originalname,
+          attachment.originalname
         );
         const object = {
           name: attachment.originalname,

@@ -312,6 +312,7 @@ export default function Tiptap({
     const isAuthor = currentAuthor?._id === uid;
 
     if (currentAuthor && !isAuthor && task?.description?.text) {
+      console.log("played");
       return;
     }
 
