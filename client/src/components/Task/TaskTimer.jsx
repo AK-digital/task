@@ -81,13 +81,13 @@ export default function TaskTimer({ task }) {
     if (stopwatchRef.current && !isRunning) {
       stopwatchRef.current.reset(newOffset, false);
     }
-
     // SEULEMENT émettre si c'est une mise à jour locale
     if (isLocalUpdate) {
       socket.emit("update task", project?._id);
       setIsLocalUpdate(false); // Reset le flag
     }
   }, [sessions, isRunning, project?._id, isLocalUpdate]);
+  }, [sessions]);
 
   // MODIFIÉ: Ne pas émettre de socket ici, juste mettre à jour l'état
   useEffect(() => {

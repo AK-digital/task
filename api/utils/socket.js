@@ -30,7 +30,6 @@ export default function socketHandler(io) {
     socket.on(
       "create notification",
       async (sender, receiver, message, link) => {
-        console.log(sender, receiver, message, link);
         const senderUser = await UserModel.findById({ _id: sender?._id });
 
         if (senderUser) {

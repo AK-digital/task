@@ -38,20 +38,22 @@ export default function Message({
   const date = moment(message?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
-  const handleReadBy = useCallback(async () => {
-    if (uid === author?._id) return;
-    if (!message?.readBy?.includes(uid)) {
-      const response = await updateReadBy(project?._id, message?._id);
-
-      if (!response?.success) return;
-
-      socket.emit("update task", project?._id);
-    }
-  }, [uid, author?._id, message?.readBy, project?._id, message?._id]);
-
   useEffect(() => {
+    async function handleReadBy() {
+      if (uid === author?._id) return;
+      const isRead = message?.readBy?.some((user) => user?._id === uid);
+
+      if (!isRead) {
+        const response = await updateReadBy(project?._id, message?._id);
+        if (!response?.success) return;
+
+        mutateMessage();
+        socket.emit("update task", project?._id);
+      }
+    }
+
     handleReadBy();
-  }, [handleReadBy]);
+  }, []);
 
   async function handleDeleteMessage() {
     setMore(false);
