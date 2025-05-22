@@ -1,6 +1,6 @@
 const emailStyles = {
   container:
-    "font-family: Arial, sans-serif; color:#4a4a4a; text-align: center; padding: 20px; margin-inline: auto;",
+    "font-family: Arial, sans-serif; color: #4a4a4a; text-align: center; padding: 20px; margin-inline: auto;",
   title: "font-size: 40px; font-weight: bold;",
   subtitle:
     "font-size: 28px; max-width: 450px; margin-inline: auto; font-weight: 500;",
@@ -8,8 +8,8 @@ const emailStyles = {
     "font-size: 20px; font-weight: 300; text-align: center; margin-bottom:30px;",
   content: "font-size: 20px; font-weight: 300; margin-bottom: 20px;",
   button:
-    "background-color: #777AE4; outline: none; border: none; border-radius: 32px; padding: 16px 24px; color: #FFFFFF; font-weight: 500; font-size:18px; text-decoration: none;",
-  highlight: "color: #777AE4;",
+    "background-color: #a87e51; outline: none; border: none; border-radius: 32px; padding: 16px 24px; color: #FFFFFF; font-weight: 500; font-size:18px; text-decoration: none;",
+  highlight: "color: #a87e51;",
 };
 
 export function emailDescription(sender, task, link) {
@@ -52,13 +52,15 @@ export function emailProjectInvitation(project, sender, link) {
     subjet: `Vous avez reçu une invitation à rejoindre un projet`,
     text: `
       <div style="${emailStyles.container}">
-      <h1 style="${emailStyles.title}">Une nouvelle opportunité vous attend 🎯</h1>
+      <h1 style="${
+        emailStyles.title
+      }">Une nouvelle opportunité vous attend 🎯</h1>
       <p style="${emailStyles.paragraph}">${
       sender?.firstName + " " + sender?.lastName
     } vous a invité à rejoindre le projet <span style="${
       emailStyles.highlight
     }">${project?.name}</span>.</p>
-      <a href=${link} style="display:inline-block;width:auto;background-color: #777AE4; outline:none; border:none; border-radius:32px; padding:16px 24px; color: #FFFFFF;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:8px;font-size:16px;">
+      <a href=${link} style="display:inline-block;width:auto;background-color: #a87e51; outline:none; border:none; border-radius:32px; padding:16px 24px; color: #FFFFFF;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:8px;font-size:16px;">
           Rejoindre le projet
       </a>
       </div>
@@ -80,7 +82,7 @@ export function emailTaskAssigned(task, sender, projectLink) {
     }</span> sur le projet <span style="${emailStyles.highlight}">${
       task?.projectId?.name
     }</span>.</p>
-      <a href=${projectLink} style="display:inline-block;width:auto;background-color: #777AE4; outline:none; border:none; border-radius:32px; padding:16px 24px; color: #FFFFFF;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:8px;font-size:16px;">
+      <a href=${projectLink} style="display:inline-block;width:auto;background-color: #a87e51; outline:none; border:none; border-radius:32px; padding:16px 24px; color: #FFFFFF;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:8px;font-size:16px;">
           Accéder au projet
       </a>
       </div>

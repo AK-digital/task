@@ -346,7 +346,7 @@ export default function Tiptap({
     if (!descriptionDeleted) {
       response = await updateTaskDescription(
         task?._id,
-        task?.projectId,
+        task?.projectId?._id,
         finalText,
         taggedUsers,
         attachments
