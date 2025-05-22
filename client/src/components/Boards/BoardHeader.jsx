@@ -28,6 +28,7 @@ import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { set } from "zod";
+import { bricolageGrostesque } from "@/utils/font";
 
 export default function BoardHeader({
   board,
@@ -284,6 +285,7 @@ export default function BoardHeader({
               autoFocus
               onBlur={() => setEdit(false)}
               onKeyDown={handleTitleChange}
+              className={bricolageGrostesque.className}
             />
           </div>
         ) : (
