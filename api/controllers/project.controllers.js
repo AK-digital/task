@@ -7,6 +7,7 @@ import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
 import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
+import { allowedStatus } from "../utils/utils.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -166,6 +167,49 @@ export async function getProjects(req, res, next) {
           as: "tasks",
         },
       },
+
+      // Statistiques des tâches par status
+      {
+        $addFields: {
+          taskStatuses: {
+            $arrayToObject: {
+              $map: {
+                input: {
+                  $setUnion: ["$tasks.status", allowedStatus],
+                },
+                as: "status",
+                in: {
+                  k: "$$status",
+                  v: {
+                    $size: {
+                      $filter: {
+                        input: "$tasks",
+                        as: "task",
+                        cond: { $eq: ["$$task.status", "$$status"] },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      {
+        $lookup: {
+          from: "boards",
+          localField: "_id",
+          foreignField: "projectId",
+          as: "boards",
+        },
+      },
+      {
+        $addFields: {
+          boardsCount: { $size: "$boards" },
+        },
+      },
+
       {
         $addFields: {
           tasksCount: { $size: "$tasks" },
@@ -174,6 +218,7 @@ export async function getProjects(req, res, next) {
       {
         $project: {
           tasks: 0,
+          boards: 0,
           currentUserMember: 0,
           membersData: 0,
         },

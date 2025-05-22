@@ -1,219 +1,238 @@
 .main {
-    position: relative;
-    margin-left: var(--layout-gap);
-    width: 100%;
-    max-height: calc(100vh - 62px);
+  position: relative;
+  margin-left: var(--layout-gap);
+  width: 100%;
+  max-height: calc(100vh - 62px);
 }
 
 .container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    border-top-left-radius: var(--border-radius-medium);
-    background-color: rgba(218, 214, 199, 0.6);
-    height: 100%;
-    padding-left: var(--layout-gap);
-    padding-top: var(--layout-gap);
-    overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-top-left-radius: var(--border-radius-medium);
+  background-color: rgba(218, 214, 199, 0.6);
+  height: 100%;
+  padding-left: var(--layout-gap);
+  padding-top: var(--layout-gap);
+  overflow: hidden;
 }
 
 .container a {
-    text-decoration: none !important;
+  text-decoration: none !important;
 }
 
 .back {
-    position: absolute;
-    z-index: 2;
-    top: 80px;
-    left: 40px;
-    cursor: pointer;
+  position: absolute;
+  z-index: 2;
+  top: 80px;
+  left: 40px;
+  cursor: pointer;
 }
 
 /* Ajout du header avec les contrôles de défilement */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding-right: var(--layout-gap);
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-right: var(--layout-gap);
+  margin-bottom: 20px;
+}
+
+.headerH1 {
+  margin-left: 175px;
 }
 
 .projectCount {
-    color: var(--text-color-muted);
-    font-size: 0.85rem;
-    font-weight: 500;
-    background-color: var(--secondary-background-color);
-    padding: 6px 12px;
-    border-radius: var(--border-radius-small);
+  color: var(--text-color-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: var(--secondary-background-color);
+  padding: 6px 12px;
+  border-radius: var(--border-radius-small);
 }
-
-/* Boutons de défilement */
-/* .scrollControls {
-    display: flex;
-    gap: 8px;
-    margin-top: 20px;
-}
-
-.scrollButton {
-    background: var(--secondary-background-color);
-    color: var(--text-color);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
-}
-
-.scrollButton:hover {
-    background: var(--accent-color);
-    color: var(--text-lighter-color);
-}
-
-.scrollButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--secondary-background-color);
-} */
 
 .elements {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(200px, auto));
-    width: 100%;
-    gap: 80px 60px;
-    padding-top: 60px;
-    padding-bottom: 60px;
-    justify-content: center;
-    overflow-y: auto;
-    padding-right: var(--layout-gap);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 80px 60px;
+  justify-content: center;
+  width: 100%;
+  max-width: calc(4 * 310px + 3 * 60px); /* 4 colonnes + 3 gaps entre elles */
+  margin: 0 auto;
+  padding-top: 60px;
+  padding-bottom: 60px;
+  padding-right: var(--layout-gap);
 }
-
-
 
 /* Ajuster la hauteur des éléments pour le snap scroll */
-.element {
-    position: relative;
-    min-width: 220px;
-    width: 100%;
-    margin-inline: auto;
-    background-color: var(--secondary-background-color);
-    padding: 24px;
-    border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
-    overflow: visible;
-    transition: all 200ms ease-in-out;
-    cursor: pointer;
-    margin-top: 24px;
-    text-decoration: none;
+.projectWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 310px;
+  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium)
+    var(--border-radius-medium);
+  overflow: visible;
+  transition: all 200ms ease-in-out;
+  cursor: pointer;
+  margin-top: 24px;
+  text-decoration: none;
 }
 
-.element:before {
-    content: '';
-    position: absolute;
-    top: -24px;
-    left: 0;
-    width: 140px;
-    height: 24px;
-    background-color: var(--secondary-background-color);
-    border-radius: 25px 0 0 0;
-    clip-path: path('M 0 0 L 100 0 C 125 2, 115 24, 140 24 L 0 27 z');
-    z-index: 1;
-    /* Assurer que le pseudo-élément est visible par-dessus d'autres éléments */
+.projectWrapper:hover {
+  transform: translateY(-2px);
 }
 
-.element:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--box-shadow-medium);
+.imagesWrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: var(--border-radius-medium);
 }
 
-.infos {
-    margin-top: 4px;
+.contentWrapper {
+  height: 175px;
+  padding: 24px;
+  background-color: var(--secondary-background-color);
+  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium)
+    var(--border-radius-medium);
 }
 
-.name {
-    margin-bottom: 4px;
-    max-width: 100px;
-    text-wrap: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.memberWrapper {
+  margin-left: -8px;
 }
 
-.stats,
-.stats span {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+.member {
+  border-radius: 50%;
+  border: 2px solid white;
 }
 
-.stats span {
-    gap: 4px;
+.moreMembers {
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  color: #000;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: default;
+  border: 2px solid white;
 }
 
-.empty {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    font-size: 1.75rem;
-    color: var(--text-color-muted);
-    font-weight: 900;
-    opacity: 0.5;
+.starWrapper {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 24px;
+  background-color: var(--secondary-background-color);
+  border-radius: 25px 0 0 0;
+  clip-path: path("M 0 0 L 160 0 C 180 2, 170 24, 200 24 L 0 27 z");
+}
+
+.membersWrapper {
+  display: flex;
+}
+
+.star {
+  position: absolute;
+  top: 6px;
+  right: 35px;
+  fill: #d0cec7;
+  color: #d0cec7;
+}
+
+.footerWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
+  font-size: var(--text-size-small);
+}
+
+.tasks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusBar {
+  display: flex;
+  height: 12px;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #e9ecef;
+  flex: 0.5;
+}
+
+.statusSegment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.nameWrapper {
+  margin-top: 6px;
+  color: var(--text-darker-color);
+}
+
+.tabs,
+.tasks {
+  color: var(--text-darker-color);
 }
 
 /* Ajouter ces styles à la fin du fichier */
 
 .newProject {
-    background: #97897a99;
-    transition: all 200ms ease-in-out;
+  background: #97897a99;
+  transition: all 200ms ease-in-out;
 }
 
 .newProject:before {
-    background-color: #97897a99;
-    transition: all 250ms ease-in-out;
+  background-color: #97897a99;
+  transition: all 250ms ease-in-out;
 }
 
 .newProject:hover {
-    transform: translateY(-2px);
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
-    box-shadow: var(--box-shadow-medium);
+  transform: translateY(-2px);
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  box-shadow: var(--box-shadow-medium);
 }
 
 .newProject:hover:before {
-    background-color: var(--accent-color);
+  background-color: var(--accent-color);
 }
 
 .newProjectContent {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: var(--text-color);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color);
 }
 
 .plusIconWrapper {
-    background: rgba(255, 255, 255, 0.2);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .newProject:hover .plusIconWrapper {
-    background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .newProjectText {
-    font-weight: 500;
-    text-align: center;
+  font-weight: 500;
+  text-align: center;
 }
