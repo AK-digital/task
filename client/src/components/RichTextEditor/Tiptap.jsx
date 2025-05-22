@@ -690,7 +690,8 @@ export default function Tiptap({
             project={project}
             task={task}
             mutateMessage={mutateMessage}
-            type={"message"}
+            type={"editor"}
+            editor={editor}
           />
         </div>
       </div>
