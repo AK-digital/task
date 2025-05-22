@@ -30,7 +30,10 @@ export default function TaskTimer({ task }) {
   const [more, setMore] = useState(false);
   const [addingSession, setAddingSession] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
-  // Référence pour stocker l'objet stopwatch
+
+  // NOUVEAU: Flag pour différencier les mises à jour locales des externes
+  const [isLocalUpdate, setIsLocalUpdate] = useState(false);
+
   const stopwatchRef = useRef(null);
   const project = task?.projectId;
 
@@ -44,7 +47,6 @@ export default function TaskTimer({ task }) {
       const parsedState = JSON.parse(savedState);
 
       if (parsedState.isRunning) {
-        // Calculer le temps écoulé depuis le dernier démarrage
         const elapsedTime =
           Math.floor((new Date().getTime() - parsedState.startTime) / 1000) *
           1000;
@@ -54,10 +56,9 @@ export default function TaskTimer({ task }) {
         );
         setStopwatchOffset(newOffset);
 
-        // Démarrer automatiquement le chronomètre
         setTimeout(() => {
           if (stopwatchRef.current) {
-            stopwatchRef.current.reset(newOffset, true); // true pour autostart
+            stopwatchRef.current.reset(newOffset, true);
             setIsRunning(true);
           }
         }, 100);
@@ -65,6 +66,7 @@ export default function TaskTimer({ task }) {
     }
   }, [task._id]);
 
+  // MODIFIÉ: Seulement émettre si c'est une mise à jour locale
   useEffect(() => {
     const newTotalDuration = sessions.reduce(
       (acc, curr) => acc + curr.duration,
@@ -76,30 +78,34 @@ export default function TaskTimer({ task }) {
     newOffset.setTime(newOffset.getTime() + newTotalDuration);
     setStopwatchOffset(newOffset);
 
-    // Si on a une référence au stopwatch, on peut le réinitialiser avec le nouvel offset
     if (stopwatchRef.current && !isRunning) {
       stopwatchRef.current.reset(newOffset, false);
     }
+    // SEULEMENT émettre si c'est une mise à jour locale
+    if (isLocalUpdate) {
+      socket.emit("update task", project?._id);
+      setIsLocalUpdate(false); // Reset le flag
+    }
+  }, [sessions, isRunning, project?._id, isLocalUpdate]);
   }, [sessions]);
 
+  // MODIFIÉ: Ne pas émettre de socket ici, juste mettre à jour l'état
   useEffect(() => {
-    setSessions(task?.timeTrackings);
+    // Éviter les boucles en comparant les données
+    const currentSessions = JSON.stringify(sessions);
+    const newSessions = JSON.stringify(task?.timeTrackings || []);
+
+    if (currentSessions !== newSessions) {
+      setSessions(task?.timeTrackings || []);
+    }
   }, [task?.timeTrackings]);
 
-  const {
-    hours,
-    minutes,
-    seconds,
-    start,
-    pause,
-    reset, // On récupère la fonction reset
-  } = useStopwatch({
+  const { hours, minutes, seconds, start, pause, reset } = useStopwatch({
     autoStart: false,
     offsetTimestamp: stopwatchOffset,
     interval: 20,
   });
 
-  // On stocke les fonctions du stopwatch dans la référence
   useEffect(() => {
     stopwatchRef.current = { reset, start, pause };
   }, [reset, start, pause]);
@@ -116,13 +122,12 @@ export default function TaskTimer({ task }) {
 
     if (res?.success && res?.data) {
       const newSession = res.data;
+      setIsLocalUpdate(true); // Marquer comme mise à jour locale
       setSessions((prev) => [...prev, newSession]);
       localStorage.removeItem(`taskTimer_${task._id}`);
     } else {
       setSessions(task?.timeTrackings || []);
     }
-
-    socket.emit("update task", project?._id);
   };
 
   const handlePlayTimer = async () => {
@@ -139,9 +144,13 @@ export default function TaskTimer({ task }) {
     );
   };
 
+  const handleLocalSessionUpdate = (newSessions) => {
+    setIsLocalUpdate(true);
+    setSessions(newSessions);
+  };
+
   return (
     <div className={styles.container} data-running={isRunning} id="task-row">
-      {/* TIMER */}
       <span className={styles.timer} data-center={!canAdd}>
         {canAdd && (
           <>
@@ -177,7 +186,7 @@ export default function TaskTimer({ task }) {
               <TimeTrackingForm
                 task={task}
                 formatTime={formatTime}
-                setSessions={setSessions}
+                setSessions={handleLocalSessionUpdate}
               />
             ) : (
               <div className={styles.content}>
@@ -192,7 +201,7 @@ export default function TaskTimer({ task }) {
                   <TimeTrackingSessions
                     task={task}
                     sessions={sessions}
-                    setSessions={setSessions}
+                    setSessions={handleLocalSessionUpdate}
                     formatTime={formatTime}
                   />
                 )}
