@@ -9,6 +9,7 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { useDroppable } from "@dnd-kit/core";
 import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";
+import { bricolageGrostesque } from "@/utils/font";
 
 const initialState = {
   success: null,
@@ -151,6 +152,7 @@ export default function Board({
                 minLength={2}
                 maxLength={255}
                 ref={inputRef}
+                className={bricolageGrostesque.className}
                 onChange={(e) => {
                   setInputValue(e.target.value);
                   if (e.target.value.length > 0) {
@@ -160,7 +162,7 @@ export default function Board({
                   }
                 }}
               />
-              <button type="submit" hidden>
+              <button type="submit" hidden className={bricolageGrostesque.className}>
                 Ajouter une tâche
               </button>
             </form>
