@@ -58,6 +58,7 @@ export default function Filters({
 
   useEffect(() => {
     const users = [];
+
     if (!hasSelectedProjects) {
       for (const project of projectsWithTrackers) {
         const allUsers = project?.members || [];

@@ -10,6 +10,8 @@ export const allowedStatus = [
   "À estimer",
 ];
 
+export const allowedPriorities = ["Basse", "Moyenne", "Haute", "Urgent"];
+
 export function getMatches(string, regex) {
   return [...string.matchAll(regex)];
 }

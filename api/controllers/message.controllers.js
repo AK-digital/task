@@ -17,6 +17,8 @@ export async function saveMessage(req, res, next) {
     const { taskId, message, taggedUsers } = req.body;
     const attachments = req.files || [];
 
+    const tagged = JSON.parse(taggedUsers);
+
     let files = [];
 
     if (attachments.length > 0) {
@@ -35,7 +37,7 @@ export async function saveMessage(req, res, next) {
     }
 
     // Ensure that there is no duplicate value
-    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
+    const uniqueTaggedUsers = Array.from(new Set(tagged));
 
     if (!taskId || !message) {
       return res

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { allowedStatus } from "../utils/utils.js";
+import { allowedPriorities, allowedStatus } from "../utils/utils.js";
 const { Schema } = mongoose;
 
 const taskSchema = new Schema(
@@ -77,7 +77,7 @@ const taskSchema = new Schema(
     },
     priority: {
       type: String,
-      enum: ["Basse", "Moyenne", "Haute", "Urgent"],
+      enum: allowedPriorities,
       default: "Moyenne",
     },
     timeTrackings: {
