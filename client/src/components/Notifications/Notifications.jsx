@@ -119,7 +119,7 @@ export default function Notifications({
         )}
       </div>
 
-      <div id="modal-layout-opacity" onClick={(e) => setNotifOpen(false)}></div>
+      <div id="modal-layout-opacity-notifs" onClick={(e) => setNotifOpen(false)}></div>
     </>
   );
 }

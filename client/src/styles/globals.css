@@ -28,14 +28,12 @@
   --text-light-color: rgb(215, 212, 203);
   --text-lighter-color: #e7e3d9;
   --text-color-muted: #72716f;
-  --background-gradient-dark: linear-gradient(
-    140deg,
-    #39545b,
-    #2a4046 17%,
-    #16363c 52%,
-    #2a4046 86%,
-    #32484e 100%
-  );
+  --background-gradient-dark: linear-gradient(140deg,
+      #39545b,
+      #2a4046 17%,
+      #16363c 52%,
+      #2a4046 86%,
+      #32484e 100%);
   --border-color: #acaba5;
 
   --pending-color: #b3bcc0;
@@ -285,13 +283,11 @@ input[type="checkbox"] {
 }
 
 .ql-toolbar.ql-snow .ql-picker-label {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
-    contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
 }
 
 .ql-snow.ql-toolbar button svg {
-  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%)
-    contrast(99%);
+  filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
 }
 
 .ql-editor.ql-blank:before {
@@ -341,7 +337,8 @@ input[type="checkbox"] {
 
 #modal-layout,
 #task-modal-layout,
-#modal-layout-opacity {
+#modal-layout-opacity,
+#modal-layout-opacity-notifs {
   position: fixed;
   z-index: 2000;
   top: 0;
@@ -355,8 +352,15 @@ input[type="checkbox"] {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-#modal-layout-opacity {
+#modal-layout-opacity,
+#modal-layout-opacity-notifs {
   background-color: transparent;
+}
+
+@media (max-width: 750px) {
+  #modal-layout-opacity-notifs {
+    background-color: var(--side-background-color) !important;
+  }
 }
 
 /* Tiptap */
