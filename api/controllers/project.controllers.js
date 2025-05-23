@@ -7,6 +7,7 @@ import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
 import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
+import MessageModel from "../models/Message.model.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -417,6 +418,65 @@ export async function updateProjectLogo(req, res) {
   }
 }
 
+export async function leaveProject(req, res) {
+  try {
+    const authUser = res.locals.user;
+
+    const project = await ProjectModel.findOne({
+      _id: req.params.id,
+    });
+
+    if (!project) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de quitter le projet existant",
+      });
+    }
+
+    const isManagerOrTeam = project.members.some(
+      (member) =>
+        member.user.toString() !== authUser._id.toString() &&
+        (member.role === "manager" || member.role === "team")
+    );
+
+    if (project?.members?.length <= 1 && !isManagerOrTeam) {
+      await ProjectModel.findByIdAndDelete({ _id: req.params.id });
+    } else {
+      const leavingMember = project.members.find(
+        (member) => member.user.toString() === authUser._id.toString()
+      );
+
+      if (leavingMember && leavingMember.role === "owner" && isManagerOrTeam) {
+        const newOwner = project.members.find(
+          (member) =>
+            member.user.toString() !== authUser._id.toString() &&
+            (member.role === "manager" || member.role === "team")
+        );
+        if (newOwner) {
+          newOwner.role = "owner";
+        }
+      }
+    }
+
+    project.members = project.members.filter(
+      (member) => member.user.toString() !== authUser._id.toString()
+    );
+    await project.save();
+
+    return res.status(200).send({
+      success: true,
+      message: "Vous avez quitté le projet",
+      data: project,
+    });
+
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 // Only the author will be able to delete the project
 export async function deleteProject(req, res, next) {
   try {
@@ -431,10 +491,13 @@ export async function deleteProject(req, res, next) {
       });
     }
 
-    // Cascade delete related boards and tasks
-    await BoardModel.deleteMany({ projectId: deletedProject?._id });
-    await TaskModel.deleteMany({ projectId: deletedProject?._id });
     await ProjectModel.findByIdAndDelete({ _id: req.params.id });
+
+    // Cascade delete related boards and tasks
+    // await BoardModel.deleteMany({ projectId: deletedProject?._id });
+    // await TaskModel.deleteMany({ projectId: deletedProject?._id });
+    // await MessageModel.deleteMany({ projectId: deletedProject?._id });
+
 
     return res.status(200).send({
       success: true,

@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import MessageModel from "../models/Message.model.js";
+import BoardModel from "../models/Board.model.js";
+import TaskModel from "../models/Task.model.js";
 const { Schema } = mongoose;
 
 const projectSchema = new Schema(
@@ -55,5 +58,20 @@ const projectSchema = new Schema(
     timestamps: true,
   }
 );
+
+projectSchema.pre("findOneAndDelete", async function (next) {
+  const query = this;
+  const projectToDelete = await query.model.findOne(query.getQuery());
+
+  if (!projectToDelete) return next();
+
+  const projectId = projectToDelete._id;
+
+  await BoardModel.deleteMany({ projectId });
+  await TaskModel.deleteMany({ projectId });
+  await MessageModel.deleteMany({ projectId });
+
+  next();
+});
 
 export default mongoose.model("Project", projectSchema);

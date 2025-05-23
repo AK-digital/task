@@ -12,8 +12,12 @@ import NoPicture from "../User/NoPicture";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
 import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
+import { useFetch } from "@/utils/api";
+import { leaveProject } from "@/api/project";
+import { useRouter } from "next/navigation";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
+  const router = useRouter()
   const initialState = {
     status: "pending",
     message: "",
@@ -34,6 +38,22 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const canInvite = useUserRole(project, ["owner", "manager"]);
   const canRemove = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
+
+  const handleLeaveProject = async (projectId) => {
+
+    const response = await leaveProject(projectId);
+
+    if (!response.success) {
+      setIsPopup({
+        status: "failure",
+        title: "Une erreur s'est produite",
+        message: response?.message,
+      });
+    }
+
+    await mutateProject();
+    router.push("/projects");
+  }
 
   const members = project?.members;
 
@@ -71,7 +91,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
     <>
       <div className={styles.container} id="modal">
         <div className={styles.heading}>
-          <span>Inviter d'autres utilisateurs</span>
+          <span>Gestion des utilisateurs</span>
         </div>
         {canInvite && (
           <GuestFormInvitation
@@ -108,8 +128,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         {member?.user?.email}
                       </span>
                       {canEditRole &&
-                      member?.user?._id !== uid &&
-                      member?.role !== "owner" ? (
+                        member?.user?._id !== uid &&
+                        member?.role !== "owner" ? (
                         <DropDown
                           defaultValue={member?.role}
                           options={options}
@@ -121,6 +141,17 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           <span>{memberRole(member?.role)}</span>
                         </div>
                       )}
+                      {member?.user?._id === uid &&
+                        (
+                          <button
+                            type="submit"
+                            data-disabled={pending}
+                            disabled={pending}
+                            onClick={() => handleLeaveProject(project?._id)}
+                          >
+                            Quitter
+                          </button>
+                        )}
                     </div>
                     {canRemove && member?.role !== "owner" && (
                       <form action={formAction}>
@@ -170,6 +201,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
     </>
   );
 }
+
 
 export function ProjectInvitationsList({
   projectInvitations,

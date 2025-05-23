@@ -2,7 +2,7 @@
 import styles from "@/styles/layouts/project-header.module.css";
 import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
-import { UserPlus2 } from "lucide-react";
+import { UserCog } from "lucide-react";
 import { useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import NoPicture from "@/components/User/NoPicture";
@@ -56,7 +56,7 @@ export default function ProjectHeader({
               className={styles.addGuestBtn}
               onClick={(e) => setIsOpen(true)}
             >
-              <UserPlus2 size={24} />
+              <UserCog size={24} />
             </div>
           </div>
         </nav>

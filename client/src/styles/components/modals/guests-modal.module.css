@@ -64,6 +64,10 @@
   color: var(--text-color-muted);
 }
 
+.user:first-of-type {
+  width: 100%;
+}
+
 .member button,
 .pending button {
   border-radius: var(--border-radius-xs);
