@@ -39,6 +39,7 @@
     background-color: inherit;
     padding: 6px 4px !important;
     font-size: var(--text-size-normal);
+    color: var(--text-color-dark);
 }
 
 .info {
@@ -50,5 +51,5 @@
 }
 
 .info span {
-    color: white;
+    color: var(--accent-color);
 }

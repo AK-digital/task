@@ -312,6 +312,7 @@ export default function Tiptap({
     const isAuthor = currentAuthor?._id === uid;
 
     if (currentAuthor && !isAuthor && task?.description?.text) {
+      console.log("played");
       return;
     }
 
@@ -346,7 +347,7 @@ export default function Tiptap({
     if (!descriptionDeleted) {
       response = await updateTaskDescription(
         task?._id,
-        task?.projectId,
+        task?.projectId?._id,
         finalText,
         taggedUsers,
         attachments
@@ -690,7 +691,8 @@ export default function Tiptap({
             project={project}
             task={task}
             mutateMessage={mutateMessage}
-            type={"message"}
+            type={"editor"}
+            editor={editor}
           />
         </div>
       </div>

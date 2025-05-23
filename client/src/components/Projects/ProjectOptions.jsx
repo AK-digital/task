@@ -221,7 +221,7 @@ export default function ProjectOptions({ project }) {
                     type="text"
                     id="project-name"
                     name="project-name"
-                    className={styles.projectName}
+                    className={`${styles.projectName} ${bricolageGrostesque.className}`}
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
                   />

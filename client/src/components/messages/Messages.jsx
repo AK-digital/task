@@ -18,10 +18,6 @@ export default function Messages({ task, project, mutateTasks }) {
     task?._id
   );
 
-  useEffect(() => {
-    mutate();
-  }, []);
-
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
