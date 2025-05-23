@@ -1,11 +1,11 @@
 "use client";
-import styles from "@/styles/components/tasks/task-dropdown.module.css";
+import styles from "@/styles/components/task/task-status.module.css";
 import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { allowedStatus } from "@/utils/utils";
-import Portal from "../Portal/Portal";
+import { Plus } from "lucide-react";
 
 export default function TaskStatus({ task, uid }) {
   const [status, setStatus] = useState(task?.status);
@@ -45,9 +45,9 @@ export default function TaskStatus({ task, uid }) {
   }, [task?.status]);
 
   return (
-    <div className={styles["dropdown"]}>
+    <div className={styles.container}>
       <div
-        className={styles["dropdown__current"]}
+        className={styles.current}
         data-current={status}
         onClick={handleIsOpen}
       >
@@ -55,15 +55,23 @@ export default function TaskStatus({ task, uid }) {
       </div>
       {isOpen && (
         <>
-          <div className={styles["dropdown__list"]}>
+          <div className={styles.list}>
             <ul>
               {allowedStatus?.map((value, idx) => {
                 return (
-                  <li key={idx} data-value={value} onClick={handleUpdateStatus}>
+                  <li
+                    key={idx}
+                    className={styles.item}
+                    data-value={value}
+                    onClick={handleUpdateStatus}
+                  >
                     {value}
                   </li>
                 );
               })}
+              <li className={styles.add}>
+                <Plus size={16} /> Ajouter
+              </li>
             </ul>
           </div>
           <div

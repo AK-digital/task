@@ -14,12 +14,8 @@ export async function saveCustomStatus(req, res) {
 
     const newCustomStatus = new CustomStatusModel({
       projectId: projectId,
-      statuses: [
-        {
-          status: status,
-          color: color,
-        },
-      ],
+      status: status,
+      color: color,
     });
 
     const savedCustomStatus = await newCustomStatus.save();
@@ -38,6 +34,14 @@ export async function saveCustomStatus(req, res) {
     });
   } catch (err) {
     console.error(err);
+
+    if (err.code === 11000) {
+      return res.status(409).send({
+        success: false,
+        message: "Custom status already exists",
+      });
+    }
+
     return res.status(500).send({
       success: false,
       message: err.message || "Internal server error",
@@ -49,16 +53,9 @@ export async function getCustomStatus(req, res) {
   try {
     const { projectId } = req.query;
 
-    if (!projectId) {
-      return res.status(400).send({
-        success: false,
-        message: "Missing parameters",
-      });
-    }
+    const customStatus = await CustomStatusModel.find({ projectId: projectId });
 
-    const customStatus = await CustomStatusModel.findOne({ projectId });
-
-    if (!customStatus) {
+    if (!customStatus.length <= 0) {
       return res.status(404).send({
         success: false,
         message: "Custom status not found",
@@ -81,7 +78,6 @@ export async function getCustomStatus(req, res) {
 
 export async function updateCustomStatus(req, res) {
   try {
-    console.log("played");
     const { status, color } = req.body;
 
     if (!status || !color) {
@@ -91,24 +87,18 @@ export async function updateCustomStatus(req, res) {
       });
     }
 
-    const updatedCustomStatus = await CustomStatusModel.findOneAndUpdate(
-      { "statuses._id": req.params.id },
+    const updatedCustomStatus = await CustomStatusModel.findByIdAndUpdate(
+      { _id: req.params.id },
       {
-        $set: {
-          "statuses.status": status,
-          "statuses.color": color,
-        },
+        $set: { status: status, color: color },
       },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
+      { new: true }
     );
 
     if (!updatedCustomStatus) {
       return res.status(404).send({
         success: false,
-        message: "Custom status not found",
+        message: "Impossible to update a custom status that does not exist",
       });
     }
 
@@ -128,14 +118,14 @@ export async function updateCustomStatus(req, res) {
 
 export async function deleteCustomStatus(req, res) {
   try {
-    const deletedCustomStatus = await CustomStatusModel.findOneAndDelete({
-      "statuses._id": req.params.id,
+    const deletedCustomStatus = await CustomStatusModel.findByIdAndDelete({
+      _id: req.params.id,
     });
 
     if (!deletedCustomStatus) {
       return res.status(404).send({
         success: false,
-        message: "Custom status not found",
+        message: "Impossible to delete a custom status that does not exist",
       });
     }
 
