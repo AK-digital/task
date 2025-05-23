@@ -24,12 +24,6 @@ export default function Projects() {
     Terminée: "#63a758",
   };
 
-  const handleTransform = (e) => {
-    const target = e.target.nextElementSibling;
-    if(!target) return;
-    target.classList.toggle(styles.transform);
-  };
-
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -62,11 +56,7 @@ export default function Projects() {
               return (
                 <div key={projectId} className={styles.projectWrapper}>
                   <Link href={`/projects/${projectId}`}>
-                    <div
-                      className={styles.starWrapper}
-                      onMouseEnter={handleTransform}
-                      onMouseLeave={handleTransform}
-                    >
+                    <div className={styles.starWrapper}>
                       <Star size={16} className={styles.star} />
                     </div>
                     <div className={styles.contentWrapper}>
@@ -128,12 +118,7 @@ export default function Projects() {
             {/* Élément pour créer un nouveau projet */}
             <div className={styles.projectWrapper}>
               <Link href="/new-project">
-                <div
-                  className={styles.starWrapper}
-                  data-default="true"
-                  onMouseEnter={handleTransform}
-                  onMouseLeave={handleTransform}
-                >
+                <div className={styles.starWrapper} data-default="true">
                   <Star size={16} className={styles.star} data-default="true" />
                 </div>
 
