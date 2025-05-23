@@ -4,10 +4,11 @@ import styles from "@/styles/pages/projects.module.css";
 import { getProjects } from "@/api/project";
 import Image from "next/image";
 import { isNotEmpty } from "@/utils/utils";
-import { Plus, ArrowLeftCircle, Star } from "lucide-react";
+import { ArrowLeftCircle, Star } from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
+import ProjectMembers from "@/components/Projects/projectMembers";
 
 export default function Projects() {
   const router = useRouter();
@@ -69,34 +70,7 @@ export default function Projects() {
                           style={{ borderRadius: "50%", cursor: "pointer" }}
                         />
 
-                        <div className={styles.membersWrapper}>
-                          {/* Membres du projet (affiche max 4) */}
-                          {members.slice(0, 4).map((member) => (
-                            <div
-                              key={member?.user?._id}
-                              className={styles.memberWrapper}
-                            >
-                              <Image
-                                className={styles.member}
-                                src={
-                                  member?.user?.picture || "/default-pfp.webp"
-                                }
-                                alt="member"
-                                width={30}
-                                height={30}
-                              />
-                            </div>
-                          ))}
-
-                          {/* Affichage "+n" si plus de 4 membres */}
-                          {members.length > 4 && (
-                            <div className={styles.memberWrapper}>
-                              <div className={styles.moreMembers}>
-                                +{members.length - 4}
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                        <ProjectMembers members={members} />
                       </div>
 
                       <div className={styles.nameWrapper}>
@@ -142,14 +116,45 @@ export default function Projects() {
             })}
 
             {/* Élément pour créer un nouveau projet */}
-            <div className={`${styles.element} ${styles.newProject}`}>
+            <div className={styles.projectWrapper}>
               <Link href="/new-project">
-                <div className={styles.newProjectContent}>
-                  <div className={styles.plusIconWrapper}>
-                    <Plus size={30} />
+                <div className={styles.starWrapper} data-default="true">
+                  <Star size={20} className={styles.star} data-default="true" />
+                </div>
+
+                <div className={styles.contentWrapper} data-default="true">
+                  <div className={styles.imagesWrapper}>
+                    <div className={styles.defaultLogoWrapper}>
+                      <Image
+                        className={styles.logo}
+                        src="/default-project-logo.svg"
+                        alt="project"
+                        width={22}
+                        height={22}
+                      />
+                    </div>
+
+                    <div className={styles.membersWrapper}>
+                      <div
+                        className={styles.memberWrapper}
+                        data-default="true"
+                      ></div>
+                    </div>
                   </div>
-                  <div className={styles.newProjectText}>
-                    <span>Créer un nouveau projet</span>
+
+                  <div className={styles.nameWrapper}>
+                    <span>Nouveau projet</span>
+                  </div>
+
+                  <div className={styles.footerWrapper}>
+                    <div className={styles.tabs} data-default="true"></div>
+                    <div className={styles.tasks} data-default="true">
+                      <div className={styles.task} />
+                      <div
+                        className={styles.statusBar}
+                        data-default="true"
+                      ></div>
+                    </div>
                   </div>
                 </div>
               </Link>
