@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/boards/board.module.css";
+// import styles from "@/styles/components/boards/board.module.css";
 import Tasks from "../tasks/Tasks";
 import { useState, useEffect, useRef, useActionState } from "react";
 import BoardHeader from "./BoardHeader";
@@ -81,18 +81,13 @@ export default function Board({
     }
   }, [isOverlay]);
 
-  // Appliquer une classe spéciale si c'est un overlay
-  const boardClasses = `${styles.container} ${
-    isOverlay ? styles.overlayBoard : ""
-  }`;
-
   return (
     <div
-      className={boardClasses}
       data-board={board?._id}
-      style={{ borderLeft: `solid 3px ${optimisticColor}` }}
       ref={setNodeRef}
       data-board-id={board?._id}
+      style={{ borderColor: `${optimisticColor}` }}
+      className={`flex flex-col min-w-[1050px] rounded-2xl shadow-shadow-box-small border-background-secondary-color border-l-[3px] ${isOverlay ? 'overlayBoard' : ''}`}
     >
       {/* Board header - Utilisation de la classe sticky */}
       <BoardHeader
@@ -123,16 +118,17 @@ export default function Board({
       )}
       {isLoading && <TaskPending text={inputValue} />}
       {canPost && !archive && (
-        <div className={styles.footer}>
-          <div className={styles.add}>
-            <Plus size={18} />
-            <form action={formAction}>
+        <div>
+          <div className="flex center gap-0.5 h-[45px] px-3 bg-[#F6F4E9] shadow-[inset_0_3px_3px_0_rgba(0,0,0,0.063)] rounded-bl-[calc(var(--radius-border-radius-medium)-1px)] rounded-br-[calc(var(--radius-border-radius-medium)-1px)]">
+            <Plus size={18} className="text-text-color-muted" />
+            <form action={formAction} className="w-full">
               <input
                 type="text"
                 name="board-id"
                 id="board-id"
                 defaultValue={board?._id}
                 hidden
+                className="border-none bg-inherit py-1.5 px-1 text-text-size-normal"
               />
               <input
                 type="text"
@@ -151,6 +147,7 @@ export default function Board({
                     setIsWritting(false);
                   }
                 }}
+                className="border-none bg-inherit py-1.5 px-1 text-text-size-normal"
               />
               <button type="submit" hidden>
                 Ajouter une tâche
@@ -158,9 +155,9 @@ export default function Board({
             </form>
           </div>
           {isWritting && (
-            <div className={styles.info}>
+            <div className="absolute mt-1 ml-[25px] text-text-color-muted text-text-size-small">
               <p>
-                Appuyer sur <span>entrée</span> pour ajouter une tâche
+                Appuyer sur <span className="text-white">entrée</span> pour ajouter une tâche
               </p>
             </div>
           )}

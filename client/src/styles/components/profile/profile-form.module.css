@@ -1,4 +1,4 @@
-.input {
+/* .input {
     font-size: var(--text-size-medium);
 }
 
@@ -10,9 +10,9 @@
 .submitBtn {
     margin-left: auto;
     margin-top: 24px;
-}
+} */
 
-.signOut {
+/* .signOut {
     margin-top: var(--layout-gap);
     margin-bottom: var(--layout-gap);
     display: flex;
@@ -20,4 +20,4 @@
     align-items: center;
     gap: 8px;
     cursor: pointer;
-}
+} */

@@ -1,42 +1,42 @@
-.container {
+/* .container {
     background-color: var(--secondary-background-color);
-    box-shadow: var(--box-shadow-small);
+    box-shadow: var(--box-shadow-small); */
     /* border-top-left-radius: var(--border-radius-medium);
     border-top-right-radius: var(--border-radius-medium);
     border-bottom-left-radius: var(--border-radius-medium); */
-    border-radius: var(--border-radius-medium);
+    /* border-radius: var(--border-radius-medium);
     display: flex;
     flex-direction: column;
     min-width: 1050px;
-}
+} */
 
-.add {
+/* .add {
     display: flex;
     align-items: center;
     gap: 2px;
     height: 45px;
     padding-inline: 12px;
     background-color: #F6F4E9;
-    box-shadow: inset 0 3px 3px 0 #00000010;
+    box-shadow: inset 0 3px 3px 0 rgba(0, 0, 0, 0.063);
     border-bottom-left-radius: calc(var(--border-radius-medium) - 1px);
     border-bottom-right-radius: calc(var(--border-radius-medium) - 1px);
-}
+} */
 
-.add svg {
+/* .add svg {
     color: var(--text-color-muted);
-}
+} */
 
-.add form {
+/* .add form {
     width: 100%;
-}
+} */
 
-.add input {
+/* .add input {
     border: none;
     background-color: inherit;
     padding: 6px 4px !important;
     font-size: var(--text-size-normal);
-}
-
+} */
+/* 
 .info {
     position: absolute;
     margin-top: 4px;
@@ -47,4 +47,4 @@
 
 .info span {
     color: white;
-}
+} */

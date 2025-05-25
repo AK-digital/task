@@ -235,34 +235,32 @@ export default function BoardHeader({
 
   return (
     <div
-      className={styles.container}
+      className="group/data-archive-false sticky top-0 flex items-center justify-between font-medium select-none rounded-tl-border-radius-medium rounded-tr-border-radius-medium bg-background-secondary-color w-full z-10 flex-wrap p-3"
       data-open={open}
       data-archive={archive}
       style={{ "--border-color": `${board?.color}` }}
     >
-      <div className={styles.actions}>
+      <div className="relative flex items-center gap-1 [&>div]:flex [&>div]:justify-center [&>div]:items-center">
         {/* Display if tasks is not empty and if there is at least 2 task */}
         {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
           <div
-            className={styles.actionCheckbox}
             title="Sélectionner toutes les tâches"
           >
             <input
               type="checkbox"
               name="board"
-              className={styles.checkbox}
+              className="relative z-1 w-[14px] h-[14px] appearance-none bg-transparent border border-text-medium-color rounded-xs cursor-pointer p-1.5 ml-[3px] checked:bg-color-accent-color checked:relative checked:after:content-['✓'] checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-1/2 checked:after:text-white checked:after:text-xs"
               onClick={handleCheckBoard}
             />
           </div>
         )}
         {canArchive && (
-          <div ref={setNodeRef} style={style} className={styles.grip}>
+          <div ref={setNodeRef} style={style} className="text-text-light-color">
             <div
-              className={styles.boardDragHandle}
               {...attributes}
               {...listeners}
             >
-              <GripVertical size={20} />
+              <GripVertical size={20} className="max-w-5 max-h-5 cursor-pointer" />
             </div>
           </div>
         )}
@@ -272,12 +270,14 @@ export default function BoardHeader({
               style={{ color: `${optimisticColor}` }}
               onClick={handleOpenCloseBoard}
               size={20}
+              className="max-w-5 max-h-5 cursor-pointer"
             />
           ) : (
             <ChevronRight
               style={{ color: `${optimisticColor}` }}
               onClick={handleOpenCloseBoard}
               size={20}
+              className="max-w-5 max-h-5 cursor-pointer"
             />
           )}
         </div>
@@ -291,12 +291,13 @@ export default function BoardHeader({
               autoFocus
               onBlur={() => setEdit(false)}
               onKeyDown={handleTitleChange}
+              className="relative z-2001 w-fit p-1 rounded-sm text-text-size-medium"
             />
           </div>
         ) : (
           <div onClick={handleEdit}>
             <span
-              className={styles.title}
+              className="border border-transparent rounded-sm text-text-size-large font-medium cursor-text group-data-[archive=false]/data-archive-false:data-[authorized=true]:hover:border-[var(--color-color-border-color)] group-data-[archive=false]/data-archive-false:data-[authorized=true]:hover:cursor-[inherit]"
               data-authorized={canEdit}
               style={{ color: `${optimisticColor}` }}
             >

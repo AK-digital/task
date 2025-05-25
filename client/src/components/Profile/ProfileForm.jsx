@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/profile/profile-form.module.css";
+// import styles from "@/styles/components/profile/profile-form.module.css";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { updateUserProfile } from "@/actions/user";
 import { bricolageGrostesque } from "@/utils/font";
@@ -74,11 +74,11 @@ export default function ProfileForm() {
             id="firstName"
             name="firstName"
             defaultValue={user?.firstName || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setFirstName(e.target.value)}
+            className="font-bricolage text-text-size-medium focus:outline-none"
           />
           {state?.errors?.firstName && (
-            <span className={styles.error}>{state.errors.firstName}</span>
+            <span>{state.errors.firstName}</span>
           )}
         </div>
 
@@ -89,11 +89,11 @@ export default function ProfileForm() {
             id="lastName"
             name="lastName"
             defaultValue={user?.lastName || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setLastName(e.target.value)}
+            className="font-bricolage text-text-size-medium focus:outline-none"
           />
           {state?.errors?.lastName && (
-            <span className={styles.error}>{state.errors.lastName}</span>
+            <span>{state.errors.lastName}</span>
           )}
         </div>
 
@@ -104,11 +104,11 @@ export default function ProfileForm() {
             id="company"
             name="company"
             defaultValue={user?.company || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setCompany(e.target.value)}
+            className="font-bricolage text-text-size-medium focus:outline-none"
           />
           {state?.errors?.company && (
-            <span className={styles.error}>{state.errors.company}</span>
+            <span>{state.errors.company}</span>
           )}
         </div>
 
@@ -119,17 +119,17 @@ export default function ProfileForm() {
             id="position"
             name="position"
             defaultValue={user?.position || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setPosition(e.target.value)}
+            className="font-bricolage text-text-size-medium focus:outline-none"
           />
           {state?.errors?.position && (
-            <span className={styles.error}>{state.errors.position}</span>
+            <span>{state.errors.position}</span>
           )}
         </div>
         <button
           type="submit"
-          className={`${bricolageGrostesque.className} ${styles.submitBtn}`}
           data-disabled={pending}
+          className="font-bricolage ml-auto mt-6"
         >
           Mettre à jour
         </button>

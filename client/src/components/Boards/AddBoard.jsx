@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/boards/add-board.module.css";
+// import styles from "@/styles/components/boards/add-board.module.css";
 import { Plus } from "lucide-react";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
@@ -32,21 +32,21 @@ export default function AddBoard({ project }) {
   if (!isAuthorized) return null;
 
   return (
-    <div className={styles.container}>
+    <div className="flex gap-3">
       <button
         type="submit"
-        className={bricolageGrostesque.className}
         data-disabled={isLoading}
         disabled={isLoading}
         onClick={() => handleAddBoard(project?._id)}
+        className="font-bricolage flex justify-center items-center gap-1.5"
       >
         <Plus size={18} />
         Tableau vide
       </button>
       <button
         type="button"
-        className={bricolageGrostesque.className}
         onClick={() => setAddBoardTemplate(true)}
+        className="font-bricolage flex justify-center items-center gap-1.5"
       >
         <Plus size={18} />
         Modèle de tableau

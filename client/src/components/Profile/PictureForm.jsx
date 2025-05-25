@@ -1,8 +1,8 @@
 "use client";
+// import styles from "@/styles/components/profile/picture-form.module.css";
 import { updateUserPicture } from "@/actions/user";
 import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";
-import styles from "@/styles/components/profile/picture-form.module.css";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -56,12 +56,12 @@ export default function PictureForm() {
 
   return (
     <>
-      <form action={formAction} ref={formRef} className={styles.container}>
+      <form action={formAction} ref={formRef} className="flex justify-center mb-4">
         <input type="hidden" name="userId" defaultValue={user?._id} />
         <div
-          className={styles.picture}
           onMouseEnter={() => setEditImg(true)}
           onMouseLeave={() => setEditImg(false)}
+          className="relative inline-block w-25 h-25 m-auto"
         >
           <Image
             src={user?.picture || "/default-pfp.webp"}
@@ -69,11 +69,11 @@ export default function PictureForm() {
             width={100}
             height={100}
             quality={100}
-            className={styles.profileImage}
+            className="rounded-full object-cover"
           />
           {editImg && !pending && (
-            <label htmlFor="picture" className={styles.editPicture}>
-              <FontAwesomeIcon icon={faPenToSquare} />
+            <label htmlFor="picture" className="absolute flex justify-center items-center z-2001 left-1/2 top-1/2 w-25 h-25 bg-black/30 rounded-full -translate-1/2 cursor-pointer">
+              <FontAwesomeIcon icon={faPenToSquare} className="w-5 h-5 text-white" />
             </label>
           )}
           <input

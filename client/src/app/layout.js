@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import { bricolageGrostesque } from "@/utils/font";
 import moment from "moment-timezone";
 moment.tz.setDefault("Europe/Paris");
 
@@ -10,8 +9,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr">
-      <body className={bricolageGrostesque.className}>{children}</body>
+    <html className="max-w-[100vw] min-h-[100svh] overflow-x-hidden" lang="fr">
+      <body className="font-bricolage" >{children}</body>
     </html>
   );
 }

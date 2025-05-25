@@ -1,11 +1,11 @@
-.main {
+/* .main {
     position: relative;
     margin-left: var(--layout-gap);
     width: 100%;
     max-height: calc(100vh - 62px);
-}
+} */
 
-.container {
+/* .container {
     position: relative;
     display: flex;
     align-items: center;
@@ -16,38 +16,38 @@
     padding-left: var(--layout-gap);
     padding-top: var(--layout-gap);
     overflow: hidden;
-}
+} */
 
-.container a {
+/* .container a {
     text-decoration: none !important;
-}
+} */
 
-.back {
+/* .back {
     position: absolute;
     z-index: 2;
     top: 80px;
     left: 40px;
     cursor: pointer;
-}
+} */
 
 /* Ajout du header avec les contrôles de défilement */
-.header {
+/* .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     padding-right: var(--layout-gap);
     margin-bottom: 20px;
-}
+} */
 
-.projectCount {
+/* .projectCount {
     color: var(--text-color-muted);
     font-size: 0.85rem;
     font-weight: 500;
     background-color: var(--secondary-background-color);
     padding: 6px 12px;
     border-radius: var(--border-radius-small);
-}
+} */
 
 /* Boutons de défilement */
 /* .scrollControls {
@@ -81,7 +81,7 @@
     background: var(--secondary-background-color);
 } */
 
-.elements {
+/* .elements {
     position: relative;
     display: grid;
     grid-template-columns: repeat(4, minmax(200px, auto));
@@ -92,12 +92,12 @@
     justify-content: center;
     overflow-y: auto;
     padding-right: var(--layout-gap);
-}
+} */
 
 
 
 /* Ajuster la hauteur des éléments pour le snap scroll */
-.element {
+/* .element {
     position: relative;
     min-width: 220px;
     width: 100%;
@@ -124,26 +124,26 @@
     clip-path: path('M 0 0 L 100 0 C 125 2, 115 24, 140 24 L 0 27 z');
     z-index: 1;
     /* Assurer que le pseudo-élément est visible par-dessus d'autres éléments */
-}
+/* } */
 
-.element:hover {
+/* .element:hover {
     transform: translateY(-2px);
     box-shadow: var(--box-shadow-medium);
-}
+} */
 
-.infos {
+/* .infos {
     margin-top: 4px;
-}
+} */
 
-.name {
+/* .name {
     margin-bottom: 4px;
     max-width: 100px;
     text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
+} */
 
-.stats,
+/* .stats,
 .stats span {
     display: flex;
     align-items: center;
@@ -152,9 +152,9 @@
 
 .stats span {
     gap: 4px;
-}
+} */
 
-.empty {
+/* .empty {
     display: flex;
     width: 100%;
     justify-content: center;
@@ -164,11 +164,11 @@
     color: var(--text-color-muted);
     font-weight: 900;
     opacity: 0.5;
-}
+} */
 
 /* Ajouter ces styles à la fin du fichier */
 
-.newProject {
+/* .newProject {
     background: #97897a99;
     transition: all 200ms ease-in-out;
 }
@@ -176,29 +176,29 @@
 .newProject:before {
     background-color: #97897a99;
     transition: all 250ms ease-in-out;
-}
+} */
 
-.newProject:hover {
+/* .newProject:hover {
     transform: translateY(-2px);
     background-color: var(--accent-color);
     border-color: var(--accent-color);
     box-shadow: var(--box-shadow-medium);
-}
-
+} */
+/* 
 .newProject:hover:before {
     background-color: var(--accent-color);
-}
+} */
 
-.newProjectContent {
+/* .newProjectContent {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: var(--text-color);
-}
+} */
 
-.plusIconWrapper {
+/* .plusIconWrapper {
     background: rgba(255, 255, 255, 0.2);
     width: 60px;
     height: 60px;
@@ -207,13 +207,13 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 15px;
-}
+} */
 
-.newProject:hover .plusIconWrapper {
+/* .newProject:hover .plusIconWrapper {
     background: rgba(255, 255, 255, 0.3);
-}
+} */
 
-.newProjectText {
+/* .newProjectText {
     font-weight: 500;
     text-align: center;
-}
+} */

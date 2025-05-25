@@ -1,4 +1,4 @@
-.container {
+/* .container {
     position: sticky;
     top: 0;
     display: flex;
@@ -7,15 +7,15 @@
     font-weight: 500;
     user-select: none;
     border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
+    border-top-right-radius: var(--border-radius-medium); */
     /* border-bottom-left-radius: var(--border-radius-medium); */
-    background-color: var(--secondary-background-color);
+    /* background-color: var(--secondary-background-color); */
     /* border-left: 2px solid var(--border-color); */
-    width: 100%;
+    /* width: 100%;
     z-index: 10;
     flex-wrap: wrap;
     padding: 12px;
-}
+} */
 
 /* .container::before {
     position: absolute;
@@ -28,44 +28,44 @@
     height: 100%;
 } */
 
-.container svg {
+/* .container svg {
     max-width: 20px;
     max-height: 20px;
-}
+} */
 
-.container input[type="text"] {
+/* .container input[type="text"] {
     position: relative;
     z-index: 2001;
     width: fit-content;
     padding: 4px;
     border-radius: var(--border-radius-xs);
     font-size: var(--text-size-medium);
-}
+} */
 
-.container svg {
+/* .container svg {
     cursor: pointer;
-}
+} */
 
-.actions {
+/* .actions {
     position: relative;
     display: flex;
     align-items: center;
     gap: 4px;
-}
+} */
 
-.actions div {
+/* .actions div {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
-.actions div svg {
+/* .actions div svg {
     cursor: pointer;
-}
+} */
 
-.actionCheckbox input {
+/* .actionCheckbox input {
     cursor: pointer;
-}
+} */
 
 .actionMore {
     position: relative;
@@ -76,11 +76,11 @@
     color: var(--text-color);
 }
 
-.grip {
+/* .grip {
     color: var(--text-light-color);
-}
+} */
 
-.checkbox {
+/* .checkbox {
     position: relative;
     z-index: 1;
     width: 14px;
@@ -92,9 +92,9 @@
     cursor: pointer;
     padding: 6px;
     margin-left: 3px;
-}
+} */
 
-.checkbox:checked {
+/* .checkbox:checked {
     background-color: var(--accent-color);
     position: relative;
 }
@@ -108,20 +108,20 @@
     color: var(--text-color-muted);
     font-size: 12px;
     color: white;
-}
+} */
 
-.title {
+/* .title {
     border: 1px solid transparent;
     border-radius: var(--border-radius-xs);
     font-size: var(--text-size-large);
     font-weight: 500;
     cursor: text;
-}
+} */
 
-.container[data-archive="false"] .title[data-authorized="true"]:hover {
+/* .container[data-archive="false"] .title[data-authorized="true"]:hover {
     border: 1px solid var(--border-color);
     cursor: inherit !important;
-}
+} */
 
 .bullet {
     display: block;
@@ -173,7 +173,7 @@
     transition: 80ms all linear;
 }
 
-.deleteIcon {
+/* .deleteIcon {
     margin-left: auto;
     transition: color 0.2s ease-in-out;
     position: relative;
@@ -181,26 +181,26 @@
     color: #272b4e;
     display: flex;
     align-items: center;
-}
+} */
 
-.container:hover .deleteIcon {
+/* .container:hover .deleteIcon {
     color: #353855;
-}
+} */
 
-.trashIcon {
+/* .trashIcon {
     color: var(--text-color-muted);
     cursor: pointer;
-}
-
+} */
+/* 
 .trashIcon:hover {
     color: var(--error);
-}
+} */
 
-.deleteIcon:hover .trashIcon {
+/* .deleteIcon:hover .trashIcon {
     color: var(--danger-color);
-}
+} */
 
-.trashIcon .confirmOverlay {
+/* .trashIcon .confirmOverlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -211,7 +211,7 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-}
+} */
 
 .confirmModal {
     background: white;

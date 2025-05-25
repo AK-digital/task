@@ -1,6 +1,6 @@
 "use client";
 import { resetForgotPassword } from "@/actions/auth";
-import styles from "@/styles/components/auth/sign.module.css";
+// import styles from "@/styles/components/auth/sign.module.css";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
@@ -38,22 +38,22 @@ export default function ResetForgotPasswordForm({ resetCode }) {
   }, [state]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>
+    <div className="flex flex-col w-full p-10 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)] max-w-125">
+      <div className="text-[1.9rem] font-bold mb-15">
         Réinitialisation de votre mot de passe ?
       </div>
       {statusMessage && (
-        <div className={styles.messageStatus}>
-          <span data-status={state?.status}>{statusMessage}</span>
+        <div className="text-center mb-6">
+          <span data-status={state?.status} className="data-[status=success]:text-color-accent-color data-[status=failure]:text-state-blocked-color">{statusMessage}</span>
         </div>
       )}
       {state?.status !== "success" && (
-        <form className={styles.form} action={formAction}>
+        <form action={formAction} className="flex items-center flex-col gap-8">
           <div className="form-group">
             <label
               htmlFor="newPassword"
-              className={styles.passwordLabel}
               data-active={password.length > 0}
+              className="text-text-lighter-color"
             >
               Nouveau mot de passe
             </label>
@@ -63,27 +63,25 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               name="newPassword"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={styles.password}
               required
+              className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium"
             />
             {hiddenPassword ? (
               <Eye
-                className={styles.eye}
                 onClick={(e) => setHiddenPassword(false)}
-              />
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             ) : (
               <EyeOff
-                className={styles.eye}
                 onClick={(e) => setHiddenPassword(true)}
-              />
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             )}
             {state?.errors?.newPassword && <i>{state?.errors?.newPassword}</i>}
           </div>
           <div className="form-group">
             <label
               htmlFor="confirmPassword"
-              className={styles.confirmPasswordLabel}
               data-active={confirmPassword.length > 0}
+              className="text-text-lighter-color"
             >
               Confirmez le mot de passe
             </label>
@@ -91,24 +89,22 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               type={hiddenPassword ? "password" : "text"}
               id="confirmPassword"
               name="confirmPassword"
-              className={styles.confirmPassword}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium"
             />
             {hiddenPassword ? (
               <Eye
-                className={styles.eye}
-                onClick={(e) => setHiddenPassword(false)}
-              />
+              onClick={(e) => setHiddenPassword(false)}
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             ) : (
               <EyeOff
-                className={styles.eye}
-                onClick={(e) => setHiddenPassword(true)}
-              />
+              onClick={(e) => setHiddenPassword(true)}
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             )}
             {state?.errors?.confirmPassword && (
-              <i>{state?.errors?.confirmPassword}</i>
+              <i className="block mt-1">{state?.errors?.confirmPassword}</i>
             )}
           </div>
           <input
@@ -117,6 +113,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             name="reset-code"
             defaultValue={resetCode}
             hidden
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium"
           />
           <button type="submit" disabled={pending} data-disabled={pending}>
             Réinitialiser le mot de passe

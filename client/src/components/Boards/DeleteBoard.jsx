@@ -13,11 +13,11 @@ export default function DeleteBoard({ boardId, projectId }) {
   }
 
   return (
-    <div className={styles.deleteIcon}>
+    <div className="group relative flex items-center text-[#272b4e] cursor-pointer ml-auto transition-[color] duration-200 ease-in-out">
       <Trash
         size={20}
         onClick={() => setShowConfirm(true)}
-        className={styles.trashIcon}
+        className="text-text-color-muted cursor-pointer hover:text-danger-color group-hover:text-danger-color"
       />
       <ConfirmDialog
         isOpen={showConfirm}
