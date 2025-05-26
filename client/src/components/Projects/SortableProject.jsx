@@ -44,23 +44,23 @@ export default function SortableProject({ project, open, isActive }) {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       ref={setNodeRef}
-      className={styles.project}
+      className="container_SortableProject group relative flex items-center gap-3 cursor-pointer transition-all ease-linear duration-150 text-text-lighter-color"
       data-active={isActive} // Utilisation de data-active au lieu d'une classe
       style={style}
       {...attributes}
       {...listeners}
     >
-      <div className={styles.projectLogo}>
+      <div className="max-w-[42px] max-h-[42px]">
         <Image
           src={project?.logo || "/default-project-logo.webp"}
           width={42}
           height={42}
           alt="project logo"
-          style={{ borderRadius: "50%" }}
           data-active={isActive} // Ajout de data-active sur l'image aussi
+          className="rounded-full min-w-[42px] min-h-[42px] w-full h-full object-fill border-2 group-hover:border-2 group-hover:bg-color-accent-color"
         />
       </div>
-      {open && <span>{project?.name}</span>}
+      {open && <span className="text-text-size-small whitespace-nowrap overflow-hidden text-ellipsis mr-5 font-light">{project?.name}</span>}
     </div>
   );
 }

@@ -235,7 +235,7 @@ export default function BoardHeader({
 
   return (
     <div
-      className="group/data-archive-false sticky top-0 flex items-center justify-between font-medium select-none rounded-tl-border-radius-medium rounded-tr-border-radius-medium bg-background-secondary-color w-full z-10 flex-wrap p-3"
+      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-tl-border-radius-medium rounded-tr-border-radius-medium bg-background-secondary-color w-full z-10 flex-wrap p-3"
       data-open={open}
       data-archive={archive}
       style={{ "--border-color": `${board?.color}` }}
@@ -249,7 +249,7 @@ export default function BoardHeader({
             <input
               type="checkbox"
               name="board"
-              className="relative z-1 w-[14px] h-[14px] appearance-none bg-transparent border border-text-medium-color rounded-xs cursor-pointer p-1.5 ml-[3px] checked:bg-color-accent-color checked:relative checked:after:content-['✓'] checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-1/2 checked:after:text-white checked:after:text-xs"
+              className="checkbox_BoardHeader relative z-1 w-[14px] h-[14px] appearance-none bg-transparent border border-text-medium-color rounded-xs cursor-pointer p-1.5 ml-[3px] checked:bg-color-accent-color checked:relative"
               onClick={handleCheckBoard}
             />
           </div>
@@ -297,7 +297,7 @@ export default function BoardHeader({
         ) : (
           <div onClick={handleEdit}>
             <span
-              className="border border-transparent rounded-sm text-text-size-large font-medium cursor-text group-data-[archive=false]/data-archive-false:data-[authorized=true]:hover:border-[var(--color-color-border-color)] group-data-[archive=false]/data-archive-false:data-[authorized=true]:hover:cursor-[inherit]"
+              className="dataTitle border border-transparent rounded-sm text-text-size-large font-medium cursor-text"
               data-authorized={canEdit}
               style={{ color: `${optimisticColor}` }}
             >
@@ -308,15 +308,15 @@ export default function BoardHeader({
         {!archive && canEdit && (
           <div>
             <span
-              className={styles.bullet}
               style={{ backgroundColor: `${optimisticColor}` }}
               onClick={handleEditColors}
+              className="block w-4 h-4 rounded-full cursor-pointer"
             ></span>
           </div>
         )}
         {!open && tasks?.length >= 1 && (
           <div>
-            <span className={styles.count}>
+            <span className="text-text-color-muted text-text-size-small font-normal">
               {tasks?.length > 1
                 ? `${tasks?.length} Tâches`
                 : `${tasks?.length} Tâche`}
@@ -324,13 +324,14 @@ export default function BoardHeader({
           </div>
         )}
         {canArchive && (
-          <div className={styles.actionMore}>
+          <div className="relative text-text-color-muted">
             <EllipsisVertical size={18} onClick={(e) => setIsMoreOpen(true)} />
             {isMoreOpen && (
               <MoreMenu
                 isOpen={isMoreOpen}
                 setIsOpen={setIsMoreOpen}
                 options={options}
+                className="hover:text-text-color"
               />
             )}
           </div>
@@ -338,14 +339,15 @@ export default function BoardHeader({
       </div>
       {openColors && (
         <>
-          <div className={styles.modal} id="popover">
-            <ul>
+          <div id="popover" className="left-3 top-10 max-w-[234px] p-4 bg-background-secondary-color shadow-shadow-box-medium">
+            <ul className="flex flex-wrap gap-2.5">
               {colors?.map((color, idx) => (
                 <li
                   key={idx}
                   style={{ backgroundColor: `${color}` }}
                   data-value={color}
                   onClick={handleColor}
+                  className="w-[18px] h-[18px] rounded-full cursor-pointer transition-all ease-linear duration-[80ms] hover:scale-110 hover:transition-all hover:ease-linear hover:duration-[80ms]"
                 ></li>
               ))}
             </ul>

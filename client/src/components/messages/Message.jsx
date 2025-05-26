@@ -74,11 +74,11 @@ export default function Message({ task, message, project, mutateMessage }) {
         />
       ) : (
         <>
-          <div className={styles.container} data-loading={isLoading}>
-            <div className={styles.wrapper}>
+          <div className="flex flex-col gap-2 transition-opacity duration-[50ms] ease-linear data-[loading=true]:opacity-[0.4] " data-loading={isLoading}>
+            <div className="relative flex justify-between flex-col gap-3.5 py-4 px-6 bg-background-secondary-color rounded-lg transition-all duration-[50ms] ease-linear">
               {/* Header auteur */}
-              <div className={styles.header}>
-                <div className={styles.user}>
+              <div className="flex items-center justify-between [&_svg]:cursor-pointer ">
+                <div className="flex items-center gap-2">
                   <Image
                     src={author?.picture || "/default-pfp.webp"}
                     width={35}
@@ -86,12 +86,12 @@ export default function Message({ task, message, project, mutateMessage }) {
                     alt={`Photo de profil de ${author?.firstName}`}
                     style={{ borderRadius: "50%" }}
                   />
-                  <span className={styles.names}>
+                  <span className="text-text-size-normal font-medium">
                     {author?.firstName + " " + author?.lastName}
                   </span>
-                  <span className={styles.date}>{formattedDate}</span>
+                  <span className="text-xs text-text-color-muted">{formattedDate}</span>
                 </div>
-                <div className={styles.ellipsis}>
+                <div>
                   {uid === author?._id && (
                     <FontAwesomeIcon
                       icon={faEllipsisH}
@@ -99,17 +99,18 @@ export default function Message({ task, message, project, mutateMessage }) {
                     />
                   )}
                   {more && (
-                    <div className={styles.more}>
-                      <ul>
+                    <div className="absolute z-2001 right-6 w-fit p-2 bg-background-secondary-color rounded-sm shadow-shadow-box-medium">
+                      <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-background-third-color [&_li:hover]:rounded-sm">
                         <li
                           onClick={() => {
                             setEdit(true);
                             setMore(false);
                           }}
+                          className="flex items-center gap-2 p-2 text-text-size-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
                         >
                           <FontAwesomeIcon icon={faPen} /> Modifier
                         </li>
-                        <li onClick={handleDeleteMessage}>
+                        <li onClick={handleDeleteMessage} className="flex items-center gap-2 p-2 text-text-size-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear">
                           <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
                         </li>
                       </ul>
@@ -119,15 +120,15 @@ export default function Message({ task, message, project, mutateMessage }) {
               </div>
 
               {/* Message */}
-              <div className={styles.text}>
+              <div className="text_Message">
                 <div dangerouslySetInnerHTML={{ __html: message?.message }} />
               </div>
             </div>
 
-            <div className={styles.informations}>
+            <div className="flex items-center ml-3 gap-2">
               {/* Lecteurs */}
               <div
-                className={styles.readBy}
+                className="relative flex items-center gap-1"
                 onMouseEnter={() => setShowPeopleRead(true)}
                 onMouseLeave={() => setShowPeopleRead(false)}
               >

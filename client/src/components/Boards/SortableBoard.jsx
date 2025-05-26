@@ -2,7 +2,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import React from "react";
-import styles from "@/styles/components/boards/boards.module.css";
 
 export function SortableBoard({ children, board, ...props }) {
   const {
@@ -30,7 +29,6 @@ export function SortableBoard({ children, board, ...props }) {
     <div
       ref={setNodeRef}
       style={style}
-      className={styles.sortableBoardWrapper}
       {...props}
     >
       {children}

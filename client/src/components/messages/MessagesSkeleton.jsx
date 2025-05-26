@@ -5,15 +5,15 @@ export default function MessagesSkeleton() {
     <>
       {Array.from({ length: 3 }).map((_, idx) => {
         return (
-          <div className={styles.container} key={idx}>
-            <div className={styles.message}>
+          <div className="w-full" key={idx}>
+            <div className="py-4 px-6 bg-background-secondary-color rounded-lg w-full">
               {/* Message Head */}
-              <div className={styles.header}>
+              <div className="header_MessagesSkeleton">
                 <div></div>
                 <div></div>
               </div>
               {/* Message Body */}
-              <div className={styles.body}>
+              <div className="body_MessagesSkeleton">
                 <div></div>
                 <div></div>
               </div>

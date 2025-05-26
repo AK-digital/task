@@ -33,7 +33,7 @@ export default function UpdateBoard({ board, projectId }) {
   }, [state]);
 
   return (
-    <div className={styles["update-board__container"]} data-pending={pending}>
+    <div data-pending={pending} className="[&>input]:max-w-max">
       <form action={formAction}>
         {isEdit ? (
           <div>
@@ -51,7 +51,7 @@ export default function UpdateBoard({ board, projectId }) {
             <div id="overlay-hidden" onClick={(e) => setIsEdit(false)}></div>
           </div>
         ) : (
-          <div className={styles["update-board__title"]}>
+          <div className="flex items-center gap-2.5">
             <span
               onClick={(e) => setIsEdit(true)}
               style={{ color: `${board?.color}` }}
@@ -61,6 +61,7 @@ export default function UpdateBoard({ board, projectId }) {
             <span
               style={{ backgroundColor: `${board?.color}` }}
               onClick={(e) => setOpenColor(!openColor)}
+              className="w-4 h-4 rounded-full cursor-pointer"
             ></span>
             {openColor && (
               <div>

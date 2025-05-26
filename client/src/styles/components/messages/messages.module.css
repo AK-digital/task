@@ -1,10 +1,10 @@
-.container {
+/* .container {
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
+} */
 
-.title {
+/* .title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -15,15 +15,15 @@
 
 .title svg {
   color: var(--color-text-muted);
-}
+} */
 
-.empty {
+/* .empty {
   border: 1.5px solid var(--border-color);
   padding: 8px 16px;
   border-radius: var(--border-radius-small);
   font-size: var(--text-size-small);
-}
-
+} */
+/* 
 .empty[data-role="true"] {
   cursor: pointer;
-}
+} */

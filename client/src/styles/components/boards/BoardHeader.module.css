@@ -8,10 +8,10 @@
     user-select: none;
     border-top-left-radius: var(--border-radius-medium);
     border-top-right-radius: var(--border-radius-medium); */
-    /* border-bottom-left-radius: var(--border-radius-medium); */
-    /* background-color: var(--secondary-background-color); */
-    /* border-left: 2px solid var(--border-color); */
-    /* width: 100%;
+/* border-bottom-left-radius: var(--border-radius-medium); */
+/* background-color: var(--secondary-background-color); */
+/* border-left: 2px solid var(--border-color); */
+/* width: 100%;
     z-index: 10;
     flex-wrap: wrap;
     padding: 12px;
@@ -67,14 +67,14 @@
     cursor: pointer;
 } */
 
-.actionMore {
+/* .actionMore {
     position: relative;
     color: var(--text-color-muted);
 }
 
 .actionMore>svg:hover {
     color: var(--text-color);
-}
+} */
 
 /* .grip {
     color: var(--text-light-color);
@@ -118,33 +118,35 @@
     cursor: text;
 } */
 
-/* .container[data-archive="false"] .title[data-authorized="true"]:hover {
-    border: 1px solid var(--border-color);
-    cursor: inherit !important;
-} */
 
+/* 
 .bullet {
     display: block;
     width: 16px;
     height: 16px;
     border-radius: 50%;
     cursor: pointer;
-}
+    } */
 
-.count {
+/* .count {
     color: var(--text-color-muted);
     font-size: var(--text-size-small);
     font-weight: 400;
+} */
+
+/* .dataContainer[data-archive="false"] .dataTitle[data-authorized="true"]:hover {
+    border: 1px solid var(--border-color);
+    cursor: inherit !important;
 }
 
-.container[data-open="false"] {
+.dataContainer[data-open="false"] {
     background-color: var(--secondary-background-color);
     padding: 8px;
     border-radius: var(--border-radius-xs);
     margin-bottom: 0;
-}
+} */
 
-.modal {
+/* .modal {
     left: 12px;
     top: 40px;
     width: max-content;
@@ -152,9 +154,9 @@
     padding: 16px;
     background-color: var(--secondary-background-color);
     box-shadow: var(--box-shadow-medium);
-}
+} */
 
-.modal ul {
+/* .modal ul {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -166,12 +168,12 @@
     border-radius: 50%;
     cursor: pointer;
     transition: 80ms all linear;
-}
+} */
 
-.modal li:hover {
+/* .modal li:hover {
     scale: 1.1;
     transition: 80ms all linear;
-}
+} */
 
 /* .deleteIcon {
     margin-left: auto;
@@ -213,38 +215,38 @@
     z-index: 1000;
 } */
 
-.confirmModal {
+/* .confirmModal {
     background: white;
     padding: 24px;
     border-radius: var(--border-radius-small);
     position: relative;
     min-width: 300px;
-}
+} */
 
-.closeButton {
+/* .closeButton {
     position: absolute;
     top: 12px;
     right: 12px;
     background: none;
     border: none;
     cursor: pointer;
-}
+} */
 
-.confirmButtons {
+/* .confirmButtons {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
     margin-top: 8px;
-}
+} */
 
-.cancelButton {
+/* .cancelButton {
     padding: 4px 12px;
     border: 1px solid #ccc;
     background: transparent;
     border-radius: var(--border-radius-xs);
     cursor: pointer;
-}
-
+} */
+/* 
 .popupConfirm {
     position: absolute;
     top: 50%;
@@ -254,9 +256,9 @@
     border-radius: var(--border-radius-xs);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     z-index: 1000;
-}
+} */
 
-.arrow {
+/* .arrow {
     position: absolute;
     right: -6px;
     top: 50%;
@@ -266,9 +268,9 @@
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     border-left: 6px solid var(--secondary-background-color);
-}
+} */
 
-.popupContent {
+/* .popupContent {
     padding: 16px;
     min-width: 200px;
 }
@@ -287,4 +289,4 @@
 
 .popupContent .confirmButtons button {
     width: 100%;
-}
+} */

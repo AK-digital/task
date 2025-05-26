@@ -1,4 +1,4 @@
-.container {
+/* .container {
     width: 100%;
     padding: 10px 0;
     height: var(--header-height);
@@ -8,26 +8,26 @@
     justify-content: space-between;
     margin-inline: 120px 40px;
     height: 100%;
-}
+} */
 
 /* .links {
 
 } */
 
-.links svg {
+/* .links svg {
     color: var(--text-dark-color);
-}
+} */
 
-.nav,
+/* .nav,
 .actions {
     display: flex;
     align-items: center;
-}
+} */
 
-.logo {
+/* .logo {
     position: relative;
-}
-
+} */
+/* 
 .actions {
     gap: 24px;
 }
@@ -54,10 +54,9 @@
 
 .bell[data-open="true"] {
     fill: var(--text-darker-color);
-}
+} */
 
-
-.unread {
+/* .unread {
     position: absolute;
     width: 11px;
     height: 11px;
@@ -65,4 +64,4 @@
     left: 12px;
     border-radius: 50%;
     background-color: var(--danger-color);
-}
+} */

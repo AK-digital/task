@@ -1,39 +1,39 @@
-.container {
+/* .container {
     top: 12px;
     left: 18px;
     width: max-content;
     font-size: var(--text-size-small);
     padding: 8px 16px;
     box-shadow: var(--box-shadow-small);
-}
+} */
 
-.container,
+/* .container,
 .container a {
     color: var(--text-color-dark);
     text-decoration: none;
-}
+} */
 
-.option {
+/* .option {
     cursor: pointer;
     padding: 8px 0;
     border-bottom: 1px solid var(--primary-background-color);
-}
+} */
 
-.option:last-child {
+/* .option:last-child {
     border-bottom: none;
-}
+} */
 
-.option[data-remove="true"] {
+/* .option[data-remove="true"] {
     color: var(--text-color-red);
-}
-
+} */
+/* 
 .option span {
     display: flex;
     align-items: center;
     gap: 8px;
-}
+} */
 
-.option:hover,
+/* .option:hover,
 .option a:hover {
     color: var(--accent-color);
-}
+} */

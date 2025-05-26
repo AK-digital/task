@@ -14,21 +14,21 @@ export default function ProjectHeader({ project, mutateProject }) {
 
   return (
     <>
-      <header className={styles.container}>
-        <nav className={styles.nav}>
+      <header className="w-full pr-6">
+        <nav className="flex items-center justify-between pb-4">
           <ProjectTitle project={project} />
-          <div className={styles.actions}>
-            <div className={styles.members}>
+          <div className="flex">
+            <div className="flex justify-center items-center ml-2.5">
               {isNotEmpty(members) &&
                 members?.map((member) => (
-                  <div key={member?.user?._id} className={styles.guestAvatar}>
+                  <div key={member?.user?._id} className="-ml-2 rounded-full transition-transform duration-200 hover:-translate-y-0.5">
                     {member?.user?.picture ? (
                       <Image
                         src={member?.user?.picture || "/default-pfp.webp"}
                         alt={`${member?.user?.firstName} ${member?.user?.lastName}`}
                         width={32}
                         height={32}
-                        className={styles.avatar}
+                        className="mt-[5px] rounded-full object-cover h-auto max-h-8 aspect-[2/2]"
                       />
                     ) : (
                       <NoPicture
@@ -41,7 +41,7 @@ export default function ProjectHeader({ project, mutateProject }) {
                 ))}
             </div>
             <div
-              className={styles.addGuestBtn}
+              className="flex justify-center items-center cursor-pointer rounded-lg py-1.5 px-[7px] transition-all duration-200 ease-in-out hover:text-color-accent-color hover:bg-white/3"
               onClick={(e) => setIsOpen(true)}
             >
               <UserPlus2 size={24} />

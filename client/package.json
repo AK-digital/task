@@ -38,7 +38,6 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
-    "clsx": "^2.1.1",
     "emoji-picker-react": "^4.12.2",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",

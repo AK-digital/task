@@ -1,16 +1,16 @@
-.container {
+/* .dataContainer_SideNav {
   min-width: var(--aside-width);
   width: var(--aside-width);
   transition: width linear 150ms, min-width linear 150ms;
   user-select: none;
-}
+} */
 
-.container[data-open="true"] {
+/* .container_SideNav[data-open="true"] {
   min-width: 220px;
   width: 220px;
-}
+} */
 
-.wrapper {
+/* .wrapper_SideNav {
   position: fixed;
   top: 0;
   min-width: var(--aside-width);
@@ -23,14 +23,18 @@
   height: 100%;
   transition: width linear 150ms, min-width linear 150ms;
   background-color: #2a3730;
-}
+} */
 
-.container[data-open="true"] .wrapper {
+/* .container_SideNav[data-open="true"] .wrapper_SideNav {
   min-width: 220px;
   width: 220px;
 }
 
-.nav {
+.nav_SideNav::-webkit-scrollbar {
+  display: none;
+} */
+
+/* .nav {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -38,15 +42,12 @@
   max-height: 65svh;
   overflow-y: auto;
   scroll-behavior: smooth;
-}
+} */
 
-.nav::-webkit-scrollbar {
-  display: none;
-  /* background-color: transparent;
-    width: 4px; */
-}
+/* background-color: transparent;
+  width: 4px; */
 
-.project {
+/* .container_SortableProject {
   position: relative;
   display: flex;
   align-items: center;
@@ -55,15 +56,15 @@
   transition: all linear 150ms;
   color: var(--text-lighter-color);
 
-  /* Aide à aligner le défilement sur les projets */
-}
+} */
+/* Aide à aligner le défilement sur les projets */
 
-.projectLogo {
+/* .projectLogo {
   max-width: 42px;
   max-height: 42px;
-}
+} */
 
-.project img {
+/* .container_SortableProject img {
   min-width: 42px;
   min-height: 42px;
   width: 100%;
@@ -72,13 +73,13 @@
   border: 2px solid transparent;
 }
 
-.project:hover img,
-.project[data-active="true"] img {
+.container_SortableProject:hover img,
+.container_SortableProject[data-active="true"] img {
   border: 2px solid var(--accent-color);
 }
 
-.project:hover:after,
-.project[data-active="true"]:after {
+.container_SortableProject:hover:after,
+.container_SortableProject[data-active="true"]:after {
   content: "";
   position: absolute;
   top: 0;
@@ -91,27 +92,28 @@
   border-radius: 33px 0 0 33px;
 }
 
-.project span {
+.container_SortableProject[data-active="true"] span {
+  font-weight: 400;
+  transition: all linear 150ms;
+} */
+
+/* .container_SortableProject span {
   font-size: var(--text-size-small);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 20px;
   font-weight: 300;
-}
+} */
 
-.project[data-active="true"] span {
-  font-weight: 400;
-  transition: all linear 150ms;
-}
 
-.actions {
+/* .actions {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
+} */
 
-.createProjectButton,
+/* .createProjectButton,
 .openArrow {
   display: flex;
   justify-content: center;
@@ -120,33 +122,33 @@
   height: 42px;
   border-radius: 50%;
   min-height: 42px;
-}
+} */
 
-.openArrow {
+/* .openArrow {
   color: var(--text-color);
   margin-top: 20px;
   margin-bottom: 20px;
-}
+} */
 
-.createProjectButton,
+/* .createProjectButton,
 .openProjects,
 .myTasksLink {
   background-color: var(--primary-background-color);
   color: var(--side-background-color);
-}
+} */
 
-.createProjectButton:hover,
+/* .createProjectButton:hover,
 .openArrow:hover,
 .myTasksLink:hover {
   color: var(--accent-color-hover);
   cursor: pointer;
-}
+} */
 
-.create-project__buttons button:nth-child(2) {
+/* .create-project__buttons button:nth-child(2) {
   background: none;
-}
+} */
 
-.myTasks {
+/* .myTasks {
   margin-top: -12px;
   margin-bottom: 18px;
 }
@@ -171,4 +173,4 @@
 .actions a svg,
 .myTasks a svg {
   transition: all linear 150ms;
-}
+} */

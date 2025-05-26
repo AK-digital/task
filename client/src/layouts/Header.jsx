@@ -38,22 +38,22 @@ export default function Header() {
   const unreadCount = unreadNotifications?.length;
 
   return (
-    <header className={styles.container}>
-      <nav className={styles.nav}>
-        <div className={styles.links}>
+    <header className="w-full py-2.5 h-spacing-header-height">
+      <nav className="flex justify-between items-center h-full ml-30 mr-10">
+        <div className="[&_svg]:text-text-dark-color">
           <Link href={"/time-trackings"}>
             <Timer size={24} cursor={"pointer"} />
           </Link>
         </div>
-        <ul className={styles.actions}>
-          <li className={styles.action}>
+        <ul className="relative flex items-center gap-6">
+          <li className="relative action flex justify-center items-center h-full">
             <Bell
               size={22}
               onClick={(e) => setNotifOpen(true)}
               data-open={notifOpen}
-              className={styles.bell}
+              className="hover:fill-text-darker-color hover:cursor-pointer data-[open=true]:fill-text-darker-color "
             />
-            {unreadCount > 0 && <div className={styles.unread}></div>}
+            {unreadCount > 0 && <div className="absolute w-[11px] h-[11px] top-3 left-3 rounded-full bg-danger-color"></div>}
             {notifOpen && (
               <Notifications
                 setNotifOpen={setNotifOpen}
@@ -64,7 +64,7 @@ export default function Header() {
               />
             )}
           </li>
-          <li className={styles.user}>
+          <li>
             <Link href={"/profile"}>
               <Image
                 src={user?.picture || "/default-pfp.webp"}

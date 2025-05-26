@@ -30,7 +30,7 @@ export default function NoPicture({ user, width, height }) {
 
   return (
     <div
-      className={styles.container}
+      className="flex justify-center items-center rounded-full cursor-default select-none mt-[5px]"
       style={{
         width: width,
         height: height,
@@ -38,7 +38,7 @@ export default function NoPicture({ user, width, height }) {
       }}
       suppressHydrationWarning
     >
-      <span>{initials}</span>
+      <span className="text-white text-sm">{initials}</span>
     </div>
   );
 }

@@ -1,9 +1,9 @@
-.container {
+/* .container {
   position: relative;
   user-select: none;
-}
+} */
 
-.current {
+/* .current {
   padding: 8px;
   background-color: var(--accent-color);
   width: 100px;
@@ -11,9 +11,9 @@
   border-radius: var(--border-radius-xs);
   cursor: pointer;
   transition: all 80ms ease-in;
-}
+} */
 
-.current:hover {
+/* .current:hover {
   background-color: var(--accent-color-hover);
 }
 
@@ -21,9 +21,9 @@
   color: white;
   text-align: center;
   width: 100%;
-}
+} */
 
-.options {
+/* .options {
   position: absolute;
   z-index: 9999;
   top: 40px;
@@ -39,9 +39,9 @@
   overflow: auto;
   text-align: left;
   box-shadow: var(--box-shadow-medium);
-}
+} */
 
-.option {
+/* .option {
   padding: 8px;
   transition: all 150ms ease-in;
 }
@@ -54,4 +54,4 @@
 .option:hover {
   background-color: var(--third-background-color);
   color: var(--text-darker-color);
-}
+} */

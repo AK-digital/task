@@ -1,4 +1,4 @@
-.boards {
+/* .boards {
     display: flex;
     flex-direction: column;
     gap: 44px;
@@ -9,18 +9,18 @@
     position: relative;
     border-top-left-radius: var(--border-radius-medium);
     border-top-right-radius: var(--border-radius-medium);
-}
+} */
 
-.archiveTitle {
+/* .archiveTitle {
     display: flex;
     align-items: center;
     gap: 8px;
     font-weight: 600;
     font-size: var(--text-size-large);
     margin-bottom: -20px;
-}
+} */
 
-.task-overlay {
+/* .task-overlay {
     cursor: grabbing;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -32,9 +32,9 @@
     padding: 1rem;
     background: white;
     border-radius: var(--border-radius-xs);
-}
+} */
 
-.back {
+/* .back {
     position: relative;
     top: 3px;
     cursor: pointer;
@@ -45,4 +45,4 @@
     flex-direction: column;
     gap: 44px;
     width: 100%;
-}
+} */

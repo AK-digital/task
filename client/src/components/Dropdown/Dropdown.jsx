@@ -57,17 +57,17 @@ export function DropDown({
 
   return (
     <>
-      <div className={styles.container}>
-        <div onClick={handleIsOpen} className={styles.current}>
-          <span>{memberRole(current)}</span>
+      <div className="relative select-none">
+        <div onClick={handleIsOpen} className="p-2 bg-color-accent-color w-full text-text-size-small rounded-sm cursor-pointer transition-all ease-in duration-[80ms] hover:bg-color-accent-color-hover">
+          <span className="text-white text-center w-full">{memberRole(current)}</span>
         </div>
         {isOpen && (
-          <ul className={styles.options}>
+          <ul className="absolute flex flex-col z-9999 top-10 left-0 gap-0 w-full bg-background-secondary-color text-text-size-small rounded-sm max-h-50 overflow-auto text-left shadow-shadow-box-medium">
             {options.map((option, idx) => {
               return (
                 <li
                   key={idx}
-                  className={styles.option}
+                  className="p-2 cursor-pointer hover:bg-background-third-color text-text-darker-color"
                   onClick={handleChangeRole}
                   data-value={option}
                 >

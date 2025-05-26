@@ -329,12 +329,12 @@ export default function Boards({
   const boardIds = useMemo(() => boards.map((board) => board._id), [boards]);
 
   return (
-    <div className={styles["boards"]}>
+    <div className="relative flex flex-col gap-11 h-full overflow-y-auto pr-4 pb-6 rounded-tl-border-radius-medium rounded-tr-border-radius-medium">
       {archive && (
         <>
-          <div className={styles.archiveTitle}>
+          <div className="flex items-center gap-2 font-semibold text-text-size-large -mb-5">
             <div
-              className={styles.back}
+              className="relative top-[3px] cursor-pointer"
               onClick={() => router.push(`/projects/${project?._id}`)}
             >
               <ArrowLeftCircle size={32} />
@@ -361,7 +361,7 @@ export default function Boards({
           items={boardIds}
           strategy={verticalListSortingStrategy}
         >
-          <div className={styles.boardsContainer}>
+          <div className="flex flex-col gap-11 w-full">
             {boards
               ?.filter((board) =>
                 archive
@@ -407,7 +407,7 @@ export default function Boards({
               archive={archive}
             />
           ) : activeId && activeType === "board" ? (
-            <div className={styles.boardOverlay}>
+            <div>
               <Board
                 tasks={tasks[activeId] || []}
                 project={project}
@@ -420,7 +420,7 @@ export default function Boards({
         </DragOverlay>
       </DndContext>
       {!archive && canPost && (
-        <div className={styles.options}>
+        <div>
           <AddBoard project={project} />
         </div>
       )}

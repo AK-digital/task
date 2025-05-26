@@ -15,7 +15,7 @@ export default function UserInfo() {
         width={40}
         height={40}
         quality={100}
-        style={{ borderRadius: "50%" }}
+        className="rounded-full"
       />
     </Link>
   );

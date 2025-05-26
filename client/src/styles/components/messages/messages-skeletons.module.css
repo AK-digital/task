@@ -1,4 +1,4 @@
-.container {
+/* .container {
     width: 100%;
 }
 
@@ -57,17 +57,17 @@
             var(--third-background-color) 75%);
     background-size: 200% 100%;
     animation-timing-function: ease-in-out;
-}
+} */
 
 /* Animation spécifique aux éléments du header */
-.header div:nth-child(1),
+/* .header div:nth-child(1),
 .header div:nth-child(2) {
     background-size: 800px 100px;
     animation: wave-skeleton 2.5s infinite ease-in-out;
-}
+} */
 
 /* Animation spécifique pour les divs dans le body */
-.body div {
+/* .body div {
     background-size: 800px 100px;
     animation: wave-skeleton 2.5s infinite ease-in-out;
 }
@@ -84,4 +84,4 @@
     100% {
         background-position: -468px 0;
     }
-}
+} */
