@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .backdrop {
@@ -14,7 +14,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,0.18);
-  z-index: 1001;
+  z-index: 2001;
 }
 
 .modal {
@@ -24,9 +24,9 @@
   transform: translate(-50%, -50%);
   background: var(--secondary-background-color);
   border-radius: 12px;
-  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.01);
+  box-shadow: 2px 2px 8px var(--foreground);
   padding: 2rem 2.5rem;
-  z-index: 1002;
+  z-index: 2002;
   min-width: 350px;
   max-width: 95vw;
   min-height: 200px;
@@ -108,13 +108,19 @@
   flex-direction: column;
   gap: 14px;
   border: 1.5px solid var(--border-color);
+  text-align: left;
+}
+.result h3 {
+  text-align: left;
+  margin-bottom: 12px;
 }
 .result ul {
-  padding-left: 1.2rem;
+  padding-left: 0;
   margin: 0.5rem 0 0 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  text-align: left;
 }
 .result li {
   margin-bottom: 0;
@@ -124,6 +130,7 @@
   background: none;
   border: none;
   padding: 0;
+  text-align: left;
 }
 
 .result b {
@@ -138,4 +145,14 @@
   padding: 0.5rem 1rem;
   margin-top: 0.5rem;
   font-size: 0.98em;
+}
+
+.checkboxContainer {
+  width: 60px;
+  min-width: 40px;
+  max-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-right: 8px;
 } 
