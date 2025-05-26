@@ -1,18 +1,14 @@
 import styles from "@/styles/components/popups/usersInfo.module.css";
-import Image from "next/image";
+import { displayPicture } from "@/utils/utils";
 
-export default function UsersInfo({ users }) {
+export default function UsersInfo({ users, style }) {
+  const top = style?.top || "35px";
+  const left = style?.left || "4px";
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ top: top, left: left }}>
       {users.map((user) => (
         <div key={user?._id} className={styles.infoUser}>
-          <Image
-            src={user?.picture || "/default-pfp.webp"}
-            width={24}
-            height={24}
-            alt={`Photo de profil de ${user?.firstName}`}
-            className={styles.profileImage}
-          />
+          {displayPicture(user, 24, 24)}
           <span className={styles.name}>
             {user?.firstName} {user?.lastName}
           </span>
