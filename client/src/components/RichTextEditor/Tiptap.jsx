@@ -458,7 +458,7 @@ export default function Tiptap({
       content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
     };
 
-    const link = `/projects/${task?.projectId}/task/${task?._id}`;
+    const link = `/projects/${task?.projectId?._id}/task/${task?._id}`;
 
     for (const taggedUser of taggedUsers) {
       socket.emit("create notification", user, taggedUser, messageNotif, link);
