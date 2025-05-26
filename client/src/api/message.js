@@ -14,11 +14,7 @@ export async function saveMessage(
     data.append("taskId", taskId);
     data.append("message", message);
 
-    if (isNotEmpty(taggedUsers)) {
-      taggedUsers.forEach((taggedUser) => {
-        data.append("taggedUsers", taggedUser);
-      });
-    }
+    data.append("taggedUsers", JSON.stringify(taggedUsers));
 
     if (isNotEmpty(attachments)) {
       attachments.forEach((file) => {

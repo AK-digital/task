@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { getNotifications } from "@/api/notification";
+import moment from "moment";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -37,11 +38,21 @@ export default function Header() {
   const unreadNotifications = notificationsData?.filter((notif) => !notif.read);
   const unreadCount = unreadNotifications?.length;
 
+  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
+  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
+
   return (
     <header className={styles.container}>
       <nav className={styles.nav}>
         <div className={styles.links}>
-          <Link href={"/time-trackings"}>
+          <Link
+            href={
+              "/times?startingDate=" +
+              firstDayOfTheMonth +
+              "&endingDate=" +
+              lastDayOfTheMonth
+            }
+          >
             <Timer size={24} cursor={"pointer"} />
           </Link>
         </div>

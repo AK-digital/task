@@ -37,14 +37,13 @@ export async function sendEmail(from, to, subject, text) {
                     <div style="font-family: Arial, sans-serif; color: #5C5D61; text-align: center; background-color: white; width: 100%; border-radius:16px; border-top: 4px solid #a87e51; padding: 20px;">
                       ${text}
                     </div>
-                    <div style="margin-top:16px;font-size:13px;font-weight:600;color:#72716f;">
-                      Fait avec ❤️ par l'équipe d'<a href="https://akdigital.fr" style="color:#777AE4;text-decoration:none;">AK Digital</a>
-                    </div>
-
                     <div style="font-family: Arial, sans-serif; color: #72716f; text-align: center; font-size: 12px; margin-top: 20px; max-width: 460px;">
                       <p style="margin: 0;">
                         Conformément à la réglementation en vigueur, cet email vous est adressé dans le cadre de votre relation avec AK Digital. Si vous pensez avoir reçu ce message par erreur, vous pouvez l’ignorer ou nous contacter.
                       </p>
+                    </div>
+                     <div style="margin-top:16px;font-size:12px;font-weight:600;color:#72716f;">
+                      Fait avec ❤️ par l'équipe d'<a href="https://akdigital.fr" style="color:#a87e51;text-decoration:none;">AK Digital</a>
                     </div>
                   </td>
                 </tr>

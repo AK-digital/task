@@ -67,7 +67,7 @@ export async function getTimeTrackings(req, res, next) {
     const { projects, users, startingDate, endingDate } = req.query;
 
     const userProjects = await ProjectModel.find({
-      members: authUser?._id,
+      "members.user": authUser?._id,
     }).select("_id name");
 
     if (userProjects.length === 0) {

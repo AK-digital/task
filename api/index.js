@@ -13,6 +13,7 @@ import templateRouter from "./routes/template.routes.js";
 import boardTemplateRouter from "./routes/boardTemplate.routes.js";
 import projectRouter from "./routes/project.routes.js";
 import projectInvitations from "./routes/projectInvitation.routes.js";
+import customStatusRouter from "./routes/customStatus.routes.js";
 import boardRouter from "./routes/board.routes.js";
 import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
@@ -57,6 +58,7 @@ app.use("/api/board-template", boardTemplateRouter);
 
 app.use("/api/project", projectRouter);
 app.use("/api/project-invitation", projectInvitations);
+app.use("/api/custom-status", customStatusRouter);
 app.use("/api/board", boardRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/message", messageRouter);

@@ -8,7 +8,6 @@ import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailDescription } from "../templates/emails.js";
-import { regex } from "../utils/regex.js";
 import { allowedStatus, getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
@@ -226,6 +225,54 @@ export async function updateTaskText(req, res, next) {
   }
 }
 
+export async function addTaskStatus(req, res) {
+  try {
+    const { status, color } = req.body;
+
+    if (!color) {
+    }
+
+    if (!status && !color) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $addToSet: {
+          status: status,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de modifier le status d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Status modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function updateTaskStatus(req, res, next) {
   try {
     const { status } = req.body;
@@ -418,6 +465,7 @@ export async function updateTaskDescription(req, res, next) {
     const { description, taggedUsers, existingFiles } = req.body;
 
     const task = await TaskModel.findById({ _id: req.params.id });
+    const tagged = JSON.parse(taggedUsers);
 
     if (!task) {
       return res.status(404).send({
@@ -499,7 +547,7 @@ export async function updateTaskDescription(req, res, next) {
 
     let updatedDescription = description;
 
-    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
+    const uniqueTaggedUsers = Array.from(new Set(tagged));
 
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
@@ -540,7 +588,7 @@ export async function updateTaskDescription(req, res, next) {
           "description.createdAt": task?.description?.createdAt ?? Date.now(),
           "description.updatedAt": Date.now(),
           "description.files": newFiles,
-          taggedUsers: uniqueTaggedUsers,
+          taggedUsers: tagged,
         },
       },
       {

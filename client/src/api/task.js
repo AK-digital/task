@@ -285,11 +285,7 @@ export async function updateTaskDescription(
     const data = new FormData();
     data.append("description", description);
 
-    if (isNotEmpty(taggedUsers)) {
-      taggedUsers.forEach((taggedUser) => {
-        data.append("taggedUsers", taggedUser);
-      });
-    }
+    data.append("taggedUsers", JSON.stringify(taggedUsers));
 
     if (isNotEmpty(attachments)) {
       attachments.forEach((attachment) => {
