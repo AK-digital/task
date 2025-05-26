@@ -5,6 +5,7 @@ import { instrumentSans } from "@/utils/font";
 import { FolderPlus, Layout, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import IAProjectModal from "@/components/Modals/IAProjectModal";
 
 const initialState = {
   status: "pending",
@@ -20,7 +21,7 @@ export default function NewProject() {
     saveProject,
     initialState
   );
-
+  const [showIAModal, setShowIAModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -86,6 +87,15 @@ export default function NewProject() {
                     <Layout size={18} />
                     Choisir un template
                   </button>
+                  <button
+                    type="button"
+                    className={styles.ia}
+                    disabled={pending}
+                    style={{ marginLeft: 8 }}
+                    onClick={() => setShowIAModal(true)}
+                  >
+                    🤖 Créer un projet grâce à l'IA
+                  </button>
                 </div>
                 <button
                   type="button"
@@ -102,6 +112,7 @@ export default function NewProject() {
           </div>
         </div>
       </div>
+      {showIAModal && <IAProjectModal onClose={() => setShowIAModal(false)} />}
     </main>
   );
 }

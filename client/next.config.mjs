@@ -16,6 +16,14 @@ const nextConfig = {
     },
     serverActions: { bodySizeLimit: "20mb" },
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/ai/:path*',
+        destination: 'http://localhost:5000/api/ai/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
