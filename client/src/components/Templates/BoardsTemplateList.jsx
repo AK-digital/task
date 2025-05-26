@@ -77,7 +77,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
           )}
         </div>
       </div>
-      <div id="modal-layout" onClick={() => setAddBoardTemplate(false)}></div>
+      <div className="modal-layout" onClick={() => setAddBoardTemplate(false)}></div>
     </>
   );
 }

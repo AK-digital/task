@@ -152,7 +152,7 @@ export default function Message({ task, message, project, mutateMessage }) {
           </div>
 
           {more && (
-            <div id="modal-layout-opacity" onClick={() => setMore(false)} />
+            <div className="modal-layout-opacity" onClick={() => setMore(false)} />
           )}
         </>
       )}

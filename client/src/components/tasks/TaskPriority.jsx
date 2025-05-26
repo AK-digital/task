@@ -68,7 +68,7 @@ export default function TaskPriority({ task, project, uid }) {
             </ul>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={(e) => setIsOpen(false)}
           ></div>
         </>

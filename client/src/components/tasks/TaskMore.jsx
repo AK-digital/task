@@ -103,9 +103,7 @@ export default function TaskMore({ task, project, archive, uid }) {
               width={20}
               height={20}
               alt={`Photo de profil de ${task?.author?.firstName}`}
-              style={{
-                borderRadius: "50%",
-              }}
+              className="rounded-full max-h-[20px]"
             />{" "}
             {task?.author
               ? task?.author?.firstName + " " + task?.author?.lastName
@@ -121,7 +119,7 @@ export default function TaskMore({ task, project, archive, uid }) {
           <Messages task={task} project={project} />
         </div>
       </div>
-      {open && <div onClick={handleClose} id="task-modal-layout"></div>}
+      {open && <div onClick={handleClose} className="task-modal-layout"></div>}
     </>
   );
 }

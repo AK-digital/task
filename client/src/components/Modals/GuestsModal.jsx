@@ -69,8 +69,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className={styles.container} id="modal">
-        <div className={styles.heading}>
+      <div className="flex flex-col bg-background-secondary-color gap-5 w-full max-w-125 shadow-[2px_2px_4px_var(--color-color-foreground)]" id="modal">
+        <div className="text-[1.4rem] font-medium">
           <span>Inviter d'autres utilisateurs</span>
         </div>
         {canInvite && (
@@ -82,27 +82,25 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         )}
         {/* Guests list */}
         {isNotEmpty(members) && (
-          <div className={styles.guests}>
-            <ul>
+          <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+            <ul className="flex flex-col gap-3.5">
               {members.map((member) => {
                 return (
-                  <li key={member?.user?._id} className={styles.member}>
-                    <div className={styles.user}>
+                  <li key={member?.user?._id} className="flex justify-between items-center gap-3">
+                    <div>
                       {member?.user?.picture ? (
                         <Image
                           src={member?.user?.picture || "/default-pfp.webp"}
                           width={32}
                           height={32}
                           alt={`Photo de profil de ${member?.firstName}`}
-                          style={{
-                            borderRadius: "50%",
-                          }}
+                          className="rounded-full min-w-8 min-h-8"
                         />
                       ) : (
                         <NoPicture user={member?.user} width={32} height={32} />
                       )}
                       <span
-                        className={styles.email}
+                        className="w-55 overflow-hidden text-ellipsis"
                         title={member?.user?.email}
                       >
                         {member?.user?.email}
@@ -117,8 +115,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           member={member}
                         />
                       ) : (
-                        <div className={styles.role}>
-                          <span>{memberRole(member?.role)}</span>
+                        <div className="w-full text-text-size-small">
+                          <span className="text-center w-full text-text-color-muted">{memberRole(member?.role)}</span>
                         </div>
                       )}
                     </div>
@@ -135,6 +133,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           type="submit"
                           data-disabled={pending}
                           disabled={pending}
+                          className="rounded-sm p-2 text-text-size-small bg-danger-color h-8 hover:bg-text-color-red"
                         >
                           Révoquer
                         </button>
@@ -147,8 +146,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
           </div>
         )}
         {isNotEmpty(projectInvitations) && (
-          <div className={styles.invitations}>
-            <ul>
+          <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2 ">
+            <ul className="flex flex-col gap-3.5">
               <ProjectInvitationsList
                 projectInvitations={projectInvitations}
                 setIsPopup={setIsPopup}
@@ -159,7 +158,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
           </div>
         )}
       </div>
-      <div id="modal-layout" onClick={(e) => setIsOpen(false)}></div>
+      <div className="modal-layout" onClick={(e) => setIsOpen(false)}></div>
       {isPopup && (
         <PopupMessage
           status={isPopup?.status}
@@ -213,14 +212,14 @@ export function ProjectInvitationsList({
   return (
     <>
       {projectInvitations.map((inv) => (
-        <li key={inv?._id} className={styles.pending}>
+        <li key={inv?._id} className="flex justify-between items-center gap-3 text-text-color-muted">
           <div>
             <Image
               src={"/default-pfp.webp"}
               width={32}
               height={32}
               alt={`Photo de profil de ${inv?.guestEmail}`}
-              style={{ borderRadius: "50%" }}
+              className="rounded-full"
             />
             <span>{inv?.guestEmail}</span>
           </div>
@@ -248,7 +247,7 @@ export function ProjectInvitationsList({
                 defaultValue={inv?.projectId}
                 hidden
               />
-              <button type="submit" data-disabled={pending} disabled={pending}>
+              <button type="submit" data-disabled={pending} disabled={pending} className="rounded-sm p-2 text-text-size-small bg-danger-color h-8 hover:bg-text-color-red">
                 Annuler
               </button>
             </form>

@@ -1,4 +1,4 @@
-.container {
+/* .container {
     display: flex;
     flex-direction: column;
     top: 40px;
@@ -10,9 +10,9 @@
     overflow-y: auto;
     border-radius: var(--border-radius-medium);
     box-shadow: var(--box-shadow-medium);
-}
+} */
 
-.header {
+/* .header {
     font-weight: bold;
     font-size: var(--text-size-normal);
     display: flex;
@@ -23,26 +23,25 @@
     background-color: var(--background-color);
     z-index: 2;
     border-bottom: 1px solid var(--text-medium-color);
-}
+} */
 
-.unreadCount {
+/* .unreadCount {
     background-color: var(--accent-color);
     color: white;
     font-size: var(--text-size-small);
     padding: 2px 8px;
     border-radius: 12px;
     font-weight: 500;
-}
+} */
 
-.notifications {
+/* .notifications {
     height: 100%;
     overflow-y: auto;
 
-}
+} */
 
 
-.notification {
-    display: flex;
+/* .notification {
     gap: 4px;
     cursor: pointer;
     display: flex;
@@ -60,51 +59,51 @@
 
 .notification[data-read="false"] {
     background-color: var(--accent-color-transparent)
-        /* background-color: var(--third-background-color); */
-}
+         background-color: var(--third-background-color); */
+/* } */
 
-.notification:hover {
+/* .notification:hover {
     background-color: var(--third-background-color);
-}
+}  */
 
 
-.left {
+/* .left {
     display: flex;
     gap: 8px;
-}
+} */
 
-.header,
+/* .header,
 .messsage,
 .empty,
 .notification {
     padding: 14px;
-}
+} */
 
-.message {
+/* .message {
     display: flex;
     flex-direction: column;
     gap: 4px;
-}
+} */
 
-.right {
+/* .right {
     display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: flex-end;
-}
+} */
 
 
-.title {
+/* .title {
     font-size: var(--text-size-normal);
     font-weight: 500;
-}
+} */
 
-.content {
+/* .content {
     font-size: var(--text-size-small);
     color: var(--text-color-muted);
-}
+} */
 
-.notification .date {
+/* .notification .date {
     font-size: var(--text-size-small);
     color: var(--text-color-muted);
     align-self: flex-start;
@@ -113,22 +112,22 @@
 .date {
     text-align: right;
     min-width: max-content;
-}
+} */
 
-.empty {
+/* .empty {
     text-align: center;
     padding: 24px;
     color: var(--text-color-muted);
     font-style: italic;
-}
+} */
 
-.headerActions {
+/* .headerActions {
     display: flex;
     align-items: center;
     gap: 10px;
-}
+} */
 
-.readAllButton {
+/* .readAllButton {
     background: transparent;
     color: var(--accent-color);
     padding: 4px 8px;
@@ -138,12 +137,12 @@
 }
 
 .readAllButton:hover {
-    background-color: rgba(168, 126, 81, 0.1);
+    background-color: #a87e511a;
     box-shadow: none;
 }
 
 .readAllButton[data-disabled="true"] {
     opacity: 0.5;
     cursor: not-allowed;
-    background-color: rgba(168, 126, 81, 0.1);
-}
+    background-color: #a87e511a;
+} */

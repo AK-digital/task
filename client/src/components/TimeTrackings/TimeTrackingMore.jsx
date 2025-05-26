@@ -44,7 +44,7 @@ export default function TimeTrackingMore({
           </li>
         </ul>
       </div>
-      <div id="modal-layout-opacity" onClick={handleMore}></div>
+      <div className="modal-layout-opacity" onClick={handleMore}></div>
     </>
   );
 }

@@ -129,12 +129,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                       width={20}
                       height={20}
                       quality={100}
-                      style={{
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                        minWidth: "20px",
-                        minHeight: "20px",
-                      }}
+                      className="rounded-full max-h-[20px] min-h-[20px] min-w-[20px] object-cover"
                     />
                     <span>{option?.label}</span>
                   </label>
@@ -145,7 +140,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
         )}
       </div>
       {isOpen && (
-        <div id="modal-layout-opacity" onClick={() => setIsOpen(false)}></div>
+        <div className="modal-layout-opacity" onClick={() => setIsOpen(false)}></div>
       )}
     </>
   );

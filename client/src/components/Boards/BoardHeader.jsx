@@ -353,7 +353,7 @@ export default function BoardHeader({
             </ul>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={(e) => setOpenColors(false)}
           ></div>
         </>

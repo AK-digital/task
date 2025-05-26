@@ -192,7 +192,7 @@ export default function TaskEstimate({ task, project, uid }) {
             </div>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={() => setIsEditing(false)}
           ></div>
         </>

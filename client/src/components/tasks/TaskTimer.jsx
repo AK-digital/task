@@ -201,7 +201,7 @@ export default function TaskTimer({ task, project, uid }) {
               </div>
             )}
           </div>
-          <div id="modal-layout-opacity" onClick={(e) => setMore(false)}></div>
+          <div className="modal-layout-opacity" onClick={(e) => setMore(false)}></div>
         </>
       )}
     </div>

@@ -49,7 +49,7 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
           </ul>
         )}
       </div>
-      {isOpen && <div id="modal-layout-opacity" onClick={handleIsOpen}></div>}
+      {isOpen && <div className="modal-layout-opacity" onClick={handleIsOpen}></div>}
     </>
   );
 }

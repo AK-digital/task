@@ -11,7 +11,7 @@ export default async function ProjectsLayout({ children }) {
   return (
     <>
       <Header />
-      <div className={styles.container}>
+      <div className="flex h-full min-h-[calc(100svh-62px)]">
         <SideNav projects={projects} />
         {children}
       </div>

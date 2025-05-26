@@ -100,7 +100,7 @@ export default function CreateProject({
         </form>
       </div>
       <div
-        id="modal-layout-opacity"
+        className="modal-layout-opacity"
         onClick={(e) => setIsCreating(false)}
       ></div>
     </div>

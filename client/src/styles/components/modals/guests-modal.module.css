@@ -1,4 +1,4 @@
-.container {
+/* .container {
   box-shadow: 2px 2px 4px var(--foreground);
   background-color: var(--secondary-background-color);
   display: flex;
@@ -6,54 +6,54 @@
   gap: 20px;
   width: 100%;
   max-width: 500px;
-}
+} */
 
-.heading {
+/* .heading {
   font-size: 1.4rem;
   font-weight: 500;
-}
+} */
 
-.guests,
+/* .guests,
 .invitations {
   border-top: 1px solid var(--border-color);
   padding-top: 20px;
-}
+} */
 
-.guests ul,
+/* .guests ul,
 .invitations ul {
   display: flex;
   flex-direction: column;
   gap: 14px;
-}
+} */
 
-.guests li,
+/* .guests li,
 .invitations li {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-}
+} */
 
-.guests div,
+/* .guests div,
 .invitations div {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-}
+} */
 
-.user img {
+/* .user img {
   min-width: 32px;
   min-height: 32px;
-}
+} */
 
-.email {
+/* .email {
   width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
-}
+} */
 
-.role {
+/* .role {
   width: 100px;
   font-size: var(--text-size-small);
 }
@@ -62,9 +62,9 @@
   text-align: center;
   width: 100%;
   color: var(--text-color-muted);
-}
+} */
 
-.member button,
+/* .member button,
 .pending button {
   border-radius: var(--border-radius-xs);
   padding: 8px !important;
@@ -80,4 +80,4 @@
 
 .pending {
   color: var(--text-color-muted);
-}
+} */

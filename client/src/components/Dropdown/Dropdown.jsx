@@ -77,7 +77,7 @@ export function DropDown({
             })}
           </ul>
         )}
-        {isOpen && <div id="modal-layout-opacity" onClick={handleIsOpen}></div>}
+        {isOpen && <div className="modal-layout-opacity" onClick={handleIsOpen}></div>}
       </div>
     </>
   );

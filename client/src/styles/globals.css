@@ -356,6 +356,36 @@
     font-weight: 400;
     transition: all linear 150ms;
   }
+
+  /* UsersInfo */
+  .container_UsersInfo::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .container_UsersInfo::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-background-color);
+    border-radius: 6px;
+  }
+
+  .modal-layout,
+  .task-modal-layout,
+  .modal-layout-opacity {
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal-layout,
+  .task-modal-layout {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-layout-opacity {
+    background-color: transparent;
+  }
 }
 
 @layer base {
@@ -572,26 +602,6 @@ html:has(#task-more) {
   font-size: var(--text-text-size-small);
   color: var(--color-text-color-dark);
   user-select: none;
-}
-
-#modal-layout,
-#task-modal-layout,
-#modal-layout-opacity {
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-#modal-layout,
-#task-modal-layout {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-#modal-layout-opacity {
-  background-color: transparent;
 }
 
 #task-text:last-child {

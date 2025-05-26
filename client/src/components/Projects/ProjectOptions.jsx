@@ -381,7 +381,7 @@ export function IconList({ setMoreIcons, links, setLinks, idx }) {
         ))}
       </div>
       <div
-        id="modal-layout-opacity"
+        className="modal-layout-opacity"
         onClick={(e) => {
           e.stopPropagation();
           setMoreIcons(null);

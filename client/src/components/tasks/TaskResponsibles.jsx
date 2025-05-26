@@ -150,11 +150,7 @@ export default function TaskResponsibles({ task, project, archive }) {
                   width={30}
                   height={30}
                   quality={100}
-                  style={{
-                    objectFit: "cover",
-                    borderRadius: "50%",
-                    cursor: "pointer",
-                  }}
+                  className="rounded-full max-h-[30px] object-cover cursor-pointer"
                   alt={`Photo de profil de ${responsible?.firstName}`}
                 />
               ) : (
@@ -191,7 +187,7 @@ export default function TaskResponsibles({ task, project, archive }) {
                         width={20}
                         height={20}
                         quality={100}
-                        style={{ objectFit: "fill", borderRadius: "50%" }}
+                        className="rounded-full max-h-[20px] object-fill"
                         alt={`Photo de profil de ${responsible?.firstName}`}
                       />
                       {responsible?.firstName + " " + responsible?.lastName}

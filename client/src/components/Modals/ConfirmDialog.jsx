@@ -4,14 +4,14 @@ export default function ConfirmDialog({ isOpen, onClose, onConfirm, message }) {
     if (!isOpen) return null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.popupConfirm}>
-                <div className={styles.arrow}></div>
-                <div className={styles.popupContent}>
-                    <p>{message}</p>
-                    <span className={styles.info}>Cette action est irréversible</span>
-                    <div className={styles.confirmButtons}>
-                        <button onClick={onClose} className={styles.cancelButton}>
+        <div className="relative">
+            <div className="absolute bg-background-secondary-color rounded-lg shadow-shadow-box-medium z-2002 right-[29px] -top-[50px] min-w-50">
+                <div className="absolute top-[49%] right-0 w-2.5 h-2.5 bg-background-secondary-color rotate-45 -translate-y-1/2"></div>
+                <div className="p-3">
+                    <p className="text-[0.85em] text-center">{message}</p>
+                    <span className="text-[0.7rem] text-[#8688a4] text-center w-full block">Cette action est irréversible</span>
+                    <div className="flex justify-between gap-2 mt-2.5">
+                        <button onClick={onClose} className="bg-text-color-muted py-2 px-[22px] border-none rounded-lg cursor-pointer">
                             Non
                         </button>
                         <button
@@ -19,7 +19,7 @@ export default function ConfirmDialog({ isOpen, onClose, onConfirm, message }) {
                                 onConfirm();
                                 onClose();
                             }}
-                            className={styles.deleteButton}
+                            className="bg-danger-color text-white py-2 px-[22px] border-none rounded-lg cursor-pointer"
                         >
                             Oui
                         </button>

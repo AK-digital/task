@@ -69,7 +69,7 @@ export default function PictureForm() {
             width={100}
             height={100}
             quality={100}
-            className="rounded-full object-cover"
+            className="rounded-full object-cover max-h-[100px] max-w-[100px]"
           />
           {editImg && !pending && (
             <label htmlFor="picture" className="absolute flex justify-center items-center z-2001 left-1/2 top-1/2 w-25 h-25 bg-black/30 rounded-full -translate-1/2 cursor-pointer">

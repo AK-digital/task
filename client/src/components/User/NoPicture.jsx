@@ -30,7 +30,7 @@ export default function NoPicture({ user, width, height }) {
 
   return (
     <div
-      className="flex justify-center items-center rounded-full cursor-default select-none mt-[5px]"
+      className="flex justify-center items-center rounded-full cursor-default select-none mt-[5px] min-w-[30px] "
       style={{
         width: width,
         height: height,

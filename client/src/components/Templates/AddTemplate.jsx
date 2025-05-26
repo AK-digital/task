@@ -70,7 +70,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
           </button>
         </form>
       </div>
-      <div id="modal-layout" onClick={(e) => setAddTemplate(false)}></div>
+      <div className="modal-layout" onClick={(e) => setAddTemplate(false)}></div>
       {popup && (
         <PopupMessage
           status={popup.status}
