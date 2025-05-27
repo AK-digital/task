@@ -506,6 +506,25 @@
     transition: background-color 5000s linear 0s;
     -webkit-text-fill-color: var(--text-dark-color) !important;
   }
+
+  /* TaskDeadline */
+  .wrapper_TaskDeadline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--progress);
+    height: 100%;
+    background-color: var(--finished-color);
+  }
+
+  .wrapper_TaskDeadline[data-past-deadline="true"]::before {
+    background-color: var(--text-color-red);
+  }
+
+  .wrapper_TaskDeadline[data-past-today="true"]::before {
+    background-color: var(--processing-color);
+  }
 }
 
 @layer base {
@@ -729,11 +748,11 @@ html:has(#task-more) {
 }
 
 /* Task row */
-#task-row {
+/* #task-row {
   display: flex;
   align-items: center;
   height: 100%;
-}
+} */
 
 .epr_-6npj90 {
   --epr-emoji-size: 18px !important;

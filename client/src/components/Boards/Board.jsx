@@ -112,7 +112,7 @@ export default function Board({
       />
       {/* Board content */}
       {open && !isOverlay && (
-        <div className="px-5">
+        <div className="bg-background-secondary-color px-5">
           <Tasks
             tasks={tasks}
             project={project}

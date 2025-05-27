@@ -21,7 +21,7 @@ export default function TaskCheckbox({ task, setSelectedTasks }) {
   }
 
   return (
-    <div id="task-row">
+    <div className="flex items-center h-full">
       <input
         type="checkbox"
         name="task"

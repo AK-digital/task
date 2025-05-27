@@ -1,4 +1,4 @@
-.container {
+/* .container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,15 +9,15 @@
     width: 100%;
     height: 100%;
     gap: 2px;
-}
+} */
 
-.container svg {
+/* .container svg {
     color: var(--text-color-muted);
     width: 18px;
     height: 18px;
-}
+} */
 
-.wrapper {
+/* .wrapper {
     position: relative;
     width: 100%;
     background-color: var(--primary-background-color);
@@ -28,14 +28,14 @@
     cursor: pointer;
     font-size: var(--text-size-small);
     overflow: hidden;
-}
+} */
 
-.wrapper span {
+/* .wrapper span {
     position: relative;
     z-index: 1;
-}
+} */
 
-.wrapper::before {
+/* .wrapper_TaskDeadline::before {
     content: "";
     position: absolute;
     top: 0;
@@ -45,18 +45,17 @@
     background-color: var(--finished-color);
 }
 
-
-.wrapper[data-past-deadline="true"]::before {
+.wrapper_TaskDeadline[data-past-deadline="true"]::before {
     background-color: var(--text-color-red);
 }
 
-.wrapper[data-past-today="true"]::before {
+.wrapper_TaskDeadline[data-past-today="true"]::before {
     background-color: var(--processing-color);
-}
+} */
 
-.wrapper input {
+/* .wrapper input {
     opacity: 0;
     width: 0;
     height: 0;
     position: absolute;
-}
+} */
