@@ -15,7 +15,7 @@ export default function UserInfo() {
         width={40}
         height={40}
         quality={100}
-        className="rounded-full"
+        className="rounded-full max-h-10 max-w-10"
       />
     </Link>
   );

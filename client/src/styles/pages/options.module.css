@@ -1,4 +1,4 @@
-.container {
+/* .container {
     position: relative;
     background-color: var(--primary-background-transparent);
     border-radius: var(--border-radius-medium) 0 0 0;
@@ -13,52 +13,52 @@
     top: 45px;
     left: 45px;
     cursor: pointer;
-}
+} */
 
-.columns {
+/* .columns {
     width: 100%;
-}
-
+} */
+/* 
 .columns,
 .column {
     display: flex;
     gap: 40px;
-}
+} */
 
-.columns {
+/* .columns {
     justify-content: center;
-}
+} */
 
-.column {
+/* .column {
     flex-direction: column;
     width: 40%;
-}
+} */
 
-.column:last-child {
+/* .column:last-child {
     position: relative;
     top: 94px;
     width: 20%;
     min-width: 400px;
-}
+} */
 
 
-.column:last-child .wrapper {
+/* .column:last-child .wrapper {
     height: 675px;
-}
+} */
 
-.wrapper {
+/* .wrapper {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: var(--border-radius-medium);
     padding: 32px;
-}
+} */
 
 
-.header {
+/* .header {
     display: flex;
     justify-content: space-between;
-}
+} */
 
-.infos {
+/* .infos {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -69,8 +69,8 @@
 
 .title {
     font-size: var(--text-size-large);
-}
-
+} */
+/* 
 .content {
     display: flex;
     flex-direction: column;
@@ -81,9 +81,9 @@
 .picture {
     position: relative;
     width: fit-content;
-}
+} */
 
-.editPicture {
+/* .editPicture {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
@@ -98,16 +98,16 @@
 
 .editPicture svg {
     color: white;
-}
-
+} */
+/* 
 .projectName {
     font-size: 1.2rem;
     padding-left: 4px;
     border-bottom: 2px solid var(--text-dark-color);
     color: var(--text-color-dark);
-}
+} */
 
-.footer {
+/* .footer {
     margin-top: 24px;
     display: flex;
     justify-content: space-between;
@@ -118,9 +118,9 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-}
+} */
 
-.archive {
+/* .archive {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -130,10 +130,10 @@
     text-decoration: underline;
     color: var(--text-dark-color);
     font-size: var(--text-size-small);
-}
+} */
 
 /* LINKS */
-
+/* 
 .content:has(.link) {
     display: flex;
     flex-direction: column;
@@ -142,10 +142,10 @@
 
 .link {
     display: flex;
-    align-items: center;
-    /* gap: 8px; */
-}
-
+    align-items: center; */
+/* gap: 8px; */
+/* } */
+/* 
 .icon {
     position: relative;
     display: flex;
@@ -154,9 +154,9 @@
     border: 1px solid var(--text-medium-color);
     height: 45px;
     width: 45px;
-}
+} */
 
-.iconList {
+/* .iconList {
     position: absolute;
     z-index: 2001;
     top: -25px;
@@ -172,8 +172,8 @@
     border-radius: var(--border-radius-small);
     box-shadow: var(--box-shadow-small);
     gap: 12px;
-}
-
+} */
+/* 
 .iconElement {
     display: flex;
     flex-direction: column;
@@ -187,15 +187,15 @@
 .iconElement:hover {
     background-color: var(--third-background-color);
     cursor: pointer;
-}
+} */
 
-.remove {
+/* .remove {
     color: var(--text-color-red);
     padding-left: 20px;
     cursor: pointer;
-}
+} */
 
-.addLink {
+/* .addLink {
     background-color: transparent;
     color: var(--accent-color);
     width: fit-content;
@@ -207,15 +207,15 @@
     background-color: transparent;
     box-shadow: none;
     text-decoration: underline;
-}
+} */
 
-.link input {
+/* .link input {
     position: relative;
     top: 2px;
     padding-left: 8px;
-}
+} */
 
-.delete {
+/* .delete {
     padding: 0;
     width: fit-content;
     background: transparent;
@@ -225,26 +225,26 @@
 
 .delete:hover {
     background: transparent;
-}
+} */
 
-.updateButtons {
+/* .updateButtons {
     display: flex;
     justify-content: space-between;
 }
 
 .updateButtons button:last-child {
     border-radius: var(--border-radius-xs);
-}
+} */
 
 /* RIGHT SIDE */
 
-.column:nth-child(2) .content {
+/* .column:nth-child(2) .content {
     height: 100%;
-}
-
+} */
+/* 
 .note {
     height: 90%;
     resize: none;
     border: none;
     font-size: var(--text-size-normal);
-}
+} */

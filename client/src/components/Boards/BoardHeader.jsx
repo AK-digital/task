@@ -243,7 +243,6 @@ export default function BoardHeader({
             <input
               type="checkbox"
               name="board"
-              className="checkbox_BoardHeader relative z-1 w-[14px] h-[14px] appearance-none bg-transparent border border-text-medium-color rounded-xs cursor-pointer p-1.5 ml-[3px] checked:bg-color-accent-color checked:relative"
               onClick={handleCheckBoard}
             />
           </div>

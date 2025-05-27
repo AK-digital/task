@@ -150,6 +150,75 @@
     pointer-events: none;
   }
 
+  .toolbar_Tiptap button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none !important;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 8px !important;
+    margin: auto;
+    color: #333;
+    transition: background 0.2s;
+    border-radius: 4px;
+  }
+
+  .toolbar_Tiptap button svg {
+    min-width: 16px;
+    min-height: 16px;
+  }
+
+  .toolbar_Tiptap button:hover {
+    background: #ddd;
+  }
+
+  .content_Tiptap ul,
+  .content_Tiptap ol {
+    margin-left: 25px;
+  }
+
+  .content_Tiptap ul {
+    list-style-type: inherit !important;
+  }
+
+  .content_Tiptap pre {
+    background: #282c34;
+    color: #abb2bf;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    width: fit-content;
+  }
+
+  .content_Tiptap img {
+    max-width: 800px;
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    margin: 10px 0 10px 0;
+  }
+
+  .content_Tiptap span {
+    color: var(--accent-color);
+  }
+
+  .actions_Tiptap button {
+    border: 2px solid var(--accent-color);
+    transition: all 80ms linear;
+  }
+
+  .actions_Tiptap button:hover {
+    border-color: var(--accent-color-hover);
+  }
+
+  .actions_Tiptap button[data-disabled="true"] {
+    pointer-events: none;
+    background-color: transparent;
+    border: 2px solid var(--text-color-muted);
+    color: var(--text-color-muted);
+  }
+
   /* BoardHeader */
   .container_BoardHeader[data-archive="false"] .dataTitle_BoardHeader[data-authorized="true"]:hover {
     border: 1px solid var(--border-color);
@@ -157,21 +226,18 @@
   }
 
   .container_BoardHeader[data-open="false"] {
-    background-color: var(--secondary-background-color);
+    background-color: var(--secondary-background-color) !important;
     padding: 8px;
     border-radius: var(--border-radius-xs);
     margin-bottom: 0;
   }
 
-  .checkbox_BoardHeader:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--text-color-muted);
-    font-size: 12px;
-    color: white !important;
+  /* Task */
+  .container_Task>div>span {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   /* Message */
@@ -386,6 +452,60 @@
   .modal-layout-opacity {
     background-color: transparent;
   }
+
+  /* AttachmentsInfo */
+  .infos_AttachmentsInfo::-webkit-scrollbar,
+  .actions_AttachmentsInfo::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-background-color);
+    border-radius: 6px;
+  }
+
+  .infos_AttachmentsInfo::-webkit-scrollbar-thumb,
+  .actions_AttachmentsInfo::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-background-color);
+    border-radius: 6px;
+  }
+
+  .delete_AttachmentsInfo[data-has-background="true"]:hover {
+    background-color: var(--text-color-red);
+  }
+
+  .delete_AttachmentsInfo[data-has-background="false"],
+  .download_AttachmentsInfo[data-has-background="false"] {
+    background-color: transparent;
+    background: none;
+  }
+
+  .delete_AttachmentsInfo[data-has-background="false"] {
+    color: var(--danger-color);
+  }
+
+  .download_AttachmentsInfo[data-has-background="false"] {
+    color: var(--accent-color);
+  }
+
+  .delete_AttachmentsInfo[data-has-background="false"]:hover,
+  .download_AttachmentsInfo[data-has-background="false"]:hover {
+    background: none;
+    box-shadow: none;
+  }
+
+  .delete_AttachmentsInfo[data-has-background="false"]:hover {
+    color: var(--text-color-red);
+  }
+
+  .download_AttachmentsInfo[data-has-background="false"]:hover {
+    color: var(--accent-color-hover);
+  }
+
+  /* GuestFormInvitation */
+  .input_GuestFormInvitation:-webkit-autofill,
+  .input_GuestFormInvitation:-webkit-autofill:hover,
+  .input_GuestFormInvitation:-webkit-autofill:focus,
+  .input_GuestFormInvitation:-webkit-autofill:active {
+    transition: background-color 5000s linear 0s;
+    -webkit-text-fill-color: var(--text-dark-color) !important;
+  }
 }
 
 @layer base {
@@ -456,7 +576,7 @@
     font-size: var(--text-size-medium);
     letter-spacing: var(--letter-spacing-normal);
     background-color: var(--accent-color);
-    padding: 12px 24px !important;
+    padding: 12px 24px;
     border: none;
     outline: none;
     color: white;
@@ -538,7 +658,7 @@
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
     transition: background-color 5000s linear 0s;
-    -webkit-text-fill-color: white !important;
+    -webkit-text-fill-color: white;
   }
 
   input[type="checkbox"] {

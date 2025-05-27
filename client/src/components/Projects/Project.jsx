@@ -50,7 +50,7 @@ export default function Project({
   }, [socket]);
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col bg-[#dad6c799] min-h-full h-full rounded-tl-border-radius-medium pt-6 pl-6 pr-3 pb-0">
       <ProjectHeader
         project={project}
         tasks={tasks}

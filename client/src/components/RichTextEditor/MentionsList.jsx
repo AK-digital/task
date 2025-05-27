@@ -113,7 +113,7 @@ export default function MentionsList({
 
   return (
     <div
-      className={styles.container}
+      className="absolute z-9999 bg-background-secondary-color shadow-shadow-box-small rounded-lg p-2"
       style={{
         top: mentionPosition?.top,
         left: mentionPosition?.left,
@@ -121,12 +121,12 @@ export default function MentionsList({
       onMouseEnter={resetIdxOnMouseEnter}
     >
       {isNotEmpty(members) && (
-        <div className={styles.guests}>
-          <ul className={styles.items}>
+        <div>
+          <ul>
             {members?.map((member, idx) => {
               return (
                 <li
-                  className={styles.item}
+                  className="flex items-center gap-1.5 text-text-size-small p-1 cursor-pointer transition-colors duration-[120ms] ease-linear hover:bg-background-third-color hover:rounded-sm data-[active=true]:bg-background-third-color data-[active=true]:rounded-sm"
                   key={member?.user?._id}
                   data-active={idx === selectedIdx}
                   onClick={() => addMention(member?.user)}
@@ -137,7 +137,7 @@ export default function MentionsList({
                       width={22}
                       height={22}
                       alt={`Photo de profil de ${member?.user?.firstName}`}
-                      style={{ borderRadius: "50%" }}
+                      className="rounded-full max-h-[22px] max-w-[22px]"
                     />
                   ) : (
                     <NoPicture user={member?.user} width={22} height={22} />

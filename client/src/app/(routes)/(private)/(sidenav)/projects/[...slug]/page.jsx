@@ -29,7 +29,7 @@ export default async function ProjectPage({ params }) {
   if (!initialProject) return notFound(); // 404
 
   return (
-    <main className={styles.main}>
+    <main className="w-full ml-6 min-w-0 max-h-[calc(100svh-64px)]">
       {!options && !timeTracking && (
         <Project
           initialProject={initialProject}

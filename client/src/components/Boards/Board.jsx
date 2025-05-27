@@ -1,6 +1,5 @@
 "use client";
 // import styles from "@/styles/components/boards/board.module.css";
-import Tasks from "../tasks/Tasks";
 import { useState, useEffect, useRef, useActionState } from "react";
 import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
@@ -113,7 +112,7 @@ export default function Board({
       />
       {/* Board content */}
       {open && !isOverlay && (
-        <div className={styles.tasks}>
+        <div className="px-5">
           <Tasks
             tasks={tasks}
             project={project}
@@ -167,7 +166,7 @@ export default function Board({
           {isWritting && (
             <div className="absolute mt-1 ml-[25px] text-text-color-muted text-text-size-small">
               <p>
-                Appuyer sur <span className="text-white">entrée</span> pour ajouter une tâche
+                Appuyer sur <span className="text-text-accent-color">entrée</span> pour ajouter une tâche
               </p>
             </div>
           )}

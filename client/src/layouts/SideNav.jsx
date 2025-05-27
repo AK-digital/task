@@ -105,7 +105,7 @@ export default function SideNav({ projects }) {
           </div>
           <div className="-mt-3 mb-[18px]">
             <Link
-              href={"/myTasks"}
+              href={"/tasks"}
               title="Mes tâches"
               className="flex justify-center items-center min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color hover:text-color-accent-color-hover hover:cursor-pointer [&_svg]:transition-all [&_svg]:ease-linear [&_svg]:duration-150"
             >

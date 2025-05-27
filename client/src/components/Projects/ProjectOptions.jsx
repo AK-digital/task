@@ -154,24 +154,24 @@ export default function ProjectOptions({ project }) {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.back} onClick={() => router.back()}>
+    <div className="relative bg-background-primary-transparent rounded-t-border-radius-medium p-8 text-text-dark-color h-full overflow-auto">
+      <div onClick={() => router.back()} className="absolute top-[45px] left-[45px] cursor-pointer">
         <ArrowLeftCircle size={32} />
       </div>
-      <form action={formAction} className={styles.form}>
+      <form action={formAction}>
         <input type="hidden" name="project-id" defaultValue={project?._id} />
 
         {/* Columns container */}
-        <div className={styles.columns}>
+        <div className="flex justify-center gap-10 w-full">
           {/* Left Column */}
-          <div className={styles.column}>
+          <div className="flex gap-10 flex-col w-[40%]">
             <h1>Options de projet</h1>
             {/* Informations */}
-            <div className={styles.wrapper}>
+            <div className="bg-white/50 rounded-border-radius-medium p-8">
               {/* Wrapper header */}
-              <div className={styles.header}>
-                <span className={styles.title}>Informations générales</span>
-                <div className={styles.infos}>
+              <div className="flex justify-between">
+                <span className="text-text-size-large">Informations générales</span>
+                <div className="flex flex-col items-center gap-0.5 text-[0.8rem] text-text-color-muted">
                   <span>Créée le {createdAt}</span>
                   <span>
                     Par {author?.user?.firstName + " " + author?.user?.lastName}
@@ -179,10 +179,10 @@ export default function ProjectOptions({ project }) {
                 </div>
               </div>
               {/* Wrapper content */}
-              <div className={styles.content}>
+              <div className="flex flex-col gap-0 mt-5">
                 {/* Project Logo */}
                 <div
-                  className={styles.picture}
+                  className="relative w-fit"
                   onMouseEnter={() => setEditImg(true)}
                   onMouseLeave={() => setEditImg(false)}
                 >
@@ -192,16 +192,11 @@ export default function ProjectOptions({ project }) {
                     width={100}
                     height={100}
                     quality={100}
-                    className={styles.logo}
-                    style={{
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      objectPosition: "center",
-                    }}
+                    className="rounded-full object-cover object-center"
                   />
                   {(editImg || isPictLoading) && (
-                    <label htmlFor="logo" className={styles.editPicture}>
-                      {!isPictLoading && <Pencil size={20} />}
+                    <label htmlFor="logo" className="absolute flex justify-center items-center inset-0 bg-black/50 cursor-pointer min-w-25 h-25 rounded-full">
+                      {!isPictLoading && <Pencil size={20} className="text-white" />}
                     </label>
                   )}
                   <input
@@ -221,21 +216,21 @@ export default function ProjectOptions({ project }) {
                     type="text"
                     id="project-name"
                     name="project-name"
-                    className={`${styles.projectName} ${bricolageGrostesque.className}`}
+                    className="font-bricolage text-[1.2rem] pl-1 border-b-2 border-text-dark-color text-text-dark-color"
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
                   />
                 </div>
 
-                <div className={styles.footer}>
-                  <div className={styles.counts}>
+                <div className="flex justify-between items-end mt-6">
+                  <div className="flex flex-col gap-1">
                     <span>{project?.boardsCount} Tableaux</span>
                     <span>{project?.tasksCount} tâches</span>
                   </div>
                   {/* Project archive */}
-                  <div className={styles.archive}>
+                  <div className="flex items-center gap-1">
                     <Archive size={16} />
-                    <Link href={`/projects/${project?._id}/archive`}>
+                    <Link href={`/projects/${project?._id}/archive`} className="underline text-text-dark-color text-text-size-small">
                       Archive du projet
                     </Link>
                   </div>
@@ -243,17 +238,17 @@ export default function ProjectOptions({ project }) {
               </div>
             </div>
             {/*  Links  */}
-            <div className={styles.wrapper}>
-              <div className={styles.title}>
+            <div className="bg-white/50 rounded-border-radius-medium p-8">
+              <div className="text-text-size-large">
                 <span>Liens rapides</span>
               </div>
-              <div className={styles.content}>
+              <div className="flex flex-col gap-4 mt-5">
                 {isNotEmpty(links) &&
                   links?.map((link, idx) => {
                     return (
-                      <div className={styles.link} key={idx}>
+                      <div className="flex items-center" key={idx}>
                         <div
-                          className={styles.icon}
+                          className="relative flex items-center justify-center border border-text-medium-color w-[45px] h-[45px]"
                           onClick={() => setMoreIcons(idx)}
                         >
                           {displayIcon(link?.icon)}
@@ -287,7 +282,7 @@ export default function ProjectOptions({ project }) {
                           }}
                         />
                         <div
-                          className={styles.remove}
+                          className="text-text-color-red pl-5 cursor-pointer"
                           onClick={(e) => removeLink(e, link)}
                         >
                           <Delete size={20} />
@@ -296,7 +291,7 @@ export default function ProjectOptions({ project }) {
                     );
                   })}
                 {links.length < 6 && (
-                  <button onClick={addLink} className={styles.addLink}>
+                  <button onClick={addLink} className="bg-transparent text-color-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none underline">
                     Ajouter un lien
                   </button>
                 )}
@@ -304,19 +299,19 @@ export default function ProjectOptions({ project }) {
             </div>
 
             {/* Project  actions */}
-            <div className={styles.updateButtons}>
+            <div className="flex justify-between">
               <button
                 type="button"
                 onClick={() => setIsOpen(true)}
-                className={`${styles.delete} ${bricolageGrostesque.className}`}
+                className="font-bricolage p-0 w-fit bg-transparent bg-none text-text-color-red underline hover:bg-none hover:bg-transparent"
               >
                 Supprimer ce projet
               </button>
               <button
                 type="submit"
-                className={`${styles.save} ${bricolageGrostesque.className}`}
                 data-disabled={isDisabled}
                 disabled={isDisabled}
+                className="font-bricolage rounded-sm"
               >
                 Enregistrer les modifications
               </button>
@@ -324,19 +319,19 @@ export default function ProjectOptions({ project }) {
           </div>
 
           {/* Right Column */}
-          <div className={styles.column}>
-            <div className={styles.wrapper}>
-              <div className={styles.title}>
+          <div className="relative top-[94px] w-[20%] min-w-[400px] flex gap-10 flex-col">
+            <div className="bg-white/50 rounded-border-radius-medium p-8 h-[675px]">
+              <div className="text-text-size-large">
                 <span>Notes</span>
               </div>
-              <div className={styles.content}>
+              <div className="flex flex-col gap-0 mt-5 h-full">
                 <textarea
                   name="note"
                   id="note"
-                  className={`${styles.note} ${bricolageGrostesque.className}`}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Ajouter une note..."
+                  className="font-bricolage h-[90%] resize-none border-none text-text-size-normal"
                 ></textarea>
               </div>
             </div>
@@ -370,11 +365,11 @@ export function IconList({ setMoreIcons, links, setLinks, idx }) {
 
   return (
     <>
-      <div className={styles.iconList}>
+      <div className="absolute flex justify-center items-center flex-wrap bg-background-secondary-color rounded-lg shadow-shadow-box-small gap-3 z-2001 -top-[25px] right-[45px] h-fit p-3 w-[175px]">
         {icons.map((icon) => (
           <div
             key={icon?.name}
-            className={styles.iconElement}
+            className="flex flex-col items-center justify-center p-1 rounded-lg transition-all duration-150 ease-linear hover:bg-background-third-color hover:cursor-pointer"
             onClick={() => handleIconChange(icon?.name)}
           >
             {icon?.icon}

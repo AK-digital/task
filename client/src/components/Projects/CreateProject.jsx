@@ -71,15 +71,15 @@ export default function CreateProject({
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.overlay}>
+    <div className="relative w-full">
+      <div className="fixed top-0 right-0 bottom-0 bg-background-primary-color gap-1.5 w-full z-9999">
         <span
-          className={styles.closeButton}
+          className="absolute top-16 right-16 bg-none bg-transparent border-none cursor-pointer"
           onClick={() => setIsCreating(false)}
         >
           <X size={32} />
         </span>
-        <form ref={formRef} action={formAction} className={styles.form}>
+        <form ref={formRef} action={formAction} className="flex justify-start items-center flex-col mt-[15%]">
           <input
             ref={inputRef}
             type="text"
@@ -89,12 +89,13 @@ export default function CreateProject({
             required
             minLength={2}
             maxLength={250}
+            className="w-fit mt-2.5 h-[150px] text-[2.5rem] bg-transparent border-none text-center"
           />
-          <span className={styles.projectCreationInfo}>
+          <span className="text-[0.82rem] text-text-color-muted mb-3">
             Appuyer sur Entrée pour créer le projet
           </span>
-          <span className={styles.projectCreationInfo}>OU</span>
-          <button type="submit" data-disabled={pending} disabled={pending}>
+          <span className="text-[0.82rem] text-text-color-muted mb-3">OU</span>
+          <button type="submit" data-disabled={pending} disabled={pending} className="py-3.5 px-[22px]">
             Cliquer pour créer le projet
           </button>
         </form>

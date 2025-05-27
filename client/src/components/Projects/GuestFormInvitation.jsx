@@ -65,8 +65,8 @@ export default function GuestFormInvitation({
 
   return (
     <>
-      <div className={styles.container}>
-        <form action={formAction}>
+      <div>
+        <form action={formAction} className="gap-3">
           <input
             type="email"
             name="email"
@@ -74,10 +74,10 @@ export default function GuestFormInvitation({
             placeholder="Inviter par e-mail"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className={bricolageGrostesque.className}
+            className="input_GuestFormInvitation font-bricolage border-none bg-background-third-color p-2 rounded-sm"
           />
           {errors && <i>{errors?.email}</i>}
-          <button type="submit" data-disabled={pending}>
+          <button type="submit" data-disabled={pending} className="w-full rounded-sm text-text-size-medium p-2">
             Envoyer une invitation
           </button>
         </form>

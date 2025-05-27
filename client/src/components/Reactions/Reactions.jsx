@@ -74,7 +74,7 @@ export default function Reactions({
   }
 
   return (
-    <div className={styles.container}>
+    <div className="flex items-center gap-2">
       {isNotEmpty(element?.reactions) &&
         uniqueReactions.map((reaction, idx) => {
           const emoji = reaction?.emoji;
@@ -84,14 +84,14 @@ export default function Reactions({
           return (
             <div
               key={idx}
-              className={styles.wrapper}
               onClick={() => handleReactionClick(emoji)}
               onMouseEnter={() => setHoveredEmoji(emoji)}
               onMouseLeave={() => setHoveredEmoji(null)}
               title={hasUserReacted ? "Retirer votre réaction" : ""}
+              className="relative flex items-center gap-1 p-1 text-center bg-background-secondary-color rounded-sm transition-all duration-200 ease-in-out cursor-pointer hover:shadow-shadow-box-small"
             >
-              <span className={styles.emojiIcon}>{emoji}</span>
-              <span className={styles.emojiCount}>{total}</span>
+              <span>{emoji}</span>
+              <span>{total}</span>
               {/* Affichage des avatars des utilisateurs qui ont réagi */}
               {hoveredEmoji === emoji && <UsersInfo users={users} />}
             </div>

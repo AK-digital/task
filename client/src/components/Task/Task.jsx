@@ -68,7 +68,7 @@ export default function Task({
     <div
       ref={setNodeRef}
       style={style}
-      className={`${styles.container} ${isDragging ? styles.dragging : ""}`}
+      className={`container_Task flex items-center border border-text-color h-[46px] cursor-pointer text-text-color-dark transition-all duration-[120ms] ease-in-out data-[openned=true]:bg-[#ebded1] hover:shadow-[0_4px_2px_-2px_rgba(0,0,0,0.1)] ${isDragging ? "opacity-0" : ""}`}
       suppressHydrationWarning
       data-openned={openedTask === task?._id}
       data-done={task?.status === "Terminée"}
@@ -79,7 +79,7 @@ export default function Task({
       )}
       {/* Drag */}
       {isDrag && (
-        <div className={styles.canDrag} data-drag={canDrag}>
+        <div className="data-[drag=false]:cursor-[inherit]! data-[drag=false]:invisible" data-drag={canDrag}>
           <TaskDrag attributes={attributes} listeners={listeners} />
         </div>
       )}
@@ -107,7 +107,7 @@ export default function Task({
       {canRemove ? (
         <TaskRemove task={task} archive={false} mutate={mutate} />
       ) : (
-        <div className={styles.removeGhost}></div>
+        <div className="relative px-1.5 min-w-8"></div>
       )}
 
       {openedTask === task?._id && (
