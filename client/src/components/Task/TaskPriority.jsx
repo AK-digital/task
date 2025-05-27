@@ -91,7 +91,7 @@ export default function TaskPriority({ task }) {
     : "#afbde9";
 
   function listWidth() {
-    if (isEdit && priorities?.length === 6) {
+    if (isEdit && priorities?.length > 5) {
       return true;
     } else if (!isEdit && priorities?.length > 6) {
       return true;

@@ -87,7 +87,7 @@ export default function TaskStatus({ task, uid }) {
   const currentBackgroundColor = hasStatus ? currentStatus?.color : "#b3bcc0";
 
   function listWidth() {
-    if (isEdit && statuses?.length === 6) {
+    if (isEdit && statuses?.length > 5) {
       return true;
     } else if (!isEdit && statuses?.length > 6) {
       return true;

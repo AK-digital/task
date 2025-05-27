@@ -22,21 +22,21 @@ export function ProjectProvider({
     archived: archive,
   });
   const { project, mutateProject } = useProject(
-    initialProject._id,
+    initialProject?._id,
     initialProject
   );
   const { boards, mutateBoards } = useBoards(
-    initialProject._id,
+    initialProject?._id,
     archive,
     initialBoards
   );
-  const { tasks, mutateTasks } = useTasks(queries, initialTasks);
+  const { tasks, tasksLoading, mutateTasks } = useTasks(queries, initialTasks);
   const { statuses, mutateStatuses } = useStatuses(
-    initialProject._id,
+    initialProject?._id,
     initialStatuses
   );
   const { priorities, mutatePriorities } = usePriorities(
-    initialProject._id,
+    initialProject?._id,
     initialPriorities
   );
 
@@ -48,6 +48,7 @@ export function ProjectProvider({
         boards,
         mutateBoards,
         tasks,
+        tasksLoading,
         mutateTasks,
         statuses,
         mutateStatuses,
