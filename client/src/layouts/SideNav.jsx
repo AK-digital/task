@@ -1,7 +1,7 @@
 "use client";
 import styles from "@/styles/layouts/side-nav.module.css";
 import { useParams } from "next/navigation";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -25,9 +25,11 @@ import {
   LayoutGrid,
   Plus,
   ClipboardList,
+  Clock3,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import moment from "moment";
 
 export default function SideNav({ projects }) {
   const params = useParams();
@@ -36,6 +38,9 @@ export default function SideNav({ projects }) {
   const projectId = id ?? "";
   const [projectItems, setProjectItems] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
+  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
 
   useEffect(() => {
     if (projects) {
@@ -147,6 +152,19 @@ export default function SideNav({ projects }) {
               <LayoutGrid size={24} />
             </div>
             <span>Mes projets</span>
+          </Link>
+          <Link
+            href={
+              "/times?startingDate=" +
+              firstDayOfTheMonth +
+              "&endingDate=" +
+              lastDayOfTheMonth
+            }
+          >
+            <div>
+              <Clock3 size={24} />
+            </div>
+            <span>Suivi du temps</span>
           </Link>
           <Link href={"/new-project"}>
             <div>
