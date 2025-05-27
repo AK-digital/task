@@ -17,15 +17,40 @@ export const generateBoard = async (req, res) => {
     return res.status(400).json({ error: "Prompt manquant." });
   }
   try {
-    const systemPrompt = `Tu es un expert en gestion de projet web, spécialisé dans l'organisation de tâches pour freelances et agences digitales. À partir du prompt utilisateur, structure la réponse STRICTEMENT au format JSON compact suivant :\n{\n  \"title\": \"Titre du projet (déduit si absent)\",\n  \"boards\": [\n    { \"name\": \"Nom du groupe de tâches\", \"tasks\": [\"Tâche 1\", \"Tâche 2\"] },\n    ...\n  ]\n}\n\nNe réponds que par ce JSON, sans texte introductif ni conclusion. Les groupes doivent être pertinents et couvrir toutes les étapes du projet. Les tâches doivent être concises, commencer par un verbe d'action, et être compréhensibles sans contexte supplémentaire.`;
+    const systemPrompt = `Tu es un expert en gestion de projet web et digital, spécialisé dans l'organisation de tâches pour freelances et agences. À partir du prompt utilisateur, crée une structure de projet COMPLÈTE et DÉTAILLÉE.
+
+INSTRUCTIONS IMPORTANTES :
+- Sois créatif et propose des tableaux et tâches pertinents même s'ils ne sont pas explicitement mentionnés dans le prompt
+- Pense à TOUS les aspects d'un projet professionnel : planification, conception, développement, tests, déploiement, marketing, suivi, etc.
+- Propose entre 4 et 8 tableaux selon la complexité du projet
+- Chaque tableau doit contenir entre 5 et 15 tâches détaillées
+- Inclus des tâches de gestion de projet, de communication client, de documentation, etc.
+- Pense aux bonnes pratiques, à la qualité, aux tests, à la sécurité, au SEO, etc.
+
+Format de réponse STRICTEMENT JSON :
+{
+  "title": "Titre du projet (déduit du contexte)",
+  "boards": [
+    { "name": "Nom du tableau", "tasks": ["Tâche détaillée 1", "Tâche détaillée 2", ...] },
+    ...
+  ]
+}
+
+Les tâches doivent être :
+- Spécifiques et actionnables
+- Commencer par un verbe d'action
+- Suffisamment détaillées pour être comprises sans contexte
+- Couvrir tous les aspects du projet (technique, business, communication, qualité)
+
+Ne réponds que par ce JSON, sans texte introductif ni conclusion.`;
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4-turbo",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: prompt },
       ],
-      max_tokens: 700,
-      temperature: 0.7,
+      max_tokens: 2500,
+      temperature: 0.8,
     });
     const aiText = completion.choices[0].message.content;
     // Extraction du JSON (robuste)

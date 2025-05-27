@@ -73,7 +73,7 @@
   padding: 0.75rem;
   font-size: 1rem;
   resize: vertical;
-  background: var(--primary-background-color);
+  background: #efece0;
   color: var(--text-dark-color);
   margin-bottom: 0.5rem;
 }

@@ -197,14 +197,52 @@ export async function getTemplates(req, res, next) {
         },
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
         $addFields: {
           boardsCount: { $size: "$boards" },
           tasksCount: { $size: "$tasks" },
+          creator: { $arrayElemAt: ["$creator", 0] },
+          // Grouper les tâches par board
+          boardsWithTasks: {
+            $map: {
+              input: "$boards",
+              as: "board",
+              in: {
+                _id: "$$board._id",
+                title: "$$board.title",
+                color: "$$board.color",
+                tasks: {
+                  $filter: {
+                    input: "$tasks",
+                    as: "task",
+                    cond: { $eq: ["$$task.boardId", "$$board._id"] }
+                  }
+                }
+              }
+            }
+          }
         },
       },
       {
         $project: {
-          tasks: 0,
+          name: 1,
+          description: 1,
+          author: 1,
+          project: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          boardsCount: 1,
+          tasksCount: 1,
+          boardsWithTasks: 1,
+          "creator.name": 1,
+          "creator.picture": 1
         },
       },
     ]);
@@ -296,6 +334,71 @@ export async function deleteTemplate(req, res, next) {
       message:
         err?.message ||
         "Une erreur s'est produite lors de la suppression du modèle",
+    });
+  }
+}
+
+export async function useCustomTemplate(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { projectName, boards } = req.body;
+
+    if (!projectName || !boards || !Array.isArray(boards)) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants (projectName et boards requis)",
+      });
+    }
+
+    // Create a new project with the custom name
+    const newProject = new ProjectModel({
+      members: [
+        {
+          user: authUser?._id,
+          role: "owner",
+        },
+      ],
+      name: projectName,
+    });
+
+    await newProject.save();
+
+    // Create boards and tasks based on the custom data
+    for (const boardData of boards) {
+      const newBoard = new BoardModel({
+        projectId: newProject?._id,
+        title: boardData.title,
+        color: boardData.color || "#3B82F6", // Default color
+      });
+
+      await newBoard.save();
+
+      // Create tasks for this board
+      if (boardData.tasks && Array.isArray(boardData.tasks)) {
+        for (const taskData of boardData.tasks) {
+          const newTask = new TaskModel({
+            projectId: newProject?._id,
+            boardId: newBoard?._id,
+            author: authUser?._id,
+            text: taskData.text,
+          });
+
+          await newTask.save();
+        }
+      }
+    }
+
+    return res.status(201).send({
+      success: true,
+      message: "Projet créé avec succès à partir du modèle personnalisé",
+      data: newProject,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur s'est produite lors de la création du projet",
     });
   }
 }
