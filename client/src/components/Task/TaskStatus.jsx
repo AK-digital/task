@@ -4,13 +4,22 @@ import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
-import { allowedStatus } from "@/utils/utils";
 import { Plus } from "lucide-react";
+import { getFloating, usePreventScroll } from "@/utils/floating";
+import { allowedStatus } from "@/utils/utils";
 
 export default function TaskStatus({ task, uid }) {
   const [status, setStatus] = useState(task?.status);
   const [isOpen, setIsOpen] = useState(false);
   const project = task?.projectId;
+
+  const { refs, floatingStyles } = getFloating(isOpen, setIsOpen);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   const canEdit = useUserRole(project, [
     "owner",
@@ -50,12 +59,17 @@ export default function TaskStatus({ task, uid }) {
         className={styles.current}
         data-current={status}
         onClick={handleIsOpen}
+        ref={refs.setReference}
       >
         <span>{status}</span>
       </div>
       {isOpen && (
         <>
-          <div className={styles.list}>
+          <div
+            className={styles.list}
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <ul>
               {allowedStatus?.map((value, idx) => {
                 return (

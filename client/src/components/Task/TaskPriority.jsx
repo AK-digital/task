@@ -3,6 +3,7 @@ import { updateTaskPriority } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 
 const priorities = ["Basse", "Moyenne", "Haute", "Urgent"];
 
@@ -16,6 +17,14 @@ export default function TaskPriority({ task }) {
     "team",
     "customer",
   ]);
+
+  const { refs, floatingStyles } = getFloating(isOpen, setIsOpen);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   async function handleUpdateStatus(e) {
     const value = e.target.dataset.value;
@@ -52,12 +61,17 @@ export default function TaskPriority({ task }) {
         className={styles["dropdown__current"]}
         data-current={priority}
         onClick={handleIsOpen}
+        ref={refs.setReference}
       >
         <span>{priority}</span>
       </div>
       {isOpen && (
         <>
-          <div className={styles["dropdown__list"]}>
+          <div
+            className={styles["dropdown__list"]}
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <ul>
               {priorities?.map((value, idx) => {
                 return (
