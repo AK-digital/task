@@ -187,7 +187,7 @@ export default function TasksHeader({
         <div className={`${styles.drag} ${styles.row}`}></div>
       )}
       <div className={`${styles.text}`}>
-        <span>Tâches</span>
+        <span>Tâche</span>
       </div>
       {isProject && (
         <div className={`${styles.project} ${styles.row}`}>
@@ -234,7 +234,7 @@ export default function TasksHeader({
       </div>
       {isStatus && (
         <div className={`${styles.status} ${styles.row}`}>
-          <span>Status</span>
+          <span>Statut</span>
           <div className={styles.sort}>
             <ChevronUp
               size={14}

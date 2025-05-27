@@ -270,3 +270,43 @@ export function sendNotification(receiver, user, uid, message, link) {
 
   socket.emit("create notification", user, receiver?.email, message, link);
 }
+
+export const colors = [
+  "#b3bcc0",
+  "#559fc6",
+  "#f3b158",
+  "#63a758",
+  "#007bff",
+  "#28a745",
+  "#ffc107",
+  "#dc3545",
+  "#4ECDC4",
+  "#556270",
+  "#aa51c4",
+  "#D35400",
+  "#2574A9",
+  "#26A65B",
+  "#F5D76E",
+  "#663399",
+  "#E74C3C",
+];
+
+export const priorityColors = [
+  "#E0F7FA", // Très Basse
+  "#afbde9", // Basse (existante)
+  "#BBDEFB", // Info
+  "#C5CAE9", // Routine
+  "#B2EBF2", // Planifiée
+  "#879ce0", // Moyenne (existante)
+  "#D1C4E9", // Standard
+  "#9575CD", // Importante
+  "#7c67ad", // Haute (existante)
+  "#8E24AA", // Critique
+  "#F06292", // Urgente
+  "#e17587", // Urgent (existante)
+  "#E53935", // Très Urgente
+  "#D32F2F", // Immédiate
+  "#C62828", // Blocante
+  "#FF7043", // Sécurité
+  "#FF8A65", // Alerte modérée
+];
