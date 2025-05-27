@@ -1,13 +1,12 @@
 "use client";
 import styles from "@/styles/layouts/project-header.module.css";
-import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import { UserPlus2 } from "lucide-react";
 import { useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
-import NoPicture from "@/components/User/NoPicture";
 import { isNotEmpty } from "@/utils/utils";
 import TasksFilters from "@/components/tasks/TasksFilters";
+import DisplayPicture from "@/components/User/DisplayPicture";
 
 export default function ProjectHeader({
   project,
@@ -34,21 +33,16 @@ export default function ProjectHeader({
               {isNotEmpty(members) &&
                 members?.map((member) => (
                   <div key={member?.user?._id} className={styles.guestAvatar}>
-                    {member?.user?.picture ? (
-                      <Image
-                        src={member?.user?.picture || "/default-pfp.webp"}
-                        alt={`${member?.user?.firstName} ${member?.user?.lastName}`}
-                        width={32}
-                        height={32}
-                        className={styles.avatar}
-                      />
-                    ) : (
-                      <NoPicture
-                        user={member?.user}
-                        width={"32px"}
-                        height={"32px"}
-                      />
-                    )}
+                    <DisplayPicture
+                      user={member?.user}
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "50%",
+                        marginTop: "5px",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
                 ))}
             </div>

@@ -1,10 +1,10 @@
 import { useProject } from "@/app/hooks/useProject";
 import styles from "@/styles/components/tasks/tasks-admin-filter.module.css";
-import { displayPicture, isNotEmpty } from "@/utils/utils";
 import { ChevronDown, CircleUserRound, Undo } from "lucide-react";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import DisplayPicture from "../User/DisplayPicture";
+import { isNotEmpty } from "@/utils/utils";
 
 export default function TasksAdminFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,7 +85,15 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                     />
 
                     <label htmlFor={member?.user?._id}>
-                      {displayPicture(member?.user, 22, 22)}
+                      <DisplayPicture
+                        user={member?.user}
+                        style={{
+                          width: "22px",
+                          height: "22px",
+                          borderRadius: "50%",
+                        }}
+                        isPopup={false}
+                      />
                       <span>
                         {member?.user?.firstName + " " + member?.user?.lastName}
                       </span>
