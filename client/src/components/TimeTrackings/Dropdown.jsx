@@ -124,7 +124,13 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                     className={styles.label}
                   >
                     <Image
-                      src={option?.picture || "/default-pfp.webp"}
+                      src={
+                        option?.picture
+                          ? option.picture
+                          : query === "users"
+                          ? "/default-pfp.webp"
+                          : "/default-project-logo.webp"
+                      }
                       alt={option?.label || "Logo"}
                       width={20}
                       height={20}

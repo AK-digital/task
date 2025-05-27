@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { getNotifications } from "@/api/notification";
+import moment from "moment";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -36,6 +37,9 @@ export default function Header() {
   // Count the number of unread notifications
   const unreadNotifications = notificationsData?.filter((notif) => !notif.read);
   const unreadCount = unreadNotifications?.length;
+
+  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
+  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
 
   return (
     <header className="w-full py-2.5 h-spacing-header-height">

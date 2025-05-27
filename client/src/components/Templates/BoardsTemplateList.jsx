@@ -20,8 +20,6 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
 
     const response = await useBoardTemplate(templateId, project?._id);
 
-    console.log(response);
-
     if (!response.success) return;
 
     await mutate(`/boards?projectId=${project?._id}&archived=false`);

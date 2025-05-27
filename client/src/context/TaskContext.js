@@ -22,10 +22,10 @@ export function TaskProvider({ children }) {
     }
   }, [pathname]);
 
-  const openTask = (taskId, archive, projectId) => {
-    const path = archive
-      ? `/projects/${projectId}/archive/task/${taskId}`
-      : `/projects/${projectId}/task/${taskId}`;
+  const openTask = (taskId, path) => {
+    // const path = archive
+    //   ? `/projects/${projectId}/archive/task/${taskId}`
+    //   : `/projects/${projectId}/task/${taskId}`;
     window.history.pushState({}, "", path);
     setOpenedTask(taskId);
   };

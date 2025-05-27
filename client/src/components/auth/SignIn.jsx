@@ -6,7 +6,6 @@ import { reSendVerificationEmail } from "@/api/auth";
 import { ArrowRightCircle, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
-import { set } from "zod";
 
 const initialState = {
   status: "pending",
@@ -34,10 +33,6 @@ export default function SignIn() {
     e.preventDefault();
     router.push("/forgot-password");
   }
-  // async function handleGoogleAuth(e) {
-  //   e.preventDefault();
-  //   window.open(`http://localhost:5000/api/auth/google/`, "_self");
-  // }
 
   useEffect(() => {
     setMessage("");

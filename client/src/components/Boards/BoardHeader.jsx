@@ -28,6 +28,7 @@ import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { set } from "zod";
+import { bricolageGrostesque } from "@/utils/font";
 
 export default function BoardHeader({
   board,
@@ -96,14 +97,6 @@ export default function BoardHeader({
   }
 
   async function handleDeleteBoard(e) {
-    e.preventDefault();
-
-    const isConfirmed = window.confirm(
-      `Êtes-vous sûr de vouloir supprimer le tableau "${board?.title}" ?`
-    );
-
-    if (!isConfirmed) return;
-
     const response = await deleteBoard(board?._id, project?._id);
 
     if (!response?.success) return;
@@ -124,6 +117,7 @@ export default function BoardHeader({
       icon: <Trash2 size={16} />,
       name: "Supprimer le tableau",
       remove: true,
+      deletionName: board?.title,
     },
   ];
 
@@ -291,7 +285,7 @@ export default function BoardHeader({
               autoFocus
               onBlur={() => setEdit(false)}
               onKeyDown={handleTitleChange}
-              className="relative z-2001 w-fit p-1 rounded-sm text-text-size-medium"
+              className="font-bricolage relative z-2001 w-fit p-1 rounded-sm text-text-size-medium"
             />
           </div>
         ) : (

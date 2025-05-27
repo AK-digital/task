@@ -34,6 +34,8 @@ export default function NoPicture({ user, width, height }) {
       style={{
         width: width,
         height: height,
+        minWidth: width,
+        minHeight: height,
         backgroundColor: bgColor,
       }}
       suppressHydrationWarning

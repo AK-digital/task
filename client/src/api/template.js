@@ -55,7 +55,6 @@ export async function getTemplates() {
 
     const data = await res.json();
 
-    console.log(data);
     if (res.status === 404) {
       return {
         success: false,

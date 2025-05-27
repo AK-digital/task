@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
 import TimeTrackingModel from "../models/TimeTracking.model.js";
 import moment from "moment";
@@ -60,11 +62,31 @@ export async function saveTimeTracking(req, res, next) {
 
 export async function getTimeTrackings(req, res, next) {
   try {
+    const authUser = res.locals.user;
+
     const { projects, users, startingDate, endingDate } = req.query;
 
-    console.log("projectName", projects);
+    const userProjects = await ProjectModel.find({
+      "members.user": authUser?._id,
+    }).select("_id name");
+
+    if (userProjects.length === 0) {
+      return res.status(200).send({
+        success: true,
+        message: "Aucun projet trouvé pour cet utilisateur",
+        data: [],
+      });
+    }
+
+    // Extraire les IDs et noms des projets de l'utilisateur
+    const userProjectIds = userProjects.map((project) => project._id);
 
     const pipeline = [
+      {
+        $match: {
+          projectId: { $in: userProjectIds },
+        },
+      },
       {
         $lookup: {
           from: "tasks",
@@ -148,6 +170,7 @@ export async function getTimeTrackings(req, res, next) {
       return res.status(404).send({
         success: false,
         message: "Aucun temps de suivi trouvé",
+        data: [],
       });
     }
 
@@ -157,6 +180,7 @@ export async function getTimeTrackings(req, res, next) {
       data: timeTrackings,
     });
   } catch (err) {
+    console.error("Erreur dans getTimeTrackings:", err);
     return res.status(500).send({
       success: false,
       message: err.message || "Une erreur inattendue est survenue",

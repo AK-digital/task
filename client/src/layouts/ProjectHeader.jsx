@@ -7,8 +7,15 @@ import { useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import NoPicture from "@/components/User/NoPicture";
 import { isNotEmpty } from "@/utils/utils";
+import TasksFilters from "@/components/tasks/TasksFilters";
 
-export default function ProjectHeader({ project, mutateProject }) {
+export default function ProjectHeader({
+  project,
+  displayedFilters,
+  queries,
+  setQueries,
+  mutateProject,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const members = project?.members;
 

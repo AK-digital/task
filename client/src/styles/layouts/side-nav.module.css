@@ -156,18 +156,25 @@
 .actions a,
 .myTasks a {
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-width: 40px;
-  min-height: 40px;
-  max-width: 40px;
-  max-height: 40px;
-  border-radius: 50%;
+  gap: 12px;
+}
+
+.actions span,
+.myTasks span {
+  font-size: var(--text-size-small) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 20px;
+  font-weight: 300;
+  color: var(--text-lighter-color);
 }
 
 .actions a:hover,
 .myTasks a:hover {
   cursor: pointer;
+  text-decoration: none;
 }
 
 .actions a svg,

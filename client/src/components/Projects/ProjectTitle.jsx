@@ -42,18 +42,10 @@ export default function ProjectTitle({ project }) {
 
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
 
-  async function handleDeleteProject(e) {
-    e.preventDefault();
-    const isConfirmed = window.confirm(
-      `Êtes-vous sûr de vouloir supprimer le projet "${project?.name}" ?`
-    );
-
-    if (!isConfirmed) return;
-
+  async function handleDeleteProject() {
     const response = await deleteProject(project?._id);
 
     if (response?.success) {
-      router.refresh();
       router.push("/projects");
     }
 
@@ -61,9 +53,7 @@ export default function ProjectTitle({ project }) {
     setIsMoreOpen(false);
   }
 
-  function handleAddTemplate(e) {
-    e.preventDefault();
-
+  function handleAddTemplate() {
     setAddTemplate((prev) => !prev);
     setIsMoreOpen(false);
   }
@@ -92,6 +82,8 @@ export default function ProjectTitle({ project }) {
       icon: <Trash2 size={16} />,
       name: "Supprimer le projet",
       remove: true,
+      project: true,
+      deletionName: project?.name,
     },
   ];
 

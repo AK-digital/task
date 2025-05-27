@@ -2,10 +2,36 @@
 import styles from "@/styles/components/dropdown/more.module.css";
 import Link from "next/link";
 import React from "react";
+import { useState } from "react";
+import ConfirmationDelete from "../Popups/ConfirmationDelete";
+import Portal from "../Portal/Portal";
 
 export function MoreMenu({ isOpen, setIsOpen, options }) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [deleteOption, setDeleteOption] = useState(null);
+
+  const isProject = options.some((option) => option?.project);
+
   const handleIsOpen = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const handleClick = (option) => {
+    if (option.remove) {
+      setDeleteOption(option);
+      setPendingAction(() => option.function);
+      setConfirmOpen(true);
+    } else {
+      option.function?.();
+      setIsOpen(false);
+    }
+  };
+
+  const handleConfirm = () => {
+    pendingAction?.();
+    setConfirmOpen(false);
+    setIsOpen(false);
   };
 
   function content(option) {
@@ -22,7 +48,6 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
       onClick: option?.function,
       "data-remove": option?.remove,
     };
-
     return props;
   }
 

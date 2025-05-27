@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { allowedPriorities, allowedStatus } from "../utils/utils.js";
 const { Schema } = mongoose;
 
 const taskSchema = new Schema(
@@ -47,6 +48,16 @@ const taskSchema = new Schema(
           },
         },
       ],
+      files: [
+        {
+          name: {
+            type: String,
+          },
+          url: {
+            type: String,
+          },
+        },
+      ],
     },
     messages: {
       type: [Schema.Types.ObjectId],
@@ -61,19 +72,12 @@ const taskSchema = new Schema(
     },
     status: {
       type: String,
-      enum: [
-        "En cours",
-        "En attente",
-        "Terminée",
-        "À faire",
-        "À vérifier",
-        "Bloquée",
-      ],
+      enum: allowedStatus,
       default: "En attente",
     },
     priority: {
       type: String,
-      enum: ["Basse", "Moyenne", "Haute", "Urgent"],
+      enum: allowedPriorities,
       default: "Moyenne",
     },
     timeTrackings: {

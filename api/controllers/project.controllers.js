@@ -388,7 +388,6 @@ export async function updateProjectLogo(req, res) {
     const uploadedFile = await uploadFileBuffer(
       "task/project",
       logo.buffer,
-      `project_${project._id}_${Date.now()}` // Nom de fichier unique
     );
 
     if (!uploadedFile || !uploadedFile.secure_url) {

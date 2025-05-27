@@ -2,11 +2,21 @@
 import ProjectHeader from "@/layouts/ProjectHeader";
 import styles from "@/styles/pages/project.module.css";
 import Boards from "@/components/Boards/Boards";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { useProject } from "@/app/hooks/useProject";
 import { useTasks } from "@/app/hooks/useTasks";
 import { useBoards } from "@/app/hooks/useBoards";
+
+const displayedFilters = {
+  isSearch: true,
+  isProject: false,
+  isBoard: false,
+  isAdmin: true,
+  isStatus: true,
+  isPriorities: true,
+  isDeadline: true,
+};
 
 export default function Project({
   initialProject,
@@ -20,7 +30,12 @@ export default function Project({
     initialProject
   );
   const { boards } = useBoards(initialProject._id, archive, initialBoards);
-  const { tasks } = useTasks(initialProject._id, archive, initialTasks);
+  const [queries, setQueries] = useState({
+    projectId: initialProject?._id,
+    archived: archive,
+  });
+
+  const { tasks, mutateTasks } = useTasks(queries, initialTasks);
 
   useEffect(() => {
     function handleRevalidate() {
@@ -39,12 +54,16 @@ export default function Project({
       <ProjectHeader
         project={project}
         tasks={tasks}
+        displayedFilters={displayedFilters}
+        queries={queries}
+        setQueries={setQueries}
         mutateProject={mutateProject}
       />
       <Boards
         boards={boards}
         project={project}
         tasksData={tasks}
+        mutateTasks={mutateTasks}
         archive={archive}
       />
     </div>

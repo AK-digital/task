@@ -1,5 +1,17 @@
 import MessageModel from "../models/Message.model.js";
 
+export const allowedStatus = [
+  "En cours",
+  "En attente",
+  "Terminée",
+  "À faire",
+  "À vérifier",
+  "Bloquée",
+  "À estimer",
+];
+
+export const allowedPriorities = ["Basse", "Moyenne", "Haute", "Urgent"];
+
 export function getMatches(string, regex) {
   return [...string.matchAll(regex)];
 }
@@ -29,6 +41,8 @@ export async function deleteReaction(message, userId) {
 
     return updatedMessage;
   } catch (err) {
-    throw new Error("Erreur lors de la suppression de la réaction : " + err.message);
+    throw new Error(
+      "Erreur lors de la suppression de la réaction : " + err.message
+    );
   }
 }

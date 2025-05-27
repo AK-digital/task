@@ -1,0 +1,92 @@
+.task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--text-color);
+    height: 46px;
+}
+
+.task:last-child {
+    border-bottom: none;
+}
+
+.checkbox {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background-color: var(--primary-background-color);
+}
+
+.text {
+    width: 100%;
+    max-width: 700px;
+    height: 18px;
+    border-radius: 2px;
+    background-color: var(--primary-background-color);
+}
+
+.project,
+.timer {
+    width: 100%;
+    max-width: 180px;
+    height: 18px;
+    border-radius: 2px;
+    background-color: var(--primary-background-color);
+}
+
+.board {
+    max-width: 160px;
+}
+
+.admin {
+    width: 100%;
+    max-width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--primary-background-color);
+}
+
+.board,
+.status,
+.priority,
+.deadline,
+.estimate {
+    width: 100%;
+    max-width: 150px;
+    height: 32px;
+    border-radius: var(--border-radius-medium);
+    background-color: var(--primary-background-color);
+}
+
+.timer {
+    max-width: 150px;
+}
+
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.checkbox,
+.text,
+.project,
+.board,
+.admin,
+.status,
+.priority,
+.deadline,
+.estimate,
+.timer {
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(to right,
+            #eae7de 0%,
+            #f5f3ec 50%,
+            #eae7de 100%);
+    background-size: 1000px 100%;
+}

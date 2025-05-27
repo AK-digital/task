@@ -1,10 +1,12 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { generateUrlParams } from "@/utils/generateUrlParams";
+import { isNotEmpty } from "@/utils/utils";
 
-export async function getTasks(projectId, archived) {
+export async function getTasks(queries) {
   try {
     const res = await useAuthFetch(
-      `task?projectId=${projectId}&archived=${archived}`,
+      `task${generateUrlParams(queries)}`,
       "GET",
       "application/json",
       null,
@@ -231,6 +233,11 @@ export async function addResponsible(taskId, responsibleId, projectId) {
       err.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
     );
+
+    return {
+      success: false,
+      message: err.message || "Une erreur est survenue",
+    };
   }
 }
 
@@ -259,26 +266,49 @@ export async function removeResponsible(taskId, responsibleId, projectId) {
       err.message ||
         "Une erreur est survenue lors de la récupération des tableaux"
     );
+
+    return {
+      success: false,
+      message: err.message || "Une erreur est survenue",
+    };
   }
 }
 
 export async function updateTaskDescription(
   taskId,
   projectId,
-  content,
-  taggedUsers
+  description,
+  taggedUsers,
+  attachments
 ) {
   try {
-    const rawData = {
-      description: content,
-      taggedUsers: taggedUsers,
-    };
+    const data = new FormData();
+    data.append("description", description);
+
+    data.append("taggedUsers", JSON.stringify(taggedUsers));
+
+    if (isNotEmpty(attachments)) {
+      attachments.forEach((attachment) => {
+        if (attachment instanceof File) {
+          data.append("attachments", attachment);
+        } else {
+          data.append(
+            "existingFiles",
+            JSON.stringify({
+              id: attachment.id,
+              name: attachment.name,
+              url: attachment.url,
+            })
+          );
+        }
+      });
+    }
 
     const res = await useAuthFetch(
       `task/${taskId}/description?projectId=${projectId}`,
       "PATCH",
-      "application/json",
-      rawData
+      "multipart/form-data",
+      data
     );
 
     const response = await res.json();
@@ -384,7 +414,11 @@ export async function updateTaskDeadline(taskId, projectId, deadline) {
 
 export async function updateTaskEstimate(taskId, projectId, estimation) {
   try {
-    console.log(estimation);
+    if (!taskId || !projectId) {
+      throw new Error(
+        "Paramètres invalides pour la mise à jour de l'estimation"
+      );
+    }
 
     const res = await useAuthFetch(
       `task/${taskId}/estimate?projectId=${projectId}`,

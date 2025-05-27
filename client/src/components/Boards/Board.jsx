@@ -6,10 +6,11 @@ import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
 import socket from "@/utils/socket";
-import { mutate } from "swr";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { useDroppable } from "@dnd-kit/core";
-import { TaskPending } from "../tasks/TaskPending";
+import { TaskPending } from "../Task/TaskPending";
+import Tasks from "../tasks/Tasks";
+import { bricolageGrostesque } from "@/utils/font";
 
 const initialState = {
   success: null,
@@ -20,6 +21,8 @@ const initialState = {
 
 export default function Board({
   tasks,
+  displayedElts,
+  mutateTasks,
   project,
   board,
   activeId,
@@ -63,16 +66,21 @@ export default function Board({
   );
 
   useEffect(() => {
-    if (state?.success === true) {
-      setIsLoading(true);
-      inputRef?.current?.focus();
-      setIsWritting(false);
+    async function handleTaskCreated() {
+      if (state?.success === true) {
+        setIsLoading(true);
+        inputRef?.current?.focus();
+        setIsWritting(false);
 
-      mutate(`/task?projectId=${project?._id}&archived=${archive}`).then(() => {
+        await mutateTasks();
+
         socket.emit("update task", project?._id);
+
         setIsLoading(false);
-      });
+      }
     }
+
+    handleTaskCreated();
   }, [state]);
 
   useEffect(() => {
@@ -105,16 +113,18 @@ export default function Board({
       />
       {/* Board content */}
       {open && !isOverlay && (
-        <Tasks
-          tasks={tasks}
-          project={project}
-          boardId={board?._id}
-          activeId={activeId}
-          optimisticColor={optimisticColor}
-          selectedTasks={selectedTasks}
-          setSelectedTasks={setSelectedTasks}
-          archive={archive}
-        />
+        <div className={styles.tasks}>
+          <Tasks
+            tasks={tasks}
+            project={project}
+            mutateTasks={mutateTasks}
+            activeId={activeId}
+            displayedElts={displayedElts}
+            selectedTasks={selectedTasks}
+            setSelectedTasks={setSelectedTasks}
+            archive={archive}
+          />
+        </div>
       )}
       {isLoading && <TaskPending text={inputValue} />}
       {canPost && !archive && (
@@ -147,9 +157,9 @@ export default function Board({
                     setIsWritting(false);
                   }
                 }}
-                className="border-none bg-inherit py-1.5 px-1 text-text-size-normal"
+                className="font-bricolage border-none bg-inherit py-1.5 px-1 text-text-size-normal"
               />
-              <button type="submit" hidden>
+              <button type="submit" hidden className={bricolageGrostesque.className}>
                 Ajouter une tâche
               </button>
             </form>

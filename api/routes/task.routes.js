@@ -12,12 +12,7 @@ router.post(
   taskControllers.saveTask
 );
 
-router.get(
-  "/",
-  authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer", "guest"]), // projectId query is required
-  taskControllers.getTasks
-);
+router.get("/", authMiddlewares.auth, taskControllers.getTasks);
 
 router.get(
   "/:id",
@@ -57,8 +52,8 @@ router.patch(
 router.patch(
   "/:id/description",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer"]), // projectId query is required
-  upload.fields([{ name: "medias", maxCount: 20 }]),
+  checkRole(["owner", "manager", "team", "customer"]),
+  upload.array("attachments", 10),
   taskControllers.updateTaskDescription
 );
 

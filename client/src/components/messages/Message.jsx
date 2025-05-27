@@ -18,8 +18,15 @@ import { Eye } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
 import Reactions from "../Reactions/Reactions";
+import AttachmentsInfo from "../Popups/AttachmentsInfo";
 
-export default function Message({ task, message, project, mutateMessage }) {
+export default function Message({
+  task,
+  message,
+  project,
+  mutateMessage,
+  mutateTasks,
+}) {
   const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,20 +38,22 @@ export default function Message({ task, message, project, mutateMessage }) {
   const date = moment(message?.createdAt);
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
-  const handleReadBy = useCallback(async () => {
-    if (uid === author?._id) return;
-    if (!message?.readBy?.includes(uid)) {
-      const response = await updateReadBy(project?._id, message?._id);
-
-      if (!response?.success) return;
-
-      socket.emit("update task", project?._id);
-    }
-  }, [uid, author?._id, message?.readBy, project?._id, message?._id]);
-
   useEffect(() => {
+    async function handleReadBy() {
+      if (uid === author?._id) return;
+      const isRead = message?.readBy?.some((user) => user?._id === uid);
+
+      if (!isRead) {
+        const response = await updateReadBy(project?._id, message?._id);
+        if (!response?.success) return;
+
+        mutateMessage();
+        socket.emit("update task", project?._id);
+      }
+    }
+
     handleReadBy();
-  }, [handleReadBy]);
+  }, []);
 
   async function handleDeleteMessage() {
     setMore(false);
@@ -54,6 +63,7 @@ export default function Message({ task, message, project, mutateMessage }) {
     if (!response?.success) return;
 
     await mutateMessage();
+    await mutateTasks();
     socket.emit("update message", message?.projectId);
     socket.emit("update task", project?._id);
 
@@ -71,6 +81,7 @@ export default function Message({ task, message, project, mutateMessage }) {
           setConvOpen={setEdit}
           editMessage={true}
           message={message}
+          handleDeleteMessage={handleDeleteMessage}
         />
       ) : (
         <>

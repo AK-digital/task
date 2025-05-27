@@ -1,7 +1,6 @@
 import UserModel from "../models/User.model.js";
 import NotificationModel from "../models/Notification.model.js";
 import ProjectModel from "../models/Project.model.js";
-import BoardModel from "../models/Board.model.js";
 
 export default function socketHandler(io) {
   io.on("connection", (socket) => {
@@ -9,6 +8,7 @@ export default function socketHandler(io) {
       if (!userId) return;
 
       const user = await UserModel.findById({ _id: userId });
+
       if (!user) {
         throw new Error("Aucun utilisateur trouvé avec cette ID : ", userId);
       }
@@ -18,6 +18,11 @@ export default function socketHandler(io) {
         { $set: { socketId: socket?.id } },
         { new: true, setDefaultsOnInsert: true }
       );
+
+      const projects = await ProjectModel.find({ "members.user": user?._id });
+      const projectIds = projects.map((project) => project._id.toString());
+
+      socket.join(projectIds);
 
       socket.emit("logged in", userWithSocketId);
     });
@@ -99,11 +104,11 @@ export default function socketHandler(io) {
     });
 
     socket.on("update task", async (projectId) => {
-      await emitToProjectMembers(projectId, "task updated", io);
+      await emitToProjectMembers(projectId, "task updated", socket);
     });
 
     socket.on("update message", async (projectId) => {
-      await emitToProjectMembers(projectId, "message updated", io);
+      await emitToProjectMembers(projectId, "message updated", socket);
     });
 
     socket.on("update-project-role", async (memberId) => {
@@ -116,22 +121,16 @@ export default function socketHandler(io) {
   });
 }
 
-async function emitToProjectMembers(projectId, event, io, ...args) {
+async function emitToProjectMembers(projectId, event, socket, ...args) {
   const project = await ProjectModel.findById({ _id: projectId });
 
   if (!project) return;
 
-  const members = project?.members;
+  const projectIdString = project?._id.toString();
 
-  members?.forEach(async (member) => {
-    const user = await UserModel.findById({ _id: member?.user });
-
-    if (!user) return;
-
-    if (args) {
-      io.to(user?.socketId).emit(event, ...args);
-    } else {
-      io.to(user?.socketId).emit(event);
-    }
-  });
+  if (args) {
+    socket.to(projectIdString).emit(event, ...args);
+  } else {
+    socket.to(projectIdString).emit(event);
+  }
 }

@@ -98,6 +98,8 @@ export async function signIn(prevState, formData) {
 
     const res = await useFetch("auth/sign-in", options);
 
+    console.log(res);
+
     const response = await res.json();
 
     if (res.status === 403) {
@@ -123,7 +125,7 @@ export async function signIn(prevState, formData) {
       secure: true,
       httpOnly: true,
       sameSite: "lax",
-      expires: new Date(Date.now() + (12 * 60 + 30) * 60 * 1000), // 12h30 en millisecondes
+      expires: new Date(Date.now() + 12 * 60 * 60 * 1000), // 12h en millisecondes
     });
 
     cookie.set("rtk", refreshToken, {

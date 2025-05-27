@@ -1,11 +1,14 @@
-import { destroyFile, uploadFile } from "../helpers/cloudinary.js";
+import {
+  destroyFile,
+  uploadFile,
+  uploadFileBuffer,
+} from "../helpers/cloudinary.js";
 import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailDescription } from "../templates/emails.js";
-import { regex } from "../utils/regex.js";
-import { getMatches } from "../utils/utils.js";
+import { allowedStatus, getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
 
@@ -53,13 +56,51 @@ export async function saveTask(req, res, next) {
 // Only authors and guets will be able to get the tasks
 export async function getTasks(req, res, next) {
   try {
-    const { archived } = req.query;
+    const {
+      projectId,
+      boardId,
+      userId,
+      responsiblesId,
+      search,
+      status,
+      priorities,
+      archived,
+    } = req.query;
 
-    const tasks = await TaskModel.find({
-      projectId: req.query.projectId,
-      archived: archived,
-    })
+    const filters = {};
+
+    if (!projectId && !userId) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    if (projectId) filters.projectId = projectId;
+    if (boardId) filters.boardId = boardId;
+    if (archived) filters.archived = archived;
+    if (userId) filters.responsibles = userId;
+    if (responsiblesId) {
+      filters.responsibles = { $in: responsiblesId?.split(",") };
+    }
+    if (search) filters.text = { $regex: search, $options: "i" };
+    if (status) filters.status = { $in: status?.split(",") };
+    if (priorities) filters.priority = { $in: priorities?.split(",") };
+
+    const tasks = await TaskModel.find(filters)
       .sort({ order: "asc" })
+      .populate({
+        path: "projectId",
+        select: "name logo members",
+        populate: {
+          path: "members.user",
+          select: "firstName lastName picture email",
+        },
+      })
+      .populate({
+        path: "boardId",
+        select: "title color",
+      })
       .populate({
         path: "responsibles",
         select: "-password -role", // Exclure le champ `password` des responsibles
@@ -184,18 +225,57 @@ export async function updateTaskText(req, res, next) {
   }
 }
 
+export async function addTaskStatus(req, res) {
+  try {
+    const { status, color } = req.body;
+
+    if (!color) {
+    }
+
+    if (!status && !color) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $addToSet: {
+          status: status,
+        },
+      },
+      {
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de modifier le status d'une tâche qui n'existe pas",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Status modifié avec succès",
+      data: updatedTask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function updateTaskStatus(req, res, next) {
   try {
     const { status } = req.body;
-
-    const allowedStatus = [
-      "En cours",
-      "En attente",
-      "Terminée",
-      "À faire",
-      "À vérifier",
-      "Bloquée",
-    ];
 
     if (!status) {
       return res.status(400).send({
@@ -382,11 +462,92 @@ export async function updateTaskEstimation(req, res, next) {
 export async function updateTaskDescription(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { description, taggedUsers } = req.body;
+    const { description, taggedUsers, existingFiles } = req.body;
+
+    const task = await TaskModel.findById({ _id: req.params.id });
+    const tagged = JSON.parse(taggedUsers);
+
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier une tâche qui n'existe pas",
+      });
+    }
+
+    if (task?.description?.text) {
+      if (
+        authUser?._id.toString() !== task?.description?.author?._id.toString()
+      ) {
+        return res.status(403).send({
+          success: false,
+          message:
+            "Impossible de modifier une description qui n'est pas le votre",
+        });
+      }
+    }
+
+    const oldFiles = task?.description?.files || [];
+    const attachments = req.files || [];
+    let newFiles = [];
+
+    let existingFilesArray = [];
+    if (existingFiles) {
+      if (Array.isArray(existingFiles)) {
+        existingFilesArray = existingFiles.map((fileStr) =>
+          JSON.parse(fileStr)
+        );
+      } else if (typeof existingFiles === "string") {
+        try {
+          const parsed = JSON.parse(existingFiles);
+          existingFilesArray = Array.isArray(parsed) ? parsed : [parsed];
+        } catch (e) {
+          console.error("Erreur de parsing des fichiers existants:", e);
+        }
+      }
+    }
+
+    if (existingFilesArray.length > 0) {
+      existingFilesArray.forEach((file) => {
+        newFiles.push({
+          name: file.name,
+          url: file.url,
+          ...(file.id && { id: file.id }),
+        });
+      });
+    }
+
+    if (attachments.length > 0) {
+      for (const attachment of attachments) {
+        const bufferResponse = await uploadFileBuffer(
+          "task/description",
+          attachment.buffer,
+          attachment.originalname
+        );
+        const object = {
+          name: attachment.originalname,
+          url: bufferResponse?.secure_url,
+        };
+        newFiles.push(object);
+      }
+    }
+
+    if (newFiles.length > 0) {
+      for (const oldFile of oldFiles) {
+        const stillExists = newFiles.find((file) => file.url === oldFile.url);
+        if (!stillExists) {
+          await destroyFile("description", oldFile.url);
+        }
+      }
+    } else if (existingFiles === undefined && attachments.length === 0) {
+      for (const oldFile of oldFiles) {
+        await destroyFile("description", oldFile.url);
+      }
+      newFiles = [];
+    }
 
     let updatedDescription = description;
 
-    const uniqueTaggedUsers = Array.from(new Set(taggedUsers));
+    const uniqueTaggedUsers = Array.from(new Set(tagged));
 
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
 
@@ -403,8 +564,6 @@ export async function updateTaskDescription(req, res, next) {
         }
       }
     } else {
-      const task = await TaskModel.findById({ _id: req.params.id });
-
       const taskDescription = task?.description?.text;
 
       if (taskDescription) {
@@ -420,8 +579,6 @@ export async function updateTaskDescription(req, res, next) {
       }
     }
 
-    const task = await TaskModel.findById({ _id: req.params.id });
-
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
@@ -430,7 +587,8 @@ export async function updateTaskDescription(req, res, next) {
           "description.text": updatedDescription,
           "description.createdAt": task?.description?.createdAt ?? Date.now(),
           "description.updatedAt": Date.now(),
-          taggedUsers: uniqueTaggedUsers,
+          "description.files": newFiles,
+          taggedUsers: tagged,
         },
       },
       {
@@ -1039,6 +1197,14 @@ export async function deleteTask(req, res, next) {
           success: false,
           message: `Impossible de supprimer la tâche avec l'ID ${taskId} car elle n'existe pas`,
         });
+      }
+
+      const attachments = task?.description?.files;
+
+      if (attachments) {
+        for (const attachment of attachments) {
+          await destroyFile("description", attachment?.url);
+        }
       }
 
       // Suppression des images dans la description de la tâche

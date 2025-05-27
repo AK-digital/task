@@ -1,8 +1,7 @@
 import { signUp } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
-import { bricolageGrostesque, instrumentSans } from "@/utils/font";
+import { bricolageGrostesque } from "@/utils/font";
 import { Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 
@@ -33,7 +32,7 @@ export default function SignUp() {
     if (state?.status === "failure" && state?.errors === null) {
       setMessage(
         state?.message ||
-        "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."
+          "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."
       );
     }
   }, [state]);
@@ -44,8 +43,8 @@ export default function SignUp() {
         <div className="flex flex-col gap-2">
           <span className="text-2xl font-bold">Votre compte a été créé avec succès !</span>
           <p>
-            Un email de vérification a été envoyé à votre adresse e-mail. Veuillez
-            cliquer sur le lien dans l'email pour activer votre compte.
+            Un email de vérification a été envoyé à votre adresse e-mail.
+            Veuillez cliquer sur le lien dans l'email pour activer votre compte.
           </p>
           <button type="button" onClick={handleSignIn} className="mt-2">
             Retourner à la page de connexion

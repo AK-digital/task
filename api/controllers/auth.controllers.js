@@ -17,8 +17,6 @@ export async function signUp(req, res, next) {
   try {
     const { lastName, firstName, email, password } = req.body;
 
-    console.log(lastName, firstName, email, password);
-
     // Checks if a body value is missing
     if (!lastName || !firstName || !email || !password) {
       return res

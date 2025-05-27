@@ -1,24 +1,35 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { isNotEmpty } from "@/utils/utils";
 
-export async function saveMessage(projectId, taskId, message, taggedUsers) {
+export async function saveMessage(
+  projectId,
+  taskId,
+  message,
+  taggedUsers,
+  attachments
+) {
   try {
-    const rawData = {
-      taskId: taskId,
-      message: message,
-      taggedUsers: taggedUsers,
-    };
+    const data = new FormData();
+    data.append("taskId", taskId);
+    data.append("message", message);
+
+    data.append("taggedUsers", JSON.stringify(taggedUsers));
+
+    if (isNotEmpty(attachments)) {
+      attachments.forEach((file) => {
+        data.append("attachments", file);
+      });
+    }
 
     const res = await useAuthFetch(
       `message?projectId=${projectId}`,
       "POST",
-      "application/json",
-      rawData
+      "multipart/form-data",
+      data
     );
 
     const response = await res.json();
-
-    console.log(response);
 
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
@@ -67,27 +78,46 @@ export async function updateMessage(
   projectId,
   messageId,
   message,
-  taggedUsers
+  taggedUsers,
+  attachments
 ) {
   try {
-    const rawData = {
-      message: message,
-      taggedUsers: taggedUsers,
-    };
+    const data = new FormData();
+    data.append("message", message);
+
+    if (isNotEmpty(taggedUsers)) {
+      taggedUsers.forEach((taggedUser) => {
+        data.append("taggedUsers", taggedUser);
+      });
+    }
+
+    if (isNotEmpty(attachments)) {
+      attachments.forEach((attachment) => {
+        if (attachment instanceof File) {
+          data.append("attachments", attachment);
+        } else {
+          data.append(
+            "existingFiles",
+            JSON.stringify({
+              id: attachment.id,
+              name: attachment.name,
+              url: attachment.url,
+            })
+          );
+        }
+      });
+    }
 
     const res = await useAuthFetch(
       `message/${messageId}?projectId=${projectId}`,
       "PUT",
-      "application/json",
-      rawData
+      "multipart/form-data",
+      data
     );
-
     const response = await res.json();
-
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
-
     return response;
   } catch (err) {
     console.log(
