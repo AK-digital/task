@@ -1,14 +1,14 @@
+import { useProjectContext } from "@/context/ProjectContext";
 import styles from "@/styles/components/tasks/tasks-status-filter.module.css";
-import { allowedStatus } from "@/utils/utils";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function TasksStatusFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
-  const status = queries?.status;
-  const hasStatus = status?.length > 0;
-  const pathname = usePathname();
+  const QueriesStatus = queries?.status;
+  const hasStatus = QueriesStatus?.length > 0;
+
+  const { statuses } = useProjectContext();
 
   function handleResetStatus() {
     setQueries((prev) => ({
@@ -38,16 +38,6 @@ export default function TasksStatusFilter({ queries, setQueries }) {
     }
   }
 
-  // If we are on tasks page we want the 'En cours' and 'À faire' status to be checked by default
-  useEffect(() => {
-    if (pathname === "/tasks") {
-      setQueries((prev) => ({
-        ...prev,
-        status: ["En cours", "À faire"],
-      }));
-    }
-  }, []);
-
   return (
     <div className={styles.container}>
       <div
@@ -57,8 +47,8 @@ export default function TasksStatusFilter({ queries, setQueries }) {
       >
         <ChartBar size={16} />
         <span>Status</span>
-        {status?.length > 0 && (
-          <span className={styles.length}>{status?.length}</span>
+        {hasStatus && (
+          <span className={styles.length}>{QueriesStatus?.length}</span>
         )}
         <ChevronDown size={16} />
       </div>
@@ -70,17 +60,19 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
-              {allowedStatus.map((elt, idx) => (
-                <li key={idx} className={styles.status}>
+              {statuses.map((elt) => (
+                <li key={elt?._id} className={styles.status}>
                   <input
                     type="checkbox"
-                    id={elt}
-                    name={elt}
-                    value={elt}
+                    id={elt?._id}
+                    name={elt?.name}
+                    value={elt?._id}
                     onChange={handleStatusChange}
-                    checked={hasStatus ? status?.includes(elt) : false}
+                    checked={
+                      hasStatus ? QueriesStatus?.includes(elt?._id) : false
+                    }
                   />
-                  <label htmlFor={elt}>{elt}</label>
+                  <label htmlFor={elt?._id}>{elt?.name}</label>
                 </li>
               ))}
             </ul>

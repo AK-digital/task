@@ -61,18 +61,7 @@
     color: white;
     border-radius: var(--border-radius-large);
     text-align: center;
-}
-
-.item {
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: var(--border-radius-large);
     min-height: 34px;
-    transition: 60ms all linear;
-}
-
-.item:hover {
-    opacity: 0.8;
 }
 
 .add {

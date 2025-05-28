@@ -2,34 +2,33 @@ import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import { checkRole } from "../middlewares/projectRole.middlewares.js";
-import * as customStatusController from "../controllers/customStatus.controllers.js";
+import * as priorityControllers from "../controllers/priority.controllers.js";
 
 router.post(
   "/",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.saveCustomStatus
+  priorityControllers.savePriority
 );
 
 router.get(
-  "/",
+  "/project/:id",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.getCustomStatus
+  priorityControllers.getPriorityByProject
 );
 
 router.put(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.updateCustomStatus
+  priorityControllers.updatePriority
 );
 
 router.delete(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.deleteCustomStatus
+  priorityControllers.deletePriority
 );
 
 export default router;
