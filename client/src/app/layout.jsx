@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import moment from "moment-timezone";
 moment.tz.setDefault("Europe/Paris");
 
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <html className="max-w-[100vw] min-h-[100svh] overflow-x-hidden" lang="fr">
       <body className="font-bricolage" >{children}</body>
+      <Analytics />
     </html>
   );
 }

@@ -27,7 +27,6 @@ import { mutate } from "swr";
 import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { set } from "zod";
 import { bricolageGrostesque } from "@/utils/font";
 
 export default function BoardHeader({
@@ -183,6 +182,12 @@ export default function BoardHeader({
     debouncedUpdateTask(value);
   };
 
+  function handleTitleEnterKey(e) {
+    if (e.key === "Enter") {
+      setEdit(false);
+    }
+  }
+
   async function handleOpenCloseBoard() {
     if (window !== undefined) {
       localStorage.setItem(`board-${board?._id}`, !open);
@@ -280,10 +285,11 @@ export default function BoardHeader({
               type="text"
               name="title"
               id="title"
-              defaultValue={title}
+              value={title}
               autoFocus
               onBlur={() => setEdit(false)}
-              onKeyDown={handleTitleChange}
+              onChange={handleTitleChange}
+              onKeyDown={handleTitleEnterKey}
               className="font-bricolage relative z-2001 w-fit p-1 rounded-sm text-text-size-medium"
             />
           </div>

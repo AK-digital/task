@@ -3,13 +3,20 @@ import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
-import { allowedStatus } from "@/utils/utils";
-import { Plus } from "lucide-react";
+import { Pen, Plus, Save } from "lucide-react";
+import { useProjectContext } from "@/context/ProjectContext";
+import TaskEditStatus from "./TaskEditStatus";
+import { saveStatus } from "@/api/status";
+import { colors } from "@/utils/utils";
 
 export default function TaskStatus({ task, uid }) {
-  const [status, setStatus] = useState(task?.status);
+  const { project, mutateTasks, statuses, mutateStatuses } =
+    useProjectContext();
+  const [currentStatus, setCurrentStatus] = useState(task?.status);
+  const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const project = task?.projectId;
+
+  const maxStatuses = statuses?.length === 12;
 
   const canEdit = useUserRole(project, [
     "owner",
@@ -18,65 +25,135 @@ export default function TaskStatus({ task, uid }) {
     "customer",
   ]);
 
-  async function handleUpdateStatus(e) {
-    const value = e.target.dataset.value;
-    setStatus(value);
+  async function handleTaskUpdateStatus(status) {
+    if (!canEdit) return;
+    setCurrentStatus(status);
     setIsOpen(false);
 
-    const res = await updateTaskStatus(task?._id, project?._id, value);
+    const res = await updateTaskStatus(task?._id, project?._id, status?._id);
 
     if (!res?.success) {
-      setStatus(task?.status);
+      setCurrentStatus(task?.status);
       return;
     }
 
     socket.emit("update task", project?._id);
+    mutateTasks();
+    mutateStatuses();
+  }
+
+  async function handleAddStatus() {
+    if (!canEdit) return;
+
+    // Get a random color for the new status and prevent duplicates colors from statuses
+    const existingColors = statuses.map((status) => status?.color);
+    const availableColors = colors.filter(
+      (color) => !existingColors.includes(color)
+    );
+    const randomColor =
+      availableColors[Math.floor(Math.random() * availableColors?.length)];
+
+    const response = await saveStatus(project?._id, {
+      name: "Nouveau statut",
+      color: randomColor,
+    });
+
+    if (!response?.success) {
+      console.error("Failed to save status:", response.message);
+      return;
+    }
+
+    mutateStatuses();
   }
 
   const handleIsOpen = useCallback(() => {
     if (!canEdit) return;
 
     setIsOpen((prev) => !prev);
+    setIsEdit(false);
   }, [project, uid]);
 
+  function handleEditStatus() {
+    if (!canEdit) return;
+
+    setIsEdit((prev) => !prev);
+  }
+
   useMemo(() => {
-    setStatus(task?.status);
+    setCurrentStatus(task?.status);
   }, [task?.status]);
+
+  const hasStatus = currentStatus?.name;
+  const currentBackgroundColor = hasStatus ? currentStatus?.color : "#b3bcc0";
+
+  function listWidth() {
+    if (isEdit && statuses?.length > 5) {
+      return true;
+    } else if (!isEdit && statuses?.length > 6) {
+      return true;
+    }
+
+    return false;
+  }
 
   return (
     <div className="relative flex items-center select-none border-r border-text-light-color text-text-size-normal text-color-foreground min-w-[135px] max-w-[150px] w-full h-full">
       <div
-        className="relative flex items-center justify-center w-full min-w-[110px] text-center cursor-pointer py-2 px-4 rounded-border-radius-large mx-3 text-white data-[current='En attente']:bg-state-pending-color data-[current='À faire']:bg-state-todo-color data-[current='En cours']:bg-state-processing-color data-[current='Bloquée']:bg-state-blocked-color data-[current='Terminée']:bg-state-finished-color data-[current='À vérifier']:bg-state-checking-color data-[current='À estimer']:bg-state-estimating-color"
-        data-current={status}
+        className={styles.current}
+        style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
       >
-        <span>{status}</span>
+        <span>{currentStatus?.name || "En attente"}</span>
       </div>
       {isOpen && (
         <>
-          <div className="absolute z-[2001] top-[45px] left-0 w-full p-2 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-border-radius-small">
-            <ul className="gap-inherit text-center flex flex-col gap-2">
-              {allowedStatus?.map((value, idx) => {
-                return (
-                  <li
-                    key={idx}
-                    className="py-2 px-4 cursor-pointer text-white rounded-border-radius-large data-[value='En attente']:bg-state-pending-color data-[value='À faire']:bg-state-todo-color data-[value='En cours']:bg-state-processing-color data-[value='Bloquée']:bg-state-blocked-color data-[value='Terminée']:bg-state-finished-color data-[value='À vérifier']:bg-state-checking-color data-[value='À estimer']:bg-state-estimating-color"
-                    data-value={value}
-                    onClick={handleUpdateStatus}
-                  >
-                    {value}
-                  </li>
-                );
+          <div className={styles.list} data-big={listWidth()}>
+            <ul className={styles.items}>
+              {statuses?.map((status) => {
+                if (!isEdit) {
+                  return (
+                    <li
+                      key={status?._id}
+                      className={styles.item}
+                      onClick={() => handleTaskUpdateStatus(status)}
+                      style={{ backgroundColor: status?.color }}
+                    >
+                      {status?.name}
+                    </li>
+                  );
+                } else {
+                  return (
+                    <TaskEditStatus
+                      key={status?._id}
+                      status={status}
+                      currentStatus={currentStatus}
+                      setCurrentStatus={setCurrentStatus}
+                    />
+                  );
+                }
               })}
-              <li className="flex items-center justify-center gap-1 text-text-dark-color border border-dashed border-text-dark-color py-2 px-4 cursor-pointer rounded-border-radius-large">
-                <Plus size={16} /> Ajouter
-              </li>
+              {isEdit && !maxStatuses && (
+                <li
+                  className={`${styles.item} ${styles.add}`}
+                  onClick={handleAddStatus}
+                >
+                  <Plus size={16} />
+                  Ajouter
+                </li>
+              )}
             </ul>
+            {isEdit ? (
+              <button className={styles.edit} onClick={handleEditStatus}>
+                <Save size={16} />
+                Appliquer
+              </button>
+            ) : (
+              <button className={styles.edit} onClick={handleEditStatus}>
+                <Pen size={16} /> Modifier les statuts
+              </button>
+            )}
           </div>
-          <div
-            id="modal-layout-opacity"
-            onClick={(e) => setIsOpen(false)}
-          ></div>
+          <div id="modal-layout-opacity" onClick={handleIsOpen}></div>
         </>
       )}
     </div>

@@ -27,6 +27,7 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { SortableBoard } from "./SortableBoard"; // Nous allons créer ce composant
 import { updateBoardOrder } from "@/api/board"; // Vous devrez créer cette fonction API
 import Task from "../Task/Task";
+import { useProjectContext } from "@/context/ProjectContext";
 
 const displayedElts = {
   isCheckbox: true,
@@ -41,13 +42,8 @@ const displayedElts = {
   isTimer: true,
 };
 
-export default function Boards({
-  boards: initialBoards,
-  project,
-  tasksData,
-  mutateTasks,
-  archive,
-}) {
+export default function Boards({ boards: initialBoards, tasksData }) {
+  const { project, mutateTasks, archive } = useProjectContext();
   const router = useRouter();
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [boards, setBoards] = useState(initialBoards || []);
@@ -398,13 +394,10 @@ export default function Boards({
                       <Board
                         tasks={tasks[board._id] || []}
                         displayedElts={displayedElts}
-                        mutateTasks={mutateTasks}
-                        project={project}
                         board={board}
                         activeId={activeId}
                         selectedTasks={selectedTasks}
                         setSelectedTasks={setSelectedTasks}
-                        archive={archive}
                       />
                     </SortableContext>
                   </SortableBoard>

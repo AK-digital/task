@@ -1,6 +1,7 @@
 /* .container {
-    justify-content: center;
-    text-align: center;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
     padding-inline: 16px;
     font-size: var(--text-size-normal);
     min-width: 150px;
@@ -13,9 +14,14 @@
     text-transform: uppercase;
 }
 
+.bullet {
+    width: 14px;
+    height: 12px;
+    border-radius: 50%;
+}
+
 .board {
-    gap: 8px;
     width: 100%;
     padding: 8px;
     border-radius: var(--border-radius-medium);
-} */
+}  */

@@ -5,7 +5,7 @@ import { AuthContext } from "@/context/auth";
 import { useContext, useMemo, useState } from "react";
 import Tasks from "@/components/tasks/Tasks";
 import TasksFilters from "@/components/tasks/TasksFilters";
-import { useTasks } from "@/app/hooks/useTasks";
+import { ProjectProvider, useProjectContext } from "@/context/ProjectContext";
 
 // This is where you define the task elements you want to display
 const displayedElts = {
@@ -33,20 +33,35 @@ const displayedFilters = {
 
 export default function TasksPage() {
   const { uid } = useContext(AuthContext);
-  const [queries, setQueries] = useState({});
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [defaultQueries, setDefaultQueries] = useState({
+    userId: uid,
+    archived: false,
+  });
 
   useMemo(() => {
     if (uid === null) return;
 
-    setQueries((prevQueries) => ({
+    setDefaultQueries((prevQueries) => ({
       ...prevQueries,
       userId: uid,
       archived: false,
     }));
   }, [uid]);
 
-  const { tasks, tasksLoading, mutateTasks } = useTasks(queries);
+  if (!uid) return null;
+
+  return (
+    <ProjectProvider defaultQueries={defaultQueries}>
+      <TasksContent />
+    </ProjectProvider>
+  );
+}
+
+function TasksContent() {
+  const [selectedTasks, setSelectedTasks] = useState([]);
+
+  // Utilisez le contexte du projet pour récupérer les tâches
+  const { tasks, tasksLoading, mutateTasks } = useProjectContext();
 
   return (
     <main className={styles.main}>
@@ -55,12 +70,7 @@ export default function TasksPage() {
         <div className={styles.header}>
           <span className={styles.title}>Mes tâches</span>
           {/* Filters */}
-          <TasksFilters
-            displayedFilters={displayedFilters}
-            tasks={tasks}
-            queries={queries}
-            setQueries={setQueries}
-          />
+          <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
         </div>
         {/* Tasks */}
         <div className={styles.tasksContainer}>

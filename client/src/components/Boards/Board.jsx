@@ -10,6 +10,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";
 import { bricolageGrostesque } from "@/utils/font";
+import { useProjectContext } from "@/context/ProjectContext";
 
 const initialState = {
   success: null,
@@ -21,15 +22,14 @@ const initialState = {
 export default function Board({
   tasks,
   displayedElts,
-  mutateTasks,
-  project,
   board,
   activeId,
   selectedTasks,
   setSelectedTasks,
-  archive,
   isOverlay = false, // Nouvelle prop pour indiquer si le board est dans un DragOverlay
 }) {
+  const { project, mutateTasks, archive } = useProjectContext();
+
   const { setNodeRef } = useDroppable({
     id: board?._id,
   });
@@ -158,7 +158,11 @@ export default function Board({
                 }}
                 className="font-bricolage border-none bg-inherit py-1.5 px-1 text-text-size-normal"
               />
-              <button type="submit" hidden className={bricolageGrostesque.className}>
+              <button
+                type="submit"
+                hidden
+                className={bricolageGrostesque.className}
+              >
                 Ajouter une tâche
               </button>
             </form>
