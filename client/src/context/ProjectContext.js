@@ -20,7 +20,6 @@ export function ProjectProvider({
 }) {
   const [queries, setQueries] = useState(defaultQueries);
 
-  console.log(queries);
   const { project, mutateProject } = useProject(
     initialProject?._id,
     initialProject
@@ -31,10 +30,12 @@ export function ProjectProvider({
     initialBoards
   );
   const { tasks, tasksLoading, mutateTasks } = useTasks(queries, initialTasks);
+
   const { statuses, mutateStatuses } = useStatuses(
     initialProject?._id,
     initialStatuses
   );
+
   const { priorities, mutatePriorities } = usePriorities(
     initialProject?._id,
     initialPriorities
