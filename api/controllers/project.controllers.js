@@ -178,6 +178,14 @@ export async function getProjects(req, res, next) {
           as: "tasks",
         },
       },
+      {
+        $lookup: {
+          from: "statuses",
+          localField: "_id",
+          foreignField: "projectId",
+          as: "projectStatuses",
+        },
+      },
 
       // Statistiques des tâches par status
       {
@@ -186,11 +194,20 @@ export async function getProjects(req, res, next) {
             $arrayToObject: {
               $map: {
                 input: {
-                  $setUnion: ["$tasks.status", allowedStatus],
+                  $setUnion: [
+                    "$tasks.status",
+                    {
+                      $map: {
+                        input: "$projectStatuses",
+                        as: "status",
+                        in: "$$status._id",
+                      },
+                    },
+                  ],
                 },
                 as: "status",
                 in: {
-                  k: "$$status",
+                  k: { $toString: "$$status" },
                   v: {
                     $size: {
                       $filter: {
@@ -206,7 +223,6 @@ export async function getProjects(req, res, next) {
           },
         },
       },
-
       {
         $lookup: {
           from: "boards",
@@ -232,6 +248,7 @@ export async function getProjects(req, res, next) {
           boards: 0,
           currentUserMember: 0,
           membersData: 0,
+          projectStatuses: 0,
         },
       },
       {
