@@ -39,12 +39,12 @@
   --border-color: #acaba5;
 
   --pending-color: #b3bcc0;
+  --estimating-color: #62c3b0;
   --processing-color: #f3b158;
-  --finished-color: #63a758;
   --todo-color: #559fc6;
   --checking-color: #9d88c2;
-  --estimating-color: #62c3b0;
   --blocked-color: #ca4250;
+  --finished-color: #63a758;
 
   --low-color: #afbde9;
   --medium-color: #879ce0;
