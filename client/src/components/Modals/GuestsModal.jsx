@@ -223,15 +223,15 @@ export function ProjectInvitationsList({
               style={{ borderRadius: "50%" }}
             />
             <span>{inv?.guestEmail}</span>
+            {canEditRole && (
+              <DropDown
+                defaultValue={inv?.role}
+                options={["owner", "manager", "team", "customer", "guest"]}
+                invitation={inv}
+                project={project}
+              />
+            )}
           </div>
-          {canEditRole && (
-            <DropDown
-              defaultValue={inv?.role}
-              options={["owner", "manager", "team", "customer", "guest"]}
-              invitation={inv}
-              project={project}
-            />
-          )}
           {canDelete && (
             <form action={formAction}>
               <input

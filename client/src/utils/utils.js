@@ -39,7 +39,7 @@ export function checkRole(project, roles, uid) {
 
 export function memberRole(role) {
   if (role === "owner") {
-    return "👑 Créateur";
+    return "👑 Propriétaire";
   }
   if (role === "manager") {
     return "👨‍💼 Manager";
