@@ -59,8 +59,8 @@ export default function TasksStatusFilter({ queries, setQueries }) {
       >
         <ChartBar size={16} />
         <span>Status</span>
-        {QueriesStatus?.length > 0 && (
-          <span className={styles.length}>{status?.length}</span>
+        {hasStatus && (
+          <span className={styles.length}>{QueriesStatus?.length}</span>
         )}
         <ChevronDown size={16} />
       </div>

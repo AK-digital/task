@@ -59,42 +59,17 @@ export default function TasksHeader({
   function sortTasks(sort, elt, path) {
     setSortedTasks((prev) => {
       const sortedTasks = [...prev]?.sort((a, b) => {
-        if (sort === "asc") {
-          if (elt) {
-            return a[elt][path]?.localeCompare(b[elt][path]);
-          } else {
-            return a[path]?.localeCompare(b[path]);
-          }
-        } else {
-          if (elt) {
-            return b[elt][path]?.localeCompare(a[elt][path]);
-          } else {
-            return b[path]?.localeCompare(a[path]);
-          }
-        }
-      });
-      return sortedTasks;
-    });
-  }
+        const aValue = elt ? a[elt]?.[path] : a[path];
+        const bValue = elt ? b[elt]?.[path] : b[path];
 
-  function sortTaskByPriority(sort) {
-    setSortedTasks((prev) => {
-      const sortedTasks = [...prev].sort((a, b) => {
-        // Convert priority strings to numeric values
-        const priorityValues = {
-          Urgent: 4,
-          Haute: 3,
-          Moyenne: 2,
-          Basse: 1,
-        };
-
-        const priorityA = priorityValues[a.priority];
-        const priorityB = priorityValues[b.priority];
+        if (!aValue && !bValue) return 0;
+        if (!aValue) return 1;
+        if (!bValue) return -1;
 
         if (sort === "asc") {
-          return priorityA - priorityB;
+          return aValue.localeCompare(bValue);
         } else {
-          return priorityB - priorityA;
+          return bValue.localeCompare(aValue);
         }
       });
       return sortedTasks;
@@ -131,7 +106,7 @@ export default function TasksHeader({
 
     setStatusSort(sort);
 
-    sortTasks(sort, null, "status");
+    sortTasks(sort, "status", "name");
   }
 
   function sortByPriority(sort) {
@@ -142,7 +117,42 @@ export default function TasksHeader({
 
     setPrioritySort(sort);
 
-    sortTaskByPriority(sort);
+    setSortedTasks((prev) => {
+      const sortedTasks = [...prev]?.sort((a, b) => {
+        const aPriority = a.priority;
+        const bPriority = b.priority;
+
+        // Si une des priorités est null/undefined, on la met à la fin
+        if (!aPriority && !bPriority) return 0;
+        if (!aPriority) return sort === "asc" ? 1 : -1;
+        if (!bPriority) return sort === "asc" ? -1 : 1;
+
+        // Mapping des noms de priorités vers des valeurs numériques
+        // Plus le nombre est élevé, plus c'est urgent/important
+        const priorityOrder = {
+          "Très Basse": 1,
+          Basse: 2,
+          Faible: 2,
+          Normale: 3,
+          Moyenne: 4,
+          Élevée: 5,
+          Haute: 6,
+          "Très Haute": 7,
+          Urgente: 8,
+          Critique: 9,
+          Bloquante: 10,
+          // Ajoutez ici vos autres noms de priorités personnalisés
+        };
+
+        // Récupérer les valeurs numériques ou utiliser 2 (Basse) par défaut
+        const aOrder = priorityOrder[aPriority.name] || 2;
+        const bOrder = priorityOrder[bPriority.name] || 2;
+
+        // Trier par ordre d'importance
+        return sort === "asc" ? aOrder - bOrder : bOrder - aOrder;
+      });
+      return sortedTasks;
+    });
   }
 
   function sortByDeadline(sort) {
