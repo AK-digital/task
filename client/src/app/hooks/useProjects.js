@@ -15,5 +15,6 @@ export function useProjects() {
 
   return {
     projects: data,
+    projectsLoading: isLoading,
   };
 }

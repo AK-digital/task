@@ -7,10 +7,11 @@ import { ArrowLeftCircle } from "lucide-react";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/Projects/ProjectCard";
+import { useProjects } from "@/app/hooks/useProjects";
 
 export default function Projects() {
   const router = useRouter();
-  const { data: projects } = useSWR("/api/project", getProjects);
+  const { projects, projectsLoading } = useProjects();
 
   return (
     <main className={styles.main}>
