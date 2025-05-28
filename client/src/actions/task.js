@@ -43,12 +43,10 @@ export async function saveTask(projectId, prevState, formData) {
 }
 
 // Update the status of a given task
-export async function updateTaskStatus(taskId, projectId, status) {
+export async function updateTaskStatus(taskId, projectId, statusId) {
   try {
-    if (!allowedStatus.includes(status)) throw new Error("Paramètre invalide");
-
     const rawData = {
-      status: status,
+      statusId: statusId,
     };
 
     const res = await useAuthFetch(
@@ -79,16 +77,10 @@ export async function updateTaskStatus(taskId, projectId, status) {
 }
 
 // Update the priority of a given task
-export async function updateTaskPriority(taskId, projectId, priority) {
+export async function updateTaskPriority(taskId, projectId, priorityId) {
   try {
-    const allowedPriorities = ["Basse", "Moyenne", "Haute", "Urgent"];
-
-    if (!allowedPriorities.includes(priority)) {
-      throw new Error("Paramètre invalide");
-    }
-
     const rawData = {
-      priority: priority,
+      priorityId: priorityId,
     };
 
     const res = await useAuthFetch(

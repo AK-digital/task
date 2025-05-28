@@ -7,6 +7,12 @@ import BoardModel from "../models/Board.model.js";
 import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
 import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
+import StatusModel from "../models/Status.model.js";
+import {
+  getDefaultPriorities,
+  getDefaultStatuses,
+} from "../helpers/defaultStatuses.js";
+import PriorityModel from "../models/Priority.model.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -64,6 +70,12 @@ export async function saveProject(req, res, next) {
         setDefaultsOnInsert: true,
       }
     );
+
+    const defaultStatuses = getDefaultStatuses(savedProject?._id);
+    const defaultPriorities = getDefaultPriorities(savedProject?._id);
+
+    await StatusModel.insertMany(defaultStatuses);
+    await PriorityModel.insertMany(defaultPriorities);
 
     return res.status(201).send({
       success: true,
@@ -385,10 +397,7 @@ export async function updateProjectLogo(req, res) {
     }
 
     // Upload du nouveau fichier
-    const uploadedFile = await uploadFileBuffer(
-      "task/project",
-      logo.buffer,
-    );
+    const uploadedFile = await uploadFileBuffer("task/project", logo.buffer);
 
     if (!uploadedFile || !uploadedFile.secure_url) {
       throw new Error("Échec de l'upload du fichier");

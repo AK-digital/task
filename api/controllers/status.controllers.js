@@ -1,26 +1,26 @@
-import CustomStatusModel from "../models/CustomStatus.model.js";
+import StatusModel from "../models/Status.model.js";
 
-export async function saveCustomStatus(req, res) {
+export async function saveStatus(req, res) {
   try {
     const { projectId } = req.query;
-    const { status, color } = req.body;
+    const { name, color } = req.body;
 
-    if (!status || !color) {
+    if (!color) {
       return res.status(400).send({
         success: false,
-        message: "Missing parameters",
+        message: "Missings parameters",
       });
     }
 
-    const newCustomStatus = new CustomStatusModel({
+    const newStatus = new StatusModel({
       projectId: projectId,
-      status: status,
+      name: name,
       color: color,
     });
 
-    const savedCustomStatus = await newCustomStatus.save();
+    const savedStatus = await newStatus.save();
 
-    if (!savedCustomStatus) {
+    if (!savedStatus) {
       return res.status(500).send({
         success: false,
         message: "Failed to save custom status",
@@ -29,8 +29,8 @@ export async function saveCustomStatus(req, res) {
 
     return res.status(201).send({
       success: true,
-      message: "Custom status saved successfully",
-      data: savedCustomStatus,
+      message: "Status saved successfully",
+      data: savedStatus,
     });
   } catch (err) {
     console.error(err);
@@ -38,7 +38,7 @@ export async function saveCustomStatus(req, res) {
     if (err.code === 11000) {
       return res.status(409).send({
         success: false,
-        message: "Custom status already exists",
+        message: "This status already exists",
       });
     }
 
@@ -49,23 +49,23 @@ export async function saveCustomStatus(req, res) {
   }
 }
 
-export async function getCustomStatus(req, res) {
+export async function getStatusByProject(req, res) {
   try {
-    const { projectId } = req.query;
+    const status = await StatusModel.find({ projectId: req.params.id }).sort({
+      createdAt: 1,
+    });
 
-    const customStatus = await CustomStatusModel.find({ projectId: projectId });
-
-    if (!customStatus.length <= 0) {
+    if (!status.length === 0) {
       return res.status(404).send({
         success: false,
-        message: "Custom status not found",
+        message: "Status not found",
       });
     }
 
     return res.status(200).send({
       success: true,
-      message: "Custom status retrieved successfully",
-      data: customStatus,
+      message: "Status retrieved successfully",
+      data: status,
     });
   } catch (err) {
     console.log(err);
@@ -76,36 +76,36 @@ export async function getCustomStatus(req, res) {
   }
 }
 
-export async function updateCustomStatus(req, res) {
+export async function updateStatus(req, res) {
   try {
-    const { status, color } = req.body;
+    const { name, color } = req.body;
 
-    if (!status || !color) {
+    if (!name || !color) {
       return res.status(400).send({
         success: false,
         message: "Missing parameters",
       });
     }
 
-    const updatedCustomStatus = await CustomStatusModel.findByIdAndUpdate(
+    const updatedStatus = await StatusModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
-        $set: { status: status, color: color },
+        $set: { name: name, color: color },
       },
       { new: true }
     );
 
-    if (!updatedCustomStatus) {
+    if (!updatedStatus) {
       return res.status(404).send({
         success: false,
-        message: "Impossible to update a custom status that does not exist",
+        message: "Impossible to update a status that does not exist",
       });
     }
 
     return res.status(200).send({
       success: true,
-      message: "Custom status updated successfully",
-      data: updatedCustomStatus,
+      message: "Status updated successfully",
+      data: updatedStatus,
     });
   } catch (err) {
     console.log(err);
@@ -116,23 +116,34 @@ export async function updateCustomStatus(req, res) {
   }
 }
 
-export async function deleteCustomStatus(req, res) {
+export async function deleteStatus(req, res) {
   try {
-    const deletedCustomStatus = await CustomStatusModel.findByIdAndDelete({
+    const { projectId } = req.query;
+
+    const statuses = await StatusModel.find({ projectId: projectId });
+
+    if (statuses.length === 1) {
+      return res.status(400).send({
+        success: false,
+        message: "Impossible to delete the last status",
+      });
+    }
+
+    const deletedStatus = await StatusModel.findByIdAndDelete({
       _id: req.params.id,
     });
 
-    if (!deletedCustomStatus) {
+    if (!deletedStatus) {
       return res.status(404).send({
         success: false,
-        message: "Impossible to delete a custom status that does not exist",
+        message: "Impossible to delete a status that does not exist",
       });
     }
 
     return res.status(200).send({
       success: true,
-      message: "Custom status deleted successfully",
-      data: deletedCustomStatus,
+      message: "Status deleted successfully",
+      data: deletedStatus,
     });
   } catch (err) {
     console.log(err);

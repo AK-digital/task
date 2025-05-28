@@ -102,6 +102,14 @@ export async function getTasks(req, res, next) {
         select: "title color",
       })
       .populate({
+        path: "status",
+        select: "name color projectId",
+      })
+      .populate({
+        path: "priority",
+        select: "name color _id",
+      })
+      .populate({
         path: "responsibles",
         select: "-password -role", // Exclure le champ `password` des responsibles
       })
@@ -225,84 +233,24 @@ export async function updateTaskText(req, res, next) {
   }
 }
 
-export async function addTaskStatus(req, res) {
-  try {
-    const { status, color } = req.body;
-
-    if (!color) {
-    }
-
-    if (!status && !color) {
-      return res.status(400).send({
-        success: false,
-        message: "Paramètres manquants",
-      });
-    }
-
-    const updatedTask = await TaskModel.findByIdAndUpdate(
-      { _id: req.params.id },
-      {
-        $addToSet: {
-          status: status,
-        },
-      },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
-
-    if (!updatedTask) {
-      return res.status(404).send({
-        success: false,
-        message:
-          "Impossible de modifier le status d'une tâche qui n'existe pas",
-      });
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: "Status modifié avec succès",
-      data: updatedTask,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message: err.message || "Une erreur inattendue est survenue",
-    });
-  }
-}
-
 export async function updateTaskStatus(req, res, next) {
   try {
-    const { status } = req.body;
+    const { statusId } = req.body;
 
-    if (!status) {
+    if (!statusId) {
       return res.status(400).send({
         success: false,
-        message: "Paramètres manquants",
+        message: "Missing parameters",
       });
     }
 
-    if (status) {
-      if (!allowedStatus.includes(status)) {
-        return res.status(400).send({
-          success: false,
-          message: "Paramètres invalide",
-        });
-      }
-    }
-
     const updatedTask = await TaskModel.findByIdAndUpdate(
-      { _id: req.params.id },
+      req.params.id,
       {
-        $set: {
-          status: status,
-        },
+        status: statusId,
       },
       {
         new: true,
-        setDefaultsOnInsert: true,
       }
     );
 
@@ -310,50 +258,39 @@ export async function updateTaskStatus(req, res, next) {
       return res.status(404).send({
         success: false,
         message:
-          "Impossible de modifier le status d'une tâche qui n'existe pas",
+          "Impossible to update the status of a task that does not exist",
       });
     }
 
     return res.status(200).send({
       success: true,
-      message: "Status modifié avec succès",
+      message: "Task status successfully updated",
       data: updatedTask,
     });
   } catch (err) {
     return res.status(500).send({
       success: false,
-      message: err.message || "Une erreur inattendue est survenue",
+      message: err.message || "Internal server error",
     });
   }
 }
 
 export async function updateTaskPriority(req, res, next) {
   try {
-    const { priority } = req.body;
+    const { priorityId } = req.body;
 
-    const allowedPriority = ["Basse", "Moyenne", "Haute", "Urgent"];
-
-    if (!priority) {
+    if (!priorityId) {
       return res.status(400).send({
         success: false,
-        message: "Paramètres manquants",
+        message: "Missing parameters",
       });
-    }
-
-    if (priority) {
-      if (!allowedPriority.includes(priority)) {
-        return res.status(400).send({
-          success: false,
-          message: "Paramètres invalide",
-        });
-      }
     }
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
         $set: {
-          priority: priority,
+          priority: priorityId,
         },
       },
       {
@@ -366,19 +303,19 @@ export async function updateTaskPriority(req, res, next) {
       return res.status(404).send({
         success: false,
         message:
-          "Impossible de modifier la priorité d'une tâche qui n'existe pas",
+          "Impossible to update the priority of a task that does not exist",
       });
     }
 
     return res.status(200).send({
       success: true,
-      message: "Priorité modifié avec succès",
+      message: "Priority updated successfully",
       data: updatedTask,
     });
   } catch (err) {
     return res.status(500).send({
       success: false,
-      message: err.message || "Une erreur inattendue est survenue",
+      message: err.message || "Internal server error",
     });
   }
 }

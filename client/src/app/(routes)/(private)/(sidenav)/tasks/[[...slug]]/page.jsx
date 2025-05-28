@@ -6,6 +6,7 @@ import { useContext, useMemo, useState } from "react";
 import Tasks from "@/components/tasks/Tasks";
 import TasksFilters from "@/components/tasks/TasksFilters";
 import { useTasks } from "@/app/hooks/useTasks";
+import { ProjectProvider } from "@/context/ProjectContext";
 
 // This is where you define the task elements you want to display
 const displayedElts = {
