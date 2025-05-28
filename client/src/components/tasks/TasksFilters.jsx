@@ -8,7 +8,6 @@ import TasksProjectFilter from "./TasksProjectFilter";
 
 export default function TasksFilters({
   displayedFilters,
-  tasks,
   queries,
   setQueries,
 }) {
@@ -22,11 +21,7 @@ export default function TasksFilters({
         <TasksProjectFilter queries={queries} setQueries={setQueries} />
       )}
       {isBoard && (
-        <TasksBoardFilter
-          tasks={tasks}
-          queries={queries}
-          setQueries={setQueries}
-        />
+        <TasksBoardFilter queries={queries} setQueries={setQueries} />
       )}
       {isAdmin && (
         <TasksAdminFilter queries={queries} setQueries={setQueries} />
