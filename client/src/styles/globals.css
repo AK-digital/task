@@ -525,6 +525,165 @@
   .wrapper_TaskDeadline[data-past-today="true"]::before {
     background-color: var(--processing-color);
   }
+
+  /* TaskDescription */
+  .content_TaskDescription p:empty {
+    margin: 12px 0;
+  }
+
+  .content_TaskDescription ul {
+    list-style-type: disc;
+  }
+
+  .content_TaskDescription ul,
+  .content_TaskDescription ol {
+    margin-left: 25px;
+  }
+
+  .content_TaskDescription strong {
+    font-weight: bold;
+  }
+
+  .content_TaskDescription a {
+    color: #1e90ff;
+    text-decoration: underline;
+  }
+
+  .content_TaskDescription img {
+    max-width: 800px;
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    margin: 10px 0 10px 0;
+  }
+
+  .content_TaskDescription span {
+    color: var(--accent-color);
+    font-weight: 500;
+  }
+
+  /* TaskEstimate */
+  .input_TaskEstimate::-webkit-outer-spin-button,
+  .input_TaskEstimate::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+    /* <-- Apparently some margin are still there even though it's hidden */
+  }
+
+  /* TaskMore */
+  .container_TaskMore {
+    animation: openAnimation 250ms forwards ease-out;
+  }
+
+  .container-close_TaskMore {
+    animation: closeAnimation 250ms forwards ease-out;
+  }
+
+  @keyframes openAnimation {
+    from {
+      transform: translateX(100%);
+    }
+
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes closeAnimation {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  /* TaskPriority */
+  .dropdown__current_TaskPriority[data-current="En attente"],
+  .dropdown__list_TaskPriority li[data-value="En attente"] {
+    background-color: var(--color-state-pending-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="À faire"],
+  .dropdown__list_TaskPriority li[data-value="À faire"] {
+    background-color: var(--color-state-todo-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="En cours"],
+  .dropdown__list_TaskPriority li[data-value="En cours"] {
+    background-color: var(--color-state-processing-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="Bloquée"],
+  .dropdown__list_TaskPriority li[data-value="Bloquée"] {
+    background-color: var(--color-state-blocked-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="Terminée"],
+  .dropdown__list_TaskPriority li[data-value="Terminée"] {
+    background-color: var(--color-state-finished-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="À vérifier"],
+  .dropdown__list_TaskPriority li[data-value="À vérifier"] {
+    background-color: var(--color-state-checking-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="À estimer"],
+  .dropdown__list_TaskPriority li[data-value="À estimer"] {
+    background-color: var(--color-state-estimating-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="Basse"],
+  .dropdown__list_TaskPriority li[data-value="Basse"] {
+    background-color: var(--color-color-low-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="Moyenne"],
+  .dropdown__list_TaskPriority li[data-value="Moyenne"] {
+    background-color: var(--color-color-medium-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="Haute"],
+  .dropdown__list_TaskPriority li[data-value="Haute"] {
+    background-color: var(--color-color-high-color);
+  }
+
+  .dropdown__current_TaskPriority[data-current="Urgent"],
+  .dropdown__list_TaskPriority li[data-value="Urgent"] {
+    background-color: var(--color-color-urgent-color);
+  }
+
+  /* TaskResponsibles */
+  .images_TaskResponsibles:not(:first-child) {
+    position: relative;
+    left: -12px;
+    margin-right: -12px;
+  }
+
+  .images_TaskResponsibles:not(:first-child) img,
+  .images_TaskResponsibles:not(:first-child) div {
+    width: 36px !important;
+    height: 36px !important;
+    border: 3px solid var(--color-background-secondary-color);
+  }
+
+  .images_TaskResponsibles img {
+    border-radius: 50%;
+  }
+
+  /* TaskSkeletons */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+
+    100% {
+      background-position: 1000px 0;
+    }
+  }
 }
 
 @layer base {

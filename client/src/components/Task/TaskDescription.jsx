@@ -93,9 +93,9 @@ export default function TaskDescription({ project, task, uid }) {
   };
 
   return (
-    <div className={styles.container}>
-      <span className={styles.title}>
-        <PanelTop size={16} /> Description
+    <div className="flex column gap-3">
+      <span className="flex items-center gap-2 text-text-size-large text-text-dark-color font-medium">
+        <PanelTop size={16} className="text-text-color-muted" /> Description
       </span>
       {/* If is editing */}
       {isEditing && (
@@ -114,37 +114,37 @@ export default function TaskDescription({ project, task, uid }) {
       {/* If not editing and description is not empty */}
       {!isEditing && description && (
         <div>
-          <div className={styles.preview} onClick={handleEditDescription}>
-            <div className={styles.user}>
+          <div className="relative rounded-lg shadow-shadow-box-small p-4 text-text-size-normal cursor-pointer bg-background-secondary-color" onClick={handleEditDescription}>
+            <div className="flex items-center gap-2">
               {descriptionAuthor?.picture ? (
                 <Image
                   src={descriptionAuthor?.picture || "/default-pfp.webp"}
                   width={24}
                   height={24}
                   alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
-                  style={{ borderRadius: "50%" }}
+                  className="rounded-full max-h-6 max-w-6"
                 />
               ) : (
                 <NoPicture user={descriptionAuthor} width={24} height={24} />
               )}
 
-              <span className={styles.names}>
+              <span>
                 {(descriptionAuthor?.firstName || user?.firstName) +
                   " " +
                   (descriptionAuthor?.lastName || user?.lastName)}
               </span>
               {task?.description?.createdAt && (
-                <span className={styles.date}>{formattedDate}</span>
+                <span className="text-xs text-text-color-muted">{formattedDate}</span>
               )}
             </div>
             <div
-              className={styles.content}
               dangerouslySetInnerHTML={{ __html: description }}
+              className="content_TaskDescription mt-3 font-light text-text-size-normal"
             ></div>
           </div>
 
           {/* Zone de réactions et actions */}
-          <div className={styles.informations}>
+          <div className="flex items-center justify-between gap-2 mt-2 py-0 px-2">
             {/* Attachments */}
             {isNotEmpty(task?.description?.files) && (
               <AttachmentsInfo attachments={task?.description?.files} />
@@ -160,12 +160,12 @@ export default function TaskDescription({ project, task, uid }) {
 
             {/* Actions (supprimer la description) */}
             {isAuthor && isAuthorized && (
-              <div className={styles.actions}>
+              <div className="flex justify-end mr-3">
                 <button
-                  className={styles.button}
                   data-disabled={pending}
                   disabled={pending}
                   onClick={handleRemoveDescription}
+                  className="bg-transparent text-text-accent-color p-0 text-text-size-small hover:accent-color-accent-color-hover shadow-inherit"
                 >
                   Effacer la description
                 </button>
@@ -177,9 +177,9 @@ export default function TaskDescription({ project, task, uid }) {
       {/* If not editing and description empty */}
       {!isEditing && !description && (
         <div
-          className={styles.empty}
           onClick={handleEditDescription}
           data-role={isAuthorized}
+          className="border border-color-border-color py-3 px-6 rounded-lg text-text-size-small data-[role=true]:cursor-pointer"
         >
           {isAuthorized ? (
             <p>Ajouter une description</p>

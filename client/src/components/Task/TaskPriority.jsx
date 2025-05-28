@@ -1,4 +1,3 @@
-import styles from "@/styles/components/tasks/task-dropdown.module.css";
 import { updateTaskPriority } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
@@ -47,9 +46,9 @@ export default function TaskPriority({ task }) {
   }, [task?.priority]);
 
   return (
-    <div className={styles["dropdown"]}>
+    <div className="relative flex items-center select-none border-r border-text-light-color text-text-size-normal text-text-color min-w-[135px] max-w-[150px] w-full h-full">
       <div
-        className={styles["dropdown__current"]}
+        className="dropdown__current_TaskPriority relative flex items-center justify-center w-full min-w-[110px] text-center cursor-pointer py-2 px-4 rounded-border-radius-large mx-3 text-white"
         data-current={priority}
         onClick={handleIsOpen}
       >
@@ -57,11 +56,11 @@ export default function TaskPriority({ task }) {
       </div>
       {isOpen && (
         <>
-          <div className={styles["dropdown__list"]}>
-            <ul>
+          <div className="dropdown__list_TaskPriority absolute z-[2001] top-[45px] left-0 w-full p-2 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-border-radius-small">
+            <ul className="text-center flex flex-col gap-2">
               {priorities?.map((value, idx) => {
                 return (
-                  <li key={idx} data-value={value} onClick={handleUpdateStatus}>
+                  <li key={idx} data-value={value} onClick={handleUpdateStatus} className="py-2 px-4 cursor-pointer text-white rounded-border-radius-large">
                     {value}
                   </li>
                 );

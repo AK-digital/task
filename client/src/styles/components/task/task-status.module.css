@@ -1,4 +1,4 @@
-.container {
+/* .container {
     position: relative;
     display: flex;
     align-items: center;
@@ -103,4 +103,4 @@
 .current[data-current="À estimer"],
 .list ul li[data-value="À estimer"] {
     background-color: var(--estimating-color);
-}
+} */

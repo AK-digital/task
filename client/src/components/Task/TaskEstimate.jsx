@@ -1,8 +1,6 @@
 "use client";
 import { updateTaskEstimate } from "@/api/task";
 import { useUserRole } from "@/app/hooks/useUserRole";
-import styles from "@/styles/components/task/task-estimate.module.css";
-import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 import { XCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -99,66 +97,66 @@ export default function TaskEstimate({ task, uid }) {
 
   return (
     <div
-      className={styles.container}
+      className="relative flex justify-center items-center py-1 px-2 border-r border-text-light-color min-w-30 max-w-35 w-full h-full gap-0.5"
       onMouseEnter={handleHover}
       onMouseLeave={() => setHover(false)}
     >
       <div
         data-estimation={hasEstimation}
-        className={styles.wrapper}
         onClick={handleIsEditing}
+        className="bg-background-primary-color p-1.5 rounded-border-radius-medium text-text-size-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-white"
       >
         <span>{estimation}</span>
       </div>
       {hover && hasEstimation && (
-        <div className={styles.delete} onClick={handleDeleteEstimation}>
+        <div className="relative top-0.5 text-danger-color cursor-pointer" onClick={handleDeleteEstimation}>
           <XCircle size={16} />
         </div>
       )}
       {isEditing && (
         <>
-          <div className={styles.edit} id="popover">
-            <div className={styles.suggestions}>
+          <div className="absolute z-2001 bg-background-secondary-color rounded-border-radius-small top-[45px] p-2 w-[305px] shadow-shadow-box-medium">
+            <div className="flex justify-center flex-wrap gap-2">
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-border-radius-medium text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 15 minutes
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-border-radius-medium text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 30 minutes
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-border-radius-medium text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 45 minutes
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-border-radius-medium text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 1 heure
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-border-radius-medium text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 2 heures
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-border-radius-medium text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 1 jour
               </span>
             </div>
-            <div className={styles.custom}>
-              <form className={styles.form} onSubmit={handleCustomeEstimation}>
-                <div className={styles.row}>
+            <div className="mt-2">
+              <form className="flex flex-col gap-0" onSubmit={handleCustomeEstimation}>
+                <div className="flex flex-row gap-0">
                   <input
                     type="number"
                     id="number"
@@ -168,13 +166,13 @@ export default function TaskEstimate({ task, uid }) {
                     step={0.1}
                     min={1}
                     max={99}
-                    className={bricolageGrostesque.className}
+                    className="input_TaskEstimate font-bricolage text-text-size-small text-text-dark-color font-semibold p-1.5 bg-background-third-color rounded-border-radius-medium rounded-tr-[inherit] rounded-br-[inherit] border-none text-center"
                   />
                   <select
                     name=""
                     id=""
-                    className={bricolageGrostesque.className}
                     onChange={(e) => setWeek(e.target.value)}
+                    className="font-bricolage text-text-size-small text-text-dark-color font-semibold bg-background-third-color outline-none border-none rounded-border-radius-medium rounded-tl-[inherit] rounded-bl-[inherit]"
                   >
                     <option value="minutes">Minutes</option>
                     <option value="heures">Heures</option>
@@ -183,9 +181,9 @@ export default function TaskEstimate({ task, uid }) {
                   </select>
                 </div>
                 {number >= 1 && (
-                  <div className={styles.buttons}>
+                  <div>
                     <button
-                      className={bricolageGrostesque.className}
+                      className="font-bricolage mt-2 text-text-size-small font-normal p-1.5 w-full text-white"
                       type="submit"
                     >
                       Valider

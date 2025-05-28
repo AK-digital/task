@@ -1,5 +1,4 @@
 import { deleteTask } from "@/api/task";
-import styles from "@/styles/components/task/task-remove.module.css";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
@@ -29,7 +28,7 @@ export default function TaskRemove({ task, archive, mutate }) {
   if (!canDelete) return null;
 
   return (
-    <div className={styles.container} id="task-row">
+    <div className="cursor-pointer text-[#41435f] transition-colors duration-150 ease-in-out relative px-[6px] hover:text-danger-color" id="task-row">
       <Trash size={20} onClick={() => setShowConfirm(true)} />
       <ConfirmDialog
         isOpen={showConfirm}

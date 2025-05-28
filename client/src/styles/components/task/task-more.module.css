@@ -1,3 +1,4 @@
+/*
 .container {
   position: fixed;
   z-index: 2001;
@@ -25,7 +26,7 @@
 
 /* Close btn */
 
-.close {
+/* .close {
   display: flex;
   align-items: center;
   background-color: var(--third-background-color);
@@ -74,8 +75,9 @@
   height: 100vh;
   position: fixed;
   top: 0;
-  left: 0; /* Sera mis à jour dynamiquement */
-  cursor: col-resize;
+  left: 0;  */
+  /* Sera mis à jour dynamiquement */
+  /* cursor: col-resize;
   background-color: transparent;
   z-index: 2002;
 }
@@ -104,3 +106,4 @@
     transform: translateX(100%);
   }
 }
+*/

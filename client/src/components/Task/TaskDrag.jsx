@@ -4,8 +4,7 @@ import { GripVertical } from "lucide-react";
 export default function TaskDrag({ attributes, listeners }) {
   return (
     <div
-      className={styles.container}
-      id="task-row"
+      className="flex items-center h-full pl-1.5 text-color-border-color"
       {...attributes}
       {...listeners}
       suppressHydrationWarning

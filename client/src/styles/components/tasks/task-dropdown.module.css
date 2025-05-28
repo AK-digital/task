@@ -1,3 +1,4 @@
+/*
 .dropdown {
   position: relative;
   display: flex;
@@ -28,7 +29,7 @@
 }
 
 /* Status */
-.dropdown__current[data-current="En attente"],
+/* .dropdown__current[data-current="En attente"],
 .dropdown__list ul li[data-value="En attente"] {
   background-color: var(--pending-color);
 }
@@ -64,7 +65,7 @@
 }
 
 /* priority  */
-.dropdown__current[data-current="Basse"],
+/* .dropdown__current[data-current="Basse"],
 .dropdown__list ul li[data-value="Basse"] {
   background-color: var(--low-color);
 }
@@ -109,4 +110,6 @@
   cursor: pointer;
   color: white;
   border-radius: var(--border-radius-large);
-}
+ } */
+
+/* Styles converted to Tailwind CSS in TaskPriority.jsx */

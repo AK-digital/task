@@ -1,4 +1,3 @@
-import styles from "@/styles/components/task/task-responsibles.module.css";
 import { displayPicture, isNotEmpty, sendNotification } from "@/utils/utils";
 import { PlusCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -86,12 +85,12 @@ export default function TaskResponsibles({ task, uid, user }) {
   }, [task?.responsibles]);
 
   return (
-    <div className={styles.container} id="task-row">
-      <div className={styles.wrapper} id="task-row" onClick={handleIsMoreOpen}>
+    <div className="relative justify-center px-3 min-w-[100px] max-w-[100px] w-full border-r border-l border-text-color" id="task-row">
+      <div className="wrapper_TaskResponsibles" id="task-row" onClick={handleIsMoreOpen}>
         {isNotEmpty(responsibles) ? (
           responsibles.slice(0, 3).map((responsible) => {
             return (
-              <div className={styles.images} key={responsible?._id}>
+              <div className="images_TaskResponsibles flex justify-center items-center" key={responsible?._id}>
                 {displayPicture(responsible, 30, 30)}
               </div>
             );
@@ -100,20 +99,20 @@ export default function TaskResponsibles({ task, uid, user }) {
           <PlusCircle size={24} />
         )}
         {responsibles?.length > 3 && (
-          <span className={styles.length}>+{responsibles?.length - 3}</span>
+          <span className="absolute flex justify-center items-center bg-background-primary-color rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-background-secondary-color">+{responsibles?.length - 3}</span>
         )}
       </div>
 
       {isMoreOpen && (
         <>
-          <div className={styles.modal}>
+          <div className="absolute w-[300px] bg-background-secondary-color shadow-shadow-box-medium rounded-border-radius-small top-[50px] z-[2001] p-2">
             {/* Responsibles */}
             {isNotEmpty(responsibles) && (
-              <div className={styles.responsibles}>
+              <div className="flex flex-wrap gap-1 mb-2">
                 {responsibles?.map((responsible) => {
                   return (
                     <div
-                      className={styles.responsible}
+                      className="flex items-center gap-1 bg-background-third-color p-1 rounded-border-radius-small text-text-size-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-background-primary-color"
                       key={responsible?._id}
                       onClick={() => handleRemoveResponsible(responsible)}
                     >
@@ -127,14 +126,15 @@ export default function TaskResponsibles({ task, uid, user }) {
                 })}
               </div>
             )}
-            <span className={styles.subtitle}>Personnes à inviter</span>
+            <span className="text-[14px] font-medium text-text-color-muted">Personnes à inviter</span>
             {/* Members */}
             <div>
               {isNotEmpty(members) && (
-                <ul>
+                <ul className="mt-[6px]">
                   {members?.map((member) => {
                     return (
                       <li
+                        className="flex items-center gap-1 p-2 rounded-border-radius-small hover:bg-background-third-color"
                         key={member?.user?._id}
                         onClick={() => handleAddResponsible(member?.user)}
                       >

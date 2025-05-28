@@ -1,23 +1,22 @@
 "use client";
-import styles from "@/styles/components/task/task-pending.module.css";
 import { GripVertical, MessageCircle } from "lucide-react";
 
 export function TaskPending({ text }) {
   return (
-    <div className={styles.container}>
-      <div className={`${styles.checkbox} ${styles.row}`}>
+    <div className="flex items-center justify-start border-b border-text-light-color w-full h-[42px] transition-all duration-150 ease-in-out text-text-size-normal px-3 opacity-50 blur-[0.4px]">
+      <div className="min-w-5 max-w-5">
         <input type="checkbox" name="task" id="task" />
       </div>
 
-      <div className={`${styles.grip} ${styles.row}`}>
+      <div className="min-w-5 max-w-5 text-text-light-color">
         <GripVertical size={20} />
       </div>
 
-      <div className={styles.text}>
-        <span>{text}</span>
+      <div className="p-1.5 w-full min-w-[200px] max-w-[700px]">
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{text}</span>
       </div>
 
-      <div className={`${styles.comment} ${styles.row}`}>
+      <div className="flex items-center justify-center text-text-color-muted min-w-[41px] max-w-[41px] border-r border-text-light-color h-full">
         <MessageCircle size={24} fillOpacity={0} />
       </div>
     </div>
