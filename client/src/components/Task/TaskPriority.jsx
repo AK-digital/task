@@ -10,7 +10,8 @@ import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
 
 export default function TaskPriority({ task }) {
-  const { project, priorities, mutatePriorities } = useProjectContext();
+  const { project, mutateTasks, priorities, mutatePriorities } =
+    useProjectContext();
   const [currentPriority, setCurrentPriority] = useState(task?.priority);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -42,6 +43,9 @@ export default function TaskPriority({ task }) {
     }
 
     socket.emit("update task", project?._id);
+
+    mutateTasks();
+    mutatePriorities();
   }
 
   async function handleAddPriority() {
