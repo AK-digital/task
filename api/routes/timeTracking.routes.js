@@ -41,4 +41,11 @@ router.delete(
   timeTrackingControllers.deleteTimeTracking
 );
 
+router.patch(
+  "/:id/billable",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer"]),
+  timeTrackingControllers.updateTimeTrackingBillable
+);
+
 export default router;
