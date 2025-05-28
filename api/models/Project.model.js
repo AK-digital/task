@@ -9,6 +9,11 @@ const projectSchema = new Schema(
       minLength: 2,
       maxLength: 250,
     },
+    creator: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     logo: {
       type: String,
       trim: true,

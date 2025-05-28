@@ -1,7 +1,14 @@
 "use client";
 import { removeGuest } from "@/actions/project";
 import styles from "@/styles/components/modals/guests-modal.module.css";
-import { isNotEmpty, memberRole } from "@/utils/utils";
+import {
+  isNotEmpty,
+  memberRole,
+  canEditMemberRole,
+  canRemoveMember,
+  getAvailableRoleOptions,
+  getAvailableRoleOptionsForInvitation,
+} from "@/utils/utils";
 import Image from "next/image";
 import { useActionState, useContext, useEffect, useState } from "react";
 import GuestFormInvitation from "../Projects/GuestFormInvitation";
@@ -32,8 +39,6 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
     initialState
   );
   const canInvite = useUserRole(project, ["owner", "manager"]);
-  const canRemove = useUserRole(project, ["owner", "manager"]);
-  const canEditRole = useUserRole(project, ["owner", "manager"]);
 
   const members = project?.members;
 
@@ -65,7 +70,6 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
       });
     }
   }, [state]);
-  const options = ["owner", "manager", "team", "customer", "guest"];
 
   return (
     <>
@@ -85,6 +89,11 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
           <div className={styles.guests}>
             <ul>
               {members.map((member) => {
+                const availableOptions = getAvailableRoleOptions(
+                  project,
+                  member,
+                  uid
+                );
                 return (
                   <li key={member?.user?._id} className={styles.member}>
                     <div className={styles.user}>
@@ -107,12 +116,12 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                       >
                         {member?.user?.email}
                       </span>
-                      {canEditRole &&
+                      {canEditMemberRole(project, member, uid) &&
                       member?.user?._id !== uid &&
-                      member?.role !== "owner" ? (
+                      availableOptions.length > 0 ? (
                         <DropDown
                           defaultValue={member?.role}
-                          options={options}
+                          options={availableOptions}
                           project={project}
                           member={member}
                         />
@@ -122,7 +131,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         </div>
                       )}
                     </div>
-                    {canRemove && member?.role !== "owner" && (
+                    {canRemoveMember(project, member, uid) && (
                       <form action={formAction}>
                         <input
                           type="text"
@@ -187,6 +196,7 @@ export function ProjectInvitationsList({
     initialState
   );
 
+  const { uid } = useContext(AuthContext);
   const canDelete = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
 
@@ -212,49 +222,65 @@ export function ProjectInvitationsList({
 
   return (
     <>
-      {projectInvitations.map((inv) => (
-        <li key={inv?._id} className={styles.pending}>
-          <div>
-            <Image
-              src={"/default-pfp.webp"}
-              width={32}
-              height={32}
-              alt={`Photo de profil de ${inv?.guestEmail}`}
-              style={{ borderRadius: "50%" }}
-            />
-            <span>{inv?.guestEmail}</span>
-          </div>
-          {canEditRole && (
-            <DropDown
-              defaultValue={inv?.role}
-              options={["owner", "manager", "team", "customer", "guest"]}
-              invitation={inv}
-              project={project}
-            />
-          )}
-          {canDelete && (
-            <form action={formAction}>
-              <input
-                type="text"
-                name="project-invitation-id"
-                id="project-invitation-id"
-                defaultValue={inv?._id}
-                hidden
+      {projectInvitations.map((inv) => {
+        const availableOptions = getAvailableRoleOptionsForInvitation(
+          project,
+          inv,
+          uid
+        );
+        return (
+          <li key={inv?._id} className={styles.pending}>
+            <div>
+              <Image
+                src={"/default-pfp.webp"}
+                width={32}
+                height={32}
+                alt={`Photo de profil de ${inv?.guestEmail}`}
+                style={{ borderRadius: "50%" }}
               />
-              <input
-                type="text"
-                name="project-id"
-                id="project-id"
-                defaultValue={inv?.projectId}
-                hidden
-              />
-              <button type="submit" data-disabled={pending} disabled={pending}>
-                Annuler
-              </button>
-            </form>
-          )}
-        </li>
-      ))}
+              <span>{inv?.guestEmail}</span>
+              {canEditRole && availableOptions.length > 0 && (
+                <DropDown
+                  defaultValue={inv?.role}
+                  options={availableOptions}
+                  invitation={inv}
+                  project={project}
+                />
+              )}
+              {(!canEditRole || availableOptions.length === 0) && (
+                <div className={styles.role}>
+                  <span>{memberRole(inv?.role)}</span>
+                </div>
+              )}
+            </div>
+            {canDelete && (
+              <form action={formAction}>
+                <input
+                  type="text"
+                  name="project-invitation-id"
+                  id="project-invitation-id"
+                  defaultValue={inv?._id}
+                  hidden
+                />
+                <input
+                  type="text"
+                  name="project-id"
+                  id="project-id"
+                  defaultValue={inv?.projectId}
+                  hidden
+                />
+                <button
+                  type="submit"
+                  data-disabled={pending}
+                  disabled={pending}
+                >
+                  Annuler
+                </button>
+              </form>
+            )}
+          </li>
+        );
+      })}
     </>
   );
 }

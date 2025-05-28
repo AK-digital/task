@@ -35,6 +35,7 @@ export async function saveProject(req, res, next) {
 
     const newProject = new ProjectModel({
       name: name,
+      creator: authUser._id,
       order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
       members: [
         {
@@ -641,6 +642,7 @@ export async function acceptProjectInvitation(req, res, next) {
 
 export async function updateProjectRole(req, res, next) {
   try {
+    const authUser = res.locals.user;
     const { memberId, role } = req.body;
     const rolesEnum = ["owner", "manager", "team", "customer", "guest"]; // Enum of roles based on the model
 
@@ -681,6 +683,49 @@ export async function updateProjectRole(req, res, next) {
       });
     }
 
+    // Get the current user's role in the project
+    const currentUserMember = project?.members?.find(
+      (member) => member.user.toString() === authUser._id.toString()
+    );
+
+    if (!currentUserMember) {
+      return res.status(403).send({
+        success: false,
+        message: "Vous n'êtes pas membre de ce projet",
+      });
+    }
+
+    // Check if the user trying to modify is the original creator
+    const isOriginalCreator =
+      project.creator.toString() === authUser._id.toString();
+
+    // If the target member is an owner and the current user is not the original creator
+    if (member.role === "owner" && !isOriginalCreator) {
+      return res.status(403).send({
+        success: false,
+        message:
+          "Seul le créateur original du projet peut modifier le rôle d'un propriétaire",
+      });
+    }
+
+    // If trying to make someone an owner and the current user is not the original creator
+    if (role === "owner" && !isOriginalCreator) {
+      return res.status(403).send({
+        success: false,
+        message:
+          "Seul le créateur original du projet peut nommer d'autres propriétaires",
+      });
+    }
+
+    // Prevent the original creator from losing their owner status
+    if (memberId === project.creator.toString() && role !== "owner") {
+      return res.status(403).send({
+        success: false,
+        message:
+          "Le créateur original du projet doit toujours rester propriétaire",
+      });
+    }
+
     // Update the role of the member
     member.role = role;
 
@@ -703,7 +748,52 @@ export async function updateProjectRole(req, res, next) {
 // Only the author can remove a guest
 export async function removeGuest(req, res, next) {
   try {
+    const authUser = res.locals.user;
     const { guestId } = req.body;
+
+    const project = await ProjectModel.findById({ _id: req.params.id });
+
+    if (!project) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de supprimer un invité d'un projet qui n'existe pas",
+      });
+    }
+
+    // Get the member to remove
+    const memberToRemove = project?.members?.find(
+      (member) => member.user.toString() === guestId.toString()
+    );
+
+    if (!memberToRemove) {
+      return res.status(404).send({
+        success: false,
+        message:
+          "Impossible de supprimer un utilisateur qui n'est pas membre du projet",
+      });
+    }
+
+    // Check if the user trying to remove is the original creator
+    const isOriginalCreator =
+      project.creator.toString() === authUser._id.toString();
+
+    // Prevent removing the original creator
+    if (guestId === project.creator.toString()) {
+      return res.status(403).send({
+        success: false,
+        message: "Le créateur original du projet ne peut pas être révoqué",
+      });
+    }
+
+    // If the target member is an owner and the current user is not the original creator
+    if (memberToRemove.role === "owner" && !isOriginalCreator) {
+      return res.status(403).send({
+        success: false,
+        message:
+          "Seul le créateur original du projet peut révoquer un propriétaire",
+      });
+    }
 
     const updatedProject = await ProjectModel.findOneAndUpdate(
       {
@@ -726,13 +816,13 @@ export async function removeGuest(req, res, next) {
       return res.status(404).send({
         success: false,
         message:
-          "Impossible de supprimer un inviter d'un projet qui n'existe pas",
+          "Impossible de supprimer un invité d'un projet qui n'existe pas",
       });
     }
 
     return res.status(200).send({
       success: true,
-      message: "Invité supprimer du projet avec succès",
+      message: "Invité supprimé du projet avec succès",
       data: updatedProject,
     });
   } catch (err) {

@@ -37,6 +37,34 @@ export function checkRole(project, roles, uid) {
   return roles?.includes(member?.role);
 }
 
+export function isOriginalCreator(project, uid) {
+  return project?.creator === uid || project?.creator?._id === uid;
+}
+
+export function canEditMemberRole(project, member, uid) {
+  // Seul le créateur original peut modifier le rôle d'un propriétaire
+  if (member?.role === "owner") {
+    return isOriginalCreator(project, uid);
+  }
+
+  // Les propriétaires et managers peuvent modifier les autres rôles
+  return checkRole(project, ["owner", "manager"], uid);
+}
+
+export function canRemoveMember(project, member, uid) {
+  // Seul le créateur original peut révoquer un propriétaire
+  if (member?.role === "owner") {
+    return isOriginalCreator(project, uid);
+  }
+
+  // Les propriétaires et managers peuvent révoquer les autres rôles (sauf eux-mêmes)
+  const userRole = project?.members?.find((m) => m?.user?._id === uid)?.role;
+  return (
+    (userRole === "owner" || userRole === "manager") &&
+    member?.user?._id !== uid
+  );
+}
+
 export function memberRole(role) {
   if (role === "owner") {
     return "👑 Créateur";
@@ -300,3 +328,81 @@ export const priorityColors = [
   "#FF7043", // Sécurité
   "#FF8A65", // Alerte modérée
 ];
+
+export function getAvailableRoleOptions(project, targetMember, currentUserId) {
+  const currentUserMember = project?.members?.find(
+    (m) => m?.user?._id === currentUserId
+  );
+  const currentUserRole = currentUserMember?.role;
+
+  // Si l'utilisateur actuel n'est pas membre du projet, aucune option
+  if (!currentUserRole) {
+    return [];
+  }
+
+  // Si l'utilisateur actuel est le créateur original
+  if (isOriginalCreator(project, currentUserId)) {
+    // Le créateur peut assigner tous les rôles
+    return ["owner", "manager", "team", "customer", "guest"];
+  }
+
+  // Si l'utilisateur actuel est propriétaire (mais pas créateur original)
+  if (currentUserRole === "owner") {
+    // Si le membre cible est le créateur original, aucune modification possible
+    if (isOriginalCreator(project, targetMember?.user?._id)) {
+      return [];
+    }
+    // Sinon, peut assigner tous les rôles sauf propriétaire
+    return ["manager", "team", "customer", "guest"];
+  }
+
+  // Si l'utilisateur actuel est manager
+  if (currentUserRole === "manager") {
+    // Ne peut pas modifier les propriétaires
+    if (targetMember?.role === "owner") {
+      return [];
+    }
+    // Peut assigner manager, équipe, client, invité
+    return ["manager", "team", "customer", "guest"];
+  }
+
+  // Les autres rôles ne peuvent pas modifier les rôles
+  return [];
+}
+
+export function getAvailableRoleOptionsForInvitation(
+  project,
+  invitation,
+  currentUserId
+) {
+  const currentUserMember = project?.members?.find(
+    (m) => m?.user?._id === currentUserId
+  );
+  const currentUserRole = currentUserMember?.role;
+
+  // Si l'utilisateur actuel n'est pas membre du projet, aucune option
+  if (!currentUserRole) {
+    return [];
+  }
+
+  // Si l'utilisateur actuel est le créateur original
+  if (isOriginalCreator(project, currentUserId)) {
+    // Le créateur peut assigner tous les rôles pour les invitations
+    return ["owner", "manager", "team", "customer", "guest"];
+  }
+
+  // Si l'utilisateur actuel est propriétaire (mais pas créateur original)
+  if (currentUserRole === "owner") {
+    // Peut assigner tous les rôles sauf propriétaire pour les invitations
+    return ["manager", "team", "customer", "guest"];
+  }
+
+  // Si l'utilisateur actuel est manager
+  if (currentUserRole === "manager") {
+    // Peut assigner manager, équipe, client, invité pour les invitations
+    return ["manager", "team", "customer", "guest"];
+  }
+
+  // Les autres rôles ne peuvent pas modifier les rôles
+  return [];
+}
