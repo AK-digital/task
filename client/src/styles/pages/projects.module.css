@@ -15,7 +15,8 @@
   height: 100%;
   padding-left: var(--layout-gap);
   padding-top: var(--layout-gap);
-  overflow: hidden;
+  padding-bottom: var(--layout-gap);
+  overflow-y: auto;
 }
 
 .container a {

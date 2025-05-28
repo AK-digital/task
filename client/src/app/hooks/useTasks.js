@@ -23,6 +23,15 @@ import useSWR from "swr";
 // }
 
 export function useTasks(queries, fallbackData = null) {
+  if (!queries.projectId) {
+    return {
+      tasks: [],
+      tasksValidating: false,
+      tasksLoading: false,
+      mutateTasks: () => {},
+    };
+  }
+
   const fetcher = getTasks.bind(null, queries);
 
   console.log(generateUrlParams(queries));

@@ -20,10 +20,7 @@ export async function getStatusByProject(projectId) {
     return response?.data || [];
   } catch (err) {
     console.error(err);
-    return {
-      success: false,
-      message: err.message || "An error occurred while fetching custom status",
-    };
+    return [];
   }
 }
 

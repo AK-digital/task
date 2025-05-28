@@ -28,7 +28,6 @@
 }
 
 .starWrapper[data-default="true"] {
-  top: -5px;
   background-color: #e9e7dd;
 }
 
@@ -53,7 +52,6 @@
 }
 
 .contentWrapper[data-default="true"] {
-  position: absolute;
   width: 100%;
   top: 24px;
   background-color: #e9e7dd;

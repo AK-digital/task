@@ -4,21 +4,56 @@ import StatusSegment from "./StatusSegment";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import { useStatuses } from "@/app/hooks/useStatus";
+import { useTasks } from "@/app/hooks/useTasks";
+import { useMemo } from "react";
 
 export default function ProjectCard({ project, href, isDefault }) {
   const isDefaultProject = isDefault || false;
+  const projectId = project?._id;
 
-  const status = project?.taskStatuses || [];
-  const entries = Object.entries(status).filter(([, count]) => count > 0);
+  // Récupérer les statuts avec leurs couleurs pour ce projet
+  const { statuses } = useStatuses(
+    projectId && !isDefaultProject ? projectId : null
+  );
 
-  const totalTasks = project?.tasksCount || 0;
+  // Récupérer les tâches pour ce projet
+  const { tasks } = useTasks({
+    projectId: projectId && !isDefaultProject ? projectId : null,
+    archived: false,
+  });
+
+  // Calculer le nombre de tâches par statut
+  const taskStatusCounts = useMemo(() => {
+    if (!tasks || !statuses) return {};
+
+    const counts = {};
+
+    // Initialiser tous les statuts à 0
+    statuses.forEach((status) => {
+      counts[status.name] = 0;
+    });
+
+    // Compter les tâches par statut
+    tasks.forEach((task) => {
+      if (task?.status?.name && counts.hasOwnProperty(task?.status?.name)) {
+        counts[task?.status?.name]++;
+      }
+    });
+
+    return counts;
+  }, [tasks, statuses]);
+
+  const totalTasks = tasks ? tasks.length : 0;
   const totalBoards = project?.boardsCount || 0;
 
   const members = project?.members || [];
-
-  const projectId = project?._id;
-
   const name = project?.name || "Nouveau projet";
+
+  // Filtrer les entrées qui ont un nombre > 0
+  const entries = Object.entries(taskStatusCounts).filter(
+    ([, count]) => count > 0
+  );
 
   return (
     <div key={projectId} className={styles.projectWrapper}>
@@ -90,6 +125,9 @@ export default function ProjectCard({ project, href, isDefault }) {
                           count={count}
                           status={status}
                           totalTasks={totalTasks}
+                          statusColor={
+                            statuses.find((s) => s.name === status)?.color
+                          }
                         />
                       );
                     })}
