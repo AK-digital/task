@@ -5,12 +5,11 @@ export default function TaskBoard({ task }) {
 
   return (
     <div className={styles.container} id="task-row">
-      <span
-        className={styles.board}
-        style={{ border: `1px solid ${board?.color}` }}
-      >
-        {board?.title}
-      </span>
+      <div
+        className={styles.bullet}
+        style={{ backgroundColor: `${board?.color}` }}
+      ></div>
+      <span className={styles.board}>{board?.title}</span>
     </div>
   );
 }

@@ -11,7 +11,8 @@ import { saveStatus } from "@/api/status";
 import { colors } from "@/utils/utils";
 
 export default function TaskStatus({ task, uid }) {
-  const { project, statuses, mutateStatuses } = useProjectContext();
+  const { project, mutateTasks, statuses, mutateStatuses } =
+    useProjectContext();
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +39,7 @@ export default function TaskStatus({ task, uid }) {
     }
 
     socket.emit("update task", project?._id);
-
+    mutateTasks();
     mutateStatuses();
   }
 

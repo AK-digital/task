@@ -35,6 +35,11 @@ export default async function ProjectPage({ params }) {
 
   if (!initialProject) return notFound(); // 404
 
+  const defaultQueries = {
+    projectId: initialProject?._id,
+    archived: archive,
+  };
+
   return (
     <ProjectProvider
       initialProject={initialProject}
@@ -43,6 +48,7 @@ export default async function ProjectPage({ params }) {
       initialStatuses={statusesData}
       initialPriorities={prioritiesData}
       archive={archive}
+      defaultQueries={defaultQueries}
     >
       <main className={styles.main}>
         {!options && !timeTracking && <Project />}

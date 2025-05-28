@@ -16,11 +16,11 @@ export function ProjectProvider({
   initialStatuses,
   initialPriorities,
   archive = false,
+  defaultQueries,
 }) {
-  const [queries, setQueries] = useState({
-    projectId: initialProject?._id,
-    archived: archive,
-  });
+  const [queries, setQueries] = useState(defaultQueries);
+
+  console.log(queries);
   const { project, mutateProject } = useProject(
     initialProject?._id,
     initialProject

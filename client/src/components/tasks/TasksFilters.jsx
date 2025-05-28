@@ -5,12 +5,10 @@ import TasksPrioritiesFilter from "./TasksPrioritiesFilter";
 import TasksAdminFilter from "./TasksAdminFilter";
 import TasksBoardFilter from "./TasksBoardFilter";
 import TasksProjectFilter from "./TasksProjectFilter";
+import { useProjectContext } from "@/context/ProjectContext";
 
-export default function TasksFilters({
-  displayedFilters,
-  queries,
-  setQueries,
-}) {
+export default function TasksFilters({ displayedFilters }) {
+  const { queries, setQueries } = useProjectContext();
   const { isSearch, isProject, isBoard, isAdmin, isStatus, isPriorities } =
     displayedFilters;
 

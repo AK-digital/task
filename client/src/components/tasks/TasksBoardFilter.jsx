@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "@/styles/components/tasks/tasks-board-filter.module.css";
 import { ChevronDown, LayoutDashboard, Undo } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
+import { useProjectContext } from "@/context/ProjectContext";
 
 export default function TasksBoardFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
