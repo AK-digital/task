@@ -1,4 +1,3 @@
-import styles from "@/styles/components/tasks/tasks.module.css";
 import Task from "../Task/Task";
 import { isNotEmpty } from "@/utils/utils";
 import TasksHeader from "./TasksHeader";
@@ -25,7 +24,7 @@ export default function Tasks({
   }, [tasks]);
 
   return (
-    <div className={styles.container}>
+    <div className="relative">
       {tasksLoading ? (
         <TaskSkeletons displayedElts={displayedElts} />
       ) : (
@@ -59,7 +58,7 @@ export default function Tasks({
               )}
             </>
           ) : (
-            <div className={styles.empty}></div>
+            <div className="text-center text-text-color-muted text-[1.4rem] pb-20"></div>
           )}
         </div>
       )}

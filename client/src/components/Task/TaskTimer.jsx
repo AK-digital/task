@@ -6,7 +6,6 @@ import {
 } from "@/api/timeTracking";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
-import styles from "@/styles/components/task/task-timer.module.css";
 import socket from "@/utils/socket";
 import { formatTime, isNotEmpty } from "@/utils/utils";
 import { CirclePause, CirclePlay } from "lucide-react";
@@ -149,17 +148,22 @@ export default function TaskTimer({ task }) {
   };
 
   return (
-    <div className={styles.container} data-running={isRunning} id="task-row">
-      <span className={styles.timer} data-center={!canAdd}>
+    <div className="relative flex justify-center max-w-[120px] w-full px-1.5 border-r border-text-light-color h-full data-[running=true]:text-inherit" data-running={isRunning} id="task-row">
+      <span className="flex items-center justify-center gap-2 text-text-size-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center" data-center={!canAdd}>
         {canAdd && (
           <>
             {isRunning ? (
               <CirclePause
+                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-color-accent-color"
                 data-running={isRunning}
                 onClick={handlePauseTimer}
               />
             ) : (
-              <CirclePlay data-running={isRunning} onClick={handlePlayTimer} />
+              <CirclePlay 
+                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-color-accent-color"
+                data-running={isRunning} 
+                onClick={handlePlayTimer} 
+              />
             )}
           </>
         )}
@@ -169,12 +173,12 @@ export default function TaskTimer({ task }) {
       </span>
       {more && (
         <>
-          <div className={styles.more} id="popover">
-            <div className={styles.title}>
-              <span>Gestion du temps</span>
+          <div className="flex flex-col gap-2 top-[44px] right-1 p-0 w-[400px] rounded-sm max-h-[300px] overflow-hidden shadow-shadow-box-small" id="popover">
+            <div className="flex justify-between items-center text-[1.1rem] font-medium bg-background-third-color p-2 rounded-t">
+              <span className="text-text-dark-color">Gestion du temps</span>
               {addingSession && (
                 <span
-                  className={styles.back}
+                  className="text-color-accent-color text-text-size-normal cursor-pointer"
                   onClick={(e) => setAddingSession(false)}
                 >
                   Retour
@@ -188,10 +192,10 @@ export default function TaskTimer({ task }) {
                 setSessions={handleLocalSessionUpdate}
               />
             ) : (
-              <div className={styles.content}>
+              <div className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4">
                 {canAdd && (
-                  <div className={styles.addTime}>
-                    <button onClick={() => setAddingSession(true)}>
+                  <div className="flex items-center gap-2">
+                    <button className="w-full p-2 rounded" onClick={() => setAddingSession(true)}>
                       Ajouter une session
                     </button>
                   </div>
@@ -283,21 +287,24 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
   };
 
   return (
-    <div className={styles.content}>
-      <form action={formAction} className={styles.form}>
-        <div className={styles.dateInput}>
-          <label>Date de début</label>
+    <div className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4
+">
+      <form action={formAction} className="flex flex-col gap-3">
+        <div className="mx-auto">
+          <label className="relative text-text-color-muted text-text-size-normal text-left block">Date de début</label>
           <input
+            className="border-none input_TimeTrackingForm_TaskTimer"
             type="date"
             name="date"
             id="date"
             defaultValue={moment().format("YYYY-MM-DD")}
           />
         </div>
-        <div className={styles.timeInputs}>
-          <div>
-            <label>Heure de début</label>
+        <div className="flex justify-evenly w-full gap-2">
+          <div className="flex flex-col gap-1 items-center">
+            <label className="relative text-color-text-color-muted text-text-size-normal text-left block">Heure de début</label>
             <input
+              className="w-[65px] !important border-none p-0 !important input_TimeTrackingForm_TaskTimer"
               type="time"
               name="start-time"
               id="start-time"
@@ -305,9 +312,10 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
               defaultValue={moment().format("HH:mm")}
             />
           </div>
-          <div>
-            <label>Heure de fin</label>
+          <div className="flex flex-col gap-1 items-center">
+            <label className="relative text-color-text-color-muted text-text-size-normal text-left block">Heure de fin</label>
             <input
+              className="w-[65px] border-none p-0 input_TimeTrackingForm_TaskTimer"
               type="time"
               name="end-time"
               id="end-time"
@@ -315,9 +323,9 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
             />
           </div>
         </div>
-        <div className={styles.buttons}>
+        <div className="flex justify-evenly items-center mb-1 mt-3 w-full">
           <span>{timeExpected}</span>
-          <button type="submit" disabled={pending} data-disabled={pending}>
+          <button className="p-2 rounded" type="submit" disabled={pending} data-disabled={pending}>
             Ajouter la session
           </button>
         </div>
@@ -346,8 +354,8 @@ export function TimeTrackingSessions({
   }
 
   return (
-    <div className={styles.sessions} data-overflow={sessions?.length > 6}>
-      <ul>
+    <div className="overflow-x-auto max-h-[200px] text-[0.85em] text-text-dark-color data-[overflow=true]:pr-5" data-overflow={sessions?.length > 6}>
+      <ul className="gap-3">
         {sessions.map((session, index) => {
           const user = session?.userId;
           const endDate = moment(session?.endTime).format("D MMM");
@@ -360,9 +368,9 @@ export function TimeTrackingSessions({
           return (
             <li
               key={`session-${session?._id}-${index}`}
-              className={styles.session}
+              className="flex justify-between items-center"
             >
-              <div className={styles.monthDay}>
+              <div className="flex items-center gap-2">
                 <Image
                   src={user?.picture || "/default-pfp.webp"}
                   width={25}
@@ -372,18 +380,18 @@ export function TimeTrackingSessions({
                 />
                 <span>{endDate}</span>
               </div>
-              <span className={styles.hours}>
+              <span className="flex-1 text-center">
                 {hoursStart} à {hoursEnd}
               </span>
-              <span className={styles.time}>
+              <span className="flex justify-end min-w-[70px]">
                 {formatTime(Math.floor(session?.duration / 1000))}
               </span>
               {uid === user?._id && (
                 <span
-                  className={styles.delete}
+                  className="ml-2.5 flex cursor-pointer"
                   onClick={() => handleDeleteSession(session?._id)}
                 >
-                  <MinusCircle />
+                  <MinusCircle className="text-color-text-color-red hover:text-color-blocked-color" />
                 </span>
               )}
             </li>

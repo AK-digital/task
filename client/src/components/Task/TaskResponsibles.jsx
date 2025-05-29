@@ -130,7 +130,7 @@ export default function TaskResponsibles({ task, uid, user }) {
             {/* Members */}
             <div>
               {isNotEmpty(members) && (
-                <ul className="mt-[6px]">
+                <ul className="mt-1.5">
                   {members?.map((member) => {
                     return (
                       <li

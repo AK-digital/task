@@ -1,10 +1,10 @@
-.container {
+/* .container {
     display: flex;
     align-items: center;
     gap: 8px;
     /* background-color: var(--secondary-background-color); */
-    /* border-radius: 4px; */
-    padding: 8px;
+/* border-radius: 4px; */
+/* padding: 8px;
     width: 100%;
     max-width: 250px;
     transition: all 150ms ease-in-out;
@@ -32,4 +32,4 @@
 .container input[type="search"]::-webkit-search-results-button,
 .container input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
-}
+} */

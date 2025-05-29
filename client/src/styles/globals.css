@@ -25,12 +25,14 @@
 
   /* BACKGROUNDS */
   --color-background-primary-transparent: rgba(218, 214, 199, 0.6);
-  --background-gradient-dark: linear-gradient(140deg,
-      #39545b,
-      #2a4046 17%,
-      #16363c 52%,
-      #2a4046 86%,
-      #32484e 100%);
+  --background-gradient-dark: linear-gradient(
+    140deg,
+    #39545b,
+    #2a4046 17%,
+    #16363c 52%,
+    #2a4046 86%,
+    #32484e 100%
+  );
 
   /* COLORS */
   --color-text-darker-color: #1f312d;
@@ -114,11 +116,13 @@
   }
 
   .ql-toolbar.ql-snow .ql-picker-label {
-    filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+    filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg)
+      brightness(96%) contrast(99%);
   }
 
   .ql-snow.ql-toolbar button svg {
-    filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg) brightness(96%) contrast(99%);
+    filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg)
+      brightness(96%) contrast(99%);
   }
 
   .ql-editor.ql-blank:before {
@@ -220,7 +224,8 @@
   }
 
   /* BoardHeader */
-  .container_BoardHeader[data-archive="false"] .dataTitle_BoardHeader[data-authorized="true"]:hover {
+  .container_BoardHeader[data-archive="false"]
+    .dataTitle_BoardHeader[data-authorized="true"]:hover {
     border: 1px solid var(--border-color);
     cursor: inherit !important;
   }
@@ -233,7 +238,7 @@
   }
 
   /* Task */
-  .container_Task>div>span {
+  .container_Task > div > span {
     display: block;
     overflow: hidden;
     white-space: nowrap;
@@ -315,10 +320,12 @@
 
   .header_MessagesSkeleton div,
   .body_MessagesSkeleton div {
-    background: linear-gradient(90deg,
-        var(--third-background-color) 25%,
-        rgba(255, 255, 255, 0.1) 50%,
-        var(--third-background-color) 75%);
+    background: linear-gradient(
+      90deg,
+      var(--third-background-color) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      var(--third-background-color) 75%
+    );
     background-size: 200% 100%;
     animation-timing-function: ease-in-out;
   }
@@ -363,11 +370,11 @@
   }
 
   .container_PopupMessage[data-status="success"] .header {
-    color: #33BB87;
+    color: #33bb87;
   }
 
   .container_PopupMessage[data-status="success"]::before {
-    background-color: #33BB87;
+    background-color: #33bb87;
   }
 
   .container_PopupMessage[data-status="failure"] .header {
@@ -684,6 +691,55 @@
       background-position: 1000px 0;
     }
   }
+
+  /* TaskTimer */
+  .input_TimeTrackingForm_TaskTimer[type="date"]::-webkit-inner-spin-button,
+  .input_TimeTrackingForm_TaskTimer[type="date"]::-webkit-calendar-picker-indicator,
+  .input_TimeTrackingForm_TaskTimer[type="time"]::-webkit-inner-spin-button,
+  .input_TimeTrackingForm_TaskTimer[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+
+  /* SelectedTasks */
+  @keyframes showAnim {
+    from {
+      opacity: 0;
+      bottom: -50%;
+    }
+
+    to {
+      opacity: 1;
+      bottom: 20px;
+    }
+  }
+
+  /* TasksBoardFilter */
+  .current_TasksBoardFilter:hover {
+    background-color: #f9f7efb3;
+    box-shadow: var(--shadow-shadow-box-small);
+  }
+
+  .current_TasksBoardFilter[data-open="true"] {
+    background-color: #f9f7efb3;
+    box-shadow: var(--shadow-shadow-box-small);
+  }
+
+  .current_TasksBoardFilter[data-open="true"] .chevron_TasksBoardFilter {
+    transform: rotate(180deg);
+  }
+
+  /* TasksSearch */
+  .input_TasksSearch[type="search"]::-webkit-search-decoration,
+  .input_TasksSearch[type="search"]::-webkit-search-cancel-button,
+  .input_TasksSearch[type="search"]::-webkit-search-results-button,
+  .input_TasksSearch[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+
+  .container_TasksSearch:has(input:focus) {
+    border-bottom: 1px solid var(--text-dark-color);
+  }
 }
 
 @layer base {
@@ -907,11 +963,11 @@ html:has(#task-more) {
 }
 
 /* Task row */
-/* #task-row {
+#task-row {
   display: flex;
   align-items: center;
   height: 100%;
-} */
+}
 
 .epr_-6npj90 {
   --epr-emoji-size: 18px !important;
@@ -948,12 +1004,14 @@ html:has(#task-more) {
   --text-light-color: rgb(215, 212, 203);
   --text-lighter-color: #e7e3d9;
   --text-color-muted: #72716f;
-  --background-gradient-dark: linear-gradient(140deg,
-      #39545b,
-      #2a4046 17%,
-      #16363c 52%,
-      #2a4046 86%,
-      #32484e 100%);
+  --background-gradient-dark: linear-gradient(
+    140deg,
+    #39545b,
+    #2a4046 17%,
+    #16363c 52%,
+    #2a4046 86%,
+    #32484e 100%
+  );
   --border-color: #acaba5;
 
   --pending-color: #b3bcc0;

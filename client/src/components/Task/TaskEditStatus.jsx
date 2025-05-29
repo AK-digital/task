@@ -1,6 +1,4 @@
 import { deleteStatus, updateStatus } from "@/api/status";
-import styles from "@/styles/components/task/task-edit-status.module.css";
-import { bricolageGrostesque } from "@/utils/font";
 import { Palette, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -108,11 +106,14 @@ export default function TaskEditStatus({
 
   return (
     <li
-      className={styles.container}
+      className="relative flex items-center gap-0.5 min-w-[135px] max-w-[150px]"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <div className={styles.color} style={{ backgroundColor: color }}>
+      <div 
+        className="absolute flex justify-center items-center text-text-light-color h-5.5 w-5.5 left-1 rounded-border-radius-large"
+        style={{ backgroundColor: color }}
+      >
         <Palette size={14} onClick={(e) => setMoreColor(true)} />{" "}
         {moreColor && (
           <ColorsPopup
@@ -133,11 +134,11 @@ export default function TaskEditStatus({
           setName(e.target.value);
           handleUpdateStatusNameDebouced();
         }}
-        className={bricolageGrostesque.className}
+        className="border-none py-2 pr-4 !pl-7.5 rounded-border-radius-large bg-text-lighter-color text-[15px] whitespace-nowrap text-ellipsis font-bricolage"
       />
       {statuses.length > 1 && (
         <X
-          className={styles.delete}
+          className="opacity-0 absolute text-text-dark-color -right-4.5 data-[show=true]:opacity-100"
           data-show={isHover}
           size={18}
           onClick={handleDeleteStatus}

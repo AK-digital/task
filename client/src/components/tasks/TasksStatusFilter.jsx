@@ -1,5 +1,4 @@
 import { useProjectContext } from "@/context/ProjectContext";
-import styles from "@/styles/components/tasks/tasks-status-filter.module.css";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
 import { useState } from "react";
 
@@ -39,29 +38,30 @@ export default function TasksStatusFilter({ queries, setQueries }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="relative">
       <div
-        className={styles.current}
+        className={`relative flex items-center gap-2 bg-background-secondary-color p-2.5 rounded-sm border border-color-border-color cursor-pointer transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-shadow-box-small ${isOpen ? 'bg-[#f9f7efb3] shadow-shadow-box-small' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
-        data-open={isOpen}
       >
         <ChartBar size={16} />
-        <span>Status</span>
+        <span className="flex-1">Status</span>
         {hasStatus && (
-          <span className={styles.length}>{QueriesStatus?.length}</span>
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-text-size-small">
+            {QueriesStatus?.length}
+          </span>
         )}
-        <ChevronDown size={16} />
+        <ChevronDown size={16} className={`transition-all duration-[120ms] ease-in-out ${isOpen ? 'rotate-180' : ''}`} />
       </div>
       {isOpen && (
         <>
-          <div className={styles.dropdown}>
-            <ul>
-              <li className={styles.status} onClick={handleResetStatus}>
+          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-shadow-box-small border border-color-border-color p-2 w-full font-medium text-text-size-small">
+            <ul className="flex flex-col">
+              <li className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" onClick={handleResetStatus}>
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
               {statuses.map((elt) => (
-                <li key={elt?._id} className={styles.status}>
+                <li key={elt?._id} className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm">
                   <input
                     type="checkbox"
                     id={elt?._id}
@@ -71,8 +71,9 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                     checked={
                       hasStatus ? QueriesStatus?.includes(elt?._id) : false
                     }
+                    className="w-auto cursor-pointer"
                   />
-                  <label htmlFor={elt?._id}>{elt?.name}</label>
+                  <label htmlFor={elt?._id} className="flex items-center cursor-pointer flex-1">{elt?.name}</label>
                 </li>
               ))}
             </ul>

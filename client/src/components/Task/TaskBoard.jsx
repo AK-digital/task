@@ -1,4 +1,3 @@
-import styles from "@/styles/components/task/task-board.module.css";
 
 export default function TaskBoard({ task }) {
   const board = task?.boardId;

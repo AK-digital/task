@@ -95,7 +95,7 @@ export default function Message({
                     width={35}
                     height={35}
                     alt={`Photo de profil de ${author?.firstName}`}
-                    style={{ borderRadius: "50%" }}
+                    className="rounded-full w-[35px] h-[35px] max-w-[35px] max-h-[35px]"
                   />
                   <span className="text-text-size-normal font-medium">
                     {author?.firstName + " " + author?.lastName}

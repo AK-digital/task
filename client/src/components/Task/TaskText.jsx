@@ -1,10 +1,8 @@
-import styles from "@/styles/components/task/task-text.module.css";
 import { updateTaskText } from "@/api/task";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import socket from "@/utils/socket";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { bricolageGrostesque } from "@/utils/font";
 
 export default function TaskText({ task }) {
   const [isEdit, setIsEdit] = useState(false);
@@ -48,8 +46,8 @@ export default function TaskText({ task }) {
   }, [task?.text]);
 
   return (
-    <div className={styles.container} onClick={handleEdit} id="task-row">
-      {!isEdit && <span>{value}</span>}
+    <div className="w-full min-w-[200px] max-w-[700px] cursor-text mx-2" onClick={handleEdit} id="task-row">
+      {!isEdit && <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-text-size-normal tracking-[0.01em]">{value}</span>}
       {isEdit && (
         <input
           type="text"
@@ -59,7 +57,7 @@ export default function TaskText({ task }) {
           onChange={handleChange}
           onBlur={() => setIsEdit(false)}
           autoFocus
-          className={bricolageGrostesque.className}
+          className="relative text-text-size-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-border-radius-xs font-bricolage"
         />
       )}
     </div>

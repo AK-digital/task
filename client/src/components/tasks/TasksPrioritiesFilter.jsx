@@ -1,5 +1,4 @@
 import { useProjectContext } from "@/context/ProjectContext";
-import styles from "@/styles/components/tasks/tasks-priorities-filter.module.css";
 import { ChevronDown, Star, Undo } from "lucide-react";
 import { useState } from "react";
 
@@ -38,29 +37,37 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="relative">
       <div
-        className={styles.current}
+        className="relative flex items-center gap-2 bg-background-secondary-color p-2.5 rounded-sm border border-color-border-color cursor-pointer transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-shadow-box-small data-[open=true]:bg-[#f9f7efb3] data-[open=true]:shadow-shadow-box-small"
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
       >
         <Star size={16} />
-        <span>Priorité</span>
+        <span className="flex-1">Priorité</span>
         {hasPriorities && (
-          <span className={styles.length}>{queriesPriorities?.length}</span>
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-text-size-small">
+            {queriesPriorities?.length}
+          </span>
         )}
-        <ChevronDown size={16} />
+        <ChevronDown 
+          size={16} 
+          className={`transition-all duration-[120ms] ease-in-out ${isOpen ? 'rotate-180' : ''}`}
+        />
       </div>
       {isOpen && (
         <>
-          <div className={styles.dropdown}>
-            <ul>
-              <li className={styles.priority} onClick={handleResetPriorities}>
+          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-shadow-box-small border border-color-border-color p-2 w-full font-medium text-text-size-small">
+            <ul className="flex flex-col">
+              <li 
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm"
+                onClick={handleResetPriorities}
+              >
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
               {priorities.map((priority) => (
-                <li key={priority?._id} className={styles.priority}>
+                <li key={priority?._id} className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm">
                   <input
                     type="checkbox"
                     id={priority?._id}
@@ -72,8 +79,11 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                         ? queriesPriorities?.includes(priority?._id)
                         : false
                     }
+                    className="cursor-pointer"
                   />
-                  <label htmlFor={priority?._id}>{priority?.name}</label>
+                  <label htmlFor={priority?._id} className="flex items-center cursor-pointer flex-1">
+                    {priority?.name}
+                  </label>
                 </li>
               ))}
             </ul>
