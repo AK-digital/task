@@ -1,7 +1,5 @@
 import { saveTemplate } from "@/actions/template";
 import PopupMessage from "@/layouts/PopupMessage";
-import styles from "@/styles/components/templates/add-template.module.css";
-import { bricolageGrostesque } from "@/utils/font";
 import { useActionState, useEffect, useState } from "react";
 
 const initialState = {
@@ -41,11 +39,11 @@ export default function AddTemplate({ project, setAddTemplate }) {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.header}>
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 w-[400px] bg-background-secondary-color p-6 rounded-lg shadow-shadow-box-medium">
+        <div className="text-center text-text-size-large text-text-color-dark">
           <span>Enregistrer ce projet comme modèle</span>
         </div>
-        <form action={formAction} className={styles.form}>
+        <form action={formAction} className="flex flex-col gap-3">
           <input
             type="text"
             id="project-id"
@@ -59,10 +57,11 @@ export default function AddTemplate({ project, setAddTemplate }) {
             name="template-name"
             placeholder="Nom du modèle"
             autoFocus
+            className="border-none bg-background-third-color border border-background-third-color w-full p-2 text-text-color-muted font-medium text-center transition-all duration-[150ms] ease-linear focus:outline-none focus:border-background-primary-color focus:shadow-shadow-box-small"
           />
 
           <button
-            className={bricolageGrostesque.className}
+            className="font-bricolage w-full p-2 rounded-sm text-text-size-medium"
             disabled={pending}
             data-disabled={pending}
           >

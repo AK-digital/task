@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/timeTrackings/dropdown.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
@@ -57,13 +56,13 @@ export function Dropdown({ defaultValue, selected, options, query }) {
 
   return (
     <>
-      <div className={styles.container} data-active={isOpen}>
-        <div onClick={() => setIsOpen(!isOpen)} className={styles.current}>
+      <div className={`relative text-center text-text-color-muted select-none ${isOpen ? "z-[9999]" : ""}`} data-active={isOpen}>
+        <div onClick={() => setIsOpen(!isOpen)} className="relative flex justify-center items-center bg-background-secondary-color py-1.5 px-0 h-[35px] w-[180px] gap-1 rounded-3xl text-text-size-normal transition-all duration-[120ms] ease-ease-linear text-text-dark-color cursor-pointer hover:shadow-shadow-box-small">
           {isNotEmpty(selected) ? (
             selected.slice(0, 4).map((element, idx) => {
               if (selected.length > 1) {
                 return (
-                  <span className={styles.item} key={`${element?.id}-${idx}`}>
+                  <span className="span_Dropdown" key={`${element?.id}-${idx}`}>
                     <Image
                       src={
                         element?.logo || element?.picture || "/default-pfp.webp"
@@ -71,13 +70,13 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                       alt={element?.name || element?.label || "Logo"}
                       width={24}
                       height={24}
-                      style={{ borderRadius: "50%", minWidth: "24px" }}
+                      className="rounded-full max-h-6 min-h-6 min-w-6 object-cover"
                     />
                   </span>
                 );
               } else {
                 return (
-                  <span className={styles.item} key={`${element?.id}-${idx}`}>
+                  <span className="span_Dropdown" key={`${element?.id}-${idx}`}>
                     <Image
                       src={
                         element?.logo || element?.picture || "/default-pfp.webp"
@@ -93,26 +92,26 @@ export function Dropdown({ defaultValue, selected, options, query }) {
               }
             })
           ) : (
-            <span className={styles.item}>{defaultValue}</span>
+            <span className="span_Dropdown">{defaultValue}</span>
           )}
           {selected.length > 4 && (
-            <span className={styles.count}>+{selected.length - 4}</span>
+            <span className="span_Dropdown justify-center min-w-6 min-h-6 bg-background-primary-color rounded-full text-text-size-small">+{selected.length - 4}</span>
           )}
-          <span className={styles.chevron}>
+          <span className={`span_Dropdown absolute right-2 transition-all duration-200 ease-linear ${isOpen ? "rotate-180" : ""}`}>
             <ChevronDown size={16} />
           </span>
         </div>
         {/* List */}
         {isOpen && (
-          <div className={styles.options}>
+          <div className="absolute z-999 top-10 left-0 w-full bg-background-secondary-color text-text-size-small rounded-lg max-h-[200px] overflow-auto text-left shadow-shadow-box-medium">
             {options?.map((option) => {
               return (
-                <div className={styles.option} key={option?.id}>
+                <div className="flex items-center gap-1 cursor-pointer transition-all duration-150 ease-in-out px-1.5 hover:bg-background-third-color" key={option?.id}>
                   <input
                     type="checkbox"
                     name="projects"
                     id={`project-${option?.id}`}
-                    className={styles.checkbox}
+                    className="w-3.5"
                     defaultValue={option?.id}
                     defaultChecked={queries.get(query)?.includes(option?.label)}
                     onChange={(e) => {
@@ -121,7 +120,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                   />
                   <label
                     htmlFor={`project-${option?.id}`}
-                    className={styles.label}
+                    className="flex items-center gap-1 cursor-pointer w-full h-full py-1.5 overflow-hidden text-ellipsis whitespace-nowrap"
                   >
                     <Image
                       src={
@@ -137,7 +136,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                       quality={100}
                       className="rounded-full max-h-[20px] min-h-[20px] min-w-[20px] object-cover"
                     />
-                    <span>{option?.label}</span>
+                    <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap">{option?.label}</span>
                   </label>
                 </div>
               );

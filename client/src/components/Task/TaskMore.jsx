@@ -53,21 +53,22 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   }, [isResizing, resize, stopResizing]);
 
   useEffect(() => {
-  const updateResizerPosition = () => {
-    if (containerRef.current && resizerRef.current) {
-      const containerRect = containerRef.current.getBoundingClientRect();
-      resizerRef.current.style.left = `${containerRect.left}px`;
-    }
-    requestAnimationFrame(updateResizerPosition); // loop
-  };
+    const updateResizerPosition = () => {
+      if (containerRef.current && resizerRef.current) {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        resizerRef.current.style.left = `${containerRect.left}px`;
+      }
+      requestAnimationFrame(updateResizerPosition); // loop
+    };
 
-  updateResizerPosition();
+    updateResizerPosition();
 
-  return () => cancelAnimationFrame(updateResizerPosition);
-}, []);
+    return () => cancelAnimationFrame(updateResizerPosition);
+  }, []);
 
   const handleClose = () => {
     const container = containerRef.current;
+
     if (!container) return;
 
     container.classList.add("container-close_TaskMore");
@@ -101,7 +102,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
         className="w-1 h-screen fixed top-0 left-0 cursor-col-resize bg-transparent z-[2002] hover:bg-color-accent-color active:bg-color-accent-color"
         onMouseDown={startResizing}
       ></div>
-      <div className="container_TaskMore fixed z-[2001] top-0 right-0 bottom-0 bg-[url('/backgrounds/background.jpg')] bg-no-repeat bg-[20%_50%] bg-cover w-[clamp(520px,45%,calc(100vw-80px))] h-screen shadow-[-4px_10px_10px_0px_rgba(0,0,0,0.15)] animate-[openAnimation_250ms_forwards_ease-out] p-8 cursor-default overflow-y-auto min-w-[520px] resize-x" ref={containerRef} id="task-more">
+      <div className="container_TaskMore fixed z-[2001] top-0 right-0 bottom-0 bg-[url('/backgrounds/background.jpg')] bg-no-repeat bg-[20%_50%] bg-cover w-[clamp(520px,45%,calc(100vw-80px))] h-screen shadow-[-4px_10px_10px_0px_rgba(0,0,0,0.15)] p-8 cursor-default overflow-y-auto min-w-[520px] resize-x" ref={containerRef} id="task-more">
         {/* Description */}
         <div className="flex flex-col gap-2 mb-6">
           <p className="text-text-size-large font-medium">{task?.text}</p>

@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/templates/boards-template-list.module.css";
 import {
   deleteBoardTemplate,
   getBoardsTemplates,
@@ -10,7 +9,7 @@ import useSWR, { mutate } from "swr";
 
 export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
   const { data: boardsTemplates } = useSWR(
-    `/board-template`,
+    "/board-template",
     getBoardsTemplates
   );
   const templates = boardsTemplates?.data || [];
@@ -31,33 +30,35 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
   async function handleDeleteBoardTemplate(e, templateId) {
     await deleteBoardTemplate(templateId);
 
-    await mutate(`/board-template`);
+    await mutate("/board-template");
   }
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.header}>
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 bg-background-secondary-color p-6 rounded-lg shadow-shadow-box-medium w-[500px]">
+        <div className="text-center text-text-size-large border-b border-background-primary-color pb-6">
           <span>Liste de modèle des tableaux</span>
         </div>
         {/* Boards templates */}
-        <div className={styles.content}>
+        <div className="mt-6">
           {isNotEmpty(templates) ? (
-            <ul className={styles.templates}>
+            <ul className="flex flex-col gap-3">
               {templates.map((template) => (
-                <li key={template._id} className={styles.template}>
+                <li key={template._id} className="flex items-center justify-between">
                   <div>
                     <span>{template.name}</span>
                   </div>
-                  <div className={styles.actions}>
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
+                      className="p-2 rounded-sm"
                       onClick={(e) => handleUseBoardTemplate(e, template?._id)}
                     >
                       Utiliser
                     </button>
                     <button
                       type="button"
+                      className="p-2 rounded-sm bg-danger-color"
                       onClick={(e) =>
                         handleDeleteBoardTemplate(e, template?._id)
                       }

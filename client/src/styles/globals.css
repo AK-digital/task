@@ -740,6 +740,17 @@
   .container_TasksSearch:has(input:focus) {
     border-bottom: 1px solid var(--text-dark-color);
   }
+
+  /* Dropdown */
+  .span_Dropdown {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 @layer base {

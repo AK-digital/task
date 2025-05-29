@@ -94,7 +94,7 @@ export default function TaskDescription({ project, task, uid }) {
   };
 
   return (
-    <div className="flex column gap-3">
+    <div className="flex flex-col gap-3">
       <span className="flex items-center gap-2 text-text-size-large text-text-dark-color font-medium">
         <PanelTop size={16} className="text-text-color-muted" /> Description
       </span>
