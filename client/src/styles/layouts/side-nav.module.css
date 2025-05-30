@@ -48,14 +48,20 @@
 
 .project {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+
   cursor: pointer;
   transition: all linear 150ms;
   color: var(--text-lighter-color);
 
   /* Aide à aligner le défilement sur les projets */
+}
+
+.project a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-lighter-color);
 }
 
 .projectLogo {

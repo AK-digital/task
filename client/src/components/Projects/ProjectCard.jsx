@@ -7,6 +7,7 @@ import Image from "next/image";
 import { deleteFavorite, saveFavorite } from "@/api/favorite";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth";
+import { mutate } from "swr";
 
 export default function ProjectCard({
   project,
@@ -52,6 +53,7 @@ export default function ProjectCard({
     }
 
     mutateProjects();
+    mutate("/favorite");
   }
 
   async function RemoveFavorite() {
@@ -65,6 +67,7 @@ export default function ProjectCard({
       return;
     }
     mutateProjects();
+    mutate("/favorite");
   }
 
   return (
