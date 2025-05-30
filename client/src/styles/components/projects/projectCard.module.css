@@ -3,8 +3,7 @@
   position: relative;
   width: 100%;
   max-width: 290px;
-  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium)
-    var(--border-radius-medium);
+  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
   overflow: visible;
   transition: all 200ms ease-in-out;
   cursor: pointer;
@@ -40,11 +39,15 @@
   color: #d0cec7;
 }
 
+.star[data-favorite="true"] {
+  fill: var(--accent-color);
+  color: var(--accent-color);
+}
+
 .contentWrapper {
   padding: 18px 22px;
   background-color: var(--secondary-background-color);
-  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium)
-    var(--border-radius-medium);
+  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
   transition: all 200ms ease-in-out;
 }
 
@@ -114,13 +117,13 @@
   flex: 0.5;
 }
 
-.statusBar > div:first-child {
+.statusBar>div:first-child {
   min-width: 12px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
 
-.statusBar > div:last-child {
+.statusBar>div:last-child {
   min-width: 12px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;

@@ -1,17 +1,18 @@
 "use client";
-
 import styles from "@/styles/pages/projects.module.css";
-import { getProjects } from "@/api/project";
-import { isNotEmpty } from "@/utils/utils";
 import { ArrowLeftCircle } from "lucide-react";
-import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/Projects/ProjectCard";
+import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
 import { useProjects } from "@/app/hooks/useProjects";
 
 export default function Projects() {
   const router = useRouter();
-  const { projects, projectsLoading } = useProjects();
+  const { projects, projectsLoading, mutateProjects } = useProjects();
+  // Sort projects by favorites
+  projects?.sort((a, b) => {
+    return b.favorites?.length - a.favorites?.length;
+  });
 
   return (
     <main className={styles.main}>
@@ -22,29 +23,32 @@ export default function Projects() {
         <div className={styles.header}>
           <h1 className={styles.headerH1}>Vos projets</h1>
           <div className={styles.projectCount}>
-            <span>{projects?.length} projets</span>
+            <span>
+              {projectsLoading ? "..." : `${projects?.length} projets`}
+            </span>
           </div>
         </div>
 
-        {isNotEmpty(projects) ? (
-          <div className={styles.elements}>
-            {/* Projets existants */}
-            {projects?.map((project) => {
-              return (
-                <ProjectCard
-                  key={project?._id}
-                  project={project}
-                  href={`/projects/${project?._id}`}
-                />
-              );
-            })}
-
-            {/* Élément pour créer un nouveau projet */}
-            <ProjectCard href="/new-project" isDefault={true} />
-          </div>
-        ) : (
-          <div className={styles.empty}>Créez ou sélectionnez un projet.</div>
-        )}
+        <div className={styles.elements}>
+          {projectsLoading ? (
+            <ProjectCardSkeleton />
+          ) : (
+            <>
+              {projects?.map((project) => {
+                return (
+                  <ProjectCard
+                    key={project?._id}
+                    project={project}
+                    mutateProjects={mutateProjects}
+                    href={`/projects/${project?._id}`}
+                  />
+                );
+              })}
+            </>
+          )}
+          {/* Élément pour créer un nouveau projet */}
+          <ProjectCard href="/new-project" isDefault={true} />
+        </div>
       </div>
     </main>
   );

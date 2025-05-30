@@ -11,6 +11,7 @@ import { emailDescription } from "../templates/emails.js";
 import { allowedStatus, getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
+import StatusModel from "../models/Status.model.js";
 
 // Only authors and guets will be able to post the tasks
 export async function saveTask(req, res, next) {
@@ -29,6 +30,8 @@ export async function saveTask(req, res, next) {
     const tasks = await TaskModel.find({
       projectId: projectId,
     });
+
+    const status = await StatusModel.findById({ projectId: projectId });
 
     const newTask = new TaskModel({
       author: authUser?._id,

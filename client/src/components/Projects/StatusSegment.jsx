@@ -2,30 +2,18 @@ import styles from "@/styles/components/projects/statusSegment.module.css";
 import { useState } from "react";
 import TaskInfo from "../Popups/TaskInfo";
 
-export default function StatusSegment({ count, totalTasks, status }) {
+export default function StatusSegment({ status, totalTasks }) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
 
-  const percentage = (count / totalTasks) * 100;
+  const percentage = totalTasks > 0 ? (status?.count / totalTasks) * 100 : 0;
 
-  const statusColors = {
-    "En attente": "#b3bcc0",
-    "À estimer": "#62c3b0",
-    "En cours": "#f3b158",
-    "À faire": "#559fc6",
-    "À vérifier": "#9d88c2",
-    Bloquée: "#ca4250",
-    Terminée: "#63a758",
-  };
-
-  const handlePopupMouseEnter = (e, status, count) => {
+  const handlePopupMouseEnter = (e) => {
+    const count = status?.count;
+    const name = status?.name?.toLowerCase();
     const taskWord = count === 1 ? "tâche" : "tâches";
-    const statusWord =
-      status.toLowerCase() === "terminée" && count > 1
-        ? "terminées"
-        : status.toLowerCase();
 
-    setMessage(`${count} ${taskWord} ${statusWord}`);
+    setMessage(`${count} ${taskWord} ${name}`.toLowerCase());
     setIsOpen(true);
   };
 
@@ -33,22 +21,20 @@ export default function StatusSegment({ count, totalTasks, status }) {
     setIsOpen(false);
   };
 
+  // Si le count est 0, ne pas afficher le segment
+  if (status?.count === 0) return null;
+
   return (
     <div
-      key={status}
       className={styles.statusSegment}
       style={{
         width: `${percentage}%`,
-        backgroundColor: statusColors[status] || "#ccc",
+        backgroundColor: status?.color || "#ccc",
       }}
-      onMouseEnter={(e) => handlePopupMouseEnter(e, status, count)}
+      onMouseEnter={(e) => handlePopupMouseEnter(e)}
       onMouseLeave={handlePopupMouseLeave}
     >
-      {isOpen && (
-        <div>
-          <TaskInfo message={message} />
-        </div>
-      )}
+      {isOpen && <TaskInfo message={message} />}
     </div>
   );
 }

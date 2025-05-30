@@ -4,12 +4,23 @@ import StatusSegment from "./StatusSegment";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import { deleteFavorite, saveFavorite } from "@/api/favorite";
+import { useContext, useState } from "react";
+import { AuthContext } from "@/context/auth";
 
-export default function ProjectCard({ project, href, isDefault }) {
+export default function ProjectCard({
+  project,
+  mutateProjects,
+  href,
+  isDefault,
+}) {
+  const { uid } = useContext(AuthContext);
+  const userFavIds = project?.favorites?.map((fav) => fav.user);
+  const hasFav = userFavIds?.includes(uid);
+  const [isFavorite, setIsFavorite] = useState(hasFav);
   const isDefaultProject = isDefault || false;
 
-  const status = project?.taskStatuses || [];
-  const entries = Object.entries(status).filter(([, count]) => count > 0);
+  const statuses = project?.statuses || [];
 
   const totalTasks = project?.tasksCount || 0;
   const totalBoards = project?.boardsCount || 0;
@@ -20,16 +31,54 @@ export default function ProjectCard({ project, href, isDefault }) {
 
   const name = project?.name || "Nouveau projet";
 
+  async function handleFavorite(e) {
+    e.stopPropagation();
+
+    if (isFavorite) {
+      await RemoveFavorite();
+    } else {
+      await AddFavorite();
+    }
+  }
+
+  async function AddFavorite() {
+    setIsFavorite(true);
+
+    const res = await saveFavorite(projectId);
+
+    if (!res.success) {
+      setIsFavorite(false);
+      return;
+    }
+
+    mutateProjects();
+  }
+
+  async function RemoveFavorite() {
+    setIsFavorite(false);
+    const favoriteId = project?.favorites?.find((fav) => fav.user === uid)?._id;
+
+    const res = await deleteFavorite(favoriteId);
+
+    if (!res.success) {
+      setIsFavorite(true);
+      return;
+    }
+    mutateProjects();
+  }
+
   return (
     <div key={projectId} className={styles.projectWrapper}>
+      <div className={styles.starWrapper} data-default={isDefaultProject}>
+        <Star
+          size={16}
+          className={styles.star}
+          data-default={isDefaultProject}
+          data-favorite={isFavorite}
+          onClick={handleFavorite}
+        />
+      </div>
       <Link href={href}>
-        <div className={styles.starWrapper} data-default={isDefaultProject}>
-          <Star
-            size={16}
-            className={styles.star}
-            data-default={isDefaultProject}
-          />
-        </div>
         <div className={styles.contentWrapper} data-default={isDefaultProject}>
           {isDefaultProject ? (
             <div className={styles.imagesWrapper}>
@@ -83,11 +132,10 @@ export default function ProjectCard({ project, href, isDefault }) {
                 <div className={styles.tasks}>
                   {`${totalTasks} tâche${totalTasks === 1 ? "" : "s"}`}
                   <div className={styles.statusBar}>
-                    {entries.map(([status, count]) => {
+                    {statuses.map((status, idx) => {
                       return (
                         <StatusSegment
-                          key={status}
-                          count={count}
+                          key={status?._id}
                           status={status}
                           totalTasks={totalTasks}
                         />
