@@ -779,6 +779,52 @@
       color: var(--color-text-medium-color);
     }
   }
+
+  /* TaskInfo */
+  .container_TaskInfo::before {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid var(--color-background-secondary-color);
+  }
+
+  /* ProjectCard */
+  .statusBar_ProjectCard > div:first-child {
+    min-width: 12px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .statusBar_ProjectCard > div:last-child {
+    min-width: 12px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  /* ProjectCardSkeleton */
+  .shimmer_ProjectCardSkeleton {
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(
+      to right,
+      #eae7de 0%,
+      #f5f3ec 50%,
+      #eae7de 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  .member_ProjectCardSkeleton {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--color-background-primary-color);
+  }
 }
 
 @layer base {

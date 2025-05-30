@@ -44,7 +44,12 @@ export default function Header() {
     <header className="w-full py-2.5 h-spacing-header-height">
       <nav className="flex justify-between items-center h-full ml-30 mr-10">
         <div className="[&_svg]:text-text-dark-color">
-          <Link href={"/time-trackings"}>
+          <Link href={
+              "/times?startingDate=" +
+              firstDayOfTheMonth +
+              "&endingDate=" +
+              lastDayOfTheMonth
+            }>
             <Timer size={24} cursor={"pointer"} />
           </Link>
         </div>

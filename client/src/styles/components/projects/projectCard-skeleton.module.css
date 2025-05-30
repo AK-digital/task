@@ -1,4 +1,4 @@
-.projectWrapper {
+/* .projectWrapper {
     position: relative;
     width: 100%;
     max-width: 290px;
@@ -116,7 +116,7 @@
 }
 
 /* Animation shimmer */
-@keyframes shimmer {
+/* @keyframes shimmer {
     0% {
         background-position: -1000px 0;
     }
@@ -139,4 +139,4 @@
             #f5f3ec 50%,
             #eae7de 100%);
     background-size: 1000px 100%;
-}
+} */

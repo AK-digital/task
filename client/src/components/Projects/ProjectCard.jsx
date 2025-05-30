@@ -1,4 +1,3 @@
-import styles from "@/styles/components/projects/projectCard.module.css";
 import ProjectMembers from "./ProjectMembers";
 import StatusSegment from "./StatusSegment";
 import Link from "next/link";
@@ -68,70 +67,71 @@ export default function ProjectCard({
   }
 
   return (
-    <div key={projectId} className={styles.projectWrapper}>
-      <div className={styles.starWrapper} data-default={isDefaultProject}>
+    <div key={projectId} className="relative w-full max-w-[290px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl overflow-visible transition-all duration-200 ease-in-out cursor-pointer mt-6 no-underline hover:-translate-y-0.5">
+      <div className={`relative ${isDefaultProject ? '-top-[5px] bg-[#e9e7dd]' : 'top-px left-0 bg-background-secondary-color'} w-40 h-[30px] rounded-tl-2xl rounded-tr-0 rounded-bl-0 rounded-br-0 clip-path-[path("M_0_0_L_128_0_C_144_2_136_24,_160_34_L_0_34_Z")]`}>
+
         <Star
           size={16}
-          className={styles.star}
-          data-default={isDefaultProject}
-          data-favorite={isFavorite}
           onClick={handleFavorite}
-        />
+          className={`absolute top-[7px] left-[15px] ${isFavorite ? 'fill-color-accent-color text-color-accent-color' : 'fill-[#d0cec7] text-[#d0cec7]'}`} 
+          />
       </div>
+
       <Link href={href}>
-        <div className={styles.contentWrapper} data-default={isDefaultProject}>
+        <div className={`${isDefaultProject ? 'absolute w-full top-6 bg-[#e9e7dd]' : 'bg-background-secondary-color'} py-[18px] px-[22px] rounded-tr-2xl rounded-bl-2xl rounded-br-2xl rounded-tl-none transition-all duration-200 ease-in-out hover:shadow-[10px_10px_10px_rgba(0,0,0,0.1)]`}>
+          
           {isDefaultProject ? (
-            <div className={styles.imagesWrapper}>
-              <div className={styles.defaultLogoWrapper}>
+            <div className="flex justify-between w-full rounded-2xl">
+              <div className="flex items-center justify-center w-[41px] h-[41px] bg-[#d0cec7] rounded-full">
                 <Image
-                  className={styles.logo}
                   src="/default-project-logo.svg"
                   alt="project"
                   width={22}
                   height={22}
+                  className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px]"
                 />
               </div>
 
-              <div className={styles.membersWrapper}>
-                <div className={styles.memberWrapper} data-default="true"></div>
+              <div className="flex w-[30px] h-[30px] rounded-full bg-[#d0cec7]">
+                <div className="-ml-2"></div>
               </div>
             </div>
+            
           ) : (
-            <div className={styles.imagesWrapper}>
+            <div className="flex justify-between w-full rounded-2xl">
               <Image
-                className={styles.logo}
                 src={project?.logo || "/default-project-logo.webp"}
                 alt="project"
                 width={45}
                 height={45}
-                style={{ borderRadius: "50%", cursor: "pointer" }}
+                className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px] cursor-pointer"
               />
 
               <ProjectMembers members={members} />
             </div>
           )}
 
-          <div className={styles.nameWrapper}>
+          <div className="text-xl mt-1.5 text-text-darker-color">
             <span>{name}</span>
           </div>
 
           {isDefaultProject ? (
-            <div className={styles.footerWrapper}>
-              <div className={styles.tabs} data-default="true"></div>
-              <div className={styles.tasks} data-default="true">
-                <div className={styles.task} />
-                <div className={styles.statusBar} data-default="true"></div>
+            <div className="flex flex-col gap-2.5 mt-[30px] text-text-size-small">
+              <div className={`text-text-darker-color ${isDefaultProject ? 'bg-[#d0cec7] w-[100px] h-3 rounded-[5px]' : ''}`} data-default="true"></div>
+              <div className="flex justify-between items-center text-text-darker-color" data-default="true">
+                <div className="rounded-[5px] bg-[#d0cec7] w-[76px] h-3" />
+                <div className={`flex h-3 w-full rounded-[5px] flex-[0.5] statusBar_ProjectCard ${isDefaultProject ? 'bg-[#d0cec7]' : 'bg-[#e9ecef]'}`} data-default="true"></div>
               </div>
             </div>
           ) : (
             project && (
-              <div className={styles.footerWrapper}>
-                <span className={styles.tabs}>
+              <div className="flex flex-col gap-2.5 mt-[30px] text-text-size-small">
+                <span className="text-text-darker-color">
                   {`${totalBoards} tableau${totalBoards === 1 ? "" : "x"}`}
                 </span>
-                <div className={styles.tasks}>
+                <div className="flex justify-between items-center text-text-darker-color">
                   {`${totalTasks} tâche${totalTasks === 1 ? "" : "s"}`}
-                  <div className={styles.statusBar}>
+                  <div className="flex h-3 w-full rounded-[5px] bg-[#e9ecef] flex-[0.5] statusBar_ProjectCard">
                     {statuses.map((status, idx) => {
                       return (
                         <StatusSegment

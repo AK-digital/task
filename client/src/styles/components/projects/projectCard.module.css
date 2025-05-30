@@ -1,5 +1,7 @@
+/* FICHIER CSS COMMENTÉ - STYLES CONVERTIS EN TAILWIND CSS */
+
 /* Ajuster la hauteur des éléments pour le snap scroll */
-.projectWrapper {
+/* .projectWrapper {
   position: relative;
   width: 100%;
   max-width: 290px;
@@ -153,4 +155,4 @@
   height: 30px;
   border-radius: 50%;
   background-color: #d0cec7;
-}
+} */

@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/components/projects/projectMembers.module.css";
+// import styles from "@/styles/components/projects/projectMembers.module.css";
 import { displayPicture } from "@/utils/utils";
 import { useRef, useState } from "react";
 import UsersInfo from "../Popups/UsersInfo";
@@ -72,12 +72,12 @@ export default function ProjectMembers({ members }) {
 
   return (
     <>
-      <div className={styles.membersWrapper}>
+      <div className="flex">
         {/* Membres du projet (affiche max 4) */}
         {defaultUsers.slice(0, 4).map((user) => (
           <div
             key={user?._id}
-            className={styles.memberWrapper}
+            className="-ml-2"
             onMouseEnter={handleSingleMouseEnter}
             onMouseLeave={handleMouseLeave}
             data-user-id={user?._id}
@@ -89,12 +89,14 @@ export default function ProjectMembers({ members }) {
         {/* Affichage "+n" si plus de 4 membres */}
         {defaultUsers?.length > 4 && (
           <div
-            className={styles.memberWrapper}
+            className="-ml-2"
             ref={moreRef}
             onMouseEnter={handleMoreMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <div className={styles.moreMembers}>+{defaultUsers.length - 4}</div>
+            <div className="flex items-center justify-center w-[30px] h-[30px] bg-[#ccc] text-black rounded-full text-xs font-bold cursor-default border-2 border-white">
+              +{defaultUsers.length - 4}
+            </div>
           </div>
         )}
       </div>
