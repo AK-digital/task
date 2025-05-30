@@ -679,6 +679,10 @@
 
   .images_TaskResponsibles img {
     border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    max-width: 30px;
+    max-height: 30px;
   }
 
   /* TaskSkeletons */
@@ -751,6 +755,30 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  /* SelectedTimeTrackings */
+  @keyframes slideIn {
+    from {
+      transform: translateY(100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* TimeTracking */
+  @keyframes backgroundAppear {
+    from {
+      background-color: var(--color-background-secondary-color);
+      color: var(--color-text-dark-color);
+    }
+
+    to {
+      background-color: var(--color-background-third-color);
+      color: var(--color-text-medium-color);
+    }
+  }
 }
 
 @layer base {
@@ -788,6 +816,7 @@
     background-repeat: no-repeat;
     background-position: 50% 80%;
     background-size: cover;
+    letter-spacing: 0.03rem !important;
     /* font-family: "Bricolage Grotesque", Arial, Helvetica, sans-serif; */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

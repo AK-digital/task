@@ -1,7 +1,5 @@
 "use client";
 import { saveProject } from "@/actions/project";
-import styles from "@/styles/pages/new-project.module.css";
-import { instrumentSans } from "@/utils/font";
 import { FolderPlus, Layout, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
@@ -30,28 +28,29 @@ export default function NewProject() {
   }, [state]);
 
   return (
-    <main className={styles.main}>
+    <main className="ml-5 w-full h-[calc(100svh-60px)]">
       {/* container */}
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          <div className={styles.header}>
+      <div className="flex justify-center items-center text-center bg-background-primary-color rounded-tl-lg h-full w-full text-text-dark-color">
+        <div className="flex flex-col -mt-[60px] gap-6">
+          <div className="max-w-[600px]">
             <FolderPlus size="144" />
             <h1>Créer un projet</h1>
-            <p>
+            <p className="font-light">
               Créer un nouveau projet n'a jamais été aussi simple. Donnez un nom
               à votre projet pour démarrer un nouveau projet ou profitez de nos
               templates prédéfinies pour gagner du temps.
             </p>
           </div>
-          <div className={styles.content}>
-            <form action={formAction} className={styles.form}>
-              <div className={styles.input}>
+          <div className="w-[90%] mx-auto">
+            <form action={formAction} className="flex flex-col gap-6">
+              <div className="text-center mx-auto w-full">
                 <label htmlFor="project-name" hidden></label>
                 <input
                   type="text"
                   id="project-name"
                   name="project-name"
                   placeholder="Nom du projet"
+                  className="border-b-inherit text-center text-text-size-medium"
                   onChange={(e) => {
                     if (e.target.value.length > 0) {
                       setIsSubmitDisabled(false);
@@ -62,12 +61,10 @@ export default function NewProject() {
                   autoFocus
                 />
               </div>
-              <div className={styles.buttons}>
-                <div>
+              <div className="flex flex-col gap-3 w-full">
+                <div className="flex gap-2">
                   <button
-                    className={`${styles.submit} ${
-                      isSubmitDisabled ? styles.disabled : ""
-                    }`}
+                    className={`flex justify-center items-center gap-2 w-full border-2 border-accent-color ${isSubmitDisabled ? "pointer-events-none bg-transparent border-2 border-text-muted text-text-muted" : ""}`}
                     data-disabled={pending || isSubmitDisabled}
                     type="submit"
                     disabled={pending || isSubmitDisabled}
@@ -76,12 +73,12 @@ export default function NewProject() {
                   </button>
                   <button
                     type="button"
-                    className={styles.template}
                     disabled={pending}
                     onClick={(e) => {
                       e.preventDefault();
                       router.push("/new-project/templates");
                     }}
+                    className="flex justify-center items-center gap-2 w-full bg-transparent border-2 border-accent-color text-accent-color hover:bg-transparent hover:text-white hover:border-2 hover:border-text-color hover:shadow-inherit"
                   >
                     <Layout size={18} />
                     Choisir un template
@@ -89,7 +86,7 @@ export default function NewProject() {
                 </div>
                 <button
                   type="button"
-                  className={styles.back}
+                  className="bg-transparent shadow-none text-accent-color text-text-size-medium max-w-fit mx-auto hover:bg-transparent hover:shadow-none hover:text-accent-color-hover"
                   onClick={(e) => {
                     e.preventDefault();
                     router.back();

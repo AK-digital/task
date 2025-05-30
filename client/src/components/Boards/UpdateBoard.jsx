@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/boards/update-board.module.css";
 import { updateBoard } from "@/actions/board";
 import { useActionState, useEffect, useState } from "react";
 

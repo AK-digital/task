@@ -1,4 +1,3 @@
-import styles from "@/styles/components/task/task-drag.module.css";
 import { GripVertical } from "lucide-react";
 
 export default function TaskDrag({ attributes, listeners }) {

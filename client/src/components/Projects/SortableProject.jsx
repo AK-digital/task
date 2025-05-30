@@ -3,7 +3,6 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import styles from "@/styles/layouts/side-nav.module.css";
 import { useState, useRef, useEffect } from "react";
 
 export default function SortableProject({ project, open, isActive }) {

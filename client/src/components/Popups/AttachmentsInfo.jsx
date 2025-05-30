@@ -1,4 +1,3 @@
-import styles from "@/styles/components/popups/attachmentsInfo.module.css";
 import { useState, useEffect } from "react";
 import Attachment from "../Attachment/Attachment";
 import { Download, Trash2 } from "lucide-react";

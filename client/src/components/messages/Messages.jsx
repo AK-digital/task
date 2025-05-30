@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/messages/messages.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
 import { useCallback, useEffect, useState } from "react";

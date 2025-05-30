@@ -1,4 +1,3 @@
-import styles from "@/styles/components/timeTrackings/time-tracking-header.module.css";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -113,84 +112,93 @@ export default function TimeTrackingHeader({
   };
 
   return (
-    <div className={styles.container}>
-      <div className={`${styles.selection} ${styles.row}`}>
+    <div className="sticky flex items-center top-0 bg-background-secondary-color border-b border-text-light-color text-text-size-small h-[38px] text-text-color-muted font-medium rounded-t-lg last:border-b-0">
+      <div className="min-w-[40px] max-w-[40px] flex justify-center items-center w-full h-full gap-2 cursor-default">
         <input
           type="checkbox"
           id="trackers"
           name="trackers"
           onClick={handleSelectAllTrackers}
+          className="w-4 cursor-pointer"
         />
       </div>
-      <div className={styles.text}>
-        <span>Description</span>
+      <div className="w-full min-w-[200px] max-w-[700px]">
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Description</span>
       </div>
-      <div className={`${styles.project} ${styles.row}`}>
-        <span>Projet</span>
-        <div className={styles.sort}>
+      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color">
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Projet</span>
+        <div className="flex flex-col">
           <ChevronUp
             size={15}
             cursor={"pointer"}
             onClick={() => handleProjectSort("asc")}
             data-sort={projectSort === "asc"}
+            className="relative top-1 data-[sort=true]:text-color-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleProjectSort("desc")}
             data-sort={projectSort === "desc"}
+            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
           />
         </div>
       </div>
-      <div className={`${styles.user} ${styles.row}`}>
-        <span>Utilisateur</span>
-        <div className={styles.sort}>
+      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color">
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Utilisateur</span>
+        <div className="flex flex-col">
           <ChevronUp
             size={15}
             cursor={"pointer"}
             onClick={() => handleUserSort("asc")}
             data-sort={userSort === "asc"}
+            className="relative top-1 data-[sort=true]:text-color-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleUserSort("desc")}
             data-sort={userSort === "desc"}
+            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
           />
         </div>
       </div>
-      <div className={`${styles.date} ${styles.row}`}>
-        <span>Date</span>
-        <div className={styles.sort}>
+      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color">
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Date</span>
+        <div className="flex flex-col">
           <ChevronUp
             size={15}
             cursor={"pointer"}
             onClick={() => handleDateSort("asc")}
             data-sort={dateSort === "asc"}
+            className="relative top-1 data-[sort=true]:text-color-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleDateSort("desc")}
             data-sort={dateSort === "desc"}
+            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
           />
         </div>
       </div>
 
-      <div className={`${styles.duration} ${styles.row}`}>
-        <span>Temps</span>
-        <div className={styles.sort}>
+      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color">
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Temps</span>
+        <div className="flex flex-col">
           <ChevronUp
             size={15}
             cursor={"pointer"}
             onClick={() => handleDurationSort("asc")}
             data-sort={durationSort === "asc"}
+            className="relative top-1 data-[sort=true]:text-color-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleDurationSort("desc")}
             data-sort={durationSort === "desc"}
+            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
           />
         </div>
       </div>

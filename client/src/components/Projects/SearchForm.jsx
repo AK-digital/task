@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/layouts/project-header.module.css";
 import { Search } from "lucide-react";
 
 export default function SearchForm() {

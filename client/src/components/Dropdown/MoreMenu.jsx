@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/dropdown/more.module.css";
 import Link from "next/link";
 import React from "react";
 import { useState } from "react";

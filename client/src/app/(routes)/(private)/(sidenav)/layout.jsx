@@ -1,6 +1,5 @@
 "use server";
 
-import styles from "@/styles/layouts/projects-layouts.module.css";
 import { getProjects } from "@/api/project";
 import Header from "@/layouts/Header";
 import SideNav from "@/layouts/SideNav";

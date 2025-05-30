@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/boards/boards.module.css";
 import Board from "./Board";
 import {
   DndContext,

@@ -1,5 +1,4 @@
 "use server";
-import styles from "@/styles/pages/time-trackings.module.css";
 import { getTimeTrackings } from "@/api/timeTracking";
 import TimeTrackings from "@/components/TimeTrackings/TimeTrackings";
 import { getProjects } from "@/api/project";
@@ -13,8 +12,8 @@ export default async function TimeTrackingsPage({ searchParams }) {
   projects?.sort((a, b) => a.name.localeCompare(b.name)); // Sort projects by name
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
+    <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
+      <div className="flex flex-col bg-background-primary-transparent rounded-tl-2xl h-full pt-6 pl-6 overflow-hidden">
         <TimeTrackings
           trackers={trackers?.data}
           projects={projects}

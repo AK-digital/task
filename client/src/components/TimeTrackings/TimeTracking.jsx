@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/timeTrackings/time-tracking.module.css";
 import { formatTime } from "@/utils/utils";
 import Image from "next/image";
 import { useState } from "react";
@@ -88,22 +87,23 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
 
   return (
     <div
-      className={styles.container}
+      className="flex items-center bg-background-secondary-color border-b border-text-light-color text-text-size-normal h-[42px] last:border-b-0"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
       {/* Element selection */}
-      <div className={`${styles.selection} ${styles.row}`}>
+      <div className="flex justify-center items-center min-w-10 max-w-10 gap-1 w-full h-full cursor-default">
         <input
           type="checkbox"
           name="tracker"
           id={`tracker-${tracker?._id}`}
           defaultValue={tracker?._id}
           onClick={handleSelectTracker}
+          className="w-3.5 cursor-pointer"
         />
       </div>
       {/* Task text */}
-      <div className={styles.text}>
+      <div className="w-full min-w-[200px] max-w-[700px] cursor-text">
         {isEditing ? (
           <input
             type="text"
@@ -113,53 +113,53 @@ export default function TimeTracking({ tracker, setSelectedTrackers }) {
             onBlur={handleIsEditing}
             onChange={handleChange}
             autoFocus
+            className="relative -left-1.5 border-none p-1.5 bg-background-third-color rounded-sm text-[14.8px] text-text-medium-color animate-[backgroundAppear_150ms_linear]"
           />
         ) : (
-          <span onClick={handleIsEditing}>{inputValue}</span>
+          <span onClick={handleIsEditing} className="block overflow-hidden whitespace-nowrap text-ellipsis">
+            {inputValue}
+          </span>
         )}
       </div>
-      <div className={`${styles.project} ${styles.row}`}>
+      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color px-1">
         <Image
           src={project?.logo || "/default-project-logo.webp"}
           alt={project?.name}
-          style={{
-            borderRadius: "50%",
-          }}
           width={22}
           height={22}
+          className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px]"
         />
-        <span>{project?.name}</span>
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{project?.name}</span>
       </div>
       {/* user */}
-      <div className={`${styles.user} ${styles.row}`}>
+      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color ">
         {user?.picture ? (
           <Image
             src={user?.picture}
             alt={user?.firstName}
-            style={{
-              borderRadius: "50%",
-            }}
             width={22}
             height={22}
+            className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px]"
           />
         ) : (
           <NoPicture user={user} width={22} height={22} />
         )}
-        <span>{user?.firstName + " " + user?.lastName}</span>
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{user?.firstName + " " + user?.lastName}</span>
       </div>
-      <div className={`${styles.date} ${styles.row}`}>
-        <span>{date}</span>
+      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color">
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{date}</span>
       </div>
       {/* Duration */}
-      <div className={`${styles.duration} ${styles.row}`}>
-        <span>{formatTime(Math.floor(tracker?.duration / 1000))}</span>
+      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color ">
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{formatTime(Math.floor(tracker?.duration / 1000))}</span>
       </div>
       {isHover && (
-        <div className={`${styles.more} ${styles.row}`}>
+        <div className="relative flex items-center justify-center gap-1 w-full h-full cursor-default max-w-5 min-w-5 text-text-color-muted">
           <MoreVerticalIcon
             size={18}
             cursor={"pointer"}
             onClick={() => setIsMore(true)}
+            className="hover:text-text-dark-color"
           />
           {isMore && (
             <TimeTrackingMore

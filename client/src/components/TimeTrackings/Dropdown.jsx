@@ -84,7 +84,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
                       alt={element?.name || element?.label || "Logo"}
                       width={22}
                       height={22}
-                      style={{ borderRadius: "50%" }}
+                      className="rounded-full max-w-[22px] max-h-[22px] w-[22px] h-[22px]"
                     />
                     {element?.name || element?.label}
                   </span>

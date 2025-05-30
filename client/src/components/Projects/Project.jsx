@@ -1,6 +1,5 @@
 "use client";
 import ProjectHeader from "@/layouts/ProjectHeader";
-import styles from "@/styles/pages/project.module.css";
 import Boards from "@/components/Boards/Boards";
 import { useEffect } from "react";
 import socket from "@/utils/socket";

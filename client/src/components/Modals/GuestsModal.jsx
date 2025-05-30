@@ -1,6 +1,5 @@
 "use client";
 import { removeGuest } from "@/actions/project";
-import styles from "@/styles/components/modals/guests-modal.module.css";
 import { isNotEmpty, memberRole } from "@/utils/utils";
 import Image from "next/image";
 import { useActionState, useContext, useEffect, useState } from "react";

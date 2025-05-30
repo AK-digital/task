@@ -1,13 +1,11 @@
 "use client";
 import { updateBoard } from "@/actions/board";
-import styles from "@/styles/components/boards/BoardHeader.module.css";
 import {
   Archive,
   ArchiveRestore,
   ChevronDown,
   ChevronRight,
   EllipsisVertical,
-  FlipVertical,
   GripVertical,
   Save,
   Trash2,
@@ -27,7 +25,6 @@ import { mutate } from "swr";
 import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { bricolageGrostesque } from "@/utils/font";
 
 export default function BoardHeader({
   board,

@@ -1,10 +1,8 @@
 "use client";
-import styles from "@/styles/components/projects/guest-form-invitation.module.css";
 import { sendProjectInvitationToGuest } from "@/actions/project";
 import socket from "@/utils/socket";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
-import { bricolageGrostesque } from "@/utils/font";
 
 const initialState = {
   status: "pending",

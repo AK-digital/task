@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/timeTrackings/filters.module.css";
 import { useEffect, useState } from "react";
 import { Dropdown } from "./Dropdown";
 import { usePathname, useRouter } from "next/navigation";
@@ -122,7 +121,7 @@ export default function Filters({
   const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
 
   return (
-    <div className={styles.container}>
+    <div className="flex items-center gap-3">
       {/* Filter by project */}
       <Dropdown
         defaultValue={"Choisir un projet"}
@@ -137,24 +136,26 @@ export default function Filters({
         options={usersOptions}
         query={"users"}
       />
-      <div className={styles.date}>
-        <label>Date de début</label>
+      <div className="relative flex justify-center bg-background-secondary-color rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
+        <label className="absolute -top-4 left-[18px] text-text-size-small block w-full">Date de début</label>
         <input
           type="date"
           name="startingDate"
           id="startingDate"
           defaultValue={queries.get("startingDate") || firstDayOfTheMonth}
           onChange={handleStartingDate}
+          className="p-0 max-w-[100px] border-none text-text-size-normal"
         />
       </div>
-      <div className={styles.date}>
-        <label>Date de fin</label>
+      <div className="relative flex justify-center bg-background-secondary-color rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
+        <label className="absolute -top-4 left-[18px] text-text-size-small block w-full">Date de fin</label>
         <input
           type="date"
           name="endingDate"
           id="endingDate"
           defaultValue={queries.get("endingDate") || lastDayOfTheMonth}
           onChange={handleEndingDate}
+          className="p-0 max-w-[100px] border-none text-text-size-normal"
         />
       </div>
     </div>

@@ -1,4 +1,3 @@
-import styles from "@/styles/components/modals/confirm-dialog.module.css";
 
 export default function ConfirmDialog({ isOpen, onClose, onConfirm, message }) {
     if (!isOpen) return null;

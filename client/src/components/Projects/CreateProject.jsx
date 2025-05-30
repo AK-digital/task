@@ -1,6 +1,5 @@
 "use client";
 import { saveProject } from "@/actions/project";
-import styles from "@/styles/components/projects/create-project.module.css";
 import { instrumentSans } from "@/utils/font";
 import { Plus, X } from "lucide-react";
 import { useActionState, useEffect, useState, useRef } from "react";

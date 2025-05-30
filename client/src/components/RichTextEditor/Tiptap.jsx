@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/components/tiptap/tiptap.module.css";
 import { useEditor, EditorContent } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
@@ -288,7 +287,7 @@ export default function Tiptap({
       const coords = editor.view.coordsAtPos(from);
 
       // Récupérer la position de l'éditeur
-      const editorElement = editor.view.dom.closest(`.${styles.container}`);
+      const editorElement = containerRef.current;
       const editorRect = editorElement.getBoundingClientRect();
 
       // Calculer la position relative à l'éditeur
@@ -304,7 +303,7 @@ export default function Tiptap({
   function isMeaningfulContent(html) {
     const temp = document.createElement("div");
     temp.innerHTML = html;
-    return !!temp.textContent.trim(); // retourne true s’il y a du texte non vide
+    return !!temp.textContent.trim(); // retourne true s'il y a du texte non vide
   }
 
   const handleSaveDescription = async () => {

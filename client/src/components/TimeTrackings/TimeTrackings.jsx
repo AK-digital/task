@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/timeTrackings/time-trackings.module.css";
 import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
 import TimeTracking from "./TimeTracking";
 import Filters from "./Filters";
@@ -54,9 +53,9 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>Suivi du temps</h1>
+    <div className="h-full">
+      <div className="flex items-center gap-6">
+        <h1 className="mb-[inherit] min-w-fit">Suivi du temps</h1>
         {/* Filters */}
         <Filters
           projects={projects}
@@ -67,7 +66,7 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
         />
         {/* Total duration */}
         {totalDuration && (
-          <span className={styles.total}>
+          <span className="font-bold">
             Temps total : {formatTime(Math.floor(totalDuration / 1000))}
           </span>
         )}
@@ -76,7 +75,7 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
       </div>
       {/* Time tracking list */}
       {isNotEmpty(filteredTrackers) ? (
-        <div className={styles.content}>
+        <div className="mt-3 overflow-auto h-full pr-3 mr-3 pb-10 rounded-lg">
           <TimeTrackingHeader
             trackers={trackers}
             setFilteredTrackers={setFilteredTrackers}
@@ -100,7 +99,7 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
           )}
         </div>
       ) : (
-        <div className={styles.empty}>
+        <div className="flex items-center justify-center h-full text-2xl">
           <h2>Aucun de vos projets ne contient un suivi de temps</h2>
         </div>
       )}

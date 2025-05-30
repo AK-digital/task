@@ -2,7 +2,6 @@
 
 import { getProject } from "@/api/project";
 import { getBoards } from "@/api/board";
-import styles from "@/styles/pages/project.module.css";
 import { notFound } from "next/navigation";
 import Project from "@/components/Projects/Project";
 import { getTasks } from "@/api/task";

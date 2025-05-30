@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/components/notifications/notifications.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
 import NoPicture from "../User/NoPicture";

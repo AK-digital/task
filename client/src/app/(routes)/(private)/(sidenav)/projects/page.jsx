@@ -1,6 +1,5 @@
 "use client";
 
-// import styles from "@/styles/pages/projects.module.css";
 import { getProjects } from "@/api/project";
 import Image from "next/image";
 import { isNotEmpty } from "@/utils/utils";

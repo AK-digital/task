@@ -1,6 +1,4 @@
 import { signUp } from "@/actions/auth";
-import styles from "@/styles/components/auth/sign.module.css";
-import { bricolageGrostesque } from "@/utils/font";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";

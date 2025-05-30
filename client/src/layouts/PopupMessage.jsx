@@ -1,4 +1,3 @@
-import styles from "@/styles/layouts/popup-message.module.css";
 
 export default function PopupMessage({ status, title, message }) {
   return (

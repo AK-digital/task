@@ -1,8 +1,6 @@
 "use client";
-// import styles from "@/styles/components/profile/profile-form.module.css";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { updateUserProfile } from "@/actions/user";
-import { bricolageGrostesque } from "@/utils/font";
 import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";

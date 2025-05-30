@@ -1,10 +1,9 @@
 "use client";
-import styles from "@/styles/pages/auth.module.css";
 import SignUp from "@/components/auth/SignUp";
 
 export default function Auth() {
   return (
-    <div className={styles.container}>
+    <div className="flex justify-center items-center flex-col w-full h-full gap-6">
       <SignUp />
     </div>
   );

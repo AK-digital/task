@@ -1,7 +1,6 @@
 import TaskBoard from "@/components/Task/TaskBoard";
 import TaskProject from "@/components/Task/TaskProject";
 import TaskText from "@/components/Task/TaskText";
-import styles from "@/styles/components/task/task.module.css";
 import { useContext } from "react";
 import TaskResponsibles from "./TaskResponsibles";
 import TaskStatus from "./TaskStatus";

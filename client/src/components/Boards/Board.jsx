@@ -1,5 +1,4 @@
 "use client";
-// import styles from "@/styles/components/boards/board.module.css";
 import { useState, useEffect, useRef, useActionState } from "react";
 import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";

@@ -1,6 +1,5 @@
 "use client";
 import { deleteTemplate, useTemplate } from "@/api/template";
-// import styles from "@/styles/components/templates/template.module.css";
 import { List, ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
 

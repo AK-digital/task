@@ -1,5 +1,4 @@
 "use client";
-// import styles from "@/styles/components/profile/picture-form.module.css";
 import { updateUserPicture } from "@/actions/user";
 import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";

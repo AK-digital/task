@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/pages/tasks.module.css";
 import { AuthContext } from "@/context/auth";
 import { useContext, useMemo, useState } from "react";
 import Tasks from "@/components/tasks/Tasks";
@@ -64,17 +63,17 @@ function TasksContent() {
   const { tasks, tasksLoading, mutateTasks } = useProjectContext();
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
+    <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
+      <div className="p-[38px] bg-background-primary-color h-full rounded-tl-2xl overflow-auto">
         {/* Header */}
-        <div className={styles.header}>
-          <span className={styles.title}>Mes tâches</span>
+        <div className="flex items-center mb-6 gap-4 bg-background-primary-color p-4">
+          <span className="text-2xl min-w-max">Mes tâches</span>
           {/* Filters */}
           <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
         </div>
         {/* Tasks */}
-        <div className={styles.tasksContainer}>
-          <div className={styles.tasks}>
+        <div className="overflow-auto h-[90%] pr-5 rounded-2xl">
+          <div className="relative bg-background-secondary-color shadow-shadow-box-small rounded-2xl min-w-max">
             <Tasks
               tasks={tasks}
               tasksLoading={tasksLoading}

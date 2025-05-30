@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/components/messages/message.module.css";
 import { useCallback, useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

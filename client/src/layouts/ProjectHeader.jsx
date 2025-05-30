@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/layouts/project-header.module.css";
 import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import { UserPlus2 } from "lucide-react";

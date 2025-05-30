@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/reactions/reactions.module.css";
 import { groupReactionsByEmoji, isNotEmpty } from "@/utils/utils";
 import AddReactions from "./AddReactions";
 import socket from "@/utils/socket";

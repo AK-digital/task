@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import styles from "@/styles/pages/options.module.css";
 import moment from "moment/moment";
 import "moment/locale/fr";
 import Image from "next/image";

@@ -1,5 +1,4 @@
 import { Paperclip } from "lucide-react";
-import styles from "@/styles/components/attachment/attachment.module.css";
 
 export default function Attachment({
   attachments,

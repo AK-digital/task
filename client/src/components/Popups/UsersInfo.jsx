@@ -1,4 +1,3 @@
-import styles from "@/styles/components/popups/usersInfo.module.css";
 import Image from "next/image";
 
 export default function UsersInfo({ users }) {

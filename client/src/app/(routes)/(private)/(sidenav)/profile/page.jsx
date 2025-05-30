@@ -2,7 +2,6 @@
 import SignOut from "@/components/auth/SignOut";
 import PictureForm from "@/components/Profile/PictureForm";
 import ProfileForm from "@/components/Profile/ProfileForm";
-import styles from "@/styles/pages/profile.module.css";
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -14,13 +13,13 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className={styles.main}>
-      <div className={styles.back} onClick={handleBack}>
+    <main className="relative h-full w-full">
+      <div className="absolute top-5 left-[120px] cursor-pointer" onClick={handleBack}>
         <ArrowLeftCircle size={32} />
       </div>
-      <div className={styles.container}>
+      <div className="flex flex-col items-center justify-center gap-6 h-full w-full">
         <h1>Mon profil</h1>
-        <div className={styles.wrapper}>
+        <div className="bg-background-secondary-color rounded-2xl w-full p-[44px] max-w-[540px]">
           <PictureForm />
           <ProfileForm />
         </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/layouts/header.module.css";
 import Notifications from "@/components/Notifications/Notifications";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";

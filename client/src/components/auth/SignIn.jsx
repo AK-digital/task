@@ -2,8 +2,7 @@
 
 import { signIn } from "@/actions/auth";
 import { reSendVerificationEmail } from "@/api/auth";
-// import styles from "@/styles/components/auth/sign.module.css";
-import { ArrowRightCircle, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 

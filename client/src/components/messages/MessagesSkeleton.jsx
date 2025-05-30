@@ -1,4 +1,3 @@
-import styles from "@/styles/components/messages/messages-skeletons.module.css";
 
 export default function MessagesSkeleton() {
   return (

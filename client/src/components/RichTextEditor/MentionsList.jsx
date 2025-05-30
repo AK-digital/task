@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/richTextEditor/mentions-list.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";

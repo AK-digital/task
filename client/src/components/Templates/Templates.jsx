@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/templates/templates.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Template from "./Template";
 import { useRouter } from "next/navigation";

@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/popups/confirmationDelete.module.css";
 
 export default function ConfirmationDelete({ title, onCancel, onConfirm }) {
   return (

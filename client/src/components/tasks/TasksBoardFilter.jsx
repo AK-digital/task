@@ -21,9 +21,11 @@ export default function TasksBoardFilter({ queries, setQueries }) {
   return (
     <div className="relative z-2000">
       <div
-        className="current_TasksBoardFilter flex items-center gap-2 bg-background-secondary-color p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[210px] transition-all duration-[120ms] ease-in-out"
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
+        className={`current_TasksBoardFilter flex items-center gap-2 bg-background-secondary-color p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[210px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-shadow-box-small ${
+          isOpen ? "bg-[#f9f7efb3] shadow-shadow-box-small" : ""
+        }`}
       >
         {theBoard?.color ? (
           <div

@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { updateProject } from "@/actions/project";

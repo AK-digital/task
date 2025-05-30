@@ -3,7 +3,6 @@ import { deleteBoard } from "@/actions/board";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
-import styles from "@/styles/components/boards/BoardHeader.module.css";
 
 export default function DeleteBoard({ boardId, projectId }) {
   const [showConfirm, setShowConfirm] = useState(false);

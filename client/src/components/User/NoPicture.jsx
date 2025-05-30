@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import styles from "@/styles/components/user/no-picture.module.css";
 
 const backgroundColors = [
   "#52796F",

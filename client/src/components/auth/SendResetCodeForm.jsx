@@ -1,6 +1,4 @@
 import { sendResetCode } from "@/actions/auth";
-// import styles from "@/styles/components/auth/sign.module.css";
-import { bricolageGrostesque, instrumentSans } from "@/utils/font";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 const initialState = {

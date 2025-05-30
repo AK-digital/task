@@ -2,7 +2,6 @@
 
 import { updateProjectRole } from "@/api/project";
 import { updateProjectInvitationRole } from "@/actions/projectInvitation";
-import styles from "@/styles/components/dropdown/dropdown.module.css";
 import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
 import { useState } from "react";
