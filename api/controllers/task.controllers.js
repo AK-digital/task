@@ -31,7 +31,10 @@ export async function saveTask(req, res, next) {
       projectId: projectId,
     });
 
-    const status = await StatusModel.findById({ projectId: projectId });
+    const status = await StatusModel.findOne({
+      projectId: projectId,
+      name: "En attente",
+    });
 
     const newTask = new TaskModel({
       author: authUser?._id,
@@ -39,6 +42,7 @@ export async function saveTask(req, res, next) {
       boardId: boardId,
       text: text,
       order: tasks ? tasks.length - 0 : 0,
+      status: status?._id,
     });
 
     const savedTask = await newTask.save();

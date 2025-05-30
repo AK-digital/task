@@ -162,12 +162,19 @@ export async function deleteStatus(req, res) {
   try {
     const { projectId } = req.query;
 
-    const statuses = await StatusModel.find({ projectId: projectId });
+    const statuses = await StatusModel.findOne({ projectId: projectId });
 
-    if (statuses.length === 1) {
+    if (!statuses) {
       return res.status(400).send({
         success: false,
-        message: "Impossible to delete the last status",
+        message: "Impossible to delete a status that does not exist",
+      });
+    }
+
+    if (statuses.name === "En attente") {
+      return res.status(400).send({
+        success: false,
+        message: "Impossible to delete the default status",
       });
     }
 

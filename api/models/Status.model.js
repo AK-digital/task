@@ -17,6 +17,10 @@ const statusSchema = new Schema(
       trim: true,
       match: /^#([0-9A-Fa-f]{6})$/,
     },
+    default: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

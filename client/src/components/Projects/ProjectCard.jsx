@@ -68,18 +68,21 @@ export default function ProjectCard({
   }
 
   return (
-    <div key={projectId} className={styles.projectWrapper}>
-      <div className={styles.starWrapper} data-default={isDefaultProject}>
+    <div
+      key={projectId}
+      className={styles.projectWrapper}
+      data-default={isDefaultProject}
+    >
+      <div className={styles.starWrapper}>
         <Star
-          size={16}
+          size={18}
           className={styles.star}
-          data-default={isDefaultProject}
           data-favorite={isFavorite}
           onClick={handleFavorite}
         />
       </div>
       <Link href={href}>
-        <div className={styles.contentWrapper} data-default={isDefaultProject}>
+        <div className={styles.contentWrapper}>
           {isDefaultProject ? (
             <div className={styles.imagesWrapper}>
               <div className={styles.defaultLogoWrapper}>
@@ -93,7 +96,7 @@ export default function ProjectCard({
               </div>
 
               <div className={styles.membersWrapper}>
-                <div className={styles.memberWrapper} data-default="true"></div>
+                <div className={styles.memberWrapper}></div>
               </div>
             </div>
           ) : (
@@ -117,10 +120,10 @@ export default function ProjectCard({
 
           {isDefaultProject ? (
             <div className={styles.footerWrapper}>
-              <div className={styles.tabs} data-default="true"></div>
-              <div className={styles.tasks} data-default="true">
+              <div className={styles.tabs}></div>
+              <div className={styles.tasks}>
                 <div className={styles.task} />
-                <div className={styles.statusBar} data-default="true"></div>
+                <div className={styles.statusBar}></div>
               </div>
             </div>
           ) : (

@@ -17,10 +17,10 @@ export default function Projects() {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <div className={styles.back} onClick={() => router.back()}>
-          <ArrowLeftCircle size={32} />
-        </div>
         <div className={styles.header}>
+          <div className={styles.back} onClick={() => router.back()}>
+            <ArrowLeftCircle size={32} />
+          </div>
           <h1 className={styles.headerH1}>Vos projets</h1>
           <div className={styles.projectCount}>
             <span>
@@ -28,26 +28,27 @@ export default function Projects() {
             </span>
           </div>
         </div>
-
-        <div className={styles.elements}>
-          {projectsLoading ? (
-            <ProjectCardSkeleton />
-          ) : (
-            <>
-              {projects?.map((project) => {
-                return (
-                  <ProjectCard
-                    key={project?._id}
-                    project={project}
-                    mutateProjects={mutateProjects}
-                    href={`/projects/${project?._id}`}
-                  />
-                );
-              })}
-            </>
-          )}
-          {/* Élément pour créer un nouveau projet */}
-          <ProjectCard href="/new-project" isDefault={true} />
+        <div className={styles.wrapper}>
+          <div className={styles.elements}>
+            {projectsLoading ? (
+              <ProjectCardSkeleton />
+            ) : (
+              <>
+                {projects?.map((project) => {
+                  return (
+                    <ProjectCard
+                      key={project?._id}
+                      project={project}
+                      mutateProjects={mutateProjects}
+                      href={`/projects/${project?._id}`}
+                    />
+                  );
+                })}
+              </>
+            )}
+            {/* Élément pour créer un nouveau projet */}
+            <ProjectCard href="/new-project" isDefault={true} />
+          </div>
         </div>
       </div>
     </main>
