@@ -39,6 +39,7 @@ export async function saveFavorite(req, res) {
   }
 }
 
+// Récupère les favoris de l'utilisateur avec les détails des projets
 export async function getFavorites(req, res) {
   try {
     const authUser = res.locals.user;
@@ -69,7 +70,7 @@ export async function getFavorites(req, res) {
 
 export async function deleteFavorite(req, res) {
   try {
-    if (req.params.id) {
+    if (!req.params.id) {
       return res.status(400).send({
         success: false,
         message: "Missing parameters",

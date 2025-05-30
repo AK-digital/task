@@ -76,6 +76,48 @@ export async function getStatusByProject(req, res) {
   }
 }
 
+export async function getUserProjectsStatuses(req, res) {
+  try {
+    const authUser = res.locals.user;
+
+    const projects = await ProjectModel.find({
+      members: { $in: [authUser._id] },
+    });
+
+    if (!projects.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Projects not found",
+        data: [],
+      });
+    }
+
+    const statuses = await StatusModel.find({
+      projectId: { $in: projects.map((project) => project._id) },
+    });
+
+    if (!statuses.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Statuses not found",
+        data: [],
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Statuses retrieved successfully",
+      data: statuses,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Internal server error",
+    });
+  }
+}
+
 export async function updateStatus(req, res) {
   try {
     const { name, color } = req.body;

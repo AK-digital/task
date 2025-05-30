@@ -6,8 +6,7 @@ export async function getStatusByProject(projectId) {
     const res = await useAuthFetch(
       `status/project/${projectId}`,
       "GET",
-      "application/json",
-      null
+      "application/json"
     );
 
     const response = await res.json();
@@ -24,6 +23,39 @@ export async function getStatusByProject(projectId) {
     return {
       success: false,
       message: err.message || "An error occurred while fetching custom status",
+    };
+  }
+}
+
+export async function getUserProjectsStatuses() {
+  try {
+    const res = await useAuthFetch("/status", "GET", "application/json");
+
+    if (res.status === 404) {
+      return {
+        success: false,
+        message: "Statuses not found",
+        data: [],
+      };
+    }
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(
+        response.message ||
+          "An error occurred while fetching user projects statuses"
+      );
+    }
+
+    return response?.data;
+  } catch (err) {
+    console.error(err);
+
+    return {
+      success: false,
+      message: err.message || "An error occurred while fetching custom status",
+      data: [],
     };
   }
 }

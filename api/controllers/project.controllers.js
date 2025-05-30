@@ -26,16 +26,8 @@ export async function saveProject(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    // Trouver l'ordre maximum actuel
-    const maxOrder = await ProjectModel.findOne({
-      $or: [{ author: authUser._id }, { guests: authUser?._id }],
-    })
-      .sort({ order: -1 })
-      .select("order");
-
     const newProject = new ProjectModel({
       name: name,
-      order: maxOrder ? maxOrder.order + 1 : 0, // Définir le nouvel ordre
       members: [
         {
           user: authUser._id,
@@ -90,109 +82,20 @@ export async function saveProject(req, res, next) {
   }
 }
 
-export async function getProjects(req, res, next) {
+export async function getUserProjects(req, res, next) {
   try {
     const authUser = res.locals.user;
 
+    // A .pre aggregate is set in ProjectModel to get the membersData, statuses, tasks and boards
     const projects = await ProjectModel.aggregate([
       {
         $match: {
-          "members.user": new mongoose.Types.ObjectId(authUser._id),
-        },
-      },
-      {
-        // Extraire uniquement le member correspondant à l'utilisateur connecté
-        $addFields: {
-          currentUserMember: {
-            $first: {
-              $filter: {
-                input: "$members",
-                as: "member",
-                cond: {
-                  $eq: [
-                    "$$member.user",
-                    new mongoose.Types.ObjectId(authUser._id),
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        // Ajouter un champ temporaire 'userOrder' pour trier
-        $addFields: {
-          userOrder: "$currentUserMember.order",
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "members.user",
-          foreignField: "_id",
-          as: "membersData",
-        },
-      },
-      {
-        $addFields: {
-          members: {
-            $map: {
-              input: "$members",
-              as: "member",
-              in: {
-                role: "$$member.role",
-                order: "$$member.order",
-                user: {
-                  $arrayElemAt: [
-                    {
-                      $map: {
-                        input: {
-                          $filter: {
-                            input: "$membersData",
-                            as: "userData",
-                            cond: { $eq: ["$$userData._id", "$$member.user"] },
-                          },
-                        },
-                        as: "filteredUser",
-                        in: {
-                          $mergeObjects: [
-                            "$$filteredUser",
-                            { password: "$$REMOVE" },
-                          ],
-                        },
-                      },
-                    },
-                    0,
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "_id",
-          foreignField: "projectId",
-          as: "tasks",
-        },
-      },
-      {
-        $addFields: {
-          tasksCount: { $size: "$tasks" },
-        },
-      },
-      {
-        $project: {
-          tasks: 0,
-          currentUserMember: 0,
-          membersData: 0,
+          "members.user": authUser._id,
         },
       },
       {
         $sort: {
-          userOrder: 1,
+          name: 1,
         },
       },
     ]);
@@ -222,90 +125,12 @@ export async function getProject(req, res, next) {
     const project = await ProjectModel.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(req.params.id),
-        },
-      },
-      // On effectue d'abord le lookup pour obtenir les informations des utilisateurs
-      {
-        $lookup: {
-          from: "users",
-          localField: "members.user",
-          foreignField: "_id",
-          as: "membersData",
-        },
-      },
-      // Ensuite on restructure le tableau members pour remplacer l'ObjectId par les données utilisateur tout en gardant le rôle
-      {
-        $addFields: {
-          members: {
-            $map: {
-              input: "$members",
-              as: "member",
-              in: {
-                // On conserve le rôle de la structure originale
-                role: "$$member.role",
-                // On remplace l'ObjectId par l'objet utilisateur complet (sans le mot de passe)
-                user: {
-                  $arrayElemAt: [
-                    {
-                      $map: {
-                        input: {
-                          $filter: {
-                            input: "$membersData",
-                            as: "userData",
-                            cond: { $eq: ["$$userData._id", "$$member.user"] },
-                          },
-                        },
-                        as: "filteredUser",
-                        in: {
-                          $mergeObjects: [
-                            "$$filteredUser",
-                            { password: "$$REMOVE" },
-                          ],
-                        },
-                      },
-                    },
-                    0,
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "boards",
-          localField: "_id",
-          foreignField: "projectId",
-          as: "boards",
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "boards._id",
-          foreignField: "boardId",
-          as: "tasks",
-        },
-      },
-      {
-        $addFields: {
-          boardsCount: { $size: "$boards" },
-          tasksCount: { $size: "$tasks" },
-        },
-      },
-      {
-        $project: {
-          "author.password": 0,
-          membersData: 0,
-          boards: 0,
-          tasks: 0,
+          _id: mongoose.Types.ObjectId.createFromHexString(req.params.id),
         },
       },
     ]);
 
-    if (!project.length) {
+    if (project.length === 0) {
       return res.status(404).send({
         success: false,
         message: "Aucun projet n'a été trouvé dans la base de données",
