@@ -14,7 +14,8 @@ export default function TaskEditPriority({
   currentPriority,
   setCurrentPriority,
 }) {
-  const { project, priorities, mutatePriorities } = useProjectContext();
+  const { project, mutateTasks, priorities, mutatePriorities } =
+    useProjectContext();
   const [isHover, setIsHover] = useState(false);
   const [name, setName] = useState(priority?.name || "");
   const [moreColor, setMoreColor] = useState(false);
@@ -55,6 +56,7 @@ export default function TaskEditPriority({
     }
 
     mutatePriorities();
+    mutateTasks();
   }
 
   async function handleUpdatePriorityColor(newColor = color) {
@@ -83,6 +85,7 @@ export default function TaskEditPriority({
     }
 
     mutatePriorities();
+    mutateTasks();
   }
 
   async function handleDeletePriority() {
@@ -98,6 +101,7 @@ export default function TaskEditPriority({
     }
 
     mutatePriorities();
+    mutateTasks();
   }
 
   const handleUpdatePriorityNameDebouced = useDebouncedCallback(() => {
@@ -133,7 +137,7 @@ export default function TaskEditPriority({
         }}
         className={bricolageGrostesque.className}
       />
-      {priorities.length > 1 && (
+      {!priority?.default && (
         <X
           className={styles.delete}
           data-show={isHover}

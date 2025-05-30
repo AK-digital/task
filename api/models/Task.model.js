@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { allowedPriorities, allowedStatus } from "../utils/utils.js";
+import MessageModel from "./Message.model.js";
+import { destroyMessageFiles } from "../helpers/cloudinary.js";
 const { Schema } = mongoose;
 
 const taskSchema = new Schema(

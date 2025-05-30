@@ -1,4 +1,5 @@
 import StatusModel from "../models/Status.model.js";
+import TaskModel from "../models/Task.model.js";
 
 export async function saveStatus(req, res) {
   try {
@@ -16,6 +17,7 @@ export async function saveStatus(req, res) {
       projectId: projectId,
       name: name,
       color: color,
+      default: false,
     });
 
     const savedStatus = await newStatus.save();
@@ -162,21 +164,32 @@ export async function deleteStatus(req, res) {
   try {
     const { projectId } = req.query;
 
-    const statuses = await StatusModel.findOne({ projectId: projectId });
+    const status = await StatusModel.findById({ _id: req.params.id });
 
-    if (!statuses) {
+    if (!status) {
       return res.status(400).send({
         success: false,
         message: "Impossible to delete a status that does not exist",
       });
     }
 
-    if (statuses.name === "En attente") {
+    if (status.default) {
       return res.status(400).send({
         success: false,
-        message: "Impossible to delete the default status",
+        message: "Impossible to delete a default status",
       });
     }
+
+    const defaultStatus = await StatusModel.findOne({
+      projectId: projectId,
+      default: true,
+      status: "waiting",
+    });
+
+    await TaskModel.updateMany(
+      { status: status?._id },
+      { $set: { status: defaultStatus?._id } }
+    );
 
     const deletedStatus = await StatusModel.findByIdAndDelete({
       _id: req.params.id,

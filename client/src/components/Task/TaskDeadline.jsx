@@ -16,6 +16,8 @@ export default function TaskDeadline({ task, uid }) {
   const [isEditing, setIsEditing] = useState(false);
   const project = task?.projectId;
 
+  console.log(task.status);
+
   useEffect(() => {
     // Update deadline when task is updated (from another user)
     setDeadline(task?.deadline?.split("T")[0] || "");
@@ -92,10 +94,9 @@ export default function TaskDeadline({ task, uid }) {
   };
 
   const pastDeadline =
-    moment().isAfter(moment(deadline)) && task?.status?.name !== "Terminée";
+    moment().isAfter(moment(deadline)) && task?.status?.status !== "done";
   const isToday =
-    moment().isSame(moment(deadline), "day") &&
-    task?.status?.name !== "Terminée";
+    moment().isSame(moment(deadline), "day") && task?.status?.status !== "done";
 
   const handleHover = useCallback(() => {
     const isAuthorized = checkRole(

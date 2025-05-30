@@ -253,7 +253,7 @@ export async function updateProjectLogo(req, res) {
 // Only the author will be able to delete the project
 export async function deleteProject(req, res, next) {
   try {
-    const deletedProject = await ProjectModel.findById({
+    const deletedProject = await ProjectModel.findByIdAndDelete({
       _id: req.params.id,
     });
 
@@ -263,11 +263,6 @@ export async function deleteProject(req, res, next) {
         message: "Impossible de supprimer un projet inexistant",
       });
     }
-
-    // Cascade delete related boards and tasks
-    await BoardModel.deleteMany({ projectId: deletedProject?._id });
-    await TaskModel.deleteMany({ projectId: deletedProject?._id });
-    await ProjectModel.findByIdAndDelete({ _id: req.params.id });
 
     return res.status(200).send({
       success: true,
