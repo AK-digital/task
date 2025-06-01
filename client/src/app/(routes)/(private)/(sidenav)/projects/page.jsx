@@ -15,7 +15,7 @@ export default function Projects() {
 
   return (
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">
-      <div className="relative flex items-center flex-col rounded-tl-2xl bg-background-primary-transparent h-full pl-6 pt-6 overflow-hidden">
+      <div className="relative flex items-center flex-col rounded-tl-2xl bg-background-primary-transparent h-full pl-6 pt-6">
         <div onClick={() => router.back()} className="absolute z-2 top-20 left-10 cursor-pointer">
           <ArrowLeftCircle size={32} />
         </div>

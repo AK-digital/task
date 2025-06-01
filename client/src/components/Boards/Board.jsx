@@ -8,7 +8,6 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { useDroppable } from "@dnd-kit/core";
 import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";
-import { bricolageGrostesque } from "@/utils/font";
 import { useProjectContext } from "@/context/ProjectContext";
 
 const initialState = {
@@ -160,7 +159,7 @@ export default function Board({
               <button
                 type="submit"
                 hidden
-                className={bricolageGrostesque.className}
+                className="font-bricolage"
               >
                 Ajouter une tâche
               </button>

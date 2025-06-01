@@ -246,7 +246,7 @@ export function displayPicture(user, width, height) {
         height={height}
         quality={100}
         alt={`Photo de ${user?.firstName}`}
-        style={{ borderRadius: "50%", minHeight: height, minWidth: width }}
+        className={`w-[${width}px] h-[${height}px] max-w-[${width}px] max-h-[${height}px] min-h-[${height}px] min-w-[${width}px] rounded-full`}
       />
     );
   } else {

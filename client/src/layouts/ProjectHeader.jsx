@@ -37,6 +37,7 @@ export default function ProjectHeader({ displayedFilters }) {
                         user={member?.user}
                         width={"32px"}
                         height={"32px"}
+                        className="!mt-[5px]"
                       />
                     )}
                   </div>

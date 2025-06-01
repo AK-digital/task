@@ -35,7 +35,6 @@ import {
   UnderlineIcon,
   Undo2,
 } from "lucide-react";
-import { bricolageGrostesque } from "@/utils/font";
 import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
 import socket from "@/utils/socket";

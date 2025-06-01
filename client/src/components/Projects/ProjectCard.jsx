@@ -68,7 +68,7 @@ export default function ProjectCard({
 
   return (
     <div key={projectId} className="relative w-full max-w-[290px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl overflow-visible transition-all duration-200 ease-in-out cursor-pointer mt-6 no-underline hover:-translate-y-0.5">
-      <div className={`relative ${isDefaultProject ? '-top-[5px] bg-[#e9e7dd]' : 'top-px left-0 bg-background-secondary-color'} w-40 h-[30px] rounded-tl-2xl rounded-tr-0 rounded-bl-0 rounded-br-0 clip-path-[path("M_0_0_L_128_0_C_144_2_136_24,_160_34_L_0_34_Z")]`}>
+      <div className={`relative ${isDefaultProject ? '-top-[5px] bg-[#e9e7dd]' : 'top-px left-0 bg-background-secondary-color'} w-40 h-[30px] rounded-tl-2xl rounded-tr-0 rounded-bl-0 rounded-br-0 [clip-path:path('M_0_0_L_128_0_C_144_2_136_24,_160_34_L_0_34_Z')]`}>
 
         <Star
           size={16}
@@ -78,7 +78,7 @@ export default function ProjectCard({
       </div>
 
       <Link href={href}>
-        <div className={`${isDefaultProject ? 'absolute w-full top-6 bg-[#e9e7dd]' : 'bg-background-secondary-color'} py-[18px] px-[22px] rounded-tr-2xl rounded-bl-2xl rounded-br-2xl rounded-tl-none transition-all duration-200 ease-in-out hover:shadow-[10px_10px_10px_rgba(0,0,0,0.1)]`}>
+        <div className={`${isDefaultProject ? 'absolute w-full top-6 bg-[#e9e7dd]' : 'bg-background-secondary-color'} py-[18px] px-[22px] rounded-tr-2xl rounded-bl-2xl rounded-br-2xl rounded-tl-none transition-all duration-200 ease-in-out hover:shadow-[10px_10px_10px_rgba(0,0,0,0.1)] hover:!text-transparent`}>
           
           {isDefaultProject ? (
             <div className="flex justify-between w-full rounded-2xl">
@@ -92,7 +92,7 @@ export default function ProjectCard({
                 />
               </div>
 
-              <div className="flex w-[30px] h-[30px] rounded-full bg-[#d0cec7]">
+              <div className="flex w-[30px] h-[30px] max-w-[30px] max-h-[30px] rounded-full bg-[#d0cec7]">
                 <div className="-ml-2"></div>
               </div>
             </div>
@@ -104,7 +104,7 @@ export default function ProjectCard({
                 alt="project"
                 width={45}
                 height={45}
-                className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px] cursor-pointer"
+                className="rounded-full w-[45px] h-[45px] max-w-[45px] max-h-[45px] cursor-pointer"
               />
 
               <ProjectMembers members={members} />

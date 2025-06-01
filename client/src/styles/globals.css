@@ -886,10 +886,10 @@
     text-decoration: underline;
   }
 
-  img,
+  /* img,
   video {
     height: unset !important;
-  }
+  } */
 
   button {
     border-radius: var(--border-radius-large);

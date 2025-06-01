@@ -13,7 +13,6 @@ import {
   Pencil,
 } from "lucide-react";
 import Link from "next/link";
-import { bricolageGrostesque } from "@/utils/font";
 import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
