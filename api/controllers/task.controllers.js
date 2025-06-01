@@ -31,7 +31,15 @@ export async function saveTask(req, res, next) {
       projectId: projectId,
     });
 
-    const status = await StatusModel.findById({ projectId: projectId });
+    const status = await StatusModel.findOne({
+      projectId: projectId,
+      status: "waiting",
+    });
+
+    const priority = await PriorityModel.findOne({
+      projectId: projectId,
+      priority: "medium",
+    });
 
     const newTask = new TaskModel({
       author: authUser?._id,
@@ -39,6 +47,8 @@ export async function saveTask(req, res, next) {
       boardId: boardId,
       text: text,
       order: tasks ? tasks.length - 0 : 0,
+      status: status?._id,
+      priority: priority?._id,
     });
 
     const savedTask = await newTask.save();
@@ -106,7 +116,7 @@ export async function getTasks(req, res, next) {
       })
       .populate({
         path: "status",
-        select: "name color projectId",
+        select: "status name color projectId",
       })
       .populate({
         path: "priority",

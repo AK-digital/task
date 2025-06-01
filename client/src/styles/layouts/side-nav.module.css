@@ -49,9 +49,7 @@
 
 /* .container_SortableProject {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+
   cursor: pointer;
   transition: all linear 150ms;
   color: var(--text-lighter-color);

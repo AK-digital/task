@@ -44,11 +44,21 @@ export async function getFavorites(req, res) {
   try {
     const authUser = res.locals.user;
 
-    const favorites = await FavoriteModel.find({ user: authUser?._id })
-      .populate("project")
-      .exec();
+    const favorites = await FavoriteModel.aggregate([
+      { $match: { user: authUser._id } },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "project",
+          foreignField: "_id",
+          as: "project",
+        },
+      },
+      { $unwind: "$project" },
+      { $sort: { "project.name": 1 } },
+    ]);
 
-    if (!favorites) {
+    if (!favorites || favorites.length === 0) {
       return res.status(404).send({
         success: false,
         message: "No favorites found",

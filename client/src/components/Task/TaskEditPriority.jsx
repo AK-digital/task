@@ -12,7 +12,8 @@ export default function TaskEditPriority({
   currentPriority,
   setCurrentPriority,
 }) {
-  const { project, priorities, mutatePriorities } = useProjectContext();
+  const { project, mutateTasks, priorities, mutatePriorities } =
+    useProjectContext();
   const [isHover, setIsHover] = useState(false);
   const [name, setName] = useState(priority?.name || "");
   const [moreColor, setMoreColor] = useState(false);
@@ -53,6 +54,7 @@ export default function TaskEditPriority({
     }
 
     mutatePriorities();
+    mutateTasks();
   }
 
   async function handleUpdatePriorityColor(newColor = color) {
@@ -81,6 +83,7 @@ export default function TaskEditPriority({
     }
 
     mutatePriorities();
+    mutateTasks();
   }
 
   async function handleDeletePriority() {
@@ -96,6 +99,7 @@ export default function TaskEditPriority({
     }
 
     mutatePriorities();
+    mutateTasks();
   }
 
   const handleUpdatePriorityNameDebouced = useDebouncedCallback(() => {
@@ -134,7 +138,7 @@ export default function TaskEditPriority({
         }}
         className="border-none py-2 pr-4 !pl-7.5 rounded-border-radius-large bg-text-lighter-color text-[15px] whitespace-nowrap text-ellipsis font-bricolage"
       />
-      {priorities.length > 1 && (
+      {!priority?.default && (
         <X
           className="opacity-0 absolute text-text-dark-color -right-4.5 data-[show=true]:opacity-100"
           size={18}

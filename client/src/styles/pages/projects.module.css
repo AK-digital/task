@@ -55,17 +55,18 @@
     border-radius: var(--border-radius-small);
 }
 
+.wrapper {
+    width: 100%;
+    overflow: auto;
+}
 .elements {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 80px 60px;
-    justify-content: center;
-    width: 100%;
-  max-width: calc(4 * 310px + 3 * 60px); /* 4 colonnes + 3 gaps entre elles */
-/*
+    grid-template-columns: repeat(4, 1fr);
+    gap: 70px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding-top: 60px;
-    padding-bottom: 60px;
-    padding-right: var(--layout-gap);
+    padding: 16px 12px;
+    
+    
+    "grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-y-20 gap-x-15 justify-center w-full max-w-[calc(4*310px+3*60px)] mx-auto pt-15 pb-15 pr-6"
 }
-*/

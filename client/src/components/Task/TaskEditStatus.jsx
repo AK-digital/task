@@ -12,7 +12,8 @@ export default function TaskEditStatus({
   currentStatus,
   setCurrentStatus,
 }) {
-  const { project, statuses, mutateStatuses } = useProjectContext();
+  const { project, mutateTasks, statuses, mutateStatuses } =
+    useProjectContext();
   const [isHover, setIsHover] = useState(false);
   const [name, setName] = useState(status?.name || "");
   const [moreColor, setMoreColor] = useState(false);
@@ -56,7 +57,9 @@ export default function TaskEditStatus({
     }
 
     mutateStatuses();
+    mutateTasks();
   }
+
   async function handleUpdateStatusColor(newColor = color) {
     if (!canEdit) return;
     setMoreColor(false);
@@ -82,6 +85,7 @@ export default function TaskEditStatus({
     }
 
     mutateStatuses();
+    mutateTasks();
   }
 
   // Only authorized users can delete a status and there must be more than one status
@@ -98,6 +102,7 @@ export default function TaskEditStatus({
     }
 
     mutateStatuses();
+    mutateTasks();
   }
 
   const handleUpdateStatusNameDebouced = useDebouncedCallback(() => {
@@ -136,7 +141,7 @@ export default function TaskEditStatus({
         }}
         className="border-none py-2 pr-4 !pl-7.5 rounded-border-radius-large bg-text-lighter-color text-[15px] whitespace-nowrap text-ellipsis font-bricolage"
       />
-      {statuses.length > 1 && (
+      {!status?.default && (
         <X
           className="opacity-0 absolute text-text-dark-color -right-4.5 data-[show=true]:opacity-100"
           data-show={isHover}
