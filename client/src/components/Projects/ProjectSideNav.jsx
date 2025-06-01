@@ -17,7 +17,7 @@ export default function ProjectSideNav({ project, open, isActive }) {
     <div data-active={isActive}>
       <Link 
       href={`/projects/${project._id}`} 
-      className="flex items-center gap-3 no-underline text-text-lighter-color"
+      className="container_ProjectSideNav group relative flex items-center gap-3 cursor-pointer transition-all ease-linear duration-150 text-text-lighter-color"
       >
         <div className="max-w-[42px] max-h-[42px]">
           <Image
@@ -26,10 +26,10 @@ export default function ProjectSideNav({ project, open, isActive }) {
             height={42}
             alt="project logo"
             data-active={isActive} // Ajout de data-active sur l'image aussi
-            className="w-[42px] h-[42px] max-w-[42px] max-h-[42px] rounded-full"
+            className="rounded-full min-w-[42px] min-h-[42px] w-full h-full object-fill border-2 group-hover:border-2 group-hover:bg-color-accent-color"
           />
         </div>
-        {open && <span>{project?.name}</span>}
+        {open && <span className="text-text-size-small whitespace-nowrap overflow-hidden text-ellipsis mr-5 font-light">{project?.name}</span>}
       </Link>
     </div>
   );

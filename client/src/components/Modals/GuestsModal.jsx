@@ -82,7 +82,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         {/* Guests list */}
         {isNotEmpty(members) && (
           <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
-            <ul className="flex flex-col gap-3.5">
+            <ul className="flex flex-col gap-3.5 mt-6">
               {members.map((member) => {
                 return (
                   <li key={member?.user?._id} className="flex justify-between items-center gap-3">
