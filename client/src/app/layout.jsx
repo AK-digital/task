@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { bricolageGrostesque } from "@/utils/font";
 import moment from "moment-timezone";
+import I18nProvider from "@/components/providers/I18nProvider";
 moment.tz.setDefault("Europe/Paris");
 
 export const metadata = {
@@ -24,7 +25,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr">
-      <body className={bricolageGrostesque.className}>{children}</body>
+      <body className={bricolageGrostesque.className}>
+        <I18nProvider>{children}</I18nProvider>
+      </body>
       <Analytics />
     </html>
   );
