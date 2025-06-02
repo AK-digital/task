@@ -7,7 +7,7 @@ import { upload } from "../middlewares/multer.middlewares.js";
 
 router.post("/", authMiddlewares.auth, projectControllers.saveProject);
 
-router.get("/", authMiddlewares.auth, projectControllers.getProjects);
+router.get("/", authMiddlewares.auth, projectControllers.getUserProjects);
 
 router.get(
   "/:id",

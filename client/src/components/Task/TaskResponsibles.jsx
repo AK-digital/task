@@ -1,11 +1,13 @@
 import styles from "@/styles/components/task/task-responsibles.module.css";
-import { displayPicture, isNotEmpty, sendNotification } from "@/utils/utils";
+import { isNotEmpty, sendNotification } from "@/utils/utils";
 import { PlusCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
 import socket from "@/utils/socket";
 import { getFloating, usePreventScroll } from "@/utils/floating";
+import DisplayPicture from "@/components/User/DisplayPicture.jsx";
+
 
 export default function TaskResponsibles({ task, uid, user }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -102,7 +104,14 @@ export default function TaskResponsibles({ task, uid, user }) {
           responsibles.slice(0, 3).map((responsible) => {
             return (
               <div className={styles.images} key={responsible?._id}>
-                {displayPicture(responsible, 30, 30)}
+                <DisplayPicture
+                  user={responsible}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                  }}
+                />
               </div>
             );
           })
@@ -131,7 +140,15 @@ export default function TaskResponsibles({ task, uid, user }) {
                       key={responsible?._id}
                       onClick={() => handleRemoveResponsible(responsible)}
                     >
-                      {displayPicture(responsible, 24, 24)}
+                      <DisplayPicture
+                        user={responsible}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "50%",
+                        }}
+                        isPopup={false}
+                      />
                       <span>
                         {responsible.firstName + " " + responsible?.lastName}
                       </span>
@@ -152,7 +169,14 @@ export default function TaskResponsibles({ task, uid, user }) {
                         key={member?.user?._id}
                         onClick={() => handleAddResponsible(member?.user)}
                       >
-                        {displayPicture(member?.user, 24, 24)}
+                        <DisplayPicture
+                          user={member?.user}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            borderRadius: "50%",
+                          }}
+                        />
                         <span>{member?.user?.email}</span>
                       </li>
                     );

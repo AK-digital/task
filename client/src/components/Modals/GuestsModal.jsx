@@ -8,10 +8,10 @@ import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 import { AuthContext } from "@/context/auth";
 import { deleteProjectInvitation } from "@/actions/projectInvitation";
-import NoPicture from "../User/NoPicture";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
 import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
+import DisplayPicture from "../User/DisplayPicture";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const initialState = {
@@ -88,19 +88,14 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                 return (
                   <li key={member?.user?._id} className={styles.member}>
                     <div className={styles.user}>
-                      {member?.user?.picture ? (
-                        <Image
-                          src={member?.user?.picture || "/default-pfp.webp"}
-                          width={32}
-                          height={32}
-                          alt={`Photo de profil de ${member?.firstName}`}
-                          style={{
-                            borderRadius: "50%",
-                          }}
-                        />
-                      ) : (
-                        <NoPicture user={member?.user} width={32} height={32} />
-                      )}
+                      <DisplayPicture
+                        user={member?.user}
+                        style={{
+                          borderRadius: "50%",
+                          width: "32px",
+                          height: "32px",
+                        }}
+                      />
                       <span
                         className={styles.email}
                         title={member?.user?.email}

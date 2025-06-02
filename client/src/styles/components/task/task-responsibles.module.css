@@ -29,7 +29,7 @@
 .images:not(:first-child) div {
   width: 36px !important;
   height: 36px !important;
-  border: 3px solid var(--secondary-background-color);
+  border: 2px solid var(--secondary-background-color);
 }
 
 .length {
@@ -44,9 +44,10 @@
   min-height: 26px;
   height: 26px;
   padding: 4px;
-  right: 3px;
+  right: 0;
   bottom: 8px;
-  border: 3px solid var(--secondary-background-color);
+  border: 2px solid var(--secondary-background-color);
+  font-size: 15px;
 }
 
 .modal {

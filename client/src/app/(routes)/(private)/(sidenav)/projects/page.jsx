@@ -1,83 +1,62 @@
 "use client";
-
 import styles from "@/styles/pages/projects.module.css";
-import { getProjects } from "@/api/project";
-import Image from "next/image";
-import { isNotEmpty } from "@/utils/utils";
-import { ListTodo, Users, Plus, ArrowLeftCircle } from "lucide-react";
-import Link from "next/link";
-import useSWR from "swr";
+import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import ProjectCard from "@/components/Projects/ProjectCard";
+import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
+import { useProjects } from "@/app/hooks/useProjects";
+import { AuthContext } from "@/context/auth";
+import { useContext } from "react";
 
 export default function Projects() {
   const router = useRouter();
-  const { data: projects } = useSWR("/api/project", getProjects);
+  const { uid } = useContext(AuthContext);
+  const { projects, projectsLoading, mutateProjects } = useProjects();
+
+  // Trier les projets par favoris (favoris en premier)
+  const sortedProjects = projects?.sort((a, b) => {
+    const aIsFavorite = a?.favorites?.some((fav) => fav?.user === uid) || false;
+    const bIsFavorite = b?.favorites?.some((fav) => fav?.user === uid) || false;
+
+    return bIsFavorite - aIsFavorite;
+  });
 
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <div className={styles.back} onClick={() => router.back()}>
-          <ArrowLeftCircle size={32} />
-        </div>
         <div className={styles.header}>
-          <h1>Vos projets</h1>
+          <div className={styles.back} onClick={() => router.back()}>
+            <ArrowLeftCircle size={32} />
+          </div>
+          <h1 className={styles.headerH1}>Vos projets</h1>
           <div className={styles.projectCount}>
-            <span>{projects?.length} projets</span>
+            <span>
+              {projectsLoading ? "..." : `${projects?.length} projets`}
+            </span>
           </div>
         </div>
-
-        {isNotEmpty(projects) ? (
+        <div className={styles.wrapper}>
           <div className={styles.elements}>
-            {/* Projets existants */}
-            {projects?.map((project) => (
-              <div key={project?._id}>
-                <Link href={`/projects/${project?._id}`}>
-                  <div className={styles.element}>
-                    <Image
-                      className={styles.logo}
-                      src={project?.logo || "/default-project-logo.webp"}
-                      alt="project"
-                      width={45}
-                      height={45}
-                      style={{ borderRadius: "50%", cursor: "pointer" }}
+            {projectsLoading ? (
+              <ProjectCardSkeleton />
+            ) : (
+              <>
+                {sortedProjects?.map((project) => {
+                  return (
+                    <ProjectCard
+                      key={project?._id}
+                      project={project}
+                      mutateProjects={mutateProjects}
+                      href={`/projects/${project?._id}`}
                     />
-                    <div className={styles.infos}>
-                      <div className={styles.name}>
-                        <span>{project?.name}</span>
-                      </div>
-                      <div className={styles.stats}>
-                        <span>
-                          <ListTodo size={16} />
-                          {project?.tasksCount}
-                        </span>
-                        <span>
-                          <Users size={16} />
-                          {project?.members?.length}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
-
+                  );
+                })}
+              </>
+            )}
             {/* Élément pour créer un nouveau projet */}
-            <div className={`${styles.element} ${styles.newProject}`}>
-              <Link href="/new-project">
-                <div className={styles.newProjectContent}>
-                  <div className={styles.plusIconWrapper}>
-                    <Plus size={30} />
-                  </div>
-                  <div className={styles.newProjectText}>
-                    <span>Créer un nouveau projet</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
+            <ProjectCard href="/new-project" isDefault={true} />
           </div>
-        ) : (
-          <div className={styles.empty}>Créez ou sélectionnez un projet.</div>
-        )}
+        </div>
       </div>
     </main>
   );

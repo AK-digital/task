@@ -15,5 +15,7 @@ export function useProjects() {
 
   return {
     projects: data,
+    projectsLoading: isLoading,
+    mutateProjects: mutate,
   };
 }

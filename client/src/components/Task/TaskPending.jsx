@@ -10,7 +10,7 @@ export function TaskPending({ text }) {
       </div>
 
       <div className={`${styles.grip} ${styles.row}`}>
-        <GripVertical size={20} />
+        <GripVertical size={16} />
       </div>
 
       <div className={styles.text}>
