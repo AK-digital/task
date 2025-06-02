@@ -4,6 +4,7 @@ import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 import { Pen, Plus, Save } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditStatus from "./TaskEditStatus";
@@ -18,6 +19,14 @@ export default function TaskStatus({ task, uid }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const maxStatuses = statuses?.length === 12;
+
+  const { refs, floatingStyles } = getFloating(isOpen, setIsOpen);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   const canEdit = useUserRole(project, [
     "owner",
@@ -103,12 +112,14 @@ export default function TaskStatus({ task, uid }) {
         className={styles.current}
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
+        ref={refs.setReference}
       >
         <span>{currentStatus?.name || "En attente"}</span>
       </div>
       {isOpen && (
         <>
-          <div className={styles.list} data-big={listWidth()}>
+          <div className={styles.list} data-big={listWidth()} ref={refs.setFloating}
+            style={floatingStyles}>
             <ul className={styles.items}>
               {statuses?.map((status) => {
                 if (!isEdit) {

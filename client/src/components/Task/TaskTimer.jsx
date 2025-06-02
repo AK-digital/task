@@ -7,6 +7,7 @@ import {
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import styles from "@/styles/components/task/task-timer.module.css";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
 import { formatTime, isNotEmpty } from "@/utils/utils";
 import { CirclePause, CirclePlay } from "lucide-react";
@@ -38,6 +39,14 @@ export default function TaskTimer({ task }) {
   const project = task?.projectId;
 
   const canAdd = useUserRole(project, ["owner", "manager", "team"]);
+
+  const { refs, floatingStyles } = getFloating(more, setMore);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   // Restaurer l'état du chronomètre lors du chargement du composant
   useEffect(() => {
@@ -163,13 +172,18 @@ export default function TaskTimer({ task }) {
             )}
           </>
         )}
-        <span onClick={() => setMore(true)}>
+        <span onClick={() => setMore(true)} ref={refs.setReference}>
           {formattedHours + ":" + formattedMinutes + ":" + formattedSeconds}
         </span>
       </span>
       {more && (
         <>
-          <div className={styles.more} id="popover">
+          <div
+            className={styles.more}
+            id="popover"
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <div className={styles.title}>
               <span>Gestion du temps</span>
               {addingSession && (

@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
 import socket from "@/utils/socket";
-import DisplayPicture from "../User/DisplayPicture";
+import { getFloating, usePreventScroll } from "@/utils/floating";
+import DisplayPicture from "@/components/User/DisplayPicture.jsx";
+
 
 export default function TaskResponsibles({ task, uid, user }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -17,6 +19,10 @@ export default function TaskResponsibles({ task, uid, user }) {
   const project = task?.projectId;
 
   const canAdd = useUserRole(project, ["owner", "manager", "team", "customer"]);
+
+  const { refs, floatingStyles } = getFloating(isMoreOpen, setIsMoreOpen);
+
+  usePreventScroll({ shouldPrevent: isMoreOpen, mode: "body" });
 
   async function handleAddResponsible(member) {
     if (!canAdd) return;
@@ -88,7 +94,12 @@ export default function TaskResponsibles({ task, uid, user }) {
 
   return (
     <div className={styles.container} id="task-row">
-      <div className={styles.wrapper} id="task-row" onClick={handleIsMoreOpen}>
+      <div
+        className={styles.wrapper}
+        id="task-row"
+        onClick={handleIsMoreOpen}
+        ref={refs.setReference}
+      >
         {isNotEmpty(responsibles) ? (
           responsibles.slice(0, 3).map((responsible) => {
             return (
@@ -114,7 +125,11 @@ export default function TaskResponsibles({ task, uid, user }) {
 
       {isMoreOpen && (
         <>
-          <div className={styles.modal}>
+          <div
+            className={styles.modal}
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             {/* Responsibles */}
             {isNotEmpty(responsibles) && (
               <div className={styles.responsibles}>
@@ -145,7 +160,7 @@ export default function TaskResponsibles({ task, uid, user }) {
             )}
             <span className={styles.subtitle}>Personnes à inviter</span>
             {/* Members */}
-            <div>
+            <div className={`${styles.members} ${styles.scrollable}`}>
               {isNotEmpty(members) && (
                 <ul>
                   {members?.map((member) => {

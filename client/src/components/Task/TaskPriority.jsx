@@ -3,11 +3,13 @@ import { updateTaskPriority } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 import { Pen, Plus, Save } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
+
 
 export default function TaskPriority({ task }) {
   const { project, mutateTasks, priorities, mutatePriorities } =
@@ -25,6 +27,17 @@ export default function TaskPriority({ task }) {
     "customer",
   ]);
 
+  const { refs, floatingStyles } = getFloating(isOpen, setIsOpen);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
+
+  async function handleUpdateStatus(e) {
+    const value = e.target.dataset.value;
+    setPriority(value);
   async function handleTaskUpdatePriority(priority) {
     if (!canEdit) return;
 
@@ -110,12 +123,14 @@ export default function TaskPriority({ task }) {
         className={styles.current}
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
+        ref={refs.setReference}
       >
         <span>{currentPriority?.name || "Basse"}</span>
       </div>
       {isOpen && (
         <>
-          <div className={styles.list} data-big={listWidth()}>
+          <div className={styles.list} data-big={listWidth()}  ref={refs.setFloating}
+            style={floatingStyles}>
             <ul className={styles.items}>
               {priorities?.map((priority) => {
                 if (!isEdit) {

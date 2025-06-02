@@ -2,6 +2,7 @@
 import { updateTaskEstimate } from "@/api/task";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import styles from "@/styles/components/task/task-estimate.module.css";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 import { XCircle } from "lucide-react";
@@ -16,6 +17,14 @@ export default function TaskEstimate({ task, uid }) {
   const hasEstimation = estimation !== "-";
   const project = task?.projectId;
   const canEdit = useUserRole(project, ["owner", "manager", "team"]);
+
+  const { refs, floatingStyles } = getFloating(isEditing, setIsEditing);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   // Update estimation when task is updated (from another user)
   useEffect(() => {
@@ -107,6 +116,7 @@ export default function TaskEstimate({ task, uid }) {
         data-estimation={hasEstimation}
         className={styles.wrapper}
         onClick={handleIsEditing}
+        ref={refs.setReference}
       >
         <span>{estimation}</span>
       </div>
@@ -117,7 +127,12 @@ export default function TaskEstimate({ task, uid }) {
       )}
       {isEditing && (
         <>
-          <div className={styles.edit} id="popover">
+          <div
+            className={styles.edit}
+            id="popover"
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <div className={styles.suggestions}>
               <span
                 className={styles.suggestion}
