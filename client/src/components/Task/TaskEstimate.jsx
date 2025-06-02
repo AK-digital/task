@@ -1,6 +1,7 @@
 "use client";
 import { updateTaskEstimate } from "@/api/task";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
 import { XCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -14,6 +15,14 @@ export default function TaskEstimate({ task, uid }) {
   const hasEstimation = estimation !== "-";
   const project = task?.projectId;
   const canEdit = useUserRole(project, ["owner", "manager", "team"]);
+
+  const { refs, floatingStyles } = getFloating(isEditing, setIsEditing);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   // Update estimation when task is updated (from another user)
   useEffect(() => {
@@ -104,6 +113,7 @@ export default function TaskEstimate({ task, uid }) {
       <div
         data-estimation={hasEstimation}
         onClick={handleIsEditing}
+        ref={refs.setReference}
         className="bg-background-primary-color p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
       >
         <span>{estimation}</span>
@@ -115,7 +125,11 @@ export default function TaskEstimate({ task, uid }) {
       )}
       {isEditing && (
         <>
-          <div className="absolute z-2001 bg-background-secondary-color rounded-border-radius-small top-[45px] p-2 w-[305px] shadow-shadow-box-medium">
+          <div
+            className="absolute z-2001 bg-background-secondary-color rounded-border-radius-small top-[45px] p-2 w-[305px] shadow-shadow-box-medium"
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <div className="flex justify-center flex-wrap gap-2">
               <span
                 className="p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"

@@ -7,6 +7,7 @@ import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 
 export default function TaskPriority({ task }) {
   const { project, mutateTasks, priorities, mutatePriorities } =
@@ -23,6 +24,14 @@ export default function TaskPriority({ task }) {
     "team",
     "customer",
   ]);
+
+  const { refs, floatingStyles } = getFloating(isOpen, setIsOpen);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   async function handleTaskUpdatePriority(priority) {
     if (!canEdit) return;
@@ -109,13 +118,18 @@ export default function TaskPriority({ task }) {
         className="relative w-full min-w-[110px] text-center cursor-pointer py-1 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
+        ref={refs.setReference}
       >
         <span>{currentPriority?.name || "Basse"}</span>
       </div>
       {isOpen && (
         <>
-          <div className={`absolute z-[2001] top-[45px] left-1/2 -translate-x-1/2 p-3 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-border-radius-small ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}>
-            <ul className="grid grid-flow-col grid-rows-6 gap-2 px-3 pb-3 border-b border-color-border-color">
+          <div
+            className={`absolute z-[2001] top-[45px] left-1/2 -translate-x-1/2 p-3 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
+            <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 px-3 pb-3 border-b border-color-border-color">
               {priorities?.map((priority) => {
                 if (!isEdit) {
                   return (

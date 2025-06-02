@@ -6,6 +6,7 @@ import {
 } from "@/api/timeTracking";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
 import { formatTime, isNotEmpty } from "@/utils/utils";
 import { CirclePause, CirclePlay } from "lucide-react";
@@ -37,6 +38,14 @@ export default function TaskTimer({ task }) {
   const project = task?.projectId;
 
   const canAdd = useUserRole(project, ["owner", "manager", "team"]);
+
+  const { refs, floatingStyles } = getFloating(more, setMore);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   // Restaurer l'état du chronomètre lors du chargement du composant
   useEffect(() => {
@@ -167,13 +176,17 @@ export default function TaskTimer({ task }) {
             )}
           </>
         )}
-        <span onClick={() => setMore(true)}>
+        <span onClick={() => setMore(true)} ref={refs.setReference}>
           {formattedHours + ":" + formattedMinutes + ":" + formattedSeconds}
         </span>
       </span>
       {more && (
         <>
-          <div className="flex flex-col gap-2 top-[44px] right-1 p-0 w-[400px] rounded-sm max-h-[300px] overflow-hidden shadow-shadow-box-small" id="popover">
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className="absolute flex flex-col z-2001 bg-background-secondary-color gap-2 top-[44px] right-1 p-0 w-[400px] rounded-lg max-h-[300px] overflow-hidden shadow-shadow-box-small"
+          >
             <div className="flex justify-between items-center text-[1.1rem] font-medium bg-background-third-color p-2 rounded-t">
               <span className="text-text-dark-color">Gestion du temps</span>
               {addingSession && (

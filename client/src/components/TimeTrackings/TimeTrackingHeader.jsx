@@ -10,12 +10,14 @@ export default function TimeTrackingHeader({
   const [userSort, setUserSort] = useState("");
   const [dateSort, setDateSort] = useState("");
   const [durationSort, setDurationSort] = useState("");
+  const [billableSort, setBillableSort] = useState("");
 
   const resetStates = () => {
     setUserSort("");
     setDateSort("");
     setDurationSort("");
     setProjectSort("");
+    setBillableSort("");
   };
 
   //  If trackers change reset the sort
@@ -81,17 +83,18 @@ export default function TimeTrackingHeader({
     resetStates();
     setFilteredTrackers([...trackers]);
 
-    if (sort === "asc" && durationSort !== "asc") {
-      const newTrackers = [...trackers].sort((a, b) => a.duration - b.duration);
-      setFilteredTrackers(newTrackers);
-      setDurationSort("asc");
-    }
+    if (durationSort === sort) return;
 
-    if (sort === "desc" && durationSort !== "desc") {
-      const newTrackers = [...trackers].sort((a, b) => b.duration - a.duration);
-      setFilteredTrackers(newTrackers);
-      setDurationSort("desc");
-    }
+    const newTrackers = [...trackers].sort((a, b) => {
+      if (sort === "asc") {
+        return a.duration - b.duration;
+      } else {
+        return b.duration - a.duration;
+      }
+    });
+
+    setDurationSort(sort);
+    setFilteredTrackers(newTrackers);
   };
 
   const handleSelectAllTrackers = (e) => {
@@ -109,6 +112,34 @@ export default function TimeTrackingHeader({
     });
 
     setSelectedTrackers(selectedTrackers);
+  };
+
+  const handleBillableSort = (sort) => {
+    resetStates();
+    setFilteredTrackers([...trackers]);
+
+    if (billableSort === sort) {
+      setBillableSort("");
+      return;
+    }
+
+    const newTrackers = [...trackers].sort((a, b) => {
+      // Pour le tri ascendant (chevron haut), on veut les non facturables en premier
+      if (sort === "asc") {
+        if (!a.billable && b.billable) return -1; // a non facturable en premier
+        if (a.billable && !b.billable) return 1; // b non facturable en premier
+        return 0; // garder l'ordre si même état
+      }
+      // Pour le tri descendant (chevron bas), on veut les facturables en premier
+      else {
+        if (a.billable && !b.billable) return -1; // a facturable en premier
+        if (!a.billable && b.billable) return 1; // b facturable en premier
+        return 0; // garder l'ordre si même état
+      }
+    });
+
+    setBillableSort(sort);
+    setFilteredTrackers(newTrackers);
   };
 
   return (
@@ -199,6 +230,23 @@ export default function TimeTrackingHeader({
             onClick={() => handleDurationSort("desc")}
             data-sort={durationSort === "desc"}
             className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
+          />
+        </div>
+      </div>
+      <div className={`${styles.billable} ${styles.row}`}>
+        <span>Facturable</span>
+        <div className={styles.sort}>
+          <ChevronUp
+            size={15}
+            cursor={"pointer"}
+            onClick={() => handleBillableSort("asc")}
+            data-sort={billableSort === "asc"}
+          />
+          <ChevronDown
+            size={15}
+            cursor={"pointer"}
+            onClick={() => handleBillableSort("desc")}
+            data-sort={billableSort === "desc"}
           />
         </div>
       </div>

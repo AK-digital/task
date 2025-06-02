@@ -3,13 +3,12 @@
 import Notifications from "@/components/Notifications/Notifications";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
-import { Bell, Timer } from "lucide-react";
+import { Bell } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { getNotifications } from "@/api/notification";
-import moment from "moment";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -37,24 +36,11 @@ export default function Header() {
   const unreadNotifications = notificationsData?.filter((notif) => !notif.read);
   const unreadCount = unreadNotifications?.length;
 
-  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
-  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
-
   return (
     <header className="w-full py-2.5 h-spacing-header-height">
-      <nav className="flex justify-between items-center h-full ml-30 mr-10">
-        <div className="[&_svg]:text-text-dark-color">
-          <Link href={
-              "/times?startingDate=" +
-              firstDayOfTheMonth +
-              "&endingDate=" +
-              lastDayOfTheMonth
-            }>
-            <Timer size={24} cursor={"pointer"} />
-          </Link>
-        </div>
+      <nav className="flex justify-end items-center h-full ml-30 mr-10">
         <ul className="relative flex items-center gap-6">
-          <li className="relative action flex justify-center items-center h-full">
+          <li className="relative flex justify-center items-center h-full">
             <Bell
               size={22}
               onClick={(e) => setNotifOpen(true)}

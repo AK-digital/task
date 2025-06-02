@@ -144,7 +144,7 @@ export async function updatePicture(req, res, next) {
       await destroyFile("profil", user?.picture);
     }
 
-    const uploadRes = await uploadFileBuffer("task/profil", picture?.buffer);
+    const uploadRes = await uploadFileBuffer("clynt/profil", picture?.buffer);
 
     if (!uploadRes) {
       return res.status(400).send({

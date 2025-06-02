@@ -21,7 +21,7 @@ function stripHtmlTags(html) {
 export async function sendEmail(from, to, subject, text) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: from, // sender address
+    from: `"AK Digital" <${from}>`, // sender address with display name
     to: to, // list of receivers
     replyTo: from,
     subject: subject, // Subject line
@@ -39,7 +39,7 @@ export async function sendEmail(from, to, subject, text) {
                     </div>
                     <div style="font-family: Arial, sans-serif; color: #72716f; text-align: center; font-size: 12px; margin-top: 20px; max-width: 460px;">
                       <p style="margin: 0;">
-                        Conformément à la réglementation en vigueur, cet email vous est adressé dans le cadre de votre relation avec AK Digital. Si vous pensez avoir reçu ce message par erreur, vous pouvez l’ignorer ou nous contacter.
+                        Conformément à la réglementation en vigueur, cet email vous est adressé dans le cadre de votre relation avec AK Digital. Si vous pensez avoir reçu ce message par erreur, vous pouvez l'ignorer ou nous contacter.
                       </p>
                     </div>
                      <div style="margin-top:16px;font-size:12px;font-weight:600;color:#72716f;">

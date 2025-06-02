@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
 import socket from "@/utils/socket";
-import DisplayPicture from "../User/DisplayPicture";
+import { getFloating, usePreventScroll } from "@/utils/floating";
+import DisplayPicture from "@/components/User/DisplayPicture.jsx";
+
 
 export default function TaskResponsibles({ task, uid, user }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -16,6 +18,10 @@ export default function TaskResponsibles({ task, uid, user }) {
   const project = task?.projectId;
 
   const canAdd = useUserRole(project, ["owner", "manager", "team", "customer"]);
+
+  const { refs, floatingStyles } = getFloating(isMoreOpen, setIsMoreOpen);
+
+  usePreventScroll({ shouldPrevent: isMoreOpen, mode: "body" });
 
   async function handleAddResponsible(member) {
     if (!canAdd) return;
@@ -86,8 +92,12 @@ export default function TaskResponsibles({ task, uid, user }) {
   }, [task?.responsibles]);
 
   return (
-    <div className="relative justify-center px-3 min-w-[100px] max-w-[100px] w-full border-r border-l border-text-color" id="task-row">
-      <div className="wrapper_TaskResponsibles" id="task-row" onClick={handleIsMoreOpen}>
+    <div className="relative flex items-center justify-center px-3 min-w-[100px] max-w-[100px] w-full h-full border-r border-l border-text-color">
+      <div
+        className="flex items-center h-full"
+        onClick={handleIsMoreOpen}
+        ref={refs.setReference}
+      >
         {isNotEmpty(responsibles) ? (
           responsibles.slice(0, 3).map((responsible) => {
             return (
@@ -110,7 +120,11 @@ export default function TaskResponsibles({ task, uid, user }) {
 
       {isMoreOpen && (
         <>
-          <div className="absolute w-[300px] bg-background-secondary-color shadow-shadow-box-medium rounded-border-radius-small top-[50px] z-[2001] p-2">
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className="absolute w-[300px] bg-background-secondary-color shadow-shadow-box-medium rounded-lg top-[50px] z-[2001] p-2"
+          >
             {/* Responsibles */}
             {isNotEmpty(responsibles) && (
               <div className="flex flex-wrap gap-1 mb-2">
@@ -141,7 +155,7 @@ export default function TaskResponsibles({ task, uid, user }) {
             )}
             <span className="text-[14px] font-medium text-text-color-muted">Personnes à inviter</span>
             {/* Members */}
-            <div>
+            <div className="scrollable_TaskResponsibles max-h-[200px] overflow-y-auto">
               {isNotEmpty(members) && (
                 <ul className="mt-1.5">
                   {members?.map((member) => {
@@ -168,7 +182,7 @@ export default function TaskResponsibles({ task, uid, user }) {
             </div>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={(e) => setIsMoreOpen(false)}
           ></div>
         </>

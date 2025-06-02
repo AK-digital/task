@@ -3,6 +3,7 @@ import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 import { Pen, Plus, Save } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditStatus from "./TaskEditStatus";
@@ -17,6 +18,14 @@ export default function TaskStatus({ task, uid }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const maxStatuses = statuses?.length === 12;
+
+  const { refs, floatingStyles } = getFloating(isOpen, setIsOpen);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   const canEdit = useUserRole(project, [
     "owner",
@@ -102,13 +111,18 @@ export default function TaskStatus({ task, uid }) {
         className="relative w-full min-w-[110px] text-center cursor-pointer py-1 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
+        ref={refs.setReference}
       >
         <span>{currentStatus?.name || "En attente"}</span>
       </div>
       {isOpen && (
         <>
-          <div className={`absolute z-2001 top-[45px] left-1/2 -translate-x-1/2 p-3 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-border-radius-small ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}>
-            <ul className="grid grid-flow-col grid-rows-6 gap-2 px-3 pb-3 border-b border-color-border-color">
+          <div 
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className={`absolute z-2001 top-[45px] left-1/2 -translate-x-1/2 p-3 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-border-radius-small ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
+            >
+            <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 px-3 pb-3 border-b border-color-border-color">
               {statuses?.map((status) => {
                 if (!isEdit) {
                   return (

@@ -17,8 +17,6 @@ export async function saveTimeTracking(req, res, next) {
 
   const task = await TaskModel.findById({ _id: taskId });
 
-  console.log("task", task);
-
   if (!task) {
     return res.status(404).send({
       success: false,
@@ -361,6 +359,44 @@ export async function deleteTimeTracking(req, res, next) {
       success: true,
       message: "Le temps de suivi a été supprimé",
       data: deletedTimeTracking,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTimeTrackingBillable(req, res, next) {
+  try {
+    const { billable } = req.body;
+    const timeTrackingId = req.params.id;
+
+    if (billable === undefined) {
+      return res.status(400).send({
+        success: false,
+        message: "Le statut facturable est requis",
+      });
+    }
+
+    const updatedTimeTracking = await TimeTrackingModel.findByIdAndUpdate(
+      timeTrackingId,
+      { billable: billable },
+      { new: true }
+    );
+
+    if (!updatedTimeTracking) {
+      return res.status(404).send({
+        success: false,
+        message: "Temps de suivi non trouvé",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Statut facturable mis à jour avec succès",
+      data: updatedTimeTracking,
     });
   } catch (err) {
     return res.status(500).send({

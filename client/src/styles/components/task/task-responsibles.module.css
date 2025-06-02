@@ -107,4 +107,14 @@
 
 .modal li:hover {
   background-color: var(--third-background-color);
-} */
+}
+
+.members {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.scrollable {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch; /* iOS smooth scroll */
+}

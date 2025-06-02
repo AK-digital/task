@@ -6,11 +6,29 @@ import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useMemo, useState } from "react";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import ExportPdfBtn from "./ExportPdfBtn";
+import { useTimeTrackings } from "@/app/hooks/useTimeTrackings";
+import socket from "@/utils/socket";
 
-export default function TimeTrackings({ trackers, projects, searchParams }) {
+export default function TimeTrackings({
+  trackers: initialTrackers,
+  projects,
+  searchParams,
+}) {
   const [selectedProjects, setSelectedProjects] = useState([]);
-  const [filteredTrackers, setFilteredTrackers] = useState(trackers || []);
+  const [filteredTrackers, setFilteredTrackers] = useState(
+    initialTrackers || []
+  );
   const [selectedTrackers, setSelectedTrackers] = useState([]);
+
+  // Utiliser le hook pour les données en temps réel
+  const { timeTrackings, mutateTimeTrackings } = useTimeTrackings(
+    searchParams,
+    { data: initialTrackers }
+  );
+
+  // Utiliser les données du hook ou les données initiales
+  const trackers = timeTrackings?.data || initialTrackers || [];
+
   const projectsWithTrackers = projects?.filter((project) =>
     filteredTrackers?.some((tracker) => tracker?.project?._id === project?._id)
   );
@@ -25,14 +43,56 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
   const hasSelectedProjects = selectedProjects?.length > 0;
   const hasSelectedTrackers = selectedTrackers?.length > 0;
 
-  /* The `useEffect` hook you provided is responsible for updating the `filteredTrackers` state based on
-  the `trackers` prop whenever the `trackers` prop changes. */
   useEffect(() => {
     setFilteredTrackers(trackers);
   }, [trackers]);
 
-  /* This `useEffect` hook is responsible for updating the `selectedProjects` state based on the
- `searchParams` whenever `searchParams` changes. */
+  useEffect(() => {
+    const handleTaskUpdated = (projectId) => {
+      // Revalider seulement si on n'a pas de filtre de projet ou si c'est un projet concerné
+      const projectsParam = searchParams?.projects;
+      if (!projectsParam || projectsParam.includes(projectId)) {
+        mutateTimeTrackings(undefined, {
+          revalidate: true,
+          populateCache: false,
+        });
+      }
+    };
+
+    const handleTimeTrackingUpdated = () => {
+      mutateTimeTrackings(undefined, {
+        revalidate: true,
+        populateCache: false,
+      });
+    };
+
+    const handleTimeTrackingDeleted = () => {
+      mutateTimeTrackings(undefined, {
+        revalidate: true,
+        populateCache: false,
+      });
+    };
+
+    const handleTimeTrackingDeletedBatch = () => {
+      mutateTimeTrackings(undefined, {
+        revalidate: true,
+        populateCache: false,
+      });
+    };
+
+    socket.on("task updated", handleTaskUpdated);
+    socket.on("time tracking updated", handleTimeTrackingUpdated);
+    socket.on("time tracking deleted", handleTimeTrackingDeleted);
+    socket.on("time tracking deleted batch", handleTimeTrackingDeletedBatch);
+
+    return () => {
+      socket.off("task updated", handleTaskUpdated);
+      socket.off("time tracking updated", handleTimeTrackingUpdated);
+      socket.off("time tracking deleted", handleTimeTrackingDeleted);
+      socket.off("time tracking deleted batch", handleTimeTrackingDeletedBatch);
+    };
+  }, [mutateTimeTrackings, searchParams]);
+
   useEffect(() => {
     // Get the "projects" query parameter from the URL search params
     const projectsNames = queries?.get("projects")?.split(",") || [];
@@ -86,6 +146,7 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
               <TimeTracking
                 tracker={tracker}
                 setSelectedTrackers={setSelectedTrackers}
+                mutateTimeTrackings={mutateTimeTrackings}
                 key={tracker?._id}
               />
             );
@@ -95,6 +156,8 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
             <SelectedTimeTrackings
               selectedTrackers={selectedTrackers}
               setSelectedTrackers={setSelectedTrackers}
+              mutateTimeTrackings={mutateTimeTrackings}
+              trackers={filteredTrackers}
             />
           )}
         </div>
