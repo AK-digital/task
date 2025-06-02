@@ -1,0 +1,195 @@
+{
+  "auth": {
+    "signin": {
+      "title": "Connexion",
+      "email_label": "Adresse e-mail",
+      "password_label": "Mot de passe",
+      "forgot_password": "Mot de passe oublié ?",
+      "submit_button": "Se connecter",
+      "submit_button_loading": "Connexion en cours...",
+      "no_account": "Vous n'avez pas encore de compte ?",
+      "signup_link": "S'inscrire",
+      "resend_verification": "Renvoyer un email de vérification",
+      "invalid_credentials": "Identifiants incorrects, veuillez réessayer.",
+      "connection_error": "Une erreur s'est produite lors de la connexion. Veuillez réessayer.",
+      "verification_success": "Email de vérification renvoyé avec succès."
+    },
+    "signup": {
+      "title": "Inscription",
+      "lastname_label": "Nom",
+      "firstname_label": "Prénom",
+      "email_label": "Adresse e-mail",
+      "password_label": "Mot de passe",
+      "submit_button": "S'inscrire",
+      "submit_button_loading": "Inscription en cours...",
+      "have_account": "Vous avez déjà un compte ?",
+      "signin_link": "Se connecter",
+      "account_created_title": "Votre compte a été créé avec succès !",
+      "account_created_message": "Un email de vérification a été envoyé à votre adresse e-mail. Veuillez cliquer sur le lien dans l'email pour activer votre compte.",
+      "back_to_signin": "Retourner à la page de connexion",
+      "password_requirements": "Le mot de passe doit contenir :",
+      "password_min_chars": "- Au moins 8 caractères",
+      "password_uppercase": "- Une lettre majuscule (A-Z)",
+      "password_number": "- Un chiffre (0-9)",
+      "password_special": "- Un caractère spécial (!@#$%^&?)",
+      "creation_error": "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."
+    },
+    "verification": {
+      "verifying": "Vérification en cours...",
+      "verification_error": "Une erreur s'est produite lors de la vérification de votre compte.",
+      "verification_success": "Votre adresse e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter."
+    },
+    "forgot_password": {
+      "reset_button": "Réinitialiser mon mot de passe"
+    }
+  },
+  "validation": {
+    "lastname_min": "Le nom doit contenir au moins 2 caractères",
+    "lastname_max": "Le nom ne peut pas dépasser 50 caractères",
+    "firstname_min": "Le prénom doit contenir au moins 2 caractères",
+    "firstname_max": "Le prénom ne peut pas dépasser 50 caractères",
+    "email_invalid": "L'adresse e-mail saisie est invalide",
+    "password_contains": "Le mot de passe doit contenir ",
+    "password_invalid": "Le mot de passe saisi est invalide",
+    "company_max": "Le nom de l'entreprise ne peut pas dépasser 100 caractères",
+    "position_max": "Le poste ne peut pas dépasser 100 caractères"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread_singular": "non lue",
+    "unread_plural": "non lues",
+    "mark_all_read": "Tout marquer comme lu",
+    "empty_message": "Vous n'avez aucune notification pour le moment"
+  },
+  "projects": {
+    "create_project": "Nom du projet",
+    "first_board": "Votre premier tableau",
+    "boards_count": "Tableaux",
+    "tasks_count": "tâches",
+    "choose_project": "Choisir un projet",
+    "invite_users": "Inviter d'autres utilisateurs",
+    "revoke_user": "Révoquer",
+    "cancel_invitation": "Annuler",
+    "user_revoked_success": "Utilisateur révoqué avec succès",
+    "invitation_cancelled_success": "Invitation annulée avec succès",
+    "invitation_cancelled_error": "Une erreur s'est produite lors de l'annulation de l'invitation",
+    "general_error": "Une erreur s'est produite"
+  },
+  "tasks": {
+    "choose_board": "Choisir un tableau",
+    "status_waiting": "En attente",
+    "priority_low": "Basse",
+    "set_deadline": "Définir une date",
+    "no_deadline": "-",
+    "billable_tasks": "Tâches facturables",
+    "non_billable_tasks": "Tâches non facturables"
+  },
+  "roles": {
+    "owner": "Propriétaire",
+    "manager": "Manager",
+    "team": "Équipe",
+    "customer": "Client",
+    "guest": "Invité"
+  },
+  "time_tracking": {
+    "time_report": "Relevé de temps - AK Digital",
+    "document_generated": "Document généré automatiquement",
+    "default_project": "projet"
+  },
+  "general": {
+    "description": "Description",
+    "responsible": "Responsable",
+    "time": "Temps",
+    "date": "Date",
+    "error_occurred": "Une erreur s'est produite",
+    "success": "Succès",
+    "loading": "Chargement...",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier"
+  },
+  "emails": {
+    "description_mention": {
+      "subject": "Vous avez été mentionné dans une description",
+      "title": "Vous avez été mentionné 👀",
+      "content": "vous a mentionné dans",
+      "highlight": "la description suivante",
+      "button": "Accéder à la description"
+    },
+    "message_mention": {
+      "subject": "Vous avez été mentionné dans une conversation",
+      "title": "Un message vous concerne 💬",
+      "content": "vous a mentionné dans une",
+      "highlight": "conversation",
+      "button": "Accéder à la conversation"
+    },
+    "project_invitation": {
+      "subject": "Vous avez reçu une invitation à rejoindre un projet",
+      "title": "Une nouvelle opportunité vous attend 🎯",
+      "content": "vous a invité à rejoindre le projet",
+      "button": "Rejoindre le projet"
+    },
+    "task_assigned": {
+      "subject": "Vous avez été assigné à une tâche dans le projet",
+      "title": "Une tâche vous a été assignée",
+      "content": "vous a assigné la tâche",
+      "content_project": "sur le projet",
+      "button": "Accéder au projet"
+    },
+    "reset_code": {
+      "subject": "Réinitialisation de votre mot de passe",
+      "title": "Réinitialisation du mot de passe",
+      "greeting": "Bonjour",
+      "content": "Vous avez demandé la réinitialisation de votre mot de passe.",
+      "instruction": "Cliquez sur le bouton ci-dessous pour continuer :",
+      "button": "Réinitialiser mon mot de passe"
+    },
+    "verification": {
+      "subject": "Vérification de votre adresse email",
+      "title": "Confirmez votre adresse email",
+      "greeting": "Bonjour",
+      "content": "Merci de confirmer votre adresse email en cliquant sur le bouton ci-dessous :",
+      "button": "Vérifier mon adresse email"
+    }
+  },
+  "api_messages": {
+    "missing_parameters": "Paramètres manquants",
+    "invalid_parameters": "Paramètres invalides",
+    "unexpected_error": "Une erreur inattendue est survenue",
+    "user_created_success": "Utilisateur créé avec succès",
+    "user_connected_success": "Utilisateur connecté avec succès",
+    "email_verified_success": "Adresse mail vérifiée avec succès",
+    "verification_email_resent": "Email de vérification renvoyé avec succès",
+    "password_reset_success": "Mot de passe réinitialisé avec succès",
+    "logout_success": "Déconnexion réussie",
+    "project_created_success": "Projet créé avec succès",
+    "project_modified_success": "Projet modifié avec succès",
+    "project_deleted_success": "Projet supprimé avec succès",
+    "logo_updated_success": "Logo mis à jour avec succès",
+    "task_created_success": "Tâche créée avec succès",
+    "task_modified_success": "Tâche modifié avec succès",
+    "description_modified_success": "Description modifié avec succès",
+    "deadline_modified_success": "Deadline modifié avec succès",
+    "estimation_modified_success": "Estimation modifié avec succès",
+    "message_created_success": "Message créée avec succès",
+    "message_modified_success": "Réponse modifiée avec succès",
+    "message_deleted_success": "Message supprimé avec succès",
+    "reaction_added_success": "Réaction ajoutée avec succès",
+    "reaction_removed_success": "Réaction supprimée avec succès",
+    "reaction_updated_success": "Réaction mise à jour avec succès",
+    "responsible_added_success": "Un nouveau responsable vient d'être ajouté",
+    "responsible_removed_success": "Responsable retiré",
+    "time_tracking_finished": "Le tracking du temps de la tâche est terminée",
+    "invitation_sent_success": "Invitation par e-mail envoyé avec succès",
+    "user_joined_success": "Un nouvel utilisateur a rejoint le projet avec succès",
+    "role_updated_success": "Rôle de l'utilisateur mis à jour avec succès",
+    "guest_removed_success": "Invité supprimer du projet avec succès",
+    "projects_order_updated": "Ordre des projets mis à jour pour l'utilisateur"
+  },
+  "meta": {
+    "app_title": "Clynt | Simple as fäck",
+    "app_description": "Generated by create next app",
+    "language": "fr"
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "auth": {
+    "signin": {
+      "title": "Connection",
+      "email_label": "E-mail address",
+      "password_label": "Password",
+      "forgot_password": "Forgot your password?",
+      "submit_button": "Sign in",
+      "submit_button_loading": "Connection in progress...",
+      "no_account": "Don't have an account yet?",
+      "signup_link": "Sign up",
+      "resend_verification": "Resend a verification email",
+      "invalid_credentials": "Please try again.",
+      "connection_error": "An error has occurred during connection. Please try again.",
+      "verification_success": "Verification email sent successfully."
+    },
+    "signup": {
+      "title": "Registration",
+      "lastname_label": "Name",
+      "firstname_label": "First name",
+      "email_label": "E-mail address",
+      "password_label": "Password",
+      "submit_button": "Sign up",
+      "submit_button_loading": "Registration in progress...",
+      "have_account": "Already have an account?",
+      "signin_link": "Sign in",
+      "account_created_title": "Your account has been successfully created!",
+      "account_created_message": "A verification email has been sent to your email address. Please click on the link in the email to activate your account.",
+      "back_to_signin": "Return to the login page",
+      "password_requirements": "The password must contain :",
+      "password_min_chars": "- At least 8 characters",
+      "password_uppercase": "- A capital letter (A-Z)",
+      "password_number": "- One digit (0-9)",
+      "password_special": "- A special character (!@#$%^&?)",
+      "creation_error": "An error has occurred while creating your account. Please try again."
+    },
+    "verification": {
+      "verifying": "Check in progress...",
+      "verification_error": "An error has occurred while verifying your account.",
+      "verification_success": "Your e-mail address has been successfully verified. You can now log in."
+    },
+    "forgot_password": {
+      "reset_button": "Reset my password"
+    }
+  },
+  "validation": {
+    "lastname_min": "The name must contain at least 2 characters",
+    "lastname_max": "The name cannot exceed 50 characters",
+    "firstname_min": "The first name must contain at least 2 characters",
+    "firstname_max": "The first name may not exceed 50 characters",
+    "email_invalid": "The e-mail address entered is invalid",
+    "password_contains": "The password must contain ",
+    "password_invalid": "The password entered is invalid",
+    "company_max": "The company name may not exceed 100 characters.",
+    "position_max": "The post cannot exceed 100 characters"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread_singular": "unread",
+    "unread_plural": "unread",
+    "mark_all_read": "Mark everything as read",
+    "empty_message": "You have no notification for the moment"
+  },
+  "projects": {
+    "create_project": "Project name",
+    "first_board": "Your first painting",
+    "boards_count": "Tables",
+    "tasks_count": "tasks",
+    "choose_project": "Choose a project",
+    "invite_users": "Invite other users",
+    "revoke_user": "Revoke",
+    "cancel_invitation": "Cancel",
+    "user_revoked_success": "User successfully revoked",
+    "invitation_cancelled_success": "Invitation successfully cancelled",
+    "invitation_cancelled_error": "An error occurred when cancelling the invitation",
+    "general_error": "An error has occurred"
+  },
+  "tasks": {
+    "choose_board": "Choose a table",
+    "status_waiting": "On hold",
+    "priority_low": "Low",
+    "set_deadline": "Set a date",
+    "no_deadline": "-",
+    "billable_tasks": "Billable tasks",
+    "non_billable_tasks": "Non-billable tasks"
+  },
+  "roles": {
+    "owner": "Owner",
+    "manager": "Manager",
+    "team": "Team",
+    "customer": "Customer",
+    "guest": "Guest"
+  },
+  "time_tracking": {
+    "time_report": "Time recording - AK Digital",
+    "document_generated": "Automatically generated document",
+    "default_project": "project"
+  },
+  "general": {
+    "description": "Description",
+    "responsible": "Manager",
+    "time": "Time",
+    "date": "Date",
+    "error_occurred": "An error has occurred",
+    "success": "Success",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "save": "Register",
+    "delete": "Delete",
+    "edit": "Modify"
+  },
+  "emails": {
+    "description_mention": {
+      "subject": "You were mentioned in a description",
+      "title": "You were mentioned 👀",
+      "content": "mentioned you in",
+      "highlight": "the following description",
+      "button": "Go to description"
+    },
+    "message_mention": {
+      "subject": "You were mentioned in a conversation",
+      "title": "A message for you 💬",
+      "content": "mentioned you in a",
+      "highlight": "conversation",
+      "button": "Access the conversation"
+    },
+    "project_invitation": {
+      "subject": "You have received an invitation to join a project",
+      "title": "A new opportunity awaits you 🎯",
+      "content": "has invited you to join the",
+      "button": "Join the project"
+    },
+    "task_assigned": {
+      "subject": "You have been assigned a task in the project",
+      "title": "A task has been assigned to you",
+      "content": "has assigned you the task",
+      "content_project": "on the project",
+      "button": "Access to the project"
+    },
+    "reset_code": {
+      "subject": "Resetting your password",
+      "title": "Reset password",
+      "greeting": "Hello",
+      "content": "You have asked for your password to be reset.",
+      "instruction": "Click on the button below to continue:",
+      "button": "Reset my password"
+    },
+    "verification": {
+      "subject": "Checking your email address",
+      "title": "Confirm your email address",
+      "greeting": "Hello",
+      "content": "Please confirm your email address by clicking on the button below:",
+      "button": "Check my email address"
+    }
+  },
+  "api_messages": {
+    "missing_parameters": "Missing parameters",
+    "invalid_parameters": "Invalid parameters",
+    "unexpected_error": "An unexpected error has occurred",
+    "user_created_success": "User successfully created",
+    "user_connected_success": "User successfully logged in",
+    "email_verified_success": "E-mail address successfully verified",
+    "verification_email_resent": "Verification email sent successfully",
+    "password_reset_success": "Password successfully reset",
+    "logout_success": "Successful disconnection",
+    "project_created_success": "Project successfully created",
+    "project_modified_success": "Project successfully modified",
+    "project_deleted_success": "Project successfully deleted",
+    "logo_updated_success": "Logo successfully updated",
+    "task_created_success": "Task created successfully",
+    "task_modified_success": "Task successfully modified",
+    "description_modified_success": "Description successfully modified",
+    "deadline_modified_success": "Deadline successfully modified",
+    "estimation_modified_success": "Estimate successfully modified",
+    "message_created_success": "Message successfully created",
+    "message_modified_success": "Response successfully modified",
+    "message_deleted_success": "Message successfully deleted",
+    "reaction_added_success": "Reaction successfully added",
+    "reaction_removed_success": "Reaction successfully suppressed",
+    "reaction_updated_success": "Reaction successfully updated",
+    "responsible_added_success": "A new manager has just been added",
+    "responsible_removed_success": "Manager removed",
+    "time_tracking_finished": "Task time tracking is complete",
+    "invitation_sent_success": "Invitation by e-mail sent successfully",
+    "user_joined_success": "A new user has successfully joined the project",
+    "role_updated_success": "User role successfully updated",
+    "guest_removed_success": "Guest successfully removed from project",
+    "projects_order_updated": "Project order updated for the user"
+  },
+  "meta": {
+    "app_title": "Clynt | Simple as fäck",
+    "app_description": "Generated by create next app",
+    "language": "en"
+  }
+}
