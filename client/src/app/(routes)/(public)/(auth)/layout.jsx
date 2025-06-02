@@ -4,7 +4,7 @@ export default function AuthLayout({ children }) {
     <main className={styles.main}>
       {children}
       <span className={styles.footer}>
-        Simple as <strong>täsk</strong>
+        Simple as <strong>Clynt</strong>
       </span>
     </main>
   );

@@ -67,7 +67,7 @@ export async function signUp(req, res, next) {
     const template = emailVerification(user, link);
 
     await sendEmail(
-      "task@akdigital.fr",
+      "notifications@clynt.io",
       savedUser?.email,
       template?.subjet,
       template?.text
@@ -184,7 +184,7 @@ export async function reSendVerification(req, res, next) {
     const template = emailVerification(user, link);
 
     await sendEmail(
-      "task@akdigital.fr",
+      "notifications@clynt.io",
       user?.email,
       template?.subjet,
       template?.text
@@ -474,7 +474,7 @@ export async function sendResetCode(req, res, next) {
     const template = emailResetCode(user, link);
 
     await sendEmail(
-      "task@akdigital.fr",
+      "notifications@clynt.io",
       email,
       template?.subjet,
       template.text

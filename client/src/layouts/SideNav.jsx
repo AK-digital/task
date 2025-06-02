@@ -29,10 +29,10 @@ export default function SideNav() {
       <div className={styles.wrapper}>
         <div className={styles.top}>
           <Image
-            src={"/task.svg"}
-            width={46}
-            height={18}
-            alt="Logo de Täsk"
+            src={"/clynt-logo-dark.svg"}
+            width={32}
+            height={32}
+            alt="Logo de Clynt"
             className={styles.logo}
           />
           <div

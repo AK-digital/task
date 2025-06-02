@@ -24,7 +24,7 @@ export async function saveMessage(req, res, next) {
     if (attachments.length > 0) {
       for (const attachment of attachments) {
         const bufferResponse = await uploadFileBuffer(
-          "task/message",
+          "clynt/message",
           attachment.buffer,
           attachment.originalname
         );
@@ -55,7 +55,7 @@ export async function saveMessage(req, res, next) {
       for (const match of matches) {
         const img = match[1]; // Le src est dans le premier groupe capturé
 
-        const res = await uploadFile("task/message", img);
+        const res = await uploadFile("clynt/message", img);
 
         if (res?.secure_url) {
           messageWithImg = messageWithImg.replace(img, res.secure_url);
@@ -85,7 +85,7 @@ export async function saveMessage(req, res, next) {
 
       if (user) {
         await sendEmail(
-          "task@akdigital.fr",
+          "notifications@clynt.io",
           user?.email,
           template?.subjet,
           template?.text
@@ -205,7 +205,7 @@ export async function updateMessage(req, res, next) {
     if (matches.length > 0) {
       for (const match of matches) {
         const img = match[1];
-        const resImg = await uploadFile("task/message", img);
+        const resImg = await uploadFile("clynt/message", img);
         if (resImg?.secure_url) {
           messageWithImg = messageWithImg.replace(img, resImg.secure_url);
         }
@@ -256,7 +256,7 @@ export async function updateMessage(req, res, next) {
     if (attachments.length > 0) {
       for (const attachment of attachments) {
         const bufferResponse = await uploadFileBuffer(
-          "task/message",
+          "clynt/message",
           attachment.buffer,
           attachment.originalname
         );
@@ -309,7 +309,7 @@ export async function updateMessage(req, res, next) {
       if (user) {
         const template = emailMessage(user, updatedMessage);
         await sendEmail(
-          "task@akdigital.fr",
+          "notifications@clynt.io",
           user.email,
           template.subjet,
           template.text
