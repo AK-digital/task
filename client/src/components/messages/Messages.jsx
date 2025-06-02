@@ -88,7 +88,7 @@ export default function Messages({ task, project, mutateTasks }) {
           mutateDraft={mutateDraft}
         />
       )}
-      {!isOpen && (
+      {!isOpen && !messageLoading && (
         <div
           className="border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-text-size-small data-[role=true]:cursor-pointer"
           onClick={handleIsOpen}

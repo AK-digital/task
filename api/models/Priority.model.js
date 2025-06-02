@@ -17,6 +17,14 @@ const prioritySchema = new Schema(
       trim: true,
       match: /^#([0-9A-Fa-f]{6})$/,
     },
+    priority: {
+      type: String,
+      enum: ["urgent", "high", "medium", "low"],
+    },
+    default: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

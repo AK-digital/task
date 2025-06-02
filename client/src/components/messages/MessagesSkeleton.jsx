@@ -2,7 +2,7 @@
 export default function MessagesSkeleton() {
   return (
     <>
-      {Array.from({ length: 3 }).map((_, idx) => {
+      {Array.from({ length: 1 }).map((_, idx) => {
         return (
           <div className="w-full" key={idx}>
             <div className="py-4 px-6 bg-background-secondary-color rounded-lg w-full">

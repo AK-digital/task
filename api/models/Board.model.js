@@ -1,4 +1,10 @@
 import mongoose from "mongoose";
+import MessageModel from "./Message.model.js";
+import TaskModel from "./Task.model.js";
+import {
+  destroyMessageFiles,
+  destroyTaskFiles,
+} from "../helpers/cloudinary.js";
 const { Schema } = mongoose;
 
 const boardSchema = new Schema(
@@ -46,5 +52,24 @@ const boardSchema = new Schema(
     timestamps: true,
   }
 );
+
+boardSchema.pre(["deleteOne", "findOneAndDelete"], async function () {
+  const boardId = this.getQuery()._id;
+
+  const tasks = await TaskModel.find({ boardId: boardId });
+
+  for (const task of tasks) {
+    await destroyTaskFiles(task);
+    const messages = await MessageModel.find({ taskId: task._id });
+
+    for (const message of messages) {
+      await destroyMessageFiles(message);
+    }
+
+    await MessageModel.deleteMany({ taskId: task._id });
+  }
+
+  await TaskModel.deleteMany({ boardId: boardId });
+});
 
 export default mongoose.model("Board", boardSchema);

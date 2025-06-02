@@ -1,4 +1,20 @@
-import mongoose, { Query } from "mongoose";
+import mongoose from "mongoose";
+import BoardModel from "./Board.model.js";
+import TaskModel from "./Task.model.js";
+import StatusModel from "./Status.model.js";
+import PriorityModel from "./Priority.model.js";
+import ProjectInvitationModel from "./ProjectInvitation.model.js";
+import TimeTrackingModel from "./TimeTracking.model.js";
+import FavoriteModel from "./Favorite.model.js";
+import MessageModel from "./Message.model.js";
+import DraftModel from "./Draft.model.js";
+import { getMatches } from "../utils/utils.js";
+import {
+  destroyFile,
+  destroyMessageFiles,
+  destroyTaskFiles,
+} from "../helpers/cloudinary.js";
+
 const { Schema } = mongoose;
 
 const projectSchema = new Schema(
@@ -134,6 +150,36 @@ projectSchema.pre("aggregate", function () {
     membersData: 0,
     status: 0,
   });
+});
+
+// Middleware pour la suppression en cascade
+projectSchema.pre(["deleteOne", "findOneAndDelete"], async function () {
+  const projectId = this.getQuery()._id;
+
+  // Suppression en cascade des éléments liés au projet
+  await BoardModel.deleteMany({ projectId: projectId });
+  await StatusModel.deleteMany({ projectId: projectId });
+  await PriorityModel.deleteMany({ projectId: projectId });
+  await TimeTrackingModel.deleteMany({ projectId: projectId });
+  await ProjectInvitationModel.deleteMany({ projectId: projectId });
+  await FavoriteModel.deleteMany({ project: projectId });
+  await DraftModel.deleteMany({ projectId: projectId });
+
+  const tasks = await TaskModel.find({ projectId: projectId });
+
+  for (const task of tasks) {
+    await destroyTaskFiles(task);
+  }
+
+  await TaskModel.deleteMany({ projectId: projectId });
+
+  const messages = await MessageModel.find({ projectId: projectId });
+
+  for (const message of messages) {
+    await destroyMessageFiles(message);
+  }
+
+  await MessageModel.deleteMany({ projectId: projectId });
 });
 
 export default mongoose.model("Project", projectSchema);

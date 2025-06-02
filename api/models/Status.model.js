@@ -17,6 +17,14 @@ const statusSchema = new Schema(
       trim: true,
       match: /^#([0-9A-Fa-f]{6})$/,
     },
+    status: {
+      type: String,
+      enum: ["waiting", "todo", "progress", "done"],
+    },
+    default: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
