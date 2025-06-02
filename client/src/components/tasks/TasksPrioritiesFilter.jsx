@@ -1,13 +1,14 @@
+import { useProjectContext } from "@/context/ProjectContext";
 import styles from "@/styles/components/tasks/tasks-priorities-filter.module.css";
 import { ChevronDown, Star, Undo } from "lucide-react";
 import { useState } from "react";
 
-const prioritiesEnum = ["Basse", "Moyenne", "Haute", "Urgent"];
-
 export default function TasksPrioritiesFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
-  const priorities = queries?.priorities;
-  const hasPriorities = priorities?.length > 0;
+  const queriesPriorities = queries?.priorities;
+  const hasPriorities = queriesPriorities?.length > 0;
+
+  const { priorities } = useProjectContext();
 
   function handleResetPriorities() {
     setQueries((prev) => ({
@@ -28,6 +29,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
       const deletedPriorities = queries?.priorities?.filter(
         (priority) => priority !== value
       );
+
       setQueries((prev) => ({
         ...prev,
         priorities: deletedPriorities,
@@ -44,8 +46,8 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
       >
         <Star size={16} />
         <span>Priorité</span>
-        {priorities?.length > 0 && (
-          <span className={styles.length}>{priorities?.length}</span>
+        {hasPriorities && (
+          <span className={styles.length}>{queriesPriorities?.length}</span>
         )}
         <ChevronDown size={16} />
       </div>
@@ -57,19 +59,21 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
-              {prioritiesEnum.map((priority, idx) => (
-                <li key={idx} className={styles.priority}>
+              {priorities.map((priority) => (
+                <li key={priority?._id} className={styles.priority}>
                   <input
                     type="checkbox"
-                    id={priority}
-                    name={priority}
-                    value={priority}
+                    id={priority?._id}
+                    name={priority?.name}
+                    value={priority?._id}
                     onChange={handlePrioritiesChange}
                     checked={
-                      hasPriorities ? priorities?.includes(priority) : false
+                      hasPriorities
+                        ? queriesPriorities?.includes(priority?._id)
+                        : false
                     }
                   />
-                  <label htmlFor={priority}>{priority}</label>
+                  <label htmlFor={priority?._id}>{priority?.name}</label>
                 </li>
               ))}
             </ul>

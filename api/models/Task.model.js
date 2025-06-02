@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { allowedPriorities, allowedStatus } from "../utils/utils.js";
+import MessageModel from "./Message.model.js";
+import { destroyMessageFiles } from "../helpers/cloudinary.js";
 const { Schema } = mongoose;
 
 const taskSchema = new Schema(
@@ -71,14 +73,12 @@ const taskSchema = new Schema(
       ref: "User",
     },
     status: {
-      type: String,
-      enum: allowedStatus,
-      default: "En attente",
+      type: Schema.Types.ObjectId,
+      ref: "Status",
     },
     priority: {
-      type: String,
-      enum: allowedPriorities,
-      default: "Moyenne",
+      type: Schema.Types.ObjectId,
+      ref: "Priority",
     },
     timeTrackings: {
       type: [Schema.Types.ObjectId],

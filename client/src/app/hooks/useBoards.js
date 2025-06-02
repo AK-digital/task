@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 export function useBoards(projectId, archived, initialBoards) {
   const fetcher = getBoards.bind(null, projectId, archived);
-  const { data, isLoading } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     `/boards?projectId=${projectId}&archived=${archived}`,
     fetcher,
     {
@@ -12,5 +12,5 @@ export function useBoards(projectId, archived, initialBoards) {
     }
   );
 
-  return { boards: data, isLoading };
+  return { boards: data, mutateBoards: mutate, isLoading };
 }

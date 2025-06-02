@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import Tiptap from "../RichTextEditor/Tiptap";
 import { PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { getDrafts } from "@/api/draft";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
@@ -90,6 +90,7 @@ export default function TaskDescription({ project, task, uid }) {
 
     // Update description for every guests
     socket.emit("update task", project?._id);
+    await mutate(`/task?projectId=${project?._id}&archived=false`);
   };
 
   return (
