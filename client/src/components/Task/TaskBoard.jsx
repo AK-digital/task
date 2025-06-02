@@ -8,7 +8,7 @@ export default function TaskBoard({ task }) {
         className="w-3.5 h-3 rounded-full"
         style={{ backgroundColor: `${board?.color}` }}
       ></div>
-      <span className="w-full p-2 rounded-border-radius-medium first-letter:uppercase border gap-2">{board?.title}</span>
+      <span className="w-full p-2 rounded-border-radius-medium first-letter:uppercase gap-2">{board?.title}</span>
     </div>
   );
 }

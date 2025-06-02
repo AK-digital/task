@@ -33,7 +33,9 @@ export default function NewProject() {
       <div className="flex justify-center items-center text-center bg-background-primary-color rounded-tl-lg h-full w-full text-text-dark-color">
         <div className="flex flex-col -mt-[60px] gap-6">
           <div className="max-w-[600px]">
+            <div className="flex justify-center items-center">
             <FolderPlus size="144" />
+            </div>
             <h1>Créer un projet</h1>
             <p className="font-light">
               Créer un nouveau projet n'a jamais été aussi simple. Donnez un nom

@@ -99,7 +99,7 @@ export default function Notifications({
                         height={"30px"}
                       />
                     )}
-                    <div className="flex flex-col gap-1 p-[14px]">
+                    <div className="flex flex-col gap-1">
                       <div className="text-text-size-normal font-medium">
                         <span>{notif?.message?.title}</span>
                       </div>
@@ -108,7 +108,7 @@ export default function Notifications({
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end border-b-0 gap-2">
+                  <div className="flex flex-col items-end justify-center border-b-0 gap-2">
                     <div className="text-text-size-small text-text-color-muted self-start text-right min-w-max">{dateFromNow}</div>
                   </div>
                 </li>

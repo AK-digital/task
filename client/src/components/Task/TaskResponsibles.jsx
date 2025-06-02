@@ -94,7 +94,7 @@ export default function TaskResponsibles({ task, uid, user }) {
               <div className="images_TaskResponsibles flex justify-center items-center" key={responsible?._id}>
                 <DisplayPicture
                   user={responsible}
-                  style={{ width: "30px", height: "30px" }}
+                  style={{ width: "32px", height: "32px" }}
                   className="rounded-full"
                 />
               </div>

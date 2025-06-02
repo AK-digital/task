@@ -41,7 +41,7 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
           style={{ ...style }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className={`max-w-[${style?.width}px] max-h-[${style?.height}px] min-h-[${style?.height}px] min-w-[${style?.width}px] rounded-full`}
+          className={`min-h-[${style?.height}] min-w-[${style?.width}] rounded-full`}
         />
       ) : (
         <div

@@ -4,6 +4,7 @@ const config = {
         "postcss-remove-rules": {
             rulesToRemove: {
                 "img, video": "height",
+                "html, :host": "line-height",
             },
         },
     },

@@ -61,7 +61,7 @@ export default function Header() {
               data-open={notifOpen}
               className="hover:fill-text-darker-color hover:cursor-pointer data-[open=true]:fill-text-darker-color "
             />
-            {unreadCount > 0 && <div className="absolute w-[11px] h-[11px] top-3 left-3 rounded-full bg-danger-color"></div>}
+            {unreadCount > 0 && <div className="absolute w-[11px] h-[11px] top-3 left-3 rounded-full bg-danger-color animate-ping"></div>}
             {notifOpen && (
               <Notifications
                 setNotifOpen={setNotifOpen}

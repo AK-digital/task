@@ -35,7 +35,7 @@ export default function Projects() {
           </div>
         </div>
         <div className="w-full overflow-auto">
-          <div className="grid grid-cols-4 gap-[70px] max-w-[1400px] mx-auto py-4 px-3">
+          <div className="grid grid-cols-4 gap-[70px] max-w-[1400px] mx-auto py-4 px-3 mt-6">
             {projectsLoading ? (
               <ProjectCardSkeleton />
             ) : (
