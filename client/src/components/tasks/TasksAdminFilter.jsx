@@ -1,16 +1,14 @@
-import { useProject } from "@/app/hooks/useProject";
+import { useProjectContext } from "@/context/ProjectContext";
 import styles from "@/styles/components/tasks/tasks-admin-filter.module.css";
 import { ChevronDown, CircleUserRound, Undo } from "lucide-react";
-import { useParams } from "next/navigation";
 import { useState } from "react";
-import DisplayPicture from "../User/DisplayPicture";
+import DisplayPicture from "@/components/User/DisplayPicture";
 import { isNotEmpty } from "@/utils/utils";
 
 export default function TasksAdminFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { slug } = useParams();
 
-  const { project } = useProject(slug, null);
+  const { project } = useProjectContext();
   const members = project?.members || [];
   const selectedMembers = queries?.responsiblesId || [];
 

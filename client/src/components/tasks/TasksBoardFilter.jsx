@@ -1,23 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "@/styles/components/tasks/tasks-board-filter.module.css";
 import { ChevronDown, LayoutDashboard, Undo } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
+import { useProjectContext } from "@/context/ProjectContext";
 
-export default function TasksBoardFilter({ tasks, queries, setQueries }) {
+export default function TasksBoardFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [boards, setBoards] = useState([]);
-
-  useEffect(() => {
-    const reducedBoards = tasks?.reduce((acc, curr) => {
-      const board = curr?.boardId;
-      if (board && !acc.some((b) => b._id === board._id)) {
-        acc.push(board);
-      }
-      return acc;
-    }, []);
-
-    setBoards(reducedBoards);
-  }, [tasks]);
+  const { boards } = useProjectContext();
 
   const theBoard = boards?.find((board) => board?._id === queries?.boardId);
 

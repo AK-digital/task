@@ -13,12 +13,14 @@ import templateRouter from "./routes/template.routes.js";
 import boardTemplateRouter from "./routes/boardTemplate.routes.js";
 import projectRouter from "./routes/project.routes.js";
 import projectInvitations from "./routes/projectInvitation.routes.js";
-import customStatusRouter from "./routes/customStatus.routes.js";
+import statusRouter from "./routes/status.routes.js";
+import priorityRouter from "./routes/priority.routes.js";
 import boardRouter from "./routes/board.routes.js";
 import taskRouter from "./routes/task.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import draftRouter from "./routes/draft.routes.js";
 import timeTrackingRouter from "./routes/timeTracking.routes.js";
+import favoriteRouter from "./routes/favorite.routes.js";
 import socketHandler from "./utils/socket.js";
 
 const app = express();
@@ -58,12 +60,14 @@ app.use("/api/board-template", boardTemplateRouter);
 
 app.use("/api/project", projectRouter);
 app.use("/api/project-invitation", projectInvitations);
-app.use("/api/custom-status", customStatusRouter);
+app.use("/api/status", statusRouter);
+app.use("/api/priority", priorityRouter);
 app.use("/api/board", boardRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/draft", draftRouter);
 app.use("/api/time-tracking", timeTrackingRouter);
+app.use("/api/favorite", favoriteRouter);
 
 // SOCKET LOGIC
 socketHandler(io);

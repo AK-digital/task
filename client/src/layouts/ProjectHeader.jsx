@@ -7,14 +7,11 @@ import GuestsModal from "@/components/Modals/GuestsModal";
 import { isNotEmpty } from "@/utils/utils";
 import TasksFilters from "@/components/tasks/TasksFilters";
 import DisplayPicture from "@/components/User/DisplayPicture";
+import { useProjectContext } from "@/context/ProjectContext";
 
-export default function ProjectHeader({
-  project,
-  displayedFilters,
-  queries,
-  setQueries,
-  mutateProject,
-}) {
+
+export default function ProjectHeader({ displayedFilters }) {
+  const { project, mutateProject, queries, setQueries } = useProjectContext();
   const [isOpen, setIsOpen] = useState(false);
   const members = project?.members;
 

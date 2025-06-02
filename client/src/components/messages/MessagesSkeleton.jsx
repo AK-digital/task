@@ -3,7 +3,7 @@ import styles from "@/styles/components/messages/messages-skeletons.module.css";
 export default function MessagesSkeleton() {
   return (
     <>
-      {Array.from({ length: 3 }).map((_, idx) => {
+      {Array.from({ length: 1 }).map((_, idx) => {
         return (
           <div className={styles.container} key={idx}>
             <div className={styles.message}>

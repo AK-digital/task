@@ -7,30 +7,25 @@
     height: 42px;
     transition: all 150ms ease-in-out;
     font-size: var(--text-size-normal);
-    padding-inline: 12px;
+    padding-inline: 20px;
     opacity: 0.5;
     filter: blur(0.4px);
 }
 
-.checkbox,
 .grip {
-    min-width: 20px;
-    max-width: 20px;
-}
-
-.grip {
+    margin-left: 6px;
     color: var(--text-light-color);
 }
+
 
 .comment {
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-color-muted);
-    min-width: 41px;
-    max-width: 41px;
     border-right: 1px solid var(--text-light-color);
     height: 100%;
+    padding-right: 12px;
 }
 
 .text {
@@ -38,6 +33,7 @@
     width: 100%;
     min-width: 200px;
     max-width: 700px;
+    margin-right: 12px;
 }
 
 .text span {

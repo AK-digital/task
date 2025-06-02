@@ -7,12 +7,11 @@ export default function TaskProject({ task }) {
     <div className={styles.container} id="task-row">
       <Image
         src={project?.logo || "/default-project-logo.webp"}
-        width={24}
-        height={24}
+        width={32}
+        height={32}
         style={{ borderRadius: "50%" }}
         alt={`Logo du projet ${project?.name}`}
       />
-      <span>{project?.name}</span>
     </div>
   );
 }

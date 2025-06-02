@@ -89,7 +89,7 @@ export default function Messages({ task, project, mutateTasks }) {
           mutateDraft={mutateDraft}
         />
       )}
-      {!isOpen && (
+      {!isOpen && !messageLoading && (
         <div
           className={styles.empty}
           onClick={handleIsOpen}

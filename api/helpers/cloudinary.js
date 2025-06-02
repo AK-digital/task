@@ -1,4 +1,5 @@
 import cloudinary from "../config/cloudinary.js";
+import { getMatches } from "../utils/utils.js";
 
 export async function uploadFileBuffer(path, buffer, originalFilename) {
   try {
@@ -78,6 +79,53 @@ export async function destroyFile(folder, file) {
     console.log(`File destroyed: task/${folder}/${publicId} (${resourceType})`);
   } catch (err) {
     console.error("Error destroying file:", err);
+    throw err;
+  }
+}
+
+export async function destroyTaskFiles(task) {
+  if (task?.description?.files?.length > 0) {
+    for (const file of task?.description?.files) {
+      await destroyFile("task", file?.url);
+    }
+  }
+
+  if (task?.description?.text) {
+    const imgRegex = /<img.*?src=["'](.*?)["']/g;
+    const matches = getMatches(task?.description?.text, imgRegex);
+
+    if (matches.length > 0) {
+      for (const match of matches) {
+        const img = match[1];
+        await destroyFile("description", img);
+      }
+    }
+  }
+}
+
+export async function destroyMessageFiles(message) {
+  try {
+    const messageFiles = message?.files;
+
+    if (messageFiles?.length > 0) {
+      for (const file of messageFiles) {
+        await destroyFile("message", file?.url);
+      }
+    }
+
+    if (message?.message) {
+      const imgRegex = /<img.*?src=["'](.*?)["']/g;
+      const matches = getMatches(message?.message, imgRegex);
+
+      if (matches.length > 0) {
+        for (const match of matches) {
+          const img = match[1];
+
+          await destroyFile("message", img);
+        }
+      }
+    }
+  } catch (err) {
     throw err;
   }
 }

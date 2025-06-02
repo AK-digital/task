@@ -8,11 +8,13 @@ export default function UsersInfo({ users, style }) {
     <div className={styles.container} style={{ top: top, left: left }}>
       {users.map((user) => (
         <div key={user?._id} className={styles.infoUser}>
+
           <DisplayPicture
             user={user}
             style={{ width: "24px", height: "24px", borderRadius: "50%" }}
             isPopup={false}
           />
+
           <span className={styles.name}>
             {user?.firstName} {user?.lastName}
           </span>

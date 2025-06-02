@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { bricolageGrostesque } from "@/utils/font";
 import moment from "moment-timezone";
 moment.tz.setDefault("Europe/Paris");
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <body className={bricolageGrostesque.className}>{children}</body>
+      <Analytics />
     </html>
   );
 }

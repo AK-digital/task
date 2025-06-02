@@ -2,34 +2,39 @@ import express from "express";
 const router = express.Router();
 import * as authMiddlewares from "../middlewares/jwt.middlewares.js";
 import { checkRole } from "../middlewares/projectRole.middlewares.js";
-import * as customStatusController from "../controllers/customStatus.controllers.js";
+import * as statusControllers from "../controllers/status.controllers.js";
 
 router.post(
   "/",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.saveCustomStatus
+  statusControllers.saveStatus
+);
+
+router.get(
+  "/project/:id",
+  authMiddlewares.auth,
+  statusControllers.getStatusByProject
 );
 
 router.get(
   "/",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.getCustomStatus
+  statusControllers.getUserProjectsStatuses
 );
 
 router.put(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.updateCustomStatus
+  statusControllers.updateStatus
 );
 
 router.delete(
   "/:id",
   authMiddlewares.auth,
   checkRole(["owner", "manager", "team", "customer"]),
-  customStatusController.deleteCustomStatus
+  statusControllers.deleteStatus
 );
 
 export default router;
