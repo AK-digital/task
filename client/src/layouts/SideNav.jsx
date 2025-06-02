@@ -1,24 +1,7 @@
 "use client";
 import styles from "@/styles/layouts/side-nav.module.css";
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import SortableProject from "@/components/Projects/SortableProject";
-import { updateProjectsOrder } from "@/actions/project";
-import { MeasuringStrategy } from "@dnd-kit/core";
+import { useState } from "react";
 import {
   ArrowLeftFromLine,
   ArrowRightFromLine,

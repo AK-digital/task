@@ -5,7 +5,6 @@ import UsersInfo from "../Popups/UsersInfo";
 import Portal from "../Portal/Portal";
 import DisplayPicture from "../User/DisplayPicture";
 
-
 export default function ProjectMembers({ members }) {
   const [isOpen, setIsOpen] = useState(false);
   const [style, setStyle] = useState(null);
@@ -31,23 +30,6 @@ export default function ProjectMembers({ members }) {
         left: rect.left + window.scrollX,
       });
       setUsers(defaultUsers);
-
-      setIsOpen(true);
-    }
-  };
-
-  const handleSingleMouseEnter = (e) => {
-    clearHoverTimeout();
-    const userId = e.currentTarget.dataset.userId;
-    const user = defaultUsers.find((u) => u._id === userId);
-
-    if (user) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      setStyle({
-        top: rect.top + window.scrollY + rect.height - 12,
-        left: rect.left + window.scrollX,
-      });
-      setUsers([user]);
 
       setIsOpen(true);
     }

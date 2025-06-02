@@ -3,13 +3,12 @@ import { updateTaskPriority } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "@/app/hooks/useUserRole";
-import { getFloating, usePreventScroll } from "@/utils/floating";
 import { Pen, Plus, Save } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
-
+import { getFloating, usePreventScroll } from "@/utils/floating";
 
 export default function TaskPriority({ task }) {
   const { project, mutateTasks, priorities, mutatePriorities } =
@@ -35,9 +34,6 @@ export default function TaskPriority({ task }) {
     mode: "element",
   });
 
-  async function handleUpdateStatus(e) {
-    const value = e.target.dataset.value;
-    setPriority(value);
   async function handleTaskUpdatePriority(priority) {
     if (!canEdit) return;
 
@@ -129,8 +125,12 @@ export default function TaskPriority({ task }) {
       </div>
       {isOpen && (
         <>
-          <div className={styles.list} data-big={listWidth()}  ref={refs.setFloating}
-            style={floatingStyles}>
+          <div
+            className={styles.list}
+            data-big={listWidth()}
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <ul className={styles.items}>
               {priorities?.map((priority) => {
                 if (!isEdit) {
