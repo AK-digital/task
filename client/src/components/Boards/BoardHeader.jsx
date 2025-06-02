@@ -231,7 +231,8 @@ export default function BoardHeader({
 
   return (
     <div
-      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-tl-border-radius-medium rounded-tr-border-radius-medium bg-background-secondary-color w-full z-10 flex-wrap p-3"
+      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-background-secondary-color w-full z-9999 flex-wrap p-3"
+      // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
       style={{ "--border-color": `${board?.color}` }}
