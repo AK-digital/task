@@ -8,9 +8,7 @@ import TimeTrackingModel from "./TimeTracking.model.js";
 import FavoriteModel from "./Favorite.model.js";
 import MessageModel from "./Message.model.js";
 import DraftModel from "./Draft.model.js";
-import { getMatches } from "../utils/utils.js";
 import {
-  destroyFile,
   destroyMessageFiles,
   destroyTaskFiles,
 } from "../helpers/cloudinary.js";
@@ -155,7 +153,7 @@ projectSchema.pre("aggregate", function () {
 });
 
 // Middleware pour la suppression en cascade
-projectSchema.pre(["deleteOne", "findOneAndDelete"], async function () {
+projectSchema.post(["deleteOne", "findOneAndDelete"], async function () {
   const projectId = this.getQuery()._id;
 
   // Suppression en cascade des éléments liés au projet

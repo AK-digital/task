@@ -5,13 +5,20 @@ import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/Projects/ProjectCard";
 import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
 import { useProjects } from "@/app/hooks/useProjects";
+import { AuthContext } from "@/context/auth";
+import { useContext } from "react";
 
 export default function Projects() {
   const router = useRouter();
+  const { uid } = useContext(AuthContext);
   const { projects, projectsLoading, mutateProjects } = useProjects();
-  // Sort projects by favorites
-  projects?.sort((a, b) => {
-    return b.favorites?.length - a.favorites?.length;
+
+  // Trier les projets par favoris (favoris en premier)
+  const sortedProjects = projects?.sort((a, b) => {
+    const aIsFavorite = a?.favorites?.some((fav) => fav?.user === uid) || false;
+    const bIsFavorite = b?.favorites?.some((fav) => fav?.user === uid) || false;
+
+    return bIsFavorite - aIsFavorite;
   });
 
   return (
@@ -34,7 +41,7 @@ export default function Projects() {
               <ProjectCardSkeleton />
             ) : (
               <>
-                {projects?.map((project) => {
+                {sortedProjects?.map((project) => {
                   return (
                     <ProjectCard
                       key={project?._id}
