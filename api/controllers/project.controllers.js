@@ -218,11 +218,11 @@ export async function updateProjectLogo(req, res) {
 
     // Si un logo existe déjà, on le supprime d'abord
     if (project.logo) {
-      await destroyFile("task/project", project.logo);
+      await destroyFile("clynt/project", project.logo);
     }
 
     // Upload du nouveau fichier
-    const uploadedFile = await uploadFileBuffer("task/project", logo.buffer);
+    const uploadedFile = await uploadFileBuffer("clynt/project", logo.buffer);
 
     if (!uploadedFile || !uploadedFile.secure_url) {
       throw new Error("Échec de l'upload du fichier");

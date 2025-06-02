@@ -30,7 +30,7 @@ export async function uploadFileBuffer(path, buffer, originalFilename) {
 
     const options = {
       folder: path,
-      upload_preset: "task_preset",
+      upload_preset: "clynt_preset",
       resource_type: resourceType,
     };
 
@@ -51,7 +51,7 @@ export async function uploadFile(path, img) {
   try {
     const options = {
       folder: path,
-      upload_preset: "task_preset",
+      upload_preset: "clynt_preset",
     };
 
     return await cloudinary.uploader.upload(img, options);
@@ -73,10 +73,9 @@ export async function destroyFile(folder, file) {
       publicId = lastSegment;
     }
 
-    await cloudinary?.uploader?.destroy(`task/${folder}/${publicId}`, {
+    await cloudinary?.uploader?.destroy(`clynt/${folder}/${publicId}`, {
       resource_type: resourceType, // "image" ou "raw" selon le type
     });
-    console.log(`File destroyed: task/${folder}/${publicId} (${resourceType})`);
   } catch (err) {
     console.error("Error destroying file:", err);
     throw err;
@@ -86,7 +85,7 @@ export async function destroyFile(folder, file) {
 export async function destroyTaskFiles(task) {
   if (task?.description?.files?.length > 0) {
     for (const file of task?.description?.files) {
-      await destroyFile("task", file?.url);
+      await destroyFile("description", file?.url);
     }
   }
 

@@ -299,7 +299,7 @@ export function exportTimeTracking(projects, trackers) {
     doc.save(
       `${formattedStartingDate}-${formattedEndingDate}-${
         project?.name || "projet"
-      }-temps-task.pdf`
+      }-temps-clynt.pdf`
     );
   }
 }

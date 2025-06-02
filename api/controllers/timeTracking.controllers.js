@@ -17,8 +17,6 @@ export async function saveTimeTracking(req, res, next) {
 
   const task = await TaskModel.findById({ _id: taskId });
 
-  console.log("task", task);
-
   if (!task) {
     return res.status(404).send({
       success: false,
