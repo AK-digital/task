@@ -26,7 +26,8 @@ export default function ProjectHeader({ displayedFilters }) {
                   <div key={member?.user?._id} className="-ml-2 rounded-full transition-transform duration-200 hover:-translate-y-0.5">
                     <DisplayPicture
                       user={member?.user}
-                      className="mt-[5px] rounded-full object-cover w-8 h-8"
+                      style={{ width: "32px", height: "32px" }}
+                      className="mt-[5px] rounded-full object-cover"
                     />
                   </div>
                 ))}

@@ -78,7 +78,8 @@ export default function ProjectMembers({ members }) {
           <div key={user?._id} className="-ml-2">
             <DisplayPicture
               user={user}
-              className="w-[30px] h-[30px] rounded-full"
+              style={{ width: "30px", height: "30px" }}
+              className="rounded-full"
             />
           </div>
         ))}

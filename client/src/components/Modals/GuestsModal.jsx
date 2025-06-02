@@ -89,7 +89,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                     <div>
                       <DisplayPicture
                         user={member?.user}
-                        className="rounded-full w-8 h-8 min-w-8 min-h-8"
+                        style={{ width: "32px", height: "32px" }}
+                        className="rounded-full min-w-8 min-h-8"
                       />
                       <span
                         className="w-55 overflow-hidden text-ellipsis"

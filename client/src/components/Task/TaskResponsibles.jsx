@@ -94,7 +94,8 @@ export default function TaskResponsibles({ task, uid, user }) {
               <div className="images_TaskResponsibles flex justify-center items-center" key={responsible?._id}>
                 <DisplayPicture
                   user={responsible}
-                  className="w-[30px] h-[30px] rounded-full"
+                  style={{ width: "30px", height: "30px" }}
+                  className="rounded-full"
                 />
               </div>
             );
@@ -125,8 +126,8 @@ export default function TaskResponsibles({ task, uid, user }) {
                         style={{
                           width: "24px",
                           height: "24px",
-                          borderRadius: "50%",
                         }}
+                        className="rounded-full"
                         isPopup={false}
                       />
                       <span>
@@ -155,8 +156,8 @@ export default function TaskResponsibles({ task, uid, user }) {
                           style={{
                             width: "24px",
                             height: "24px",
-                            borderRadius: "50%",
                           }}
+                          className="rounded-full"
                         />
                         <span>{member?.user?.email}</span>
                       </li>

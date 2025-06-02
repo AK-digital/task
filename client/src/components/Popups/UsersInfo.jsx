@@ -11,7 +11,8 @@ export default function UsersInfo({ users, style }) {
           <DisplayPicture
             user={user}
             isPopup={false}
-            className="rounded-full w-6 h-6"
+            style={{ width: "24px", height: "24px" }}
+            className="rounded-full"
           />
 
           <span className="text-[0.85rem] text-text-color-muted whitespace-nowrap">

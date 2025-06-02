@@ -92,7 +92,8 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                       <DisplayPicture
                         user={member?.user}
                         isPopup={false}
-                        className="w-[22px] h-[22px] rounded-full"
+                        style={{ width: "22px", height: "22px" }}
+                        className="rounded-full"
                       />
                       <span className="whitespace-nowrap text-ellipsis overflow-hidden block max-w-[110px]">
                         {member?.user?.firstName + " " + member?.user?.lastName}
