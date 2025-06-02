@@ -1,9 +1,10 @@
 "use client";
 import styles from "@/styles/components/projects/projectMembers.module.css";
-import { displayPicture } from "@/utils/utils";
 import { useRef, useState } from "react";
 import UsersInfo from "../Popups/UsersInfo";
 import Portal from "../Portal/Portal";
+import DisplayPicture from "../User/DisplayPicture";
+
 
 export default function ProjectMembers({ members }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,14 +76,15 @@ export default function ProjectMembers({ members }) {
       <div className={styles.membersWrapper}>
         {/* Membres du projet (affiche max 4) */}
         {defaultUsers.slice(0, 4).map((user) => (
-          <div
-            key={user?._id}
-            className={styles.memberWrapper}
-            onMouseEnter={handleSingleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            data-user-id={user?._id}
-          >
-            {displayPicture(user, 30, 30)}
+          <div key={user?._id} className={styles.memberWrapper}>
+            <DisplayPicture
+              user={user}
+              style={{
+                width: "30px",
+                height: "30px",
+                borderRadius: "50%",
+              }}
+            />
           </div>
         ))}
 
