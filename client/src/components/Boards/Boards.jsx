@@ -338,37 +338,32 @@ export default function Boards({ boards: initialBoards, tasksData }) {
   const boardIds = useMemo(() => boards.map((board) => board._id), [boards]);
 
   return (
-    <div className="relative flex flex-col gap-11 h-full overflow-y-auto pr-4 pb-6 rounded-tl-border-radius-medium rounded-tr-border-radius-medium">
-      {archive && (
-        <>
-          <div className="flex items-center gap-2 font-semibold text-text-size-large -mb-5">
-            <div
-              className="relative top-[3px] cursor-pointer"
-              onClick={() => router.push(`/projects/${project?._id}`)}
-            >
-              <ArrowLeftCircle size={32} />
+      <div className="boards_Boards relative flex flex-col gap-11 h-full overflow-y-auto pr-2.5 pb-6 z-9999 border-r-[3px] border-transparent rounded-2xl">
+        {archive && (
+          <>
+            <div className="flex items-center gap-2 font-semibold text-text-size-large -mb-5">
+              <div
+                className="relative top-[3px] cursor-pointer"
+                onClick={() => router.push(`/projects/${project?._id}`)}
+              >
+                <ArrowLeftCircle size={32} />
+              </div>
+              <span>Archives du projet</span>
             </div>
-            <span>Archives du projet</span>
-          </div>
 
-          {Object.values(tasks).flat()?.length === 0 && (
-            <div>
-              <p>Aucune archive disponible actuellement</p>
-            </div>
-          )}
-        </>
-      )}
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-        modifiers={[restrictToVerticalAxis]}
-      >
-        {/* Contexte pour les boards */}
-        <SortableContext
-          items={boardIds}
-          strategy={verticalListSortingStrategy}
+            {Object.values(tasks).flat()?.length === 0 && (
+              <div>
+                <p>Aucune archive disponible actuellement</p>
+              </div>
+            )}
+          </>
+        )}
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis]}
         >
           <div className="flex flex-col gap-11 w-full">
             {boards
@@ -403,36 +398,33 @@ export default function Boards({ boards: initialBoards, tasksData }) {
                 );
               })}
           </div>
-        </SortableContext>
-        <DragOverlay>
-          {activeId && activeType === "task" ? (
-            <Task
-              id={activeId}
-              task={Object.values(tasks)
-                .flat()
-                .find((task) => task?._id === activeId)}
-              project={project}
-              displayedElts={displayedElts}
-              archive={archive}
-            />
-          ) : activeId && activeType === "board" ? (
-            <div>
-              <Board
-                tasks={tasks[activeId] || []}
+          <DragOverlay>
+            {activeId && activeType === "task" ? (
+              <Task
+                id={activeId}
+                task={Object.values(tasks)
+                  .flat()
+                  .find((task) => task?._id === activeId)}
                 project={project}
-                board={boards.find((board) => board._id === activeId)}
-                isOverlay={true}
+                displayedElts={displayedElts}
                 archive={archive}
               />
-            </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
-      {!archive && canPost && (
-        <div>
-          <AddBoard project={project} />
-        </div>
-      )}
-    </div>
+            ) : activeId && activeType === "board" ? (
+              <div>
+                <Board
+                  tasks={tasks[activeId] || []}
+                  project={project}
+                  archive={archive}
+                />
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+        {!archive && canPost && (
+          <div>
+            <AddBoard project={project} />
+          </div>
+        )}
+      </div>
   );
 }
