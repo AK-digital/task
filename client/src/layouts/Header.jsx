@@ -4,13 +4,12 @@ import styles from "@/styles/layouts/header.module.css";
 import Notifications from "@/components/Notifications/Notifications";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
-import { Bell, Timer } from "lucide-react";
+import { Bell } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { getNotifications } from "@/api/notification";
-import moment from "moment";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -38,24 +37,9 @@ export default function Header() {
   const unreadNotifications = notificationsData?.filter((notif) => !notif.read);
   const unreadCount = unreadNotifications?.length;
 
-  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
-  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
-
   return (
     <header className={styles.container}>
       <nav className={styles.nav}>
-        <div className={styles.links}>
-          <Link
-            href={
-              "/times?startingDate=" +
-              firstDayOfTheMonth +
-              "&endingDate=" +
-              lastDayOfTheMonth
-            }
-          >
-            <Timer size={24} cursor={"pointer"} />
-          </Link>
-        </div>
         <ul className={styles.actions}>
           <li className={styles.action}>
             <Bell

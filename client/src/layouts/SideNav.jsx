@@ -1,16 +1,35 @@
 "use client";
 import styles from "@/styles/layouts/side-nav.module.css";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import SortableProject from "@/components/Projects/SortableProject";
+import { updateProjectsOrder } from "@/actions/project";
+import { MeasuringStrategy } from "@dnd-kit/core";
 import {
   ArrowLeftFromLine,
   ArrowRightFromLine,
   LayoutGrid,
   Plus,
   ClipboardList,
+  Clock3,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import moment from "moment";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
@@ -23,6 +42,9 @@ export default function SideNav() {
   const { favorites, favoritesLoading } = useFavorites();
   const projects = favorites?.map((favorite) => favorite.project);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
+  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
 
   return (
     <aside className={styles.container} data-open={isMenuOpen}>
@@ -71,6 +93,19 @@ export default function SideNav() {
               <LayoutGrid size={24} />
             </div>
             <span>Mes projets</span>
+          </Link>
+          <Link
+            href={
+              "/times?startingDate=" +
+              firstDayOfTheMonth +
+              "&endingDate=" +
+              lastDayOfTheMonth
+            }
+          >
+            <div>
+              <Clock3 size={24} />
+            </div>
+            <span>Suivi du temps</span>
           </Link>
           <Link href={"/new-project"}>
             <div>
