@@ -15,8 +15,6 @@ export default function TaskDeadline({ task, uid }) {
   const [isEditing, setIsEditing] = useState(false);
   const project = task?.projectId;
 
-  console.log(task.status);
-
   useEffect(() => {
     // Update deadline when task is updated (from another user)
     setDeadline(task?.deadline?.split("T")[0] || "");

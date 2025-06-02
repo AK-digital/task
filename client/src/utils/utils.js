@@ -211,8 +211,7 @@ export function exportTimeTracking(projects, trackers) {
     // Sauvegarde du fichier avec nom du projet
 
     doc.save(
-      `${formattedStartingDate}-${formattedEndingDate}-${
-        project?.name || "projet"
+      `${formattedStartingDate}-${formattedEndingDate}-${project?.name || "projet"
       }-temps-task.pdf`
     );
   }
@@ -235,23 +234,6 @@ export function groupReactionsByEmoji(reactions = []) {
       return acc;
     }
   }, []);
-}
-
-export function displayPicture(user, width, height) {
-  if (user?.picture) {
-    return (
-      <Image
-        src={user?.picture}
-        width={width}
-        height={height}
-        quality={100}
-        alt={`Photo de ${user?.firstName}`}
-        className={`w-[${width}px] h-[${height}px] max-w-[${width}px] max-h-[${height}px] min-h-[${height}px] min-w-[${width}px] rounded-full`}
-      />
-    );
-  } else {
-    return <NoPicture width={width} height={height} user={user} />;
-  }
 }
 
 export function sendNotification(receiver, user, uid, message, link) {

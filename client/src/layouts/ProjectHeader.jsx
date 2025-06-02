@@ -1,13 +1,13 @@
 "use client";
-import Image from "next/image";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
 import { UserPlus2 } from "lucide-react";
 import { useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
-import NoPicture from "@/components/User/NoPicture";
 import { isNotEmpty } from "@/utils/utils";
 import TasksFilters from "@/components/tasks/TasksFilters";
+import DisplayPicture from "@/components/User/DisplayPicture";
 import { useProjectContext } from "@/context/ProjectContext";
+
 
 export default function ProjectHeader({ displayedFilters }) {
   const { project, mutateProject, queries, setQueries } = useProjectContext();
@@ -24,22 +24,10 @@ export default function ProjectHeader({ displayedFilters }) {
               {isNotEmpty(members) &&
                 members?.map((member) => (
                   <div key={member?.user?._id} className="-ml-2 rounded-full transition-transform duration-200 hover:-translate-y-0.5">
-                    {member?.user?.picture ? (
-                      <Image
-                        src={member?.user?.picture || "/default-pfp.webp"}
-                        alt={`${member?.user?.firstName} ${member?.user?.lastName}`}
-                        width={32}
-                        height={32}
-                        className="mt-[5px] rounded-full object-cover h-auto max-h-8 aspect-[2/2]"
-                      />
-                    ) : (
-                      <NoPicture
-                        user={member?.user}
-                        width={"32px"}
-                        height={"32px"}
-                        className="!mt-[5px]"
-                      />
-                    )}
+                    <DisplayPicture
+                      user={member?.user}
+                      className="mt-[5px] rounded-full object-cover w-8 h-8"
+                    />
                   </div>
                 ))}
             </div>

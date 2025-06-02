@@ -1,7 +1,8 @@
 import { useProjectContext } from "@/context/ProjectContext";
-import { displayPicture, isNotEmpty } from "@/utils/utils";
 import { ChevronDown, CircleUserRound, Undo } from "lucide-react";
 import { useState } from "react";
+import DisplayPicture from "@/components/User/DisplayPicture";
+import { isNotEmpty } from "@/utils/utils";
 
 export default function TasksAdminFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,7 +89,11 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                     />
 
                     <label htmlFor={member?.user?._id} className="flex items-center gap-1 cursor-pointer">
-                      {displayPicture(member?.user, 22, 22)}
+                      <DisplayPicture
+                        user={member?.user}
+                        isPopup={false}
+                        className="w-[22px] h-[22px] rounded-full"
+                      />
                       <span className="whitespace-nowrap text-ellipsis overflow-hidden block max-w-[110px]">
                         {member?.user?.firstName + " " + member?.user?.lastName}
                       </span>

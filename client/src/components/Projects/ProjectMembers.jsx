@@ -1,9 +1,9 @@
 "use client";
-// import styles from "@/styles/components/projects/projectMembers.module.css";
-import { displayPicture } from "@/utils/utils";
 import { useRef, useState } from "react";
 import UsersInfo from "../Popups/UsersInfo";
 import Portal from "../Portal/Portal";
+import DisplayPicture from "../User/DisplayPicture";
+
 
 export default function ProjectMembers({ members }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,14 +75,11 @@ export default function ProjectMembers({ members }) {
       <div className="flex">
         {/* Membres du projet (affiche max 4) */}
         {defaultUsers.slice(0, 4).map((user) => (
-          <div
-            key={user?._id}
-            className="-ml-2"
-            onMouseEnter={handleSingleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            data-user-id={user?._id}
-          >
-            {displayPicture(user, 30, 30)}
+          <div key={user?._id} className="-ml-2">
+            <DisplayPicture
+              user={user}
+              className="w-[30px] h-[30px] rounded-full"
+            />
           </div>
         ))}
 
