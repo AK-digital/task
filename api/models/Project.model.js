@@ -75,7 +75,9 @@ projectSchema.pre("aggregate", function () {
     localField: "members.user",
     foreignField: "_id",
     as: "membersData",
-    pipeline: [{ $project: { lastName: 1, firstName: 1, picture: 1 } }],
+    pipeline: [
+      { $project: { lastName: 1, firstName: 1, email: 1, picture: 1 } },
+    ],
   });
   this.lookup({
     from: "status",

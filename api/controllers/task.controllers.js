@@ -12,6 +12,7 @@ import { allowedStatus, getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
 import StatusModel from "../models/Status.model.js";
+import PriorityModel from "../models/Priority.model.js";
 
 // Only authors and guets will be able to post the tasks
 export async function saveTask(req, res, next) {
