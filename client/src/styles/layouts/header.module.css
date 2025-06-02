@@ -43,7 +43,11 @@
   align-items: center;
 }
 
-.action:nth-child(1) {
+.languageSelector {
+  margin-right: 8px;
+}
+
+.action:nth-child(2) {
   position: relative;
 }
 

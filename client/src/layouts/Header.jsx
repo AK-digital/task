@@ -2,6 +2,7 @@
 
 import styles from "@/styles/layouts/header.module.css";
 import Notifications from "@/components/Notifications/Notifications";
+import LanguageSwitcher from "@/components/Header/LanguageSwitcher";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import { Bell } from "lucide-react";
@@ -41,6 +42,9 @@ export default function Header() {
     <header className={styles.container}>
       <nav className={styles.nav}>
         <ul className={styles.actions}>
+          <li className={styles.languageSelector}>
+            <LanguageSwitcher />
+          </li>
           <li className={styles.action}>
             <Bell
               size={22}
