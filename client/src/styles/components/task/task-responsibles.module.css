@@ -117,4 +117,4 @@
 .scrollable {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch; /* iOS smooth scroll */
-}
+/* } */

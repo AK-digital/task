@@ -275,17 +275,18 @@ export default function TimeTracking({
       </div>
       {/* Billable */}
       <div
-        className={`${styles.billable} ${styles.row}`}
+        className={`relative flex justify-center items-center gap-1 w-full h-full max-w-[120px] min-w-[120px] border-r border-text-light-color text-text-color-muted ${!canPut ? "cursor-default" : "cursor-pointer hover:text-text-dark-color"}`}
         onClick={handleBillableToggle}
         data-disabled={!canPut}
       >
         <BadgeEuro
           size={18}
           key={isSpinning ? "spinning" : "not-spinning"}
-          className={`${isSpinning ? styles.spin : ""}`}
           cursor={canPut ? "pointer" : "default"}
+          className={`${isSpinning ? "transform-3d backface-visible animate-[spinY_0.5s_ease-in-out]" : ""}`}
         />
-        {!isBillable && <div className={styles.slash}></div>}
+        {!isBillable && <div className="content-[''] absolute w-5 h-0.5 top-1/2 left-[42%] origin-center pointer-events-none -translate-y-1/2 -rotate-45">
+        </div>}
       </div>
       {isHover && (
         <div className="relative flex items-center justify-center gap-1 w-full h-full cursor-default max-w-5 min-w-5 text-text-color-muted">

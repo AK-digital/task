@@ -52,7 +52,7 @@ export default function SideNav() {
               title="Mes tâches"
               className="flex justify-center items-center min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color hover:text-color-accent-color-hover hover:cursor-pointer"
             >
-              <ClipboardList size={24} className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color transition-all ease-linear duration-150"/>
+              <ClipboardList size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150"/>
             </Link>
           </div>
           <nav className="nav_SideNav relative flex flex-col gap-2 max-h-[65svh] overflow-y-auto scroll-smooth">
@@ -76,7 +76,7 @@ export default function SideNav() {
             href={"/projects"}
             data-active={projectId === ""}
           >
-            <LayoutGrid size={24} className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
+            <LayoutGrid size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
           </Link>
           <Link
             href={
@@ -85,18 +85,18 @@ export default function SideNav() {
               "&endingDate=" +
               lastDayOfTheMonth
             }
-            className="flex items-center gap-3"
+            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-color-accent-color-hover hover:cursor-pointer"
           >
             <div>
-              <Clock3 size={24} className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
+              <Clock3 size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
             </div>
-            <span className="text-text-size-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Suivi du temps</span>
+            {/* <span className="text-text-size-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Suivi du temps</span> */}
           </Link>
           <Link href={"/new-project"} className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-color-accent-color-hover hover:cursor-pointer">
             <div>
-              <Plus size={24} className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
+              <Plus size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
             </div>
-            <span className="text-text-size-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Ajouter un projet</span>
+            {/* <span className="text-text-size-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Ajouter un projet</span> */}
           </Link>
         </div>
       </div>

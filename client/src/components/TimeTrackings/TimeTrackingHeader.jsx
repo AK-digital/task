@@ -143,7 +143,7 @@ export default function TimeTrackingHeader({
   };
 
   return (
-    <div className="sticky flex items-center top-0 bg-background-secondary-color border-b border-text-light-color text-text-size-small h-[38px] text-text-color-muted font-medium rounded-t-lg last:border-b-0">
+    <div className="sticky flex items-center top-0 bg-background-secondary-color border-b border-text-light-color text-text-size-small h-[38px] text-text-color-muted font-medium rounded-t-lg z-10 last:border-b-0">
       <div className="min-w-[40px] max-w-[40px] flex justify-center items-center w-full h-full gap-2 cursor-default">
         <input
           type="checkbox"
@@ -233,20 +233,22 @@ export default function TimeTrackingHeader({
           />
         </div>
       </div>
-      <div className={`${styles.billable} ${styles.row}`}>
-        <span>Facturable</span>
-        <div className={styles.sort}>
+      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[120px] min-w-[120px] border-r border-text-light-color">
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Facturable</span>
+        <div className="flex flex-col gap-0">
           <ChevronUp
             size={15}
             cursor={"pointer"}
             onClick={() => handleBillableSort("asc")}
             data-sort={billableSort === "asc"}
+            className="relative top-1 data-[sort=true]:text-color-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleBillableSort("desc")}
             data-sort={billableSort === "desc"}
+            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
           />
         </div>
       </div>
