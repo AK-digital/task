@@ -23,7 +23,8 @@ export default function PictureForm() {
   const [editImg, setEditImg] = useState(false);
   const [popUp, setPopup] = useState(null);
 
-  const updateUserPictureWithT = updateUserPicture.bind(null, t);
+  const updateUserPictureWithT = (prevState, formData) =>
+    updateUserPicture(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     updateUserPictureWithT,
     initialState

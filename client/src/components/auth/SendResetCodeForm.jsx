@@ -19,7 +19,7 @@ export default function SendResetCodeForm() {
   const [messageStatus, setMessageStatus] = useState("");
 
   const sendResetCodeWithT = (prevState, formData) =>
-    sendResetCode(prevState, formData, t);
+    sendResetCode(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     sendResetCodeWithT,
     initialState

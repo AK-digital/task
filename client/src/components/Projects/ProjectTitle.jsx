@@ -31,7 +31,8 @@ export default function ProjectTitle({ project }) {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const updateProjectWithT = updateProject.bind(null, t);
+  const updateProjectWithT = (prevState, formData) =>
+    updateProject(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     updateProjectWithT,
     initialState

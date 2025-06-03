@@ -25,7 +25,7 @@ export default function SignUp() {
   const [message, setMessage] = useState(null);
 
   // Fonction wrapper pour passer t à signUp
-  const signUpWithT = (prevState, formData) => signUp(prevState, formData, t);
+  const signUpWithT = (prevState, formData) => signUp(t, prevState, formData);
 
   const [state, formAction, pending] = useActionState(
     signUpWithT,

@@ -43,7 +43,8 @@ export default function ProjectOptions({ project }) {
   const [isDisabled, setIsDisabled] = useState(true);
   const [popup, setPopup] = useState(null);
 
-  const updateProjectWithT = updateProject.bind(null, t);
+  const updateProjectWithT = (prevState, formData) =>
+    updateProject(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     updateProjectWithT,
     initialState

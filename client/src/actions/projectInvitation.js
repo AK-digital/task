@@ -2,7 +2,7 @@
 
 import { useAuthFetch } from "@/utils/api";
 
-export async function updateProjectInvitationRole(prevState, formData, t) {
+export async function updateProjectInvitationRole(t, prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");
@@ -35,7 +35,7 @@ export async function updateProjectInvitationRole(prevState, formData, t) {
   }
 }
 
-export async function deleteProjectInvitation(prevState, formData, t) {
+export async function deleteProjectInvitation(t, prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");

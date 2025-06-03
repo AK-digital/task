@@ -2,7 +2,7 @@
 import { useAuthFetch } from "@/utils/api";
 import { allowedStatus } from "@/utils/utils";
 
-export async function saveTask(projectId, prevState, formData, t) {
+export async function saveTask(projectId, t, prevState, formData) {
   try {
     const boardId = formData.get("board-id");
     const text = formData.get("new-task");

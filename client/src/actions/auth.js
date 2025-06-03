@@ -4,7 +4,7 @@ import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
 import { cookies } from "next/headers";
 
-export async function signUp(prevState, formData, t) {
+export async function signUp(t, prevState, formData) {
   try {
     const rawFormData = {
       lastName: formData.get("last-name"),
@@ -64,7 +64,7 @@ export async function signUp(prevState, formData, t) {
   }
 }
 
-export async function signIn(prevState, formData, t) {
+export async function signIn(t, prevState, formData) {
   try {
     const rawFormData = {
       email: formData.get("email"),
@@ -166,7 +166,7 @@ export async function signIn(prevState, formData, t) {
   }
 }
 
-export async function sendResetCode(prevState, formData, t) {
+export async function sendResetCode(t, prevState, formData) {
   try {
     const email = formData.get("email");
 
@@ -220,7 +220,7 @@ export async function sendResetCode(prevState, formData, t) {
   }
 }
 
-export async function resetForgotPassword(prevState, formData, t) {
+export async function resetForgotPassword(t, prevState, formData) {
   try {
     const resetCode = formData.get("reset-code");
     const newPassword = formData.get("newPassword");

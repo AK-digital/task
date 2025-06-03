@@ -19,7 +19,8 @@ export default function ProfileForm() {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
 
-  const updateUserProfileWithT = updateUserProfile.bind(null, t);
+  const updateUserProfileWithT = (prevState, formData) =>
+    updateUserProfile(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     updateUserProfileWithT,
     initialState

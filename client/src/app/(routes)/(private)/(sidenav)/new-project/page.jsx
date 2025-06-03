@@ -19,7 +19,8 @@ export default function NewProject() {
   const { t } = useTranslation();
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-  const saveProjectWithT = saveProject.bind(null, t);
+  const saveProjectWithT = (prevState, formData) =>
+    saveProject(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     saveProjectWithT,
     initialState

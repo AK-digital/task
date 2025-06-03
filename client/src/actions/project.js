@@ -5,7 +5,7 @@ import { regex } from "@/utils/regex";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export async function saveProject(prevState, formData, t) {
+export async function saveProject(t, prevState, formData) {
   try {
     const rawFormData = {
       name: formData.get("project-name"),
@@ -41,9 +41,9 @@ export async function saveProject(prevState, formData, t) {
 
 export async function sendProjectInvitationToGuest(
   projectId,
+  t,
   prevState,
-  formData,
-  t
+  formData
 ) {
   try {
     const email = formData.get("email");
@@ -161,7 +161,7 @@ export async function acceptProjectInvitation(invitationId, t) {
   }
 }
 
-export async function removeGuest(projectId, prevState, formData, t) {
+export async function removeGuest(projectId, t, prevState, formData) {
   try {
     const guestId = formData.get("guest-id");
 
@@ -203,7 +203,7 @@ export async function removeGuest(projectId, prevState, formData, t) {
   }
 }
 
-export async function updateProject(prevState, formData, t) {
+export async function updateProject(t, prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");

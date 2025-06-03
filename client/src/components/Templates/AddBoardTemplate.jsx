@@ -16,7 +16,8 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
 
-  const saveBoardTemplateWithT = saveBoardTemplate.bind(null, t);
+  const saveBoardTemplateWithT = (prevState, formData) =>
+    saveBoardTemplate(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     saveBoardTemplateWithT,
     initialState

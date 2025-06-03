@@ -7,9 +7,9 @@ import moment from "moment";
 export async function saveTimeTracking(
   taskId,
   projectId,
+  t,
   prevState,
-  formData,
-  t
+  formData
 ) {
   try {
     const date = formData.get("date");

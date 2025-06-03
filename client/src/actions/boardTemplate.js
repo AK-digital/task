@@ -2,7 +2,7 @@
 
 import { useAuthFetch } from "@/utils/api";
 
-export async function saveBoardTemplate(prevState, formData, t) {
+export async function saveBoardTemplate(t, prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const boardId = formData.get("board-id");

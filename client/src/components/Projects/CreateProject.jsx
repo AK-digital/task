@@ -21,7 +21,8 @@ export default function CreateProject({
   setIsCreating,
 }) {
   const { t } = useTranslation();
-  const saveProjectWithT = saveProject.bind(null, t);
+  const saveProjectWithT = (prevState, formData) =>
+    saveProject(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     saveProjectWithT,
     initialState

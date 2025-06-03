@@ -26,7 +26,7 @@ export default function SignIn() {
   const [status, setStatus] = useState(null);
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
-  const signInWithT = (prevState, formData) => signIn(prevState, formData, t);
+  const signInWithT = (prevState, formData) => signIn(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     signInWithT,
     initialState

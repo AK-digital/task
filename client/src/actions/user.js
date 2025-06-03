@@ -2,7 +2,7 @@
 import { userUpdateValidation } from "@/utils/zod";
 import { useAuthFetch } from "@/utils/api";
 
-export async function updateUserProfile(prevState, formData, t) {
+export async function updateUserProfile(t, prevState, formData) {
   try {
     const userId = formData.get("userId");
 
@@ -50,7 +50,7 @@ export async function updateUserProfile(prevState, formData, t) {
   }
 }
 
-export async function updateUserPicture(prevState, formData, t) {
+export async function updateUserPicture(t, prevState, formData) {
   try {
     const userId = formData.get("userId");
     const pictureFile = formData.get("picture");

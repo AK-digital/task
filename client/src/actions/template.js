@@ -1,7 +1,7 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
 
-export async function saveTemplate(prevState, formData, t) {
+export async function saveTemplate(t, prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const name = formData.get("template-name");

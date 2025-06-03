@@ -180,7 +180,8 @@ export function ProjectInvitationsList({
     message: "",
   };
 
-  const deleteProjectInvitationWithT = deleteProjectInvitation.bind(null, t);
+  const deleteProjectInvitationWithT = (prevState, formData) =>
+    deleteProjectInvitation(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
     deleteProjectInvitationWithT,
     initialState
