@@ -46,7 +46,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
         <ChartBar size={16} />
         <span className="flex-1">Status</span>
         {hasStatus && (
-          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-text-size-small">
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {QueriesStatus?.length}
           </span>
         )}
@@ -54,7 +54,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
       </div>
       {isOpen && (
         <>
-          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-shadow-box-small border border-color-border-color p-2 w-full font-medium text-text-size-small">
+          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-shadow-box-small border border-color-border-color p-2 w-full font-medium text-small">
             <ul className="flex flex-col">
               <li className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" onClick={handleResetStatus}>
                 <Undo size={14} />

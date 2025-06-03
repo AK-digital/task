@@ -36,7 +36,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
   return (
     <>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 bg-background-secondary-color p-6 rounded-lg shadow-shadow-box-medium w-[500px]">
-        <div className="text-center text-text-size-large border-b border-background-primary-color pb-6">
+        <div className="text-center text-large border-b border-background-primary-color pb-6">
           <span>Liste de modèle des tableaux</span>
         </div>
         {/* Boards templates */}

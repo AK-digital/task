@@ -137,25 +137,25 @@ export default function Filters({
         query={"users"}
       />
       <div className="relative flex justify-center bg-background-secondary-color rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
-        <label className="absolute -top-4 left-[18px] text-text-size-small block w-full">Date de début</label>
+        <label className="absolute -top-4 left-[18px] text-small block w-full">Date de début</label>
         <input
           type="date"
           name="startingDate"
           id="startingDate"
           defaultValue={queries.get("startingDate") || firstDayOfTheMonth}
           onChange={handleStartingDate}
-          className="p-0 max-w-[100px] border-none text-text-size-normal"
+          className="p-0 max-w-[100px] border-none text-normal"
         />
       </div>
       <div className="relative flex justify-center bg-background-secondary-color rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
-        <label className="absolute -top-4 left-[18px] text-text-size-small block w-full">Date de fin</label>
+        <label className="absolute -top-4 left-[18px] text-small block w-full">Date de fin</label>
         <input
           type="date"
           name="endingDate"
           id="endingDate"
           defaultValue={queries.get("endingDate") || lastDayOfTheMonth}
           onChange={handleEndingDate}
-          className="p-0 max-w-[100px] border-none text-text-size-normal"
+          className="p-0 max-w-[100px] border-none text-normal"
         />
       </div>
     </div>

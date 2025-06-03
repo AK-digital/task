@@ -188,7 +188,7 @@ export default function TasksHeader({
   // }
 
   return (
-    <div className={`sticky z-1002 left-0 bg-background-secondary-color flex items-center w-full text-text-size-small text-text-color-muted pb-3 ${!isTaskPage ? 'top-[49px] pt-0' : 'top-0 pt-5'}`}>
+    <div className={`sticky z-1002 left-0 bg-background-secondary-color flex items-center w-full text-small text-text-color-muted pb-3 ${!isTaskPage ? 'top-[49px] pt-0' : 'top-0 pt-5'}`}>
       {(canEdit || isCheckbox) && (
         <div className="min-w-[13px] w-[13px] h-5 flex justify-center items-center gap-1 cursor-default"></div>
       )}

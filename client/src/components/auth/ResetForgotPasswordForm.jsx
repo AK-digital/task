@@ -63,7 +63,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium"
+              className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
             />
             {hiddenPassword ? (
               <Eye
@@ -91,7 +91,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium"
+              className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
             />
             {hiddenPassword ? (
               <Eye
@@ -112,7 +112,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             name="reset-code"
             defaultValue={resetCode}
             hidden
-            className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium"
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
           />
           <button type="submit" disabled={pending} data-disabled={pending}>
             Réinitialiser le mot de passe

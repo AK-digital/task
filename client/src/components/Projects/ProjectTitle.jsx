@@ -144,7 +144,7 @@ export default function ProjectTitle({ project }) {
 
   return (
     <div className="flex flex-row items-center gap-4">
-      <div className="flex items-center font-bold text-text-size-large">
+      <div className="flex items-center font-bold text-large">
         {isEditing ? (
           <form action={formAction} ref={formRef}>
             <input

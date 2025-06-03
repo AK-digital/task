@@ -75,7 +75,7 @@ export default function GuestFormInvitation({
             className="input_GuestFormInvitation font-bricolage border-none bg-background-third-color p-2 rounded-sm"
           />
           {errors && <i>{errors?.email}</i>}
-          <button type="submit" data-disabled={pending} className="w-full rounded-sm text-text-size-medium p-2">
+          <button type="submit" data-disabled={pending} className="w-full rounded-sm text-medium p-2">
             Envoyer une invitation
           </button>
         </form>

@@ -47,7 +47,7 @@ export default function TaskText({ task }) {
 
   return (
     <div className="w-full min-w-[200px] max-w-[700px] cursor-text mx-2" onClick={handleEdit} id="task-row">
-      {!isEdit && <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-text-size-normal tracking-[0.01em]">{value}</span>}
+      {!isEdit && <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em]">{value}</span>}
       {isEdit && (
         <input
           type="text"
@@ -57,7 +57,7 @@ export default function TaskText({ task }) {
           onChange={handleChange}
           onBlur={() => setIsEdit(false)}
           autoFocus
-          className="relative text-text-size-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-border-radius-xs font-bricolage"
+          className="relative text-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-border-radius-xs font-bricolage"
         />
       )}
     </div>

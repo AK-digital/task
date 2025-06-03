@@ -23,7 +23,7 @@ export default function TasksSearch({ setQueries }) {
         id="search"
         placeholder="Recherchez une tâche..."
         onChange={handleSearch}
-        className="input_TasksSearch border-0 p-0 text-color-text-dark-color text-text-size-normal font-bricolage placeholder:text-color-text-color-muted"
+        className="input_TasksSearch border-0 p-0 text-color-text-dark-color text-normal font-bricolage placeholder:text-color-text-color-muted"
       />
     </div>
   );

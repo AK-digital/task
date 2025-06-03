@@ -51,7 +51,7 @@ export default function SendResetCodeForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium"
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
             />
 
           {state?.errors?.email && (

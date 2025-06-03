@@ -58,7 +58,7 @@ export default function Messages({ task, project, mutateTasks }) {
 
   return (
     <div className="flex flex-col gap-[15px]">
-      <span className="flex items-center gap-2 text-text-size-large text-text-dark-color font-medium [&_svg]:text-text-color-muted">
+      <span className="flex items-center gap-2 text-large text-text-dark-color font-medium [&_svg]:text-text-color-muted">
         <MessagesSquareIcon size={18} /> Conversation
       </span>
 
@@ -90,7 +90,7 @@ export default function Messages({ task, project, mutateTasks }) {
       )}
       {!isOpen && !messageLoading && (
         <div
-          className="border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-text-size-small data-[role=true]:cursor-pointer"
+          className="border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-small data-[role=true]:cursor-pointer"
           onClick={handleIsOpen}
           data-role={isAuthorized}
         >

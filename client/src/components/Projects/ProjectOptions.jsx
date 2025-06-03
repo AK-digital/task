@@ -168,7 +168,7 @@ export default function ProjectOptions({ project }) {
             <div className="bg-white/50 rounded-border-radius-medium p-8">
               {/* Wrapper header */}
               <div className="flex justify-between">
-                <span className="text-text-size-large">Informations générales</span>
+                <span className="text-large">Informations générales</span>
                 <div className="flex flex-col items-center gap-0.5 text-[0.8rem] text-text-color-muted">
                   <span>Créée le {createdAt}</span>
                   <span>
@@ -228,7 +228,7 @@ export default function ProjectOptions({ project }) {
                   {/* Project archive */}
                   <div className="flex items-center gap-1">
                     <Archive size={16} />
-                    <Link href={`/projects/${project?._id}/archive`} className="underline text-text-dark-color text-text-size-small">
+                    <Link href={`/projects/${project?._id}/archive`} className="underline text-text-dark-color text-small">
                       Archive du projet
                     </Link>
                   </div>
@@ -237,7 +237,7 @@ export default function ProjectOptions({ project }) {
             </div>
             {/*  Links  */}
             <div className="bg-white/50 rounded-border-radius-medium p-8">
-              <div className="text-text-size-large">
+              <div className="text-large">
                 <span>Liens rapides</span>
               </div>
               <div className="flex flex-col gap-4 mt-5">
@@ -319,7 +319,7 @@ export default function ProjectOptions({ project }) {
           {/* Right Column */}
           <div className="relative top-[94px] w-[20%] min-w-[400px] flex gap-10 flex-col">
             <div className="bg-white/50 rounded-border-radius-medium p-8 h-[675px]">
-              <div className="text-text-size-large">
+              <div className="text-large">
                 <span>Notes</span>
               </div>
               <div className="flex flex-col gap-0 mt-5 h-full">
@@ -329,7 +329,7 @@ export default function ProjectOptions({ project }) {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Ajouter une note..."
-                  className="font-bricolage h-[90%] resize-none border-none text-text-size-normal"
+                  className="font-bricolage h-[90%] resize-none border-none text-normal"
                 ></textarea>
               </div>
             </div>

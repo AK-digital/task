@@ -158,7 +158,7 @@ export default function TaskTimer({ task }) {
 
   return (
     <div className="relative flex justify-center max-w-[120px] w-full px-1.5 border-r border-text-light-color h-full data-[running=true]:text-inherit" data-running={isRunning} id="task-row">
-      <span className="flex items-center justify-center gap-2 text-text-size-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center" data-center={!canAdd}>
+      <span className="flex items-center justify-center gap-2 text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center" data-center={!canAdd}>
         {canAdd && (
           <>
             {isRunning ? (
@@ -191,7 +191,7 @@ export default function TaskTimer({ task }) {
               <span className="text-text-dark-color">Gestion du temps</span>
               {addingSession && (
                 <span
-                  className="text-color-accent-color text-text-size-normal cursor-pointer"
+                  className="text-color-accent-color text-normal cursor-pointer"
                   onClick={(e) => setAddingSession(false)}
                 >
                   Retour
@@ -304,7 +304,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
 ">
       <form action={formAction} className="flex flex-col gap-3">
         <div className="mx-auto">
-          <label className="relative text-text-color-muted text-text-size-normal text-left block">Date de début</label>
+          <label className="relative text-text-color-muted text-normal text-left block">Date de début</label>
           <input
             className="border-none input_TimeTrackingForm_TaskTimer"
             type="date"
@@ -315,7 +315,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
         </div>
         <div className="flex justify-evenly w-full gap-2">
           <div className="flex flex-col gap-1 items-center">
-            <label className="relative text-color-text-color-muted text-text-size-normal text-left block">Heure de début</label>
+            <label className="relative text-color-text-color-muted text-normal text-left block">Heure de début</label>
             <input
               className="w-[65px] !important border-none p-0 !important input_TimeTrackingForm_TaskTimer"
               type="time"
@@ -326,7 +326,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
             />
           </div>
           <div className="flex flex-col gap-1 items-center">
-            <label className="relative text-color-text-color-muted text-text-size-normal text-left block">Heure de fin</label>
+            <label className="relative text-color-text-color-muted text-normal text-left block">Heure de fin</label>
             <input
               className="w-[65px] border-none p-0 input_TimeTrackingForm_TaskTimer"
               type="time"

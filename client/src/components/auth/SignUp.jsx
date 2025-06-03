@@ -76,7 +76,7 @@ export default function SignUp() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
-                className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium font-bricolage"
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.lastName && <i className="block mt-1">{state?.errors?.lastName}</i>}
             </div>
@@ -96,7 +96,7 @@ export default function SignUp() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
-                className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium font-bricolage"
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.firstName && <i className="block mt-1">{state?.errors?.firstName}</i>}
             </div>
@@ -116,7 +116,7 @@ export default function SignUp() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium font-bricolage"
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.email && <i className="block mt-1">{state?.errors?.email}</i>}
             </div>
@@ -136,7 +136,7 @@ export default function SignUp() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium pr-10" />
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10" />
               {hiddenPassword ? (
                 <Eye
                   onClick={(e) => setHiddenPassword(false)}

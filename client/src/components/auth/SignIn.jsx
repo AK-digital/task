@@ -74,7 +74,7 @@ export default function SignIn() {
           <span data-status={status} className="data-[status=success]:text-color-accent-color data-[status=failure]:text-state-blocked-color">
             {message}
           </span>
-          <button className="bg-transparent text-color-accent-color text-text-size-small" onClick={handleResendEmail}>
+          <button className="bg-transparent text-color-accent-color text-small" onClick={handleResendEmail}>
             Renvoyer un email de vérification
           </button>
         </div>
@@ -97,7 +97,7 @@ export default function SignIn() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium" />
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium" />
         </div>
         <div className="form-group">
           <label
@@ -114,7 +114,7 @@ export default function SignIn() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="border-b border-b-text-lighter-color text-text-lighter-color text-text-size-medium pr-10" />
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10" />
           {hiddenPassword ? (
             <Eye
               onClick={(e) => setHiddenPassword(false)}
@@ -126,7 +126,7 @@ export default function SignIn() {
           )}
           <a
             onClick={handleForgotPassword}
-            className="float-right mt-3 text-text-size-small">
+            className="float-right mt-3 text-small">
             Mot de passe oublié ?
           </a>
         </div>

@@ -288,13 +288,13 @@ export default function BoardHeader({
               onBlur={() => setEdit(false)}
               onChange={handleTitleChange}
               onKeyDown={handleTitleEnterKey}
-              className="font-bricolage relative z-2001 w-fit p-1 rounded-sm text-text-size-medium"
+              className="font-bricolage relative z-2001 w-fit p-1 rounded-sm text-medium"
             />
           </div>
         ) : (
           <div onClick={handleEdit}>
             <span
-              className="dataTitle border border-transparent rounded-sm text-text-size-large font-medium cursor-text"
+              className="dataTitle border border-transparent rounded-sm text-large font-medium cursor-text"
               data-authorized={canEdit}
               style={{ color: `${optimisticColor}` }}
             >
@@ -313,7 +313,7 @@ export default function BoardHeader({
         )}
         {!open && tasks?.length >= 1 && (
           <div>
-            <span className="text-text-color-muted text-text-size-small font-normal">
+            <span className="text-text-color-muted text-small font-normal">
               {tasks?.length > 1
                 ? `${tasks?.length} Tâches`
                 : `${tasks?.length} Tâche`}

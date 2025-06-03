@@ -52,7 +52,7 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
 
   return (
     <>
-      <div className="top-3 left-[18px] w-max text-text-size-small py-2 px-4 shadow-shadow-box-small text-text-color-dark no-underline [&_a]:text-red-500 [&_a]:no-underline " id="popover">
+      <div className="top-3 left-[18px] w-max text-small py-2 px-4 shadow-shadow-box-small text-text-color-dark no-underline [&_a]:text-red-500 [&_a]:no-underline " id="popover">
         {isOpen && (
           <ul>
             {options.map((option, idx) => {

@@ -40,7 +40,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
   return (
     <>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 w-[400px] bg-background-secondary-color p-6 rounded-lg shadow-shadow-box-medium">
-        <div className="text-center text-text-size-large text-text-color-dark">
+        <div className="text-center text-large text-text-color-dark">
           <span>Enregistrer ce projet comme modèle</span>
         </div>
         <form action={formAction} className="flex flex-col gap-3">
@@ -61,7 +61,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
           />
 
           <button
-            className="font-bricolage w-full p-2 rounded-sm text-text-size-medium"
+            className="font-bricolage w-full p-2 rounded-sm text-medium"
             disabled={pending}
             data-disabled={pending}
           >

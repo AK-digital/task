@@ -207,7 +207,7 @@ export default function TimeTracking({
 
   return (
     <div
-      className="flex items-center bg-background-secondary-color border-b border-text-light-color text-text-size-normal h-[42px] last:border-b-0"
+      className="flex items-center bg-background-secondary-color border-b border-text-light-color text-normal h-[42px] last:border-b-0"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >

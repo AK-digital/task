@@ -29,7 +29,7 @@ export default function ProjectSideNav({ project, open, isActive }) {
             className="rounded-full min-w-[42px] min-h-[42px] w-full h-full object-fill border-2 group-hover:border-2 group-hover:bg-color-accent-color"
           />
         </div>
-        {open && <span className="text-text-size-small whitespace-nowrap overflow-hidden text-ellipsis mr-5 font-light">{project?.name}</span>}
+        {open && <span className="text-small whitespace-nowrap overflow-hidden text-ellipsis mr-5 font-light">{project?.name}</span>}
       </Link>
     </div>
   );

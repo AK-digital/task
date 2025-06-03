@@ -58,7 +58,7 @@ export default function TimeTrackingMore({
 
   return (
     <>
-      <div className="absolute z-2001 bg-background-secondary-color rounded-sm shadow-shadow-box-medium p-2 text-text-size-small text-text-dark-color select-none top-[30px] left-2 w-max">
+      <div className="absolute z-2001 bg-background-secondary-color rounded-sm shadow-shadow-box-medium p-2 text-small text-text-dark-color select-none top-[30px] left-2 w-max">
         <ul className="flex flex-col gap-2">
           <li className="flex items-center gap-1 cursor-pointer" onClick={handleEditDescription}>
             <PenBox size={14} /> Modifier la description

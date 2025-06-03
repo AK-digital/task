@@ -42,14 +42,14 @@ export default function TasksBoardFilter({ queries, setQueries }) {
         <div className="absolute top-11 rounded-sm bg-white shadow-shadow-box-small border border-color-border-color p-2 w-full">
           {isNotEmpty(boards) ? (
             <ul>
-              <li className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-text-size-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" onClick={() => handleSelect()}>
+              <li className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" onClick={() => handleSelect()}>
                 <Undo size={16} />
                 <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">Supprimer les filtres</span>
               </li>
               {boards.map((board) => (
                 <li
                   key={board._id}
-                  className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-text-size-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm"
+                  className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm"
                   onClick={() => handleSelect(board._id)}
                 >
                   <div

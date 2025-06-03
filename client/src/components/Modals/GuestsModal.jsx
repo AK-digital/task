@@ -108,7 +108,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           member={member}
                         />
                       ) : (
-                        <div className="w-full text-text-size-small">
+                        <div className="w-full text-small">
                           <span className="text-center w-full text-text-color-muted">{memberRole(member?.role)}</span>
                         </div>
                       )}
@@ -126,7 +126,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           type="submit"
                           data-disabled={pending}
                           disabled={pending}
-                          className="rounded-sm p-2 text-text-size-small bg-danger-color h-8 hover:bg-text-color-red"
+                          className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
                         >
                           Révoquer
                         </button>
@@ -240,7 +240,7 @@ export function ProjectInvitationsList({
                 defaultValue={inv?.projectId}
                 hidden
               />
-              <button type="submit" data-disabled={pending} disabled={pending} className="rounded-sm p-2 text-text-size-small bg-danger-color h-8 hover:bg-text-color-red">
+              <button type="submit" data-disabled={pending} disabled={pending} className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red">
                 Annuler
               </button>
             </form>

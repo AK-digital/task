@@ -58,10 +58,10 @@
   --color-color-urgent-color: #e17587;
 
   /* TEXT */
-  --text-text-size-large: 1.2rem;
-  --text-text-size-medium: 1rem;
-  --text-text-size-normal: 0.95rem;
-  --text-text-size-small: 0.8rem;
+  --text-large: 1.2rem;
+  --text-medium: 1rem;
+  --text-normal: 0.95rem;
+  --text-small: 0.8rem;
 
   /* SPACING */
   --spacing-spacing-header-height: 62px;
@@ -88,7 +88,7 @@
 
   .form-group:has(input:focus) label {
     transition: all ease-in-out 120ms;
-    font-size: var(--text-size-small);
+    font-size: var(--text-small);
     top: -15px;
   }
 
@@ -102,7 +102,7 @@
   }
 
   .ql-editor {
-    font-size: var(--text-size-normal);
+    font-size: var(--text-normal);
     letter-spacing: 0.01rem;
     height: auto;
     min-height: 100px;
@@ -260,7 +260,7 @@
   /* Message */
   .text_Message {
     font-weight: 300;
-    font-size: var(--text-text-size-normal);
+    font-size: var(--text-normal);
   }
 
   .text_Message p:empty {
@@ -841,7 +841,7 @@
 
   button {
     border-radius: var(--border-radius-large);
-    font-size: var(--text-size-medium);
+    font-size: var(--text-medium);
     letter-spacing: var(--letter-spacing-normal);
     background-color: var(--accent-color);
     padding: 12px 24px;
@@ -904,7 +904,7 @@
   }
 
   form label[data-active="true"] {
-    font-size: var(--text-size-small);
+    font-size: var(--text-small);
     top: -15px;
   }
 
@@ -987,7 +987,7 @@ html:has(#task-more) {
   border-radius: var(--radius-border-radius-xs);
   box-shadow: var(--shadow-shadow-box-medium);
   padding: 8px;
-  font-size: var(--text-text-size-small);
+  font-size: var(--text-small);
   color: var(--color-text-color-dark);
   user-select: none;
 }
@@ -1062,10 +1062,10 @@ html:has(#task-more) {
   --urgent-color: #e17587;
 
   /* TEXT */
-  --text-size-large: 1.2rem;
-  --text-size-medium: 1rem;
-  --text-size-normal: 0.95rem;
-  --text-size-small: 0.8rem;
+  --text-large: 1.2rem;
+  --text-medium: 1rem;
+  --text-normal: 0.95rem;
+  --text-small: 0.8rem;
   --letter-spacing-normal: 0.011rem;
 
   /* SPACING */

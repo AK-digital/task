@@ -96,7 +96,7 @@ export default function SelectedTasks({
     <div className="flex fixed z-2001 left-1/2 bottom-5 -translate-x-1/2 bg-background-secondary-color shadow-[0_2px_4px_rgba(0,0,0,0.25)] rounded-border-radius-small text-black animate-[showAnim_0.2s_ease-out]">
       {/* Main content */}
       <div className="flex items-center gap-3 pr-6">
-        <div className="bg-[#007CFF] h-full text-text-color rounded-[8px_0_0_8px] font-bold text-text-size-large py-4.5 px-6">
+        <div className="bg-[#007CFF] h-full text-text-color rounded-[8px_0_0_8px] font-bold text-large py-4.5 px-6">
           <span> {selectedTasks.length}</span>
         </div>
         <div className="text-[1.4rem]">
@@ -113,13 +113,13 @@ export default function SelectedTasks({
             checkRole(project, ["owner", "manager", "team"], uid) && (
               <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleAddToArchive}>
                 <Archive size={20} />
-                <span className="text-text-size-small">Archiver</span>
+                <span className="text-small">Archiver</span>
               </div>
             )}
           {archive && checkRole(project, ["owner", "manager", "team"], uid) && (
             <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleRemoveFromArchive}>
               <ArchiveRestore size={20} />
-              <span className="text-text-size-small">Restaurer</span>
+              <span className="text-small">Restaurer</span>
             </div>
           )}
           {checkRole(
@@ -129,7 +129,7 @@ export default function SelectedTasks({
           ) && (
             <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 text-blocked-color" onClick={handleDelete}>
               <Trash size={20} />
-              <span className="text-text-size-small">Supprimer</span>
+              <span className="text-small">Supprimer</span>
             </div>
           )}
           <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 border-l border-[#007CFF] pl-3" onClick={handleClose}>

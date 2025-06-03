@@ -94,7 +94,7 @@ export default function TaskDescription({ project, task, uid }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="flex items-center gap-2 text-text-size-large text-text-dark-color font-medium">
+      <span className="flex items-center gap-2 text-large text-text-dark-color font-medium">
         <PanelTop size={16} className="text-text-color-muted" /> Description
       </span>
       {/* If is editing */}
@@ -114,7 +114,7 @@ export default function TaskDescription({ project, task, uid }) {
       {/* If not editing and description is not empty */}
       {!isEditing && description && (
         <div>
-          <div className="relative rounded-lg shadow-shadow-box-small p-4 text-text-size-normal cursor-pointer bg-background-secondary-color" onClick={handleEditDescription}>
+          <div className="relative rounded-lg shadow-shadow-box-small p-4 text-normal cursor-pointer bg-background-secondary-color" onClick={handleEditDescription}>
             <div className="flex items-center gap-2">
               {descriptionAuthor?.picture ? (
                 <Image
@@ -139,7 +139,7 @@ export default function TaskDescription({ project, task, uid }) {
             </div>
             <div
               dangerouslySetInnerHTML={{ __html: description }}
-              className="content_TaskDescription mt-3 font-light text-text-size-normal"
+              className="content_TaskDescription mt-3 font-light text-normal"
             ></div>
           </div>
 
@@ -165,7 +165,7 @@ export default function TaskDescription({ project, task, uid }) {
                   data-disabled={pending}
                   disabled={pending}
                   onClick={handleRemoveDescription}
-                  className="bg-transparent text-text-accent-color p-0 text-text-size-small hover:accent-color-accent-color-hover shadow-inherit"
+                  className="bg-transparent text-text-accent-color p-0 text-small hover:accent-color-accent-color-hover shadow-inherit"
                 >
                   Effacer la description
                 </button>
@@ -179,7 +179,7 @@ export default function TaskDescription({ project, task, uid }) {
         <div
           onClick={handleEditDescription}
           data-role={isAuthorized}
-          className="border border-color-border-color py-3 px-6 rounded-lg text-text-size-small data-[role=true]:cursor-pointer"
+          className="border border-color-border-color py-3 px-6 rounded-lg text-small data-[role=true]:cursor-pointer"
         >
           {isAuthorized ? (
             <p>Ajouter une description</p>

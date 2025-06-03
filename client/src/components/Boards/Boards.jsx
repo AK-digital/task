@@ -341,7 +341,7 @@ export default function Boards({ boards: initialBoards, tasksData }) {
       <div className="boards_Boards relative flex flex-col gap-11 h-full overflow-y-auto pr-2.5 pb-6 z-9999 border-r-[3px] border-transparent rounded-2xl">
         {archive && (
           <>
-            <div className="flex items-center gap-2 font-semibold text-text-size-large -mb-5">
+            <div className="flex items-center gap-2 font-semibold text-large -mb-5">
               <div
                 className="relative top-[3px] cursor-pointer"
                 onClick={() => router.push(`/projects/${project?._id}`)}

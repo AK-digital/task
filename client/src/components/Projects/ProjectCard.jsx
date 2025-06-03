@@ -120,7 +120,7 @@ export default function ProjectCard({
           </div>
 
           {isDefaultProject ? (
-            <div className="flex flex-col gap-2.5 text-text-size-small">
+            <div className="flex flex-col gap-2.5 text-small">
               <div className="tabs_ProjectCard text-text-darker-color"></div>
               <div className="flex justify-between items-center text-text-darker-color">
                 <div className="rounded-[5px] bg-[#d0cec7] w-[76px] h-3" />
@@ -129,7 +129,7 @@ export default function ProjectCard({
             </div>
           ) : (
             project && (
-              <div className="flex flex-col gap-2.5 text-text-size-small">
+              <div className="flex flex-col gap-2.5 text-small">
                 <span className="text-text-darker-color">
                   {`${totalBoards} tableau${totalBoards === 1 ? "" : "x"}`}
                 </span>

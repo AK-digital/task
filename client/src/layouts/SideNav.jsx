@@ -90,13 +90,13 @@ export default function SideNav() {
             <div>
               <Clock3 size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
             </div>
-            {/* <span className="text-text-size-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Suivi du temps</span> */}
+            {/* <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Suivi du temps</span> */}
           </Link>
           <Link href={"/new-project"} className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-color-accent-color-hover hover:cursor-pointer">
             <div>
               <Plus size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
             </div>
-            {/* <span className="text-text-size-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Ajouter un projet</span> */}
+            {/* <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Ajouter un projet</span> */}
           </Link>
         </div>
       </div>

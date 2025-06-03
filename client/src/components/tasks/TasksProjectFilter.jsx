@@ -67,7 +67,7 @@ export default function TasksProjectFilter({ queries, setQueries }) {
           {isNotEmpty(projects) ? (
             <ul>
               <li 
-                className="flex items-center gap-1 p-1.5 cursor-pointer text-text-size-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" 
+                className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" 
                 onClick={() => handleSelectProject()}
               >
                 <Undo size={16} />
@@ -76,7 +76,7 @@ export default function TasksProjectFilter({ queries, setQueries }) {
               {projects.map((project) => (
                 <li
                   key={project._id}
-                  className="flex items-center gap-1 p-1.5 cursor-pointer text-text-size-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm"
+                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm"
                   onClick={() => handleSelectProject(project._id)}
                 >
                   <Image

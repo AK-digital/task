@@ -73,7 +73,7 @@ export default function ProfileForm() {
             name="firstName"
             defaultValue={user?.firstName || ""}
             onChange={(e) => setFirstName(e.target.value)}
-            className="font-bricolage text-text-size-medium focus:outline-none"
+            className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.firstName && (
             <span>{state.errors.firstName}</span>
@@ -88,7 +88,7 @@ export default function ProfileForm() {
             name="lastName"
             defaultValue={user?.lastName || ""}
             onChange={(e) => setLastName(e.target.value)}
-            className="font-bricolage text-text-size-medium focus:outline-none"
+            className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.lastName && (
             <span>{state.errors.lastName}</span>
@@ -103,7 +103,7 @@ export default function ProfileForm() {
             name="company"
             defaultValue={user?.company || ""}
             onChange={(e) => setCompany(e.target.value)}
-            className="font-bricolage text-text-size-medium focus:outline-none"
+            className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.company && (
             <span>{state.errors.company}</span>
@@ -118,7 +118,7 @@ export default function ProfileForm() {
             name="position"
             defaultValue={user?.position || ""}
             onChange={(e) => setPosition(e.target.value)}
-            className="font-bricolage text-text-size-medium focus:outline-none"
+            className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.position && (
             <span>{state.errors.position}</span>

@@ -114,7 +114,7 @@ export default function TaskEstimate({ task, uid }) {
         data-estimation={hasEstimation}
         onClick={handleIsEditing}
         ref={refs.setReference}
-        className="bg-background-primary-color p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
+        className="bg-background-primary-color p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
       >
         <span>{estimation}</span>
       </div>
@@ -132,37 +132,37 @@ export default function TaskEstimate({ task, uid }) {
           >
             <div className="flex justify-center flex-wrap gap-2">
               <span
-                className="p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 15 minutes
               </span>
               <span
-                className="p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 30 minutes
               </span>
               <span
-                className="p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 45 minutes
               </span>
               <span
-                className="p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 1 heure
               </span>
               <span
-                className="p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 2 heures
               </span>
               <span
-                className="p-1.5 rounded-2xl text-text-size-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-background-third-color min-w-[90px] max-w-[90px] hover:bg-background-primary-color"
                 onClick={handleUpdateTaskEstimate}
               >
                 1 jour
@@ -180,13 +180,13 @@ export default function TaskEstimate({ task, uid }) {
                     step={0.1}
                     min={1}
                     max={99}
-                    className="input_TaskEstimate font-bricolage text-text-size-small text-text-dark-color font-semibold p-1.5 bg-background-third-color rounded-2xl rounded-tr-[inherit] rounded-br-[inherit] border-none text-center"
+                    className="input_TaskEstimate font-bricolage text-small text-text-dark-color font-semibold p-1.5 bg-background-third-color rounded-2xl rounded-tr-[inherit] rounded-br-[inherit] border-none text-center"
                   />
                   <select
                     name=""
                     id=""
                     onChange={(e) => setWeek(e.target.value)}
-                    className="font-bricolage text-text-size-small text-text-dark-color font-semibold bg-background-third-color outline-none border-none rounded-2xl rounded-tl-[inherit] rounded-bl-[inherit]"
+                    className="font-bricolage text-small text-text-dark-color font-semibold bg-background-third-color outline-none border-none rounded-2xl rounded-tl-[inherit] rounded-bl-[inherit]"
                   >
                     <option value="minutes">Minutes</option>
                     <option value="heures">Heures</option>
@@ -197,7 +197,7 @@ export default function TaskEstimate({ task, uid }) {
                 {number >= 1 && (
                   <div>
                     <button
-                      className="font-bricolage mt-2 text-text-size-small font-normal p-1.5 w-full text-white"
+                      className="font-bricolage mt-2 text-small font-normal p-1.5 w-full text-white"
                       type="submit"
                     >
                       Valider

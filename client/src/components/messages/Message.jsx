@@ -96,7 +96,7 @@ export default function Message({
                     alt={`Photo de profil de ${author?.firstName}`}
                     className="rounded-full w-[35px] h-[35px] max-w-[35px] max-h-[35px]"
                   />
-                  <span className="text-text-size-normal font-medium">
+                  <span className="text-normal font-medium">
                     {author?.firstName + " " + author?.lastName}
                   </span>
                   <span className="text-xs text-text-color-muted">{formattedDate}</span>
@@ -116,11 +116,11 @@ export default function Message({
                             setEdit(true);
                             setMore(false);
                           }}
-                          className="flex items-center gap-2 p-2 text-text-size-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
+                          className="flex items-center gap-2 p-2 text-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
                         >
                           <FontAwesomeIcon icon={faPen} /> Modifier
                         </li>
-                        <li onClick={handleDeleteMessage} className="flex items-center gap-2 p-2 text-text-size-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear">
+                        <li onClick={handleDeleteMessage} className="flex items-center gap-2 p-2 text-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear">
                           <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
                         </li>
                       </ul>

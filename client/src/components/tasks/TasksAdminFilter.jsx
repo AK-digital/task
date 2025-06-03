@@ -52,7 +52,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
         <CircleUserRound size={18} />
         <span className="flex-1">Responsables</span>
         {hasMembers && (
-          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-text-size-small">
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {selectedMembers?.length}
           </span>
         )}
@@ -67,14 +67,14 @@ export default function TasksAdminFilter({ queries, setQueries }) {
             {isNotEmpty(members) ? (
               <ul>
                 <li 
-                  className="flex items-center gap-1 p-1.5 cursor-pointer text-text-size-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" 
+                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" 
                   onClick={() => handleReset()}
                 >
                   <Undo size={16} />
                   Supprimer les filtres
                 </li>
                 {members.map((member) => (
-                  <li key={member?.user?._id} className="flex items-center gap-1 p-1.5 cursor-pointer text-text-size-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm">
+                  <li key={member?.user?._id} className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm">
                     <input
                       type="checkbox"
                       id={member?.user?._id}

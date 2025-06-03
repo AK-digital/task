@@ -52,7 +52,7 @@ export default function NewProject() {
                   id="project-name"
                   name="project-name"
                   placeholder="Nom du projet"
-                  className="border-b-inherit text-center text-text-size-medium"
+                  className="border-b-inherit text-center text-medium"
                   onChange={(e) => {
                     if (e.target.value.length > 0) {
                       setIsSubmitDisabled(false);
@@ -88,7 +88,7 @@ export default function NewProject() {
                 </div>
                 <button
                   type="button"
-                  className="bg-transparent shadow-none text-accent-color text-text-size-medium max-w-fit mx-auto hover:bg-transparent hover:shadow-none hover:text-accent-color-hover"
+                  className="bg-transparent shadow-none text-accent-color text-medium max-w-fit mx-auto hover:bg-transparent hover:shadow-none hover:text-accent-color-hover"
                   onClick={(e) => {
                     e.preventDefault();
                     router.back();

@@ -655,12 +655,12 @@ export default function Tiptap({
           />
         )}
         {isLoadingDraft && (
-          <div className="absolute right-2.5 bottom-1 text-text-size-small text-text-color-muted">
+          <div className="absolute right-2.5 bottom-1 text-small text-text-color-muted">
             <span>Brouillon en cours d'enregistrement...</span>
           </div>
         )}
         {isDraftSaved && !isLoadingDraft && (
-          <div className="absolute right-2.5 bottom-1 text-text-size-small text-text-color-muted">
+          <div className="absolute right-2.5 bottom-1 text-small text-text-color-muted">
             <span>Brouillon enregistré</span>
           </div>
         )}
@@ -709,7 +709,7 @@ export default function Tiptap({
         {type === "message" && (
           <>
             <button
-              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-text-size-normal mr-3 hover:text-text-accent-color hover:bg-transparent shadow-none"
+              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-normal mr-3 hover:text-text-accent-color hover:bg-transparent shadow-none"
               onClick={handleCancel}
             >
               Annuler

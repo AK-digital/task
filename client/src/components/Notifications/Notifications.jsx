@@ -50,18 +50,18 @@ export default function Notifications({
   return (
     <>
       <div id="popover" className="flex flex-col top-10 right-[50px] w-[560px] p-0 pr-2 max-h-[400px] overflow-y-auto rounded-2xl shadow-shadow-box-medium">
-        <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-text-size-normal p-[14px]">
+        <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px]">
           <span>Notifications</span>
           {unreadCount > 0 && (
             <div className="flex items-center gap-2.5">
-              <div className="py-0.5 px-2 bg-color-accent-color text-text-size-small rounded-xl font-medium text-white">
+              <div className="py-0.5 px-2 bg-color-accent-color text-small rounded-xl font-medium text-white">
                 {unreadCount} non {unreadCount === 1 ? "lue" : "lues"}
               </div>
               <button
                 onClick={handleReadNotifications}
                 data-disabled={isLoading}
                 disabled={isLoading}
-                className="bg-transparent text-text-accent-color py-1 px-2 text-text-size-small rounded-sm shadow-none hover:bg-[#a87e511a] hover:shadow-none data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-[#a87e511a]"
+                className="bg-transparent text-text-accent-color py-1 px-2 text-small rounded-sm shadow-none hover:bg-[#a87e511a] hover:shadow-none data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-[#a87e511a]"
               >
                 Tout marquer comme lu
               </button>
@@ -100,16 +100,16 @@ export default function Notifications({
                       />
                     )}
                     <div className="flex flex-col gap-1">
-                      <div className="text-text-size-normal font-medium">
+                      <div className="text-normal font-medium">
                         <span>{notif?.message?.title}</span>
                       </div>
-                      <div className="text-text-size-small text-text-color-muted">
+                      <div className="text-small text-text-color-muted">
                         {notif?.message?.content}
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col items-end justify-center border-b-0 gap-2">
-                    <div className="text-text-size-small text-text-color-muted self-start text-right min-w-max">{dateFromNow}</div>
+                    <div className="text-small text-text-color-muted self-start text-right min-w-max">{dateFromNow}</div>
                   </div>
                 </li>
               );

@@ -3,7 +3,7 @@ import { GripVertical, MessageCircle } from "lucide-react";
 
 export function TaskPending({ text }) {
   return (
-    <div className="flex items-center justify-start border-b border-text-light-color w-full h-[42px] transition-all duration-150 ease-in-out text-text-size-normal px-5 opacity-50 blur-[0.4px]">
+    <div className="flex items-center justify-start border-b border-text-light-color w-full h-[42px] transition-all duration-150 ease-in-out text-normal px-5 opacity-50 blur-[0.4px]">
       <div>
         <input type="checkbox" name="task" id="task" />
       </div>

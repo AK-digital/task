@@ -135,7 +135,7 @@ export default function Board({
                 id="board-id"
                 defaultValue={board?._id}
                 hidden
-                className="border-none bg-inherit py-1.5 px-1 text-text-size-normal"
+                className="border-none bg-inherit py-1.5 px-1 text-normal"
               />
               <input
                 type="text"
@@ -154,7 +154,7 @@ export default function Board({
                     setIsWritting(false);
                   }
                 }}
-                className="font-bricolage border-none bg-inherit py-1.5 px-1 text-text-size-normal"
+                className="font-bricolage border-none bg-inherit py-1.5 px-1 text-normal"
               />
               <button
                 type="submit"
@@ -166,7 +166,7 @@ export default function Board({
             </form>
           </div>
           {isWritting && (
-            <div className="absolute mt-1 ml-[25px] text-text-color-muted text-text-size-small">
+            <div className="absolute mt-1 ml-[25px] text-text-color-muted text-small">
               <p>
                 Appuyer sur <span className="text-text-accent-color">entrée</span> pour ajouter une tâche
               </p>

@@ -131,7 +131,7 @@ export default function TaskResponsibles({ task, uid, user }) {
                 {responsibles?.map((responsible) => {
                   return (
                     <div
-                      className="flex items-center gap-1 bg-background-third-color p-1 rounded-border-radius-small text-text-size-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-background-primary-color"
+                      className="flex items-center gap-1 bg-background-third-color p-1 rounded-border-radius-small text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-background-primary-color"
                       key={responsible?._id}
                       onClick={() => handleRemoveResponsible(responsible)}
                     >

@@ -125,7 +125,7 @@ export default function MentionsList({
             {members?.map((member, idx) => {
               return (
                 <li
-                  className="flex items-center gap-1.5 text-text-size-small p-1 cursor-pointer transition-colors duration-[120ms] ease-linear hover:bg-background-third-color hover:rounded-sm data-[active=true]:bg-background-third-color data-[active=true]:rounded-sm"
+                  className="flex items-center gap-1.5 text-small p-1 cursor-pointer transition-colors duration-[120ms] ease-linear hover:bg-background-third-color hover:rounded-sm data-[active=true]:bg-background-third-color data-[active=true]:rounded-sm"
                   key={member?.user?._id}
                   data-active={idx === selectedIdx}
                   onClick={() => addMention(member?.user)}
