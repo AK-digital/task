@@ -37,7 +37,7 @@ export default function SideNav() {
             width={32}
             height={32}
             alt="Logo de Clynt"
-            className="logo_SideNav block ml-[5px] mr-auto"
+            className="block ml-[5px] mr-auto"
           />
           <div
             onClick={(e) => setIsMenuOpen(!isMenuOpen)}
@@ -55,7 +55,7 @@ export default function SideNav() {
               <ClipboardList size={24} className="bg-primary text-side transition-all ease-linear duration-150"/>
             </Link>
           </div>
-          <nav className="nav_SideNav relative flex flex-col gap-2 max-h-[65svh] overflow-y-auto scroll-smooth">
+          <nav className="relative flex flex-col gap-2 max-h-[65svh] overflow-y-auto scroll-smooth">
             {favoritesLoading ? (
               <ProjectSideNavSkeleton />
             ) : (

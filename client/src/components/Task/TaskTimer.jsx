@@ -157,7 +157,7 @@ export default function TaskTimer({ task }) {
   };
 
   return (
-    <div className="relative flex justify-center max-w-[120px] w-full px-1.5 border-r border-text-light-color h-full data-[running=true]:text-inherit" data-running={isRunning} id="task-row">
+    <div className="relative flex items-center justify-center max-w-[120px] h-full w-full px-1.5 border-r border-text-light-color data-[running=true]:text-inherit" data-running={isRunning}>
       <span className="flex items-center justify-center gap-2 text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center" data-center={!canAdd}>
         {canAdd && (
           <>
