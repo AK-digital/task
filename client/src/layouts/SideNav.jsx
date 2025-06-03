@@ -25,9 +25,6 @@ export default function SideNav() {
   const projects = favorites?.map((favorite) => favorite.project);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
-  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
-
   return (
     <aside data-open={isMenuOpen} className="container_SideNav min-w-aside-width w-aside-width transition-[width,min-width] duration-[150ms] ease-linear select-none data-[open=true]:w-[220px] data-[open=true]:min-w-[220px]" >
       <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-7 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730]">
@@ -78,15 +75,7 @@ export default function SideNav() {
           >
             <LayoutGrid size={24} className="bg-primary text-side transition-all ease-linear duration-150" />
           </Link>
-          <Link
-            href={
-              "/times?startingDate=" +
-              firstDayOfTheMonth +
-              "&endingDate=" +
-              lastDayOfTheMonth
-            }
-            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary hover:text-accent-color-hover hover:cursor-pointer"
-          >
+          <Link href={"/times"} className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary hover:text-accent-color-hover hover:cursor-pointer">
             <div>
               <Clock3 size={24} className="bg-primary text-side transition-all ease-linear duration-150" />
             </div>

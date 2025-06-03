@@ -62,7 +62,9 @@ export async function getTimeTrackings(req, res, next) {
   try {
     const authUser = res.locals.user;
 
-    const { projects, users, startingDate, endingDate } = req.query;
+    const { projects, members, startingDate, endingDate } = req.query;
+
+    console.log(projects, members, startingDate, endingDate);
 
     const userProjects = await ProjectModel.find({
       "members.user": authUser?._id,
@@ -124,18 +126,11 @@ export async function getTimeTrackings(req, res, next) {
       },
     ];
 
-    if (projects?.length > 0) {
+    if (members?.length > 0) {
+      console.log(members?.split(","));
       pipeline.push({
         $match: {
-          "project.name": { $in: projects?.split(",") },
-        },
-      });
-    }
-
-    if (users?.length > 0) {
-      pipeline.push({
-        $match: {
-          fullName: { $in: users?.split(",") },
+          userId: { $in: members?.split(",") },
         },
       });
     }
@@ -159,6 +154,14 @@ export async function getTimeTrackings(req, res, next) {
       // Ajout du filtre dans le pipeline
       pipeline.push({
         $match: matchStage,
+      });
+    }
+
+    if (projects?.length > 0) {
+      pipeline.push({
+        $match: {
+          "project?._id": { $in: projects?.split(",") },
+        },
       });
     }
 

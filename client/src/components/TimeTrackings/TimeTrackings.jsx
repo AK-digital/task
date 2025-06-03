@@ -1,109 +1,57 @@
 "use client";
 import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
-import TimeTracking from "./TimeTracking";
 import Filters from "./Filters";
-import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useMemo, useState } from "react";
-import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import ExportPdfBtn from "./ExportPdfBtn";
 import { useTimeTrackings } from "@/app/hooks/useTimeTrackings";
 import socket from "@/utils/socket";
+import { useProjects } from "@/app/hooks/useProjects";
+import TimeTracking from "./TimeTracking";
+import SelectedTimeTrackings from "./SelectedTimeTrackings";
+import TimeTrackingHeader from "./TimeTrackingHeader";
 
-export default function TimeTrackings({
-  trackers: initialTrackers,
-  projects,
-  searchParams,
-}) {
-  const [selectedProjects, setSelectedProjects] = useState([]);
-  const [filteredTrackers, setFilteredTrackers] = useState(
-    initialTrackers || []
-  );
+export default function TimeTrackings({ searchParams }) {
+  const [queries, setQueries] = useState(searchParams);
+  const { projects, projectsLoading } = useProjects();
+  const { timeTrackings, timeTrackingsLoading, mutateTimeTrackings } =
+    useTimeTrackings(queries);
+
+  console.log(timeTrackings);
+
   const [selectedTrackers, setSelectedTrackers] = useState([]);
 
-  // Utiliser le hook pour les données en temps réel
-  const { timeTrackings, mutateTimeTrackings } = useTimeTrackings(
-    searchParams,
-    { data: initialTrackers }
-  );
-
-  // Utiliser les données du hook ou les données initiales
-  const trackers = timeTrackings?.data || initialTrackers || [];
-
-  const projectsWithTrackers = projects?.filter((project) =>
-    filteredTrackers?.some((tracker) => tracker?.project?._id === project?._id)
-  );
-  const queries = new URLSearchParams(searchParams);
-
-  const totalDuration = useMemo(() => {
-    return trackers?.reduce((acc, tracker) => {
-      return acc + Math.floor(tracker?.duration / 1000) * 1000;
-    }, 0);
-  }, [trackers]);
-
-  const hasSelectedProjects = selectedProjects?.length > 0;
   const hasSelectedTrackers = selectedTrackers?.length > 0;
 
-  useEffect(() => {
-    setFilteredTrackers(trackers);
-  }, [trackers]);
+  const totalDuration = useMemo(() => {
+    return timeTrackings?.reduce((acc, tracker) => {
+      return acc + Math.floor(tracker?.duration / 1000) * 1000;
+    }, 0);
+  }, [timeTrackings]);
+
+  const hasTrackers = timeTrackings?.length > 0;
 
   useEffect(() => {
     const handleTaskUpdated = (projectId) => {
       // Revalider seulement si on n'a pas de filtre de projet ou si c'est un projet concerné
       const projectsParam = searchParams?.projects;
+
       if (!projectsParam || projectsParam.includes(projectId)) {
-        mutateTimeTrackings(undefined, {
-          revalidate: true,
-          populateCache: false,
-        });
+        mutateTimeTrackings();
       }
     };
 
     const handleTimeTrackingUpdated = () => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
-    };
-
-    const handleTimeTrackingDeleted = () => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
-    };
-
-    const handleTimeTrackingDeletedBatch = () => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
+      mutateTimeTrackings();
     };
 
     socket.on("task updated", handleTaskUpdated);
     socket.on("time tracking updated", handleTimeTrackingUpdated);
-    socket.on("time tracking deleted", handleTimeTrackingDeleted);
-    socket.on("time tracking deleted batch", handleTimeTrackingDeletedBatch);
 
     return () => {
       socket.off("task updated", handleTaskUpdated);
       socket.off("time tracking updated", handleTimeTrackingUpdated);
-      socket.off("time tracking deleted", handleTimeTrackingDeleted);
-      socket.off("time tracking deleted batch", handleTimeTrackingDeletedBatch);
     };
   }, [mutateTimeTrackings, searchParams]);
-
-  useEffect(() => {
-    // Get the "projects" query parameter from the URL search params
-    const projectsNames = queries?.get("projects")?.split(",") || [];
-
-    if (projects?.length <= 0) setSelectedProjects([]);
-
-    // If there are project names, filter the projects array to find matching projects
-    setSelectedProjects(
-      projects.filter((project) => projectsNames.includes(project?.name))
-    );
-  }, [searchParams]);
 
   function handleExport() {
     exportTimeTracking(
@@ -117,13 +65,13 @@ export default function TimeTrackings({
       <div className="flex items-center gap-6">
         <h1 className="mb-[inherit] min-w-fit">Suivi du temps</h1>
         {/* Filters */}
-        <Filters
-          projects={projects}
-          selectedProjects={selectedProjects}
-          searchParams={searchParams}
-          hasSelectedProjects={hasSelectedProjects}
-          projectsWithTrackers={projectsWithTrackers}
-        />
+        {!projectsLoading && (
+          <Filters
+            projects={projects}
+            queries={queries}
+            setQueries={setQueries}
+          />
+        )}
         {/* Total duration */}
         {totalDuration && (
           <span className="font-bold">
@@ -134,14 +82,15 @@ export default function TimeTrackings({
         <ExportPdfBtn handleExport={handleExport} />
       </div>
       {/* Time tracking list */}
-      {isNotEmpty(filteredTrackers) ? (
+      {isNotEmpty(timeTrackings) ? (
         <div className="mt-3 overflow-auto h-full pr-3 mr-3 pb-10 rounded-lg">
-          <TimeTrackingHeader
-            trackers={trackers}
+          {/* <TimeTrackingHeader
+            trackers={timeTrackings}
             setFilteredTrackers={setFilteredTrackers}
             setSelectedTrackers={setSelectedTrackers}
-          />
-          {filteredTrackers?.map((tracker) => {
+          /> */}
+
+          {timeTrackings?.map((tracker) => {
             return (
               <TimeTracking
                 tracker={tracker}
@@ -157,7 +106,7 @@ export default function TimeTrackings({
               selectedTrackers={selectedTrackers}
               setSelectedTrackers={setSelectedTrackers}
               mutateTimeTrackings={mutateTimeTrackings}
-              trackers={filteredTrackers}
+              trackers={timeTrackings}
             />
           )}
         </div>

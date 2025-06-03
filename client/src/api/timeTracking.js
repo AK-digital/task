@@ -22,7 +22,7 @@ export async function getTimeTrackings(queries) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
-    return response;
+    return response.data;
   } catch (err) {
     console.log(
       err?.message ||
