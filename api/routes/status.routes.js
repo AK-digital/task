@@ -17,6 +17,12 @@ router.get(
   statusControllers.getStatusByProject
 );
 
+router.get(
+  "/",
+  authMiddlewares.auth,
+  statusControllers.getUserProjectsStatuses
+);
+
 router.put(
   "/:id",
   authMiddlewares.auth,

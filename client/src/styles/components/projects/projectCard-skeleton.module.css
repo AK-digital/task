@@ -1,0 +1,141 @@
+.projectWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 290px;
+    border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
+    overflow: visible;
+}
+
+.starWrapper {
+    position: relative;
+    top: 1px;
+    left: 0;
+    width: 160px;
+    height: 30px;
+    background-color: var(--secondary-background-color);
+    border-radius: var(--border-radius-medium) 0 0 0;
+    clip-path: path(" M 0 0 L 128 0 C 144 2, 136 24, 160 34 L 0 34 Z ");
+}
+
+.star {
+    position: absolute;
+    top: 7px;
+    left: 15px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--primary-background-color);
+}
+
+.contentWrapper {
+    min-height: 181px;
+    padding: 18px 22px;
+    background-color: var(--secondary-background-color);
+    border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
+}
+
+.imagesWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-radius: var(--border-radius-medium);
+    align-items: center;
+}
+
+.logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--primary-background-color);
+}
+
+.membersWrapper {
+    display: flex;
+    gap: -8px;
+}
+
+.member {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--primary-background-color);
+    margin-left: -8px;
+}
+
+.member:first-child {
+    margin-left: 0;
+}
+
+.nameWrapper {
+    margin-top: 6px;
+}
+
+.name {
+    width: 70%;
+    height: 20px;
+    border-radius: var(--border-radius-small);
+    background-color: var(--primary-background-color);
+}
+
+.footerWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.tabs {
+    width: 100px;
+    height: 12px;
+    border-radius: 5px;
+    background-color: var(--primary-background-color);
+}
+
+.tasks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.taskText {
+    width: 76px;
+    height: 12px;
+    border-radius: 5px;
+    background-color: var(--primary-background-color);
+}
+
+.statusBar {
+    height: 12px;
+    width: 100%;
+    max-width: 120px;
+    border-radius: 5px;
+    background-color: var(--primary-background-color);
+    flex: 0.5;
+}
+
+/* Animation shimmer */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.star,
+.logo,
+.member,
+.name,
+.tabs,
+.taskText,
+.statusBar {
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(to right,
+            #eae7de 0%,
+            #f5f3ec 50%,
+            #eae7de 100%);
+    background-size: 1000px 100%;
+}

@@ -14,7 +14,8 @@ export default function TaskEditStatus({
   currentStatus,
   setCurrentStatus,
 }) {
-  const { project, statuses, mutateStatuses } = useProjectContext();
+  const { project, mutateTasks, statuses, mutateStatuses } =
+    useProjectContext();
   const [isHover, setIsHover] = useState(false);
   const [name, setName] = useState(status?.name || "");
   const [moreColor, setMoreColor] = useState(false);
@@ -58,7 +59,9 @@ export default function TaskEditStatus({
     }
 
     mutateStatuses();
+    mutateTasks();
   }
+
   async function handleUpdateStatusColor(newColor = color) {
     if (!canEdit) return;
     setMoreColor(false);
@@ -84,6 +87,7 @@ export default function TaskEditStatus({
     }
 
     mutateStatuses();
+    mutateTasks();
   }
 
   // Only authorized users can delete a status and there must be more than one status
@@ -100,6 +104,7 @@ export default function TaskEditStatus({
     }
 
     mutateStatuses();
+    mutateTasks();
   }
 
   const handleUpdateStatusNameDebouced = useDebouncedCallback(() => {
@@ -135,7 +140,7 @@ export default function TaskEditStatus({
         }}
         className={bricolageGrostesque.className}
       />
-      {statuses.length > 1 && (
+      {!status?.default && (
         <X
           className={styles.delete}
           data-show={isHover}

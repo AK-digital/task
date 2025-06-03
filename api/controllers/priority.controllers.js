@@ -1,4 +1,5 @@
 import PriorityModel from "../models/Priority.model.js";
+import TaskModel from "../models/Task.model.js";
 
 export async function savePriority(req, res) {
   try {
@@ -16,6 +17,7 @@ export async function savePriority(req, res) {
       projectId: projectId,
       name: name,
       color: color,
+      default: false,
     });
 
     const savedPriority = await newPriority.save();
@@ -122,14 +124,32 @@ export async function deletePriority(req, res) {
   try {
     const { projectId } = req.query;
 
-    const priorities = await PriorityModel.find({ projectId: projectId });
+    const priority = await PriorityModel.findById({ _id: req.params.id });
 
-    if (priorities.length === 1) {
+    if (!priority) {
       return res.status(400).send({
         success: false,
-        message: "Impossible to delete the last priority",
+        message: "Impossible to delete a priority that does not exist",
       });
     }
+
+    if (priority.default) {
+      return res.status(400).send({
+        success: false,
+        message: "Impossible to delete a default priority",
+      });
+    }
+
+    const defaultPriority = await PriorityModel.findOne({
+      projectId: projectId,
+      default: true,
+      priority: "medium",
+    });
+
+    await TaskModel.updateMany(
+      { priority: priority?._id },
+      { $set: { priority: defaultPriority?._id } }
+    );
 
     const deletedPriority = await PriorityModel.findByIdAndDelete({
       _id: req.params.id,

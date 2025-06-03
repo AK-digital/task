@@ -123,11 +123,27 @@ export function exportTimeTracking(projects, trackers) {
     });
 
     const filteredTrackers = trackers?.filter(
-      (tracker) => tracker?.projectId === project?._id
+      (tracker) => tracker?.project?._id === project?._id
     );
-    const totalDuration = filteredTrackers?.reduce((acc, tracker) => {
+
+    // Séparer les trackers facturables et non facturables
+    const billableTrackers = filteredTrackers?.filter(
+      (tracker) => tracker.billable === true
+    );
+    const nonBillableTrackers = filteredTrackers?.filter(
+      (tracker) => tracker.billable === false
+    );
+
+    // Calculer les durées totales
+    const billableDuration = billableTrackers?.reduce((acc, tracker) => {
       return acc + Math.floor(tracker?.duration / 1000) * 1000;
     }, 0);
+
+    const nonBillableDuration = nonBillableTrackers?.reduce((acc, tracker) => {
+      return acc + Math.floor(tracker?.duration / 1000) * 1000;
+    }, 0);
+
+    const totalDuration = billableDuration + nonBillableDuration;
 
     const startingDate = filteredTrackers?.sort(
       (a, b) => new Date(a.startTime) - new Date(b.startTime)
@@ -186,36 +202,107 @@ export function exportTimeTracking(projects, trackers) {
       { align: "right" }
     );
 
-    autoTable(doc, {
-      head: [["Description", "Responsable", "Temps", "Date"]],
-      body: filteredTrackers?.map((tracker) => {
-        return [
-          tracker?.taskText || tracker?.task[0]?.text,
-          tracker?.user?.firstName + " " + tracker?.user?.lastName,
-          formatTime(Math.floor(tracker?.duration / 1000)),
-          new Date(tracker?.startTime).toLocaleDateString("fr-FR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          }),
-        ];
-      }),
-      startY: 90,
-      styles: {
-        fontSize: 10,
-        cellPadding: 4,
-      },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        halign: "center",
-        fontStyle: "bold",
-      },
-      alternateRowStyles: {
-        fillColor: [245, 245, 245],
-      },
-      margin: { left: 14, right: 14 },
-    });
+    let currentY = 90;
+
+    // Tableau des tâches facturables
+    if (billableTrackers?.length > 0) {
+      // Titre du tableau facturable
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(41, 128, 185);
+      doc.text("Tâches facturables", 14, currentY);
+      doc.setTextColor(0);
+      doc.setFontSize(12);
+      doc.text(
+        `Total : ${formatTime(Math.floor(billableDuration / 1000))}`,
+        pageWidth - 14,
+        currentY,
+        { align: "right" }
+      );
+      currentY += 10;
+
+      autoTable(doc, {
+        head: [["Description", "Responsable", "Temps", "Date"]],
+        body: billableTrackers?.map((tracker) => {
+          return [
+            tracker?.taskText || tracker?.task[0]?.text,
+            tracker?.user?.firstName + " " + tracker?.user?.lastName,
+            formatTime(Math.floor(tracker?.duration / 1000)),
+            new Date(tracker?.startTime).toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }),
+          ];
+        }),
+        startY: currentY,
+        styles: {
+          fontSize: 10,
+          cellPadding: 4,
+        },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          halign: "center",
+          fontStyle: "bold",
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245],
+        },
+        margin: { left: 14, right: 14 },
+      });
+
+      currentY = doc.lastAutoTable.finalY + 20;
+    }
+
+    // Tableau des tâches non facturables
+    if (nonBillableTrackers?.length > 0) {
+      // Titre du tableau non facturable
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(192, 57, 43);
+      doc.text("Tâches non facturables", 14, currentY);
+      doc.setTextColor(0);
+      doc.setFontSize(12);
+      doc.text(
+        `Total : ${formatTime(Math.floor(nonBillableDuration / 1000))}`,
+        pageWidth - 14,
+        currentY,
+        { align: "right" }
+      );
+      currentY += 10;
+
+      autoTable(doc, {
+        head: [["Description", "Responsable", "Temps", "Date"]],
+        body: nonBillableTrackers?.map((tracker) => {
+          return [
+            tracker?.taskText || tracker?.task[0]?.text,
+            tracker?.user?.firstName + " " + tracker?.user?.lastName,
+            formatTime(Math.floor(tracker?.duration / 1000)),
+            new Date(tracker?.startTime).toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }),
+          ];
+        }),
+        startY: currentY,
+        styles: {
+          fontSize: 10,
+          cellPadding: 4,
+        },
+        headStyles: {
+          fillColor: [192, 57, 43],
+          textColor: 255,
+          halign: "center",
+          fontStyle: "bold",
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245],
+        },
+        margin: { left: 14, right: 14 },
+      });
+    }
 
     // Pied de page
     const pageCount = doc.internal.getNumberOfPages();
@@ -237,11 +324,10 @@ export function exportTimeTracking(projects, trackers) {
     }
 
     // Sauvegarde du fichier avec nom du projet
-
     doc.save(
       `${formattedStartingDate}-${formattedEndingDate}-${
         project?.name || "projet"
-      }-temps-task.pdf`
+      }-temps-clynt.pdf`
     );
   }
 }
@@ -263,23 +349,6 @@ export function groupReactionsByEmoji(reactions = []) {
       return acc;
     }
   }, []);
-}
-
-export function displayPicture(user, width, height) {
-  if (user?.picture) {
-    return (
-      <Image
-        src={user?.picture}
-        width={width}
-        height={height}
-        quality={100}
-        alt={`Photo de ${user?.firstName}`}
-        style={{ borderRadius: "50%", minHeight: height, minWidth: width }}
-      />
-    );
-  } else {
-    return <NoPicture width={width} height={height} user={user} />;
-  }
 }
 
 export function sendNotification(receiver, user, uid, message, link) {

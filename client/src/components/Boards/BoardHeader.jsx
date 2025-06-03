@@ -7,7 +7,6 @@ import {
   ChevronDown,
   ChevronRight,
   EllipsisVertical,
-  FlipVertical,
   GripVertical,
   Save,
   Trash2,

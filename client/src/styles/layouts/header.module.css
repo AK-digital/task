@@ -1,13 +1,13 @@
 .container {
-    width: 100%;
-    padding: 10px 0;
-    height: var(--header-height);
+  width: 100%;
+  padding: 10px 0;
+  height: var(--header-height);
 }
 
 .nav {
-    justify-content: space-between;
-    margin-inline: 120px 40px;
-    height: 100%;
+  justify-content: flex-end;
+  margin-inline: 120px 40px;
+  height: 100%;
 }
 
 /* .links {
@@ -15,54 +15,53 @@
 } */
 
 .links svg {
-    color: var(--text-dark-color);
+  color: var(--text-dark-color);
 }
 
 .nav,
 .actions {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .logo {
-    position: relative;
+  position: relative;
 }
 
 .actions {
-    gap: 24px;
+  gap: 24px;
 }
 
 .actions {
-    position: relative;
+  position: relative;
 }
 
 .actions li {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .action:nth-child(1) {
-    position: relative;
+  position: relative;
 }
 
 .bell:hover {
-    fill: var(--text-darker-color);
-    cursor: pointer;
+  fill: var(--text-darker-color);
+  cursor: pointer;
 }
 
 .bell[data-open="true"] {
-    fill: var(--text-darker-color);
+  fill: var(--text-darker-color);
 }
 
-
 .unread {
-    position: absolute;
-    width: 11px;
-    height: 11px;
-    top: 12px;
-    left: 12px;
-    border-radius: 50%;
-    background-color: var(--danger-color);
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  top: 12px;
+  left: 12px;
+  border-radius: 50%;
+  background-color: var(--danger-color);
 }

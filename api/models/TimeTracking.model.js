@@ -37,6 +37,10 @@ const timeTrackingSchema = new Schema(
       type: Number,
       default: 0,
     },
+    billable: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

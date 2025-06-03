@@ -30,6 +30,17 @@
   width: 220px;
 }
 
+.logo {
+  display: block;
+  margin-left: 5px;
+  margin-right: auto;
+}
+
+.container[data-open="true"] .logo {
+  margin-left: 5px;
+  margin-right: auto;
+}
+
 .nav {
   position: relative;
   display: flex;
@@ -48,14 +59,20 @@
 
 .project {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+
   cursor: pointer;
   transition: all linear 150ms;
   color: var(--text-lighter-color);
 
   /* Aide à aligner le défilement sur les projets */
+}
+
+.project a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-lighter-color);
 }
 
 .projectLogo {

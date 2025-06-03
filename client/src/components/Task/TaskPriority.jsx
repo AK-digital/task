@@ -8,6 +8,7 @@ import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
+import { getFloating, usePreventScroll } from "@/utils/floating";
 
 export default function TaskPriority({ task }) {
   const { project, mutateTasks, priorities, mutatePriorities } =
@@ -24,6 +25,14 @@ export default function TaskPriority({ task }) {
     "team",
     "customer",
   ]);
+
+  const { refs, floatingStyles } = getFloating(isOpen, setIsOpen);
+
+  usePreventScroll({
+    elementRef: refs.floating,
+    shouldPrevent: true,
+    mode: "element",
+  });
 
   async function handleTaskUpdatePriority(priority) {
     if (!canEdit) return;
@@ -110,12 +119,18 @@ export default function TaskPriority({ task }) {
         className={styles.current}
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
+        ref={refs.setReference}
       >
         <span>{currentPriority?.name || "Basse"}</span>
       </div>
       {isOpen && (
         <>
-          <div className={styles.list} data-big={listWidth()}>
+          <div
+            className={styles.list}
+            data-big={listWidth()}
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <ul className={styles.items}>
               {priorities?.map((priority) => {
                 if (!isEdit) {

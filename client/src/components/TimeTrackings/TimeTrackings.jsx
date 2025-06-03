@@ -1,50 +1,58 @@
 "use client";
 import styles from "@/styles/components/timeTrackings/time-trackings.module.css";
 import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
-import TimeTracking from "./TimeTracking";
 import Filters from "./Filters";
-import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useMemo, useState } from "react";
-import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import ExportPdfBtn from "./ExportPdfBtn";
+import { useTimeTrackings } from "@/app/hooks/useTimeTrackings";
+import socket from "@/utils/socket";
+import { useProjects } from "@/app/hooks/useProjects";
+import TimeTracking from "./TimeTracking";
+import SelectedTimeTrackings from "./SelectedTimeTrackings";
+import TimeTrackingHeader from "./TimeTrackingHeader";
 
-export default function TimeTrackings({ trackers, projects, searchParams }) {
-  const [selectedProjects, setSelectedProjects] = useState([]);
-  const [filteredTrackers, setFilteredTrackers] = useState(trackers || []);
+export default function TimeTrackings({ searchParams }) {
+  const [queries, setQueries] = useState(searchParams);
+  const { projects, projectsLoading } = useProjects();
+  const { timeTrackings, timeTrackingsLoading, mutateTimeTrackings } =
+    useTimeTrackings(queries);
+
+  console.log(timeTrackings);
+
   const [selectedTrackers, setSelectedTrackers] = useState([]);
-  const projectsWithTrackers = projects?.filter((project) =>
-    filteredTrackers?.some((tracker) => tracker?.project?._id === project?._id)
-  );
-  const queries = new URLSearchParams(searchParams);
 
-  const totalDuration = useMemo(() => {
-    return trackers?.reduce((acc, tracker) => {
-      return acc + Math.floor(tracker?.duration / 1000) * 1000;
-    }, 0);
-  }, [trackers]);
-
-  const hasSelectedProjects = selectedProjects?.length > 0;
   const hasSelectedTrackers = selectedTrackers?.length > 0;
 
-  /* The `useEffect` hook you provided is responsible for updating the `filteredTrackers` state based on
-  the `trackers` prop whenever the `trackers` prop changes. */
+  const totalDuration = useMemo(() => {
+    return timeTrackings?.reduce((acc, tracker) => {
+      return acc + Math.floor(tracker?.duration / 1000) * 1000;
+    }, 0);
+  }, [timeTrackings]);
+
+  const hasTrackers = timeTrackings?.length > 0;
+
   useEffect(() => {
-    setFilteredTrackers(trackers);
-  }, [trackers]);
+    const handleTaskUpdated = (projectId) => {
+      // Revalider seulement si on n'a pas de filtre de projet ou si c'est un projet concerné
+      const projectsParam = searchParams?.projects;
 
-  /* This `useEffect` hook is responsible for updating the `selectedProjects` state based on the
- `searchParams` whenever `searchParams` changes. */
-  useEffect(() => {
-    // Get the "projects" query parameter from the URL search params
-    const projectsNames = queries?.get("projects")?.split(",") || [];
+      if (!projectsParam || projectsParam.includes(projectId)) {
+        mutateTimeTrackings();
+      }
+    };
 
-    if (projects?.length <= 0) setSelectedProjects([]);
+    const handleTimeTrackingUpdated = () => {
+      mutateTimeTrackings();
+    };
 
-    // If there are project names, filter the projects array to find matching projects
-    setSelectedProjects(
-      projects.filter((project) => projectsNames.includes(project?.name))
-    );
-  }, [searchParams]);
+    socket.on("task updated", handleTaskUpdated);
+    socket.on("time tracking updated", handleTimeTrackingUpdated);
+
+    return () => {
+      socket.off("task updated", handleTaskUpdated);
+      socket.off("time tracking updated", handleTimeTrackingUpdated);
+    };
+  }, [mutateTimeTrackings, searchParams]);
 
   function handleExport() {
     exportTimeTracking(
@@ -58,13 +66,13 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
       <div className={styles.header}>
         <h1>Suivi du temps</h1>
         {/* Filters */}
-        <Filters
-          projects={projects}
-          selectedProjects={selectedProjects}
-          searchParams={searchParams}
-          hasSelectedProjects={hasSelectedProjects}
-          projectsWithTrackers={projectsWithTrackers}
-        />
+        {!projectsLoading && (
+          <Filters
+            projects={projects}
+            queries={queries}
+            setQueries={setQueries}
+          />
+        )}
         {/* Total duration */}
         {totalDuration && (
           <span className={styles.total}>
@@ -75,18 +83,20 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
         <ExportPdfBtn handleExport={handleExport} />
       </div>
       {/* Time tracking list */}
-      {isNotEmpty(filteredTrackers) ? (
+      {isNotEmpty(timeTrackings) ? (
         <div className={styles.content}>
-          <TimeTrackingHeader
-            trackers={trackers}
+          {/* <TimeTrackingHeader
+            trackers={timeTrackings}
             setFilteredTrackers={setFilteredTrackers}
             setSelectedTrackers={setSelectedTrackers}
-          />
-          {filteredTrackers?.map((tracker) => {
+          /> */}
+
+          {timeTrackings?.map((tracker) => {
             return (
               <TimeTracking
                 tracker={tracker}
                 setSelectedTrackers={setSelectedTrackers}
+                mutateTimeTrackings={mutateTimeTrackings}
                 key={tracker?._id}
               />
             );
@@ -96,6 +106,8 @@ export default function TimeTrackings({ trackers, projects, searchParams }) {
             <SelectedTimeTrackings
               selectedTrackers={selectedTrackers}
               setSelectedTrackers={setSelectedTrackers}
+              mutateTimeTrackings={mutateTimeTrackings}
+              trackers={timeTrackings}
             />
           )}
         </div>

@@ -11,6 +11,8 @@ import { emailDescription } from "../templates/emails.js";
 import { allowedStatus, getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
+import StatusModel from "../models/Status.model.js";
+import PriorityModel from "../models/Priority.model.js";
 
 // Only authors and guets will be able to post the tasks
 export async function saveTask(req, res, next) {
@@ -30,12 +32,24 @@ export async function saveTask(req, res, next) {
       projectId: projectId,
     });
 
+    const status = await StatusModel.findOne({
+      projectId: projectId,
+      status: "waiting",
+    });
+
+    const priority = await PriorityModel.findOne({
+      projectId: projectId,
+      priority: "medium",
+    });
+
     const newTask = new TaskModel({
       author: authUser?._id,
       projectId: projectId,
       boardId: boardId,
       text: text,
       order: tasks ? tasks.length - 0 : 0,
+      status: status?._id,
+      priority: priority?._id,
     });
 
     const savedTask = await newTask.save();
@@ -103,7 +117,7 @@ export async function getTasks(req, res, next) {
       })
       .populate({
         path: "status",
-        select: "name color projectId",
+        select: "status name color projectId",
       })
       .populate({
         path: "priority",
@@ -456,7 +470,7 @@ export async function updateTaskDescription(req, res, next) {
     if (attachments.length > 0) {
       for (const attachment of attachments) {
         const bufferResponse = await uploadFileBuffer(
-          "task/description",
+          "clynt/description",
           attachment.buffer,
           attachment.originalname
         );
@@ -494,7 +508,7 @@ export async function updateTaskDescription(req, res, next) {
       for (const match of matches) {
         const img = match[1]; // Le src est dans le premier groupe capturé
 
-        const res = await uploadFile("task/description", img);
+        const res = await uploadFile("clynt/description", img);
 
         if (res?.secure_url) {
           updatedDescription = updatedDescription.replace(img, res.secure_url);
@@ -543,7 +557,7 @@ export async function updateTaskDescription(req, res, next) {
 
       if (user) {
         await sendEmail(
-          "task@akdigital.fr",
+          "notifications@clynt.io",
           user?.email,
           template?.subjet,
           template?.text
@@ -719,7 +733,7 @@ export async function addResponsible(req, res, next) {
 
       const template = emailTaskAssigned(updatedTask, authUser, projectLink);
       await sendEmail(
-        "task@akdigital.fr",
+        "notifications@clynt.io",
         responsible?.email,
         template.subjet,
         template.text
@@ -808,7 +822,7 @@ export async function endTimer(req, res, next) {
       return res.status(404).send({
         success: false,
         message:
-          "Impossible de mettre à jour le temps d'un utilisateur qui n'a pas démarrer le timer",
+          "Impossible de mettre à jour le temps d'un utilisateur qui n'a pas démarré le timer",
       });
     }
 

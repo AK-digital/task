@@ -1,14 +1,11 @@
 /* Ajuster la hauteur des éléments pour le snap scroll */
 .projectWrapper {
   position: relative;
-  width: 100%;
-  max-width: 290px;
-  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium)
-    var(--border-radius-medium);
+  width: 290px;
+  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
   overflow: visible;
   transition: all 200ms ease-in-out;
   cursor: pointer;
-  margin-top: 24px;
   text-decoration: none;
 }
 
@@ -27,8 +24,8 @@
   clip-path: path(" M 0 0 L 128 0 C 144 2, 136 24, 160 34 L 0 34 Z ");
 }
 
-.starWrapper[data-default="true"] {
-  top: -5px;
+.projectWrapper[data-default="true"] .starWrapper,
+.projectWrapper[data-default="true"] .contentWrapper {
   background-color: #e9e7dd;
 }
 
@@ -40,23 +37,21 @@
   color: #d0cec7;
 }
 
+.star[data-favorite="true"] {
+  fill: var(--accent-color);
+  color: var(--accent-color);
+}
+
 .contentWrapper {
   padding: 18px 22px;
   background-color: var(--secondary-background-color);
-  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium)
-    var(--border-radius-medium);
+  border-radius: 0 var(--border-radius-medium) var(--border-radius-medium) var(--border-radius-medium);
   transition: all 200ms ease-in-out;
+  min-height: 181px;
 }
 
 .contentWrapper:hover {
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
-}
-
-.contentWrapper[data-default="true"] {
-  position: absolute;
-  width: 100%;
-  top: 24px;
-  background-color: #e9e7dd;
 }
 
 .imagesWrapper {
@@ -67,6 +62,9 @@
 }
 
 .nameWrapper {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 20px;
   margin-top: 6px;
   color: var(--text-darker-color);
@@ -85,7 +83,7 @@
   color: var(--text-darker-color);
 }
 
-.tabs[data-default="true"] {
+.projectWrapper[data-default="true"] .tabs {
   background-color: #d0cec7;
   width: 100px;
   height: 12px;
@@ -114,19 +112,19 @@
   flex: 0.5;
 }
 
-.statusBar > div:first-child {
+.statusBar>div:first-child {
   min-width: 12px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
 
-.statusBar > div:last-child {
+.statusBar>div:last-child {
   min-width: 12px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 
-.statusBar[data-default="true"] {
+.projectWrapper[data-default="true"] .statusBar {
   background-color: #d0cec7;
 }
 

@@ -1,4 +1,5 @@
 import StatusModel from "../models/Status.model.js";
+import TaskModel from "../models/Task.model.js";
 
 export async function saveStatus(req, res) {
   try {
@@ -16,6 +17,7 @@ export async function saveStatus(req, res) {
       projectId: projectId,
       name: name,
       color: color,
+      default: false,
     });
 
     const savedStatus = await newStatus.save();
@@ -76,6 +78,48 @@ export async function getStatusByProject(req, res) {
   }
 }
 
+export async function getUserProjectsStatuses(req, res) {
+  try {
+    const authUser = res.locals.user;
+
+    const projects = await ProjectModel.find({
+      members: { $in: [authUser._id] },
+    });
+
+    if (!projects.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Projects not found",
+        data: [],
+      });
+    }
+
+    const statuses = await StatusModel.find({
+      projectId: { $in: projects.map((project) => project._id) },
+    });
+
+    if (!statuses.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Statuses not found",
+        data: [],
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Statuses retrieved successfully",
+      data: statuses,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Internal server error",
+    });
+  }
+}
+
 export async function updateStatus(req, res) {
   try {
     const { name, color } = req.body;
@@ -120,14 +164,32 @@ export async function deleteStatus(req, res) {
   try {
     const { projectId } = req.query;
 
-    const statuses = await StatusModel.find({ projectId: projectId });
+    const status = await StatusModel.findById({ _id: req.params.id });
 
-    if (statuses.length === 1) {
+    if (!status) {
       return res.status(400).send({
         success: false,
-        message: "Impossible to delete the last status",
+        message: "Impossible to delete a status that does not exist",
       });
     }
+
+    if (status.default) {
+      return res.status(400).send({
+        success: false,
+        message: "Impossible to delete a default status",
+      });
+    }
+
+    const defaultStatus = await StatusModel.findOne({
+      projectId: projectId,
+      default: true,
+      status: "waiting",
+    });
+
+    await TaskModel.updateMany(
+      { status: status?._id },
+      { $set: { status: defaultStatus?._id } }
+    );
 
     const deletedStatus = await StatusModel.findByIdAndDelete({
       _id: req.params.id,

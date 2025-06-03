@@ -92,9 +92,9 @@ export default function TaskDeadline({ task, uid }) {
   };
 
   const pastDeadline =
-    moment().isAfter(moment(deadline)) && task?.status !== "Terminée";
+    moment().isAfter(moment(deadline)) && task?.status?.status !== "done";
   const isToday =
-    moment().isSame(moment(deadline), "day") && task?.status !== "Terminée";
+    moment().isSame(moment(deadline), "day") && task?.status?.status !== "done";
 
   const handleHover = useCallback(() => {
     const isAuthorized = checkRole(

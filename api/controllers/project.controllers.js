@@ -26,13 +26,6 @@ export async function saveProject(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    // Trouver l'ordre maximum actuel
-    const maxOrder = await ProjectModel.findOne({
-      $or: [{ author: authUser._id }, { guests: authUser?._id }],
-    })
-      .sort({ order: -1 })
-      .select("order");
-
     const newProject = new ProjectModel({
       name: name,
       creator: authUser._id,
@@ -91,153 +84,20 @@ export async function saveProject(req, res, next) {
   }
 }
 
-export async function getProjects(req, res, next) {
+export async function getUserProjects(req, res, next) {
   try {
     const authUser = res.locals.user;
 
+    // A .pre aggregate is set in ProjectModel to get the membersData, statuses, tasks and boards
     const projects = await ProjectModel.aggregate([
       {
         $match: {
-          "members.user": new mongoose.Types.ObjectId(authUser._id),
-        },
-      },
-      {
-        // Extraire uniquement le member correspondant à l'utilisateur connecté
-        $addFields: {
-          currentUserMember: {
-            $first: {
-              $filter: {
-                input: "$members",
-                as: "member",
-                cond: {
-                  $eq: [
-                    "$$member.user",
-                    new mongoose.Types.ObjectId(authUser._id),
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        // Ajouter un champ temporaire 'userOrder' pour trier
-        $addFields: {
-          userOrder: "$currentUserMember.order",
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "members.user",
-          foreignField: "_id",
-          as: "membersData",
-        },
-      },
-      {
-        $addFields: {
-          members: {
-            $map: {
-              input: "$members",
-              as: "member",
-              in: {
-                role: "$$member.role",
-                order: "$$member.order",
-                user: {
-                  $arrayElemAt: [
-                    {
-                      $map: {
-                        input: {
-                          $filter: {
-                            input: "$membersData",
-                            as: "userData",
-                            cond: { $eq: ["$$userData._id", "$$member.user"] },
-                          },
-                        },
-                        as: "filteredUser",
-                        in: {
-                          $mergeObjects: [
-                            "$$filteredUser",
-                            { password: "$$REMOVE" },
-                          ],
-                        },
-                      },
-                    },
-                    0,
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "_id",
-          foreignField: "projectId",
-          as: "tasks",
-        },
-      },
-
-      // Statistiques des tâches par status
-      {
-        $addFields: {
-          taskStatuses: {
-            $arrayToObject: {
-              $map: {
-                input: {
-                  $setUnion: ["$tasks.status", allowedStatus],
-                },
-                as: "status",
-                in: {
-                  k: "$$status",
-                  v: {
-                    $size: {
-                      $filter: {
-                        input: "$tasks",
-                        as: "task",
-                        cond: { $eq: ["$$task.status", "$$status"] },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-
-      {
-        $lookup: {
-          from: "boards",
-          localField: "_id",
-          foreignField: "projectId",
-          as: "boards",
-        },
-      },
-      {
-        $addFields: {
-          boardsCount: { $size: "$boards" },
-        },
-      },
-
-      {
-        $addFields: {
-          tasksCount: { $size: "$tasks" },
-        },
-      },
-      {
-        $project: {
-          tasks: 0,
-          boards: 0,
-          currentUserMember: 0,
-          membersData: 0,
+          "members.user": authUser._id,
         },
       },
       {
         $sort: {
-          userOrder: 1,
+          name: 1,
         },
       },
     ]);
@@ -267,90 +127,12 @@ export async function getProject(req, res, next) {
     const project = await ProjectModel.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(req.params.id),
-        },
-      },
-      // On effectue d'abord le lookup pour obtenir les informations des utilisateurs
-      {
-        $lookup: {
-          from: "users",
-          localField: "members.user",
-          foreignField: "_id",
-          as: "membersData",
-        },
-      },
-      // Ensuite on restructure le tableau members pour remplacer l'ObjectId par les données utilisateur tout en gardant le rôle
-      {
-        $addFields: {
-          members: {
-            $map: {
-              input: "$members",
-              as: "member",
-              in: {
-                // On conserve le rôle de la structure originale
-                role: "$$member.role",
-                // On remplace l'ObjectId par l'objet utilisateur complet (sans le mot de passe)
-                user: {
-                  $arrayElemAt: [
-                    {
-                      $map: {
-                        input: {
-                          $filter: {
-                            input: "$membersData",
-                            as: "userData",
-                            cond: { $eq: ["$$userData._id", "$$member.user"] },
-                          },
-                        },
-                        as: "filteredUser",
-                        in: {
-                          $mergeObjects: [
-                            "$$filteredUser",
-                            { password: "$$REMOVE" },
-                          ],
-                        },
-                      },
-                    },
-                    0,
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "boards",
-          localField: "_id",
-          foreignField: "projectId",
-          as: "boards",
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "boards._id",
-          foreignField: "boardId",
-          as: "tasks",
-        },
-      },
-      {
-        $addFields: {
-          boardsCount: { $size: "$boards" },
-          tasksCount: { $size: "$tasks" },
-        },
-      },
-      {
-        $project: {
-          "author.password": 0,
-          membersData: 0,
-          boards: 0,
-          tasks: 0,
+          _id: mongoose.Types.ObjectId.createFromHexString(req.params.id),
         },
       },
     ]);
 
-    if (!project.length) {
+    if (project.length === 0) {
       return res.status(404).send({
         success: false,
         message: "Aucun projet n'a été trouvé dans la base de données",
@@ -438,11 +220,11 @@ export async function updateProjectLogo(req, res) {
 
     // Si un logo existe déjà, on le supprime d'abord
     if (project.logo) {
-      await destroyFile("task/project", project.logo);
+      await destroyFile("clynt/project", project.logo);
     }
 
     // Upload du nouveau fichier
-    const uploadedFile = await uploadFileBuffer("task/project", logo.buffer);
+    const uploadedFile = await uploadFileBuffer("clynt/project", logo.buffer);
 
     if (!uploadedFile || !uploadedFile.secure_url) {
       throw new Error("Échec de l'upload du fichier");
@@ -473,7 +255,7 @@ export async function updateProjectLogo(req, res) {
 // Only the author will be able to delete the project
 export async function deleteProject(req, res, next) {
   try {
-    const deletedProject = await ProjectModel.findById({
+    const deletedProject = await ProjectModel.findByIdAndDelete({
       _id: req.params.id,
     });
 
@@ -483,11 +265,6 @@ export async function deleteProject(req, res, next) {
         message: "Impossible de supprimer un projet inexistant",
       });
     }
-
-    // Cascade delete related boards and tasks
-    await BoardModel.deleteMany({ projectId: deletedProject?._id });
-    await TaskModel.deleteMany({ projectId: deletedProject?._id });
-    await ProjectModel.findByIdAndDelete({ _id: req.params.id });
 
     return res.status(200).send({
       success: true,
