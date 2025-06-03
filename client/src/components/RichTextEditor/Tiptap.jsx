@@ -709,7 +709,7 @@ export default function Tiptap({
         {type === "message" && (
           <>
             <button
-              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-normal mr-3 hover:text-text-accent-color hover:bg-transparent shadow-none"
+              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-normal mr-3 hover:text-accent-color-light hover:bg-transparent shadow-none"
               onClick={handleCancel}
             >
               Annuler

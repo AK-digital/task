@@ -10,7 +10,7 @@ export default function ConfirmationDelete({ title, onCancel, onConfirm }) {
           irréversible.
         </p>
         <div className="flex justify-between gap-3">
-          <button className="py-2 px-4 cursor-pointer hover:bg-color-accent-color-hover" onClick={onCancel}>
+          <button className="py-2 px-4 cursor-pointer hover:bg-accent-color-hover" onClick={onCancel}>
             Annuler
           </button>
           <button className="border-none bg-danger-color py-2 px-4 rounded-sm hover:bg-[#c0392b]" onClick={onConfirm}>

@@ -150,7 +150,7 @@ export default function AttachmentsInfo({
       onMouseEnter={() => setShowAttachments(true)}
       onMouseLeave={() => setShowAttachments(false)}
     >
-      <span className="text-text-accent-color text-small">
+      <span className="text-accent-color-light text-small">
         {disable ? (
           <span>{label}</span>
         ) : (

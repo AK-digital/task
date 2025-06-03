@@ -168,7 +168,7 @@ export default function Board({
           {isWritting && (
             <div className="absolute mt-1 ml-[25px] text-text-color-muted text-small">
               <p>
-                Appuyer sur <span className="text-text-accent-color">entrée</span> pour ajouter une tâche
+                Appuyer sur <span className="text-accent-color-light">entrée</span> pour ajouter une tâche
               </p>
             </div>
           )}

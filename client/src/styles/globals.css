@@ -4,9 +4,10 @@
 @theme {
   --font-bricolage: "Bricolage Grotesque", sans-serif;
 
-  --color-color-accent-color: #a87e51;
-  --color-color-accent-color-transparent: rgba(168, 126, 81, 0.3);
-  --color-color-accent-color-hover: #977045;
+  --color-accent-color: #a87e51;
+  --color-accent-color-light: #d4a979;
+  --color-accent-color-transparent: rgba(168, 126, 81, 0.3);
+  --color-accent-color-hover: #977045;
   --color-background-primary-color: #dad6c7;
   --color-background-secondary-color: #f9f7ef;
   --color-background-third-color: #eae7de;
@@ -15,7 +16,6 @@
   --color-color-border-color: #3a3d5c;
 
   --color-text-color: #e0e0e0;
-  --color-text-accent-color: #d4a979;
   --color-text-color-dark: #3a4344;
   --color-text-color-red: #c04747;
 
@@ -269,7 +269,7 @@
   }
 
   .text_Message span {
-    color: var(--color-color-accent-color);
+    color: var(--color-accent-color);
     font-weight: 500;
   }
 
@@ -804,7 +804,6 @@
     background-position: 50% 80%;
     background-size: cover;
     letter-spacing: 0.03rem !important;
-    /* font-family: "Bricolage Grotesque", Arial, Helvetica, sans-serif; */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: var(--text-dark-color);
@@ -1003,6 +1002,7 @@ html:has(#task-more) {
 
 :root {
   --accent-color: #a87e51;
+  --accent-color-light: #d4a979;
   --accent-color-transparent: rgba(168, 126, 81, 0.3);
   --accent-color-hover: #977045;
   --primary-background-color: #dad6c7;
@@ -1013,7 +1013,6 @@ html:has(#task-more) {
   --border-color: #3a3d5c;
 
   --text-color: #e0e0e0;
-  --text-accent-color: #d4a979;
   --text-color-dark: #3a4344;
   --text-color-red: #c04747;
 

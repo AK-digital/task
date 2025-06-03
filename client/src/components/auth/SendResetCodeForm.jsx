@@ -77,7 +77,7 @@ export default function SendResetCodeForm() {
             onClick={(e) => {
               router.push("/");
             }}
-          className="text-text-accent-color cursor-pointer ml-1 hover:underline"
+          className="text-accent-color-light cursor-pointer ml-1 hover:underline"
           >
             Retourner sur l'écran de connexion
           </span>

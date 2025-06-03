@@ -43,7 +43,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
       </div>
       {statusMessage && (
         <div className="text-center mb-6">
-          <span data-status={state?.status} className="data-[status=success]:text-color-accent-color data-[status=failure]:text-state-blocked-color">{statusMessage}</span>
+          <span data-status={state?.status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">{statusMessage}</span>
         </div>
       )}
       {state?.status !== "success" && (

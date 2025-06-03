@@ -30,7 +30,7 @@ export default function TasksBoardFilter({ queries, setQueries }) {
         {theBoard?.color ? (
           <div
             style={{ backgroundColor: `${theBoard?.color}` }}
-            className="min-w-3 h-3 rounded-full bg-color-accent-color"
+            className="min-w-3 h-3 rounded-full bg-accent-color"
           ></div>
         ) : (
           <LayoutDashboard size={16} />
@@ -54,7 +54,7 @@ export default function TasksBoardFilter({ queries, setQueries }) {
                 >
                   <div
                     style={{ backgroundColor: `${board?.color}` }}
-                    className="min-w-3 h-3 rounded-full bg-color-accent-color"
+                    className="min-w-3 h-3 rounded-full bg-accent-color"
                   ></div>
                   <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">{board?.title}</span>
                 </li>

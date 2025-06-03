@@ -99,7 +99,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
     <>
       <div
         ref={resizerRef}
-        className="w-1 h-screen fixed top-0 left-0 cursor-col-resize bg-transparent z-[2002] hover:bg-color-accent-color active:bg-color-accent-color"
+        className="w-1 h-screen fixed top-0 left-0 cursor-col-resize bg-transparent z-[2002] hover:bg-accent-color active:bg-accent-color"
         onMouseDown={startResizing}
       ></div>
       <div className="container_TaskMore fixed z-[2001] top-0 right-0 bottom-0 bg-[url('/backgrounds/background.jpg')] bg-no-repeat bg-[20%_50%] bg-cover w-[clamp(520px,45%,calc(100vw-80px))] h-screen shadow-[-4px_10px_10px_0px_rgba(0,0,0,0.15)] p-8 cursor-default overflow-y-auto min-w-[520px] resize-x" ref={containerRef} id="task-more">

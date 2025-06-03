@@ -54,14 +54,14 @@ export default function Notifications({
           <span>Notifications</span>
           {unreadCount > 0 && (
             <div className="flex items-center gap-2.5">
-              <div className="py-0.5 px-2 bg-color-accent-color text-small rounded-xl font-medium text-white">
+              <div className="py-0.5 px-2 bg-accent-color text-small rounded-xl font-medium text-white">
                 {unreadCount} non {unreadCount === 1 ? "lue" : "lues"}
               </div>
               <button
                 onClick={handleReadNotifications}
                 data-disabled={isLoading}
                 disabled={isLoading}
-                className="bg-transparent text-text-accent-color py-1 px-2 text-small rounded-sm shadow-none hover:bg-[#a87e511a] hover:shadow-none data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-[#a87e511a]"
+                className="bg-transparent text-accent-color-light py-1 px-2 text-small rounded-sm shadow-none hover:bg-[#a87e511a] hover:shadow-none data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-[#a87e511a]"
               >
                 Tout marquer comme lu
               </button>
@@ -81,7 +81,7 @@ export default function Notifications({
                   data-read={notif?.read}
                   key={idx}
                   onClick={(e) => handleReadNotification(e, notif)}
-                  className="flex justify-between flex-row gap-1 cursor-pointer no-underline w-full text-text-medium-color transition-[background-color] duration-200 p-[14px] hover:bg-background-third-color data-[read=false]:bg-color-accent-color-transparent"
+                  className="flex justify-between flex-row gap-1 cursor-pointer no-underline w-full text-text-medium-color transition-[background-color] duration-200 p-[14px] hover:bg-background-third-color data-[read=false]:bg-accent-color-transparent"
                 >
                   <div className="flex gap-2">
                     {notif?.senderId?.picture ? (

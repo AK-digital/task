@@ -71,10 +71,10 @@ export default function SignIn() {
       </div>
       {message && (
         <div className="text-center mb-6">
-          <span data-status={status} className="data-[status=success]:text-color-accent-color data-[status=failure]:text-state-blocked-color">
+          <span data-status={status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">
             {message}
           </span>
-          <button className="bg-transparent text-color-accent-color text-small" onClick={handleResendEmail}>
+          <button className="bg-transparent text-accent-color text-small" onClick={handleResendEmail}>
             Renvoyer un email de vérification
           </button>
         </div>
@@ -151,7 +151,7 @@ export default function SignIn() {
       <div className="text-center text-text-color mt-15 font-light">
         <p>
           Vous n'avez pas encore de compte ?{" "}
-          <span onClick={handleSignUp} className="text-text-accent-color cursor-pointer ml-1 hover:underline">S'inscrire</span>
+          <span onClick={handleSignUp} className="text-accent-color-light cursor-pointer ml-1 hover:underline">S'inscrire</span>
         </p>
       </div>
     </div>

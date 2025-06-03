@@ -59,7 +59,7 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
               if (option?.authorized === false) return null;
 
               return (
-                <li {...itemProps(option)} key={idx} className="option cursor-pointer py-2 border-b border-background-primary-color hover:text-text-accent-color last:border-b-0 data-[remove=true]:text-text-color-red hover:[&_a]:text-text-accent-color [&_span]:flex [&_span]:items-center [&_span]:gap-2 ">
+                <li {...itemProps(option)} key={idx} className="option cursor-pointer py-2 border-b border-background-primary-color hover:text-accent-color-light last:border-b-0 data-[remove=true]:text-text-color-red hover:[&_a]:text-accent-color-light [&_span]:flex [&_span]:items-center [&_span]:gap-2 ">
                   {option?.link ? (
                     <Link href={option?.link}>
                       {content(option)}

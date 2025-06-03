@@ -76,7 +76,7 @@ export default function ProjectCard({
         <Star
           size={18}
           onClick={handleFavorite}
-          className={`absolute top-[7px] left-[15px] ${isFavorite ? 'fill-color-accent-color text-color-accent-color' : 'fill-[#d0cec7] text-[#d0cec7]'}`} 
+          className={`absolute top-[7px] left-[15px] ${isFavorite ? 'fill-accent-color text-accent-color' : 'fill-[#d0cec7] text-[#d0cec7]'}`} 
           />
       </div>
 

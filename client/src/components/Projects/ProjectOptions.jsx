@@ -289,7 +289,7 @@ export default function ProjectOptions({ project }) {
                     );
                   })}
                 {links.length < 6 && (
-                  <button onClick={addLink} className="bg-transparent text-color-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none underline">
+                  <button onClick={addLink} className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none underline">
                     Ajouter un lien
                   </button>
                 )}

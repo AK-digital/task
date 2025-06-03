@@ -40,8 +40,8 @@ export default function TaskConversation({ task, archive = false, uid }) {
 
   return (
     <div className="relative flex items-center h-full pr-2" onClick={handleOpenTask}>
-      {!hasDescription() && <MessageCircle size={24} className="hover:text-color-accent-color" />}
-      {hasDescription() && <MessageCircleMore size={24} className="hover:text-color-accent-color" />}
+      {!hasDescription() && <MessageCircle size={24} className="hover:text-accent-color" />}
+      {hasDescription() && <MessageCircleMore size={24} className="hover:text-accent-color" />}
       {messagesCount > 0 && (
         <span data-read={hasReadMessage} className="absolute flex justify-center items-center bottom-2 right-1 p-1 w-4 h-4 bg-background-primary-color rounded-full text-small">{messagesCount}</span>
       )}

@@ -26,7 +26,7 @@ export default function ProjectSideNav({ project, open, isActive }) {
             height={42}
             alt="project logo"
             data-active={isActive} // Ajout de data-active sur l'image aussi
-            className="rounded-full min-w-[42px] min-h-[42px] w-full h-full object-fill border-2 group-hover:border-2 group-hover:bg-color-accent-color"
+            className="rounded-full min-w-[42px] min-h-[42px] w-full h-full object-fill border-2 group-hover:border-2 group-hover:bg-accent-color"
           />
         </div>
         {open && <span className="text-small whitespace-nowrap overflow-hidden text-ellipsis mr-5 font-light">{project?.name}</span>}

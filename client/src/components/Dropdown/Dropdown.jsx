@@ -57,7 +57,7 @@ export function DropDown({
   return (
     <>
       <div className="relative select-none">
-        <div onClick={handleIsOpen} className="p-2 bg-color-accent-color w-full text-small rounded-sm cursor-pointer transition-all ease-in duration-[80ms] hover:bg-color-accent-color-hover">
+        <div onClick={handleIsOpen} className="p-2 bg-accent-color w-full text-small rounded-sm cursor-pointer transition-all ease-in duration-[80ms] hover:bg-accent-color-hover">
           <span className="text-white text-center w-full">{memberRole(current)}</span>
         </div>
         {isOpen && (

@@ -163,13 +163,13 @@ export default function TaskTimer({ task }) {
           <>
             {isRunning ? (
               <CirclePause
-                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-color-accent-color"
+                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
                 data-running={isRunning}
                 onClick={handlePauseTimer}
               />
             ) : (
               <CirclePlay 
-                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-color-accent-color"
+                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
                 data-running={isRunning} 
                 onClick={handlePlayTimer} 
               />
@@ -191,7 +191,7 @@ export default function TaskTimer({ task }) {
               <span className="text-text-dark-color">Gestion du temps</span>
               {addingSession && (
                 <span
-                  className="text-color-accent-color text-normal cursor-pointer"
+                  className="text-accent-color text-normal cursor-pointer"
                   onClick={(e) => setAddingSession(false)}
                 >
                   Retour

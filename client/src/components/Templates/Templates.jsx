@@ -31,7 +31,7 @@ export default function Templates({ templates }) {
 
       {/* buttons */}
 
-      <button type="button" onClick={handleGoBack} className="bg-transparent shadow-none max-w-fit hover:bg-transparent hover:shadow-none hover:text-text-accent-color">
+      <button type="button" onClick={handleGoBack} className="bg-transparent shadow-none max-w-fit hover:bg-transparent hover:shadow-none hover:text-accent-color-light">
         Retour
       </button>
     </div>

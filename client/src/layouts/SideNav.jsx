@@ -41,7 +41,7 @@ export default function SideNav() {
           />
           <div
             onClick={(e) => setIsMenuOpen(!isMenuOpen)}
-            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-text-color my-5 hover:text-color-accent-color-hover hover:cursor-pointer"
+            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-text-color my-5 hover:text-accent-color-hover hover:cursor-pointer"
           >
             {isMenuOpen && <ArrowLeftFromLine size={24} />}
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
@@ -50,7 +50,7 @@ export default function SideNav() {
             <Link
               href={"/tasks"}
               title="Mes tâches"
-              className="flex justify-center items-center min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color hover:text-color-accent-color-hover hover:cursor-pointer"
+              className="flex justify-center items-center min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-background-primary-color text-background-side-color hover:text-accent-color-hover hover:cursor-pointer"
             >
               <ClipboardList size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150"/>
             </Link>
@@ -72,7 +72,7 @@ export default function SideNav() {
         </div>
         <div className="flex justify-center items-center flex-col gap-3 min-w-10 max-w-10 min-h-10 rounded-full hover:cursor-pointer">
           <Link
-            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-color-accent-color-hover hover:cursor-pointer"
+            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-accent-color-hover hover:cursor-pointer"
             href={"/projects"}
             data-active={projectId === ""}
           >
@@ -85,14 +85,14 @@ export default function SideNav() {
               "&endingDate=" +
               lastDayOfTheMonth
             }
-            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-color-accent-color-hover hover:cursor-pointer"
+            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-accent-color-hover hover:cursor-pointer"
           >
             <div>
               <Clock3 size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
             </div>
             {/* <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Suivi du temps</span> */}
           </Link>
-          <Link href={"/new-project"} className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-color-accent-color-hover hover:cursor-pointer">
+          <Link href={"/new-project"} className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-background-side-color bg-background-primary-color hover:text-accent-color-hover hover:cursor-pointer">
             <div>
               <Plus size={24} className="bg-background-primary-color text-background-side-color transition-all ease-linear duration-150" />
             </div>

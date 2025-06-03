@@ -33,7 +33,7 @@ export default function ProjectHeader({ displayedFilters }) {
                 ))}
             </div>
             <div
-              className="flex justify-center items-center cursor-pointer rounded-lg py-1.5 px-[7px] transition-all duration-200 ease-in-out hover:text-color-accent-color hover:bg-white/3"
+              className="flex justify-center items-center cursor-pointer rounded-lg py-1.5 px-[7px] transition-all duration-200 ease-in-out hover:text-accent-color hover:bg-white/3"
               onClick={(e) => setIsOpen(true)}
             >
               <UserPlus2 size={24} />

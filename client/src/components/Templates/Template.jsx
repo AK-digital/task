@@ -49,8 +49,8 @@ export default function Template({ elt }) {
         </div>
       </div>
       <div>
-        <button onClick={handleUseTemplate} className="bg-transparent text-color-accent-color">Utiliser ce template</button>
-        <button onClick={handleDelete} className="bg-transparent text-color-accent-color">Supprimer</button>
+        <button onClick={handleUseTemplate} className="bg-transparent text-accent-color">Utiliser ce template</button>
+        <button onClick={handleDelete} className="bg-transparent text-accent-color">Supprimer</button>
       </div>
     </div>
   );

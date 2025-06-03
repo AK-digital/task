@@ -55,7 +55,7 @@ export default function SignUp() {
           </div>
           {message && (
             <div className="text-center mb-6">
-              <span data-status={state?.status} className="data-[status=success]:text-color-accent-color data-[status=failure]:text-state-blocked-color">
+              <span data-status={state?.status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">
                 {message}
               </span>
             </div>
@@ -180,7 +180,7 @@ export default function SignUp() {
           <div className="text-center text-text-color mt-15 font-light">
             <p>
               Vous avez déjà un compte ?{" "}
-              <span onClick={handleSignIn} className="text-text-accent-color cursor-pointer ml-1 hover:underline">Se connecter</span>
+              <span onClick={handleSignIn} className="text-accent-color-light cursor-pointer ml-1 hover:underline">Se connecter</span>
             </p>
           </div>
         </>

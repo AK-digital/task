@@ -164,14 +164,14 @@ export default function TimeTrackingHeader({
             cursor={"pointer"}
             onClick={() => handleProjectSort("asc")}
             data-sort={projectSort === "asc"}
-            className="relative top-1 data-[sort=true]:text-color-accent-color"
+            className="relative top-1 data-[sort=true]:text-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleProjectSort("desc")}
             data-sort={projectSort === "desc"}
-            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
+            className="relative -top-0.5 data-[sort=true]:text-accent-color"
           />
         </div>
       </div>
@@ -183,14 +183,14 @@ export default function TimeTrackingHeader({
             cursor={"pointer"}
             onClick={() => handleUserSort("asc")}
             data-sort={userSort === "asc"}
-            className="relative top-1 data-[sort=true]:text-color-accent-color"
+            className="relative top-1 data-[sort=true]:text-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleUserSort("desc")}
             data-sort={userSort === "desc"}
-            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
+            className="relative -top-0.5 data-[sort=true]:text-accent-color"
           />
         </div>
       </div>
@@ -202,14 +202,14 @@ export default function TimeTrackingHeader({
             cursor={"pointer"}
             onClick={() => handleDateSort("asc")}
             data-sort={dateSort === "asc"}
-            className="relative top-1 data-[sort=true]:text-color-accent-color"
+            className="relative top-1 data-[sort=true]:text-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleDateSort("desc")}
             data-sort={dateSort === "desc"}
-            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
+            className="relative -top-0.5 data-[sort=true]:text-accent-color"
           />
         </div>
       </div>
@@ -222,14 +222,14 @@ export default function TimeTrackingHeader({
             cursor={"pointer"}
             onClick={() => handleDurationSort("asc")}
             data-sort={durationSort === "asc"}
-            className="relative top-1 data-[sort=true]:text-color-accent-color"
+            className="relative top-1 data-[sort=true]:text-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleDurationSort("desc")}
             data-sort={durationSort === "desc"}
-            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
+            className="relative -top-0.5 data-[sort=true]:text-accent-color"
           />
         </div>
       </div>
@@ -241,14 +241,14 @@ export default function TimeTrackingHeader({
             cursor={"pointer"}
             onClick={() => handleBillableSort("asc")}
             data-sort={billableSort === "asc"}
-            className="relative top-1 data-[sort=true]:text-color-accent-color"
+            className="relative top-1 data-[sort=true]:text-accent-color"
           />
           <ChevronDown
             size={15}
             cursor={"pointer"}
             onClick={() => handleBillableSort("desc")}
             data-sort={billableSort === "desc"}
-            className="relative -top-0.5 data-[sort=true]:text-color-accent-color"
+            className="relative -top-0.5 data-[sort=true]:text-accent-color"
           />
         </div>
       </div>
