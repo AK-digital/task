@@ -152,7 +152,7 @@ export default function ProjectOptions({ project }) {
   }
 
   return (
-    <div className="relative bg-background-primary-transparent rounded-t-border-radius-medium p-8 text-text-dark-color h-full overflow-auto">
+    <div className="relative bg-background-primary-transparent rounded-t-2xl p-8 text-text-dark-color h-full overflow-auto">
       <div onClick={() => router.back()} className="absolute top-[45px] left-[45px] cursor-pointer">
         <ArrowLeftCircle size={32} />
       </div>
@@ -165,7 +165,7 @@ export default function ProjectOptions({ project }) {
           <div className="flex gap-10 flex-col w-[40%]">
             <h1>Options de projet</h1>
             {/* Informations */}
-            <div className="bg-white/50 rounded-border-radius-medium p-8">
+            <div className="bg-white/50 rounded-2xl p-8">
               {/* Wrapper header */}
               <div className="flex justify-between">
                 <span className="text-large">Informations générales</span>
@@ -236,7 +236,7 @@ export default function ProjectOptions({ project }) {
               </div>
             </div>
             {/*  Links  */}
-            <div className="bg-white/50 rounded-border-radius-medium p-8">
+            <div className="bg-white/50 rounded-2xl p-8">
               <div className="text-large">
                 <span>Liens rapides</span>
               </div>
@@ -318,7 +318,7 @@ export default function ProjectOptions({ project }) {
 
           {/* Right Column */}
           <div className="relative top-[94px] w-[20%] min-w-[400px] flex gap-10 flex-col">
-            <div className="bg-white/50 rounded-border-radius-medium p-8 h-[675px]">
+            <div className="bg-white/50 rounded-2xl p-8 h-[675px]">
               <div className="text-large">
                 <span>Notes</span>
               </div>

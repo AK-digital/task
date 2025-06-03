@@ -120,7 +120,7 @@ export default function TaskStatus({ task, uid }) {
           <div 
             ref={refs.setFloating}
             style={floatingStyles}
-            className={`absolute z-2001 top-[45px] left-1/2 -translate-x-1/2 p-3 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-border-radius-small ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
+            className={`absolute z-2001 top-[45px] left-1/2 -translate-x-1/2 p-3 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
             >
             <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 px-3 pb-3 border-b border-color-border-color">
               {statuses?.map((status) => {
@@ -128,7 +128,7 @@ export default function TaskStatus({ task, uid }) {
                   return (
                     <li
                       key={status?._id}
-                      className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-border-radius-large text-center min-h-[34px] transition-all duration-[60ms] linear hover:opacity-80"
+                      className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-3xl text-center min-h-[34px] transition-all duration-[60ms] linear hover:opacity-80"
                       onClick={() => handleTaskUpdateStatus(status)}
                       style={{ backgroundColor: status?.color }}
                     >
@@ -148,7 +148,7 @@ export default function TaskStatus({ task, uid }) {
               })}
               {isEdit && !maxStatuses && (
                 <li
-                  className="flex items-center gap-1 border-none py-2 px-4 rounded-border-radius-large bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer"
+                  className="flex items-center gap-1 border-none py-2 px-4 rounded-3xl bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer"
                   onClick={handleAddStatus}
                 >
                   <Plus size={16} />

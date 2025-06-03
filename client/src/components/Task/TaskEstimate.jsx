@@ -126,7 +126,7 @@ export default function TaskEstimate({ task, uid }) {
       {isEditing && (
         <>
           <div
-            className="absolute z-2001 bg-background-secondary-color rounded-border-radius-small top-[45px] p-2 w-[305px] shadow-shadow-box-medium"
+            className="absolute z-2001 bg-background-secondary-color rounded-lg top-[45px] p-2 w-[305px] shadow-shadow-box-medium"
             ref={refs.setFloating}
             style={floatingStyles}
           >

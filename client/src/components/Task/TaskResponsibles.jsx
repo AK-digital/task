@@ -131,7 +131,7 @@ export default function TaskResponsibles({ task, uid, user }) {
                 {responsibles?.map((responsible) => {
                   return (
                     <div
-                      className="flex items-center gap-1 bg-background-third-color p-1 rounded-border-radius-small text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-background-primary-color"
+                      className="flex items-center gap-1 bg-background-third-color p-1 rounded-lg text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-background-primary-color"
                       key={responsible?._id}
                       onClick={() => handleRemoveResponsible(responsible)}
                     >
@@ -161,7 +161,7 @@ export default function TaskResponsibles({ task, uid, user }) {
                   {members?.map((member) => {
                     return (
                       <li
-                        className="flex items-center gap-1 p-2 rounded-border-radius-small hover:bg-background-third-color"
+                        className="flex items-center gap-1 p-2 rounded-lg hover:bg-background-third-color"
                         key={member?.user?._id}
                         onClick={() => handleAddResponsible(member?.user)}
                       >

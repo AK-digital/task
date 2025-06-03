@@ -15,17 +15,26 @@ export default function TaskSkeletons({ displayedElts }) {
 
             {isProject && <div className="w-full max-w-[180px] h-4.5 rounded-xs bg-background-primary-color"></div>}
 
-            {isBoard && <div className="w-full max-w-[160px] h-8 rounded-border-radius-medium bg-background-primary-color"></div>}
+            {isBoard && <div className="w-full max-w-[160px] h-8 rounded-2xl bg-background-primary-color"></div>}
+
+            {!isBoard && (
+              <div className="flex flex-col gap-2 min-w-[150px]">
+                <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
+                <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
+                <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
+                <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
+              </div>
+            )}
 
             <div className="w-full max-w-[34px] h-[34px] rounded-full bg-background-primary-color"></div>
 
-            <div className="w-full max-w-[150px] h-8 rounded-border-radius-medium bg-background-primary-color"></div>
+            <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
 
-            <div className="w-full max-w-[150px] h-8 rounded-border-radius-medium bg-background-primary-color"></div>
+            <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
 
-            <div className="w-full max-w-[150px] h-8 rounded-border-radius-medium bg-background-primary-color"></div>
+            <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
 
-            <div className="w-full max-w-[150px] h-8 rounded-border-radius-medium bg-background-primary-color"></div>
+            <div className="w-full max-w-[150px] h-8 rounded-2xl bg-background-primary-color"></div>
 
             <div className="w-full max-w-[150px] h-4.5 rounded-xs bg-background-primary-color"></div>
           </div>

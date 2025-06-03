@@ -57,7 +57,7 @@ export default function TaskText({ task }) {
           onChange={handleChange}
           onBlur={() => setIsEdit(false)}
           autoFocus
-          className="relative text-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-border-radius-xs font-bricolage"
+          className="relative text-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-sm font-bricolage"
         />
       )}
     </div>

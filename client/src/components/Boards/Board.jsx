@@ -126,7 +126,7 @@ export default function Board({
       {isLoading && <TaskPending text={inputValue} />}
       {canPost && !archive && (
         <div>
-          <div className="flex items-center gap-0.5 h-[45px] px-3 bg-[#F6F4E9] shadow-[inset_0_3px_3px_0_rgba(0,0,0,0.063)] rounded-bl-[calc(var(--radius-border-radius-medium)-1px)] rounded-br-[calc(var(--radius-border-radius-medium)-1px)]">
+          <div className="flex items-center gap-0.5 h-[45px] px-3 bg-[#F6F4E9] shadow-[inset_0_3px_3px_0_rgba(0,0,0,0.063)] rounded-bl-[15px] rounded-br-[15px]">
             <Plus size={18} className="text-text-color-muted" />
             <form action={formAction} className="w-full">
               <input

@@ -135,7 +135,7 @@ export default function TaskPriority({ task }) {
                   return (
                     <li
                       key={priority?._id}
-                      className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-border-radius-large text-center min-h-[34px]"
+                      className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-3xl text-center min-h-[34px]"
                       data-value={priority?.name}
                       onClick={() => handleTaskUpdatePriority(priority)}
                       style={{ backgroundColor: priority?.color }}
@@ -156,7 +156,7 @@ export default function TaskPriority({ task }) {
               })}
               {isEdit && !maxPriorities && (
                 <li
-                  className="flex items-center gap-1 border-none py-2 px-4 rounded-border-radius-large bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer hover:bg-text-light-color"
+                  className="flex items-center gap-1 border-none py-2 px-4 rounded-3xl bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer hover:bg-text-light-color"
                   onClick={handleAddPriority}
                 >
                   <Plus size={16} />

@@ -558,7 +558,7 @@ export default function Tiptap({
   return (
     <>
       <div
-        className="relative flex flex-col resize-none w-full border border-[#ddd] rounded-border-radius-small bg-background-third-color min-w-full max-w-full min-h-[250px]"
+        className="relative flex flex-col resize-none w-full border border-[#ddd] rounded-lg bg-background-third-color min-w-full max-w-full min-h-[250px]"
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
         ref={containerRef}
