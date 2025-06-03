@@ -147,7 +147,8 @@ export default function BoardHeader({
       board?._id,
       board?.projectId,
       value,
-      title
+      title,
+      t
     );
 
     if (!response?.success) setOptimisticColor(board?.color);
@@ -164,7 +165,8 @@ export default function BoardHeader({
       board?._id,
       board?.projectId,
       optimisticColor,
-      value
+      value,
+      t
     );
 
     if (!response?.success) setTitle(board?.title);

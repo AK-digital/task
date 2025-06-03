@@ -42,7 +42,7 @@ export default function TaskStatus({ task, uid }) {
     setCurrentStatus(status);
     setIsOpen(false);
 
-    const res = await updateTaskStatus(task?._id, project?._id, status?._id);
+    const res = await updateTaskStatus(task?._id, project?._id, status?._id, t);
 
     if (!res?.success) {
       setCurrentStatus(task?.status);

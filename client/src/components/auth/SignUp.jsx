@@ -23,7 +23,14 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [message, setMessage] = useState(null);
-  const [state, formAction, pending] = useActionState(signUp, initialState);
+
+  // Fonction wrapper pour passer t à signUp
+  const signUpWithT = (prevState, formData) => signUp(prevState, formData, t);
+
+  const [state, formAction, pending] = useActionState(
+    signUpWithT,
+    initialState
+  );
 
   function handleSignIn(e) {
     e.preventDefault();

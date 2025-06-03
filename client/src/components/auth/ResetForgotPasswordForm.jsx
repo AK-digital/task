@@ -21,8 +21,11 @@ export default function ResetForgotPasswordForm({ resetCode }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [statusMessage, setStatusMessage] = useState("");
+
+  const resetForgotPasswordWithT = (prevState, formData) =>
+    resetForgotPassword(prevState, formData, t);
   const [state, formAction, pending] = useActionState(
-    resetForgotPassword,
+    resetForgotPasswordWithT,
     initialState
   );
 

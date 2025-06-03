@@ -15,12 +15,14 @@ export default function UpdateBoard({ board, projectId }) {
   const { t } = useTranslation();
   const [isEdit, setIsEdit] = useState(false);
   const [openColor, setOpenColor] = useState(false);
-  const [color, setColor] = useState("");
 
   const updateBoardWithProjectId = updateBoard.bind(
     null,
     board?._id,
-    projectId
+    projectId,
+    null,
+    null,
+    t
   );
   const [state, formAction, pending] = useActionState(
     updateBoardWithProjectId,

@@ -4,7 +4,13 @@ import { revalidateTag } from "next/cache";
 import "moment/locale/fr";
 import moment from "moment";
 
-export async function saveTimeTracking(taskId, projectId, prevState, formData) {
+export async function saveTimeTracking(
+  taskId,
+  projectId,
+  prevState,
+  formData,
+  t
+) {
   try {
     const date = formData.get("date");
     const startTime = formData.get("start-time");
@@ -31,20 +37,20 @@ export async function saveTimeTracking(taskId, projectId, prevState, formData) {
     const response = await res.json();
 
     if (!response?.success) {
-      throw new Error(response?.message || "Une erreur est survenue");
+      throw new Error(response?.message || t("common.error"));
     }
 
     revalidateTag("tasks");
 
     return {
       status: "success",
-      message: "Le timer a été enregistré avec succès",
+      message: t("time_tracking.save.success"),
       data: response?.data,
     };
   } catch (err) {
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue",
+      message: err.message || t("common.error"),
     };
   }
 }

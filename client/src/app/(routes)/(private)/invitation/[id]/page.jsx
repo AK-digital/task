@@ -3,15 +3,17 @@ import { acceptProjectInvitation } from "@/actions/project";
 import socket from "@/utils/socket";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Invitation() {
   const { id } = useParams();
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const acceptInvitation = async () => {
       try {
-        const response = await acceptProjectInvitation(id);
+        const response = await acceptProjectInvitation(id, t);
 
         if (!response?.success) {
           if (response?.message === "L'utilisateur n'est pas connecté") {

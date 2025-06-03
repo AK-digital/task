@@ -15,8 +15,10 @@ const initialState = {
 export default function AddTemplate({ project, setAddTemplate }) {
   const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
+
+  const saveTemplateWithT = saveTemplate.bind(null, t);
   const [state, formAction, pending] = useActionState(
-    saveTemplate,
+    saveTemplateWithT,
     initialState
   );
 

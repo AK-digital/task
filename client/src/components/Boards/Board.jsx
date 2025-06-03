@@ -60,7 +60,7 @@ export default function Board({
     }
   }, [board?._id, isOverlay]);
 
-  const saveTaskWithProjectId = saveTask.bind(null, project?._id);
+  const saveTaskWithProjectId = saveTask.bind(null, project?._id, t);
   const [state, formAction, pending] = useActionState(
     saveTaskWithProjectId,
     initialState

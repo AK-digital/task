@@ -17,7 +17,8 @@
       "google_signin": "Sign in with Google",
       "or": "or",
       "resend_email": "Resend verification email",
-      "incorrect_credentials": "Incorrect credentials, please try again."
+      "incorrect_credentials": "Incorrect credentials, please try again.",
+      "error": "An error occurred during sign in"
     },
     "signup": {
       "title": "Registration",
@@ -37,7 +38,9 @@
       "password_uppercase": "- A capital letter (A-Z)",
       "password_number": "- One digit (0-9)",
       "password_special": "- A special character (!@#$%^&?)",
-      "creation_error": "An error has occurred while creating your account. Please try again."
+      "creation_error": "An error has occurred while creating your account. Please try again.",
+      "error": "An error occurred while creating a new user",
+      "email_already_used": "This email address is already in use"
     },
     "verification": {
       "verifying": "Check in progress...",
@@ -57,6 +60,33 @@
       "password_reset_success": "Password reset successfully",
       "unexpected_error": "An unexpected error occurred",
       "login_button": "Sign in"
+    },
+    "not_connected": "User is not connected",
+    "user_not_exist": "User does not exist",
+    "account_not_verified": "Your account is not yet verified.",
+    "validation": {
+      "email": {
+        "invalid": "The entered email address is invalid",
+        "not_exist": "This email address does not exist",
+        "required": "Please enter your email address",
+        "not_found": "No user found with this email address"
+      },
+      "credentials": {
+        "invalid": "Your email address or password is invalid"
+      },
+      "password": {
+        "required": "Please enter a new password",
+        "requirements": "Password must contain at least 8 characters, an uppercase letter, a lowercase letter, a digit and a special character",
+        "no_match": "Passwords do not match",
+        "must_be_different": "New password must be different from the old one"
+      }
+    },
+    "reset_code": {
+      "sent": "A reset code has been sent to your email address",
+      "error": "An error occurred while sending the reset code"
+    },
+    "reset_password": {
+      "error": "An error occurred while resetting your password"
     }
   },
   "validation": {
@@ -142,7 +172,24 @@
     "invitation_cancelled_error": "An error occurred when cancelling the invitation",
     "general_error": "An error has occurred",
     "create_project": "Project name",
-    "first_board": "Your first painting"
+    "first_board": "Your first painting",
+    "create": {
+      "error": "An error occurred while creating the project"
+    },
+    "guest": {
+      "remove": {
+        "success": "This user has been successfully revoked"
+      }
+    },
+    "update": {
+      "success": "Project updated successfully",
+      "error": "An error occurred while updating the project"
+    },
+    "validation": {
+      "name_required": "Project name is required",
+      "url_invalid": "URL is invalid",
+      "url_empty": "URL cannot be empty"
+    }
   },
   "tasks": {
     "choose_board": "Choose a table",
@@ -219,7 +266,21 @@
     "no_project_found": "No project found",
     "clear": "Clear",
     "search_task_placeholder": "Search for a task...",
-    "photo_of": "Photo of"
+    "photo_of": "Photo of",
+    "missing_parameters": "Missing parameters",
+    "create": {
+      "error": "An error occurred while creating the task"
+    },
+    "status": {
+      "update": {
+        "error": "An error occurred while updating the task status"
+      }
+    },
+    "priority": {
+      "update": {
+        "error": "An error occurred while updating the task priority"
+      }
+    }
   },
   "time_tracking": {
     "time_report": "Time recording - AK Digital",
@@ -250,7 +311,10 @@
     "responsible_column": "Responsible",
     "time_column": "Time",
     "date_column": "Date",
-    "total_label": "Total:"
+    "total_label": "Total:",
+    "save": {
+      "success": "Timer saved successfully"
+    }
   },
   "templates": {
     "edit_board": "Edit this board",
@@ -270,7 +334,11 @@
     "template_save_error": "An error occurred while saving the template",
     "save_button": "Save",
     "save_board": "Save this board as template",
-    "delete": "Delete"
+    "delete": "Delete",
+    "save": {
+      "success": "Template saved successfully",
+      "error": "An error occurred while saving the template"
+    }
   },
   "roles": {
     "owner": "Owner",
@@ -328,7 +396,18 @@
     "sign_out": "Sign out",
     "picture_update_success": "Profile picture updated successfully",
     "picture_update_error": "An error occurred while updating the picture",
-    "profile_picture_alt": "Profile picture of"
+    "profile_picture_alt": "Profile picture of",
+    "update": {
+      "success": "Profile updated successfully",
+      "error": "An error occurred during the update"
+    },
+    "picture": {
+      "no_file_selected": "No file selected",
+      "update": {
+        "success": "Profile picture updated successfully",
+        "error": "An error occurred while updating the photo"
+      }
+    }
   },
   "emails": {
     "description_mention": {
@@ -468,5 +547,35 @@
     "edit": "Edit",
     "send": "Send",
     "message": "message"
+  },
+  "common": {
+    "error": "An error occurred",
+    "missing_parameter": "Missing parameter"
+  },
+  "project_invitation": {
+    "role": {
+      "update": {
+        "success": "User role updated successfully",
+        "error": "An error occurred while updating the user role"
+      }
+    },
+    "delete": {
+      "success": "Project invitation deleted successfully",
+      "error": "An error occurred while deleting the project invitation"
+    },
+    "send": {
+      "success": "Invitation sent to {{email}} successfully",
+      "already_sent": "An invitation has already been sent to this user"
+    }
+  },
+  "board_template": {
+    "create": {
+      "error": "An error occurred while creating the board template"
+    }
+  },
+  "board": {
+    "update": {
+      "error": "An error occurred while updating the board"
+    }
   }
 }

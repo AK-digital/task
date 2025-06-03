@@ -21,8 +21,9 @@ export default function CreateProject({
   setIsCreating,
 }) {
   const { t } = useTranslation();
+  const saveProjectWithT = saveProject.bind(null, t);
   const [state, formAction, pending] = useActionState(
-    saveProject,
+    saveProjectWithT,
     initialState
   );
   const formRef = useRef(null);
@@ -59,7 +60,7 @@ export default function CreateProject({
     e.preventDefault();
 
     try {
-      const response = await saveProject(formData);
+      const response = await saveProject(formData, t);
 
       if (response.success) {
         // Appeler la fonction de callback avec le nouveau projet

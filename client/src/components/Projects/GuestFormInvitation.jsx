@@ -24,7 +24,8 @@ export default function GuestFormInvitation({
   const [value, setValue] = useState("");
   const sendProjectInvitationToGuestWithId = sendProjectInvitationToGuest.bind(
     null,
-    project?._id
+    project?._id,
+    t
   );
   const [state, formAction, pending] = useActionState(
     sendProjectInvitationToGuestWithId,

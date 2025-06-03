@@ -18,8 +18,10 @@ const initialState = {
 export default function ProfileForm() {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
+
+  const updateUserProfileWithT = updateUserProfile.bind(null, t);
   const [state, formAction, pending] = useActionState(
-    updateUserProfile,
+    updateUserProfileWithT,
     initialState
   );
   const [popUp, setPopup] = useState(null);

@@ -17,7 +17,8 @@
       "google_signin": "Se connecter avec Google",
       "or": "ou",
       "resend_email": "Renvoyer un email de vérification",
-      "incorrect_credentials": "Identifiants incorrects, veuillez réessayer."
+      "incorrect_credentials": "Identifiants incorrects, veuillez réessayer.",
+      "error": "Une erreur est survenue lors de la connexion"
     },
     "signup": {
       "title": "Inscription",
@@ -37,7 +38,9 @@
       "password_uppercase": "- Une lettre majuscule (A-Z)",
       "password_number": "- Un chiffre (0-9)",
       "password_special": "- Un caractère spécial (!@#$%^&?)",
-      "creation_error": "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."
+      "creation_error": "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer.",
+      "error": "Une erreur est survenue lors de la création d'un nouvel utilisateur",
+      "email_already_used": "Cette adresse e-mail est déjà utilisée"
     },
     "verification": {
       "verifying": "Vérification en cours...",
@@ -57,6 +60,16 @@
       "password_reset_success": "Mot de passe réinitialisé avec succès",
       "unexpected_error": "Une erreur inattendue s'est produite",
       "login_button": "Se connecter"
+    },
+    "not_connected": "L'utilisateur n'est pas connecté",
+    "user_not_exist": "L'utilisateur n'existe pas",
+    "account_not_verified": "Votre compte n'est pas encore vérifié.",
+    "reset_code": {
+      "sent": "Un code de réinitialisation a été envoyé à votre adresse e-mail",
+      "error": "Une erreur est survenue lors de l'envoi du code de réinitialisation"
+    },
+    "reset_password": {
+      "error": "Une erreur est survenue lors de la réinitialisation de votre mot de passe"
     }
   },
   "validation": {
@@ -68,7 +81,22 @@
     "password_contains": "Le mot de passe doit contenir ",
     "password_invalid": "Le mot de passe saisi est invalide",
     "company_max": "Le nom de l'entreprise ne peut pas dépasser 100 caractères",
-    "position_max": "Le poste ne peut pas dépasser 100 caractères"
+    "position_max": "Le poste ne peut pas dépasser 100 caractères",
+    "email": {
+      "invalid": "L'adresse e-mail saisie est invalide",
+      "not_exist": "Cette adresse e-mail n'existe pas",
+      "required": "Veuillez renseigner votre adresse e-mail",
+      "not_found": "Aucun utilisateur trouvé avec cette adresse e-mail"
+    },
+    "credentials": {
+      "invalid": "Votre adresse e-mail ou votre mot de passe est invalide"
+    },
+    "password": {
+      "required": "Veuillez renseigner un nouveau mot de passe",
+      "requirements": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
+      "no_match": "Les mots de passe ne correspondent pas",
+      "must_be_different": "Le nouveau mot de passe doit être différent de l'ancien"
+    }
   },
   "notifications": {
     "title": "Notifications",
@@ -210,7 +238,8 @@
     "no_project_found": "Aucun projet n'a été trouvé",
     "clear": "Effacer",
     "search_task_placeholder": "Recherchez une tâche...",
-    "photo_of": "Photo de"
+    "photo_of": "Photo de",
+    "no_task": "Aucune tâche disponible"
   },
   "time_tracking": {
     "time_report": "Relevé de temps - AK Digital",
@@ -241,7 +270,10 @@
     "responsible_column": "Responsable",
     "time_column": "Temps",
     "date_column": "Date",
-    "total_label": "Total :"
+    "total_label": "Total :",
+    "save": {
+      "success": "Le timer a été enregistré avec succès"
+    }
   },
   "templates": {
     "edit_board": "Modifier ce tableau",
@@ -259,7 +291,11 @@
     "save_board_as_template": "Enregistrer ce tableau comme modèle",
     "save_project_as_template": "Enregistrer ce projet comme modèle",
     "template_save_error": "Une erreur s'est produite lors de l'enregistrement du template",
-    "save_button": "Sauvegarder"
+    "save_button": "Sauvegarder",
+    "save": {
+      "success": "Le template a été enregistré avec succès",
+      "error": "Une erreur s'est produite lors de l'enregistrement du template"
+    }
   },
   "roles": {
     "owner": "Propriétaire",
@@ -317,7 +353,18 @@
     "sign_out": "Se déconnecter",
     "picture_update_success": "Photo de profil mise à jour avec succès",
     "picture_update_error": "Une erreur s'est produite lors de la mise à jour de la photo",
-    "profile_picture_alt": "Photo de profil de"
+    "profile_picture_alt": "Photo de profil de",
+    "update": {
+      "success": "Profil mis à jour avec succès",
+      "error": "Une erreur est survenue lors de la mise à jour"
+    },
+    "picture": {
+      "no_file_selected": "Aucun fichier sélectionné",
+      "update": {
+        "success": "Photo de profil mise à jour avec succès",
+        "error": "Une erreur est survenue lors de la mise à jour de la photo"
+      }
+    }
   },
   "emails": {
     "description_mention": {
@@ -457,5 +504,70 @@
     "edit": "Modifier",
     "send": "Envoyer",
     "message": "le message"
+  },
+  "common": {
+    "error": "Une erreur est survenue",
+    "missing_parameter": "Paramètre manquant"
+  },
+  "task": {
+    "missing_parameters": "Paramètres manquants",
+    "create": {
+      "error": "Une erreur est survenue lors de la création de la tâche"
+    },
+    "status": {
+      "update": {
+        "error": "Une erreur est survenue lors de la mise à jour du statut de la tâche"
+      }
+    },
+    "priority": {
+      "update": {
+        "error": "Une erreur est survenue lors de la mise à jour de la priorité de la tâche"
+      }
+    }
+  },
+  "project_invitation": {
+    "role": {
+      "update": {
+        "success": "Rôle de l'utilisateur mis à jour avec succès",
+        "error": "Une erreur s'est produite lors de la mise à jour du rôle de l'utilisateur"
+      }
+    },
+    "delete": {
+      "success": "Invitation de projet supprimée avec succès",
+      "error": "Une erreur s'est produite lors de la suppression de l'invitation de projet"
+    },
+    "send": {
+      "success": "Invitation envoyée à {{email}} avec succès",
+      "already_sent": "Une invitation a déjà été envoyée à cet utilisateur"
+    }
+  },
+  "project": {
+    "create": {
+      "error": "Une erreur est survenue lors de la création du projet"
+    },
+    "guest": {
+      "remove": {
+        "success": "Cet utilisateur a été révoqué avec succès"
+      }
+    },
+    "update": {
+      "success": "Le projet a été modifié avec succès",
+      "error": "Une erreur est survenue lors de la modification du projet"
+    },
+    "validation": {
+      "name_required": "Le nom du projet est obligatoire",
+      "url_invalid": "L'URL est invalide",
+      "url_empty": "L'URL ne peut pas être vide"
+    }
+  },
+  "board_template": {
+    "create": {
+      "error": "Une erreur est survenue lors de la création du modèle de tableau"
+    }
+  },
+  "board": {
+    "update": {
+      "error": "Une erreur est survenue lors de la mise à jour du tableau"
+    }
   }
 }

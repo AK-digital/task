@@ -42,8 +42,10 @@ export default function ProjectOptions({ project }) {
   const [moreIcons, setMoreIcons] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [popup, setPopup] = useState(null);
+
+  const updateProjectWithT = updateProject.bind(null, t);
   const [state, formAction, pending] = useActionState(
-    updateProject,
+    updateProjectWithT,
     initialState
   );
   const [editImg, setEditImg] = useState(false);

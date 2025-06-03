@@ -25,7 +25,12 @@ export default function SignIn() {
   const [message, setMessage] = useState(null);
   const [status, setStatus] = useState(null);
   const [hiddenPassword, setHiddenPassword] = useState(true);
-  const [state, formAction, pending] = useActionState(signIn, initialState);
+
+  const signInWithT = (prevState, formData) => signIn(prevState, formData, t);
+  const [state, formAction, pending] = useActionState(
+    signInWithT,
+    initialState
+  );
 
   function handleSignUp(e) {
     e.preventDefault();

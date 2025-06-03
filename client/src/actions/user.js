@@ -2,7 +2,7 @@
 import { userUpdateValidation } from "@/utils/zod";
 import { useAuthFetch } from "@/utils/api";
 
-export async function updateUserProfile(prevState, formData) {
+export async function updateUserProfile(prevState, formData, t) {
   try {
     const userId = formData.get("userId");
 
@@ -39,18 +39,18 @@ export async function updateUserProfile(prevState, formData) {
 
     return {
       status: "success",
-      message: "Profil mis à jour avec succès",
+      message: t("profile.update.success"),
       data: response.data,
     };
   } catch (err) {
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue lors de la mise à jour",
+      message: err.message || t("profile.update.error"),
     };
   }
 }
 
-export async function updateUserPicture(prevState, formData) {
+export async function updateUserPicture(prevState, formData, t) {
   try {
     const userId = formData.get("userId");
     const pictureFile = formData.get("picture");
@@ -59,7 +59,7 @@ export async function updateUserPicture(prevState, formData) {
     if (!pictureFile || pictureFile.size === 0) {
       return {
         status: "failure",
-        message: "Aucun fichier sélectionné",
+        message: t("profile.picture.no_file_selected"),
       };
     }
 
@@ -82,16 +82,14 @@ export async function updateUserPicture(prevState, formData) {
 
     return {
       status: "success",
-      message: "Photo de profil mise à jour avec succès",
+      message: t("profile.picture.update.success"),
       data: response.data,
     };
   } catch (err) {
     console.log("err", err);
     return {
       status: "failure",
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la mise à jour de la photo",
+      message: err.message || t("profile.picture.update.error"),
     };
   }
 }

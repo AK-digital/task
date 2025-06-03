@@ -2,13 +2,13 @@
 import { useAuthFetch } from "@/utils/api";
 import { allowedStatus } from "@/utils/utils";
 
-export async function saveTask(projectId, prevState, formData) {
+export async function saveTask(projectId, prevState, formData, t) {
   try {
     const boardId = formData.get("board-id");
     const text = formData.get("new-task");
 
     if (!projectId || !boardId || !text) {
-      throw new Error("Paramètres manquants");
+      throw new Error(t("task.missing_parameters"));
     }
 
     const res = await useAuthFetch(
@@ -21,29 +21,22 @@ export async function saveTask(projectId, prevState, formData) {
     const response = await res.json();
 
     if (!response?.success) {
-      throw new Error(
-        response?.message ||
-          "Une erreur est survenue lors de la création de la tâche"
-      );
+      throw new Error(response?.message || t("task.create.error"));
     }
 
     return response;
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la création de la tâche"
-    );
+    console.log(err.message || t("task.create.error"));
 
     return {
       success: false,
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la création de la tâche",
+      message: err.message || t("task.create.error"),
     };
   }
 }
 
 // Update the status of a given task
-export async function updateTaskStatus(taskId, projectId, statusId) {
+export async function updateTaskStatus(taskId, projectId, statusId, t) {
   try {
     const rawData = {
       statusId: statusId,
@@ -64,20 +57,17 @@ export async function updateTaskStatus(taskId, projectId, statusId) {
 
     return response;
   } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la mise à jour du statut de la tâche"
-    );
+    console.log(err.message || t("task.status.update.error"));
 
     return {
       success: false,
-      message: err?.message || "Une erreur est survenue",
+      message: err?.message || t("common.error"),
     };
   }
 }
 
 // Update the priority of a given task
-export async function updateTaskPriority(taskId, projectId, priorityId) {
+export async function updateTaskPriority(taskId, projectId, priorityId, t) {
   try {
     const rawData = {
       priorityId: priorityId,
@@ -100,10 +90,7 @@ export async function updateTaskPriority(taskId, projectId, priorityId) {
       status: "success",
     };
   } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
-    );
+    console.log(err.message || t("task.priority.update.error"));
 
     return {
       status: "failure",

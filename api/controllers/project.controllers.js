@@ -519,37 +519,3 @@ export async function removeGuest(req, res, next) {
     });
   }
 }
-
-export const updateProjectsOrder = async (req, res) => {
-  try {
-    const authUser = res.locals.user;
-    const { projects } = req.body;
-
-    // Mise à jour de l'ordre spécifique à ce user dans chaque projet
-    const bulkOps = projects.map((project, index) => ({
-      updateOne: {
-        filter: {
-          _id: project._id,
-          "members.user": authUser._id,
-        },
-        update: {
-          $set: {
-            "members.$.order": index,
-          },
-        },
-      },
-    }));
-
-    await ProjectModel.bulkWrite(bulkOps);
-
-    return res.status(200).json({
-      success: true,
-      message: "Ordre des projets mis à jour pour l'utilisateur",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};

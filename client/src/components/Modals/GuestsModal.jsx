@@ -28,7 +28,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   );
   const { uid } = useContext(AuthContext);
   const [isPopup, setIsPopup] = useState(null);
-  const removeGuestWithId = removeGuest.bind(null, project?._id);
+  const removeGuestWithId = removeGuest.bind(null, project?._id, t);
   const [state, formAction, pending] = useActionState(
     removeGuestWithId,
     initialState
@@ -180,8 +180,9 @@ export function ProjectInvitationsList({
     message: "",
   };
 
+  const deleteProjectInvitationWithT = deleteProjectInvitation.bind(null, t);
   const [state, formAction, pending] = useActionState(
-    deleteProjectInvitation,
+    deleteProjectInvitationWithT,
     initialState
   );
 

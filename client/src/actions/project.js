@@ -5,7 +5,7 @@ import { regex } from "@/utils/regex";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export async function saveProject(prevState, formData) {
+export async function saveProject(prevState, formData, t) {
   try {
     const rawFormData = {
       name: formData.get("project-name"),
@@ -31,9 +31,7 @@ export async function saveProject(prevState, formData) {
       data: response.data,
     };
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la création du projet"
-    );
+    console.log(err.message || t("project.create.error"));
     return {
       status: "failure",
       message: err.message,
@@ -44,7 +42,8 @@ export async function saveProject(prevState, formData) {
 export async function sendProjectInvitationToGuest(
   projectId,
   prevState,
-  formData
+  formData,
+  t
 ) {
   try {
     const email = formData.get("email");
@@ -53,9 +52,9 @@ export async function sendProjectInvitationToGuest(
     if (!validation) {
       return {
         status: "failure",
-        message: "Une erreur est survenue",
+        message: t("common.error"),
         errors: {
-          email: ["L'adresse e-mail saisie est invalide"],
+          email: [t("auth.validation.email.invalid")],
         },
       };
     }
@@ -79,33 +78,33 @@ export async function sendProjectInvitationToGuest(
 
     return {
       status: "success",
-      message: `Invitation envoyé à ${email} avec succès`,
+      message: t("project_invitation.send.success", { email }),
       data: response?.data,
     };
   } catch (err) {
-    console.log(err?.message || "Une erreur est survenue");
+    console.log(err?.message || t("common.error"));
 
     if (err?.message.includes("E11000 duplicate")) {
       return {
         status: "failure",
-        message: "Une invitation a déjà été envoyé à cet utilisateur",
+        message: t("project_invitation.send.already_sent"),
         errors: null,
       };
     }
 
     return {
       status: "failure",
-      message: err?.message || "Une erreur est survenue",
+      message: err?.message || t("common.error"),
       errors: null,
     };
   }
 }
 
-export async function acceptProjectInvitation(invitationId) {
+export async function acceptProjectInvitation(invitationId, t) {
   const cookie = await cookies();
   try {
     if (!invitationId) {
-      throw new Error("Paramètre manquant");
+      throw new Error(t("common.missing_parameter"));
     }
 
     const rawData = {
@@ -120,7 +119,7 @@ export async function acceptProjectInvitation(invitationId) {
     );
 
     if (res.status === 401) {
-      throw new Error("L'utilisateur n'est pas connecté");
+      throw new Error(t("auth.not_connected"));
     }
 
     const response = await res.json();
@@ -141,11 +140,11 @@ export async function acceptProjectInvitation(invitationId) {
 
     return response;
   } catch (err) {
-    console.log(err.message || "Une erreur est survenue");
+    console.log(err.message || t("common.error"));
 
     if (
-      err?.message === "L'utilisateur n'est pas connecté" ||
-      err?.message === "L'utilisateur n'existe pas"
+      err?.message === t("auth.not_connected") ||
+      err?.message === t("auth.user_not_exist")
     ) {
       cookie.set("invitationId", invitationId, {
         secure: true,
@@ -157,12 +156,12 @@ export async function acceptProjectInvitation(invitationId) {
 
     return {
       success: false,
-      message: err.message || "Une erreur est survenue",
+      message: err.message || t("common.error"),
     };
   }
 }
 
-export async function removeGuest(projectId, prevState, formData) {
+export async function removeGuest(projectId, prevState, formData, t) {
   try {
     const guestId = formData.get("guest-id");
 
@@ -191,20 +190,20 @@ export async function removeGuest(projectId, prevState, formData) {
 
     return {
       status: "success",
-      message: "Cet utilisateur a été révoqué avec succès",
+      message: t("project.guest.remove.success"),
       guestId: guestId,
     };
   } catch (err) {
-    console.log(err.message || "Une erreur est survenue");
+    console.log(err.message || t("common.error"));
 
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue",
+      message: err.message || t("common.error"),
     };
   }
 }
 
-export async function updateProject(prevState, formData) {
+export async function updateProject(prevState, formData, t) {
   try {
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");
@@ -215,7 +214,7 @@ export async function updateProject(prevState, formData) {
     if (!name) {
       return {
         status: "failure",
-        message: "Le nom du projet est obligatoire",
+        message: t("project.validation.name_required"),
       };
     }
 
@@ -233,7 +232,7 @@ export async function updateProject(prevState, formData) {
       if (!isValidUrl(urls)) {
         return {
           status: "failure",
-          message: "L'URL est invalide",
+          message: t("project.validation.url_invalid"),
         };
       }
     }
@@ -242,7 +241,7 @@ export async function updateProject(prevState, formData) {
       if (urls[i] === "") {
         return {
           status: "failure",
-          message: "L'URL ne peut pas être vide",
+          message: t("project.validation.url_empty"),
         };
       }
     }
@@ -277,33 +276,14 @@ export async function updateProject(prevState, formData) {
 
     return {
       status: "success",
-      message: "Le projet a été modifié avec succès",
+      message: t("project.update.success"),
       data: response.data,
     };
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la modification du projet"
-    );
+    console.log(err.message || t("project.update.error"));
     return {
       status: "failure",
       message: err.message,
     };
-  }
-}
-
-export async function updateProjectsOrder(projects) {
-  try {
-    const res = await useAuthFetch(
-      `project/reorder`,
-      "PATCH",
-      "application/json",
-      { projects }
-    );
-
-    const response = await res.json();
-    return response; // Retourne la réponse complète
-  } catch (err) {
-    console.error("Erreur lors de la mise à jour de l'ordre des projets:", err);
-    throw err; // Propage l'erreur pour la gestion dans handleDragEnd
   }
 }

@@ -2,7 +2,7 @@
 
 import { useAuthFetch } from "@/utils/api";
 
-export async function updateProjectInvitationRole(prevState, formData) {
+export async function updateProjectInvitationRole(prevState, formData, t) {
   try {
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");
@@ -18,30 +18,24 @@ export async function updateProjectInvitationRole(prevState, formData) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || "Une erreur s'est produite");
+      throw new Error(response?.message || t("common.error"));
     }
 
     return {
       status: "success",
-      message:
-        response?.message || "Rôle de l'utilisateur mis à jour avec succès",
+      message: response?.message || t("project_invitation.role.update.success"),
     };
   } catch (err) {
-    console.log(
-      err?.message ||
-        "Une erreur s'est produite lors de la mise à jour du rôle de l'utilisateur"
-    );
+    console.log(err?.message || t("project_invitation.role.update.error"));
 
     return {
       status: "failure",
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de la mise à jour du rôle de l'utilisateur",
+      message: err?.message || t("project_invitation.role.update.error"),
     };
   }
 }
 
-export async function deleteProjectInvitation(prevState, formData) {
+export async function deleteProjectInvitation(prevState, formData, t) {
   try {
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");
@@ -54,25 +48,19 @@ export async function deleteProjectInvitation(prevState, formData) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || "Une erreur s'est produite");
+      throw new Error(response?.message || t("common.error"));
     }
 
     return {
       status: "success",
-      message:
-        response?.message || "Invitation de projet supprimée avec succès",
+      message: response?.message || t("project_invitation.delete.success"),
     };
   } catch (err) {
-    console.log(
-      err?.message ||
-        "Une erreur s'est produite lors de la suppression de l'invitation de projet"
-    );
+    console.log(err?.message || t("project_invitation.delete.error"));
 
     return {
       status: "failure",
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de la suppression de l'invitation de projet",
+      message: err?.message || t("project_invitation.delete.error"),
     };
   }
 }

@@ -4,7 +4,7 @@ import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
 import { cookies } from "next/headers";
 
-export async function signUp(prevState, formData) {
+export async function signUp(prevState, formData, t) {
   try {
     const rawFormData = {
       lastName: formData.get("last-name"),
@@ -48,14 +48,11 @@ export async function signUp(prevState, formData) {
       message: response?.message,
     };
   } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
-    );
+    console.log(err.message || t("auth.signup.error"));
     if (err.message.includes("E11000")) {
       return {
         status: "failure",
-        message: "Cette adresse e-mail est déjà utilisée",
+        message: t("auth.signup.email_already_used"),
         errors: null,
       };
     }
@@ -67,7 +64,7 @@ export async function signUp(prevState, formData) {
   }
 }
 
-export async function signIn(prevState, formData) {
+export async function signIn(prevState, formData, t) {
   try {
     const rawFormData = {
       email: formData.get("email"),
@@ -105,7 +102,7 @@ export async function signIn(prevState, formData) {
     if (res.status === 403) {
       return {
         status: "failure",
-        message: "Votre compte n'est pas encore vérifié.",
+        message: t("auth.account_not_verified"),
         payload: rawFormData,
         errors: null,
       };
@@ -143,16 +140,13 @@ export async function signIn(prevState, formData) {
       invitationId: invitationId ? invitationId?.value : null,
     };
   } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
-    );
+    console.log(err.message || t("auth.signin.error"));
     if (err.message.includes("mail")) {
       return {
         status: "failure",
         message: err?.message,
         errors: {
-          email: "Cette adresse e-mail n'existe pas",
+          email: t("auth.validation.email.not_exist"),
         },
       };
     }
@@ -161,7 +155,7 @@ export async function signIn(prevState, formData) {
         status: "failure",
         message: err?.message,
         errors: {
-          password: "Votre adresse e-mail ou votre mot de passe est invalide",
+          password: t("auth.validation.credentials.invalid"),
         },
       };
     }
@@ -172,21 +166,21 @@ export async function signIn(prevState, formData) {
   }
 }
 
-export async function sendResetCode(prevState, formData) {
+export async function sendResetCode(prevState, formData, t) {
   try {
     const email = formData.get("email");
 
     if (!email) {
       return {
         status: "failure",
-        errors: { email: "Veuillez renseigner votre adresse e-mail" },
+        errors: { email: t("auth.validation.email.required") },
       };
     }
 
     if (!regex.email.test(email)) {
       return {
         status: "failure",
-        errors: { email: "adresse e-mail invalide" },
+        errors: { email: t("auth.validation.email.invalid") },
       };
     }
 
@@ -206,7 +200,7 @@ export async function sendResetCode(prevState, formData) {
     if (res.status === 404) {
       return {
         status: "failure",
-        errors: { email: "Aucun utilisateur trouvé ave cette adresse e-mail" },
+        errors: { email: t("auth.validation.email.not_found") },
       };
     }
 
@@ -216,20 +210,17 @@ export async function sendResetCode(prevState, formData) {
 
     return {
       status: "success",
-      message:
-        "Un code de réinitialisation a été envoyé à votre adresse e-mail",
+      message: t("auth.reset_code.sent"),
     };
   } catch (err) {
     return {
       status: "failure",
-      message:
-        err.message ||
-        "Une erreur est survenue lors de l'envoi du code de réinitialisation",
+      message: err.message || t("auth.reset_code.error"),
     };
   }
 }
 
-export async function resetForgotPassword(prevState, formData) {
+export async function resetForgotPassword(prevState, formData, t) {
   try {
     const resetCode = formData.get("reset-code");
     const newPassword = formData.get("newPassword");
@@ -238,7 +229,7 @@ export async function resetForgotPassword(prevState, formData) {
     if (!newPassword || !confirmPassword) {
       return {
         status: "failure",
-        errors: { newPassword: "Veuillez renseigner un nouveau mot de passe" },
+        errors: { newPassword: t("auth.validation.password.required") },
       };
     }
 
@@ -246,8 +237,7 @@ export async function resetForgotPassword(prevState, formData) {
       return {
         status: "failure",
         errors: {
-          newPassword:
-            "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
+          newPassword: t("auth.validation.password.requirements"),
         },
       };
     }
@@ -255,7 +245,7 @@ export async function resetForgotPassword(prevState, formData) {
     if (newPassword !== confirmPassword) {
       return {
         status: "failure",
-        errors: { confirmPassword: "Les mots de passe ne correspondent pas" },
+        errors: { confirmPassword: t("auth.validation.password.no_match") },
       };
     }
 
@@ -280,8 +270,7 @@ export async function resetForgotPassword(prevState, formData) {
       return {
         status: "failure",
         errors: {
-          newPassword:
-            "Le nouveau mot de passe doit être différent de l'ancien",
+          newPassword: t("auth.validation.password.must_be_different"),
         },
       };
     }
@@ -298,9 +287,7 @@ export async function resetForgotPassword(prevState, formData) {
     console.log(err);
     return {
       status: "failure",
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la réinitialisation de votre mot de passe",
+      message: err.message || t("auth.reset_password.error"),
     };
   }
 }

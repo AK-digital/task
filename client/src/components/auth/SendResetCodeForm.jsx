@@ -17,8 +17,11 @@ export default function SendResetCodeForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [messageStatus, setMessageStatus] = useState("");
+
+  const sendResetCodeWithT = (prevState, formData) =>
+    sendResetCode(prevState, formData, t);
   const [state, formAction, pending] = useActionState(
-    sendResetCode,
+    sendResetCodeWithT,
     initialState
   );
 

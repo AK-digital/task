@@ -18,8 +18,10 @@ const initialState = {
 export default function NewProject() {
   const { t } = useTranslation();
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  const saveProjectWithT = saveProject.bind(null, t);
   const [state, formAction, pending] = useActionState(
-    saveProject,
+    saveProjectWithT,
     initialState
   );
 
