@@ -34,7 +34,7 @@ export default function NewProject() {
         <div className="flex flex-col -mt-[60px] gap-6">
           <div className="max-w-[600px]">
             <div className="flex justify-center items-center">
-            <FolderPlus size="144" />
+              <FolderPlus size="144" />
             </div>
             <h1>Créer un projet</h1>
             <p className="font-light">
@@ -66,7 +66,11 @@ export default function NewProject() {
               <div className="flex flex-col gap-3 w-full">
                 <div className="flex gap-2">
                   <button
-                    className={`flex justify-center items-center gap-2 w-full border-2 border-accent-color ${isSubmitDisabled ? "pointer-events-none bg-transparent border-2 border-text-muted text-text-muted" : ""}`}
+                    className={`flex justify-center items-center gap-2 w-full border-2 text-text-color-muted border-text-color-muted ${
+                      isSubmitDisabled
+                        ? "pointer-events-none bg-transparent border-2 border-text-muted text-text-muted"
+                        : "text-white border-accent-color"
+                    }`}
                     data-disabled={pending || isSubmitDisabled}
                     type="submit"
                     disabled={pending || isSubmitDisabled}

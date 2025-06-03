@@ -23,11 +23,14 @@ export default function SideNav() {
   const projectId = id ?? "";
   const { favorites, favoritesLoading } = useFavorites();
   const projects = favorites?.map((favorite) => favorite.project);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
-    <aside data-open={isMenuOpen} className="container_SideNav min-w-aside-width w-aside-width transition-[width,min-width] duration-[150ms] ease-linear select-none data-[open=true]:w-[220px] data-[open=true]:min-w-[220px]" >
-      <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-7 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730]">
+    <aside
+      data-open={isMenuOpen}
+      className="container_SideNav min-w-aside-width w-aside-width transition-[width,min-width] duration-[150ms] ease-linear select-none data-[open=true]:w-[220px] data-[open=true]:min-w-[220px]"
+    >
+      <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-7 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730] [&_a]:no-underline">
         <div>
           <Image
             src={"/clynt-logo-dark.svg"}
@@ -38,18 +41,28 @@ export default function SideNav() {
           />
           <div
             onClick={(e) => setIsMenuOpen(!isMenuOpen)}
-            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-text-color my-5 hover:text-accent-color-hover hover:cursor-pointer"
+            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] cursor-pointer rounded-full text-text-color my-5 hover:text-accent-color-hover"
           >
             {isMenuOpen && <ArrowLeftFromLine size={24} />}
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
           </div>
-          <div className="-mt-3 mb-[18px]">
+          <div className="flex justify-start items-center -mt-3 mb-[18px]">
             <Link
               href={"/tasks"}
               title="Mes tâches"
-              className="flex justify-center items-center min-w-10 max-w-10 min-h-10 max-h-10 rounded-full bg-primary text-side hover:text-accent-color-hover hover:cursor-pointer"
+              className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             >
-              <ClipboardList size={24} className="bg-primary text-side transition-all ease-linear duration-150"/>
+              <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+                <ClipboardList
+                  size={24}
+                  className="bg-transparent text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+                />
+              </div>
+              {isMenuOpen && (
+                <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                  Mes tâches
+                </span>
+              )}
             </Link>
           </div>
           <nav className="relative flex flex-col gap-2 max-h-[65svh] overflow-y-auto scroll-smooth">
@@ -67,25 +80,55 @@ export default function SideNav() {
             )}
           </nav>
         </div>
-        <div className="flex justify-center items-center flex-col gap-3 min-w-10 max-w-10 min-h-10 rounded-full hover:cursor-pointer">
+        <div className="flex justify-center items-start flex-col gap-3 min-w-10 min-h-10 rounded-full">
           <Link
-            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary hover:text-accent-color-hover hover:cursor-pointer"
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             href={"/projects"}
             data-active={projectId === ""}
           >
-            <LayoutGrid size={24} className="bg-primary text-side transition-all ease-linear duration-150" />
-          </Link>
-          <Link href={"/times"} className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary hover:text-accent-color-hover hover:cursor-pointer">
-            <div>
-              <Clock3 size={24} className="bg-primary text-side transition-all ease-linear duration-150" />
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <LayoutGrid
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
             </div>
-            {/* <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Suivi du temps</span> */}
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                Mes projets
+              </span>
+            )}
           </Link>
-          <Link href={"/new-project"} className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary hover:text-accent-color-hover hover:cursor-pointer">
-            <div>
-              <Plus size={24} className="bg-primary text-side transition-all ease-linear duration-150" />
+          <Link
+            href={"/times"}
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+          >
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <Clock3
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
             </div>
-            {/* <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-light text-text-lighter-color">Ajouter un projet</span> */}
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                Suivi du temps
+              </span>
+            )}
+          </Link>
+          <Link
+            href={"/new-project"}
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+          >
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <Plus
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
+            </div>
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                Ajouter un projet
+              </span>
+            )}
           </Link>
         </div>
       </div>

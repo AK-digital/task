@@ -68,7 +68,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)]">
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)]">
         <div className="text-[1.4rem] font-medium">
           <span>Inviter d'autres utilisateurs</span>
         </div>
@@ -85,7 +85,10 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
             <ul className="flex flex-col gap-3.5 mt-6">
               {members.map((member) => {
                 return (
-                  <li key={member?.user?._id} className="flex justify-between items-center gap-3">
+                  <li
+                    key={member?.user?._id}
+                    className="flex justify-between items-center gap-3"
+                  >
                     <div>
                       <DisplayPicture
                         user={member?.user}
@@ -109,7 +112,9 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         />
                       ) : (
                         <div className="w-full text-small">
-                          <span className="text-center w-full text-text-color-muted">{memberRole(member?.role)}</span>
+                          <span className="text-center w-full text-text-color-muted">
+                            {memberRole(member?.role)}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -205,7 +210,10 @@ export function ProjectInvitationsList({
   return (
     <>
       {projectInvitations.map((inv) => (
-        <li key={inv?._id} className="flex justify-between items-center gap-3 text-text-color-muted">
+        <li
+          key={inv?._id}
+          className="flex justify-between items-center gap-3 text-text-color-muted"
+        >
           <div>
             <Image
               src={"/default-pfp.webp"}
@@ -240,7 +248,12 @@ export function ProjectInvitationsList({
                 defaultValue={inv?.projectId}
                 hidden
               />
-              <button type="submit" data-disabled={pending} disabled={pending} className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red">
+              <button
+                type="submit"
+                data-disabled={pending}
+                disabled={pending}
+                className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
+              >
                 Annuler
               </button>
             </form>

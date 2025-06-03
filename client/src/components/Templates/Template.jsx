@@ -24,7 +24,9 @@ export default function Template({ elt }) {
     <div className="flex items-center justify-between gap-3 bg-secondary py-1 px-3 rounded-lg">
       <div className="flex items-center gap-3">
         <div>
-          <h3>{elt?.name}</h3>
+          <h3 className="text-large font-bold text-text-dark-color">
+            {elt?.name}
+          </h3>
         </div>
         {hasDescription && (
           <div>
@@ -34,23 +36,29 @@ export default function Template({ elt }) {
         <div>
           <span className="flex items-center gap-1">
             <List size={16} />
-            <span className="flex items-center gap-1">
-              {elt?.boardsCount}
-            </span>
+            <span className="flex items-center gap-1">{elt?.boardsCount}</span>
           </span>
         </div>
         <div>
           <span className="flex items-center gap-1">
             <ListTodo size={16} />
-            <span className="flex items-center gap-1">
-              {elt?.tasksCount}
-            </span>
+            <span className="flex items-center gap-1">{elt?.tasksCount}</span>
           </span>
         </div>
       </div>
       <div>
-        <button onClick={handleUseTemplate} className="bg-transparent text-accent-color">Utiliser ce template</button>
-        <button onClick={handleDelete} className="bg-transparent text-accent-color">Supprimer</button>
+        <button
+          onClick={handleUseTemplate}
+          className="bg-transparent text-accent-color"
+        >
+          Utiliser ce template
+        </button>
+        <button
+          onClick={handleDelete}
+          className="bg-transparent text-accent-color"
+        >
+          Supprimer
+        </button>
       </div>
     </div>
   );

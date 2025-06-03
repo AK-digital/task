@@ -231,32 +231,29 @@ export default function BoardHeader({
 
   return (
     <div
-      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full z-9999 flex-wrap p-3"
+      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full z-2000 flex-wrap p-3"
       // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
-      style={{ "--border-color": `${board?.color}` }}
+      style={{
+        borderColor: `${board?.color}`,
+        "--board-color": board?.color || "var(--color-color-border-color)",
+      }}
     >
       <div className="relative flex items-center gap-1 [&>div]:flex [&>div]:justify-center [&>div]:items-center">
         {/* Display if tasks is not empty and if there is at least 2 task */}
         {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
-          <div
-            title="Sélectionner toutes les tâches"
-          >
-            <input
-              type="checkbox"
-              name="board"
-              onClick={handleCheckBoard}
-            />
+          <div title="Sélectionner toutes les tâches">
+            <input type="checkbox" name="board" onClick={handleCheckBoard} />
           </div>
         )}
         {canArchive && (
           <div ref={setNodeRef} style={style} className="text-text-light-color">
-            <div
-              {...attributes}
-              {...listeners}
-            >
-              <GripVertical size={20} className="max-w-5 max-h-5 cursor-pointer" />
+            <div {...attributes} {...listeners}>
+              <GripVertical
+                size={20}
+                className="max-w-5 max-h-5 cursor-pointer"
+              />
             </div>
           </div>
         )}

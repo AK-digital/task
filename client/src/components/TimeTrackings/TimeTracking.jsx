@@ -207,7 +207,7 @@ export default function TimeTracking({
 
   return (
     <div
-      className="flex items-center bg-secondary border-b border-text-light-color text-normal h-[42px] last:border-b-0"
+      className="flex items-center bg-secondary border-b border-text-light-color text-normal h-[42px] last:border-b-0 last:rounded-bl-2xl"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
@@ -236,7 +236,10 @@ export default function TimeTracking({
             className="relative -left-1.5 border-none p-1.5 bg-third rounded-sm text-[14.8px] text-text-medium-color animate-[backgroundAppear_150ms_linear]"
           />
         ) : (
-          <span onClick={handleIsEditing} className="block overflow-hidden whitespace-nowrap text-ellipsis">
+          <span
+            onClick={handleIsEditing}
+            className="block overflow-hidden whitespace-nowrap text-ellipsis"
+          >
             {inputValue}
           </span>
         )}
@@ -249,7 +252,9 @@ export default function TimeTracking({
           height={22}
           className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px]"
         />
-        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{project?.name}</span>
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
+          {project?.name}
+        </span>
       </div>
       {/* user */}
       <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color ">
@@ -264,18 +269,28 @@ export default function TimeTracking({
         ) : (
           <NoPicture user={user} width={22} height={22} />
         )}
-        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{user?.firstName + " " + user?.lastName}</span>
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
+          {user?.firstName + " " + user?.lastName}
+        </span>
       </div>
       <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color">
-        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{date}</span>
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
+          {date}
+        </span>
       </div>
       {/* Duration */}
       <div className="flex justify-center items-center gap-1 w-full h-full cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color ">
-        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{formatTime(Math.floor(tracker?.duration / 1000))}</span>
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
+          {formatTime(Math.floor(tracker?.duration / 1000))}
+        </span>
       </div>
       {/* Billable */}
       <div
-        className={`relative flex justify-center items-center gap-1 w-full h-full max-w-[120px] min-w-[120px] border-r border-text-light-color text-text-color-muted ${!canPut ? "cursor-default" : "cursor-pointer hover:text-text-dark-color"}`}
+        className={`relative flex justify-center items-center gap-1 w-full h-full max-w-[120px] min-w-[120px] border-r border-text-light-color text-text-color-muted ${
+          !canPut
+            ? "cursor-default"
+            : "cursor-pointer hover:text-text-dark-color"
+        }`}
         onClick={handleBillableToggle}
         data-disabled={!canPut}
       >
@@ -283,10 +298,15 @@ export default function TimeTracking({
           size={18}
           key={isSpinning ? "spinning" : "not-spinning"}
           cursor={canPut ? "pointer" : "default"}
-          className={`${isSpinning ? "transform-3d backface-visible animate-[spinY_0.5s_ease-in-out]" : ""}`}
+          className={`${
+            isSpinning
+              ? "transform-3d backface-visible animate-[spinY_0.5s_ease-in-out]"
+              : ""
+          }`}
         />
-        {!isBillable && <div className="content-[''] absolute w-5 h-0.5 top-1/2 left-[42%] origin-center pointer-events-none -translate-y-1/2 -rotate-45">
-        </div>}
+        {!isBillable && (
+          <div className="content-[''] absolute w-5 h-0.5 top-1/2 left-[42%] origin-center pointer-events-none -translate-y-1/2 -rotate-45"></div>
+        )}
       </div>
       {isHover && (
         <div className="relative flex items-center justify-center gap-1 w-full h-full cursor-default max-w-5 min-w-5 text-text-color-muted">

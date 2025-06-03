@@ -338,93 +338,93 @@ export default function Boards({ boards: initialBoards, tasksData }) {
   const boardIds = useMemo(() => boards.map((board) => board._id), [boards]);
 
   return (
-      <div className="boards_Boards relative flex flex-col gap-11 h-full overflow-y-auto pr-2.5 pb-6 z-9999 border-r-[3px] border-transparent rounded-2xl">
-        {archive && (
-          <>
-            <div className="flex items-center gap-2 font-semibold text-large -mb-5">
-              <div
-                className="relative top-[3px] cursor-pointer"
-                onClick={() => router.push(`/projects/${project?._id}`)}
-              >
-                <ArrowLeftCircle size={32} />
-              </div>
-              <span>Archives du projet</span>
+    <div className="boards_Boards relative flex flex-col gap-11 h-full overflow-y-auto pr-2.5 pb-6 z-1000 border-r-[3px] border-transparent rounded-2xl">
+      {archive && (
+        <>
+          <div className="flex items-center gap-2 font-semibold text-large -mb-5">
+            <div
+              className="relative top-[3px] cursor-pointer"
+              onClick={() => router.push(`/projects/${project?._id}`)}
+            >
+              <ArrowLeftCircle size={32} />
             </div>
-
-            {Object.values(tasks).flat()?.length === 0 && (
-              <div>
-                <p>Aucune archive disponible actuellement</p>
-              </div>
-            )}
-          </>
-        )}
-        <DndContext
-          sensors={sensors}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-          modifiers={[restrictToVerticalAxis]}
-        >
-          <div className="flex flex-col gap-11 w-full">
-            {boards
-              ?.filter((board) =>
-                archive
-                  ? tasks[board?._id] && tasks[board?._id]?.length > 0
-                  : true
-              )
-              ?.map((board) => {
-                return (
-                  <SortableBoard
-                    key={board?._id}
-                    board={board}
-                    data-board-id={board?._id}
-                  >
-                    {/* Contexte pour les tâches à l'intérieur du board */}
-                    <SortableContext
-                      id={board?._id}
-                      items={tasks[board._id]?.map((task) => task?._id) || []}
-                      strategy={verticalListSortingStrategy}
-                    >
-                      <Board
-                        tasks={tasks[board._id] || []}
-                        displayedElts={displayedElts}
-                        board={board}
-                        activeId={activeId}
-                        selectedTasks={selectedTasks}
-                        setSelectedTasks={setSelectedTasks}
-                      />
-                    </SortableContext>
-                  </SortableBoard>
-                );
-              })}
+            <span>Archives du projet</span>
           </div>
-          <DragOverlay>
-            {activeId && activeType === "task" ? (
-              <Task
-                id={activeId}
-                task={Object.values(tasks)
-                  .flat()
-                  .find((task) => task?._id === activeId)}
+
+          {Object.values(tasks).flat()?.length === 0 && (
+            <div>
+              <p>Aucune archive disponible actuellement</p>
+            </div>
+          )}
+        </>
+      )}
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <div className="flex flex-col gap-11 w-full">
+          {boards
+            ?.filter((board) =>
+              archive
+                ? tasks[board?._id] && tasks[board?._id]?.length > 0
+                : true
+            )
+            ?.map((board) => {
+              return (
+                <SortableBoard
+                  key={board?._id}
+                  board={board}
+                  data-board-id={board?._id}
+                >
+                  {/* Contexte pour les tâches à l'intérieur du board */}
+                  <SortableContext
+                    id={board?._id}
+                    items={tasks[board._id]?.map((task) => task?._id) || []}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <Board
+                      tasks={tasks[board._id] || []}
+                      displayedElts={displayedElts}
+                      board={board}
+                      activeId={activeId}
+                      selectedTasks={selectedTasks}
+                      setSelectedTasks={setSelectedTasks}
+                    />
+                  </SortableContext>
+                </SortableBoard>
+              );
+            })}
+        </div>
+        <DragOverlay>
+          {activeId && activeType === "task" ? (
+            <Task
+              id={activeId}
+              task={Object.values(tasks)
+                .flat()
+                .find((task) => task?._id === activeId)}
+              project={project}
+              displayedElts={displayedElts}
+              archive={archive}
+            />
+          ) : activeId && activeType === "board" ? (
+            <div>
+              <Board
+                tasks={tasks[activeId] || []}
                 project={project}
-                displayedElts={displayedElts}
                 archive={archive}
               />
-            ) : activeId && activeType === "board" ? (
-              <div>
-                <Board
-                  tasks={tasks[activeId] || []}
-                  project={project}
-                  archive={archive}
-                />
-              </div>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-        {!archive && canPost && (
-          <div>
-            <AddBoard project={project} />
-          </div>
-        )}
-      </div>
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+      {!archive && canPost && (
+        <div>
+          <AddBoard project={project} />
+        </div>
+      )}
+    </div>
   );
 }

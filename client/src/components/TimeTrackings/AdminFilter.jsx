@@ -1,7 +1,6 @@
-import styles from "@/styles/components/timeTrackings/adminFilter.module.css";
 import React, { useEffect, useState } from "react";
 import DisplayPicture from "../User/DisplayPicture";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 export default function AdminFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,17 +61,21 @@ export default function AdminFilter({ projects, queries, setQueries }) {
   }
 
   return (
-    <div className={styles.container}>
-      <div onClick={() => setIsOpen(!isOpen)} className={styles.current}>
+    <div className="relative select-none">
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative flex items-center justify-center gap-1 p-2.5 rounded-sm bg-secondary cursor-pointer text-medium w-[180px] max-h-10 border border-color-border-color"
+      >
         {hasMembers ? (
           <>
-            <span>
+            <span className="flex justify-center gap-1">
               {currentMembers?.map((m) => {
                 return (
                   <React.Fragment key={m?.user?._id}>
                     <DisplayPicture
                       user={m?.user}
                       style={{ width: "24px", height: "24px" }}
+                      className="rounded-full"
                     />
                   </React.Fragment>
                 );
@@ -80,16 +83,23 @@ export default function AdminFilter({ projects, queries, setQueries }) {
             </span>
           </>
         ) : (
-          <span>Tous les membres</span>
+          <span className="flex justify-center gap-1">Tous les membres</span>
         )}
-        <ChevronDownIcon size={16} className={styles.icon} />
+        {!isOpen && (
+          <ChevronDownIcon size={16} className="absolute right-1.5" />
+        )}
+
+        {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
       </div>
       {isOpen && (
-        <div className={styles.dropdown}>
-          <ul className={styles.members}>
+        <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-2.5 z-[2000] max-h-[300px] overflow-y-auto">
+          <ul>
             {members?.map((member) => {
               return (
-                <li key={member?.user?._id} className={styles.member}>
+                <li
+                  key={member?.user?._id}
+                  className="flex items-center py-1.5 text-small gap-1 cursor-pointer"
+                >
                   <input
                     type="checkbox"
                     id={`user-${member?.user?._id}`}
@@ -99,13 +109,18 @@ export default function AdminFilter({ projects, queries, setQueries }) {
                       member?.user?.firstName + " " + member?.user?.lastName
                     }
                     checked={queries?.members?.includes(member?.user?._id)}
+                    className="max-w-4 max-h-4 cursor-pointer"
                   />
-                  <label htmlFor={`user-${member?.user?._id}`}>
+                  <label
+                    htmlFor={`user-${member?.user?._id}`}
+                    className="flex items-center gap-1 cursor-pointer"
+                  >
                     <DisplayPicture
                       user={member?.user}
                       style={{ width: "22px", height: "22px" }}
+                      className="rounded-full"
                     />
-                    <span>
+                    <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">
                       {member?.user?.firstName} {member?.user?.lastName}
                     </span>
                   </label>

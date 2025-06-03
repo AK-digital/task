@@ -39,15 +39,24 @@ export default function Header() {
   return (
     <header className="w-full py-2.5 h-header-height">
       <nav className="flex justify-end items-center h-full ml-30 mr-10">
-        <ul className="relative flex items-center gap-6">
-          <li className="relative flex justify-center items-center h-full">
-            <Bell
-              size={22}
+        <ul className="relative flex items-center gap-6 overflow-visible">
+          <li className="relative flex justify-center items-center h-full overflow-visible">
+            <button
               onClick={(e) => setNotifOpen(true)}
-              data-open={notifOpen}
-              className="hover:fill-text-darker-color hover:cursor-pointer data-[open=true]:fill-text-darker-color "
-            />
-            {unreadCount > 0 && <div className="absolute w-[11px] h-[11px] top-3 left-3 rounded-full bg-danger-color animate-ping"></div>}
+              className="group relative px-0.5 h-full bg-transparent overflow-visible"
+            >
+              <Bell
+                size={22}
+                data-open={notifOpen}
+                className="group-hover:fill-text-darker-color  data-[open=true]:fill-text-darker-color text-text-darker-color"
+              />
+              {unreadCount > 0 && (
+                <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-red-500 animate-ping"></div>
+              )}
+              {unreadCount > 0 && (
+                <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-text-color-red"></div>
+              )}
+            </button>
             {notifOpen && (
               <Notifications
                 setNotifOpen={setNotifOpen}

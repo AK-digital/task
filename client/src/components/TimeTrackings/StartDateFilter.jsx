@@ -25,8 +25,13 @@ export default function StartDateFilter({ queries, setQueries }) {
   }
 
   return (
-    <div>
-      <input type="date" value={startDate} onChange={handleStartDateChange} />
+    <div className="flex items-center justify-center gap-1 p-2.5 rounded-sm bg-secondary cursor-pointer text-medium w-[180px] max-h-10 border border-color-border-color">
+      <input
+        type="date"
+        value={startDate}
+        onChange={handleStartDateChange}
+        className="border-b-0 cursor-pointer"
+      />
     </div>
   );
 }

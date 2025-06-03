@@ -72,7 +72,7 @@ function TasksContent() {
           <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
         </div>
         {/* Tasks */}
-        <div className="overflow-auto h-[90%] pr-5 rounded-2xl">
+        <div className="boards_Boards overflow-auto h-[90%] pr-5 rounded-2xl">
           <div className="relative bg-secondary shadow-small rounded-2xl min-w-max">
             <Tasks
               tasks={tasks}
