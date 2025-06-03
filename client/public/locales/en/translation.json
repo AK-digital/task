@@ -164,7 +164,7 @@
     "error_occurred": "An error occurred",
     "project_options_menu": "Project options",
     "project_archives": "Project archives",
-    "save_as_template": "Save project as template",
+    "save_project": "Save project as template",
     "delete_project_menu": "Delete project",
     "search_placeholder": "Search...",
     "task_status_singular": "task",
@@ -281,12 +281,12 @@
     "create": {
       "error": "An error occurred while creating the task"
     },
-    "status": {
+    "status_update": {
       "update": {
         "error": "An error occurred while updating the task status"
       }
     },
-    "priority": {
+    "priority_update": {
       "update": {
         "error": "An error occurred while updating the task priority"
       }
@@ -331,7 +331,7 @@
     "add_board": "Add a board",
     "add_template": "Add template",
     "remove": "Remove",
-    "save": "Save this project as template",
+    "save_project": "Save this project as template",
     "template_name": "Template name",
     "save_template": "Save as template",
     "saved_boards": "Saved boards",

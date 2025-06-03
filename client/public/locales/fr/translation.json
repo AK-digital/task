@@ -162,7 +162,7 @@
     "error_occurred": "Une erreur est survenue",
     "project_options_menu": "Options du projet",
     "project_archives": "Archives du projet",
-    "save_as_template": "Enregistrer le projet comme modèle",
+    "save_project": "Enregistrer ce projet comme modèle",
     "delete_project_menu": "Supprimer le projet",
     "search_placeholder": "Rechercher...",
     "task_status_singular": "tâche",
@@ -290,7 +290,6 @@
     "add_board": "Ajouter un tableau",
     "add_template": "Ajouter un template",
     "remove": "Supprimer",
-    "save": "Enregistrer ce projet comme modèle",
     "template_name": "Nom du modèle",
     "save_template": "Enregistrer en tant que modèle",
     "saved_boards": "Tableaux sauvegardés",
@@ -524,12 +523,12 @@
     "create": {
       "error": "Une erreur est survenue lors de la création de la tâche"
     },
-    "status": {
+    "status_update": {
       "update": {
         "error": "Une erreur est survenue lors de la mise à jour du statut de la tâche"
       }
     },
-    "priority": {
+    "priority_update": {
       "update": {
         "error": "Une erreur est survenue lors de la mise à jour de la priorité de la tâche"
       }

@@ -78,7 +78,7 @@ export default function ProjectTitle({ project }) {
       authorized: isOwnerOrManager,
       function: handleAddTemplate,
       icon: <Save size={16} />,
-      name: t("projects.save_as_template"),
+      name: t("projects.save_project"),
     },
     {
       authorized: isOwnerOrManager,
