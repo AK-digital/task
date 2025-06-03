@@ -12,7 +12,7 @@
   --color-color-border-color: #acaba5;
 
   --color-text-color: #e0e0e0;
-  --color-text-color-dark: #3a4344;
+  --color-text-dark-color: #3a4344;
   --color-text-color-red: #c04747;
   --color-danger-color: #c14854;
 
@@ -977,7 +977,7 @@ html:has(#task-more) {
   box-shadow: var(--shadow-medium);
   padding: 8px;
   font-size: var(--text-small);
-  color: var(--color-text-color-dark);
+  color: var(--color-text-dark-color);
   user-select: none;
 }
 
@@ -1010,7 +1010,7 @@ html:has(#task-more) {
   --border-color: #3a3d5c;
 
   --text-color: #e0e0e0;
-  --text-color-dark: #3a4344;
+  --text-dark-color: #3a4344;
   --text-color-red: #c04747;
 
   --danger-color: #c14854;

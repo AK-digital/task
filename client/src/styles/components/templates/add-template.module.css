@@ -19,7 +19,7 @@
 .header {
     text-align: center;
     font-size: var(--text-size-large);
-    color: var(--text-color-dark);
+    color: var(--text-dark-color);
 }
 
 .form {

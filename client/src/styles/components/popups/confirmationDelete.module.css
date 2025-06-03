@@ -25,7 +25,7 @@
 
 .confirmationDialog h3 {
   margin-top: 0;
-  color: var(--text-color-dark, #333333);
+  color: var(--text-dark-color, #333333);
   font-size: var(--text-size-large, 18px);
   text-align: center;
 }

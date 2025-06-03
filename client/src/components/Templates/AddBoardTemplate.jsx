@@ -40,7 +40,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   return (
     <>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 w-[400px] bg-secondary p-6 rounded-lg shadow-medium">
-        <div className="text-center text-large text-text-color-dark">
+        <div className="text-center text-large text-text-dark-color">
           <span>Enregistrer ce tableau comme modèle</span>
         </div>
         <form action={formAction} className="flex flex-col gap-3">
