@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function TaskProject({ task }) {
   const project = task?.projectId;
   return (
-    <div className="flex-col justify-center border-l border-r border-text-color px-4 min-w-[140px] max-w-[180px] w-full text-[#CC9348] text-small h-full" id="task-row">
+    <div className="flex items-center flex-col justify-center border-l border-r border-text-color px-4 min-w-[140px] max-w-[180px] w-full text-[#CC9348] text-small h-full">
       <Image
         src={project?.logo || "/default-project-logo.webp"}
         width={32}

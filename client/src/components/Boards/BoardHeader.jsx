@@ -336,7 +336,7 @@ export default function BoardHeader({
       </div>
       {openColors && (
         <>
-          <div id="popover" className="left-3 top-10 max-w-[234px] p-4 bg-secondary shadow-medium">
+          <div className="absolute z-2001 rounded-lg left-3 top-10 max-w-[234px] p-4 bg-secondary shadow-medium">
             <ul className="flex flex-wrap gap-2.5">
               {colors?.map((color, idx) => (
                 <li

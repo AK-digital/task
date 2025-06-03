@@ -46,7 +46,7 @@ export default function TaskText({ task }) {
   }, [task?.text]);
 
   return (
-    <div className="w-full min-w-[200px] max-w-[700px] cursor-text mx-2" onClick={handleEdit} id="task-row">
+    <div className="flex items-center h-full w-full min-w-[200px] max-w-[700px] cursor-text mx-2" onClick={handleEdit}>
       {!isEdit && <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em]">{value}</span>}
       {isEdit && (
         <input

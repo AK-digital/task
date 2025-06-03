@@ -4,19 +4,36 @@
 @theme {
   --font-bricolage: "Bricolage Grotesque", sans-serif;
 
+  /* COLORS */
   --color-accent-color: #a87e51;
   --color-accent-color-light: #d4a979;
   --color-accent-color-transparent: rgba(168, 126, 81, 0.3);
   --color-accent-color-hover: #977045;
   --color-foreground: #171717;
   --color-color-border-color: #acaba5;
-
-  --color-text-color: #e0e0e0;
-  --color-text-dark-color: #3a4344;
-  --color-text-color-red: #c04747;
   --color-danger-color: #c14854;
 
-  /* REWORKED COLORS & VARS 02/03/25 */
+  --color-text-color: #e0e0e0;
+  --color-text-color-red: #c04747;
+  --color-text-darker-color: #1f312d;
+  --color-text-dark-color: #3a4344;
+  --color-text-medium-color: #909490;
+  --color-text-light-color: #d7d4cb;
+  --color-text-lighter-color: #e7e3d9;
+  --color-text-color-muted: #72716f;
+
+  --color-state-pending-color: #b3bcc0;
+  --color-state-processing-color: #f3b158;
+  --color-state-finished-color: #63a758;
+  --color-state-todo-color: #559fc6;
+  --color-state-checking-color: #9d88c2;
+  --color-state-estimating-color: #62c3b0;
+  --color-state-blocked-color: #ca4250;
+
+  --color-color-low-color: #afbde9;
+  --color-color-medium-color: #879ce0;
+  --color-color-high-color: #7c67ad;
+  --color-color-urgent-color: #e17587;
 
   /* BACKGROUNDS */
   --color-primary: #dad6c7;
@@ -34,27 +51,6 @@
     #32484e 100%
   );
 
-  /* COLORS */
-  --color-text-darker-color: #1f312d;
-  --color-text-dark-color: #3a4344;
-  --color-text-medium-color: #909490;
-  --color-text-light-color: rgb(215, 212, 203);
-  --color-text-lighter-color: #e7e3d9;
-  --color-text-color-muted: #72716f;
-
-  --color-state-pending-color: #b3bcc0;
-  --color-state-processing-color: #f3b158;
-  --color-state-finished-color: #63a758;
-  --color-state-todo-color: #559fc6;
-  --color-state-checking-color: #9d88c2;
-  --color-state-estimating-color: #62c3b0;
-  --color-state-blocked-color: #ca4250;
-
-  --color-color-low-color: #afbde9;
-  --color-color-medium-color: #879ce0;
-  --color-color-high-color: #7c67ad;
-  --color-color-urgent-color: #e17587;
-
   /* TEXT SIZES */
   --text-large: 1.2rem;
   --text-medium: 1rem;
@@ -71,6 +67,7 @@
 }
 
 @layer components {
+  /* Components/Auth Folder */
   .form-group {
     position: relative;
     width: 100%;
@@ -80,53 +77,6 @@
     transition: all ease-in-out 120ms;
     font-size: var(--text-small);
     top: -15px;
-  }
-
-  /* QUILL STYLES */
-  .ql-container {
-    font-family: inherit !important;
-  }
-
-  .ql-editor li[data-list="bullet"] {
-    list-style-type: disc;
-  }
-
-  .ql-editor {
-    font-size: var(--text-normal);
-    letter-spacing: 0.01rem;
-    height: auto;
-    min-height: 100px;
-    max-height: 500px;
-  }
-
-  .ql-toolbar.ql-snow {
-    border-bottom: inherit !important;
-    border-color: var(--border-color) !important;
-    border-radius: 4px 4px 0 0 !important;
-  }
-
-  .ql-toolbar.ql-snow .ql-picker-label {
-    filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg)
-      brightness(96%) contrast(99%);
-  }
-
-  .ql-snow.ql-toolbar button svg {
-    filter: invert(91%) sepia(0%) saturate(33%) hue-rotate(156deg)
-      brightness(96%) contrast(99%);
-  }
-
-  .ql-editor.ql-blank:before {
-    color: var(--text-color) !important;
-    font-style: normal !important;
-  }
-
-  .ql-container.ql-snow {
-    border-color: var(--border-color) !important;
-    border-radius: 0 0 4px 4px !important;
-    color: var(--text-color) !important;
-    background-color: var(--secondary-background-color) !important;
-
-    cursor: text;
   }
 
   /* Tiptap */
@@ -823,11 +773,6 @@
     text-decoration: underline;
   }
 
-  /* img,
-  video {
-    height: unset !important;
-  } */
-
   button {
     border-radius: 24px;
     font-size: var(--text-medium);
@@ -929,140 +874,3 @@
     --foreground: #ededed;
   }
 } */
-
-/* 
-html:has(#task-more) {
-  overflow: hidden; 
-} */
-
-/* * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-} */
-
-#overlay-hidden {
-  position: absolute;
-  z-index: 2000;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-#modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2001;
-  background-color: var(--color-secondary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-  padding: 24px;
-  border-radius: var(--radius);
-}
-
-#popover {
-  position: absolute;
-  z-index: 2001;
-  background-color: var(--color-secondary);
-  border-radius: 8px;
-}
-
-#more {
-  position: absolute;
-  z-index: 2001;
-  background-color: var(--color-secondary);
-  border-radius: 4px;
-  box-shadow: var(--shadow-medium);
-  padding: 8px;
-  font-size: var(--text-small);
-  color: var(--color-text-dark-color);
-  user-select: none;
-}
-
-#task-text:last-child {
-  background-color: red;
-}
-
-/* Task row */
-#task-row {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.epr_-6npj90 {
-  --epr-emoji-size: 18px !important;
-  --epr-category-navigation-button-size: 24px !important;
-}
-
-:root {
-  --accent-color: #a87e51;
-  --accent-color-light: #d4a979;
-  --accent-color-transparent: rgba(168, 126, 81, 0.3);
-  --accent-color-hover: #977045;
-  --primary-background-color: #dad6c7;
-  --secondary-background-color: #f9f7ef;
-  --third-background-color: #eae7de;
-  --side-background-color: rgba(45, 63, 68, 0.9);
-  --foreground: #171717;
-  --border-color: #3a3d5c;
-
-  --text-color: #e0e0e0;
-  --text-dark-color: #3a4344;
-  --text-color-red: #c04747;
-
-  --danger-color: #c14854;
-
-  /* REWORKED COLORS & VARS 02/03/25 */
-
-  /* BACKGROUNDS */
-  --primary-background-transparent: rgba(218, 214, 199, 0.6);
-
-  /* COLORS */
-  --text-darker-color: #1f312d;
-  --text-dark-color: #3a4344;
-  --text-medium-color: #909490;
-  --text-light-color: rgb(215, 212, 203);
-  --text-lighter-color: #e7e3d9;
-  --text-color-muted: #72716f;
-  --background-gradient-dark: linear-gradient(
-    140deg,
-    #39545b,
-    #2a4046 17%,
-    #16363c 52%,
-    #2a4046 86%,
-    #32484e 100%
-  );
-  --border-color: #acaba5;
-
-  --pending-color: #b3bcc0;
-  --estimating-color: #62c3b0;
-  --processing-color: #f3b158;
-  --todo-color: #559fc6;
-  --checking-color: #9d88c2;
-  --blocked-color: #ca4250;
-  --finished-color: #63a758;
-
-  --low-color: #afbde9;
-  --medium-color: #879ce0;
-  --high-color: #7c67ad;
-  --urgent-color: #e17587;
-
-  /* TEXT */
-  --text-large: 1.2rem;
-  --text-medium: 1rem;
-  --text-normal: 0.95rem;
-  --text-small: 0.8rem;
-  --letter-spacing-normal: 0.011rem;
-
-  /* SPACING */
-  --header-height: 62px;
-  --aside-width: 66px;
-  --layout-gap: 24px;
-
-  /* BOX SHADOW */
-  --box-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --box-shadow-small: 0 2px 4px rgba(0, 0, 0, 0.05);
-}

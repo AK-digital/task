@@ -47,7 +47,7 @@ export default function UpdateBoard({ board, projectId }) {
                 zIndex: "2001",
               }}
             />
-            <div id="overlay-hidden" onClick={(e) => setIsEdit(false)}></div>
+            <div onClick={(e) => setIsEdit(false)} className="absolute left-0 top-0 w-full h-full z-2001"></div>
           </div>
         ) : (
           <div className="flex items-center gap-2.5">

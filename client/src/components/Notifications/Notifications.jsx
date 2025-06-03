@@ -49,7 +49,7 @@ export default function Notifications({
 
   return (
     <>
-      <div id="popover" className="flex flex-col top-10 right-[50px] w-[560px] p-0 pr-2 max-h-[400px] overflow-y-auto rounded-2xl shadow-medium">
+      <div className="absolute z-2001  flex flex-col top-10 right-[50px] w-[560px] p-0 pr-2 max-h-[400px] overflow-y-auto rounded-lg bg-secondary shadow-medium">
         <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px]">
           <span>Notifications</span>
           {unreadCount > 0 && (
