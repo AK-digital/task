@@ -64,8 +64,6 @@ export async function getTimeTrackings(req, res, next) {
 
     const { projects, members, startingDate, endingDate } = req.query;
 
-    console.log(projects, members, startingDate, endingDate);
-
     const userProjects = await ProjectModel.find({
       "members.user": authUser?._id,
     }).select("_id name");
@@ -81,91 +79,31 @@ export async function getTimeTrackings(req, res, next) {
     // Extraire les IDs et noms des projets de l'utilisateur
     const userProjectIds = userProjects.map((project) => project._id);
 
-    const pipeline = [
-      {
-        $match: {
-          projectId: { $in: userProjectIds },
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "taskId",
-          foreignField: "_id",
-          as: "task",
-        },
-      },
-      {
-        $lookup: {
-          from: "projects",
-          localField: "projectId",
-          foreignField: "_id",
-          as: "project",
-        },
-      },
-      {
-        $unwind: "$project",
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: "$user",
-      },
-      {
-        $addFields: {
-          fullName: {
-            $concat: ["$user.firstName", " ", "$user.lastName"],
-          },
-        },
-      },
-    ];
-
-    if (members?.length > 0) {
-      console.log(members?.split(","));
-      pipeline.push({
-        $match: {
-          userId: { $in: members?.split(",") },
-        },
-      });
-    }
-
-    if (startingDate || endingDate) {
-      const matchStage = {};
-
-      if (startingDate) {
-        const startDate = new Date(startingDate);
-        startDate.setHours(0, 0, 0, 0); // Set to beginning of the day
-        matchStage.startTime = { $gte: startDate };
-      }
-
-      if (endingDate) {
-        const endDate = new Date(endingDate);
-        endDate.setHours(23, 59, 59, 999); // Set to end of the day
-        matchStage.startTime = matchStage.startTime || {}; // Ensurer que l'objet existe
-        matchStage.startTime.$lte = endDate;
-      }
-
-      // Ajout du filtre dans le pipeline
-      pipeline.push({
-        $match: matchStage,
-      });
-    }
+    const filters = {
+      projectId: { $in: userProjectIds },
+    };
 
     if (projects?.length > 0) {
-      pipeline.push({
-        $match: {
-          "project?._id": { $in: projects?.split(",") },
-        },
-      });
+      filters.projectId = { $in: projects?.split(",") };
     }
 
-    const timeTrackings = await TimeTrackingModel.aggregate(pipeline);
+    if (members?.length > 0) {
+      filters.userId = { $in: members?.split(",") };
+    }
+
+    if (startingDate) {
+      filters.startTime = { $gte: startingDate };
+    }
+
+    if (endingDate) {
+      filters.endTime = { $lte: endingDate };
+    }
+
+    const timeTrackings = await TimeTrackingModel.find(filters)
+      .populate("userId", "_id firstName lastName picture")
+      .populate("projectId", "_id name logo members")
+      .populate("taskId")
+      .exec();
 
     if (timeTrackings.length <= 0) {
       return res.status(404).send({

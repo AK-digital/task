@@ -42,7 +42,7 @@ export default function SelectedTimeTrackings({
       return;
     }
 
-    socket.emit("time tracking deleted batch", selectedTrackers, projectId);
+    socket.emit("update task", projectId);
 
     setTimeout(() => {
       mutateTimeTrackings(undefined, {

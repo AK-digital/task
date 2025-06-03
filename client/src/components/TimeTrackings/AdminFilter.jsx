@@ -1,7 +1,7 @@
 import styles from "@/styles/components/timeTrackings/adminFilter.module.css";
 import React, { useEffect, useState } from "react";
 import DisplayPicture from "../User/DisplayPicture";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Undo } from "lucide-react";
 
 export default function AdminFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +27,7 @@ export default function AdminFilter({ projects, queries, setQueries }) {
       setMembers(uniqueMembers);
     } else {
       const selectedProjects = projects?.filter((p) =>
-        queries?.projects?.includes(p?.name)
+        queries?.projects?.includes(p?._id)
       );
 
       const selectedProjectsMembers = selectedProjects
@@ -61,6 +61,11 @@ export default function AdminFilter({ projects, queries, setQueries }) {
     }
   }
 
+  function handleReset() {
+    setCurrentMembers([]);
+    setQueries({ ...queries, members: undefined });
+  }
+
   return (
     <div className={styles.container}>
       <div onClick={() => setIsOpen(!isOpen)} className={styles.current}>
@@ -87,6 +92,10 @@ export default function AdminFilter({ projects, queries, setQueries }) {
       {isOpen && (
         <div className={styles.dropdown}>
           <ul className={styles.members}>
+            <li className={styles.member} onClick={handleReset}>
+              <Undo size={16} />
+              Supprimer les filtres
+            </li>
             {members?.map((member) => {
               return (
                 <li key={member?.user?._id} className={styles.member}>
@@ -95,10 +104,10 @@ export default function AdminFilter({ projects, queries, setQueries }) {
                     id={`user-${member?.user?._id}`}
                     name="user"
                     onChange={(e) => handleMemberChange(e, member)}
-                    value={
-                      member?.user?.firstName + " " + member?.user?.lastName
-                    }
-                    checked={queries?.members?.includes(member?.user?._id)}
+                    value={member?.user?._id}
+                    checked={Boolean(
+                      queries?.members?.includes(member?.user?._id)
+                    )}
                   />
                   <label htmlFor={`user-${member?.user?._id}`}>
                     <DisplayPicture

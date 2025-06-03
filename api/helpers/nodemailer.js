@@ -11,7 +11,11 @@ const transporter = nodemailer.createTransport({
     // do not fail on invalid certs
     rejectUnauthorized: true,
     requestCert: false,
+    minVersion: "TLSv1.2",
   },
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
 });
 
 function stripHtmlTags(html) {
@@ -21,7 +25,7 @@ function stripHtmlTags(html) {
 export async function sendEmail(from, to, subject, text) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: `"AK Digital" <${from}>`, // sender address with display name
+    from: `"Clynt.io" <${from}>`, // sender address with display name
     to: to, // list of receivers
     replyTo: from,
     subject: subject, // Subject line

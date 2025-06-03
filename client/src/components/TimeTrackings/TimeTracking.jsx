@@ -24,7 +24,7 @@ export default function TimeTracking({
   mutateTimeTrackings,
 }) {
   const [inputValue, setInputValue] = useState(
-    tracker?.task?.[0]?.text || tracker?.taskText || ""
+    tracker?.taskId?.text || tracker?.taskText || ""
   );
   const [isEditing, setIsEditing] = useState(false);
   const [isHover, setIsHover] = useState(false);
@@ -32,46 +32,15 @@ export default function TimeTracking({
   const [isBillable, setIsBillable] = useState(tracker?.billable ?? true);
   const [isSpinning, setIsSpinning] = useState(false);
 
-  const project = tracker?.project;
-  const user = tracker?.user;
+  const project = tracker?.projectId;
+  const user = tracker?.userId;
   const canPut = useUserRole(project, ["owner", "manager"]);
 
   const date = moment(tracker?.startTime).format("DD/MM/YYYY");
 
   useEffect(() => {
-    const handleTaskUpdated = (projectId) => {
-      // Seulement revalider si c'est le bon projet
-      const currentProjectId = extractId(tracker?.projectId);
-      if (projectId === currentProjectId) {
-        mutateTimeTrackings(undefined, {
-          revalidate: true,
-          populateCache: false,
-        });
-      }
-    };
-
-    const handleTimeTrackingUpdated = (updatedTrackerId) => {
-      // Seulement revalider si c'est ce tracker ou si on ne spécifie pas d'ID
-      if (!updatedTrackerId || updatedTrackerId === tracker._id) {
-        mutateTimeTrackings(undefined, {
-          revalidate: true,
-          populateCache: false,
-        });
-      }
-    };
-
-    socket.on("task updated", handleTaskUpdated);
-    socket.on("time tracking updated", handleTimeTrackingUpdated);
-
-    return () => {
-      socket.off("task updated", handleTaskUpdated);
-      socket.off("time tracking updated", handleTimeTrackingUpdated);
-    };
-  }, [mutateTimeTrackings, tracker._id, tracker?.projectId]);
-
-  useEffect(() => {
     setIsBillable(tracker?.billable ?? true);
-    setInputValue(tracker?.task?.[0]?.text || tracker?.taskText || "");
+    setInputValue(tracker?.taskId?.text || tracker?.taskText || "");
   }, [tracker]);
 
   function handleChange(e) {
@@ -101,10 +70,7 @@ export default function TimeTracking({
 
         if (response?.success) {
           socket.emit("update task", projectId, taskId, value);
-          mutateTimeTrackings(undefined, {
-            revalidate: true,
-            populateCache: false,
-          });
+          mutateTimeTrackings();
         }
       } else if (tracker?.taskText !== undefined) {
         const projectId = extractId(tracker?.projectId);
@@ -112,11 +78,8 @@ export default function TimeTracking({
         response = await updateTimeTrackingText(tracker?._id, projectId, value);
 
         if (response?.success) {
-          socket.emit("time tracking updated", tracker?._id);
-          mutateTimeTrackings(undefined, {
-            revalidate: true,
-            populateCache: false,
-          });
+          socket.emit(" update time tracking", tracker?._id);
+          mutateTimeTrackings();
         }
       }
 
@@ -125,11 +88,8 @@ export default function TimeTracking({
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error);
-      setInputValue(tracker?.task?.[0]?.text || tracker?.taskText || "");
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
+      setInputValue(tracker?.taskId?.text || tracker?.taskText || "");
+      mutateTimeTrackings();
     }
   }
 
@@ -157,19 +117,6 @@ export default function TimeTracking({
 
     setIsBillable(newBillableState);
 
-    mutateTimeTrackings(
-      (currentData) => {
-        if (!currentData?.data) return currentData;
-        return {
-          ...currentData,
-          data: currentData.data.map((t) =>
-            t._id === tracker._id ? { ...t, billable: newBillableState } : t
-          ),
-        };
-      },
-      false // Ne pas revalider immédiatement
-    );
-
     try {
       const projectId = extractId(tracker?.projectId);
 
@@ -180,14 +127,11 @@ export default function TimeTracking({
       );
 
       if (response?.success) {
-        socket.emit("time tracking updated", tracker?._id);
+        socket.emit("update time tracking", tracker?._id);
 
         setTimeout(() => {
           setIsSpinning(false);
-          mutateTimeTrackings(undefined, {
-            revalidate: true,
-            populateCache: false,
-          });
+          mutateTimeTrackings();
         }, 300);
       } else {
         throw new Error(response?.message || "Échec de la mise à jour");
@@ -198,10 +142,7 @@ export default function TimeTracking({
         error
       );
       setIsBillable(!newBillableState);
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
+      mutateTimeTrackings();
       setIsSpinning(false);
     }
   };

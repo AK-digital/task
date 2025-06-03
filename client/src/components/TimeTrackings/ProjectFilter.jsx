@@ -1,36 +1,39 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import styles from "@/styles/components/timeTrackings/projectFilter.module.css";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Undo } from "lucide-react";
 
 export default function ProjectFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentProjects, setCurrentProjects] = useState(
-    projects?.filter((p) => queries?.projects?.includes(p?.name)) || []
-  );
+  const [currentProjects, setCurrentProjects] = useState([]);
   const hasProjects = currentProjects?.length > 0;
 
   function handleProjectChange(e, project) {
     const isChecked = e.target.checked;
-    const projectName = e.target.value;
+    const projectId = project?._id;
 
     if (isChecked) {
       const newCurrentProjects = [...currentProjects, project];
       setCurrentProjects(newCurrentProjects);
 
-      const newProjectNames = newCurrentProjects.map((p) => p.name);
+      const newProjectIds = newCurrentProjects.map((p) => p?._id);
 
-      setQueries({ ...queries, projects: newProjectNames });
+      setQueries({ ...queries, projects: newProjectIds });
     } else {
       const newCurrentProjects = currentProjects.filter(
-        (p) => p?.name !== projectName
+        (p) => p?._id !== projectId
       );
 
       setCurrentProjects(newCurrentProjects);
 
-      const newProjectNames = newCurrentProjects.map((p) => p.name);
-      setQueries({ ...queries, projects: newProjectNames });
+      const newProjectIds = newCurrentProjects.map((p) => p._id);
+      setQueries({ ...queries, projects: newProjectIds });
     }
+  }
+
+  function handleReset() {
+    setCurrentProjects([]);
+    setQueries({ ...queries, projects: undefined });
   }
 
   return (
@@ -60,6 +63,10 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
       {isOpen && (
         <div className={styles.dropdown}>
           <ul className={styles.projects}>
+            <li className={styles.project} onClick={handleReset}>
+              <Undo size={16} />
+              Supprimer les filtres
+            </li>
             {projects?.map((project) => {
               return (
                 <li className={styles.project} key={project?._id}>
@@ -67,9 +74,9 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                     type="checkbox"
                     id={`project-${project?._id}`}
                     name="project"
-                    value={project?.name}
+                    value={project?._id}
                     onChange={(e) => handleProjectChange(e, project)}
-                    checked={queries?.projects?.includes(project?.name)}
+                    checked={Boolean(queries?.projects?.includes(project?._id))}
                   />
                   <label htmlFor={`project-${project?._id}`}>
                     <Image

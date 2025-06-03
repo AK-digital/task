@@ -17,11 +17,12 @@ export default function TimeTrackings({ searchParams }) {
   const { timeTrackings, timeTrackingsLoading, mutateTimeTrackings } =
     useTimeTrackings(queries);
 
-  console.log(timeTrackings);
-
+  const [filteredTrackers, setFilteredTrackers] = useState(timeTrackings || []);
   const [selectedTrackers, setSelectedTrackers] = useState([]);
 
-  const hasSelectedTrackers = selectedTrackers?.length > 0;
+  useEffect(() => {
+    setFilteredTrackers(timeTrackings || []);
+  }, [timeTrackings]);
 
   const totalDuration = useMemo(() => {
     return timeTrackings?.reduce((acc, tracker) => {
@@ -29,16 +30,9 @@ export default function TimeTrackings({ searchParams }) {
     }, 0);
   }, [timeTrackings]);
 
-  const hasTrackers = timeTrackings?.length > 0;
-
   useEffect(() => {
-    const handleTaskUpdated = (projectId) => {
-      // Revalider seulement si on n'a pas de filtre de projet ou si c'est un projet concerné
-      const projectsParam = searchParams?.projects;
-
-      if (!projectsParam || projectsParam.includes(projectId)) {
-        mutateTimeTrackings();
-      }
+    const handleTaskUpdated = () => {
+      mutateTimeTrackings();
     };
 
     const handleTimeTrackingUpdated = () => {
@@ -54,6 +48,8 @@ export default function TimeTrackings({ searchParams }) {
     };
   }, [mutateTimeTrackings, searchParams]);
 
+  const hasSelectedTrackers = selectedTrackers?.length > 0;
+
   function handleExport() {
     exportTimeTracking(
       hasSelectedProjects ? selectedProjects : projectsWithTrackers,
@@ -65,6 +61,7 @@ export default function TimeTrackings({ searchParams }) {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Suivi du temps</h1>
+
         {/* Filters */}
         {!projectsLoading && (
           <Filters
@@ -73,49 +70,54 @@ export default function TimeTrackings({ searchParams }) {
             setQueries={setQueries}
           />
         )}
+
         {/* Total duration */}
-        {totalDuration && (
-          <span className={styles.total}>
-            Temps total : {formatTime(Math.floor(totalDuration / 1000))}
-          </span>
-        )}
+        <span className={styles.total}>
+          Temps total :{" "}
+          {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
+        </span>
+
         {/* Export PDF Button */}
         <ExportPdfBtn handleExport={handleExport} />
       </div>
-      {/* Time tracking list */}
-      {isNotEmpty(timeTrackings) ? (
-        <div className={styles.content}>
-          {/* <TimeTrackingHeader
-            trackers={timeTrackings}
-            setFilteredTrackers={setFilteredTrackers}
-            setSelectedTrackers={setSelectedTrackers}
-          /> */}
 
-          {timeTrackings?.map((tracker) => {
-            return (
-              <TimeTracking
-                tracker={tracker}
-                setSelectedTrackers={setSelectedTrackers}
-                mutateTimeTrackings={mutateTimeTrackings}
-                key={tracker?._id}
-              />
-            );
-          })}
-          {/* Selected time tracking list */}
-          {hasSelectedTrackers && (
-            <SelectedTimeTrackings
-              selectedTrackers={selectedTrackers}
-              setSelectedTrackers={setSelectedTrackers}
-              mutateTimeTrackings={mutateTimeTrackings}
+      {/* Time tracking list */}
+      <div className={styles.content}>
+        {timeTrackingsLoading ? (
+          <div>LOADING</div>
+        ) : isNotEmpty(timeTrackings) ? (
+          <>
+            <TimeTrackingHeader
               trackers={timeTrackings}
+              setFilteredTrackers={setFilteredTrackers}
+              setSelectedTrackers={setSelectedTrackers}
             />
-          )}
-        </div>
-      ) : (
-        <div className={styles.empty}>
-          <h2>Aucun de vos projets ne contient un suivi de temps</h2>
-        </div>
-      )}
+            {filteredTrackers.map((tracker) => {
+              return (
+                <TimeTracking
+                  tracker={tracker}
+                  setSelectedTrackers={setSelectedTrackers}
+                  mutateTimeTrackings={mutateTimeTrackings}
+                  key={tracker?._id}
+                />
+              );
+            })}
+          </>
+        ) : (
+          <div className={styles.empty}>
+            <h2>Aucun de vos projets ne contient un suivi de temps</h2>
+          </div>
+        )}
+        {/* Selected time tracking list */}
+        {hasSelectedTrackers && (
+          <SelectedTimeTrackings
+            selectedTrackers={selectedTrackers}
+            setSelectedTrackers={setSelectedTrackers}
+            mutateTimeTrackings={mutateTimeTrackings}
+            trackers={filteredTrackers}
+          />
+        )}
+      </div>
     </div>
   );
 }

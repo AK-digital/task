@@ -16,6 +16,10 @@ export async function getTimeTrackings(queries) {
       "trackers"
     );
 
+    if (res.status === 404) {
+      return [];
+    }
+
     const response = await res.json();
 
     if (!response?.success) {

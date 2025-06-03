@@ -1,8 +1,9 @@
+"use client";
 import styles from "@/styles/components/timeTrackings/filters.module.css";
 import AdminFilter from "./AdminFilter";
+import ProjectFilter from "./ProjectFilter";
 import StartDateFilter from "./StartDateFilter";
 import EndDateFilter from "./EndDateFilter";
-import ProjectFilter from "./ProjectFilter";
 
 export default function Filters({ projects, queries, setQueries }) {
   return (
@@ -17,8 +18,8 @@ export default function Filters({ projects, queries, setQueries }) {
         queries={queries}
         setQueries={setQueries}
       />
-      {/* <StartDateFilter queries={queries} setQueries={setQueries} />
-      <EndDateFilter queries={queries} setQueries={setQueries} /> */}
+      <StartDateFilter queries={queries} setQueries={setQueries} />
+      <EndDateFilter queries={queries} setQueries={setQueries} />
     </div>
   );
 }

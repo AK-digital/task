@@ -19,7 +19,6 @@ export async function run() {
     // Ensures that the client will close when you finish/error
 
     await client.close();
-    console.log(error);
   }
 }
 
