@@ -111,7 +111,8 @@ export default function TimeTrackings({
   function handleExport() {
     exportTimeTracking(
       hasSelectedProjects ? selectedProjects : projectsWithTrackers,
-      filteredTrackers
+      filteredTrackers,
+      t
     );
   }
 

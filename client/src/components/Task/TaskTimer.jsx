@@ -349,6 +349,7 @@ export function TimeTrackingSessions({
   setSessions,
   formatTime,
 }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
   async function handleDeleteSession(sessionId) {
     setSessions((prev) => prev.filter((session) => session._id !== sessionId));
@@ -385,7 +386,9 @@ export function TimeTrackingSessions({
                   width={25}
                   height={25}
                   style={{ borderRadius: "50%" }}
-                  alt={`${t("tasks.profile_picture_alt")} ${user?.firstName}`}
+                  alt={`${t("tasks.profile_picture_alt", {
+                    firstName: user?.firstName,
+                  })}`}
                 />
                 <span>{endDate}</span>
               </div>

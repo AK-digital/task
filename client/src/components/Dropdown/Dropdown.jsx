@@ -7,6 +7,7 @@ import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
 import { useState } from "react";
 import { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 export function DropDown({
   defaultValue,
@@ -15,6 +16,7 @@ export function DropDown({
   member = null,
   invitation = null,
 }) {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -59,7 +61,7 @@ export function DropDown({
     <>
       <div className={styles.container}>
         <div onClick={handleIsOpen} className={styles.current}>
-          <span>{memberRole(current)}</span>
+          <span>{memberRole(current, t)}</span>
         </div>
         {isOpen && (
           <ul className={styles.options}>
@@ -71,7 +73,7 @@ export function DropDown({
                   onClick={handleChangeRole}
                   data-value={option}
                 >
-                  <span>{memberRole(option)}</span>
+                  <span>{memberRole(option, t)}</span>
                 </li>
               );
             })}

@@ -115,7 +115,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         />
                       ) : (
                         <div className={styles.role}>
-                          <span>{memberRole(member?.role)}</span>
+                          <span>{memberRole(member?.role, t)}</span>
                         </div>
                       )}
                     </div>
