@@ -49,12 +49,27 @@ export default function TimeTrackings({ searchParams }) {
   }, [mutateTimeTrackings, searchParams]);
 
   const hasSelectedTrackers = selectedTrackers?.length > 0;
+  const hasSelectedProjects = queries?.projects?.length > 0;
+
+  function giveProjectsToExport() {
+    if (hasSelectedProjects) {
+      // give projects selected in the queries
+      return projects?.filter((project) =>
+        queries?.projects?.includes(project?._id)
+      );
+    } else {
+      // give all projects of current returned time trackings
+      return timeTrackings?.reduce((acc, tracker) => {
+        if (!acc.find((project) => project?._id === tracker?.projectId?._id)) {
+          acc.push(tracker?.projectId);
+        }
+        return acc;
+      }, []);
+    }
+  }
 
   function handleExport() {
-    exportTimeTracking(
-      hasSelectedProjects ? selectedProjects : projectsWithTrackers,
-      filteredTrackers
-    );
+    exportTimeTracking(giveProjectsToExport(), timeTrackings);
   }
 
   return (
@@ -73,7 +88,7 @@ export default function TimeTrackings({ searchParams }) {
 
         {/* Total duration */}
         <span className={styles.total}>
-          Temps total :{" "}
+          Temps total :
           {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
         </span>
 

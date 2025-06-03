@@ -1,4 +1,3 @@
-import NoPicture from "@/components/User/NoPicture";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import {
@@ -10,7 +9,6 @@ import {
   Layout,
   Youtube,
 } from "lucide-react";
-import Image from "next/image";
 import socket from "./socket";
 
 export function isNotEmpty(arr) {
@@ -95,15 +93,15 @@ export function exportTimeTracking(projects, trackers) {
     });
 
     const filteredTrackers = trackers?.filter(
-      (tracker) => tracker?.project?._id === project?._id
+      (tracker) => tracker?.projectId?._id === project?._id
     );
 
     // Séparer les trackers facturables et non facturables
     const billableTrackers = filteredTrackers?.filter(
-      (tracker) => tracker.billable === true
+      (tracker) => tracker?.billable === true
     );
     const nonBillableTrackers = filteredTrackers?.filter(
-      (tracker) => tracker.billable === false
+      (tracker) => tracker?.billable === false
     );
 
     // Calculer les durées totales
