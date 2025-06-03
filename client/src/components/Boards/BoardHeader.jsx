@@ -27,6 +27,7 @@ import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { bricolageGrostesque } from "@/utils/font";
+import { useTranslation } from "react-i18next";
 
 export default function BoardHeader({
   board,
@@ -40,6 +41,7 @@ export default function BoardHeader({
   archive,
   project,
 }) {
+  const { t } = useTranslation();
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -107,13 +109,13 @@ export default function BoardHeader({
       authorized: isOwnerOrManager,
       function: handleAddBoardTemplate,
       icon: <Save size={16} />,
-      name: "Enregistrer le tableau comme modèle",
+      name: t("boards.save_as_template"),
     },
     {
       authorized: canArchive,
       function: handleDeleteBoard,
       icon: <Trash2 size={16} />,
-      name: "Supprimer le tableau",
+      name: t("boards.delete_board"),
       remove: true,
       deletionName: board?.title,
     },
@@ -124,14 +126,14 @@ export default function BoardHeader({
       authorized: canArchive,
       function: handleAddArchive,
       icon: <Archive size={16} />,
-      name: "Archiver le tableau",
+      name: t("boards.archive_board"),
     });
   } else {
     options.splice(1, 0, {
       authorized: canArchive,
       function: handleRestoreArchive,
       icon: <ArchiveRestore size={16} />,
-      name: "Restaurer le tableau",
+      name: t("boards.restore_board"),
     });
   }
 
@@ -243,7 +245,7 @@ export default function BoardHeader({
         {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
           <div
             className={styles.actionCheckbox}
-            title="Sélectionner toutes les tâches"
+            title={t("boards.select_all_tasks")}
           >
             <input
               type="checkbox"
@@ -317,8 +319,8 @@ export default function BoardHeader({
           <div>
             <span className={styles.count}>
               {tasks?.length > 1
-                ? `${tasks?.length} Tâches`
-                : `${tasks?.length} Tâche`}
+                ? `${tasks?.length} ${t("boards.tasks_plural")}`
+                : `${tasks?.length} ${t("boards.task_singular")}`}
             </span>
           </div>
         )}

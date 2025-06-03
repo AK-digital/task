@@ -3,9 +3,11 @@ import styles from "@/styles/components/profile/profile-form.module.css";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { updateUserProfile } from "@/actions/user";
 import { bricolageGrostesque } from "@/utils/font";
+import { translateValidationErrors } from "@/utils/zod";
 import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -14,6 +16,7 @@ const initialState = {
 };
 
 export default function ProfileForm() {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const [state, formAction, pending] = useActionState(
     updateUserProfile,
@@ -33,16 +36,16 @@ export default function ProfileForm() {
       mutate("/auth/session");
       setPopup({
         status: state?.status,
-        title: "Succès",
-        message: "Profil mis à jour avec succès",
+        title: t("profile.success_title"),
+        message: t("profile.update_success"),
       });
     }
 
     if (state?.status === "failure") {
       setPopup({
         status: state?.status,
-        title: "Erreur",
-        message: "Une erreur s'est produite lors de la mise à jour du profil",
+        title: t("profile.error_title"),
+        message: t("profile.update_error"),
       });
     }
 
@@ -68,7 +71,9 @@ export default function ProfileForm() {
         <input type="hidden" name="userId" defaultValue={user?._id} />
 
         <div className="form-group">
-          <label htmlFor="firstName" data-active={firstName ? true : false}>Prénom</label>
+          <label htmlFor="firstName" data-active={firstName ? true : false}>
+            {t("profile.first_name")}
+          </label>
           <input
             type="text"
             id="firstName"
@@ -78,12 +83,16 @@ export default function ProfileForm() {
             onChange={(e) => setFirstName(e.target.value)}
           />
           {state?.errors?.firstName && (
-            <span className={styles.error}>{state.errors.firstName}</span>
+            <span className={styles.error}>
+              {translateValidationErrors(state.errors.firstName, t)}
+            </span>
           )}
         </div>
 
         <div className="form-group">
-          <label htmlFor="lastName" data-active={lastName ? true : false}>Nom</label>
+          <label htmlFor="lastName" data-active={lastName ? true : false}>
+            {t("profile.last_name")}
+          </label>
           <input
             type="text"
             id="lastName"
@@ -93,12 +102,16 @@ export default function ProfileForm() {
             onChange={(e) => setLastName(e.target.value)}
           />
           {state?.errors?.lastName && (
-            <span className={styles.error}>{state.errors.lastName}</span>
+            <span className={styles.error}>
+              {translateValidationErrors(state.errors.lastName, t)}
+            </span>
           )}
         </div>
 
         <div className="form-group">
-          <label htmlFor="company" data-active={company ? true : false}>Entreprise</label>
+          <label htmlFor="company" data-active={company ? true : false}>
+            {t("profile.company")}
+          </label>
           <input
             type="text"
             id="company"
@@ -108,12 +121,16 @@ export default function ProfileForm() {
             onChange={(e) => setCompany(e.target.value)}
           />
           {state?.errors?.company && (
-            <span className={styles.error}>{state.errors.company}</span>
+            <span className={styles.error}>
+              {translateValidationErrors(state.errors.company, t)}
+            </span>
           )}
         </div>
 
         <div className="form-group">
-          <label htmlFor="position" data-active={position ? true : false}>Poste</label>
+          <label htmlFor="position" data-active={position ? true : false}>
+            {t("profile.position")}
+          </label>
           <input
             type="text"
             id="position"
@@ -123,7 +140,9 @@ export default function ProfileForm() {
             onChange={(e) => setPosition(e.target.value)}
           />
           {state?.errors?.position && (
-            <span className={styles.error}>{state.errors.position}</span>
+            <span className={styles.error}>
+              {translateValidationErrors(state.errors.position, t)}
+            </span>
           )}
         </div>
         <button
@@ -131,7 +150,7 @@ export default function ProfileForm() {
           className={`${bricolageGrostesque.className} ${styles.submitBtn}`}
           data-disabled={pending}
         >
-          Mettre à jour
+          {t("profile.update_button")}
         </button>
       </form>
 

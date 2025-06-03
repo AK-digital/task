@@ -4,8 +4,10 @@ import { isNotEmpty } from "@/utils/utils";
 import { ChevronDown, FolderOpenDot, Undo } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TasksProjectFilter({ queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const { projects } = useProjects();
 
@@ -45,12 +47,12 @@ export default function TasksProjectFilter({ queries, setQueries }) {
             width={18}
             height={18}
             quality={100}
-            alt={`Logo de ${theProject?.name}`}
+            alt={`${t("projects.project_logo_alt")} ${theProject?.name}`}
           />
         ) : (
           <FolderOpenDot size={16} />
         )}
-        <span>{theProject?.name || "Choisir un projet"} </span>
+        <span>{theProject?.name || t("projects.choose_project")} </span>
         <ChevronDown size={16} />
       </div>
       {isOpen && (
@@ -59,7 +61,7 @@ export default function TasksProjectFilter({ queries, setQueries }) {
             <ul>
               <li className={styles.item} onClick={() => handleSelectProject()}>
                 <Undo size={16} />
-                Supprimer les filtres
+                {t("tasks.remove_filters")}
               </li>
               {projects.map((project) => (
                 <li
@@ -71,14 +73,14 @@ export default function TasksProjectFilter({ queries, setQueries }) {
                     src={project?.logo || "/default-project-logo.webp"}
                     width={24}
                     height={24}
-                    alt={`Logo de ${project?.name}`}
+                    alt={`${t("projects.project_logo_alt")} ${project?.name}`}
                   />
                   <span>{project?.name}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <span>Aucun projet n'a été trouvé</span>
+            <span>{t("projects.no_projects_found")}</span>
           )}
         </div>
       )}

@@ -9,8 +9,10 @@ import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
 import { getFloating, usePreventScroll } from "@/utils/floating";
+import { useTranslation } from "react-i18next";
 
 export default function TaskPriority({ task }) {
+  const { t } = useTranslation();
   const { project, mutateTasks, priorities, mutatePriorities } =
     useProjectContext();
   const [currentPriority, setCurrentPriority] = useState(task?.priority);
@@ -69,7 +71,7 @@ export default function TaskPriority({ task }) {
       availableColors[Math.floor(Math.random() * availableColors?.length)];
 
     const response = await savePriority(project?._id, {
-      name: "Nouvelle priorité",
+      name: t("tasks.new_priority"),
       color: randomColor,
     });
 
@@ -121,7 +123,7 @@ export default function TaskPriority({ task }) {
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
-        <span>{currentPriority?.name || "Basse"}</span>
+        <span>{currentPriority?.name || t("tasks.low_priority")}</span>
       </div>
       {isOpen && (
         <>
@@ -162,18 +164,18 @@ export default function TaskPriority({ task }) {
                   onClick={handleAddPriority}
                 >
                   <Plus size={16} />
-                  Ajouter
+                  {t("tasks.add")}
                 </li>
               )}
             </ul>
             {isEdit ? (
               <button className={styles.edit} onClick={handleEditPriority}>
                 <Save size={16} />
-                Appliquer
+                {t("tasks.apply")}
               </button>
             ) : (
               <button className={styles.edit} onClick={handleEditPriority}>
-                <Pen size={16} /> Modifier les priorités
+                <Pen size={16} /> {t("tasks.edit_priorities")}
               </button>
             )}
           </div>

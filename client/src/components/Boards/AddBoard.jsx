@@ -7,8 +7,10 @@ import { bricolageGrostesque } from "@/utils/font";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { useState } from "react";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
+import { useTranslation } from "react-i18next";
 
 export default function AddBoard({ project }) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
   const isAuthorized = useUserRole(project, [
@@ -41,7 +43,7 @@ export default function AddBoard({ project }) {
         onClick={() => handleAddBoard(project?._id)}
       >
         <Plus size={18} />
-        Tableau vide
+        {t("boards.empty_board")}
       </button>
       <button
         type="button"
@@ -49,7 +51,7 @@ export default function AddBoard({ project }) {
         onClick={() => setAddBoardTemplate(true)}
       >
         <Plus size={18} />
-        Modèle de tableau
+        {t("boards.board_template")}
       </button>
       {addBoardTemplate && (
         <BoardsTemplateList

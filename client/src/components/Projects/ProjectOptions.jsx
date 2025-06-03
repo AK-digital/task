@@ -23,6 +23,7 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
+import { useTranslation } from "react-i18next";
 moment.locale("fr");
 
 const initialState = {
@@ -32,6 +33,7 @@ const initialState = {
 };
 
 export default function ProjectOptions({ project }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [links, setLinks] = useState(project?.urls || []);
 
@@ -62,20 +64,20 @@ export default function ProjectOptions({ project }) {
       setIsDisabled(true);
       mutate(`/project/${project?._id}`);
       setPopup({
-        title: "Modifications enregistrées",
-        message: "Les modifications ont été enregistrées avec succès",
+        title: t("projects.changes_saved"),
+        message: t("projects.changes_saved_success"),
       });
 
       return;
     }
     if (state?.status === "failure") {
       setPopup({
-        title: "Une erreur est survenue",
+        title: t("projects.error_occurred"),
         message: state?.message,
       });
       return;
     }
-  }, [state]);
+  }, [state, t]);
 
   useEffect(() => {
     if (popup) {
@@ -165,16 +167,21 @@ export default function ProjectOptions({ project }) {
         <div className={styles.columns}>
           {/* Left Column */}
           <div className={styles.column}>
-            <h1>Options de projet</h1>
+            <h1>{t("projects.project_options")}</h1>
             {/* Informations */}
             <div className={styles.wrapper}>
               {/* Wrapper header */}
               <div className={styles.header}>
-                <span className={styles.title}>Informations générales</span>
+                <span className={styles.title}>
+                  {t("projects.general_information")}
+                </span>
                 <div className={styles.infos}>
-                  <span>Créée le {createdAt}</span>
                   <span>
-                    Par {author?.user?.firstName + " " + author?.user?.lastName}
+                    {t("projects.created_on")} {createdAt}
+                  </span>
+                  <span>
+                    {t("projects.by")}{" "}
+                    {author?.user?.firstName + " " + author?.user?.lastName}
                   </span>
                 </div>
               </div>
@@ -188,7 +195,7 @@ export default function ProjectOptions({ project }) {
                 >
                   <Image
                     src={project?.logo || "/default-project-logo.webp"}
-                    alt="Logo du projet"
+                    alt={t("projects.project_logo_alt")}
                     width={100}
                     height={100}
                     quality={100}
@@ -229,14 +236,18 @@ export default function ProjectOptions({ project }) {
 
                 <div className={styles.footer}>
                   <div className={styles.counts}>
-                    <span>{project?.boardsCount} Tableaux</span>
-                    <span>{project?.tasksCount} tâches</span>
+                    <span>
+                      {project?.boardsCount} {t("projects.boards_count")}
+                    </span>
+                    <span>
+                      {project?.tasksCount} {t("projects.tasks_count")}
+                    </span>
                   </div>
                   {/* Project archive */}
                   <div className={styles.archive}>
                     <Archive size={16} />
                     <Link href={`/projects/${project?._id}/archive`}>
-                      Archive du projet
+                      {t("projects.project_archive")}
                     </Link>
                   </div>
                 </div>
@@ -245,7 +256,7 @@ export default function ProjectOptions({ project }) {
             {/*  Links  */}
             <div className={styles.wrapper}>
               <div className={styles.title}>
-                <span>Liens rapides</span>
+                <span>{t("projects.quick_links")}</span>
               </div>
               <div className={styles.content}>
                 {isNotEmpty(links) &&
@@ -278,7 +289,7 @@ export default function ProjectOptions({ project }) {
                           type="url"
                           id="url"
                           name="url"
-                          placeholder="https://www.exemple.com"
+                          placeholder={t("projects.url_placeholder")}
                           value={link?.url}
                           onChange={(e) => {
                             links[idx].url = e.target.value;
@@ -297,7 +308,7 @@ export default function ProjectOptions({ project }) {
                   })}
                 {links.length < 6 && (
                   <button onClick={addLink} className={styles.addLink}>
-                    Ajouter un lien
+                    {t("projects.add_link")}
                   </button>
                 )}
               </div>
@@ -310,7 +321,7 @@ export default function ProjectOptions({ project }) {
                 onClick={() => setIsOpen(true)}
                 className={`${styles.delete} ${bricolageGrostesque.className}`}
               >
-                Supprimer ce projet
+                {t("projects.delete_project")}
               </button>
               <button
                 type="submit"
@@ -318,7 +329,7 @@ export default function ProjectOptions({ project }) {
                 data-disabled={isDisabled}
                 disabled={isDisabled}
               >
-                Enregistrer les modifications
+                {t("projects.save_changes")}
               </button>
             </div>
           </div>
@@ -327,7 +338,7 @@ export default function ProjectOptions({ project }) {
           <div className={styles.column}>
             <div className={styles.wrapper}>
               <div className={styles.title}>
-                <span>Notes</span>
+                <span>{t("projects.notes")}</span>
               </div>
               <div className={styles.content}>
                 <textarea
@@ -336,7 +347,7 @@ export default function ProjectOptions({ project }) {
                   className={`${styles.note} ${bricolageGrostesque.className}`}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Ajouter une note..."
+                  placeholder={t("projects.add_note_placeholder")}
                 ></textarea>
               </div>
             </div>
@@ -352,7 +363,7 @@ export default function ProjectOptions({ project }) {
       )}
       {isOpen && (
         <ConfirmationDelete
-          title={`projet ${project?.name}`}
+          title={`${t("general.project_lowercase")} ${project?.name}`}
           onCancel={() => setIsOpen(false)}
           onConfirm={handleDeleteProject}
         />

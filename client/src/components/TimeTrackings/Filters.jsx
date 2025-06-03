@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Dropdown } from "./Dropdown";
 import { usePathname, useRouter } from "next/navigation";
 import moment from "moment/moment";
+import { useTranslation } from "react-i18next";
 
 export default function Filters({
   projects,
@@ -12,6 +13,7 @@ export default function Filters({
   hasSelectedProjects,
   projectsWithTrackers,
 }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const queries = new URLSearchParams(searchParams);
@@ -125,20 +127,20 @@ export default function Filters({
     <div className={styles.container}>
       {/* Filter by project */}
       <Dropdown
-        defaultValue={"Choisir un projet"}
+        defaultValue={t("projects.choose_project")}
         selected={selectedProjects}
         options={projectsOptions}
         query={"projects"}
       />
       {/* Filter by user */}
       <Dropdown
-        defaultValue={"Tous les membres"}
+        defaultValue={t("time_tracking.all_members")}
         selected={selectedUsers}
         options={usersOptions}
         query={"users"}
       />
       <div className={styles.date}>
-        <label>Date de début</label>
+        <label>{t("time_tracking.start_date")}</label>
         <input
           type="date"
           name="startingDate"
@@ -148,7 +150,7 @@ export default function Filters({
         />
       </div>
       <div className={styles.date}>
-        <label>Date de fin</label>
+        <label>{t("time_tracking.end_date")}</label>
         <input
           type="date"
           name="endingDate"

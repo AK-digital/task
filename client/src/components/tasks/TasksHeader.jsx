@@ -3,6 +3,7 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function TasksHeader({
   project,
@@ -11,6 +12,7 @@ export default function TasksHeader({
   setSortedTasks,
   displayedFilters,
 }) {
+  const { t } = useTranslation();
   const [projectSort, setProjectSort] = useState(null);
   const [boardSort, setBoardSort] = useState(null);
   const [statusSort, setStatusSort] = useState(null);
@@ -197,11 +199,11 @@ export default function TasksHeader({
         <div className={`${styles.drag} ${styles.row}`}></div>
       )}
       <div className={`${styles.text}`}>
-        <span>Tâche</span>
+        <span>{t("tasks.task")}</span>
       </div>
       {isProject && (
         <div className={`${styles.project} ${styles.row}`}>
-          <span>Projets</span>
+          <span>{t("tasks.projects")}</span>
           <div className={styles.sort}>
             <ChevronUp
               size={14}
@@ -218,7 +220,7 @@ export default function TasksHeader({
       )}
       {isBoard && (
         <div className={`${styles.board} ${styles.row}`}>
-          <span>Tableaux</span>
+          <span>{t("tasks.boards")}</span>
           <div className={styles.sort}>
             <ChevronUp
               size={14}
@@ -234,7 +236,7 @@ export default function TasksHeader({
         </div>
       )}
       <div className={`${styles.responsibles} ${styles.row}`}>
-        <span>Admin</span>
+        <span>{t("tasks.admin")}</span>
         {isAdminFilter && (
           <div>
             <ChevronUp size={14} />
@@ -244,7 +246,7 @@ export default function TasksHeader({
       </div>
       {isStatus && (
         <div className={`${styles.status} ${styles.row}`}>
-          <span>Statut</span>
+          <span>{t("tasks.status")}</span>
           <div className={styles.sort}>
             <ChevronUp
               size={14}
@@ -261,7 +263,7 @@ export default function TasksHeader({
       )}
       {isPriority && (
         <div className={`${styles.priority} ${styles.row}`}>
-          <span>Priorité</span>
+          <span>{t("tasks.priority")}</span>
           <div className={styles.sort}>
             <ChevronUp
               size={14}
@@ -278,7 +280,7 @@ export default function TasksHeader({
       )}
       {isDeadline && (
         <div className={`${styles.deadline} ${styles.row}`}>
-          <span>Échéance</span>
+          <span>{t("tasks.deadline")}</span>
           <div className={styles.sort}>
             <ChevronUp
               size={14}
@@ -295,7 +297,7 @@ export default function TasksHeader({
       )}
       {isEstimate && (
         <div className={`${styles.estimation} ${styles.row}`}>
-          <span>Estimation</span>
+          <span>{t("tasks.estimation")}</span>
           {/* <div className={styles.sort}>
             <ChevronUp
               size={14}
@@ -312,7 +314,7 @@ export default function TasksHeader({
       )}
       {isTimer && (
         <div className={`${styles.timer} ${styles.row}`}>
-          <span>Temps</span>
+          <span>{t("tasks.time")}</span>
           {/* <div>
             <ChevronUp size={14} />
             <ChevronDown size={14} />

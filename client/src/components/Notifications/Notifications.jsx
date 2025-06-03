@@ -7,7 +7,7 @@ import NoPicture from "../User/NoPicture";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { readNotification, readNotifications } from "@/api/notification";
-import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
 export default function Notifications({
@@ -19,6 +19,8 @@ export default function Notifications({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   // Read the notification on click and redirect the user to notification link
   const handleReadNotification = async (e, notification) => {
@@ -52,11 +54,14 @@ export default function Notifications({
     <>
       <div className={styles.container} id="popover">
         <div className={styles.header}>
-          <span>Notifications</span>
+          <span>{t("notifications.title")}</span>
           {unreadCount > 0 && (
             <div className={styles.headerActions}>
               <div className={styles.unreadCount}>
-                {unreadCount} non {unreadCount === 1 ? "lue" : "lues"}
+                {unreadCount}{" "}
+                {unreadCount === 1
+                  ? t("notifications.unread_singular")
+                  : t("notifications.unread_plural")}
               </div>
               <button
                 className={styles.readAllButton}
@@ -64,14 +69,14 @@ export default function Notifications({
                 data-disabled={isLoading}
                 disabled={isLoading}
               >
-                Tout marquer comme lu
+                {t("notifications.mark_all_read")}
               </button>
             </div>
           )}
         </div>
         {!isNotEmpty(notifications) ? (
           <div className={styles.empty}>
-            <span>Vous n'avez aucune notification pour le moment</span>
+            <span>{t("notifications.empty_message")}</span>
           </div>
         ) : (
           <ul className={styles.notifications}>
@@ -90,7 +95,9 @@ export default function Notifications({
                         src={notif?.senderId?.picture}
                         width={30}
                         height={30}
-                        alt={`Photo de profil de ${notif?.senderId?.firstName}`}
+                        alt={`${t("general.profile_picture_alt")} ${
+                          notif?.senderId?.firstName
+                        }`}
                         style={{ borderRadius: "50%" }}
                       />
                     ) : (

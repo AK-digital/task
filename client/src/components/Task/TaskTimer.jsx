@@ -17,8 +17,10 @@ moment.locale("fr");
 import Image from "next/image";
 import { useEffect, useState, useActionState, useContext, useRef } from "react";
 import { useStopwatch } from "react-timer-hook";
+import { useTranslation } from "react-i18next";
 
 export default function TaskTimer({ task }) {
+  const { t } = useTranslation();
   const [totalTaskDuration, setTotalTaskDuration] = useState(
     task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0
   );
@@ -185,13 +187,13 @@ export default function TaskTimer({ task }) {
             style={floatingStyles}
           >
             <div className={styles.title}>
-              <span>Gestion du temps</span>
+              <span>{t("tasks.time_management")}</span>
               {addingSession && (
                 <span
                   className={styles.back}
                   onClick={(e) => setAddingSession(false)}
                 >
-                  Retour
+                  {t("time_tracking.back")}
                 </span>
               )}
             </div>
@@ -206,7 +208,7 @@ export default function TaskTimer({ task }) {
                 {canAdd && (
                   <div className={styles.addTime}>
                     <button onClick={() => setAddingSession(true)}>
-                      Ajouter une session
+                      {t("time_tracking.add_session")}
                     </button>
                   </div>
                 )}
@@ -229,6 +231,7 @@ export default function TaskTimer({ task }) {
 }
 
 export function TimeTrackingForm({ task, formatTime, setSessions }) {
+  const { t } = useTranslation();
   const [startTime, setStartTime] = useState(moment().format("HH:mm"));
   const [endTime, setEndTime] = useState("");
   const [timeExpected, setTimeExpected] = useState("00:00:00");
@@ -300,7 +303,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
     <div className={styles.content}>
       <form action={formAction} className={styles.form}>
         <div className={styles.dateInput}>
-          <label>Date de début</label>
+          <label>{t("tasks.start_date")}</label>
           <input
             type="date"
             name="date"
@@ -310,7 +313,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
         </div>
         <div className={styles.timeInputs}>
           <div>
-            <label>Heure de début</label>
+            <label>{t("time_tracking.start_time")}</label>
             <input
               type="time"
               name="start-time"
@@ -320,7 +323,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
             />
           </div>
           <div>
-            <label>Heure de fin</label>
+            <label>{t("time_tracking.end_time")}</label>
             <input
               type="time"
               name="end-time"
@@ -332,7 +335,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
         <div className={styles.buttons}>
           <span>{timeExpected}</span>
           <button type="submit" disabled={pending} data-disabled={pending}>
-            Ajouter la session
+            {t("time_tracking.add_session")}
           </button>
         </div>
       </form>
@@ -382,12 +385,12 @@ export function TimeTrackingSessions({
                   width={25}
                   height={25}
                   style={{ borderRadius: "50%" }}
-                  alt={`Photo de profil de ${user?.firstName}`}
+                  alt={`${t("tasks.profile_picture_alt")} ${user?.firstName}`}
                 />
                 <span>{endDate}</span>
               </div>
               <span className={styles.hours}>
-                {hoursStart} à {hoursEnd}
+                {hoursStart} {t("tasks.time_separator")} {hoursEnd}
               </span>
               <span className={styles.time}>
                 {formatTime(Math.floor(session?.duration / 1000))}

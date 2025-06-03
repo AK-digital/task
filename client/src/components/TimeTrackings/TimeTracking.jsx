@@ -17,12 +17,14 @@ import {
 } from "@/api/timeTracking";
 import NoPicture from "../User/NoPicture";
 import { extractId } from "@/utils/extractId";
+import { useTranslation } from "react-i18next";
 
 export default function TimeTracking({
   tracker,
   setSelectedTrackers,
   mutateTimeTrackings,
 }) {
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState(
     tracker?.task?.[0]?.text || tracker?.taskText || ""
   );
@@ -121,10 +123,9 @@ export default function TimeTracking({
       }
 
       if (!response?.success) {
-        throw new Error(response?.message || "Échec de la mise à jour");
+        throw new Error(response?.message || t("time_tracking.update_failed"));
       }
     } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error);
       setInputValue(tracker?.task?.[0]?.text || tracker?.taskText || "");
       mutateTimeTrackings(undefined, {
         revalidate: true,
@@ -190,13 +191,9 @@ export default function TimeTracking({
           });
         }, 300);
       } else {
-        throw new Error(response?.message || "Échec de la mise à jour");
+        throw new Error(response?.message || t("time_tracking.update_failed"));
       }
     } catch (error) {
-      console.error(
-        "Erreur lors de la mise à jour du statut facturable:",
-        error
-      );
       setIsBillable(!newBillableState);
       mutateTimeTrackings(undefined, {
         revalidate: true,

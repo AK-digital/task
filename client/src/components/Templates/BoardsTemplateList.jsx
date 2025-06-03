@@ -7,8 +7,10 @@ import {
 } from "@/api/boardTemplate";
 import { isNotEmpty } from "@/utils/utils";
 import useSWR, { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
+  const { t } = useTranslation();
   const { data: boardsTemplates } = useSWR(
     `/board-template`,
     getBoardsTemplates
@@ -38,7 +40,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <span>Liste de modèle des tableaux</span>
+          <span>{t("templates.boards_list_title")}</span>
         </div>
         {/* Boards templates */}
         <div className={styles.content}>
@@ -54,7 +56,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                       type="button"
                       onClick={(e) => handleUseBoardTemplate(e, template?._id)}
                     >
-                      Utiliser
+                      {t("templates.use")}
                     </button>
                     <button
                       type="button"
@@ -62,7 +64,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                         handleDeleteBoardTemplate(e, template?._id)
                       }
                     >
-                      Supprimer
+                      {t("templates.delete")}
                     </button>
                   </div>
                 </li>
@@ -70,7 +72,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
             </ul>
           ) : (
             <div>
-              <span>Aucun modèle de tableau n'a été trouvé</span>
+              <span>{t("templates.no_board_templates")}</span>
             </div>
           )}
         </div>

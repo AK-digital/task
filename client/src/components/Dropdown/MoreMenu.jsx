@@ -5,8 +5,10 @@ import React from "react";
 import { useState } from "react";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
 import Portal from "../Portal/Portal";
+import { useTranslation } from "react-i18next";
 
 export function MoreMenu({ isOpen, setIsOpen, options }) {
+  const { t } = useTranslation();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
   const [deleteOption, setDeleteOption] = useState(null);
@@ -81,9 +83,11 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
       {confirmOpen && (
         <Portal>
           <ConfirmationDelete
-            title={`${isProject ? "projet " : "tableau "} ${
-              deleteOption?.deletionName
-            }`}
+            title={`${
+              isProject
+                ? t("general.project_lowercase")
+                : t("general.board_lowercase")
+            } ${deleteOption?.deletionName}`}
             onCancel={() => setConfirmOpen(false)}
             onConfirm={handleConfirm}
           />

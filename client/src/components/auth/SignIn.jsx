@@ -7,6 +7,7 @@ import { bricolageGrostesque } from "@/utils/font";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -17,6 +18,7 @@ const initialState = {
 };
 
 export default function SignIn() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,10 +48,7 @@ export default function SignIn() {
       setStatus("success");
     }
     if (state?.status === "failure" && state?.errors === null) {
-      setMessage(
-        state?.message ||
-          "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
-      );
+      setMessage(state?.message || t("auth.signin.connection_error"));
       setStatus("failure");
     }
     if (state?.message.includes("vérifié")) {
@@ -62,26 +61,26 @@ export default function SignIn() {
 
     if (res?.success) {
       setStatus("success");
-      setMessage("Email de vérification renvoyé avec succès.");
+      setMessage(t("auth.signin.verification_success"));
     }
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        <span>Connexion</span>
+        <span>{t("auth.signin.title")}</span>
       </div>
       {message && (
         <div className={styles.messageStatus}>
           <span data-status={status}>{message}</span>
           <button className={styles.resend} onClick={handleResendEmail}>
-            Renvoyer un email de vérification
+            {t("auth.signin.resend_email")}
           </button>
         </div>
       )}
       {(state?.errors?.password || state?.errors?.email) && (
         <div>
-          <i data-error={true}>Identifiants incorrects, veuillez réessayer.</i>
+          <i data-error={true}>{t("auth.signin.incorrect_credentials")}</i>
         </div>
       )}
       <form className={styles.form} action={formAction}>
@@ -91,7 +90,7 @@ export default function SignIn() {
             className={styles.emailLabel}
             data-active={email ? true : false}
           >
-            Adresse e-mail
+            {t("auth.signin.email_label")}
           </label>
           <input
             type="email"
@@ -110,7 +109,7 @@ export default function SignIn() {
             className={styles.passwordLabel}
             data-active={password ? true : false}
           >
-            Mot de passe
+            {t("auth.signin.password_label")}
           </label>
           <input
             type={hiddenPassword ? "password" : "text"}
@@ -134,7 +133,7 @@ export default function SignIn() {
             />
           )}
           <a className={styles.forgotPassword} onClick={handleForgotPassword}>
-            Mot de passe oublié ?
+            {t("auth.signin.forgot_password")}
           </a>
         </div>
 
@@ -145,7 +144,9 @@ export default function SignIn() {
             className={bricolageGrostesque.className}
             disabled={pending}
           >
-            {pending ? "Connexion en cours..." : "Se connecter"}
+            {pending
+              ? t("auth.signin.submit_button_loading")
+              : t("auth.signin.submit_button")}
           </button>
           {/* <button
             className={`${instrumentSans.className} ${styles.google}`}
@@ -162,8 +163,8 @@ export default function SignIn() {
 
       <div className={styles.text}>
         <p>
-          Vous n'avez pas encore de compte ?{" "}
-          <span onClick={handleSignUp}>S'inscrire</span>
+          {t("auth.signin.no_account")}{" "}
+          <span onClick={handleSignUp}>{t("auth.signin.signup_link")}</span>
         </p>
       </div>
     </div>

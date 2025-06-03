@@ -9,6 +9,7 @@ import { updateReactions } from "@/api/message";
 import UsersInfo from "../Popups/UsersInfo";
 import { mutate } from "swr";
 import { updateTaskDescriptionReactions } from "@/api/task";
+import { useTranslation } from "react-i18next";
 
 export default function Reactions({
   element,
@@ -18,6 +19,7 @@ export default function Reactions({
   type,
   editor,
 }) {
+  const { t } = useTranslation();
   const { uid, user } = useContext(AuthContext);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [hoveredEmoji, setHoveredEmoji] = useState(null);
@@ -57,8 +59,10 @@ export default function Reactions({
 
     if (response?.message?.includes("ajoutée")) {
       const messageBody = {
-        title: `${user?.firstName} a réagi à votre ${type}`,
-        content: `${user?.firstName} a réagi à votre ${type} avec ${emoji}`,
+        title: `${user?.firstName} ${t("tasks.reacted_to_your")} ${type}`,
+        content: `${user?.firstName} ${t("tasks.reacted_with")} ${type} ${t(
+          "tasks.with_emoji"
+        )} ${emoji}`,
       };
 
       const link = "/projects/" + project?._id + "/task/" + task?._id;
@@ -88,7 +92,7 @@ export default function Reactions({
               onClick={() => handleReactionClick(emoji)}
               onMouseEnter={() => setHoveredEmoji(emoji)}
               onMouseLeave={() => setHoveredEmoji(null)}
-              title={hasUserReacted ? "Retirer votre réaction" : ""}
+              title={hasUserReacted ? t("tasks.remove_reaction") : ""}
             >
               <span className={styles.emojiIcon}>{emoji}</span>
               <span className={styles.emojiCount}>{total}</span>

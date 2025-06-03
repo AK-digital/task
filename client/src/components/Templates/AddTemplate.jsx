@@ -3,6 +3,7 @@ import PopupMessage from "@/layouts/PopupMessage";
 import styles from "@/styles/components/templates/add-template.module.css";
 import { bricolageGrostesque } from "@/utils/font";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   success: null,
@@ -12,6 +13,7 @@ const initialState = {
 };
 
 export default function AddTemplate({ project, setAddTemplate }) {
+  const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
   const [state, formAction, pending] = useActionState(
     saveTemplate,
@@ -26,10 +28,8 @@ export default function AddTemplate({ project, setAddTemplate }) {
     if (state?.success === false) {
       setPopup({
         status: "failure",
-        title: "Une erreur s'est produite",
-        message:
-          state?.message ||
-          "Une erreur s'est produite lors de l'enregistrement du template",
+        title: t("general.error_occurred"),
+        message: state?.message || t("templates.template_save_error"),
       });
     }
 
@@ -43,7 +43,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <span>Enregistrer ce projet comme modèle</span>
+          <span>{t("templates.save_project_as_template")}</span>
         </div>
         <form action={formAction} className={styles.form}>
           <input
@@ -57,7 +57,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
             type="text"
             id="template-name"
             name="template-name"
-            placeholder="Nom du modèle"
+            placeholder={t("templates.template_name")}
             autoFocus
           />
 
@@ -66,7 +66,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
             disabled={pending}
             data-disabled={pending}
           >
-            Sauvegarder
+            {t("templates.save_button")}
           </button>
         </form>
       </div>

@@ -16,8 +16,10 @@ import moment from "moment";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
+import { useTranslation } from "react-i18next";
 
 export default function SideNav() {
+  const { t } = useTranslation();
   const params = useParams();
   const { slug } = params;
   const id = slug ? slug[0] : null;
@@ -37,7 +39,7 @@ export default function SideNav() {
             src={"/clynt-logo-dark.svg"}
             width={32}
             height={32}
-            alt="Logo de Clynt"
+            alt={t("navigation.logo_alt")}
             className={styles.logo}
           />
           <div
@@ -48,11 +50,11 @@ export default function SideNav() {
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
           </div>
           <div className={styles.myTasks}>
-            <Link href={"/tasks"} title="Mes tâches">
+            <Link href={"/tasks"} title={t("navigation.my_tasks")}>
               <div>
                 <ClipboardList size={24} />
               </div>
-              <span>Mes tâches</span>
+              <span>{t("navigation.my_tasks")}</span>
             </Link>
           </div>
           <nav className={styles.nav}>
@@ -75,7 +77,7 @@ export default function SideNav() {
             <div>
               <LayoutGrid size={24} />
             </div>
-            <span>Mes projets</span>
+            <span>{t("navigation.my_projects")}</span>
           </Link>
           <Link
             href={
@@ -88,13 +90,13 @@ export default function SideNav() {
             <div>
               <Clock3 size={24} />
             </div>
-            <span>Suivi du temps</span>
+            <span>{t("navigation.time_tracking")}</span>
           </Link>
           <Link href={"/new-project"}>
             <div>
               <Plus size={24} />
             </div>
-            <span>Ajouter un projet</span>
+            <span>{t("navigation.add_project")}</span>
           </Link>
         </div>
       </div>

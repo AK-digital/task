@@ -6,7 +6,7 @@ import styles from "@/styles/components/header/language-switcher.module.css";
 const SUPPORTED_LANGUAGES = ["fr", "en"];
 
 export default function LanguageSwitcher() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -24,7 +24,9 @@ export default function LanguageSwitcher() {
             className={`${styles.langButton} ${
               currentLanguage === lang ? styles.active : ""
             }`}
-            aria-label={`Changer la langue vers ${lang.toUpperCase()}`}
+            aria-label={`${t(
+              "general.change_language_to"
+            )} ${lang.toUpperCase()}`}
           >
             {lang.toUpperCase()}
           </button>

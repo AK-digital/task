@@ -3,6 +3,7 @@ import styles from "@/styles/components/timeTrackings/time-tracking-more.module.
 import { PenBox, Trash } from "lucide-react";
 import socket from "@/utils/socket";
 import { extractId } from "@/utils/extractId";
+import { useTranslation } from "react-i18next";
 
 export default function TimeTrackingMore({
   tracker,
@@ -11,6 +12,8 @@ export default function TimeTrackingMore({
   setIsHover,
   mutateTimeTrackings,
 }) {
+  const { t } = useTranslation();
+
   const handleDeleteTracker = async () => {
     const projectId = extractId(tracker?.projectId);
 
@@ -62,11 +65,11 @@ export default function TimeTrackingMore({
       <div id="more" className={styles.container}>
         <ul>
           <li className={styles.item} onClick={handleEditDescription}>
-            <PenBox size={14} /> Modifier la description
+            <PenBox size={14} /> {t("time_tracking.edit_description")}
           </li>
           <li className={styles.item} onClick={handleDeleteTracker}>
             <Trash size={14} />
-            Supprimer ce suivi
+            {t("time_tracking.delete_tracking")}
           </li>
         </ul>
       </div>

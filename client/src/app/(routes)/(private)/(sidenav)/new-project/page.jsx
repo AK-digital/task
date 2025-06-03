@@ -5,6 +5,7 @@ import { instrumentSans } from "@/utils/font";
 import { FolderPlus, Layout, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -15,6 +16,7 @@ const initialState = {
 };
 
 export default function NewProject() {
+  const { t } = useTranslation();
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [state, formAction, pending] = useActionState(
     saveProject,
@@ -36,12 +38,8 @@ export default function NewProject() {
         <div className={styles.wrapper}>
           <div className={styles.header}>
             <FolderPlus size="144" />
-            <h1>Créer un projet</h1>
-            <p>
-              Créer un nouveau projet n'a jamais été aussi simple. Donnez un nom
-              à votre projet pour démarrer un nouveau projet ou profitez de nos
-              templates prédéfinies pour gagner du temps.
-            </p>
+            <h1>{t("projects.new_project")}</h1>
+            <p>{t("projects.new_project_description")}</p>
           </div>
           <div className={styles.content}>
             <form action={formAction} className={styles.form}>
@@ -51,7 +49,7 @@ export default function NewProject() {
                   type="text"
                   id="project-name"
                   name="project-name"
-                  placeholder="Nom du projet"
+                  placeholder={t("projects.project_name")}
                   onChange={(e) => {
                     if (e.target.value.length > 0) {
                       setIsSubmitDisabled(false);
@@ -72,7 +70,7 @@ export default function NewProject() {
                     type="submit"
                     disabled={pending || isSubmitDisabled}
                   >
-                    <PlusCircle size={18} /> Créer un nouveau projet
+                    <PlusCircle size={18} /> {t("projects.create_new_project")}
                   </button>
                   <button
                     type="button"
@@ -84,7 +82,7 @@ export default function NewProject() {
                     }}
                   >
                     <Layout size={18} />
-                    Choisir un template
+                    {t("projects.choose_template")}
                   </button>
                 </div>
                 <button
@@ -95,7 +93,7 @@ export default function NewProject() {
                     router.back();
                   }}
                 >
-                  Retour
+                  {t("projects.back")}
                 </button>
               </div>
             </form>

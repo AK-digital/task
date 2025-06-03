@@ -11,12 +11,13 @@ import { getDrafts } from "@/api/draft";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import NoPicture from "../User/NoPicture";
-
 import Reactions from "../Reactions/Reactions";
 import { isNotEmpty } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
+import { useTranslation } from "react-i18next";
 
 export default function TaskDescription({ project, task, uid }) {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
   const { data: draft, mutate: mutateDraft } = useSWR(
@@ -96,7 +97,7 @@ export default function TaskDescription({ project, task, uid }) {
   return (
     <div className={styles.container}>
       <span className={styles.title}>
-        <PanelTop size={16} /> Description
+        <PanelTop size={16} /> {t("tasks.description")}
       </span>
       {/* If is editing */}
       {isEditing && (
@@ -122,7 +123,9 @@ export default function TaskDescription({ project, task, uid }) {
                   src={descriptionAuthor?.picture || "/default-pfp.webp"}
                   width={24}
                   height={24}
-                  alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
+                  alt={`${t("general.profile_picture_alt")} ${
+                    descriptionAuthor?.firstName
+                  }`}
                   style={{ borderRadius: "50%" }}
                 />
               ) : (
@@ -168,7 +171,7 @@ export default function TaskDescription({ project, task, uid }) {
                   disabled={pending}
                   onClick={handleRemoveDescription}
                 >
-                  Effacer la description
+                  {t("tasks.clear_description")}
                 </button>
               </div>
             )}
@@ -183,9 +186,9 @@ export default function TaskDescription({ project, task, uid }) {
           data-role={isAuthorized}
         >
           {isAuthorized ? (
-            <p>Ajouter une description</p>
+            <p>{t("tasks.add_description")}</p>
           ) : (
-            <p>L'ajout de description est désactivé en tant qu'invité</p>
+            <p>{t("tasks.description_disabled_guest")}</p>
           )}
         </div>
       )}

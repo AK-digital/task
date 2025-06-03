@@ -1,9 +1,11 @@
 "use client";
 import { resetForgotPassword } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
+import { translateValidationErrors } from "@/utils/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -13,6 +15,7 @@ const initialState = {
 };
 
 export default function ResetForgotPasswordForm({ resetCode }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,21 +29,21 @@ export default function ResetForgotPasswordForm({ resetCode }) {
   useEffect(() => {
     setStatusMessage("");
     if (state?.status === "success") {
-      setStatusMessage("Mot de passe réinitialisé avec succès");
+      setStatusMessage(t("auth.forgot_password.password_reset_success"));
     }
     if (
       state?.status === "failure" &&
       !state?.errors?.newPassword &&
       !state?.errors?.confirmPassword
     ) {
-      setStatusMessage("Une erreur inattendue s'est produite");
+      setStatusMessage(t("auth.forgot_password.unexpected_error"));
     }
-  }, [state]);
+  }, [state, t]);
 
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        Réinitialisation de votre mot de passe ?
+        {t("auth.forgot_password.reset_title")}
       </div>
       {statusMessage && (
         <div className={styles.messageStatus}>
@@ -55,7 +58,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               className={styles.passwordLabel}
               data-active={password.length > 0}
             >
-              Nouveau mot de passe
+              {t("auth.forgot_password.new_password")}
             </label>
             <input
               type={hiddenPassword ? "password" : "text"}
@@ -77,7 +80,9 @@ export default function ResetForgotPasswordForm({ resetCode }) {
                 onClick={(e) => setHiddenPassword(true)}
               />
             )}
-            {state?.errors?.newPassword && <i>{state?.errors?.newPassword}</i>}
+            {state?.errors?.newPassword && (
+              <i>{translateValidationErrors(state.errors.newPassword, t)}</i>
+            )}
           </div>
           <div className="form-group">
             <label
@@ -85,7 +90,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               className={styles.confirmPasswordLabel}
               data-active={confirmPassword.length > 0}
             >
-              Confirmez le mot de passe
+              {t("auth.forgot_password.confirm_password")}
             </label>
             <input
               type={hiddenPassword ? "password" : "text"}
@@ -108,7 +113,9 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               />
             )}
             {state?.errors?.confirmPassword && (
-              <i>{state?.errors?.confirmPassword}</i>
+              <i>
+                {translateValidationErrors(state.errors.confirmPassword, t)}
+              </i>
             )}
           </div>
           <input
@@ -119,7 +126,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             hidden
           />
           <button type="submit" disabled={pending} data-disabled={pending}>
-            Réinitialiser le mot de passe
+            {t("auth.forgot_password.reset_password_button")}
           </button>
         </form>
       )}
@@ -130,7 +137,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             router.push("/");
           }}
         >
-          Se connecter
+          {t("auth.forgot_password.login_button")}
         </button>
       )}
     </div>

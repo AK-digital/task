@@ -6,9 +6,11 @@ import Image from "next/image";
 import moment from "moment";
 import TaskDescription from "./TaskDescription";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 moment.locale("fr");
 
 export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
   const resizerRef = useRef(null);
@@ -54,18 +56,18 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   }, [isResizing, resize, stopResizing]);
 
   useEffect(() => {
-  const updateResizerPosition = () => {
-    if (containerRef.current && resizerRef.current) {
-      const containerRect = containerRef.current.getBoundingClientRect();
-      resizerRef.current.style.left = `${containerRect.left}px`;
-    }
-    requestAnimationFrame(updateResizerPosition); // loop
-  };
+    const updateResizerPosition = () => {
+      if (containerRef.current && resizerRef.current) {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        resizerRef.current.style.left = `${containerRect.left}px`;
+      }
+      requestAnimationFrame(updateResizerPosition); // loop
+    };
 
-  updateResizerPosition();
+    updateResizerPosition();
 
-  return () => cancelAnimationFrame(updateResizerPosition);
-}, []);
+    return () => cancelAnimationFrame(updateResizerPosition);
+  }, []);
 
   const handleClose = () => {
     const container = containerRef.current;
@@ -107,20 +109,22 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
         <div className={styles.header}>
           <p className={styles.task}>{task?.text}</p>
           <span className={styles.author}>
-            Par{" "}
+            {t("tasks.by")}{" "}
             <Image
               src={task?.author?.picture || "/default-pfp.webp"}
               width={20}
               height={20}
-              alt={`Photo de profil de ${task?.author?.firstName}`}
+              alt={`${t("general.profile_picture_alt")} ${
+                task?.author?.firstName
+              }`}
               style={{
                 borderRadius: "50%",
               }}
             />{" "}
             {task?.author
               ? task?.author?.firstName + " " + task?.author?.lastName
-              : "Ancien utilisateur"}{" "}
-            le {moment(task?.createdAt).format("DD/MM/YYYY")}
+              : t("tasks.former_user")}{" "}
+            {t("tasks.on")} {moment(task?.createdAt).format("DD/MM/YYYY")}
           </span>
         </div>
         <div className={styles.wrapper}>

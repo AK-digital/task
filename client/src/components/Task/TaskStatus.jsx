@@ -10,8 +10,10 @@ import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditStatus from "./TaskEditStatus";
 import { saveStatus } from "@/api/status";
 import { colors } from "@/utils/utils";
+import { useTranslation } from "react-i18next";
 
 export default function TaskStatus({ task, uid }) {
+  const { t } = useTranslation();
   const { project, mutateTasks, statuses, mutateStatuses } =
     useProjectContext();
   const [currentStatus, setCurrentStatus] = useState(task?.status);
@@ -64,7 +66,7 @@ export default function TaskStatus({ task, uid }) {
       availableColors[Math.floor(Math.random() * availableColors?.length)];
 
     const response = await saveStatus(project?._id, {
-      name: "Nouveau statut",
+      name: t("tasks.new_status"),
       color: randomColor,
     });
 
@@ -114,12 +116,16 @@ export default function TaskStatus({ task, uid }) {
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
-        <span>{currentStatus?.name || "En attente"}</span>
+        <span>{currentStatus?.name || t("tasks.waiting_status")}</span>
       </div>
       {isOpen && (
         <>
-          <div className={styles.list} data-big={listWidth()} ref={refs.setFloating}
-            style={floatingStyles}>
+          <div
+            className={styles.list}
+            data-big={listWidth()}
+            ref={refs.setFloating}
+            style={floatingStyles}
+          >
             <ul className={styles.items}>
               {statuses?.map((status) => {
                 if (!isEdit) {
@@ -150,18 +156,18 @@ export default function TaskStatus({ task, uid }) {
                   onClick={handleAddStatus}
                 >
                   <Plus size={16} />
-                  Ajouter
+                  {t("tasks.add")}
                 </li>
               )}
             </ul>
             {isEdit ? (
               <button className={styles.edit} onClick={handleEditStatus}>
                 <Save size={16} />
-                Appliquer
+                {t("tasks.apply")}
               </button>
             ) : (
               <button className={styles.edit} onClick={handleEditStatus}>
-                <Pen size={16} /> Modifier les statuts
+                <Pen size={16} /> {t("tasks.edit_statuses")}
               </button>
             )}
           </div>

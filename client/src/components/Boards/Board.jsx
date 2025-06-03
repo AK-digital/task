@@ -11,6 +11,7 @@ import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";
 import { bricolageGrostesque } from "@/utils/font";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   success: null,
@@ -28,6 +29,7 @@ export default function Board({
   setSelectedTasks,
   isOverlay = false, // Nouvelle prop pour indiquer si le board est dans un DragOverlay
 }) {
+  const { t } = useTranslation();
   const { project, mutateTasks, archive } = useProjectContext();
 
   const { setNodeRef } = useDroppable({
@@ -147,7 +149,7 @@ export default function Board({
                 type="text"
                 name="new-task"
                 id="new-task"
-                placeholder=" Ajouter une tâche"
+                placeholder={t("boards.add_task_placeholder")}
                 autoComplete="off"
                 minLength={2}
                 maxLength={255}
@@ -167,15 +169,13 @@ export default function Board({
                 hidden
                 className={bricolageGrostesque.className}
               >
-                Ajouter une tâche
+                {t("boards.add_task_button")}
               </button>
             </form>
           </div>
           {isWritting && (
             <div className={styles.info}>
-              <p>
-                Appuyer sur <span>entrée</span> pour ajouter une tâche
-              </p>
+              <p>{t("boards.press_enter_info")}</p>
             </div>
           )}
         </div>

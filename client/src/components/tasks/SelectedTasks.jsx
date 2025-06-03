@@ -11,6 +11,7 @@ import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { Archive, ArchiveRestore, Trash, X } from "lucide-react";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function SelectedTasks({
   project,
@@ -19,6 +20,7 @@ export default function SelectedTasks({
   archive,
   mutate,
 }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
 
   function handleClose(e) {
@@ -37,9 +39,7 @@ export default function SelectedTasks({
   const handleAddToArchive = async (e) => {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir archiver cette tâche ?"
-    );
+    const confirmed = confirm(t("tasks.archive_confirm"));
 
     if (!confirmed) return;
 
@@ -56,9 +56,7 @@ export default function SelectedTasks({
   const handleRemoveFromArchive = async (e) => {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir restaurer cette tâche ?"
-    );
+    const confirmed = confirm(t("tasks.restore_confirm"));
 
     if (!confirmed) return;
 
@@ -75,9 +73,7 @@ export default function SelectedTasks({
   async function handleDelete(e) {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir supprimer cette tâche ?"
-    );
+    const confirmed = confirm(t("tasks.delete_confirm"));
 
     if (!confirmed) return;
 
@@ -103,8 +99,8 @@ export default function SelectedTasks({
         <div className={styles.header}>
           <span>
             {selectedTasks?.length > 1
-              ? "Tâches séléctionnées"
-              : "Tâche séléctionnée"}
+              ? t("tasks.selected_plural")
+              : t("tasks.selected_singular")}
           </span>
         </div>
         {/* actions */}
@@ -114,13 +110,13 @@ export default function SelectedTasks({
             checkRole(project, ["owner", "manager", "team"], uid) && (
               <div className={styles.action} onClick={handleAddToArchive}>
                 <Archive size={20} />
-                <span>Archiver</span>
+                <span>{t("tasks.archive")}</span>
               </div>
             )}
           {archive && checkRole(project, ["owner", "manager", "team"], uid) && (
             <div className={styles.action} onClick={handleRemoveFromArchive}>
               <ArchiveRestore size={20} />
-              <span>Restaurer</span>
+              <span>{t("tasks.restore")}</span>
             </div>
           )}
           {checkRole(
@@ -130,7 +126,7 @@ export default function SelectedTasks({
           ) && (
             <div className={styles.action} onClick={handleDelete}>
               <Trash size={20} />
-              <span>Supprimer</span>
+              <span>{t("general.delete")}</span>
             </div>
           )}
           <div className={styles.action} onClick={handleClose}>

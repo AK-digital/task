@@ -1,12 +1,14 @@
 import styles from "@/styles/components/timeTrackings/time-tracking-header.module.css";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TimeTrackingHeader({
   trackers,
   setFilteredTrackers,
   setSelectedTrackers,
 }) {
+  const { t } = useTranslation();
   const [projectSort, setProjectSort] = useState("");
   const [userSort, setUserSort] = useState("");
   const [dateSort, setDateSort] = useState("");
@@ -154,10 +156,10 @@ export default function TimeTrackingHeader({
         />
       </div>
       <div className={styles.text}>
-        <span>Description</span>
+        <span>{t("tasks.description")}</span>
       </div>
       <div className={`${styles.project} ${styles.row}`}>
-        <span>Projet</span>
+        <span>{t("tasks.project")}</span>
         <div className={styles.sort}>
           <ChevronUp
             size={15}
@@ -174,7 +176,7 @@ export default function TimeTrackingHeader({
         </div>
       </div>
       <div className={`${styles.user} ${styles.row}`}>
-        <span>Utilisateur</span>
+        <span>{t("tasks.user")}</span>
         <div className={styles.sort}>
           <ChevronUp
             size={15}
@@ -191,7 +193,7 @@ export default function TimeTrackingHeader({
         </div>
       </div>
       <div className={`${styles.date} ${styles.row}`}>
-        <span>Date</span>
+        <span>{t("tasks.date")}</span>
         <div className={styles.sort}>
           <ChevronUp
             size={15}
@@ -209,7 +211,7 @@ export default function TimeTrackingHeader({
       </div>
 
       <div className={`${styles.duration} ${styles.row}`}>
-        <span>Temps</span>
+        <span>{t("tasks.time")}</span>
         <div className={styles.sort}>
           <ChevronUp
             size={15}
@@ -226,7 +228,7 @@ export default function TimeTrackingHeader({
         </div>
       </div>
       <div className={`${styles.billable} ${styles.row}`}>
-        <span>Facturable</span>
+        <span>{t("tasks.billable")}</span>
         <div className={styles.sort}>
           <ChevronUp
             size={15}

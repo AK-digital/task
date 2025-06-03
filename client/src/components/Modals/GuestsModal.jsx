@@ -12,8 +12,10 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
 import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
 import DisplayPicture from "../User/DisplayPicture";
+import { useTranslation } from "react-i18next";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
+  const { t } = useTranslation();
   const initialState = {
     status: "pending",
     message: "",
@@ -52,7 +54,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
       mutateProject();
       setIsPopup({
         status: state?.status,
-        title: "Utilisateur révoqué avec succès",
+        title: t("guests.user_revoked_success"),
         message: state?.message,
       });
     }
@@ -60,18 +62,18 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
     if (state?.status === "failure" && state?.errors === null) {
       setIsPopup({
         status: state?.status,
-        title: "Une erreur s'est produite",
+        title: t("general.error_occurred"),
         message: state?.message,
       });
     }
-  }, [state]);
+  }, [state, t]);
   const options = ["owner", "manager", "team", "customer", "guest"];
 
   return (
     <>
       <div className={styles.container} id="modal">
         <div className={styles.heading}>
-          <span>Inviter d'autres utilisateurs</span>
+          <span>{t("guests.invite_users")}</span>
         </div>
         {canInvite && (
           <GuestFormInvitation
@@ -131,7 +133,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           data-disabled={pending}
                           disabled={pending}
                         >
-                          Révoquer
+                          {t("guests.revoke")}
                         </button>
                       </form>
                     )}
@@ -172,6 +174,7 @@ export function ProjectInvitationsList({
   project,
   mutateProjectInvitation,
 }) {
+  const { t } = useTranslation();
   const initialState = {
     status: "pending",
     message: "",
@@ -190,20 +193,18 @@ export function ProjectInvitationsList({
       mutateProjectInvitation();
       setIsPopup({
         status: state?.status,
-        title: "Invitation annulée avec succès",
-        message: state?.message || "L'invitation a été annulée avec succès",
+        title: t("guests.invitation_cancelled_success"),
+        message: state?.message || t("guests.invitation_cancelled_message"),
       });
     }
     if (state?.status === "failure") {
       setIsPopup({
         status: state?.status,
-        title: "Une erreur s'est produite",
-        message:
-          state?.message ||
-          "Une erreur s'est produite lors de l'annulation de l'invitation",
+        title: t("general.error_occurred"),
+        message: state?.message || t("guests.invitation_cancel_error"),
       });
     }
-  }, [state]);
+  }, [state, t]);
 
   return (
     <>
@@ -214,7 +215,7 @@ export function ProjectInvitationsList({
               src={"/default-pfp.webp"}
               width={32}
               height={32}
-              alt={`Photo de profil de ${inv?.guestEmail}`}
+              alt={`${t("general.profile_picture_alt")} ${inv?.guestEmail}`}
               style={{ borderRadius: "50%" }}
             />
             <span>{inv?.guestEmail}</span>
@@ -244,7 +245,7 @@ export function ProjectInvitationsList({
                 hidden
               />
               <button type="submit" data-disabled={pending} disabled={pending}>
-                Annuler
+                {t("guests.cancel_invitation")}
               </button>
             </form>
           )}

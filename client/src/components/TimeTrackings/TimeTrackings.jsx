@@ -9,12 +9,14 @@ import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import ExportPdfBtn from "./ExportPdfBtn";
 import { useTimeTrackings } from "@/app/hooks/useTimeTrackings";
 import socket from "@/utils/socket";
+import { useTranslation } from "react-i18next";
 
 export default function TimeTrackings({
   trackers: initialTrackers,
   projects,
   searchParams,
 }) {
+  const { t } = useTranslation();
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [filteredTrackers, setFilteredTrackers] = useState(
     initialTrackers || []
@@ -116,7 +118,7 @@ export default function TimeTrackings({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>Suivi du temps</h1>
+        <h1>{t("navigation.time_tracking")}</h1>
         {/* Filters */}
         <Filters
           projects={projects}
@@ -128,7 +130,8 @@ export default function TimeTrackings({
         {/* Total duration */}
         {totalDuration && (
           <span className={styles.total}>
-            Temps total : {formatTime(Math.floor(totalDuration / 1000))}
+            {t("time_tracking.total_time")}{" "}
+            {formatTime(Math.floor(totalDuration / 1000))}
           </span>
         )}
         {/* Export PDF Button */}
@@ -164,7 +167,7 @@ export default function TimeTrackings({
         </div>
       ) : (
         <div className={styles.empty}>
-          <h2>Aucun de vos projets ne contient un suivi de temps</h2>
+          <h2>{t("time_tracking.no_tracking_message")}</h2>
         </div>
       )}
     </div>

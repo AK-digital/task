@@ -7,8 +7,10 @@ import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
 import { useProjects } from "@/app/hooks/useProjects";
 import { AuthContext } from "@/context/auth";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Projects() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { uid } = useContext(AuthContext);
   const { projects, projectsLoading, mutateProjects } = useProjects();
@@ -28,10 +30,12 @@ export default function Projects() {
           <div className={styles.back} onClick={() => router.back()}>
             <ArrowLeftCircle size={32} />
           </div>
-          <h1 className={styles.headerH1}>Vos projets</h1>
+          <h1 className={styles.headerH1}>{t("projects.your_projects")}</h1>
           <div className={styles.projectCount}>
             <span>
-              {projectsLoading ? "..." : `${projects?.length} projets`}
+              {projectsLoading
+                ? "..."
+                : `${projects?.length} ${t("projects.projects_count")}`}
             </span>
           </div>
         </div>

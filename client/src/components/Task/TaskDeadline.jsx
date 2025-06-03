@@ -7,8 +7,10 @@ import socket from "@/utils/socket";
 import { updateTaskDeadline } from "@/api/task";
 import { CircleX } from "lucide-react";
 import { checkRole } from "@/utils/utils";
+import { useTranslation } from "react-i18next";
 
 export default function TaskDeadline({ task, uid }) {
+  const { t } = useTranslation();
   const inputRef = useRef(null);
   const [progress, setProgress] = useState("0%");
   const [deadline, setDeadline] = useState(task?.deadline?.split("T")[0] || "");
@@ -146,7 +148,7 @@ export default function TaskDeadline({ task, uid }) {
           {deadline ? (
             <span>{displayDate()}</span>
           ) : (
-            <span>{hover || isEditing ? "Définir une date" : "-"}</span>
+            <span>{hover || isEditing ? t("tasks.set_date") : "-"}</span>
           )}
         </div>
       </div>

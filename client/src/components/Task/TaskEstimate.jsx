@@ -7,8 +7,10 @@ import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 import { XCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TaskEstimate({ task, uid }) {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [number, setNumber] = useState(1);
   const [week, setWeek] = useState("minutes");
@@ -138,37 +140,37 @@ export default function TaskEstimate({ task, uid }) {
                 className={styles.suggestion}
                 onClick={handleUpdateTaskEstimate}
               >
-                15 minutes
+                {t("tasks.n_minutes", { n: 15 })}
               </span>
               <span
                 className={styles.suggestion}
                 onClick={handleUpdateTaskEstimate}
               >
-                30 minutes
+                {t("tasks.n_minutes", { n: 30 })}
               </span>
               <span
                 className={styles.suggestion}
                 onClick={handleUpdateTaskEstimate}
               >
-                45 minutes
+                {t("tasks.n_minutes", { n: 45 })}
               </span>
               <span
                 className={styles.suggestion}
                 onClick={handleUpdateTaskEstimate}
               >
-                1 heure
+                {t("tasks.1_hour")}
               </span>
               <span
                 className={styles.suggestion}
                 onClick={handleUpdateTaskEstimate}
               >
-                2 heures
+                {t("tasks.2_hours")}
               </span>
               <span
                 className={styles.suggestion}
                 onClick={handleUpdateTaskEstimate}
               >
-                1 jour
+                {t("tasks.1_day")}
               </span>
             </div>
             <div className={styles.custom}>
@@ -191,10 +193,10 @@ export default function TaskEstimate({ task, uid }) {
                     className={bricolageGrostesque.className}
                     onChange={(e) => setWeek(e.target.value)}
                   >
-                    <option value="minutes">Minutes</option>
-                    <option value="heures">Heures</option>
-                    <option value="jours">Jours</option>
-                    <option value="semaines">Semaines</option>
+                    <option value="minutes">{t("tasks.minutes")}</option>
+                    <option value="heures">{t("tasks.hours")}</option>
+                    <option value="jours">{t("tasks.days")}</option>
+                    <option value="semaines">{t("tasks.weeks")}</option>
                   </select>
                 </div>
                 {number >= 1 && (
@@ -203,7 +205,7 @@ export default function TaskEstimate({ task, uid }) {
                       className={bricolageGrostesque.className}
                       type="submit"
                     >
-                      Valider
+                      {t("tasks.validate")}
                     </button>
                   </div>
                 )}

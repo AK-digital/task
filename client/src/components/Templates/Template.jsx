@@ -3,8 +3,10 @@ import { deleteTemplate, useTemplate } from "@/api/template";
 import styles from "@/styles/components/templates/template.module.css";
 import { List, ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function Template({ elt }) {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const handleUseTemplate = async () => {
@@ -46,8 +48,10 @@ export default function Template({ elt }) {
         </div>
       </div>
       <div>
-        <button onClick={handleUseTemplate}>Utiliser ce template</button>
-        <button onClick={handleDelete}>Supprimer</button>
+        <button onClick={handleUseTemplate}>
+          {t("templates.use_template")}
+        </button>
+        <button onClick={handleDelete}>{t("templates.delete")}</button>
       </div>
     </div>
   );

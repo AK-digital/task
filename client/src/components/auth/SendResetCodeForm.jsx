@@ -3,6 +3,8 @@ import styles from "@/styles/components/auth/sign.module.css";
 import { bricolageGrostesque, instrumentSans } from "@/utils/font";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
 const initialState = {
   status: "pending",
   payload: null,
@@ -11,6 +13,7 @@ const initialState = {
 };
 
 export default function SendResetCodeForm() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [messageStatus, setMessageStatus] = useState("");
@@ -22,17 +25,17 @@ export default function SendResetCodeForm() {
   useEffect(() => {
     setMessageStatus("");
     if (state?.status === "success") {
-      setMessageStatus("Un email de réinitialisation a été envoyé.");
+      setMessageStatus(t("auth.forgot_password.reset_email_sent"));
     }
 
     if (state?.status === "failure" && !state?.errors?.email) {
-      setMessageStatus("Une erreur inattendue s'est produite");
+      setMessageStatus(t("auth.forgot_password.unexpected_error"));
     }
-  }, [state]);
+  }, [state, t]);
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Mot de passe oublié</div>
+      <div className={styles.title}>{t("auth.forgot_password.title")}</div>
       {messageStatus && (
         <div className={styles.messageStatus}>
           <span data-status={state?.status}>{messageStatus}</span>
@@ -45,7 +48,7 @@ export default function SendResetCodeForm() {
             className={styles.emailLabel}
             data-active={email.length > 0}
           >
-            Adresse e-mail
+            {t("auth.forgot_password.email_label")}
           </label>
           <input
             type="email"
@@ -69,7 +72,7 @@ export default function SendResetCodeForm() {
             data-disabled={pending}
             disabled={pending}
           >
-            Réinitialiser le mot de passe
+            {t("auth.forgot_password.reset_password_button")}
           </button>
         </div>
       </form>
@@ -80,7 +83,7 @@ export default function SendResetCodeForm() {
               router.push("/");
             }}
           >
-            Retourner sur l'écran de connexion
+            {t("auth.forgot_password.back_to_login")}
           </span>
         </p>
       </div>

@@ -3,8 +3,10 @@ import NoPicture from "./NoPicture";
 import { useState, useRef } from "react";
 import UsersInfo from "../Popups/UsersInfo";
 import Portal from "../Portal/Portal";
+import { useTranslation } from "react-i18next";
 
 export default function DisplayPicture({ user, style, isPopup = true }) {
+  const { t } = useTranslation();
   const hasPicture = user?.picture;
   const [isOpen, setIsOpen] = useState(false);
   const [stylePopup, setStylePopup] = useState({
@@ -37,7 +39,7 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
           width={style?.width?.replace("px", "")}
           height={style?.height?.replace("px", "")}
           quality={100}
-          alt={`Photo de ${user?.firstName}`}
+          alt={`${t("tasks.photo_of")} ${user?.firstName}`}
           style={{ ...style }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}

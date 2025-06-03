@@ -4,6 +4,7 @@ import styles from "@/styles/components/timeTrackings/selected-time-trackings.mo
 import { Trash } from "lucide-react";
 import socket from "@/utils/socket";
 import { extractId } from "@/utils/extractId";
+import { useTranslation } from "react-i18next";
 
 export default function SelectedTimeTrackings({
   selectedTrackers,
@@ -11,6 +12,8 @@ export default function SelectedTimeTrackings({
   mutateTimeTrackings,
   trackers,
 }) {
+  const { t } = useTranslation();
+
   const handleDeleteTrackers = async () => {
     const firstSelectedTracker = trackers.find((tracker) =>
       selectedTrackers.includes(tracker._id)
@@ -63,14 +66,14 @@ export default function SelectedTimeTrackings({
       <div className={styles.item}>
         <span className={styles.text}>
           {selectedTrackers?.length > 1
-            ? "Suivi séléctionnés"
-            : "Suivi sélectionné"}
+            ? t("time_tracking.selected_plural")
+            : t("time_tracking.selected_singular")}
         </span>
       </div>
       <div className={styles.border}></div>
       <div className={styles.item}>
         <span className={styles.delete} onClick={handleDeleteTrackers}>
-          <Trash size={16} /> Supprimer
+          <Trash size={16} /> {t("time_tracking.delete")}
         </span>
       </div>
     </div>

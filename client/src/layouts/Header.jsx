@@ -11,8 +11,10 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { getNotifications } from "@/api/notification";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const [notifOpen, setNotifOpen] = useState(false);
 
@@ -67,7 +69,7 @@ export default function Header() {
             <Link href={"/profile"}>
               <Image
                 src={user?.picture || "/default-pfp.webp"}
-                alt={`Photo de profil de ${user?.firstName}`}
+                alt={`${t("profile.profile_picture_alt")} ${user?.firstName}`}
                 width={38}
                 height={38}
                 quality={100}

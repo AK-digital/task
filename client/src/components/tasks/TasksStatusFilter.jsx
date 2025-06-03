@@ -2,8 +2,10 @@ import { useProjectContext } from "@/context/ProjectContext";
 import styles from "@/styles/components/tasks/tasks-status-filter.module.css";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TasksStatusFilter({ queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const QueriesStatus = queries?.status;
   const hasStatus = QueriesStatus?.length > 0;
@@ -46,7 +48,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
         data-open={isOpen}
       >
         <ChartBar size={16} />
-        <span>Status</span>
+        <span>{t("tasks.status")}</span>
         {hasStatus && (
           <span className={styles.length}>{QueriesStatus?.length}</span>
         )}
@@ -58,7 +60,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
             <ul>
               <li className={styles.status} onClick={handleResetStatus}>
                 <Undo size={14} />
-                <span>Effacer</span>
+                <span>{t("tasks.clear")}</span>
               </li>
               {statuses.map((elt) => (
                 <li key={elt?._id} className={styles.status}>

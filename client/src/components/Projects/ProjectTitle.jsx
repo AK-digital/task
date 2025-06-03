@@ -18,6 +18,7 @@ import { deleteProject } from "@/api/project";
 import AddTemplate from "../Templates/AddTemplate";
 import { MoreMenu } from "../Dropdown/MoreMenu";
 import { icons, isNotEmpty } from "@/utils/utils";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -27,6 +28,7 @@ const initialState = {
 };
 
 export default function ProjectTitle({ project }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [state, formAction, pending] = useActionState(
     updateProject,
@@ -63,24 +65,24 @@ export default function ProjectTitle({ project }) {
       authorized: isOwnerOrManager,
       link: `/projects/${project?._id}/options`,
       icon: <Settings2 size={16} />,
-      name: "Options du projet",
+      name: t("projects.project_options_menu"),
     },
     {
       link: `/projects/${project?._id}/archive`,
       icon: <Archive size={16} />,
-      name: "Archives du projet",
+      name: t("projects.project_archives"),
     },
     {
       authorized: isOwnerOrManager,
       function: handleAddTemplate,
       icon: <Save size={16} />,
-      name: "Enregistrer le projet comme modèle",
+      name: t("projects.save_as_template"),
     },
     {
       authorized: isOwnerOrManager,
       function: handleDeleteProject,
       icon: <Trash2 size={16} />,
-      name: "Supprimer le projet",
+      name: t("projects.delete_project_menu"),
       remove: true,
       project: true,
       deletionName: project?.name,

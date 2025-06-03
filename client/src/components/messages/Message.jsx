@@ -19,6 +19,7 @@ import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
 import Reactions from "../Reactions/Reactions";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
+import { useTranslation } from "react-i18next";
 
 export default function Message({
   task,
@@ -27,6 +28,7 @@ export default function Message({
   mutateMessage,
   mutateTasks,
 }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +96,9 @@ export default function Message({
                     src={author?.picture || "/default-pfp.webp"}
                     width={35}
                     height={35}
-                    alt={`Photo de profil de ${author?.firstName}`}
+                    alt={`${t("general.profile_picture_alt")} ${
+                      author?.firstName
+                    }`}
                     style={{ borderRadius: "50%" }}
                   />
                   <span className={styles.names}>
@@ -118,10 +122,11 @@ export default function Message({
                             setMore(false);
                           }}
                         >
-                          <FontAwesomeIcon icon={faPen} /> Modifier
+                          <FontAwesomeIcon icon={faPen} /> {t("messages.edit")}
                         </li>
                         <li onClick={handleDeleteMessage}>
-                          <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
+                          <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                          {t("messages.delete")}
                         </li>
                       </ul>
                     </div>

@@ -8,6 +8,7 @@ import { deleteFavorite, saveFavorite } from "@/api/favorite";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 export default function ProjectCard({
   project,
@@ -15,6 +16,7 @@ export default function ProjectCard({
   href,
   isDefault,
 }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
   const userFavIds = project?.favorites?.map((fav) => fav.user);
   const hasFav = userFavIds?.includes(uid);
@@ -30,7 +32,7 @@ export default function ProjectCard({
 
   const projectId = project?._id;
 
-  const name = project?.name || "Nouveau projet";
+  const name = project?.name || t("projects.new_project");
 
   async function handleFavorite(e) {
     e.stopPropagation();
@@ -133,10 +135,18 @@ export default function ProjectCard({
             project && (
               <div className={styles.footerWrapper}>
                 <span className={styles.tabs}>
-                  {`${totalBoards} tableau${totalBoards === 1 ? "" : "x"}`}
+                  {`${totalBoards} ${
+                    totalBoards === 1
+                      ? t("projects.board_singular")
+                      : t("projects.board_plural")
+                  }`}
                 </span>
                 <div className={styles.tasks}>
-                  {`${totalTasks} tâche${totalTasks === 1 ? "" : "s"}`}
+                  {`${totalTasks} ${
+                    totalTasks === 1
+                      ? t("projects.task_singular")
+                      : t("projects.task_plural")
+                  }`}
                   <div className={styles.statusBar}>
                     {statuses.map((status, idx) => {
                       return (

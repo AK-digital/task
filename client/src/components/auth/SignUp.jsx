@@ -1,9 +1,11 @@
 import { signUp } from "@/actions/auth";
 import styles from "@/styles/components/auth/sign.module.css";
 import { bricolageGrostesque } from "@/utils/font";
+import { translateValidationErrors } from "@/utils/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -13,6 +15,7 @@ const initialState = {
 };
 
 export default function SignUp() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -41,19 +44,16 @@ export default function SignUp() {
     <div className={styles.container}>
       {state?.status === "success" ? (
         <div className={styles.accountCreated}>
-          <span>Votre compte a été créé avec succès !</span>
-          <p>
-            Un email de vérification a été envoyé à votre adresse e-mail.
-            Veuillez cliquer sur le lien dans l'email pour activer votre compte.
-          </p>
+          <span>{t("auth.signup.account_created_title")}</span>
+          <p>{t("auth.signup.account_created_message")}</p>
           <button type="button" onClick={handleSignIn}>
-            Retourner à la page de connexion
+            {t("auth.signup.back_to_signin")}
           </button>
         </div>
       ) : (
         <>
           <div className={styles.title}>
-            <span>Inscription</span>
+            <span>{t("auth.signup.title")}</span>
           </div>
           {message && (
             <div className={styles.messageStatus}>
@@ -67,7 +67,7 @@ export default function SignUp() {
                 className={styles.lastNameLabel}
                 data-active={lastName.length > 0}
               >
-                Nom
+                {t("auth.signup.lastname_label")}
               </label>
               <input
                 type="text"
@@ -79,7 +79,9 @@ export default function SignUp() {
                 onChange={(e) => setLastName(e.target.value)}
                 required
               />
-              {state?.errors?.lastName && <i>{state?.errors?.lastName}</i>}
+              {state?.errors?.lastName && (
+                <i>{translateValidationErrors(state.errors.lastName, t)}</i>
+              )}
             </div>
             <div className="form-group">
               <label
@@ -87,7 +89,7 @@ export default function SignUp() {
                 className={styles.firstNameLabel}
                 data-active={firstName.length > 0}
               >
-                Prénom
+                {t("auth.signup.firstname_label")}
               </label>
               <input
                 type="text"
@@ -99,7 +101,9 @@ export default function SignUp() {
                 onChange={(e) => setFirstName(e.target.value)}
                 required
               />
-              {state?.errors?.firstName && <i>{state?.errors?.firstName}</i>}
+              {state?.errors?.firstName && (
+                <i>{translateValidationErrors(state.errors.firstName, t)}</i>
+              )}
             </div>
             <div className="form-group">
               <label
@@ -107,7 +111,7 @@ export default function SignUp() {
                 className={styles.emailLabel}
                 data-active={email.length > 0}
               >
-                Adresse e-mail
+                {t("auth.signup.email_label")}
               </label>
               <input
                 type="email"
@@ -119,7 +123,9 @@ export default function SignUp() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              {state?.errors?.email && <i>{state?.errors?.email}</i>}
+              {state?.errors?.email && (
+                <i>{translateValidationErrors(state.errors.email, t)}</i>
+              )}
             </div>
             <div className="form-group">
               <label
@@ -127,7 +133,7 @@ export default function SignUp() {
                 className={styles.passwordLabel}
                 data-active={password.length > 0}
               >
-                Mot de passe
+                {t("auth.signup.password_label")}
               </label>
               <input
                 type={hiddenPassword ? "password" : "text"}
@@ -152,12 +158,12 @@ export default function SignUp() {
               )}
               {state?.errors?.password && (
                 <div className={styles.passwordErr}>
-                  <i>Le mot de passe doit contenir :</i>
+                  <i>{t("auth.signup.password_requirements")}</i>
                   <ul>
-                    <li>- Au moins 8 caractères</li>
-                    <li>- Une lettre majuscule (A-Z)</li>
-                    <li>- Un chiffre (0-9)</li>
-                    <li>- Un caractère spécial (!@#$%^&?)</li>
+                    <li>{t("auth.signup.password_min_chars")}</li>
+                    <li>{t("auth.signup.password_uppercase")}</li>
+                    <li>{t("auth.signup.password_number")}</li>
+                    <li>{t("auth.signup.password_special")}</li>
                   </ul>
                 </div>
               )}
@@ -170,7 +176,9 @@ export default function SignUp() {
                 className={bricolageGrostesque.className}
                 disabled={pending}
               >
-                {pending ? "Inscription en cours..." : "S'inscrire"}
+                {pending
+                  ? t("auth.signup.submit_button_loading")
+                  : t("auth.signup.submit_button")}
               </button>
               {/* <button
             className={`${instrumentSans.className} ${styles.google}`}
@@ -186,8 +194,8 @@ export default function SignUp() {
           </form>
           <div className={styles.text}>
             <p>
-              Vous avez déjà un compte ?{" "}
-              <span onClick={handleSignIn}>Se connecter</span>
+              {t("auth.signup.have_account")}{" "}
+              <span onClick={handleSignIn}>{t("auth.signup.signin_link")}</span>
             </p>
           </div>
         </>

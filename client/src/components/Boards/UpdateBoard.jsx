@@ -2,6 +2,7 @@
 import styles from "@/styles/components/boards/update-board.module.css";
 import { updateBoard } from "@/actions/board";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -11,6 +12,7 @@ const initialState = {
 };
 
 export default function UpdateBoard({ board, projectId }) {
+  const { t } = useTranslation();
   const [isEdit, setIsEdit] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [color, setColor] = useState("");
@@ -75,7 +77,7 @@ export default function UpdateBoard({ board, projectId }) {
           </div>
         )}
         <button type="Submit" hidden>
-          Enregistrer les modifications
+          {t("boards.save_changes")}
         </button>
       </form>
     </div>

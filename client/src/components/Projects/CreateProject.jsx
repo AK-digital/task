@@ -5,6 +5,7 @@ import { instrumentSans } from "@/utils/font";
 import { Plus, X } from "lucide-react";
 import { useActionState, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -19,6 +20,7 @@ export default function CreateProject({
   isCreating,
   setIsCreating,
 }) {
+  const { t } = useTranslation();
   const [state, formAction, pending] = useActionState(
     saveProject,
     initialState
@@ -85,17 +87,17 @@ export default function CreateProject({
             type="text"
             name="project-name"
             id="project-name"
-            placeholder="Nommer votre projet"
+            placeholder={t("projects.name_your_project")}
             required
             minLength={2}
             maxLength={250}
           />
           <span className={styles.projectCreationInfo}>
-            Appuyer sur Entrée pour créer le projet
+            {t("projects.press_enter_create")}
           </span>
           <span className={styles.projectCreationInfo}>OU</span>
           <button type="submit" data-disabled={pending} disabled={pending}>
-            Cliquer pour créer le projet
+            {t("projects.click_create")}
           </button>
         </form>
       </div>

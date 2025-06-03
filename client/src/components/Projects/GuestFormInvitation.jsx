@@ -5,6 +5,7 @@ import socket from "@/utils/socket";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { bricolageGrostesque } from "@/utils/font";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -18,6 +19,7 @@ export default function GuestFormInvitation({
   setIsPopup,
   mutateProjectInvitation,
 }) {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const [value, setValue] = useState("");
   const sendProjectInvitationToGuestWithId = sendProjectInvitationToGuest.bind(
@@ -36,13 +38,13 @@ export default function GuestFormInvitation({
       setValue("");
       setIsPopup({
         status: state?.status,
-        title: "Invitation envoyé avec succès",
+        title: t("projects.invitation_sent_success"),
         message: state?.message,
       });
 
       const message = {
-        title: `🎉 Invitation à ${project?.name} !`,
-        content: `Bonne nouvelle ! Vous avez été invité pour rejoindre le projet "${project?.name}".`,
+        title: `${t("projects.invitation_emoji")} ${project?.name} !`,
+        content: `${t("projects.invitation_good_news")} "${project?.name}".`,
       };
 
       const link = "/invitation/" + state?.data?._id;
@@ -53,7 +55,7 @@ export default function GuestFormInvitation({
     if (state?.status === "failure" && state?.errors === null) {
       setIsPopup({
         status: state?.status,
-        title: "Une erreur s'est produite",
+        title: t("projects.error_occurred_simple"),
         message: state?.message,
       });
     }
@@ -61,7 +63,7 @@ export default function GuestFormInvitation({
     return () => {
       socket.off("create notification");
     };
-  }, [state]);
+  }, [state, t]);
 
   return (
     <>
@@ -71,14 +73,14 @@ export default function GuestFormInvitation({
             type="email"
             name="email"
             id="email"
-            placeholder="Inviter par e-mail"
+            placeholder={t("projects.invite_by_email")}
             value={value}
             onChange={(e) => setValue(e.target.value)}
             className={bricolageGrostesque.className}
           />
           {errors && <i>{errors?.email}</i>}
           <button type="submit" data-disabled={pending}>
-            Envoyer une invitation
+            {t("projects.send_invitation")}
           </button>
         </form>
       </div>
