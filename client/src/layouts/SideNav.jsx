@@ -26,9 +26,6 @@ export default function SideNav() {
   const projects = favorites?.map((favorite) => favorite.project);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
-  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
-
   return (
     <aside className={styles.container} data-open={isMenuOpen}>
       <div className={styles.wrapper}>
@@ -77,14 +74,7 @@ export default function SideNav() {
             </div>
             <span>Mes projets</span>
           </Link>
-          <Link
-            href={
-              "/times?startingDate=" +
-              firstDayOfTheMonth +
-              "&endingDate=" +
-              lastDayOfTheMonth
-            }
-          >
+          <Link href={"/times"}>
             <div>
               <Clock3 size={24} />
             </div>
