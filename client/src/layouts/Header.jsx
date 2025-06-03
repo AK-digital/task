@@ -37,7 +37,7 @@ export default function Header() {
   const unreadCount = unreadNotifications?.length;
 
   return (
-    <header className="w-full py-2.5 h-spacing-header-height">
+    <header className="w-full py-2.5 h-header-height">
       <nav className="flex justify-end items-center h-full ml-30 mr-10">
         <ul className="relative flex items-center gap-6">
           <li className="relative flex justify-center items-center h-full">

@@ -39,7 +39,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div
-        className="relative flex items-center gap-2 bg-background-secondary-color p-2.5 rounded-sm border border-color-border-color cursor-pointer transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-shadow-box-small data-[open=true]:bg-[#f9f7efb3] data-[open=true]:shadow-shadow-box-small"
+        className="relative flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small data-[open=true]:bg-[#f9f7efb3] data-[open=true]:shadow-small"
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
       >
@@ -57,17 +57,17 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
       </div>
       {isOpen && (
         <>
-          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-shadow-box-small border border-color-border-color p-2 w-full font-medium text-small">
+          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full font-medium text-small">
             <ul className="flex flex-col">
               <li 
-                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm"
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third hover:shadow-small hover:rounded-sm"
                 onClick={handleResetPriorities}
               >
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
               {priorities.map((priority) => (
-                <li key={priority?._id} className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm">
+                <li key={priority?._id} className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third hover:shadow-small hover:rounded-sm">
                   <input
                     type="checkbox"
                     id={priority?._id}

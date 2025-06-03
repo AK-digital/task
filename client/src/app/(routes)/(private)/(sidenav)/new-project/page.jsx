@@ -30,7 +30,7 @@ export default function NewProject() {
   return (
     <main className="ml-5 w-full h-[calc(100svh-60px)]">
       {/* container */}
-      <div className="flex justify-center items-center text-center bg-background-primary-color rounded-tl-lg h-full w-full text-text-dark-color">
+      <div className="flex justify-center items-center text-center bg-primary rounded-tl-lg h-full w-full text-text-dark-color">
         <div className="flex flex-col -mt-[60px] gap-6">
           <div className="max-w-[600px]">
             <div className="flex justify-center items-center">

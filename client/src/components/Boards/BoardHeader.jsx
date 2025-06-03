@@ -231,7 +231,7 @@ export default function BoardHeader({
 
   return (
     <div
-      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-background-secondary-color w-full z-9999 flex-wrap p-3"
+      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full z-9999 flex-wrap p-3"
       // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
@@ -336,7 +336,7 @@ export default function BoardHeader({
       </div>
       {openColors && (
         <>
-          <div id="popover" className="left-3 top-10 max-w-[234px] p-4 bg-background-secondary-color shadow-shadow-box-medium">
+          <div id="popover" className="left-3 top-10 max-w-[234px] p-4 bg-secondary shadow-medium">
             <ul className="flex flex-wrap gap-2.5">
               {colors?.map((color, idx) => (
                 <li

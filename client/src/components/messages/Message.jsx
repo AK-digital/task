@@ -85,7 +85,7 @@ export default function Message({
       ) : (
         <>
           <div className="flex flex-col gap-2 transition-opacity duration-[50ms] ease-linear data-[loading=true]:opacity-[0.4] " data-loading={isLoading}>
-            <div className="relative flex justify-between flex-col gap-3.5 py-4 px-6 bg-background-secondary-color rounded-lg transition-all duration-[50ms] ease-linear">
+            <div className="relative flex justify-between flex-col gap-3.5 py-4 px-6 bg-secondary rounded-lg transition-all duration-[50ms] ease-linear">
               {/* Header auteur */}
               <div className="flex items-center justify-between [&_svg]:cursor-pointer ">
                 <div className="flex items-center gap-2">
@@ -109,8 +109,8 @@ export default function Message({
                     />
                   )}
                   {more && (
-                    <div className="absolute z-2001 right-6 w-fit p-2 bg-background-secondary-color rounded-sm shadow-shadow-box-medium">
-                      <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-background-third-color [&_li:hover]:rounded-sm">
+                    <div className="absolute z-2001 right-6 w-fit p-2 bg-secondary rounded-sm shadow-medium">
+                      <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-third [&_li:hover]:rounded-sm">
                         <li
                           onClick={() => {
                             setEdit(true);

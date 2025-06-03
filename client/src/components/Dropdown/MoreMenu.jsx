@@ -52,14 +52,14 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
 
   return (
     <>
-      <div className="top-3 left-[18px] w-max text-small py-2 px-4 shadow-shadow-box-small text-text-color-dark no-underline [&_a]:text-red-500 [&_a]:no-underline " id="popover">
+      <div className="top-3 left-[18px] w-max text-small py-2 px-4 shadow-small text-text-color-dark no-underline [&_a]:text-red-500 [&_a]:no-underline " id="popover">
         {isOpen && (
           <ul>
             {options.map((option, idx) => {
               if (option?.authorized === false) return null;
 
               return (
-                <li {...itemProps(option)} key={idx} className="option cursor-pointer py-2 border-b border-background-primary-color hover:text-accent-color-light last:border-b-0 data-[remove=true]:text-text-color-red hover:[&_a]:text-accent-color-light [&_span]:flex [&_span]:items-center [&_span]:gap-2 ">
+                <li {...itemProps(option)} key={idx} className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light last:border-b-0 data-[remove=true]:text-text-color-red hover:[&_a]:text-accent-color-light [&_span]:flex [&_span]:items-center [&_span]:gap-2 ">
                   {option?.link ? (
                     <Link href={option?.link}>
                       {content(option)}

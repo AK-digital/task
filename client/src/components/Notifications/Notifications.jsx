@@ -49,7 +49,7 @@ export default function Notifications({
 
   return (
     <>
-      <div id="popover" className="flex flex-col top-10 right-[50px] w-[560px] p-0 pr-2 max-h-[400px] overflow-y-auto rounded-2xl shadow-shadow-box-medium">
+      <div id="popover" className="flex flex-col top-10 right-[50px] w-[560px] p-0 pr-2 max-h-[400px] overflow-y-auto rounded-2xl shadow-medium">
         <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px]">
           <span>Notifications</span>
           {unreadCount > 0 && (
@@ -81,7 +81,7 @@ export default function Notifications({
                   data-read={notif?.read}
                   key={idx}
                   onClick={(e) => handleReadNotification(e, notif)}
-                  className="flex justify-between flex-row gap-1 cursor-pointer no-underline w-full text-text-medium-color transition-[background-color] duration-200 p-[14px] hover:bg-background-third-color data-[read=false]:bg-accent-color-transparent"
+                  className="flex justify-between flex-row gap-1 cursor-pointer no-underline w-full text-text-medium-color transition-[background-color] duration-200 p-[14px] hover:bg-third data-[read=false]:bg-accent-color-transparent"
                 >
                   <div className="flex gap-2">
                     {notif?.senderId?.picture ? (

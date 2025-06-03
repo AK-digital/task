@@ -57,7 +57,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
   return (
     <>
       <div className={`relative text-center text-text-color-muted select-none ${isOpen ? "z-[9999]" : ""}`} data-active={isOpen}>
-        <div onClick={() => setIsOpen(!isOpen)} className="relative flex justify-center items-center bg-background-secondary-color py-1.5 px-0 h-[35px] w-[180px] gap-1 rounded-3xl text-normal transition-all duration-[120ms] ease-ease-linear text-text-dark-color cursor-pointer hover:shadow-shadow-box-small">
+        <div onClick={() => setIsOpen(!isOpen)} className="relative flex justify-center items-center bg-secondary py-1.5 px-0 h-[35px] w-[180px] gap-1 rounded-3xl text-normal transition-all duration-[120ms] ease-ease-linear text-text-dark-color cursor-pointer hover:shadow-small">
           {isNotEmpty(selected) ? (
             selected.slice(0, 4).map((element, idx) => {
               if (selected.length > 1) {
@@ -95,7 +95,7 @@ export function Dropdown({ defaultValue, selected, options, query }) {
             <span className="span_Dropdown">{defaultValue}</span>
           )}
           {selected.length > 4 && (
-            <span className="span_Dropdown justify-center min-w-6 min-h-6 bg-background-primary-color rounded-full text-small">+{selected.length - 4}</span>
+            <span className="span_Dropdown justify-center min-w-6 min-h-6 bg-primary rounded-full text-small">+{selected.length - 4}</span>
           )}
           <span className={`span_Dropdown absolute right-2 transition-all duration-200 ease-linear ${isOpen ? "rotate-180" : ""}`}>
             <ChevronDown size={16} />
@@ -103,10 +103,10 @@ export function Dropdown({ defaultValue, selected, options, query }) {
         </div>
         {/* List */}
         {isOpen && (
-          <div className="absolute z-999 top-10 left-0 w-full bg-background-secondary-color text-small rounded-lg max-h-[200px] overflow-auto text-left shadow-shadow-box-medium">
+          <div className="absolute z-999 top-10 left-0 w-full bg-secondary text-small rounded-lg max-h-[200px] overflow-auto text-left shadow-medium">
             {options?.map((option) => {
               return (
-                <div className="flex items-center gap-1 cursor-pointer transition-all duration-150 ease-in-out px-1.5 hover:bg-background-third-color" key={option?.id}>
+                <div className="flex items-center gap-1 cursor-pointer transition-all duration-150 ease-in-out px-1.5 hover:bg-third" key={option?.id}>
                   <input
                     type="checkbox"
                     name="projects"

@@ -136,7 +136,7 @@ export default function Filters({
         options={usersOptions}
         query={"users"}
       />
-      <div className="relative flex justify-center bg-background-secondary-color rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
+      <div className="relative flex justify-center bg-secondary rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
         <label className="absolute -top-4 left-[18px] text-small block w-full">Date de début</label>
         <input
           type="date"
@@ -147,7 +147,7 @@ export default function Filters({
           className="p-0 max-w-[100px] border-none text-normal"
         />
       </div>
-      <div className="relative flex justify-center bg-background-secondary-color rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
+      <div className="relative flex justify-center bg-secondary rounded-3xl py-1.5 px-0 w-[130px] h-[35px]">
         <label className="absolute -top-4 left-[18px] text-small block w-full">Date de fin</label>
         <input
           type="date"

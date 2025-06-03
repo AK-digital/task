@@ -55,7 +55,7 @@ export default function SelectedTimeTrackings({
   };
 
   return (
-    <div className="fixed flex items-center bottom-5 left-1/2 -translate-x-1/2 bg-background-secondary-color rounded-lg shadow-shadow-box-small gap-2 overflow-hidden pr-2 animate-[slideIn_150ms_forwards]">
+    <div className="fixed flex items-center bottom-5 left-1/2 -translate-x-1/2 bg-secondary rounded-lg shadow-small gap-2 overflow-hidden pr-2 animate-[slideIn_150ms_forwards]">
       <div className="flex justify-center items-center bg-accent-color-light h-20 w-20 text-white text-[1.4rem]">
         <span>{selectedTrackers.length}</span>
       </div>

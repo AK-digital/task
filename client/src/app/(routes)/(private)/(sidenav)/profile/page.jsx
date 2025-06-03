@@ -19,7 +19,7 @@ export default function ProfilePage() {
       </div>
       <div className="flex flex-col items-center justify-center gap-6 h-full w-full">
         <h1>Mon profil</h1>
-        <div className="bg-background-secondary-color rounded-2xl w-full p-[44px] max-w-[540px]">
+        <div className="bg-secondary rounded-2xl w-full p-[44px] max-w-[540px]">
           <PictureForm />
           <ProfileForm />
         </div>

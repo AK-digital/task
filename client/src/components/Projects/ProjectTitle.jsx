@@ -212,7 +212,7 @@ export default function ProjectTitle({ project }) {
           {project?.urls?.map((url, idx) => {
             return (
               <div key={idx}>
-                <a href={url?.url} target="_blank" rel="noopener noreferrer" className="flex items-center bg-background-secondary-color p-2 rounded-lg">
+                <a href={url?.url} target="_blank" rel="noopener noreferrer" className="flex items-center bg-secondary p-2 rounded-lg">
                   {displayIcon(url?.icon)}
                 </a>
               </div>

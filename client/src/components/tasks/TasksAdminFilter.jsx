@@ -46,7 +46,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div
-        className={`relative flex items-center gap-2 bg-background-secondary-color p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[180px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-shadow-box-small ${isOpen ? 'bg-[#f9f7efb3] shadow-shadow-box-small' : ''}`}
+        className={`relative flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[180px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${isOpen ? 'bg-[#f9f7efb3] shadow-small' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <CircleUserRound size={18} />
@@ -63,18 +63,18 @@ export default function TasksAdminFilter({ queries, setQueries }) {
       </div>
       {isOpen && (
         <>
-          <div className="absolute z-[2001] top-11 rounded-sm bg-white shadow-shadow-box-small border border-color-border-color p-2 w-full">
+          <div className="absolute z-[2001] top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full">
             {isNotEmpty(members) ? (
               <ul>
                 <li 
-                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm" 
+                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm" 
                   onClick={() => handleReset()}
                 >
                   <Undo size={16} />
                   Supprimer les filtres
                 </li>
                 {members.map((member) => (
-                  <li key={member?.user?._id} className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-background-third-color hover:shadow-shadow-box-small hover:rounded-sm">
+                  <li key={member?.user?._id} className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm">
                     <input
                       type="checkbox"
                       id={member?.user?._id}

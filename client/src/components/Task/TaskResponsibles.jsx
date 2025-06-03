@@ -114,7 +114,7 @@ export default function TaskResponsibles({ task, uid, user }) {
           <PlusCircle size={24} />
         )}
         {responsibles?.length > 3 && (
-          <span className="absolute flex justify-center items-center bg-background-primary-color rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-background-secondary-color">+{responsibles?.length - 3}</span>
+          <span className="absolute flex justify-center items-center bg-primary rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-secondary">+{responsibles?.length - 3}</span>
         )}
       </div>
 
@@ -123,7 +123,7 @@ export default function TaskResponsibles({ task, uid, user }) {
           <div
             ref={refs.setFloating}
             style={floatingStyles}
-            className="absolute w-[300px] bg-background-secondary-color shadow-shadow-box-medium rounded-lg top-[50px] z-[2001] p-2"
+            className="absolute w-[300px] bg-secondary shadow-medium rounded-lg top-[50px] z-[2001] p-2"
           >
             {/* Responsibles */}
             {isNotEmpty(responsibles) && (
@@ -131,7 +131,7 @@ export default function TaskResponsibles({ task, uid, user }) {
                 {responsibles?.map((responsible) => {
                   return (
                     <div
-                      className="flex items-center gap-1 bg-background-third-color p-1 rounded-lg text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-background-primary-color"
+                      className="flex items-center gap-1 bg-third p-1 rounded-lg text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-primary"
                       key={responsible?._id}
                       onClick={() => handleRemoveResponsible(responsible)}
                     >
@@ -161,7 +161,7 @@ export default function TaskResponsibles({ task, uid, user }) {
                   {members?.map((member) => {
                     return (
                       <li
-                        className="flex items-center gap-1 p-2 rounded-lg hover:bg-background-third-color"
+                        className="flex items-center gap-1 p-2 rounded-lg hover:bg-third"
                         key={member?.user?._id}
                         onClick={() => handleAddResponsible(member?.user)}
                       >

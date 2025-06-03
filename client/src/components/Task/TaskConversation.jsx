@@ -43,7 +43,7 @@ export default function TaskConversation({ task, archive = false, uid }) {
       {!hasDescription() && <MessageCircle size={24} className="hover:text-accent-color" />}
       {hasDescription() && <MessageCircleMore size={24} className="hover:text-accent-color" />}
       {messagesCount > 0 && (
-        <span data-read={hasReadMessage} className="absolute flex justify-center items-center bottom-2 right-1 p-1 w-4 h-4 bg-background-primary-color rounded-full text-small">{messagesCount}</span>
+        <span data-read={hasReadMessage} className="absolute flex justify-center items-center bottom-2 right-1 p-1 w-4 h-4 bg-primary rounded-full text-small">{messagesCount}</span>
       )}
     </div>
   );

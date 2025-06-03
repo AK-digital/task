@@ -125,7 +125,7 @@ export default function TaskPriority({ task }) {
       {isOpen && (
         <>
           <div
-            className={`absolute z-[2001] top-[45px] left-1/2 -translate-x-1/2 p-3 bg-background-secondary-color shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
+            className={`absolute z-[2001] top-[45px] left-1/2 -translate-x-1/2 p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
             ref={refs.setFloating}
             style={floatingStyles}
           >

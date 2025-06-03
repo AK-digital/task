@@ -558,7 +558,7 @@ export default function Tiptap({
   return (
     <>
       <div
-        className="relative flex flex-col resize-none w-full border border-[#ddd] rounded-lg bg-background-third-color min-w-full max-w-full min-h-[250px]"
+        className="relative flex flex-col resize-none w-full border border-[#ddd] rounded-lg bg-third min-w-full max-w-full min-h-[250px]"
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
         ref={containerRef}
@@ -572,7 +572,7 @@ export default function Tiptap({
             <Redo2 size={16} />
           </button>
 
-          <div className="w-[1px] h-6 bg-background-third-color my-0 mx-2"></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
 
           <button
             onClick={() =>
@@ -596,7 +596,7 @@ export default function Tiptap({
             <Heading3 size={16} />
           </button>
 
-          <div className="w-[1px] h-6 bg-background-third-color my-0 mx-2"></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
 
           <button onClick={() => editor.chain().focus().toggleBold().run()}>
             <BoldIcon size={16} />
@@ -612,7 +612,7 @@ export default function Tiptap({
           <button onClick={() => editor.chain().focus().toggleStrike().run()}>
             <StrikethroughIcon size={16} />
           </button>
-          <div className="w-[1px] h-6 bg-background-third-color my-0 mx-2"></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
@@ -624,7 +624,7 @@ export default function Tiptap({
             <ListOrderedIcon size={16} />
           </button>
 
-          <div className="w-[1px] h-6 bg-background-third-color my-0 mx-2"></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
 
           <button onClick={handleSetLink}>
             <LinkIcon size={16} />
@@ -632,7 +632,7 @@ export default function Tiptap({
           <button onClick={handleAddImage}>
             <ImageIcon size={16} />
           </button>
-          <div className="w-[1px] h-6 bg-background-third-color my-0 mx-2"></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
           <button
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
           >

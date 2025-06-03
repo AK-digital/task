@@ -8,23 +8,23 @@
   --color-accent-color-light: #d4a979;
   --color-accent-color-transparent: rgba(168, 126, 81, 0.3);
   --color-accent-color-hover: #977045;
-  --color-background-primary-color: #dad6c7;
-  --color-background-secondary-color: #f9f7ef;
-  --color-background-third-color: #eae7de;
-  --color-background-side-color: rgba(45, 63, 68, 0.9);
-  --color-color-foreground: #171717;
-  --color-color-border-color: #3a3d5c;
+  --color-foreground: #171717;
+  --color-color-border-color: #acaba5;
 
   --color-text-color: #e0e0e0;
   --color-text-color-dark: #3a4344;
   --color-text-color-red: #c04747;
-
   --color-danger-color: #c14854;
 
   /* REWORKED COLORS & VARS 02/03/25 */
 
   /* BACKGROUNDS */
-  --color-background-primary-transparent: rgba(218, 214, 199, 0.6);
+  --color-primary: #dad6c7;
+  --color-primary-transparent: rgba(218, 214, 199, 0.6);
+  --color-secondary: #f9f7ef;
+  --color-third: #eae7de;
+  --color-side: rgba(45, 63, 68, 0.9);
+
   --background-gradient-dark: linear-gradient(
     140deg,
     #39545b,
@@ -42,8 +42,6 @@
   --color-text-lighter-color: #e7e3d9;
   --color-text-color-muted: #72716f;
 
-  --color-color-border-color: #acaba5;
-
   --color-state-pending-color: #b3bcc0;
   --color-state-processing-color: #f3b158;
   --color-state-finished-color: #63a758;
@@ -57,20 +55,19 @@
   --color-color-high-color: #7c67ad;
   --color-color-urgent-color: #e17587;
 
-  /* TEXT */
+  /* TEXT SIZES */
   --text-large: 1.2rem;
   --text-medium: 1rem;
   --text-normal: 0.95rem;
   --text-small: 0.8rem;
 
   /* SPACING */
-  --spacing-spacing-header-height: 62px;
-  --spacing-spacing-aside-width: 66px;
-  --tracking-spacing-letter-normal: 0.011rem;
+  --spacing-header-height: 62px;
+  --spacing-aside-width: 66px;
 
   /* BOX SHADOW */
-  --shadow-shadow-box-medium: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-shadow-box-small: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 @layer components {
@@ -600,7 +597,7 @@
   .images_TaskResponsibles:not(:first-child) div {
     width: 36px !important;
     height: 36px !important;
-    border: 2px solid var(--color-background-secondary-color);
+    border: 2px solid var(--color-secondary);
   }
 
   .images_TaskResponsibles img {
@@ -639,12 +636,12 @@
   /* TasksBoardFilter */
   .current_TasksBoardFilter:hover {
     background-color: #f9f7efb3;
-    box-shadow: var(--shadow-shadow-box-small);
+    box-shadow: var(--shadow-small);
   }
 
   .current_TasksBoardFilter[data-open="true"] {
     background-color: #f9f7efb3;
-    box-shadow: var(--shadow-shadow-box-small);
+    box-shadow: var(--shadow-small);
   }
 
   .current_TasksBoardFilter[data-open="true"] .chevron_TasksBoardFilter {
@@ -688,12 +685,12 @@
   /* TimeTracking */
   @keyframes backgroundAppear {
     from {
-      background-color: var(--color-background-secondary-color);
+      background-color: var(--color-secondary);
       color: var(--color-text-dark-color);
     }
 
     to {
-      background-color: var(--color-background-third-color);
+      background-color: var(--color-third);
       color: var(--color-text-medium-color);
     }
   }
@@ -718,7 +715,7 @@
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: 8px solid var(--color-background-secondary-color);
+    border-top: 8px solid var(--color-secondary);
   }
 
   /* ProjectCard */
@@ -959,7 +956,7 @@ html:has(#task-more) {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2001;
-  background-color: var(--color-background-secondary-color);
+  background-color: var(--color-secondary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   padding: 24px;
   border-radius: var(--radius);
@@ -968,16 +965,16 @@ html:has(#task-more) {
 #popover {
   position: absolute;
   z-index: 2001;
-  background-color: var(--color-background-secondary-color);
+  background-color: var(--color-secondary);
   border-radius: 8px;
 }
 
 #more {
   position: absolute;
   z-index: 2001;
-  background-color: var(--color-background-secondary-color);
+  background-color: var(--color-secondary);
   border-radius: 4px;
-  box-shadow: var(--shadow-shadow-box-medium);
+  box-shadow: var(--shadow-medium);
   padding: 8px;
   font-size: var(--text-small);
   color: var(--color-text-color-dark);

@@ -4,8 +4,8 @@ export default function ConfirmDialog({ isOpen, onClose, onConfirm, message }) {
 
     return (
         <div className="relative">
-            <div className="absolute bg-background-secondary-color rounded-lg shadow-shadow-box-medium z-2002 right-[29px] -top-[50px] min-w-50">
-                <div className="absolute top-[49%] right-0 w-2.5 h-2.5 bg-background-secondary-color rotate-45 -translate-y-1/2"></div>
+            <div className="absolute bg-secondary rounded-lg shadow-medium z-2002 right-[29px] -top-[50px] min-w-50">
+                <div className="absolute top-[49%] right-0 w-2.5 h-2.5 bg-secondary rotate-45 -translate-y-1/2"></div>
                 <div className="p-3">
                     <p className="text-[0.85em] text-center">{message}</p>
                     <span className="text-[0.7rem] text-[#8688a4] text-center w-full block">Cette action est irréversible</span>

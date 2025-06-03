@@ -163,7 +163,7 @@ export default function AttachmentsInfo({
       </span>
 
       {showAttachments && (
-        <div className="absolute flex flex-col bottom-3.5 z-2001 bg-background-secondary-color rounded-sm shadow-shadow-box-small max-h-40 overflow-hidden">
+        <div className="absolute flex flex-col bottom-3.5 z-2001 bg-secondary rounded-sm shadow-small max-h-40 overflow-hidden">
           <div className="infos_AttachmentsInfo flex flex-col max-h-[calc(4*22.86px)] overflow-y-auto p-2 gap-2 grow">
             {attachments.map(({ name, url }, index) => {
               const hasUrl = !!url && isDisplayableFile(url);

@@ -68,7 +68,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className="flex flex-col bg-background-secondary-color gap-5 w-full max-w-125 shadow-[2px_2px_4px_var(--color-color-foreground)]" id="modal">
+      <div className="flex flex-col bg-secondary gap-5 w-full max-w-125 shadow-[2px_2px_4px_var(--color-foreground)]" id="modal">
         <div className="text-[1.4rem] font-medium">
           <span>Inviter d'autres utilisateurs</span>
         </div>

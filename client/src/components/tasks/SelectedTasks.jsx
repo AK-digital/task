@@ -93,7 +93,7 @@ export default function SelectedTasks({
   }
 
   return (
-    <div className="flex fixed z-2001 left-1/2 bottom-5 -translate-x-1/2 bg-background-secondary-color shadow-[0_2px_4px_rgba(0,0,0,0.25)] rounded-lg text-black animate-[showAnim_0.2s_ease-out]">
+    <div className="flex fixed z-2001 left-1/2 bottom-5 -translate-x-1/2 bg-secondary shadow-[0_2px_4px_rgba(0,0,0,0.25)] rounded-lg text-black animate-[showAnim_0.2s_ease-out]">
       {/* Main content */}
       <div className="flex items-center gap-3 pr-6">
         <div className="bg-[#007CFF] h-full text-text-color rounded-[8px_0_0_8px] font-bold text-large py-4.5 px-6">

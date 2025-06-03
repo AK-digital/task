@@ -71,7 +71,7 @@ export default function CreateProject({
 
   return (
     <div className="relative w-full">
-      <div className="fixed top-0 right-0 bottom-0 bg-background-primary-color gap-1.5 w-full z-9999">
+      <div className="fixed top-0 right-0 bottom-0 bg-primary gap-1.5 w-full z-9999">
         <span
           className="absolute top-16 right-16 bg-none bg-transparent border-none cursor-pointer"
           onClick={() => setIsCreating(false)}

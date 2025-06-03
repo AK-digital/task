@@ -87,7 +87,7 @@ export default function Reactions({
               onMouseEnter={() => setHoveredEmoji(emoji)}
               onMouseLeave={() => setHoveredEmoji(null)}
               title={hasUserReacted ? "Retirer votre réaction" : ""}
-              className="relative flex items-center gap-1 p-1 text-center bg-background-secondary-color rounded-sm transition-all duration-200 ease-in-out cursor-pointer hover:shadow-shadow-box-small"
+              className="relative flex items-center gap-1 p-1 text-center bg-secondary rounded-sm transition-all duration-200 ease-in-out cursor-pointer hover:shadow-small"
             >
               <span>{emoji}</span>
               <span>{total}</span>

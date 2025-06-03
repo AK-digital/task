@@ -152,7 +152,7 @@ export default function ProjectOptions({ project }) {
   }
 
   return (
-    <div className="relative bg-background-primary-transparent rounded-t-2xl p-8 text-text-dark-color h-full overflow-auto">
+    <div className="relative bg-primary-transparent rounded-t-2xl p-8 text-text-dark-color h-full overflow-auto">
       <div onClick={() => router.back()} className="absolute top-[45px] left-[45px] cursor-pointer">
         <ArrowLeftCircle size={32} />
       </div>
@@ -363,11 +363,11 @@ export function IconList({ setMoreIcons, links, setLinks, idx }) {
 
   return (
     <>
-      <div className="absolute flex justify-center items-center flex-wrap bg-background-secondary-color rounded-lg shadow-shadow-box-small gap-3 z-2001 -top-[25px] right-[45px] h-fit p-3 w-[175px]">
+      <div className="absolute flex justify-center items-center flex-wrap bg-secondary rounded-lg shadow-small gap-3 z-2001 -top-[25px] right-[45px] h-fit p-3 w-[175px]">
         {icons.map((icon) => (
           <div
             key={icon?.name}
-            className="flex flex-col items-center justify-center p-1 rounded-lg transition-all duration-150 ease-linear hover:bg-background-third-color hover:cursor-pointer"
+            className="flex flex-col items-center justify-center p-1 rounded-lg transition-all duration-150 ease-linear hover:bg-third hover:cursor-pointer"
             onClick={() => handleIconChange(icon?.name)}
           >
             {icon?.icon}

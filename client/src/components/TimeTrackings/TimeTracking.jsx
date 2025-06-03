@@ -207,7 +207,7 @@ export default function TimeTracking({
 
   return (
     <div
-      className="flex items-center bg-background-secondary-color border-b border-text-light-color text-normal h-[42px] last:border-b-0"
+      className="flex items-center bg-secondary border-b border-text-light-color text-normal h-[42px] last:border-b-0"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
@@ -233,7 +233,7 @@ export default function TimeTracking({
             onBlur={handleIsEditing}
             onChange={handleChange}
             autoFocus
-            className="relative -left-1.5 border-none p-1.5 bg-background-third-color rounded-sm text-[14.8px] text-text-medium-color animate-[backgroundAppear_150ms_linear]"
+            className="relative -left-1.5 border-none p-1.5 bg-third rounded-sm text-[14.8px] text-text-medium-color animate-[backgroundAppear_150ms_linear]"
           />
         ) : (
           <span onClick={handleIsEditing} className="block overflow-hidden whitespace-nowrap text-ellipsis">

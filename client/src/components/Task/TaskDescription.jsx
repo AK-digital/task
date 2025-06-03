@@ -114,7 +114,7 @@ export default function TaskDescription({ project, task, uid }) {
       {/* If not editing and description is not empty */}
       {!isEditing && description && (
         <div>
-          <div className="relative rounded-lg shadow-shadow-box-small p-4 text-normal cursor-pointer bg-background-secondary-color" onClick={handleEditDescription}>
+          <div className="relative rounded-lg shadow-small p-4 text-normal cursor-pointer bg-secondary" onClick={handleEditDescription}>
             <div className="flex items-center gap-2">
               {descriptionAuthor?.picture ? (
                 <Image

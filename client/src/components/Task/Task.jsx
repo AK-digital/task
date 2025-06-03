@@ -67,7 +67,7 @@ export default function Task({
     <div
       ref={setNodeRef}
       style={style}
-      className={`container_Task flex items-center border-t border-text-color h-[46px] cursor-pointer text-text-color-dark transition-all duration-[120ms] ease-in-out bg-background-secondary-color data-[openned=true]:bg-[#ebded1] hover:shadow-[0_4px_2px_-2px_rgba(0,0,0,0.1)] ${isDragging ? "opacity-0" : ""}`}
+      className={`container_Task flex items-center border-t border-text-color h-[46px] cursor-pointer text-text-color-dark transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] hover:shadow-[0_4px_2px_-2px_rgba(0,0,0,0.1)] ${isDragging ? "opacity-0" : ""}`}
       suppressHydrationWarning
       data-openned={openedTask === task?._id}
       data-done={task?.status === "Terminée"}

@@ -185,9 +185,9 @@ export default function TaskTimer({ task }) {
           <div
             ref={refs.setFloating}
             style={floatingStyles}
-            className="absolute flex flex-col z-2001 bg-background-secondary-color gap-2 top-[44px] right-1 p-0 w-[400px] rounded-lg max-h-[300px] overflow-hidden shadow-shadow-box-small"
+            className="absolute flex flex-col z-2001 bg-secondary gap-2 top-[44px] right-1 p-0 w-[400px] rounded-lg max-h-[300px] overflow-hidden shadow-small"
           >
-            <div className="flex justify-between items-center text-[1.1rem] font-medium bg-background-third-color p-2 rounded-t">
+            <div className="flex justify-between items-center text-[1.1rem] font-medium bg-third p-2 rounded-t">
               <span className="text-text-dark-color">Gestion du temps</span>
               {addingSession && (
                 <span
