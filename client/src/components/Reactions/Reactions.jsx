@@ -59,10 +59,11 @@ export default function Reactions({
 
     if (response?.message?.includes("ajoutée")) {
       const messageBody = {
-        title: `${user?.firstName} ${t("tasks.reacted_to_your")} ${type}`,
-        content: `${user?.firstName} ${t("tasks.reacted_with")} ${type} ${t(
-          "tasks.with_emoji"
-        )} ${emoji}`,
+        type: "reaction",
+        params: {
+          emoji: emoji,
+          type: type,
+        },
       };
 
       const link = "/projects/" + project?._id + "/task/" + task?._id;

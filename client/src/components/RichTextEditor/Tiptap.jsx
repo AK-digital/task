@@ -370,16 +370,16 @@ export default function Tiptap({
     // Update description for every guests
     socket.emit("update task", task?.projectId?._id);
 
-    const message = {
-      title: `${user?.firstName} ${t("tasks.mentioned_in_description")}`,
-      content: t("tasks.mentioned_description_content", {
+    const messageNotif = {
+      type: "mention",
+      params: {
         projectName: project?.name,
-      }),
+      },
     };
     const link = `/projects/${response?.data?.projectId}/task/${task?._id}`;
 
     for (const taggedUser of taggedUsers) {
-      socket.emit("create notification", user, taggedUser, message, link);
+      socket.emit("create notification", user, taggedUser, messageNotif, link);
     }
 
     // Reset editor
@@ -460,10 +460,10 @@ export default function Tiptap({
     socket.emit("update task", task?.projectId?._id);
 
     const messageNotif = {
-      title: `${user?.firstName} ${t("tasks.mentioned_in_conversation")}`,
-      content: t("tasks.mentioned_conversation_content", {
+      type: "mention",
+      params: {
         projectName: project?.name,
-      }),
+      },
     };
 
     const link = `/projects/${task?.projectId?._id}/task/${task?._id}`;

@@ -3,12 +3,14 @@ import styles from "@/styles/pages/verification.module.css";
 import { verification } from "@/api/auth";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 
 export default function Verification() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [success, setSuccess] = useState(false);
-  const [text, setText] = useState("Vérification en cours...");
+  const [text, setText] = useState(t("verification.verifying"));
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR(
@@ -18,23 +20,19 @@ export default function Verification() {
 
   useEffect(() => {
     if (isLoading) {
-      setText("Vérification en cours...");
+      setText(t("verification.verifying"));
       return;
     }
 
     if (error) {
-      setText(
-        "Une erreur s'est produite lors de la vérification de votre compte."
-      );
+      setText(t("verification.error"));
       setSuccess(false);
       return;
     }
 
     if (data?.success) {
       setSuccess(true);
-      setText(
-        "Votre adresse e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter."
-      );
+      setText(t("verification.success"));
 
       const timeout = setTimeout(() => {
         router.push("/");
@@ -42,19 +40,17 @@ export default function Verification() {
 
       return () => clearTimeout(timeout);
     } else {
-      setText(
-        "Une erreur s'est produite lors de la vérification de votre compte."
-      );
+      setText(t("verification.error"));
       setSuccess(false);
     }
-  }, [data, error, isLoading, router]);
+  }, [data, error, isLoading, router, t]);
 
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <h1>Vérification de votre adresse e-mail</h1>
+        <h1>{t("verification.title")}</h1>
         <p>{text}</p>
-        {success && <p>Redirection en cours...</p>}
+        {success && <p>{t("verification.redirecting")}</p>}
       </div>
     </main>
   );

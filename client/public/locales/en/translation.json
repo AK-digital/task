@@ -105,7 +105,17 @@
     "unread_singular": "unread",
     "unread_plural": "unread",
     "mark_all_read": "Mark everything as read",
-    "empty_message": "You have no notification for the moment"
+    "empty_message": "You have no notification for the moment",
+    "generic_title": "New notification",
+    "generic_content": "You have received a new notification",
+    "mentioned_title": "{{senderName}} mentioned you",
+    "mentioned_content": "You have been mentioned in a conversation",
+    "reacted_title": "{{senderName}} reacted to your message",
+    "reacted_content": "{{senderName}} reacted with {{emoji}} to your {{type}}",
+    "task_assigned_title": "New task assigned",
+    "task_assigned_content": "{{senderName}} assigned you a task",
+    "project_invitation_title": "Project invitation",
+    "project_invitation_content": "{{senderName}} invited you to join a project"
   },
   "navigation": {
     "my_tasks": "My tasks",
