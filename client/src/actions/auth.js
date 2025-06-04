@@ -99,8 +99,6 @@ export async function signIn(prevState, formData) {
 
     const res = await useFetch("auth/sign-in", options);
 
-    console.log(res);
-
     const response = await res.json();
 
     if (res.status === 403) {

@@ -1,6 +1,7 @@
 import { sendEmail } from "../helpers/nodemailer.js";
 import { betaRequestValidation } from "../helpers/zod.js";
 import BetaRequestModel from "../models/BetaRequest.model.js";
+import UserModel from "../models/User.model.js";
 import {
   emailBetaRequest,
   emailBetaRequestAdmin,
@@ -22,6 +23,15 @@ export async function sendBetaRequest(req, res) {
       });
     }
 
+    const user = await UserModel.findOne({ email: email });
+
+    if (user) {
+      return res.status(409).send({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
     const token = crypto.randomUUID(20).toString("hex");
 
     const betaRequest = new BetaRequestModel({
@@ -38,7 +48,7 @@ export async function sendBetaRequest(req, res) {
       });
     }
 
-    const link = `${process.env.CLIENT_URL}/beta/${token}`;
+    const link = `${process.env.CLIENT_URL}/verification/beta/${token}`;
 
     const templateRequest = emailBetaRequest(link);
 

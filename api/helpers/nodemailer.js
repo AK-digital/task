@@ -35,7 +35,7 @@ export async function sendEmail(from, to, subject, text) {
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td align="center" valign="middle">
-              <table width="100%" maxwidth="500" border="0" cellspacing="0" cellpadding="0" style="max-width: 500px; margin:42px;">
+              <table width="100%" maxwidth="700" border="0" cellspacing="0" cellpadding="0" style="max-width: 700px; margin:42px;">
                 <tr>
                   <td align="center" style="padding: 20px;">
                     <div style="font-family: Arial, sans-serif; color: #5C5D61; text-align: center; background-color: white; width: 100%; border-radius:16px; border-top: 4px solid #a87e51; padding: 20px;">
@@ -47,7 +47,7 @@ export async function sendEmail(from, to, subject, text) {
                       </p>
                     </div>
                      <div style="margin-top:16px;font-size:12px;font-weight:600;color:#72716f;">
-                      Fait avec ❤️ par l'équipe d'<a href="https://akdigital.fr" style="color:#a87e51;text-decoration:none;">AK Digital</a>
+                       l'équipe d'<a href="https://akdigital.fr" style="color:#a87e51;text-decoration:none;">AK Digital</a>
                     </div>
                   </td>
                 </tr>

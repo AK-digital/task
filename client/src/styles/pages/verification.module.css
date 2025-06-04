@@ -17,3 +17,18 @@
 .container p {
     margin-bottom: 10px;
 }
+
+.container a {
+    position: relative;
+    top: 24px;
+    background-color: var(--accent-color);
+    padding: 12px;
+    border-radius: var(--border-radius-large);
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.container a:hover {
+    background-color: var(--accent-color-hover);
+}

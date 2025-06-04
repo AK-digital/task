@@ -1,7 +1,7 @@
 const emailStyles = {
   container:
     "font-family: Arial, sans-serif; color: #4a4a4a; text-align: center; padding: 20px; margin-inline: auto;",
-  title: "font-size: 40px; font-weight: bold;",
+  title: "font-size: 32px; font-weight: bold;",
   subtitle:
     "font-size: 28px; max-width: 450px; margin-inline: auto; font-weight: 500;",
   paragraph:
