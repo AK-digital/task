@@ -52,7 +52,7 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
 
   return (
     <>
-      <div className="absolute z-2001 bg-secondary rounded-lg top-3 left-[18px] w-max text-small py-2 px-4 shadow-small text-text-dark-color no-underline [&_a]:text-red-500 [&_a]:no-underline ">
+      <div className="absolute z-2001 bg-secondary rounded-lg top-[25px] -left-[13px] w-max text-small py-2 px-4 shadow-small text-text-dark-color no-underline [&_a]:text-text-dark-color [&_a]:no-underline ">
         {isOpen && (
           <ul>
             {options.map((option, idx) => {
