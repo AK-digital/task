@@ -103,7 +103,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
         onMouseDown={startResizing}
       ></div>
       <div
-        className="container_TaskMore fixed z-[8000] top-0 right-0 bottom-0 bg-[url('/backgrounds/background.jpg')] bg-no-repeat bg-[20%_50%] bg-cover w-[clamp(520px,45%,calc(100vw-80px))] h-screen shadow-[-4px_10px_10px_0px_rgba(0,0,0,0.15)] p-8 cursor-default overflow-y-auto min-w-[520px] resize-x"
+        className="container_TaskMore flex flex-col gap-3 fixed z-[8000] top-0 right-0 bottom-0 bg-[url('/backgrounds/background.jpg')] bg-no-repeat bg-[20%_50%] bg-cover w-[clamp(520px,45%,calc(100vw-80px))] h-screen shadow-[-4px_10px_10px_0px_rgba(0,0,0,0.15)] p-8 cursor-default overflow-y-auto min-w-[520px] resize-x"
         ref={containerRef}
       >
         {/* Description */}

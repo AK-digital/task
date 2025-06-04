@@ -76,13 +76,13 @@ export default function ProjectCard({
         <Star
           size={18}
           onClick={handleFavorite}
-          className={`absolute top-[7px] left-[15px] ${isFavorite ? 'fill-accent-color text-accent-color' : 'fill-[#d0cec7] text-[#d0cec7]'}`} 
-          />
+          className={`absolute top-[7px] left-[15px] ${isFavorite ? 'fill-accent-color text-accent-color' : 'fill-[#d0cec7] text-[#d0cec7]'}`}
+        />
       </div>
 
       <Link href={href} className="no-underline flex-1 flex">
         <div className="contentWrapper_ProjectCard flex-1 bg-secondary py-[18px] px-[22px] min-h-[181px] rounded-tr-2xl rounded-bl-2xl rounded-br-2xl rounded-tl-none transition-all duration-200 ease-in-out hover:shadow-[10px_10px_10px_rgba(0,0,0,0.1)] hover:!text-transparent flex flex-col justify-between">
-          
+
           <div>
             {isDefaultProject ? (
               <div className="flex justify-between w-full rounded-2xl">
@@ -100,7 +100,7 @@ export default function ProjectCard({
                   <div className="-ml-2"></div>
                 </div>
               </div>
-            
+
             ) : (
               <div className="flex justify-between w-full rounded-2xl">
                 <Image
@@ -124,7 +124,7 @@ export default function ProjectCard({
               <div className="tabs_ProjectCard text-text-darker-color"></div>
               <div className="flex justify-between items-center text-text-darker-color">
                 <div className="rounded-[5px] bg-[#d0cec7] w-[76px] h-3" />
-                <div className="statusBar_ProjectCard flex h-3 w-full rounded-[5px] flex-[0.5]  bg-[#e9ecef]"></div>
+                <div className="statusBar_ProjectCard flex h-3 w-full rounded-[5px] flex-[0.5] bg-[#d0cec7]"></div>
               </div>
             </div>
           ) : (

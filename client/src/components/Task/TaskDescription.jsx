@@ -165,7 +165,7 @@ export default function TaskDescription({ project, task, uid }) {
                   data-disabled={pending}
                   disabled={pending}
                   onClick={handleRemoveDescription}
-                  className="bg-transparent text-accent-color-light p-0 text-small hover:text-accent-color-hover shadow-inherit"
+                  className="bg-transparent text-accent-color p-0 text-small hover:text-accent-color-hover shadow-inherit"
                 >
                   Effacer la description
                 </button>
