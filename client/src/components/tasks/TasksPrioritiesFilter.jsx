@@ -44,7 +44,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
         data-open={isOpen}
       >
         <Star size={16} />
-        <span className="flex-1">Priorité</span>
+        <span className="flex-1 text-[15px]">Priorité</span>
         {hasPriorities && (
           <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {queriesPriorities?.length}

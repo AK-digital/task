@@ -46,7 +46,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
         onClick={() => setIsOpen(!isOpen)}
       >
         <ChartBar size={16} />
-        <span className="flex-1">Status</span>
+        <span className="flex-1 text-[15px]">Status</span>
         {hasStatus && (
           <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {QueriesStatus?.length}

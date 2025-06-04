@@ -52,7 +52,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
         onClick={() => setIsOpen(!isOpen)}
       >
         <CircleUserRound size={18} />
-        <span className="flex-1">Responsables</span>
+        <span className="flex-1 text-[15px]">Responsables</span>
         {hasMembers && (
           <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {selectedMembers?.length}
