@@ -46,7 +46,9 @@ export default function TasksAdminFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div
-        className={`relative flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[180px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${isOpen ? 'bg-[#f9f7efb3] shadow-small' : ''}`}
+        className={`relative flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[180px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${
+          isOpen ? "bg-[#f9f7efb3] shadow-small" : ""
+        }`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <CircleUserRound size={18} />
@@ -58,7 +60,9 @@ export default function TasksAdminFilter({ queries, setQueries }) {
         )}
         <ChevronDown
           size={16}
-          className={`transition-all duration-[120ms] ease-in-out ${isOpen ? 'rotate-180' : ''}`}
+          className={`transition-all duration-[120ms] ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </div>
       {isOpen && (
@@ -67,14 +71,17 @@ export default function TasksAdminFilter({ queries, setQueries }) {
             {isNotEmpty(members) ? (
               <ul>
                 <li
-                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+                  className="flex items-center gap-1 p-1.5 cursor-pointer text-xs font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
                   onClick={() => handleReset()}
                 >
                   <Undo size={16} />
                   Supprimer les filtres
                 </li>
                 {members.map((member) => (
-                  <li key={member?.user?._id} className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm">
+                  <li
+                    key={member?.user?._id}
+                    className="flex items-center gap-1 p-1.5 cursor-pointer text-xs font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+                  >
                     <input
                       type="checkbox"
                       id={member?.user?._id}
@@ -89,7 +96,10 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                       className="w-auto cursor-pointer mr-1"
                     />
 
-                    <label htmlFor={member?.user?._id} className="flex items-center gap-1 cursor-pointer">
+                    <label
+                      htmlFor={member?.user?._id}
+                      className="flex items-center gap-1 cursor-pointer"
+                    >
                       <DisplayPicture
                         user={member?.user}
                         isPopup={false}

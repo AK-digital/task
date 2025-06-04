@@ -9,6 +9,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";
 import { useProjectContext } from "@/context/ProjectContext";
+import { isNotEmpty } from "@/utils/utils";
 
 const initialState = {
   success: null,
@@ -92,7 +93,9 @@ export default function Board({
       ref={setNodeRef}
       data-board-id={board?._id}
       style={{ borderColor: `${optimisticColor}` }}
-      className={` flex flex-col min-w-[1050px] rounded-2xl shadow-small border-secondary bg-secondary border-l-[3px] ${isOverlay ? 'overlayBoard' : ''}`}
+      className={` flex flex-col min-w-[1050px] rounded-2xl shadow-small border-secondary bg-secondary border-l-[3px] ${
+        isOverlay ? "overlayBoard" : ""
+      }`}
     >
       {/* Board header - Utilisation de la classe sticky */}
       <BoardHeader
@@ -109,7 +112,7 @@ export default function Board({
         isOverlay={isOverlay}
       />
       {/* Board content */}
-      {open && !isOverlay && (
+      {open && !isOverlay && isNotEmpty(tasks) && (
         <div className="bg-secondary px-5 rounded-2xl">
           <Tasks
             tasks={tasks}
@@ -156,11 +159,7 @@ export default function Board({
                 }}
                 className="font-bricolage border-none bg-inherit py-1.5 px-1 text-normal"
               />
-              <button
-                type="submit"
-                hidden
-                className="font-bricolage"
-              >
+              <button type="submit" hidden className="font-bricolage">
                 Ajouter une tâche
               </button>
             </form>
@@ -168,7 +167,9 @@ export default function Board({
           {isWritting && (
             <div className="absolute mt-1 ml-[25px] text-text-color-muted text-small">
               <p>
-                Appuyer sur <span className="text-accent-color-light">entrée</span> pour ajouter une tâche
+                Appuyer sur{" "}
+                <span className="text-accent-color-light">entrée</span> pour
+                ajouter une tâche
               </p>
             </div>
           )}
