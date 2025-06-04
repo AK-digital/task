@@ -23,7 +23,7 @@ export default function SideNav() {
   const projectId = id ?? "";
   const { favorites, favoritesLoading } = useFavorites();
   const projects = favorites?.map((favorite) => favorite.project);
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <aside
