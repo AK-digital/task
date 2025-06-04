@@ -31,7 +31,7 @@ const io = new Server(server, {
   addTrailingSlash: false,
   transports: ["websocket", "polling"],
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: [process.env.CLIENT_URL, process.env.LANDING_URL],
     methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -39,7 +39,7 @@ const io = new Server(server, {
 });
 
 const corsOptions = {
-  origin: process.env.CLIENT_URL,
+  origin: [process.env.CLIENT_URL, process.env.LANDING_URL],
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,

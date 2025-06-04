@@ -80,21 +80,16 @@ export async function sendBetaRequest(req, res) {
 
 export async function confirmBetaRequest(req, res) {
   try {
-    const { email } = req.body;
+    const { token } = req.body;
 
-    const isValid = betaRequestValidation.safeParse({ email });
-
-    if (!isValid.success) {
-      const { errors } = isValid.error;
-
+    if (!token) {
       return res.status(400).send({
         success: false,
-        message: "Invalid parameters",
-        errors: errors,
+        message: "Missing parameters",
       });
     }
 
-    const betaRequest = await BetaRequestModel.findOne({ email: email });
+    const betaRequest = await BetaRequestModel.findOne({ token: token });
 
     if (!betaRequest) {
       return res.status(404).send({
@@ -111,7 +106,7 @@ export async function confirmBetaRequest(req, res) {
     }
 
     const updatedBetaRequest = await BetaRequestModel.findOneAndUpdate(
-      { email },
+      { token: token },
       { verified: true },
       { new: true }
     );

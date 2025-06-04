@@ -1,7 +1,5 @@
 "use client";
 import styles from "@/styles/pages/projects.module.css";
-import { ArrowLeftCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/Projects/ProjectCard";
 import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
 import { useProjects } from "@/app/hooks/useProjects";
@@ -9,7 +7,6 @@ import { AuthContext } from "@/context/auth";
 import { useContext } from "react";
 
 export default function Projects() {
-  const router = useRouter();
   const { uid } = useContext(AuthContext);
   const { projects, projectsLoading, mutateProjects } = useProjects();
 
@@ -25,9 +22,6 @@ export default function Projects() {
     <main className={styles.main}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.back} onClick={() => router.back()}>
-            <ArrowLeftCircle size={32} />
-          </div>
           <h1 className={styles.headerH1}>Vos projets</h1>
           <div className={styles.projectCount}>
             <span>
