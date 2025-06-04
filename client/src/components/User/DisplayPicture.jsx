@@ -38,10 +38,14 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
           height={style?.height?.replace("px", "")}
           quality={100}
           alt={`Photo de ${user?.firstName}`}
-          style={{ ...style }}
+          style={{
+            ...style,
+            minHeight: style?.height,
+            minWidth: style?.width
+          }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className={`min-h-[${style?.height}] min-w-[${style?.width}] rounded-full`}
+          className="rounded-full"
         />
       ) : (
         <div

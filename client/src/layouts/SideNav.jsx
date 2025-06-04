@@ -32,13 +32,15 @@ export default function SideNav() {
     >
       <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-7 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730] [&_a]:no-underline">
         <div>
-          <Image
-            src={"/clynt-logo-dark.svg"}
-            width={32}
-            height={32}
-            alt="Logo de Clynt"
-            className="block ml-[5px] mr-auto"
-          />
+          <Link href={"/projects"}>
+            <Image
+              src={"/clynt-logo-dark.svg"}
+              width={32}
+              height={32}
+              alt="Logo de Clynt"
+              className="block ml-[5px] mr-auto"
+            />
+          </Link>
           <div
             onClick={(e) => setIsMenuOpen(!isMenuOpen)}
             className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] cursor-pointer rounded-full text-text-color my-5 hover:text-accent-color-hover"

@@ -8,7 +8,6 @@ import TasksFilters from "@/components/tasks/TasksFilters";
 import DisplayPicture from "@/components/User/DisplayPicture";
 import { useProjectContext } from "@/context/ProjectContext";
 
-
 export default function ProjectHeader({ displayedFilters }) {
   const { project, mutateProject, queries, setQueries } = useProjectContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -19,15 +18,19 @@ export default function ProjectHeader({ displayedFilters }) {
       <header className="w-full pr-6">
         <nav className="flex items-center justify-between pb-4">
           <ProjectTitle project={project} />
+          <TasksFilters displayedFilters={displayedFilters} />
           <div className="flex">
             <div className="flex justify-center items-center ml-2.5">
               {isNotEmpty(members) &&
                 members?.map((member) => (
-                  <div key={member?.user?._id} className="-ml-2 rounded-full transition-transform duration-200 hover:-translate-y-0.5">
+                  <div
+                    key={member?.user?._id}
+                    className="-ml-2 rounded-full transition-transform duration-200 hover:-translate-y-0.5"
+                  >
                     <DisplayPicture
                       user={member?.user}
                       style={{ width: "32px", height: "32px" }}
-                      className="mt-[5px] rounded-full object-cover"
+                      className="mt-[5px] rounded-full object-cover max-w-[32px] max-h-[32px]"
                     />
                   </div>
                 ))}

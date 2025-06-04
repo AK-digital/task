@@ -115,7 +115,7 @@ export default function TaskPriority({ task }) {
   return (
     <div className="relative flex items-center select-none border-r border-text-light-color text-normal text-text-color min-w-[135px] max-w-[150px] w-full h-full">
       <div
-        className="relative w-full min-w-[110px] text-center cursor-pointer py-1 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
+        className="relative w-full min-w-[110px] text-center cursor-pointer py-2 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}

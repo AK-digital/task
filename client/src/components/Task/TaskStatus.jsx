@@ -108,7 +108,7 @@ export default function TaskStatus({ task, uid }) {
   return (
     <div className="relative flex items-center select-none border-r border-text-light-color text-normal text-foreground min-w-[135px] max-w-[150px] w-full h-full">
       <div
-        className="relative w-full min-w-[110px] text-center cursor-pointer py-1 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
+        className="relative w-full min-w-[110px] text-center cursor-pointer py-2 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -117,11 +117,11 @@ export default function TaskStatus({ task, uid }) {
       </div>
       {isOpen && (
         <>
-          <div 
+          <div
             ref={refs.setFloating}
             style={floatingStyles}
             className={`absolute z-2001 top-[45px] left-1/2 -translate-x-1/2 p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
-            >
+          >
             <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 px-3 pb-3 border-b border-color-border-color">
               {statuses?.map((status) => {
                 if (!isEdit) {

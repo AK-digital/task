@@ -92,7 +92,7 @@ export default function Board({
       ref={setNodeRef}
       data-board-id={board?._id}
       style={{ borderColor: `${optimisticColor}` }}
-      className={`relative flex flex-col min-w-[1050px] rounded-2xl shadow-small border-secondary bg-secondary border-r-[3px] border-l-[3px] ${isOverlay ? 'overlayBoard' : ''}`}
+      className={` flex flex-col min-w-[1050px] rounded-2xl shadow-small border-secondary bg-secondary border-r-[3px] border-l-[3px] ${isOverlay ? 'overlayBoard' : ''}`}
     >
       {/* Board header - Utilisation de la classe sticky */}
       <BoardHeader
@@ -110,7 +110,7 @@ export default function Board({
       />
       {/* Board content */}
       {open && !isOverlay && (
-        <div className="bg-secondary px-5">
+        <div className="bg-secondary px-5 rounded-2xl">
           <Tasks
             tasks={tasks}
             project={project}

@@ -50,16 +50,18 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
             {queriesPriorities?.length}
           </span>
         )}
-        <ChevronDown 
-          size={16} 
-          className={`transition-all duration-[120ms] ease-in-out ${isOpen ? 'rotate-180' : ''}`}
+        <ChevronDown
+          size={16}
+          className={`transition-all duration-[120ms] ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </div>
       {isOpen && (
         <>
           <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full font-medium text-small">
             <ul className="flex flex-col">
-              <li 
+              <li
                 className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third hover:shadow-small hover:rounded-sm"
                 onClick={handleResetPriorities}
               >
@@ -67,7 +69,10 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                 <span>Effacer</span>
               </li>
               {priorities.map((priority) => (
-                <li key={priority?._id} className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third hover:shadow-small hover:rounded-sm">
+                <li
+                  key={priority?._id}
+                  className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third hover:shadow-small hover:rounded-sm"
+                >
                   <input
                     type="checkbox"
                     id={priority?._id}
@@ -79,9 +84,12 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                         ? queriesPriorities?.includes(priority?._id)
                         : false
                     }
-                    className="cursor-pointer"
+                    className="w-auto cursor-pointer"
                   />
-                  <label htmlFor={priority?._id} className="flex items-center cursor-pointer flex-1">
+                  <label
+                    htmlFor={priority?._id}
+                    className="flex items-center cursor-pointer flex-1"
+                  >
                     {priority?.name}
                   </label>
                 </li>

@@ -89,11 +89,11 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                     key={member?.user?._id}
                     className="flex justify-between items-center gap-3"
                   >
-                    <div>
+                    <div className="[&_div]:justify-center">
                       <DisplayPicture
                         user={member?.user}
                         style={{ width: "32px", height: "32px" }}
-                        className="rounded-full min-w-8 min-h-8"
+                        className="rounded-full"
                       />
                       <span
                         className="w-55 overflow-hidden text-ellipsis"
@@ -102,8 +102,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         {member?.user?.email}
                       </span>
                       {canEditRole &&
-                      member?.user?._id !== uid &&
-                      member?.role !== "owner" ? (
+                        member?.user?._id !== uid &&
+                        member?.role !== "owner" ? (
                         <DropDown
                           defaultValue={member?.role}
                           options={options}

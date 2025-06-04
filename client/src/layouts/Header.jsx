@@ -50,9 +50,9 @@ export default function Header() {
                 data-open={notifOpen}
                 className="group-hover:fill-text-darker-color  data-[open=true]:fill-text-darker-color text-text-darker-color"
               />
-              {unreadCount > 0 && (
+              {/* {unreadCount > 0 && (
                 <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-red-500 animate-ping"></div>
-              )}
+              )} */}
               {unreadCount > 0 && (
                 <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-text-color-red"></div>
               )}

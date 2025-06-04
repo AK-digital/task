@@ -114,7 +114,7 @@ export default function TaskEstimate({ task, uid }) {
         data-estimation={hasEstimation}
         onClick={handleIsEditing}
         ref={refs.setReference}
-        className="bg-primary p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
+        className="bg-primary py-1 px-0.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
       >
         <span>{estimation}</span>
       </div>

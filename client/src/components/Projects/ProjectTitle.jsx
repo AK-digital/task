@@ -192,7 +192,12 @@ export default function ProjectTitle({ project }) {
             ))}
           </form>
         ) : (
-          <span onClick={handleIsEditing} className="cursor-pointer hover:opacity-80">{projectName}</span>
+          <span
+            onClick={handleIsEditing}
+            className="cursor-pointer w-max hover:opacity-80"
+          >
+            {projectName}
+          </span>
         )}
       </div>
 
@@ -212,7 +217,12 @@ export default function ProjectTitle({ project }) {
           {project?.urls?.map((url, idx) => {
             return (
               <div key={idx}>
-                <a href={url?.url} target="_blank" rel="noopener noreferrer" className="flex items-center bg-secondary p-2 rounded-lg">
+                <a
+                  href={url?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center bg-secondary p-2 rounded-lg"
+                >
                   {displayIcon(url?.icon)}
                 </a>
               </div>

@@ -56,8 +56,8 @@ export default function TasksAdminFilter({ queries, setQueries }) {
             {selectedMembers?.length}
           </span>
         )}
-        <ChevronDown 
-          size={16} 
+        <ChevronDown
+          size={16}
           className={`transition-all duration-[120ms] ease-in-out ${isOpen ? 'rotate-180' : ''}`}
         />
       </div>
@@ -66,8 +66,8 @@ export default function TasksAdminFilter({ queries, setQueries }) {
           <div className="absolute z-[2001] top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full">
             {isNotEmpty(members) ? (
               <ul>
-                <li 
-                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm" 
+                <li
+                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
                   onClick={() => handleReset()}
                 >
                   <Undo size={16} />
@@ -86,6 +86,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                           ? selectedMembers?.includes(member?.user?._id)
                           : false
                       }
+                      className="w-auto cursor-pointer mr-1"
                     />
 
                     <label htmlFor={member?.user?._id} className="flex items-center gap-1 cursor-pointer">
