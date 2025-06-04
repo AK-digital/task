@@ -47,7 +47,7 @@ export async function sendEmail(from, to, subject, text) {
                       </p>
                     </div>
                      <div style="margin-top:16px;font-size:12px;font-weight:600;color:#72716f;">
-                       l'équipe d'<a href="https://akdigital.fr" style="color:#a87e51;text-decoration:none;">AK Digital</a>
+                      L'équipe d'<a href="https://akdigital.fr" style="color:#a87e51;text-decoration:none;">AK Digital</a>
                     </div>
                   </td>
                 </tr>

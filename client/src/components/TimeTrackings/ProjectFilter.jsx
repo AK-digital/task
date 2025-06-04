@@ -2,7 +2,6 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon, Undo } from "lucide-react";
 
-
 export default function ProjectFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentProjects, setCurrentProjects] = useState([]);
@@ -65,14 +64,15 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
         {!isOpen && (
           <ChevronDownIcon size={16} className="absolute right-1.5" />
         )}
-
         {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
       </div>
       {isOpen && (
-
         <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-2.5 z-[2000] max-h-[300px] overflow-y-auto">
           <ul>
-           <li className=flex items-center gap-1 cursor-pointer py-1.5 text-small onClick={handleReset}>
+            <li
+              className="flex items-center gap-1 cursor-pointer py-1.5 text-small"
+              onClick={handleReset}
+            >
               <Undo size={16} />
               Supprimer les filtres
             </li>

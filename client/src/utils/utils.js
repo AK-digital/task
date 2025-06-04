@@ -195,8 +195,8 @@ export function exportTimeTracking(projects, trackers) {
         head: [["Description", "Responsable", "Temps", "Date"]],
         body: billableTrackers?.map((tracker) => {
           return [
-            tracker?.taskText || tracker?.task[0]?.text,
-            tracker?.user?.firstName + " " + tracker?.user?.lastName,
+            tracker?.taskText || tracker?.taskId?.text,
+            tracker?.userId?.firstName + " " + tracker?.userId?.lastName,
             formatTime(Math.floor(tracker?.duration / 1000)),
             new Date(tracker?.startTime).toLocaleDateString("fr-FR", {
               day: "2-digit",
@@ -246,8 +246,8 @@ export function exportTimeTracking(projects, trackers) {
         head: [["Description", "Responsable", "Temps", "Date"]],
         body: nonBillableTrackers?.map((tracker) => {
           return [
-            tracker?.taskText || tracker?.task[0]?.text,
-            tracker?.user?.firstName + " " + tracker?.user?.lastName,
+            tracker?.taskText || tracker?.taskId?.text,
+            tracker?.userId?.firstName + " " + tracker?.userId?.lastName,
             formatTime(Math.floor(tracker?.duration / 1000)),
             new Date(tracker?.startTime).toLocaleDateString("fr-FR", {
               day: "2-digit",
@@ -295,7 +295,8 @@ export function exportTimeTracking(projects, trackers) {
 
     // Sauvegarde du fichier avec nom du projet
     doc.save(
-      `${formattedStartingDate}-${formattedEndingDate}-${project?.name || "projet"
+      `${formattedStartingDate}-${formattedEndingDate}-${
+        project?.name || "projet"
       }-temps-clynt.pdf`
     );
   }
