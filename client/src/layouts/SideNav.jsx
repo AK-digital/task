@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   ArrowLeftFromLine,
@@ -11,12 +11,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import moment from "moment";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
 
 export default function SideNav() {
+  const pathname = usePathname();
   const params = useParams();
   const { slug } = params;
   const id = slug ? slug[0] : null;
@@ -24,6 +24,10 @@ export default function SideNav() {
   const { favorites, favoritesLoading } = useFavorites();
   const projects = favorites?.map((favorite) => favorite.project);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const isProjectsPage = pathname === "/projects";
+  const isTasksPage = pathname === "/tasks";
+  const isTimesPage = pathname === "/times";
 
   return (
     <aside
@@ -53,6 +57,7 @@ export default function SideNav() {
               href={"/tasks"}
               title="Mes tâches"
               className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+              data-active={isTasksPage}
             >
               <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
                 <ClipboardList
@@ -86,7 +91,7 @@ export default function SideNav() {
           <Link
             className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             href={"/projects"}
-            data-active={projectId === ""}
+            data-active={isProjectsPage}
           >
             <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
               <LayoutGrid
@@ -103,6 +108,7 @@ export default function SideNav() {
           <Link
             href={"/times"}
             className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+            data-active={isTimesPage}
           >
             <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
               <Clock3

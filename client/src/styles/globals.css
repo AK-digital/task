@@ -287,11 +287,13 @@
     width: 220px !important;
   }
 
-  .containerIcon_SideNav:hover div {
+  .containerIcon_SideNav:hover div,
+  .containerIcon_SideNav[data-active="true"] div {
     border: 2px solid var(--color-accent-color);
   }
 
-  .containerIcon_SideNav:hover:after {
+  .containerIcon_SideNav:hover:after,
+  .containerIcon_SideNav[data-active="true"]:after {
     content: "";
     position: absolute;
     top: 0;
@@ -302,11 +304,6 @@
     border-right: 2px solid var(--color-accent-color);
     z-index: -1;
     border-radius: 33px 0 0 33px;
-  }
-
-  .containerIcon_SideNav[data-active="true"] span {
-    font-weight: 400;
-    transition: all linear 150ms;
   }
 
   /* ProjectSideNav */
