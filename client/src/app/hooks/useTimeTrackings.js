@@ -5,8 +5,6 @@ import { generateUrlParams } from "@/utils/generateUrlParams";
 export function useTimeTrackings(queries) {
   const fetcher = getTimeTrackings.bind(null, queries);
 
-  console.log(generateUrlParams(queries));
-
   const options = {
     revalidateOnFocus: false,
     revalidateOnMount: true,

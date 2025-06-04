@@ -1,4 +1,3 @@
-import styles from "@/styles/components/projects/statusSegment.module.css";
 import { useState } from "react";
 import TaskInfo from "../Popups/TaskInfo";
 
