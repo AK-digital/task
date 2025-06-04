@@ -8,7 +8,7 @@ import MessageModel from "../models/Message.model.js";
 import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailMessage } from "../templates/emails.js";
-import { deleteReaction, getMatches } from "../utils/utils.js";
+import { getMatches } from "../utils/utils.js";
 
 export async function saveMessage(req, res, next) {
   try {

@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 });
 
 function stripHtmlTags(html) {
-  return html.replace(/<[^>]*>?/gm, "");
+  return html?.replace(/<[^>]*>?/gm, "");
 }
 
 export async function sendEmail(from, to, subject, text) {
