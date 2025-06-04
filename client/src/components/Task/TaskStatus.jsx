@@ -120,7 +120,9 @@ export default function TaskStatus({ task, uid }) {
           <div
             ref={refs.setFloating}
             style={floatingStyles}
-            className={`absolute z-2001 top-[45px] left-1/2 -translate-x-1/2 p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
+            className={`absolute z-2001 top-[45px] p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${
+              listWidth() ? "w-[380px]" : "w-[220px]"
+            }`}
           >
             <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 px-3 pb-3 border-b border-color-border-color">
               {statuses?.map((status) => {
@@ -157,17 +159,23 @@ export default function TaskStatus({ task, uid }) {
               )}
             </ul>
             {isEdit ? (
-              <button className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none" onClick={handleEditStatus}>
+              <button
+                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none"
+                onClick={handleEditStatus}
+              >
                 <Save size={16} />
                 Appliquer
               </button>
             ) : (
-              <button className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none" onClick={handleEditStatus}>
+              <button
+                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none"
+                onClick={handleEditStatus}
+              >
                 <Pen size={16} /> Modifier les statuts
               </button>
             )}
           </div>
-          <div id="modal-layout-opacity" onClick={handleIsOpen}></div>
+          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
         </>
       )}
     </div>
