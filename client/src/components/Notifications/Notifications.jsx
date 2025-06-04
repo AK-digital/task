@@ -49,8 +49,8 @@ export default function Notifications({
 
   return (
     <>
-      <div className="absolute z-2001  flex flex-col top-10 right-[50px] w-[560px] p-0 pr-2 max-h-[400px] overflow-y-auto rounded-lg bg-secondary shadow-medium">
-        <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px]">
+      <div className="absolute flex flex-col top-[54px] right-0 w-[560px] z-2001 p-0 pr-2 max-h-[400px] overflow-y-auto rounded-lg bg-secondary shadow-medium sm:fixed sm:top-1/2 sm:right-1/2 sm:w-[80vw] sm:-translate-x-1/2 sm:translate-y-1/2">
+        <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px] sm:flex-col sm:gap-2.5">
           <span>Notifications</span>
           {unreadCount > 0 && (
             <div className="flex items-center gap-2.5">
@@ -61,7 +61,7 @@ export default function Notifications({
                 onClick={handleReadNotifications}
                 data-disabled={isLoading}
                 disabled={isLoading}
-                className="bg-transparent text-accent-color-light py-1 px-2 text-small rounded-sm shadow-none hover:bg-[#a87e511a] hover:shadow-none data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-[#a87e511a]"
+                className="bg-transparent text-accent-color-light text-small rounded-sm shadow-none hover:bg-[#a87e511a] hover:shadow-none data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-[#a87e511a]"
               >
                 Tout marquer comme lu
               </button>
@@ -73,7 +73,7 @@ export default function Notifications({
             <span>Vous n'avez aucune notification pour le moment</span>
           </div>
         ) : (
-          <ul className="h-full overflow-y-auto">
+          <ul className="h-full overflow-y-auto ">
             {notifications?.map((notif, idx) => {
               const dateFromNow = moment(notif?.createdAt).fromNow();
               return (
@@ -90,7 +90,7 @@ export default function Notifications({
                         width={30}
                         height={30}
                         alt={`Photo de profil de ${notif?.senderId?.firstName}`}
-                        className="rounded-full max-h-[30px]"
+                        className="rounded-full max-h-[30px] min-w-[30px]"
                       />
                     ) : (
                       <NoPicture
