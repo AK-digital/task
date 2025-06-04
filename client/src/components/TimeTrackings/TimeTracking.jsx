@@ -246,7 +246,7 @@ export default function TimeTracking({
           }`}
         />
         {!isBillable && (
-          <div className="content-[''] absolute w-5 h-0.5 top-1/2 left-[42%] origin-center pointer-events-none -translate-y-1/2 -rotate-45"></div>
+          <div className="absolute w-5 h-0.5 bg-current top-1/2 left-[42%] origin-center -translate-y-1/2 -rotate-45 pointer-events-none"></div>
         )}
       </div>
       {isHover && (
