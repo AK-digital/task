@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/boards/board.module.css";
 import { useState, useEffect, useRef, useActionState } from "react";
 import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
@@ -9,7 +8,8 @@ import { useUserRole } from "@/app/hooks/useUserRole";
 import { useDroppable } from "@dnd-kit/core";
 import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";
-import { bricolageGrostesque } from "@/utils/font";
+import { useProjectContext } from "@/context/ProjectContext";
+import { isNotEmpty } from "@/utils/utils";
 
 const initialState = {
   success: null,
@@ -21,15 +21,14 @@ const initialState = {
 export default function Board({
   tasks,
   displayedElts,
-  mutateTasks,
-  project,
   board,
   activeId,
   selectedTasks,
   setSelectedTasks,
-  archive,
   isOverlay = false, // Nouvelle prop pour indiquer si le board est dans un DragOverlay
 }) {
+  const { project, mutateTasks, archive } = useProjectContext();
+
   const { setNodeRef } = useDroppable({
     id: board?._id,
   });
@@ -88,18 +87,15 @@ export default function Board({
     }
   }, [isOverlay]);
 
-  // Appliquer une classe spéciale si c'est un overlay
-  const boardClasses = `${styles.container} ${
-    isOverlay ? styles.overlayBoard : ""
-  }`;
-
   return (
     <div
-      className={boardClasses}
       data-board={board?._id}
-      style={{ borderLeft: `solid 3px ${optimisticColor}` }}
       ref={setNodeRef}
       data-board-id={board?._id}
+      style={{ borderColor: `${optimisticColor}` }}
+      className={` flex flex-col min-w-[1050px] rounded-2xl shadow-small border-secondary bg-secondary border-l-[3px] ${
+        isOverlay ? "overlayBoard" : ""
+      }`}
     >
       {/* Board header - Utilisation de la classe sticky */}
       <BoardHeader
@@ -116,8 +112,8 @@ export default function Board({
         isOverlay={isOverlay}
       />
       {/* Board content */}
-      {open && !isOverlay && (
-        <div className={styles.tasks}>
+      {open && !isOverlay && isNotEmpty(tasks) && (
+        <div className="bg-secondary px-5 rounded-2xl">
           <Tasks
             tasks={tasks}
             project={project}
@@ -132,16 +128,17 @@ export default function Board({
       )}
       {isLoading && <TaskPending text={inputValue} />}
       {canPost && !archive && (
-        <div className={styles.footer}>
-          <div className={styles.add}>
-            <Plus size={18} />
-            <form action={formAction}>
+        <div>
+          <div className="flex items-center gap-0.5 h-[45px] px-3 bg-[#F6F4E9] shadow-[inset_0_3px_3px_0_rgba(0,0,0,0.063)] rounded-bl-[15px] rounded-br-[15px]">
+            <Plus size={18} className="text-text-color-muted" />
+            <form action={formAction} className="w-full">
               <input
                 type="text"
                 name="board-id"
                 id="board-id"
                 defaultValue={board?._id}
                 hidden
+                className="border-none bg-inherit py-1.5 px-1 text-normal"
               />
               <input
                 type="text"
@@ -152,7 +149,6 @@ export default function Board({
                 minLength={2}
                 maxLength={255}
                 ref={inputRef}
-                className={bricolageGrostesque.className}
                 onChange={(e) => {
                   setInputValue(e.target.value);
                   if (e.target.value.length > 0) {
@@ -161,16 +157,19 @@ export default function Board({
                     setIsWritting(false);
                   }
                 }}
+                className="font-bricolage border-none bg-inherit py-1.5 px-1 text-normal"
               />
-              <button type="submit" hidden className={bricolageGrostesque.className}>
+              <button type="submit" hidden className="font-bricolage">
                 Ajouter une tâche
               </button>
             </form>
           </div>
           {isWritting && (
-            <div className={styles.info}>
+            <div className="absolute mt-1 ml-[25px] text-text-color-muted text-small">
               <p>
-                Appuyer sur <span>entrée</span> pour ajouter une tâche
+                Appuyer sur{" "}
+                <span className="text-accent-color-light">entrée</span> pour
+                ajouter une tâche
               </p>
             </div>
           )}

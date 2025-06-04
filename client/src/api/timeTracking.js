@@ -16,13 +16,17 @@ export async function getTimeTrackings(queries) {
       "trackers"
     );
 
+    if (res.status === 404) {
+      return [];
+    }
+
     const response = await res.json();
 
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
-    return response;
+    return response.data;
   } catch (err) {
     console.log(
       err?.message ||
@@ -159,6 +163,44 @@ export async function deleteTimeTracking(trackersIds, projectId) {
       message:
         err?.message ||
         "Une erreur est survenue lors de la suppression de la session",
+    };
+  }
+}
+
+export async function updateTimeTrackingBillable(
+  trackingId,
+  projectId,
+  billable
+) {
+  try {
+    if (!trackingId || !projectId) {
+      throw new Error("Paramètres manquants");
+    }
+
+    const res = await useAuthFetch(
+      `time-tracking/${trackingId}/billable?projectId=${projectId}`,
+      "PATCH",
+      "application/json",
+      { billable: billable }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de la mise à jour du timer"
+    );
+
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de la mise à jour du timer",
     };
   }
 }

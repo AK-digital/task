@@ -1,4 +1,3 @@
-import styles from "@/styles/components/tasks/tasks-header.module.css";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
@@ -59,42 +58,17 @@ export default function TasksHeader({
   function sortTasks(sort, elt, path) {
     setSortedTasks((prev) => {
       const sortedTasks = [...prev]?.sort((a, b) => {
-        if (sort === "asc") {
-          if (elt) {
-            return a[elt][path]?.localeCompare(b[elt][path]);
-          } else {
-            return a[path]?.localeCompare(b[path]);
-          }
-        } else {
-          if (elt) {
-            return b[elt][path]?.localeCompare(a[elt][path]);
-          } else {
-            return b[path]?.localeCompare(a[path]);
-          }
-        }
-      });
-      return sortedTasks;
-    });
-  }
+        const aValue = elt ? a[elt]?.[path] : a[path];
+        const bValue = elt ? b[elt]?.[path] : b[path];
 
-  function sortTaskByPriority(sort) {
-    setSortedTasks((prev) => {
-      const sortedTasks = [...prev].sort((a, b) => {
-        // Convert priority strings to numeric values
-        const priorityValues = {
-          Urgent: 4,
-          Haute: 3,
-          Moyenne: 2,
-          Basse: 1,
-        };
-
-        const priorityA = priorityValues[a.priority];
-        const priorityB = priorityValues[b.priority];
+        if (!aValue && !bValue) return 0;
+        if (!aValue) return 1;
+        if (!bValue) return -1;
 
         if (sort === "asc") {
-          return priorityA - priorityB;
+          return aValue.localeCompare(bValue);
         } else {
-          return priorityB - priorityA;
+          return bValue.localeCompare(aValue);
         }
       });
       return sortedTasks;
@@ -131,7 +105,7 @@ export default function TasksHeader({
 
     setStatusSort(sort);
 
-    sortTasks(sort, null, "status");
+    sortTasks(sort, "status", "name");
   }
 
   function sortByPriority(sort) {
@@ -142,7 +116,42 @@ export default function TasksHeader({
 
     setPrioritySort(sort);
 
-    sortTaskByPriority(sort);
+    setSortedTasks((prev) => {
+      const sortedTasks = [...prev]?.sort((a, b) => {
+        const aPriority = a.priority;
+        const bPriority = b.priority;
+
+        // Si une des priorités est null/undefined, on la met à la fin
+        if (!aPriority && !bPriority) return 0;
+        if (!aPriority) return sort === "asc" ? 1 : -1;
+        if (!bPriority) return sort === "asc" ? -1 : 1;
+
+        // Mapping des noms de priorités vers des valeurs numériques
+        // Plus le nombre est élevé, plus c'est urgent/important
+        const priorityOrder = {
+          "Très Basse": 1,
+          Basse: 2,
+          Faible: 2,
+          Normale: 3,
+          Moyenne: 4,
+          Élevée: 5,
+          Haute: 6,
+          "Très Haute": 7,
+          Urgente: 8,
+          Critique: 9,
+          Bloquante: 10,
+          // Ajoutez ici vos autres noms de priorités personnalisés
+        };
+
+        // Récupérer les valeurs numériques ou utiliser 2 (Basse) par défaut
+        const aOrder = priorityOrder[aPriority.name] || 2;
+        const bOrder = priorityOrder[bPriority.name] || 2;
+
+        // Trier par ordre d'importance
+        return sort === "asc" ? aOrder - bOrder : bOrder - aOrder;
+      });
+      return sortedTasks;
+    });
   }
 
   function sortByDeadline(sort) {
@@ -179,137 +188,137 @@ export default function TasksHeader({
   // }
 
   return (
-    <div className={styles.container} data-top={!isTaskPage}>
+    <div className={`sticky z-1002 left-0 bg-secondary flex items-center w-full text-small text-text-color-muted pb-3 ${!isTaskPage ? 'top-[49px] pt-0' : 'top-0 pt-5'}`}>
       {(canEdit || isCheckbox) && (
-        <div className={`${styles.selection} ${styles.row}`}></div>
+        <div className="min-w-[13px] w-[13px] h-5 flex justify-center items-center gap-1 cursor-default"></div>
       )}
       {(canDrag || isDrag) && (
-        <div className={`${styles.drag} ${styles.row}`}></div>
+        <div className="ml-1.5 min-w-4 max-w-4 flex justify-center items-center gap-1 w-full cursor-default"></div>
       )}
-      <div className={`${styles.text}`}>
-        <span>Tâches</span>
+      <div className="w-full min-w-[240px] max-w-[740px] text-center ml-[9px]">
+        <span>Tâche</span>
       </div>
       {isProject && (
-        <div className={`${styles.project} ${styles.row}`}>
+        <div className="w-20 flex justify-center items-center gap-1 cursor-default">
           <span>Projets</span>
-          <div className={styles.sort}>
+          <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
-              data-active={projectSort === "asc"}
+              className={`cursor-pointer hover:text-text-color ${projectSort === "asc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByProject("asc")}
             />
             <ChevronDown
               size={14}
-              data-active={projectSort === "desc"}
+              className={`cursor-pointer hover:text-text-color relative -top-1 ${projectSort === "desc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByProject("desc")}
             />
           </div>
         </div>
       )}
       {isBoard && (
-        <div className={`${styles.board} ${styles.row}`}>
+        <div className="min-w-[150px] max-w-[170px] flex justify-center items-center gap-1 w-full cursor-default">
           <span>Tableaux</span>
-          <div className={styles.sort}>
+          <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
-              data-active={boardSort === "asc"}
+              className={`cursor-pointer hover:text-text-color ${boardSort === "asc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByBoard("asc")}
             />
             <ChevronDown
               size={14}
-              data-active={boardSort === "desc"}
+              className={`cursor-pointer hover:text-text-color relative -top-1 ${boardSort === "desc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByBoard("desc")}
             />
           </div>
         </div>
       )}
-      <div className={`${styles.responsibles} ${styles.row}`}>
+      <div className="min-w-[100px] max-w-[100px] flex justify-center items-center gap-1 w-full cursor-default">
         <span>Admin</span>
         {isAdminFilter && (
-          <div>
-            <ChevronUp size={14} />
-            <ChevronDown size={14} />
+          <div className="relative flex flex-col items-center top-1">
+            <ChevronUp size={14} className="cursor-pointer hover:text-text-color" />
+            <ChevronDown size={14} className="cursor-pointer hover:text-text-color relative -top-1" />
           </div>
         )}
       </div>
       {isStatus && (
-        <div className={`${styles.status} ${styles.row}`}>
-          <span>Status</span>
-          <div className={styles.sort}>
+        <div className="w-full min-w-[135px] max-w-[150px] flex justify-center items-center gap-1 cursor-default">
+          <span>Statut</span>
+          <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
-              data-active={statusSort === "asc"}
+              className={`cursor-pointer hover:text-text-color ${statusSort === "asc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByStatus("asc")}
             />
             <ChevronDown
               size={14}
-              data-active={statusSort === "desc"}
+              className={`cursor-pointer hover:text-text-color relative -top-1 ${statusSort === "desc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByStatus("desc")}
             />
           </div>
         </div>
       )}
       {isPriority && (
-        <div className={`${styles.priority} ${styles.row}`}>
+        <div className="w-full min-w-[135px] max-w-[150px] flex justify-center items-center gap-1  cursor-default">
           <span>Priorité</span>
-          <div className={styles.sort}>
+          <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
-              data-active={prioritySort === "asc"}
+              className={`cursor-pointer hover:text-text-color ${prioritySort === "asc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByPriority("asc")}
             />
             <ChevronDown
               size={14}
-              data-active={prioritySort === "desc"}
+              className={`cursor-pointer hover:text-text-color relative -top-1 ${prioritySort === "desc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByPriority("desc")}
             />
           </div>
         </div>
       )}
       {isDeadline && (
-        <div className={`${styles.deadline} ${styles.row}`}>
+        <div className="min-w-[120px] max-w-[150px] flex justify-center items-center gap-1 w-full cursor-default">
           <span>Échéance</span>
-          <div className={styles.sort}>
+          <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
-              data-active={deadlineSort === "asc"}
+              className={`cursor-pointer hover:text-text-color ${deadlineSort === "asc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByDeadline("asc")}
             />
             <ChevronDown
               size={14}
-              data-active={deadlineSort === "desc"}
+              className={`cursor-pointer hover:text-text-color relative -top-1 ${deadlineSort === "desc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByDeadline("desc")}
             />
           </div>
         </div>
       )}
       {isEstimate && (
-        <div className={`${styles.estimation} ${styles.row}`}>
+        <div className="min-w-[120px] max-w-[140px] flex justify-center items-center gap-1 w-full cursor-default">
           <span>Estimation</span>
-          {/* <div className={styles.sort}>
+          {/* <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
-              data-active={estimateSort === "asc"}
+              className={`cursor-pointer hover:text-text-color ${estimateSort === "asc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByEstimate("asc")}
             />
             <ChevronDown
               size={14}
-              data-active={estimateSort === "desc"}
+              className={`cursor-pointer hover:text-text-color relative -top-1 ${estimateSort === "desc" ? "text-[#CC9348]" : ""}`}
               onClick={() => sortByEstimate("desc")}
             />
           </div> */}
         </div>
       )}
       {isTimer && (
-        <div className={`${styles.timer} ${styles.row}`}>
+        <div className="max-w-[120px] min-w-[120px] flex justify-center items-center gap-1 w-full cursor-default">
           <span>Temps</span>
-          {/* <div>
-            <ChevronUp size={14} />
-            <ChevronDown size={14} />
+          {/* <div className="relative flex flex-col items-center top-1">
+            <ChevronUp size={14} className="cursor-pointer hover:text-text-color" />
+            <ChevronDown size={14} className="cursor-pointer hover:text-text-color relative -top-1" />
           </div> */}
         </div>
       )}
-      <div className={`${styles.remove} ${styles.row}`}></div>
+      <div className="min-w-9 w-10 h-2.5 flex justify-center items-center gap-1 cursor-default"></div>
     </div>
   );
 }

@@ -1,14 +1,13 @@
-import styles from "@/styles/components/tasks/tasks-status-filter.module.css";
-import { allowedStatus } from "@/utils/utils";
+import { useProjectContext } from "@/context/ProjectContext";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function TasksStatusFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
-  const status = queries?.status;
-  const hasStatus = status?.length > 0;
-  const pathname = usePathname();
+  const QueriesStatus = queries?.status;
+  const hasStatus = QueriesStatus?.length > 0;
+
+  const { statuses } = useProjectContext();
 
   function handleResetStatus() {
     setQueries((prev) => ({
@@ -38,49 +37,61 @@ export default function TasksStatusFilter({ queries, setQueries }) {
     }
   }
 
-  // If we are on tasks page we want the 'En cours' and 'À faire' status to be checked by default
-  useEffect(() => {
-    if (pathname === "/tasks") {
-      setQueries((prev) => ({
-        ...prev,
-        status: ["En cours", "À faire"],
-      }));
-    }
-  }, []);
-
   return (
-    <div className={styles.container}>
+    <div className="relative">
       <div
-        className={styles.current}
+        className={`relative flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${
+          isOpen ? "bg-[#f9f7efb3] shadow-small" : ""
+        }`}
         onClick={() => setIsOpen(!isOpen)}
-        data-open={isOpen}
       >
         <ChartBar size={16} />
-        <span>Status</span>
-        {status?.length > 0 && (
-          <span className={styles.length}>{status?.length}</span>
+        <span className="flex-1">Status</span>
+        {hasStatus && (
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
+            {QueriesStatus?.length}
+          </span>
         )}
-        <ChevronDown size={16} />
+        <ChevronDown
+          size={16}
+          className={`transition-all duration-[120ms] ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </div>
       {isOpen && (
         <>
-          <div className={styles.dropdown}>
-            <ul>
-              <li className={styles.status} onClick={handleResetStatus}>
+          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full font-medium text-small">
+            <ul className="flex flex-col">
+              <li
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+                onClick={handleResetStatus}
+              >
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
-              {allowedStatus.map((elt, idx) => (
-                <li key={idx} className={styles.status}>
+              {statuses.map((elt) => (
+                <li
+                  key={elt?._id}
+                  className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+                >
                   <input
                     type="checkbox"
-                    id={elt}
-                    name={elt}
-                    value={elt}
+                    id={elt?._id}
+                    name={elt?.name}
+                    value={elt?._id}
                     onChange={handleStatusChange}
-                    checked={hasStatus ? status?.includes(elt) : false}
+                    checked={
+                      hasStatus ? QueriesStatus?.includes(elt?._id) : false
+                    }
+                    className="w-auto cursor-pointer"
                   />
-                  <label htmlFor={elt}>{elt}</label>
+                  <label
+                    htmlFor={elt?._id}
+                    className="flex items-center cursor-pointer flex-1"
+                  >
+                    {elt?.name}
+                  </label>
                 </li>
               ))}
             </ul>

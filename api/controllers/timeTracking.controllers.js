@@ -17,8 +17,6 @@ export async function saveTimeTracking(req, res, next) {
 
   const task = await TaskModel.findById({ _id: taskId });
 
-  console.log("task", task);
-
   if (!task) {
     return res.status(404).send({
       success: false,
@@ -64,7 +62,7 @@ export async function getTimeTrackings(req, res, next) {
   try {
     const authUser = res.locals.user;
 
-    const { projects, users, startingDate, endingDate } = req.query;
+    const { projects, members, startingDate, endingDate } = req.query;
 
     const userProjects = await ProjectModel.find({
       "members.user": authUser?._id,
@@ -81,90 +79,31 @@ export async function getTimeTrackings(req, res, next) {
     // Extraire les IDs et noms des projets de l'utilisateur
     const userProjectIds = userProjects.map((project) => project._id);
 
-    const pipeline = [
-      {
-        $match: {
-          projectId: { $in: userProjectIds },
-        },
-      },
-      {
-        $lookup: {
-          from: "tasks",
-          localField: "taskId",
-          foreignField: "_id",
-          as: "task",
-        },
-      },
-      {
-        $lookup: {
-          from: "projects",
-          localField: "projectId",
-          foreignField: "_id",
-          as: "project",
-        },
-      },
-      {
-        $unwind: "$project",
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: "$user",
-      },
-      {
-        $addFields: {
-          fullName: {
-            $concat: ["$user.firstName", " ", "$user.lastName"],
-          },
-        },
-      },
-    ];
+    const filters = {
+      projectId: { $in: userProjectIds },
+    };
 
     if (projects?.length > 0) {
-      pipeline.push({
-        $match: {
-          "project.name": { $in: projects?.split(",") },
-        },
-      });
+      filters.projectId = { $in: projects?.split(",") };
     }
 
-    if (users?.length > 0) {
-      pipeline.push({
-        $match: {
-          fullName: { $in: users?.split(",") },
-        },
-      });
+    if (members?.length > 0) {
+      filters.userId = { $in: members?.split(",") };
     }
 
-    if (startingDate || endingDate) {
-      const matchStage = {};
-
-      if (startingDate) {
-        const startDate = new Date(startingDate);
-        startDate.setHours(0, 0, 0, 0); // Set to beginning of the day
-        matchStage.startTime = { $gte: startDate };
-      }
-
-      if (endingDate) {
-        const endDate = new Date(endingDate);
-        endDate.setHours(23, 59, 59, 999); // Set to end of the day
-        matchStage.startTime = matchStage.startTime || {}; // Ensurer que l'objet existe
-        matchStage.startTime.$lte = endDate;
-      }
-
-      // Ajout du filtre dans le pipeline
-      pipeline.push({
-        $match: matchStage,
-      });
+    if (startingDate) {
+      filters.startTime = { $gte: startingDate };
     }
 
-    const timeTrackings = await TimeTrackingModel.aggregate(pipeline);
+    if (endingDate) {
+      filters.endTime = { $lte: endingDate };
+    }
+
+    const timeTrackings = await TimeTrackingModel.find(filters)
+      .populate("userId", "_id firstName lastName picture")
+      .populate("projectId", "_id name logo members")
+      .populate("taskId")
+      .exec();
 
     if (timeTrackings.length <= 0) {
       return res.status(404).send({
@@ -361,6 +300,44 @@ export async function deleteTimeTracking(req, res, next) {
       success: true,
       message: "Le temps de suivi a été supprimé",
       data: deletedTimeTracking,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateTimeTrackingBillable(req, res, next) {
+  try {
+    const { billable } = req.body;
+    const timeTrackingId = req.params.id;
+
+    if (billable === undefined) {
+      return res.status(400).send({
+        success: false,
+        message: "Le statut facturable est requis",
+      });
+    }
+
+    const updatedTimeTracking = await TimeTrackingModel.findByIdAndUpdate(
+      timeTrackingId,
+      { billable: billable },
+      { new: true }
+    );
+
+    if (!updatedTimeTracking) {
+      return res.status(404).send({
+        success: false,
+        message: "Temps de suivi non trouvé",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Statut facturable mis à jour avec succès",
+      data: updatedTimeTracking,
     });
   } catch (err) {
     return res.status(500).send({

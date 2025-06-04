@@ -1,9 +1,0 @@
-.container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    user-select: none;
-    width: 100%;
-}

@@ -6,7 +6,6 @@ import {
   removeTaskFromArchive,
 } from "@/api/task";
 import { AuthContext } from "@/context/auth";
-import styles from "@/styles/components/tasks/selected-tasks.module.css";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { Archive, ArchiveRestore, Trash, X } from "lucide-react";
@@ -94,13 +93,13 @@ export default function SelectedTasks({
   }
 
   return (
-    <div className={styles.container}>
+    <div className="flex fixed z-2001 left-1/2 bottom-5 -translate-x-1/2 bg-secondary shadow-[0_2px_4px_rgba(0,0,0,0.25)] rounded-lg text-black animate-[showAnim_0.2s_ease-out]">
       {/* Main content */}
-      <div className={styles.wrapper}>
-        <div className={styles.count}>
+      <div className="flex items-center gap-3 pr-6">
+        <div className="bg-[#007CFF] h-full text-text-color rounded-[8px_0_0_8px] font-bold text-large py-4.5 px-6">
           <span> {selectedTasks.length}</span>
         </div>
-        <div className={styles.header}>
+        <div className="text-[1.4rem]">
           <span>
             {selectedTasks?.length > 1
               ? "Tâches séléctionnées"
@@ -108,19 +107,19 @@ export default function SelectedTasks({
           </span>
         </div>
         {/* actions */}
-        <div className={styles.actions}>
+        <div className="flex gap-6">
           {/* action */}
           {!archive &&
             checkRole(project, ["owner", "manager", "team"], uid) && (
-              <div className={styles.action} onClick={handleAddToArchive}>
+              <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleAddToArchive}>
                 <Archive size={20} />
-                <span>Archiver</span>
+                <span className="text-small">Archiver</span>
               </div>
             )}
           {archive && checkRole(project, ["owner", "manager", "team"], uid) && (
-            <div className={styles.action} onClick={handleRemoveFromArchive}>
+            <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleRemoveFromArchive}>
               <ArchiveRestore size={20} />
-              <span>Restaurer</span>
+              <span className="text-small">Restaurer</span>
             </div>
           )}
           {checkRole(
@@ -128,12 +127,12 @@ export default function SelectedTasks({
             ["owner", "manager", "team", "customer"],
             uid
           ) && (
-            <div className={styles.action} onClick={handleDelete}>
+            <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 text-blocked-color" onClick={handleDelete}>
               <Trash size={20} />
-              <span>Supprimer</span>
+              <span className="text-small">Supprimer</span>
             </div>
           )}
-          <div className={styles.action} onClick={handleClose}>
+          <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 border-l border-[#007CFF] pl-3" onClick={handleClose}>
             <X size={22} />
           </div>
         </div>

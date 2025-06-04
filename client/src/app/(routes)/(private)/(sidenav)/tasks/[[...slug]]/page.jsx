@@ -1,11 +1,10 @@
 "use client";
 
-import styles from "@/styles/pages/tasks.module.css";
 import { AuthContext } from "@/context/auth";
 import { useContext, useMemo, useState } from "react";
 import Tasks from "@/components/tasks/Tasks";
 import TasksFilters from "@/components/tasks/TasksFilters";
-import { useTasks } from "@/app/hooks/useTasks";
+import { ProjectProvider, useProjectContext } from "@/context/ProjectContext";
 
 // This is where you define the task elements you want to display
 const displayedElts = {
@@ -33,38 +32,48 @@ const displayedFilters = {
 
 export default function TasksPage() {
   const { uid } = useContext(AuthContext);
-  const [queries, setQueries] = useState({});
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [defaultQueries, setDefaultQueries] = useState({
+    userId: uid,
+    archived: false,
+  });
 
   useMemo(() => {
     if (uid === null) return;
 
-    setQueries((prevQueries) => ({
+    setDefaultQueries((prevQueries) => ({
       ...prevQueries,
       userId: uid,
       archived: false,
     }));
   }, [uid]);
 
-  const { tasks, tasksLoading, mutateTasks } = useTasks(queries);
+  if (!uid) return null;
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
+    <ProjectProvider defaultQueries={defaultQueries}>
+      <TasksContent />
+    </ProjectProvider>
+  );
+}
+
+function TasksContent() {
+  const [selectedTasks, setSelectedTasks] = useState([]);
+
+  // Utilisez le contexte du projet pour récupérer les tâches
+  const { tasks, tasksLoading, mutateTasks } = useProjectContext();
+
+  return (
+    <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
+      <div className="p-[38px] bg-primary h-full rounded-tl-2xl overflow-auto">
         {/* Header */}
-        <div className={styles.header}>
-          <span className={styles.title}>Mes tâches</span>
+        <div className="flex items-center mb-6 gap-4 bg-primary p-4">
+          <span className="text-2xl min-w-max">Mes tâches</span>
           {/* Filters */}
-          <TasksFilters
-            displayedFilters={displayedFilters}
-            tasks={tasks}
-            queries={queries}
-            setQueries={setQueries}
-          />
+          <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
         </div>
         {/* Tasks */}
-        <div className={styles.tasksContainer}>
-          <div className={styles.tasks}>
+        <div className="boards_Boards overflow-auto h-[90%] pr-5 rounded-2xl">
+          <div className="relative bg-secondary shadow-small rounded-2xl min-w-max">
             <Tasks
               tasks={tasks}
               tasksLoading={tasksLoading}

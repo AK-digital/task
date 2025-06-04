@@ -1,7 +1,7 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "L'api de Task",
+  "description": "L'api de Clynt",
   "main": "index.js",
   "type": "module",
   "scripts": {

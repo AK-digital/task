@@ -51,3 +51,11 @@ export const userUpdateValidation = z.object({
     .optional()
     .nullable(),
 });
+
+export const betaRequestValidation = z.object({
+  email: z
+    .string()
+    .min(1)
+    .max(50)
+    .regex(regex.email, "L'adresse mail saisie est invalide"),
+});

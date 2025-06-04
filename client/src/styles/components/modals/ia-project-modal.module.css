@@ -13,7 +13,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.18);
+  background: rgba(0, 0, 0, 0.18);
   z-index: 2001;
 }
 
@@ -61,6 +61,7 @@
   color: var(--text-color-muted);
   transition: color 0.2s;
 }
+
 .close:hover {
   color: var(--accent-color);
 }
@@ -91,6 +92,7 @@
   font-weight: 500;
   box-shadow: none;
 }
+
 .generate:disabled {
   background: #c7c7c7;
   border: 2px solid #c7c7c7;
@@ -110,10 +112,12 @@
   border: 1.5px solid var(--border-color);
   text-align: left;
 }
+
 .result h3 {
   text-align: left;
   margin-bottom: 12px;
 }
+
 .result ul {
   padding-left: 0;
   margin: 0.5rem 0 0 0;
@@ -122,6 +126,7 @@
   gap: 8px;
   text-align: left;
 }
+
 .result li {
   margin-bottom: 0;
   font-size: var(--text-size-normal);
@@ -155,4 +160,4 @@
   align-items: center;
   justify-content: flex-start;
   margin-right: 8px;
-} 
+}

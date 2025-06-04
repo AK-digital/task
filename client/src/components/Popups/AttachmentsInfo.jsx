@@ -1,4 +1,3 @@
-import styles from "@/styles/components/popups/attachmentsInfo.module.css";
 import { useState, useEffect } from "react";
 import Attachment from "../Attachment/Attachment";
 import { Download, Trash2 } from "lucide-react";
@@ -16,9 +15,8 @@ export default function AttachmentsInfo({
 
   const [checkedList, setCheckedList] = useState([]);
 
-  const label = `${attachmentsLength} ${
-    attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"
-  }`;
+  const label = `${attachmentsLength} ${attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"
+    }`;
 
   const isAffichage = type === "affichage";
 
@@ -148,13 +146,13 @@ export default function AttachmentsInfo({
 
   return (
     <div
-      className={styles.container}
+      className="relative"
       onMouseEnter={() => setShowAttachments(true)}
       onMouseLeave={() => setShowAttachments(false)}
     >
-      <span className={styles.attachments}>
+      <span className="text-accent-color-light text-small">
         {disable ? (
-          <span className={styles.readonlyLabel}>{label}</span>
+          <span>{label}</span>
         ) : (
           <Attachment
             attachments={attachments}
@@ -165,8 +163,8 @@ export default function AttachmentsInfo({
       </span>
 
       {showAttachments && (
-        <div className={styles.infosWrapper}>
-          <div className={styles.infos}>
+        <div className="absolute flex flex-col bottom-3.5 z-2001 bg-secondary rounded-sm shadow-small max-h-40 overflow-hidden">
+          <div className="infos_AttachmentsInfo flex flex-col max-h-[calc(4*22.86px)] overflow-y-auto p-2 gap-2 grow">
             {attachments.map(({ name, url }, index) => {
               const hasUrl = !!url && isDisplayableFile(url);
 
@@ -175,18 +173,18 @@ export default function AttachmentsInfo({
                 downloadUrl = getDownloadUrl(url);
               }
               return (
-                <div key={index} className={styles.infoAttachment}>
-                  <div className={styles.file}>
+                <div key={index} className="flex items-center justify-between gap-2 h-5 ">
+                  <div className="flex gap-2">
                     <input
                       type="checkbox"
-                      className={styles.checkbox}
                       name="checkbox"
                       checked={checkedList[index]}
                       onChange={() => toggleCheckbox(index)}
+                      className="w-3"
                     />
 
                     <a
-                      className={styles.attachmentName}
+                      className="text-[0.85rem] text-text-color-muted whitespace-nowrap data-[url=false]:no-underline data-[url=false]:cursor-default data-[url=false]:hover:text-text-color-muted"
                       data-url={hasUrl ? "true" : "false"}
                       target="_blank"
                       href={hasUrl ? url : undefined}
@@ -202,7 +200,7 @@ export default function AttachmentsInfo({
 
                   {!isAffichage && (
                     <button
-                      className={styles.delete}
+                      className="delete_AttachmentsInfo flex justify-center items-center h-3 w-auto"
                       data-has-background="false"
                       onClick={() => handleDelete("deleteOne", index)}
                     >
@@ -212,7 +210,7 @@ export default function AttachmentsInfo({
 
                   {isAffichage && (
                     <button
-                      className={styles.download}
+                      className="download_AttachmentsInfo flex justify-center items-center h-3 w-auto"
                       data-has-background="false"
                       onClick={() => handleDownload(downloadUrl, name)}
                     >
@@ -223,15 +221,15 @@ export default function AttachmentsInfo({
               );
             })}
           </div>
-          <div className={styles.actions}>
-            <span className={styles.allCheck} onClick={toggleAll}>
+          <div className="actions_AttachmentsInfo">
+            <span className="" onClick={toggleAll}>
               {isAnyChecked ? "Tout décocher" : "Tout cocher"}
             </span>
 
-            <div className={styles.actionsButtons}>
+            <div className="flex gap-1">
               {!isAffichage && isAnyChecked && (
                 <button
-                  className={styles.delete}
+                  className="delete_AttachmentsInfo flex justify-center items-center h-3 w-auto"
                   data-has-background="true"
                   onClick={() => handleDelete("delete")}
                 >
@@ -240,7 +238,7 @@ export default function AttachmentsInfo({
               )}
               {isAffichage && isAnyChecked && (
                 <button
-                  className={styles.download}
+                  className="download_AttachmentsInfo flex justify-center items-center h-3 w-auto"
                   data-has-background="true"
                   onClick={handleDownloadZip}
                 >

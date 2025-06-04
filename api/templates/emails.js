@@ -1,7 +1,7 @@
 const emailStyles = {
   container:
     "font-family: Arial, sans-serif; color: #4a4a4a; text-align: center; padding: 20px; margin-inline: auto;",
-  title: "font-size: 40px; font-weight: bold;",
+  title: "font-size: 32px; font-weight: bold;",
   subtitle:
     "font-size: 28px; max-width: 450px; margin-inline: auto; font-weight: 500;",
   paragraph:
@@ -11,6 +11,49 @@ const emailStyles = {
     "background-color: #a87e51; outline: none; border: none; border-radius: 32px; padding: 16px 24px; color: #FFFFFF; font-weight: 500; font-size:18px; text-decoration: none;",
   highlight: "color: #a87e51;",
 };
+
+export function emailBetaRequest(link) {
+  const templates = {
+    subject: "Demande de participation à la beta - Confirmation requise",
+    text: `
+      <div style="${emailStyles.container}">
+        <h1 style="${emailStyles.title}">Demande de participation à la beta</h1>
+        <p style="${emailStyles.paragraph}">Bonjour,</p>
+        <p style="${emailStyles.content}">Nous avons bien reçu votre demande de participation à notre programme beta !</p>
+        <p style="${emailStyles.content}">Pour finaliser votre inscription, merci de confirmer votre adresse email en cliquant sur le bouton ci-dessous :</p>
+        <div style="margin: 30px 0;">
+          <a href="${link}" style="${emailStyles.button}">
+            Confirmer mon email
+          </a>
+        </div>
+        <p style="${emailStyles.content}">Une fois votre email confirmé, vous recevrez plus d'informations sur le programme beta et les prochaines étapes.</p>
+        <p style="${emailStyles.content}">Merci de votre intérêt pour notre projet !</p>
+      </div>
+    `,
+  };
+
+  return templates;
+}
+
+export function emailBetaRequestAdmin(userEmail) {
+  const templates = {
+    subject: "Nouvelle demande de participation à la beta",
+    text: `
+      <div style="${emailStyles.container}">
+        <h1 style="${emailStyles.title}">Nouvelle inscription beta !</h1>
+        <p style="${emailStyles.paragraph}">Bonjour,</p>
+        <p style="${emailStyles.content}">Un nouvel utilisateur vient de faire une demande de participation au programme beta !</p>
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #a87e51;">
+          <p style="margin: 0; font-size: 18px; font-weight: 500;">
+            📧 Email : <span style="${emailStyles.highlight}">${userEmail}</span>
+          </p>
+        </div>
+      </div>
+    `,
+  };
+
+  return templates;
+}
 
 export function emailDescription(sender, task, link) {
   const templates = {

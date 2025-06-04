@@ -1,32 +1,24 @@
-import styles from "@/styles/components/tasks/tasks-filters.module.css";
 import TasksSearch from "./TasksSearch";
 import TasksStatusFilter from "./TasksStatusFilter";
 import TasksPrioritiesFilter from "./TasksPrioritiesFilter";
 import TasksAdminFilter from "./TasksAdminFilter";
 import TasksBoardFilter from "./TasksBoardFilter";
 import TasksProjectFilter from "./TasksProjectFilter";
+import { useProjectContext } from "@/context/ProjectContext";
 
-export default function TasksFilters({
-  displayedFilters,
-  tasks,
-  queries,
-  setQueries,
-}) {
+export default function TasksFilters({ displayedFilters }) {
+  const { queries, setQueries } = useProjectContext();
   const { isSearch, isProject, isBoard, isAdmin, isStatus, isPriorities } =
     displayedFilters;
 
   return (
-    <div className={styles.container}>
+    <div className="relative flex items-center flex-wrap gap-4 select-none w-full">
       {isSearch && <TasksSearch setQueries={setQueries} />}
       {isProject && (
         <TasksProjectFilter queries={queries} setQueries={setQueries} />
       )}
       {isBoard && (
-        <TasksBoardFilter
-          tasks={tasks}
-          queries={queries}
-          setQueries={setQueries}
-        />
+        <TasksBoardFilter queries={queries} setQueries={setQueries} />
       )}
       {isAdmin && (
         <TasksAdminFilter queries={queries} setQueries={setQueries} />

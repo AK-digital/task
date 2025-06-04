@@ -1,21 +1,20 @@
-import styles from "@/styles/components/messages/messages-skeletons.module.css";
 
 export default function MessagesSkeleton() {
   return (
     <>
-      {Array.from({ length: 3 }).map((_, idx) => {
+      {Array.from({ length: 1 }).map((_, idx) => {
         return (
-          <div className={styles.container} key={idx}>
-            <div className={styles.message}>
+          <div className="w-full" key={idx}>
+            <div className="py-4 px-6 bg-secondary rounded-lg w-full animate-pulse">
               {/* Message Head */}
-              <div className={styles.header}>
-                <div></div>
-                <div></div>
+              <div className="header_MessagesSkeleton flex items-center gap-2">
+                <div className="bg-third w-[35px] h-[35px] rounded-full"></div>
+                <div className="bg-third w-[120px] h-[20px] rounded-lg"></div>
               </div>
               {/* Message Body */}
-              <div className={styles.body}>
-                <div></div>
-                <div></div>
+              <div className="body_MessagesSkeleton flex flex-col gap-2 mt-[14px]">
+                <div className="bg-third w-[60%] h-[20px] rounded-lg"></div>
+                <div className="bg-third w-[40%] h-[20px] rounded-lg"></div>
               </div>
             </div>
           </div>

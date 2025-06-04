@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/pages/verification.module.css";
 import { verification } from "@/api/auth";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -50,11 +49,11 @@ export default function Verification() {
   }, [data, error, isLoading, router]);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <h1>Vérification de votre adresse e-mail</h1>
-        <p>{text}</p>
-        {success && <p>Redirection en cours...</p>}
+    <main className="flex justify-center items-center mx-10 mb-10 h-[100svh]">
+      <div className="text-center">
+        <h1 className="text-[2.5rem] mb-5 font-bold">Vérification de votre adresse e-mail</h1>
+        <p className="mb-2.5">{text}</p>
+        {success && <p className="mb-2.5">Redirection en cours...</p>}
       </div>
     </main>
   );

@@ -1,10 +1,12 @@
-import styles from "@/styles/components/task/task-responsibles.module.css";
-import { displayPicture, isNotEmpty, sendNotification } from "@/utils/utils";
+import { isNotEmpty, sendNotification } from "@/utils/utils";
 import { PlusCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
 import socket from "@/utils/socket";
+import { getFloating, usePreventScroll } from "@/utils/floating";
+import DisplayPicture from "@/components/User/DisplayPicture.jsx";
+
 
 export default function TaskResponsibles({ task, uid, user }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -16,6 +18,10 @@ export default function TaskResponsibles({ task, uid, user }) {
   const project = task?.projectId;
 
   const canAdd = useUserRole(project, ["owner", "manager", "team", "customer"]);
+
+  const { refs, floatingStyles } = getFloating(isMoreOpen, setIsMoreOpen);
+
+  usePreventScroll({ shouldPrevent: isMoreOpen, mode: "body" });
 
   async function handleAddResponsible(member) {
     if (!canAdd) return;
@@ -86,13 +92,21 @@ export default function TaskResponsibles({ task, uid, user }) {
   }, [task?.responsibles]);
 
   return (
-    <div className={styles.container} id="task-row">
-      <div className={styles.wrapper} id="task-row" onClick={handleIsMoreOpen}>
+    <div className="relative flex items-center justify-center px-3 min-w-[100px] max-w-[100px] w-full h-full border-r border-l border-text-color">
+      <div
+        className="flex items-center h-full"
+        onClick={handleIsMoreOpen}
+        ref={refs.setReference}
+      >
         {isNotEmpty(responsibles) ? (
           responsibles.slice(0, 3).map((responsible) => {
             return (
-              <div className={styles.images} key={responsible?._id}>
-                {displayPicture(responsible, 30, 30)}
+              <div className="images_TaskResponsibles flex justify-center items-center" key={responsible?._id}>
+                <DisplayPicture
+                  user={responsible}
+                  style={{ width: "32px", height: "32px" }}
+                  className="rounded-full"
+                />
               </div>
             );
           })
@@ -100,24 +114,36 @@ export default function TaskResponsibles({ task, uid, user }) {
           <PlusCircle size={24} />
         )}
         {responsibles?.length > 3 && (
-          <span className={styles.length}>+{responsibles?.length - 3}</span>
+          <span className="absolute flex justify-center items-center bg-primary rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-secondary">+{responsibles?.length - 3}</span>
         )}
       </div>
 
       {isMoreOpen && (
         <>
-          <div className={styles.modal}>
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className="absolute w-[300px] bg-secondary shadow-medium rounded-lg top-[50px] z-[2001] p-2"
+          >
             {/* Responsibles */}
             {isNotEmpty(responsibles) && (
-              <div className={styles.responsibles}>
+              <div className="flex flex-wrap gap-1 mb-2">
                 {responsibles?.map((responsible) => {
                   return (
                     <div
-                      className={styles.responsible}
+                      className="flex items-center gap-1 bg-third p-1 rounded-lg text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-primary"
                       key={responsible?._id}
                       onClick={() => handleRemoveResponsible(responsible)}
                     >
-                      {displayPicture(responsible, 24, 24)}
+                      <DisplayPicture
+                        user={responsible}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                        }}
+                        className="rounded-full"
+                        isPopup={false}
+                      />
                       <span>
                         {responsible.firstName + " " + responsible?.lastName}
                       </span>
@@ -127,18 +153,26 @@ export default function TaskResponsibles({ task, uid, user }) {
                 })}
               </div>
             )}
-            <span className={styles.subtitle}>Personnes à inviter</span>
+            <span className="text-[14px] font-medium text-text-color-muted">Personnes à inviter</span>
             {/* Members */}
-            <div>
+            <div className="scrollable_TaskResponsibles max-h-[200px] overflow-y-auto">
               {isNotEmpty(members) && (
-                <ul>
+                <ul className="mt-1.5">
                   {members?.map((member) => {
                     return (
                       <li
+                        className="flex items-center gap-1 p-2 rounded-lg hover:bg-third"
                         key={member?.user?._id}
                         onClick={() => handleAddResponsible(member?.user)}
                       >
-                        {displayPicture(member?.user, 24, 24)}
+                        <DisplayPicture
+                          user={member?.user}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                          }}
+                          className="rounded-full"
+                        />
                         <span>{member?.user?.email}</span>
                       </li>
                     );
@@ -148,7 +182,7 @@ export default function TaskResponsibles({ task, uid, user }) {
             </div>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={(e) => setIsMoreOpen(false)}
           ></div>
         </>

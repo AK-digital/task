@@ -1,158 +1,136 @@
 "use client";
-import styles from "@/styles/layouts/side-nav.module.css";
 import { useParams } from "next/navigation";
-import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import SortableProject from "@/components/Projects/SortableProject";
-import { updateProjectsOrder } from "@/actions/project";
-import { MeasuringStrategy } from "@dnd-kit/core";
+import { useState } from "react";
 import {
   ArrowLeftFromLine,
   ArrowRightFromLine,
   LayoutGrid,
   Plus,
   ClipboardList,
+  Clock3,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import moment from "moment";
+import { useFavorites } from "@/app/hooks/useFavorites";
+import ProjectSideNav from "@/components/Projects/ProjectSideNav";
+import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
 
-export default function SideNav({ projects }) {
+export default function SideNav() {
   const params = useParams();
   const { slug } = params;
   const id = slug ? slug[0] : null;
   const projectId = id ?? "";
-  const [projectItems, setProjectItems] = useState([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (projects) {
-      setProjectItems(projects);
-    }
-  }, [projects]);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        delay: 0,
-        tolerance: 5,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  async function handleDragEnd(event) {
-    const { active, over } = event;
-
-    if (active?.id !== over?.id) {
-      const oldIndex = projectItems.findIndex(
-        (project) => project?._id === active.id
-      );
-      const newIndex = projectItems.findIndex(
-        (project) => project?._id === over.id
-      );
-
-      const newItems = arrayMove(projectItems, oldIndex, newIndex);
-      setProjectItems(newItems);
-
-      try {
-        const response = await updateProjectsOrder(newItems);
-
-        if (!response.success) {
-          setProjectItems(projectItems);
-          console.error(
-            "Erreur lors de la mise à jour de l'ordre:",
-            response.message
-          );
-        }
-      } catch (error) {
-        setProjectItems(projectItems);
-        console.error("Erreur lors de la mise à jour de l'ordre:", error);
-      }
-    }
-  }
+  const { favorites, favoritesLoading } = useFavorites();
+  const projects = favorites?.map((favorite) => favorite.project);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
-    <aside className={styles.container} data-open={isMenuOpen}>
-      <div className={styles.wrapper}>
-        <div className={styles.top}>
-          <Image
-            src={"/task.svg"}
-            width={46}
-            height={18}
-            alt="Logo de Täsk"
-            className={styles.logo}
-          />
+    <aside
+      data-open={isMenuOpen}
+      className="container_SideNav min-w-aside-width w-aside-width transition-[width,min-width] duration-[150ms] ease-linear select-none data-[open=true]:w-[220px] data-[open=true]:min-w-[220px]"
+    >
+      <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-7 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730] [&_a]:no-underline">
+        <div>
+          <Link href={"/projects"}>
+            <Image
+              src={"/clynt-logo-dark.svg"}
+              width={32}
+              height={32}
+              alt="Logo de Clynt"
+              className="block ml-[5px] mr-auto"
+            />
+          </Link>
           <div
-            className={styles.openArrow}
             onClick={(e) => setIsMenuOpen(!isMenuOpen)}
+            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] cursor-pointer rounded-full text-text-color my-5 hover:text-accent-color-hover"
           >
             {isMenuOpen && <ArrowLeftFromLine size={24} />}
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
           </div>
-          <div className={styles.myTasks}>
-            <Link href={"/tasks"} title="Mes tâches">
-              <div>
-                <ClipboardList size={24} />
+          <div className="flex justify-start items-center -mt-3 mb-[18px]">
+            <Link
+              href={"/tasks"}
+              title="Mes tâches"
+              className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+            >
+              <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+                <ClipboardList
+                  size={24}
+                  className="bg-transparent text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+                />
               </div>
-              <span>Mes tâches</span>
+              {isMenuOpen && (
+                <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                  Mes tâches
+                </span>
+              )}
             </Link>
           </div>
-          <nav className={styles.nav}>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-              measuring={{
-                droppable: {
-                  strategy: MeasuringStrategy.Always,
-                },
-              }}
-              modifiers={[]}
-            >
-              <SortableContext
-                items={projectItems.map((project) => project._id)}
-                strategy={verticalListSortingStrategy}
-              >
-                {projectItems?.map((project) => (
-                  <SortableProject
-                    key={project._id}
-                    project={project}
-                    projectId={projectId}
-                    isActive={project._id === projectId}
-                    open={isMenuOpen}
-                  />
-                ))}
-              </SortableContext>
-            </DndContext>
+          <nav className="relative flex flex-col gap-2 max-h-[65svh] overflow-y-auto scroll-smooth">
+            {favoritesLoading ? (
+              <ProjectSideNavSkeleton />
+            ) : (
+              projects?.map((project) => (
+                <ProjectSideNav
+                  key={project._id}
+                  project={project}
+                  isActive={project._id === projectId}
+                  open={isMenuOpen}
+                />
+              ))
+            )}
           </nav>
         </div>
-        <div className={styles.actions}>
-          <Link href={"/projects"} data-active={projectId === ""}>
-            <div>
-              <LayoutGrid size={24} />
+        <div className="flex justify-center items-start flex-col gap-3 min-w-10 min-h-10 rounded-full">
+          <Link
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+            href={"/projects"}
+            data-active={projectId === ""}
+          >
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <LayoutGrid
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
             </div>
-            <span>Mes projets</span>
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                Mes projets
+              </span>
+            )}
           </Link>
-          <Link href={"/new-project"}>
-            <div>
-              <Plus size={24} />
+          <Link
+            href={"/times"}
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+          >
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <Clock3
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
             </div>
-            <span>Ajouter un projet</span>
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                Suivi du temps
+              </span>
+            )}
+          </Link>
+          <Link
+            href={"/new-project"}
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+          >
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <Plus
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
+            </div>
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                Ajouter un projet
+              </span>
+            )}
           </Link>
         </div>
       </div>

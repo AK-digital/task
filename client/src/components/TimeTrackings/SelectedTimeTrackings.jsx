@@ -1,36 +1,74 @@
 "use client";
 import { deleteTimeTracking } from "@/api/timeTracking";
-import styles from "@/styles/components/timeTrackings/selected-time-trackings.module.css";
 import { Trash } from "lucide-react";
+import socket from "@/utils/socket";
+import { extractId } from "@/utils/extractId";
 
 export default function SelectedTimeTrackings({
   selectedTrackers,
   setSelectedTrackers,
+  mutateTimeTrackings,
+  trackers,
 }) {
   const handleDeleteTrackers = async () => {
-    const response = await deleteTimeTracking(selectedTrackers);
+    const firstSelectedTracker = trackers.find((tracker) =>
+      selectedTrackers.includes(tracker._id)
+    );
+
+    if (!firstSelectedTracker) return;
+
+    const projectId = extractId(firstSelectedTracker.projectId);
+
+    mutateTimeTrackings(
+      (currentData) => {
+        if (!currentData?.data) return currentData;
+        return {
+          ...currentData,
+          data: currentData.data.filter(
+            (t) => !selectedTrackers.includes(t._id)
+          ),
+        };
+      },
+      false // Ne pas revalider immédiatement
+    );
+
+    const response = await deleteTimeTracking(selectedTrackers, projectId);
     if (!response.success) {
+      mutateTimeTrackings(undefined, {
+        revalidate: true,
+        populateCache: false,
+      });
       return;
     }
+
+    socket.emit("update task", projectId);
+
+    setTimeout(() => {
+      mutateTimeTrackings(undefined, {
+        revalidate: true,
+        populateCache: false,
+      });
+    }, 50);
 
     setSelectedTrackers([]);
     document.querySelector("input[name=trackers]").checked = false;
   };
+
   return (
-    <div className={styles.container}>
-      <div className={styles.selected}>
+    <div className="fixed flex items-center bottom-5 left-1/2 -translate-x-1/2 bg-secondary rounded-lg shadow-small gap-2 overflow-hidden pr-2 animate-[slideIn_150ms_forwards]">
+      <div className="flex justify-center items-center bg-accent-color-light h-20 w-20 text-white text-[1.4rem]">
         <span>{selectedTrackers.length}</span>
       </div>
-      <div className={styles.item}>
-        <span className={styles.text}>
+      <div>
+        <span className="text-[1.4rem]">
           {selectedTrackers?.length > 1
             ? "Suivi séléctionnés"
             : "Suivi sélectionné"}
         </span>
       </div>
-      <div className={styles.border}></div>
-      <div className={styles.item}>
-        <span className={styles.delete} onClick={handleDeleteTrackers}>
+      <div className="w-px bg-text-light-color h-[50px] mx-3"></div>
+      <div>
+        <span className="flex items-center text-text-color-red gap-1 cursor-pointer" onClick={handleDeleteTrackers}>
           <Trash size={16} /> Supprimer
         </span>
       </div>

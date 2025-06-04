@@ -1,4 +1,5 @@
 "use server";
+import { auth } from "@/libs/auth";
 import { useFetch } from "@/utils/api";
 import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
@@ -97,8 +98,6 @@ export async function signIn(prevState, formData) {
     };
 
     const res = await useFetch("auth/sign-in", options);
-
-    console.log(res);
 
     const response = await res.json();
 

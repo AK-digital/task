@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/task/task-deadline.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import "moment/locale/fr";
@@ -92,9 +91,9 @@ export default function TaskDeadline({ task, uid }) {
   };
 
   const pastDeadline =
-    moment().isAfter(moment(deadline)) && task?.status !== "Terminée";
+    moment().isAfter(moment(deadline)) && task?.status?.status !== "done";
   const isToday =
-    moment().isSame(moment(deadline), "day") && task?.status !== "Terminée";
+    moment().isSame(moment(deadline), "day") && task?.status?.status !== "done";
 
   const handleHover = useCallback(() => {
     const isAuthorized = checkRole(
@@ -121,9 +120,9 @@ export default function TaskDeadline({ task, uid }) {
   }, [project, uid]);
 
   return (
-    <div className={styles.container} onMouseLeave={() => setHover(false)}>
+    <div className="flex justify-center items-center py-1 px-2 border-r border-text-light-color min-w-30 max-w-[150px] w-full h-full gap-0.5" onMouseLeave={() => setHover(false)}>
       <div
-        className={styles.wrapper}
+        className="wrapper_TaskDeadline relative w-full bg-primary rounded-3xl py-1 px-0.5 text-center cursor-pointer text-small overflow-hidden"
         onMouseEnter={handleHover}
         onClick={handleIsEditing}
         style={{ "--progress": `${deadline ? progress : "0%"}` }}
@@ -141,17 +140,18 @@ export default function TaskDeadline({ task, uid }) {
               value={deadline}
               onChange={handleUpdateDate}
               ref={inputRef}
+              className="absolute opacity-0 w-0 h-0"
             />
           )}
           {deadline ? (
-            <span>{displayDate()}</span>
+            <span className="relative z-1 text-white">{displayDate()}</span>
           ) : (
-            <span>{hover || isEditing ? "Définir une date" : "-"}</span>
+            <span className="relative z-1">{hover || isEditing ? "Définir une date" : "-"}</span>
           )}
         </div>
       </div>
       {hover && deadline && (
-        <CircleX size={12} onClick={removeDeadline} cursor={"pointer"} />
+        <CircleX size={12} onClick={removeDeadline} cursor={"pointer"} className="w-4.5 h-4.5 text-text-color-muted hover:text-danger-color" />
       )}
     </div>
   );

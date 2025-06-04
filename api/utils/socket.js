@@ -1,6 +1,7 @@
 import UserModel from "../models/User.model.js";
 import NotificationModel from "../models/Notification.model.js";
 import ProjectModel from "../models/Project.model.js";
+import TimeTrackingModel from "../models/TimeTracking.model.js";
 
 export default function socketHandler(io) {
   io.on("connection", (socket) => {
@@ -116,6 +117,18 @@ export default function socketHandler(io) {
 
       if (user) {
         io.to(user?.socketId).emit("updated-project-role");
+      }
+    });
+
+    socket.on("update time tracking", async (trackingId) => {
+      const timeTracking = await TimeTrackingModel.findById(trackingId);
+      if (timeTracking) {
+        await emitToProjectMembers(
+          timeTracking.projectId,
+          "time tracking updated",
+          socket,
+          trackingId
+        );
       }
     });
   });
