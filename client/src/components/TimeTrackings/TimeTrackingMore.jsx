@@ -13,36 +13,15 @@ export default function TimeTrackingMore({
   const handleDeleteTracker = async () => {
     const projectId = extractId(tracker?.projectId);
 
-    mutateTimeTrackings(
-      (currentData) => {
-        if (!currentData?.data) return currentData;
-        return {
-          ...currentData,
-          data: currentData.data.filter((t) => t._id !== tracker._id),
-        };
-      },
-      false // Ne pas revalider immédiatement
-    );
-
     const response = await deleteTimeTracking([tracker._id], projectId);
 
     if (!response.success) {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
       return;
     }
 
-    socket.emit("time tracking deleted", tracker._id, projectId);
+    socket.emit("update task", projectId);
 
-    setTimeout(() => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
-    }, 50);
-
+    mutateTimeTrackings();
     handleMore();
   };
 

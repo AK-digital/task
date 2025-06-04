@@ -8,7 +8,6 @@ import { AuthContext } from "@/context/auth";
 import { useContext } from "react";
 
 export default function Projects() {
-  const router = useRouter();
   const { uid } = useContext(AuthContext);
   const { projects, projectsLoading, mutateProjects } = useProjects();
 
@@ -21,6 +20,7 @@ export default function Projects() {
   });
 
   return (
+
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">
       <div className="relative flex items-center flex-col rounded-tl-2xl bg-primary-transparent h-full pl-6 pt-6">
         <div className="flex justify-between items-start w-full pr-6 mb-5">

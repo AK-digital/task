@@ -33,11 +33,13 @@ export default function TimeTrackingHeader({
 
     const newTrackers = [...trackers].sort((a, b) => {
       if (sort === "asc") {
-        return a.project?.name.localeCompare(b.project?.name);
+        return a.projectId?.name.localeCompare(b.projectId?.name);
       } else {
-        return b.project?.name.localeCompare(a.project?.name);
+        return b.projectId?.name.localeCompare(a.projectId?.name);
       }
     });
+
+    console.log(newTrackers);
 
     setProjectSort(sort);
     setFilteredTrackers(newTrackers);
@@ -51,9 +53,9 @@ export default function TimeTrackingHeader({
 
     const newTrackers = [...trackers].sort((a, b) => {
       if (sort === "asc") {
-        return a.user?.firstName.localeCompare(b.user?.firstName);
+        return a.userId?.firstName.localeCompare(b.userId?.firstName);
       } else {
-        return b.user?.firstName.localeCompare(a.user?.firstName);
+        return b.userId?.firstName.localeCompare(a.userId?.firstName);
       }
     });
 

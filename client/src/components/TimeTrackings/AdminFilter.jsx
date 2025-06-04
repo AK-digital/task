@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DisplayPicture from "../User/DisplayPicture";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, Undo } from "lucide-react";
 
 export default function AdminFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function AdminFilter({ projects, queries, setQueries }) {
       setMembers(uniqueMembers);
     } else {
       const selectedProjects = projects?.filter((p) =>
-        queries?.projects?.includes(p?.name)
+        queries?.projects?.includes(p?._id)
       );
 
       const selectedProjectsMembers = selectedProjects
@@ -58,6 +58,11 @@ export default function AdminFilter({ projects, queries, setQueries }) {
       const newMemberIds = newCurrentMembers.map((m) => m?.user?._id);
       setQueries({ ...queries, members: newMemberIds });
     }
+  }
+
+  function handleReset() {
+    setCurrentMembers([]);
+    setQueries({ ...queries, members: undefined });
   }
 
   return (
@@ -94,6 +99,10 @@ export default function AdminFilter({ projects, queries, setQueries }) {
       {isOpen && (
         <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-2.5 z-[2000] max-h-[300px] overflow-y-auto">
           <ul>
+            <li className="flex items-center py-1.5 text-small gap-1 cursor-pointer" onClick={handleReset}>
+              <Undo size={16} />
+              Supprimer les filtres
+            </li>
             {members?.map((member) => {
               return (
                 <li
@@ -105,11 +114,12 @@ export default function AdminFilter({ projects, queries, setQueries }) {
                     id={`user-${member?.user?._id}`}
                     name="user"
                     onChange={(e) => handleMemberChange(e, member)}
-                    value={
-                      member?.user?.firstName + " " + member?.user?.lastName
-                    }
-                    checked={queries?.members?.includes(member?.user?._id)}
+                    value={member?.user?._id}       
+                    checked={Boolean(
+                      queries?.members?.includes(member?.user?._id)
+                    )}
                     className="max-w-4 max-h-4 cursor-pointer"
+
                   />
                   <label
                     htmlFor={`user-${member?.user?._id}`}

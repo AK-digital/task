@@ -85,11 +85,7 @@ export async function updateMessage(
     const data = new FormData();
     data.append("message", message);
 
-    if (isNotEmpty(taggedUsers)) {
-      taggedUsers.forEach((taggedUser) => {
-        data.append("taggedUsers", taggedUser);
-      });
-    }
+    data.append("taggedUsers", JSON.stringify(taggedUsers));
 
     if (isNotEmpty(attachments)) {
       attachments.forEach((attachment) => {

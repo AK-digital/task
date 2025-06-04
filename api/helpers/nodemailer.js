@@ -11,17 +11,21 @@ const transporter = nodemailer.createTransport({
     // do not fail on invalid certs
     rejectUnauthorized: true,
     requestCert: false,
+    minVersion: "TLSv1.2",
   },
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
 });
 
 function stripHtmlTags(html) {
-  return html.replace(/<[^>]*>?/gm, "");
+  return html?.replace(/<[^>]*>?/gm, "");
 }
 
 export async function sendEmail(from, to, subject, text) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: `"AK Digital" <${from}>`, // sender address with display name
+    from: `"Clynt.io" <${from}>`, // sender address with display name
     to: to, // list of receivers
     replyTo: from,
     subject: subject, // Subject line
@@ -31,7 +35,7 @@ export async function sendEmail(from, to, subject, text) {
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td align="center" valign="middle">
-              <table width="100%" maxwidth="500" border="0" cellspacing="0" cellpadding="0" style="max-width: 500px; margin:42px;">
+              <table width="100%" maxwidth="700" border="0" cellspacing="0" cellpadding="0" style="max-width: 700px; margin:42px;">
                 <tr>
                   <td align="center" style="padding: 20px;">
                     <div style="font-family: Arial, sans-serif; color: #5C5D61; text-align: center; background-color: white; width: 100%; border-radius:16px; border-top: 4px solid #a87e51; padding: 20px;">
@@ -43,7 +47,7 @@ export async function sendEmail(from, to, subject, text) {
                       </p>
                     </div>
                      <div style="margin-top:16px;font-size:12px;font-weight:600;color:#72716f;">
-                      Fait avec ❤️ par l'équipe d'<a href="https://akdigital.fr" style="color:#a87e51;text-decoration:none;">AK Digital</a>
+                       l'équipe d'<a href="https://akdigital.fr" style="color:#a87e51;text-decoration:none;">AK Digital</a>
                     </div>
                   </td>
                 </tr>

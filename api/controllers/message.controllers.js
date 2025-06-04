@@ -8,7 +8,7 @@ import MessageModel from "../models/Message.model.js";
 import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailMessage } from "../templates/emails.js";
-import { deleteReaction, getMatches } from "../utils/utils.js";
+import { getMatches } from "../utils/utils.js";
 
 export async function saveMessage(req, res, next) {
   try {
@@ -171,6 +171,8 @@ export async function updateMessage(req, res, next) {
     const { message, taggedUsers, existingFiles } = req.body;
     const messageToUpdate = await MessageModel.findById({ _id: req.params.id });
 
+    const tagged = JSON.parse(taggedUsers);
+
     if (!messageToUpdate) {
       return res.status(404).send({
         success: false,
@@ -196,7 +198,7 @@ export async function updateMessage(req, res, next) {
         .send({ success: false, message: "Paramètres manquants" });
     }
 
-    const uniqueTaggedUsers = Array.from(new Set(taggedUsers || []));
+    const uniqueTaggedUsers = Array.from(new Set(tagged || []));
 
     let messageWithImg = message;
     const imgRegex = /<img.*?src=["'](.*?)["']/g;
