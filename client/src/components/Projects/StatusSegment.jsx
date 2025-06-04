@@ -26,7 +26,7 @@ export default function StatusSegment({ status, totalTasks }) {
 
   return (
     <div
-      className={styles.statusSegment}
+      className="relative h-full transition-width duration-300"
       style={{
         width: `${percentage}%`,
         backgroundColor: status?.color || "#ccc",

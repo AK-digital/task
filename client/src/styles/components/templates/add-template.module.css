@@ -1,4 +1,6 @@
-.container {
+/* CONVERTED TO TAILWIND CSS - ALL STYLES BELOW ARE COMMENTED OUT */
+
+/* .container {
     position: fixed;
     z-index: 2001;
     top: 50%;
@@ -17,7 +19,7 @@
 .header {
     text-align: center;
     font-size: var(--text-size-large);
-    color: var(--text-color-dark);
+    color: var(--text-dark-color);
 }
 
 .form {
@@ -50,4 +52,4 @@
     padding: 8px !important;
     border-radius: var(--border-radius-xs);
     font-size: var(--text-size-medium);
-}
+} */

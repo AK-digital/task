@@ -1,13 +1,12 @@
 "use server";
-import styles from "@/styles/pages/time-trackings.module.css";
 import TimeTrackings from "@/components/TimeTrackings/TimeTrackings";
 
 export default async function TimeTrackingsPage({ searchParams }) {
   const params = await searchParams;
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
+    <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
+      <div className="flex flex-col bg-primary-transparent rounded-tl-2xl h-full pt-6 pl-6 overflow-hidden pb-10">
         <TimeTrackings searchParams={params} />
       </div>
     </main>

@@ -295,8 +295,7 @@ export function exportTimeTracking(projects, trackers) {
 
     // Sauvegarde du fichier avec nom du projet
     doc.save(
-      `${formattedStartingDate}-${formattedEndingDate}-${
-        project?.name || "projet"
+      `${formattedStartingDate}-${formattedEndingDate}-${project?.name || "projet"
       }-temps-clynt.pdf`
     );
   }

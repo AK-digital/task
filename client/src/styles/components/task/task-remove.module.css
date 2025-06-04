@@ -1,4 +1,4 @@
-.container {
+/* .container {
     cursor: pointer;
     color: #41435f;
     transition: color 150ms ease-in-out;
@@ -8,4 +8,4 @@
 
 .container:hover {
     color: var(--danger-color);
-}
+} */

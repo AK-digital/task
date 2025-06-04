@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import styles from "@/styles/components/timeTrackings/projectFilter.module.css";
-import { ChevronDownIcon, Undo } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, Undo } from "lucide-react";
+
 
 export default function ProjectFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,11 +37,14 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
   }
 
   return (
-    <div className={styles.container}>
-      <div onClick={() => setIsOpen(!isOpen)} className={styles.current}>
+    <div className="relative select-none">
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative flex items-center justify-center gap-1 p-2.5 rounded border border-color-border-color bg-secondary cursor-pointer text-medium w-[180px] max-h-10"
+      >
         {hasProjects ? (
           <>
-            <span>
+            <span className="flex justify-center gap-1">
               {currentProjects?.map((project) => {
                 return (
                   <Image
@@ -50,26 +53,35 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                     height={24}
                     alt={`Logo de ${project?.name}`}
                     key={project?._id}
+                    className="rounded-full"
                   />
                 );
               })}
             </span>
           </>
         ) : (
-          <span>Choisir un projet</span>
+          <span className="flex justify-center gap-1">Choisir un projet</span>
         )}
-        <ChevronDownIcon size={16} className={styles.icon} />
+        {!isOpen && (
+          <ChevronDownIcon size={16} className="absolute right-1.5" />
+        )}
+
+        {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
       </div>
       {isOpen && (
-        <div className={styles.dropdown}>
-          <ul className={styles.projects}>
-            <li className={styles.project} onClick={handleReset}>
+
+        <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-2.5 z-[2000] max-h-[300px] overflow-y-auto">
+          <ul>
+           <li className=flex items-center gap-1 cursor-pointer py-1.5 text-small onClick={handleReset}>
               <Undo size={16} />
               Supprimer les filtres
             </li>
             {projects?.map((project) => {
               return (
-                <li className={styles.project} key={project?._id}>
+                <li
+                  className="flex items-center gap-1 cursor-pointer py-1.5 text-small"
+                  key={project?._id}
+                >
                   <input
                     type="checkbox"
                     id={`project-${project?._id}`}
@@ -77,15 +89,22 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                     value={project?._id}
                     onChange={(e) => handleProjectChange(e, project)}
                     checked={Boolean(queries?.projects?.includes(project?._id))}
+                    className="max-w-4 max-h-4 cursor-pointer"
                   />
-                  <label htmlFor={`project-${project?._id}`}>
+                  <label
+                    htmlFor={`project-${project?._id}`}
+                    className="flex items-center gap-1 cursor-pointer"
+                  >
                     <Image
                       src={project?.logo || "/default-project-logo.svg"}
                       width={22}
                       height={22}
                       alt={`Logo de ${project?.name}`}
+                      className="rounded-full"
                     />
-                    <span>{project?.name}</span>
+                    <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">
+                      {project?.name}
+                    </span>
                   </label>
                 </li>
               );

@@ -1,4 +1,4 @@
-.container {
+/* .container {
     position: relative;
     top: 0.5px;
     cursor: pointer;
@@ -6,21 +6,21 @@
 
 .wrapper {
     display: flex;
-}
+} */
 
-.container button {
+/* .container button {
     padding: 0 !important;
     background-color: transparent !important;
     border: none;
-}
+} */
 
-.emojiPicker {
+/* .emojiPicker {
     position: absolute;
     z-index: 2001;
     top: 20px;
     left: 12px;
-}
+} */
 
-.emojiPicker aside {
+/* .emojiPicker aside {
     border-radius: 8px !important;
-}
+} */

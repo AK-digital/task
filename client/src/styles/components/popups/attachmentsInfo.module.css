@@ -1,4 +1,4 @@
-.container {
+/* .container {
   position: relative;
 }
 
@@ -47,9 +47,9 @@
   align-items: center;
   gap: 0.5rem;
   justify-content: space-between;
-}
+} */
 
-.attachmentName {
+/* .attachmentName {
   font-size: 0.85rem;
   color: var(--text-color-muted);
   white-space: nowrap;
@@ -62,24 +62,24 @@
 
 .attachmentName[data-url="false"]:hover {
   color: var(--text-color-muted);
-}
+} */
 
-.attachments {
+/* .attachments {
   color: var(--accent-color);
   font-size: var(--text-size-small);
-}
+} */
 
-.checkbox {
+/* .checkbox {
   width: 12px;
   width: 12px;
-}
+} */
 
-.actions {
+/* .actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
+} */
+/* 
 .delete,
 .download {
   display: flex;
@@ -123,23 +123,23 @@
 
 .download[data-has-background="false"]:hover {
   color: var(--accent-color-hover);
-}
+} */
 
-.actionsButtons {
+/* .actionsButtons {
   display: flex;
   gap: 0.25rem;
-}
+} */
 
-.allCheck {
+/* .allCheck {
   color: var(--accent-color);
   cursor: pointer;
 }
 
 .allCheck:hover {
   color: var(--accent-color-hover);
-}
+} */
 
-.file {
+/* .file {
   display: flex;
   gap: 0.5rem;
-}
+} */

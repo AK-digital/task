@@ -1,23 +1,23 @@
-.container {
+/* .container {
     display: flex;
     justify-content: center;
     margin-bottom: 16px;
-}
+} */
 
-.picture {
+/* .picture {
     position: relative;
     display: inline-block;
     width: 100px;
     height: 100px;
     margin: auto;
-}
+} */
 
-.profileImage {
+/* .profileImage {
     border-radius: 50% !important;
     object-fit: cover;
-}
+} */
 
-.editPicture {
+/* .editPicture {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -37,4 +37,4 @@
     width: 20px;
     height: 20px;
     color: white;
-}
+} */

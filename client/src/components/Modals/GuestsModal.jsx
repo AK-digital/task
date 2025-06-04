@@ -1,6 +1,5 @@
 "use client";
 import { removeGuest } from "@/actions/project";
-import styles from "@/styles/components/modals/guests-modal.module.css";
 import { isNotEmpty, memberRole } from "@/utils/utils";
 import Image from "next/image";
 import { useActionState, useContext, useEffect, useState } from "react";
@@ -69,8 +68,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className={styles.container} id="modal">
-        <div className={styles.heading}>
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)]">
+        <div className="text-[1.4rem] font-medium">
           <span>Inviter d'autres utilisateurs</span>
         </div>
         {canInvite && (
@@ -82,29 +81,29 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         )}
         {/* Guests list */}
         {isNotEmpty(members) && (
-          <div className={styles.guests}>
-            <ul>
+          <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+            <ul className="flex flex-col gap-3.5 mt-6">
               {members.map((member) => {
                 return (
-                  <li key={member?.user?._id} className={styles.member}>
-                    <div className={styles.user}>
+                  <li
+                    key={member?.user?._id}
+                    className="flex justify-between items-center gap-3"
+                  >
+                    <div className="[&_div]:justify-center">
                       <DisplayPicture
                         user={member?.user}
-                        style={{
-                          borderRadius: "50%",
-                          width: "32px",
-                          height: "32px",
-                        }}
+                        style={{ width: "32px", height: "32px" }}
+                        className="rounded-full"
                       />
                       <span
-                        className={styles.email}
+                        className="w-55 overflow-hidden text-ellipsis"
                         title={member?.user?.email}
                       >
                         {member?.user?.email}
                       </span>
                       {canEditRole &&
-                      member?.user?._id !== uid &&
-                      member?.role !== "owner" ? (
+                        member?.user?._id !== uid &&
+                        member?.role !== "owner" ? (
                         <DropDown
                           defaultValue={member?.role}
                           options={options}
@@ -112,8 +111,10 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           member={member}
                         />
                       ) : (
-                        <div className={styles.role}>
-                          <span>{memberRole(member?.role)}</span>
+                        <div className="w-full text-small">
+                          <span className="text-center w-full text-text-color-muted">
+                            {memberRole(member?.role)}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -130,6 +131,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           type="submit"
                           data-disabled={pending}
                           disabled={pending}
+                          className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
                         >
                           Révoquer
                         </button>
@@ -142,8 +144,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
           </div>
         )}
         {isNotEmpty(projectInvitations) && (
-          <div className={styles.invitations}>
-            <ul>
+          <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2 ">
+            <ul className="flex flex-col gap-3.5">
               <ProjectInvitationsList
                 projectInvitations={projectInvitations}
                 setIsPopup={setIsPopup}
@@ -154,7 +156,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
           </div>
         )}
       </div>
-      <div id="modal-layout" onClick={(e) => setIsOpen(false)}></div>
+      <div className="modal-layout" onClick={(e) => setIsOpen(false)}></div>
       {isPopup && (
         <PopupMessage
           status={isPopup?.status}
@@ -208,14 +210,17 @@ export function ProjectInvitationsList({
   return (
     <>
       {projectInvitations.map((inv) => (
-        <li key={inv?._id} className={styles.pending}>
+        <li
+          key={inv?._id}
+          className="flex justify-between items-center gap-3 text-text-color-muted"
+        >
           <div>
             <Image
               src={"/default-pfp.webp"}
               width={32}
               height={32}
               alt={`Photo de profil de ${inv?.guestEmail}`}
-              style={{ borderRadius: "50%" }}
+              className="rounded-full"
             />
             <span>{inv?.guestEmail}</span>
           </div>
@@ -243,7 +248,12 @@ export function ProjectInvitationsList({
                 defaultValue={inv?.projectId}
                 hidden
               />
-              <button type="submit" data-disabled={pending} disabled={pending}>
+              <button
+                type="submit"
+                data-disabled={pending}
+                disabled={pending}
+                className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
+              >
                 Annuler
               </button>
             </form>

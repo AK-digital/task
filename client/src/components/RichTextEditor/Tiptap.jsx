@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/components/tiptap/tiptap.module.css";
 import { useEditor, EditorContent } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
@@ -36,7 +35,6 @@ import {
   UnderlineIcon,
   Undo2,
 } from "lucide-react";
-import { bricolageGrostesque } from "@/utils/font";
 import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
 import socket from "@/utils/socket";
@@ -122,8 +120,8 @@ export default function Tiptap({
     message
       ? message?.message || message
       : type === "description"
-      ? description
-      : ""
+        ? description
+        : ""
   );
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
   const [taggedUsers, setTaggedUsers] = useState([]);
@@ -132,8 +130,8 @@ export default function Tiptap({
     message
       ? message?.message || message
       : type === "description"
-      ? description
-      : ""
+        ? description
+        : ""
   );
 
   useEffect(() => {
@@ -288,7 +286,7 @@ export default function Tiptap({
       const coords = editor.view.coordsAtPos(from);
 
       // Récupérer la position de l'éditeur
-      const editorElement = editor.view.dom.closest(`.${styles.container}`);
+      const editorElement = containerRef.current;
       const editorRect = editorElement.getBoundingClientRect();
 
       // Calculer la position relative à l'éditeur
@@ -304,7 +302,7 @@ export default function Tiptap({
   function isMeaningfulContent(html) {
     const temp = document.createElement("div");
     temp.innerHTML = html;
-    return !!temp.textContent.trim(); // retourne true s’il y a du texte non vide
+    return !!temp.textContent.trim(); // retourne true s'il y a du texte non vide
   }
 
   const handleSaveDescription = async () => {
@@ -560,13 +558,13 @@ export default function Tiptap({
   return (
     <>
       <div
-        className={styles.container}
+        className="relative flex flex-col resize-none w-full border border-[#ddd] rounded-lg bg-third min-w-full max-w-full min-h-[250px]"
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
         ref={containerRef}
       >
         {/* Barre d'outils */}
-        <div className={styles.toolbar}>
+        <div className="toolbar_Tiptap flex items-center p-2 bg-white border-b border-[#ddd] rounded-t-lg rounded-b-none">
           <button onClick={() => editor.chain().focus().undo().run()}>
             <Undo2 size={16} />
           </button>
@@ -574,7 +572,7 @@ export default function Tiptap({
             <Redo2 size={16} />
           </button>
 
-          <div className={styles.separator}></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
 
           <button
             onClick={() =>
@@ -598,7 +596,7 @@ export default function Tiptap({
             <Heading3 size={16} />
           </button>
 
-          <div className={styles.separator}></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
 
           <button onClick={() => editor.chain().focus().toggleBold().run()}>
             <BoldIcon size={16} />
@@ -614,7 +612,7 @@ export default function Tiptap({
           <button onClick={() => editor.chain().focus().toggleStrike().run()}>
             <StrikethroughIcon size={16} />
           </button>
-          <div className={styles.separator}></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
@@ -626,7 +624,7 @@ export default function Tiptap({
             <ListOrderedIcon size={16} />
           </button>
 
-          <div className={styles.separator}></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
 
           <button onClick={handleSetLink}>
             <LinkIcon size={16} />
@@ -634,7 +632,7 @@ export default function Tiptap({
           <button onClick={handleAddImage}>
             <ImageIcon size={16} />
           </button>
-          <div className={styles.separator}></div>
+          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
           <button
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
           >
@@ -647,7 +645,7 @@ export default function Tiptap({
           </button>
         </div>
         {/* Contenu de l'éditeur */}
-        <EditorContent editor={editor} className={styles.content} />
+        <EditorContent editor={editor} className="content_Tiptap flex-1 min-h-[150px] p-[15px] text-[16px] outline-none rounded-t-none rounded-b-lg cursor-text" />
         {isTaggedUsers && (
           <MentionsList
             project={project}
@@ -657,16 +655,16 @@ export default function Tiptap({
           />
         )}
         {isLoadingDraft && (
-          <div className={styles.draft}>
+          <div className="absolute right-2.5 bottom-1 text-small text-text-color-muted">
             <span>Brouillon en cours d'enregistrement...</span>
           </div>
         )}
         {isDraftSaved && !isLoadingDraft && (
-          <div className={styles.draft}>
+          <div className="absolute right-2.5 bottom-1 text-small text-text-color-muted">
             <span>Brouillon enregistré</span>
           </div>
         )}
-        <div className={styles.footer}>
+        <div className="relative flex items-center gap-2 ml-2 mb-2 mt-auto">
           <Attachment
             attachments={attachments}
             setAttachments={setAttachments}
@@ -684,6 +682,7 @@ export default function Tiptap({
               attachments={attachments}
               setAttachments={setAttachments}
               label="Ajouter une pièce jointe"
+              className="cursor-pointer"
             />
           )}
           <Reactions
@@ -696,10 +695,10 @@ export default function Tiptap({
           />
         </div>
       </div>
-      <div className={styles.actions}>
+      <div className="actions_Tiptap flex items-center gap-2 ml-auto">
         {type === "description" && (
           <button
-            className={bricolageGrostesque.className}
+            className="font-bricolage"
             data-disabled={checkIfDisabled()}
             disabled={checkIfDisabled()}
             onClick={handleSaveDescription}
@@ -710,13 +709,13 @@ export default function Tiptap({
         {type === "message" && (
           <>
             <button
-              className={`${bricolageGrostesque.className} ${styles.cancel}`}
+              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-normal mr-3 hover:text-accent-color-light hover:bg-transparent shadow-none"
               onClick={handleCancel}
             >
               Annuler
             </button>
             <button
-              className={bricolageGrostesque.className}
+              className="font-bricolage"
               data-disabled={checkIfDisabled()}
               disabled={checkIfDisabled()}
               onClick={handleMessage}

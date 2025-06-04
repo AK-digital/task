@@ -1,4 +1,4 @@
-.container {
+/* .container {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -7,9 +7,9 @@
 
 .container[data-loading="true"] {
   opacity: 0.4;
-}
+} */
 
-.wrapper {
+/* .wrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -19,8 +19,8 @@
   border-radius: var(--border-radius-small);
   transition: all 50ms linear;
   position: relative;
-}
-
+} */
+/* 
 .header,
 .user {
   display: flex;
@@ -33,24 +33,24 @@
 
 .header svg {
   cursor: pointer;
-}
+} */
 
-.user {
+/* .user {
   gap: 8px;
-}
+} */
 
-.names {
+/* .names {
   font-size: var(--text-size-normal);
   font-weight: 500;
-}
+} */
 
-.date,
+/* .date,
 .updated {
   font-size: 0.75rem;
   color: var(--text-color-muted);
-}
+} */
 
-.more {
+/* .more {
   position: absolute;
   z-index: 2001;
   right: 24px;
@@ -59,15 +59,15 @@
   background-color: var(--secondary-background-color);
   border-radius: var(--border-radius-xs);
   box-shadow: var(--box-shadow-medium);
-}
+} */
 
-.more ul {
+/* .more ul {
   margin: 0;
   padding: 0;
   list-style: none;
-}
+} */
 
-.more ul li {
+/* .more ul li {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -89,18 +89,18 @@
 .more li:hover {
   background-color: var(--third-background-color);
   border-radius: var(--border-radius-xs);
-}
+} */
 
-.text {
+/* .text_Message {
   font-weight: 300;
   font-size: var(--text-size-normal);
 }
 
-.text p:empty {
+.text_Message p:empty {
   margin: 12px 0;
 }
 
-.text img {
+.text_Message img {
   width: 100%;
   max-width: 800px;
   max-height: 400px;
@@ -108,21 +108,21 @@
   margin: 10px 0;
 }
 
-.text span {
+.text_Message span {
   color: var(--accent-color);
   font-weight: 500;
 }
 
-.text ul,
-.text ol {
+.text_Message ul,
+.text_Message ol {
   margin-left: 25px;
 }
 
-.text ul {
+.text_Message ul {
   list-style-type: disc;
-}
+} */
 
-.informations {
+/* .informations {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -134,4 +134,4 @@
   display: flex;
   align-items: center;
   gap: 4px;
-}
+} */

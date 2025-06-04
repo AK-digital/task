@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/layouts/project-header.module.css";
 import { useState, useRef, useEffect, useActionState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { updateProject } from "@/actions/project";
@@ -144,8 +143,8 @@ export default function ProjectTitle({ project }) {
   }
 
   return (
-    <div className={styles.titleContainer}>
-      <div className={styles.title}>
+    <div className="flex flex-row items-center gap-4">
+      <div className="flex items-center font-bold text-large">
         {isEditing ? (
           <form action={formAction} ref={formRef}>
             <input
@@ -164,7 +163,7 @@ export default function ProjectTitle({ project }) {
               onBlur={handleIsEditing}
               onKeyDown={handleKeyDown}
               defaultValue={projectName}
-              className={styles.titleInput}
+              className="bg-none border-none text-inherit text-[length:inherit] font-[family:inherit] py-0.5 px-1 rounded-sm w-75 focus:outline-none"
             />
             <input
               type="text"
@@ -193,11 +192,16 @@ export default function ProjectTitle({ project }) {
             ))}
           </form>
         ) : (
-          <span onClick={handleIsEditing}>{projectName}</span>
+          <span
+            onClick={handleIsEditing}
+            className="cursor-pointer w-max hover:opacity-80"
+          >
+            {projectName}
+          </span>
         )}
       </div>
 
-      <div className={styles.more}>
+      <div className="relative top-0.5 cursor-pointer transition-[background-color] duration-200 rounded-lg">
         <MoreVertical size={20} onClick={() => setIsMoreOpen(true)} />
         {isMoreOpen && (
           <MoreMenu
@@ -209,11 +213,16 @@ export default function ProjectTitle({ project }) {
       </div>
 
       {isNotEmpty(project?.urls) && (
-        <div className={styles.links}>
+        <div className="flex items-center gap-3 [&_svg]:w-[22px] [&_svg]:h-[22px]">
           {project?.urls?.map((url, idx) => {
             return (
               <div key={idx}>
-                <a href={url?.url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={url?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center bg-secondary p-2 rounded-lg"
+                >
                   {displayIcon(url?.icon)}
                 </a>
               </div>

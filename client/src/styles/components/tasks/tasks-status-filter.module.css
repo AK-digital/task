@@ -1,4 +1,6 @@
-.container,
+/* Styles converted to Tailwind CSS in TasksStatusFilter.jsx */
+
+/* .container,
 .current {
     position: relative;
 }
@@ -69,7 +71,6 @@
 .dropdown ul {
     display: flex;
     flex-direction: column;
-    /* gap: 8px; */
 }
 
 .status {
@@ -98,4 +99,8 @@
     align-items: center;
     cursor: pointer;
     flex: 1;
+} */
+
+.placeholder {
+  /* Placeholder rule to maintain valid CSS */
 }

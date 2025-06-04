@@ -1,6 +1,5 @@
 "use client";
 import { updateBoard } from "@/actions/board";
-import styles from "@/styles/components/boards/BoardHeader.module.css";
 import {
   Archive,
   ArchiveRestore,
@@ -26,7 +25,6 @@ import { mutate } from "swr";
 import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { bricolageGrostesque } from "@/utils/font";
 
 export default function BoardHeader({
   board,
@@ -233,34 +231,29 @@ export default function BoardHeader({
 
   return (
     <div
-      className={styles.container}
+      className="container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full z-2000 flex-wrap p-3"
+      // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
-      style={{ "--border-color": `${board?.color}` }}
+      style={{
+        borderColor: `${board?.color}`,
+        "--board-color": board?.color || "var(--color-color-border-color)",
+      }}
     >
-      <div className={styles.actions}>
+      <div className="relative flex items-center gap-1 [&>div]:flex [&>div]:justify-center [&>div]:items-center">
         {/* Display if tasks is not empty and if there is at least 2 task */}
         {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
-          <div
-            className={styles.actionCheckbox}
-            title="Sélectionner toutes les tâches"
-          >
-            <input
-              type="checkbox"
-              name="board"
-              className={styles.checkbox}
-              onClick={handleCheckBoard}
-            />
+          <div title="Sélectionner toutes les tâches">
+            <input type="checkbox" name="board" onClick={handleCheckBoard} />
           </div>
         )}
         {canArchive && (
-          <div ref={setNodeRef} style={style} className={styles.grip}>
-            <div
-              className={styles.boardDragHandle}
-              {...attributes}
-              {...listeners}
-            >
-              <GripVertical size={16} />
+          <div ref={setNodeRef} style={style} className="text-text-light-color">
+            <div {...attributes} {...listeners}>
+              <GripVertical
+                size={20}
+                className="max-w-5 max-h-5 cursor-pointer"
+              />
             </div>
           </div>
         )}
@@ -270,12 +263,14 @@ export default function BoardHeader({
               style={{ color: `${optimisticColor}` }}
               onClick={handleOpenCloseBoard}
               size={20}
+              className="max-w-5 max-h-5 cursor-pointer"
             />
           ) : (
             <ChevronRight
               style={{ color: `${optimisticColor}` }}
               onClick={handleOpenCloseBoard}
               size={20}
+              className="max-w-5 max-h-5 cursor-pointer"
             />
           )}
         </div>
@@ -290,13 +285,13 @@ export default function BoardHeader({
               onBlur={() => setEdit(false)}
               onChange={handleTitleChange}
               onKeyDown={handleTitleEnterKey}
-              className={bricolageGrostesque.className}
+              className="font-bricolage relative z-2001 w-fit p-1 rounded-sm text-medium"
             />
           </div>
         ) : (
           <div onClick={handleEdit}>
             <span
-              className={styles.title}
+              className="dataTitle border border-transparent rounded-sm text-large font-medium cursor-text"
               data-authorized={canEdit}
               style={{ color: `${optimisticColor}` }}
             >
@@ -307,15 +302,15 @@ export default function BoardHeader({
         {!archive && canEdit && (
           <div>
             <span
-              className={styles.bullet}
               style={{ backgroundColor: `${optimisticColor}` }}
               onClick={handleEditColors}
+              className="block w-4 h-4 rounded-full cursor-pointer"
             ></span>
           </div>
         )}
         {!open && tasks?.length >= 1 && (
           <div>
-            <span className={styles.count}>
+            <span className="text-text-color-muted text-small font-normal">
               {tasks?.length > 1
                 ? `${tasks?.length} Tâches`
                 : `${tasks?.length} Tâche`}
@@ -323,13 +318,14 @@ export default function BoardHeader({
           </div>
         )}
         {canArchive && (
-          <div className={styles.actionMore}>
+          <div className="relative text-text-color-muted">
             <EllipsisVertical size={18} onClick={(e) => setIsMoreOpen(true)} />
             {isMoreOpen && (
               <MoreMenu
                 isOpen={isMoreOpen}
                 setIsOpen={setIsMoreOpen}
                 options={options}
+                className="hover:text-text-color"
               />
             )}
           </div>
@@ -337,20 +333,21 @@ export default function BoardHeader({
       </div>
       {openColors && (
         <>
-          <div className={styles.modal} id="popover">
-            <ul>
+          <div className="absolute z-2001 rounded-lg left-3 top-10 max-w-[234px] p-4 bg-secondary shadow-medium">
+            <ul className="flex flex-wrap gap-2.5">
               {colors?.map((color, idx) => (
                 <li
                   key={idx}
                   style={{ backgroundColor: `${color}` }}
                   data-value={color}
                   onClick={handleColor}
+                  className="w-[18px] h-[18px] rounded-full cursor-pointer transition-all ease-linear duration-[80ms] hover:scale-110 hover:transition-all hover:ease-linear hover:duration-[80ms]"
                 ></li>
               ))}
             </ul>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={(e) => setOpenColors(false)}
           ></div>
         </>

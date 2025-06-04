@@ -1,5 +1,4 @@
 import { useProjectContext } from "@/context/ProjectContext";
-import styles from "@/styles/components/tasks/tasks-admin-filter.module.css";
 import { ChevronDown, CircleUserRound, Undo } from "lucide-react";
 import { useState } from "react";
 import DisplayPicture from "@/components/User/DisplayPicture";
@@ -45,30 +44,37 @@ export default function TasksAdminFilter({ queries, setQueries }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="relative">
       <div
-        className={styles.current}
-        data-open={isOpen}
+        className={`relative flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[180px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${isOpen ? 'bg-[#f9f7efb3] shadow-small' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <CircleUserRound size={18} />
-        <span>Responsables</span>
+        <span className="flex-1">Responsables</span>
         {hasMembers && (
-          <span className={styles.length}>{selectedMembers?.length}</span>
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
+            {selectedMembers?.length}
+          </span>
         )}
-        <ChevronDown size={16} />
+        <ChevronDown
+          size={16}
+          className={`transition-all duration-[120ms] ease-in-out ${isOpen ? 'rotate-180' : ''}`}
+        />
       </div>
       {isOpen && (
         <>
-          <div className={styles.dropdown}>
+          <div className="absolute z-[2001] top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full">
             {isNotEmpty(members) ? (
               <ul>
-                <li className={styles.item} onClick={() => handleReset()}>
+                <li
+                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+                  onClick={() => handleReset()}
+                >
                   <Undo size={16} />
                   Supprimer les filtres
                 </li>
                 {members.map((member) => (
-                  <li key={member?.user?._id} className={styles.item}>
+                  <li key={member?.user?._id} className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm">
                     <input
                       type="checkbox"
                       id={member?.user?._id}
@@ -80,19 +86,17 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                           ? selectedMembers?.includes(member?.user?._id)
                           : false
                       }
+                      className="w-auto cursor-pointer mr-1"
                     />
 
-                    <label htmlFor={member?.user?._id}>
+                    <label htmlFor={member?.user?._id} className="flex items-center gap-1 cursor-pointer">
                       <DisplayPicture
                         user={member?.user}
-                        style={{
-                          width: "22px",
-                          height: "22px",
-                          borderRadius: "50%",
-                        }}
                         isPopup={false}
+                        style={{ width: "22px", height: "22px" }}
+                        className="rounded-full"
                       />
-                      <span>
+                      <span className="whitespace-nowrap text-ellipsis overflow-hidden block max-w-[110px]">
                         {member?.user?.firstName + " " + member?.user?.lastName}
                       </span>
                     </label>

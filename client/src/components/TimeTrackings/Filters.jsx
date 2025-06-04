@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/timeTrackings/filters.module.css";
 import AdminFilter from "./AdminFilter";
 import ProjectFilter from "./ProjectFilter";
 import StartDateFilter from "./StartDateFilter";
@@ -7,7 +6,7 @@ import EndDateFilter from "./EndDateFilter";
 
 export default function Filters({ projects, queries, setQueries }) {
   return (
-    <div className={styles.container}>
+    <div className="flex items-center gap-3">
       <ProjectFilter
         projects={projects}
         queries={queries}

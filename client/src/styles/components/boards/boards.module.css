@@ -1,26 +1,43 @@
-.boards {
+/* .boards {
     display: flex;
     flex-direction: column;
     gap: 44px;
     height: 100%;
     overflow-y: auto;
-    padding-right: 16px;
     padding-bottom: var(--layout-gap);
     position: relative;
-    border-top-left-radius: var(--border-radius-medium);
-    border-top-right-radius: var(--border-radius-medium);
+    z-index: 9999;
+    border-radius: var(--border-radius-medium);
+    border-right: 3px solid transparent;
+    padding-right: 10px;
 }
 
-.archiveTitle {
+.boards_Boards::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0px;
+}
+
+.boards_Boards::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.boards_Boards::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* .archiveTitle {
     display: flex;
     align-items: center;
     gap: 8px;
     font-weight: 600;
     font-size: var(--text-size-large);
     margin-bottom: -20px;
-}
+} */
 
-.task-overlay {
+/* .task-overlay {
     cursor: grabbing;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -32,9 +49,9 @@
     padding: 1rem;
     background: white;
     border-radius: var(--border-radius-xs);
-}
+} */
 
-.back {
+/* .back {
     position: relative;
     top: 3px;
     cursor: pointer;
@@ -45,4 +62,4 @@
     flex-direction: column;
     gap: 44px;
     width: 100%;
-}
+} */

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import styles from "@/styles/components/user/no-picture.module.css";
 
 const backgroundColors = [
   "#52796F",
@@ -30,7 +29,7 @@ export default function NoPicture({ user, width, height }) {
 
   return (
     <div
-      className={styles.container}
+      className="flex justify-center items-center rounded-full cursor-default select-none min-w-[30px] "
       style={{
         width: width,
         height: height,
@@ -40,7 +39,7 @@ export default function NoPicture({ user, width, height }) {
       }}
       suppressHydrationWarning
     >
-      <span>{initials}</span>
+      <span className="text-white text-sm">{initials}</span>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-.container {
+/* .container {
     justify-content: space-between;
     gap: 8px;
     align-items: center;
@@ -22,4 +22,6 @@
 
 .board {
     width: 100%;
-}
+    padding: 8px;
+    border-radius: var(--border-radius-medium);
+}  */

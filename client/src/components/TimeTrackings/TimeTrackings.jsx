@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/timeTrackings/time-trackings.module.css";
 import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
 import Filters from "./Filters";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +9,7 @@ import { useProjects } from "@/app/hooks/useProjects";
 import TimeTracking from "./TimeTracking";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import TimeTrackingHeader from "./TimeTrackingHeader";
+import TimeTrackingsSkeletons from "./TimeTrackingsSkeletons";
 
 export default function TimeTrackings({ searchParams }) {
   const [queries, setQueries] = useState(searchParams);
@@ -34,14 +34,11 @@ export default function TimeTrackings({ searchParams }) {
     const handleTaskUpdated = () => {
       mutateTimeTrackings();
     };
-
     const handleTimeTrackingUpdated = () => {
       mutateTimeTrackings();
     };
-
     socket.on("task updated", handleTaskUpdated);
     socket.on("time tracking updated", handleTimeTrackingUpdated);
-
     return () => {
       socket.off("task updated", handleTaskUpdated);
       socket.off("time tracking updated", handleTimeTrackingUpdated);
@@ -73,10 +70,9 @@ export default function TimeTrackings({ searchParams }) {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>Suivi du temps</h1>
-
+    <div className="h-full">
+      <div className="flex items-center gap-6">
+        <h1 className="mb-[inherit] min-w-fit">Suivi du temps</h1>
         {/* Filters */}
         {!projectsLoading && (
           <Filters
@@ -87,7 +83,7 @@ export default function TimeTrackings({ searchParams }) {
         )}
 
         {/* Total duration */}
-        <span className={styles.total}>
+        <span className="font-bold">
           Temps total :
           {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
         </span>
@@ -97,9 +93,9 @@ export default function TimeTrackings({ searchParams }) {
       </div>
 
       {/* Time tracking list */}
-      <div className={styles.content}>
+      <div className="boards_Boards mt-3 overflow-auto h-full pr-3 mr-3 pb-10 rounded-lg">
         {timeTrackingsLoading ? (
-          <div>LOADING</div>
+          <TimeTrackingsSkeletons />
         ) : isNotEmpty(timeTrackings) ? (
           <>
             <TimeTrackingHeader
@@ -119,7 +115,7 @@ export default function TimeTrackings({ searchParams }) {
             })}
           </>
         ) : (
-          <div className={styles.empty}>
+          <div className="flex items-center justify-center h-full text-2xl">
             <h2>Aucun de vos projets ne contient un suivi de temps</h2>
           </div>
         )}

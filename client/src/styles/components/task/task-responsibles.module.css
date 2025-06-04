@@ -1,4 +1,4 @@
-.container {
+/* .container {
   position: relative;
   justify-content: center;
   padding-inline: 12px;
@@ -117,4 +117,4 @@
 .scrollable {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch; /* iOS smooth scroll */
-}
+/* } */

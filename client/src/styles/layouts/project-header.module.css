@@ -1,37 +1,37 @@
-.container {
+/* .container {
     width: 100%;
     padding-right: var(--layout-gap);
-}
+} */
 
-.container nav,
+/* .container nav,
 .projects {
     display: flex;
     align-items: center;
-}
+} */
 
-.container nav {
+/* .container nav {
+    justify-content: space-between;
     align-items: center;
     padding-bottom: 16px;
-}
+} */
 
-.projects {
+/* .projects {
     gap: 14px;
 }
 
 .projects span {
     color: var(--text-color-muted);
     font-size: var(--text-size-normal);
-}
+} */
 
-.titleContainer {
+/* .titleContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 1rem;
-    margin-right: 12px;
-}
+} */
 
-.title {
+/* .title {
     font-weight: bold;
     font-size: var(--text-size-large);
     display: flex;
@@ -45,9 +45,9 @@
 
 .title span:hover {
     opacity: 0.8;
-}
+} */
 
-.titleInput {
+/* .titleInput {
     background: none;
     border: none;
     font-size: inherit;
@@ -58,20 +58,20 @@
     border-radius: var(--border-radius-xs);
     width: fit-content;
     background-color: var(--background-color);
-}
+} */
 
-.titleInput:focus {
+/* .titleInput:focus {
     outline: none;
     background-color: var(--background-color);
-}
+} */
 
-.more {
+/* .more {
     position: relative;
     top: 2px;
     cursor: pointer;
     transition: background-color 0.2s ease;
     border-radius: var(--border-radius-small);
-}
+} */
 
 
 /* 
@@ -81,13 +81,13 @@
 } */
 
 /* Search styles */
-.searchContainer {
+/* .searchContainer {
     flex: 1;
     max-width: 640px;
     margin: 0 40px;
-}
+} */
 
-.searchForm {
+/* .searchForm {
     position: relative;
     width: 100%;
 }
@@ -98,9 +98,9 @@
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-color-muted);
-}
+} */
 
-.searchInput {
+/* .searchInput {
     width: 100%;
     padding: 8px 12px 8px 36px;
     border-radius: 12px;
@@ -110,17 +110,17 @@
     font-size: var(--font-size-normal);
     height: 44px;
     transition: all 0.2s ease-in-out;
-}
+} */
 
-.searchInput:hover,
+/* .searchInput:hover,
 .searchInput:focus {
     color: var(--text-color);
     box-shadow: 0 0 15px 0 rgba(255, 255, 255, 0.1);
-}
+} */
 
 
 /* Actions styles */
-.links {
+/* .links {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -137,13 +137,13 @@
 .links svg {
     width: 22px;
     height: 22px;
-}
+} */
 
-.template {
+/* .template {
     position: relative;
-}
+} */
 
-.template,
+/* .template,
 .archive {
     color: var(--text-color-muted);
     padding: 5px 7px;
@@ -158,44 +158,44 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
-.linkIcon {
+/* .linkIcon {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 8px;
     border-radius: 6px;
     transition: all 0.2s ease;
-}
+} */
 
-.linkIcon:hover,
+/* .linkIcon:hover,
 .template svg:hover,
 .archive:hover {
     background-color: #ffffff08;
     color: var(--accent-color);
     cursor: pointer;
-}
+} */
 
 /* Notification button styles */
-.notificationBtn {
+/* .notificationBtn {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
 
-}
+} */
 
-.notificationBtn svg {
+/* .notificationBtn svg {
     cursor: pointer;
-}
+} */
 
-.notificationBtn:hover svg,
+/* .notificationBtn:hover svg,
 .notificationBtn[data-open="true"] svg {
     fill: white;
-}
+} */
 
-.unread {
+/* .unread {
     position: absolute;
     top: 0;
     right: 0;
@@ -203,29 +203,28 @@
     height: 10px;
     border-radius: 50%;
     background-color: #ca4250;
-}
-
+} */
+/* 
 .separator {
     width: 1px;
     height: 24px;
     background-color: var(--text-medium-color);
     margin: 0 12px;
-}
+} */
 
-.actions {
+/* .actions {
     display: flex;
-    margin-left: auto;
-}
+} */
 
 /* Guests styles */
-.members {
+/* .members {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-left: 10px;
-}
+} */
 
-.guestAvatar {
+/* .guestAvatar {
     margin-left: -8px;
     border-radius: 50%;
     transition: transform 0.2s ease;
@@ -233,15 +232,15 @@
 
 .guestAvatar:hover {
     transform: translateY(-2px);
-}
+} */
 
-.avatar {
+/* .avatar {
     margin-top: 5px;
     border-radius: 50%;
     object-fit: cover;
-}
+} */
 
-.addGuestBtn {
+/* .addGuestBtn {
     cursor: pointer;
     border-radius: var(--border-radius-small);
     padding: 6px 7px;
@@ -249,9 +248,9 @@
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-in-out;
-}
+} */
 
-.addGuestBtn:hover {
-    background-color: #ffffff08;
+/* .addGuestBtn:hover {
+    background-color: rgba(255, 255, 255, 0.031);
     color: var(--accent-color);
-}
+} */

@@ -1,4 +1,4 @@
-.container {
+/* .container {
     position: relative;
     cursor: pointer;
     transition: all linear 150ms;
@@ -7,19 +7,19 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 8px;
-}
+} */
 
-.logo {
+/* .logo {
     min-width: 42px;
     min-height: 42px;
     width: 42px;
     height: 42px;
     border-radius: 50%;
     background-color: var(--secondary-background-color);
-}
+} */
 
 /* Animation shimmer */
-@keyframes shimmer {
+/* @keyframes shimmer {
     0% {
         background-position: -200% 0;
     }
@@ -38,4 +38,4 @@
             #f8fafc 54%,
             #f1f5f9 60%);
     background-size: 200% 100%;
-}
+} */

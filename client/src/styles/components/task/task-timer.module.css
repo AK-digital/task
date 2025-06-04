@@ -1,4 +1,4 @@
-.container {
+/* .container {
     position: relative;
     display: flex;
     justify-content: center;
@@ -36,14 +36,14 @@
 .timer[data-center="true"] {
     width: 100%;
     justify-content: center;
-}
+} */
 
 /* .more {
     position: absolute;
     background-color: var();
 } */
 
-.more {
+/* .more {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -208,7 +208,7 @@
     border-radius: 4px;
 }
 
-/* .form input[type="date"]::-webkit-inner-spin-button,
+.form input[type="date"]::-webkit-inner-spin-button,
 .form input[type="date"]::-webkit-calendar-picker-indicator,
 .form input[type="time"]::-webkit-inner-spin-button,
 .form input[type="time"]::-webkit-calendar-picker-indicator {

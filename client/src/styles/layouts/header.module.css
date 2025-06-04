@@ -14,20 +14,20 @@
 
 } */
 
-.links svg {
-  color: var(--text-dark-color);
-}
+/* .links svg {
+    color: var(--text-dark-color);
+} */
 
-.nav,
+/* .nav,
 .actions {
-  display: flex;
-  align-items: center;
-}
+    display: flex;
+    align-items: center;
+} */
 
-.logo {
-  position: relative;
-}
-
+/* .logo {
+    position: relative;
+} */
+/* 
 .actions {
   gap: 24px;
 }
@@ -53,15 +53,15 @@
 }
 
 .bell[data-open="true"] {
-  fill: var(--text-darker-color);
-}
+    fill: var(--text-darker-color);
+} */
 
-.unread {
-  position: absolute;
-  width: 11px;
-  height: 11px;
-  top: 12px;
-  left: 12px;
-  border-radius: 50%;
-  background-color: var(--danger-color);
-}
+/* .unread {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    top: 12px;
+    left: 12px;
+    border-radius: 50%;
+    background-color: var(--danger-color);
+} */

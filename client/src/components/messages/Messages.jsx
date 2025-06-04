@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/messages/messages.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
 import { useCallback, useEffect, useState } from "react";
@@ -58,8 +57,8 @@ export default function Messages({ task, project, mutateTasks }) {
   }, [project]);
 
   return (
-    <div className={styles.container}>
-      <span className={styles.title}>
+    <div className="flex flex-col gap-[15px]">
+      <span className="flex items-center gap-2 text-large text-text-dark-color font-medium [&_svg]:text-text-color-muted">
         <MessagesSquareIcon size={18} /> Conversation
       </span>
 
@@ -91,7 +90,7 @@ export default function Messages({ task, project, mutateTasks }) {
       )}
       {!isOpen && !messageLoading && (
         <div
-          className={styles.empty}
+          className="border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-small data-[role=true]:cursor-pointer"
           onClick={handleIsOpen}
           data-role={isAuthorized}
         >

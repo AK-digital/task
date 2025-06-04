@@ -1,6 +1,5 @@
 "use client";
 import { deleteTemplate, useTemplate } from "@/api/template";
-import styles from "@/styles/components/templates/template.module.css";
 import { List, ListTodo } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -22,10 +21,12 @@ export default function Template({ elt }) {
 
   const hasDescription = elt?.description;
   return (
-    <div className={styles.container}>
-      <div className={styles.infos}>
+    <div className="flex items-center justify-between gap-3 bg-secondary py-1 px-3 rounded-lg">
+      <div className="flex items-center gap-3">
         <div>
-          <h3>{elt?.name}</h3>
+          <h3 className="text-large font-bold text-text-dark-color">
+            {elt?.name}
+          </h3>
         </div>
         {hasDescription && (
           <div>
@@ -33,21 +34,31 @@ export default function Template({ elt }) {
           </div>
         )}
         <div>
-          <span>
+          <span className="flex items-center gap-1">
             <List size={16} />
-            <span>{elt?.boardsCount}</span>
+            <span className="flex items-center gap-1">{elt?.boardsCount}</span>
           </span>
         </div>
         <div>
-          <span>
+          <span className="flex items-center gap-1">
             <ListTodo size={16} />
-            {elt?.tasksCount}
+            <span className="flex items-center gap-1">{elt?.tasksCount}</span>
           </span>
         </div>
       </div>
       <div>
-        <button onClick={handleUseTemplate}>Utiliser ce template</button>
-        <button onClick={handleDelete}>Supprimer</button>
+        <button
+          onClick={handleUseTemplate}
+          className="bg-transparent text-accent-color"
+        >
+          Utiliser ce template
+        </button>
+        <button
+          onClick={handleDelete}
+          className="bg-transparent text-accent-color"
+        >
+          Supprimer
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import styles from "@/styles/components/tasks/tasks-board-filter.module.css";
 import { ChevronDown, LayoutDashboard, Undo } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import { useProjectContext } from "@/context/ProjectContext";
@@ -20,42 +19,44 @@ export default function TasksBoardFilter({ queries, setQueries }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="relative z-2000">
       <div
-        className={styles.current}
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
+        className={`current_TasksBoardFilter flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[210px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${
+          isOpen ? "bg-[#f9f7efb3] shadow-small" : ""
+        }`}
       >
         {theBoard?.color ? (
           <div
             style={{ backgroundColor: `${theBoard?.color}` }}
-            className={styles.dot}
+            className="min-w-3 h-3 rounded-full bg-accent-color"
           ></div>
         ) : (
           <LayoutDashboard size={16} />
         )}
-        <span>{theBoard?.title || "Choisir un tableau"} </span>
-        <ChevronDown size={16} />
+        <span className="max-w-[140px] flex-1 whitespace-nowrap text-ellipsis overflow-hidden block lowercase first-letter:uppercase">{theBoard?.title || "Choisir un tableau"} </span>
+        <ChevronDown size={16} className="chevron_TasksBoardFilter transition-all duration-[120ms] ease-in-out" />
       </div>
       {isOpen && (
-        <div className={styles.dropdown}>
+        <div className="absolute top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full">
           {isNotEmpty(boards) ? (
             <ul>
-              <li className={styles.item} onClick={() => handleSelect()}>
+              <li className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm" onClick={() => handleSelect()}>
                 <Undo size={16} />
-                Supprimer les filtres
+                <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">Supprimer les filtres</span>
               </li>
               {boards.map((board) => (
                 <li
                   key={board._id}
-                  className={styles.item}
+                  className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
                   onClick={() => handleSelect(board._id)}
                 >
                   <div
                     style={{ backgroundColor: `${board?.color}` }}
-                    className={styles.dot}
+                    className="min-w-3 h-3 rounded-full bg-accent-color"
                   ></div>
-                  <span>{board?.title}</span>
+                  <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">{board?.title}</span>
                 </li>
               ))}
             </ul>
