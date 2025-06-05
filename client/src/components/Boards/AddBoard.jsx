@@ -52,14 +52,14 @@ export default function AddBoard({ project }) {
         <Plus size={18} />
         Modèle de tableau
       </button>
-      <button
+      {/* <button
         type="button"
-        className="font-bricolage"
+        className="font-bricolage flex justify-center items-center gap-1.5"
         onClick={() => setShowIAModal(true)}
       >
         <Plus size={18} />
         Ajout de tableau par IA
-      </button>
+      </button> */}
       {addBoardTemplate && (
         <BoardsTemplateList
           project={project}

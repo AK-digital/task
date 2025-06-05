@@ -157,7 +157,7 @@ export default function TaskTimer({ task }) {
   };
 
   return (
-    <div className="relative flex items-center justify-center max-w-[120px] h-full w-full px-1.5 border-r border-text-light-color data-[running=true]:text-inherit" data-running={isRunning}>
+    <div className="relative flex items-center justify-start max-w-[120px] h-full w-full px-1.5 border-r border-text-light-color data-[running=true]:text-inherit" data-running={isRunning}>
       <span className="flex items-center justify-center gap-2 text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center" data-center={!canAdd}>
         {canAdd && (
           <>
@@ -168,10 +168,10 @@ export default function TaskTimer({ task }) {
                 onClick={handlePauseTimer}
               />
             ) : (
-              <CirclePlay 
+              <CirclePlay
                 className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
-                data-running={isRunning} 
-                onClick={handlePlayTimer} 
+                data-running={isRunning}
+                onClick={handlePlayTimer}
               />
             )}
           </>

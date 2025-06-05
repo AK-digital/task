@@ -126,7 +126,7 @@ export default function TaskEstimate({ task, uid }) {
       {isEditing && (
         <>
           <div
-            className="absolute z-2001 bg-secondary rounded-lg top-[45px] p-2 w-[305px] shadow-medium"
+            className="absolute z-2001 bg-secondary rounded-lg top-[45px] p-2 w-[305px] shadow-medium select-none"
             ref={refs.setFloating}
             style={floatingStyles}
           >
@@ -169,8 +169,8 @@ export default function TaskEstimate({ task, uid }) {
               </span>
             </div>
             <div className="mt-2">
-              <form className="flex flex-col gap-0" onSubmit={handleCustomeEstimation}>
-                <div className="flex flex-row gap-0">
+              <form className="flex items-center justify-between flex-row border-t border-text-light-color mt-3 pt-3" onSubmit={handleCustomeEstimation}>
+                <div className="group flex flex-row gap-0">
                   <input
                     type="number"
                     id="number"
@@ -180,13 +180,13 @@ export default function TaskEstimate({ task, uid }) {
                     step={0.1}
                     min={1}
                     max={99}
-                    className="input_TaskEstimate font-bricolage text-small text-text-dark-color font-semibold p-1.5 bg-third rounded-2xl rounded-tr-[inherit] rounded-br-[inherit] border-none text-center"
+                    className="input_TaskEstimate font-bricolage cursor-pointer text-small text-text-dark-color font-semibold p-1.5 w-10 bg-third rounded-2xl rounded-tr-[inherit] rounded-br-[inherit] border-none text-center group-hover:bg-primary"
                   />
                   <select
                     name=""
                     id=""
                     onChange={(e) => setWeek(e.target.value)}
-                    className="font-bricolage text-small text-text-dark-color font-semibold bg-third outline-none border-none rounded-2xl rounded-tl-[inherit] rounded-bl-[inherit]"
+                    className="font-bricolage text-small text-text-dark-color cursor-pointer font-semibold bg-third outline-none border-none rounded-2xl rounded-tl-[inherit] rounded-bl-[inherit] group-hover:bg-primary"
                   >
                     <option value="minutes">Minutes</option>
                     <option value="heures">Heures</option>
@@ -195,9 +195,9 @@ export default function TaskEstimate({ task, uid }) {
                   </select>
                 </div>
                 {number >= 1 && (
-                  <div>
+                  <div className="w-full">
                     <button
-                      className="font-bricolage mt-2 text-small font-normal p-1.5 w-full text-white"
+                      className="font-bricolage text-small font-normal p-1.5 w-full text-white"
                       type="submit"
                     >
                       Valider
