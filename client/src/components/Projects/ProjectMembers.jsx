@@ -74,7 +74,7 @@ export default function ProjectMembers({ members }) {
             onMouseEnter={handleMoreMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="flex items-center justify-center w-[30px] h-[30px] bg-[#ccc] text-black rounded-full text-xs font-bold cursor-default border-2 border-white">
+            <div className="flex items-center justify-center w-[30px] h-[30px] bg-[#ccc] text-black rounded-full text-xs font-bold cursor-default border-2 border-white select-none">
               +{defaultUsers.length - 4}
             </div>
           </div>

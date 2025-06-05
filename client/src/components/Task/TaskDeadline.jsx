@@ -144,9 +144,9 @@ export default function TaskDeadline({ task, uid }) {
             />
           )}
           {deadline ? (
-            <span className="relative z-1 text-white">{displayDate()}</span>
+            <span className="relative z-1 text-white select-none">{displayDate()}</span>
           ) : (
-            <span className="relative z-1">{hover || isEditing ? "Définir une date" : "-"}</span>
+            <span className="relative z-1 select-none">{hover || isEditing ? "Définir une date" : "-"}</span>
           )}
         </div>
       </div>

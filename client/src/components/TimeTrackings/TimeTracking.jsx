@@ -191,7 +191,7 @@ export default function TimeTracking({
           alt={project?.name}
           width={22}
           height={22}
-          className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px]"
+          className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px] select-none"
         />
         <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
           {project?.name}
@@ -214,13 +214,13 @@ export default function TimeTracking({
           {user?.firstName + " " + user?.lastName}
         </span>
       </div>
-      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color">
+      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color select-none">
         <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
           {date}
         </span>
       </div>
       {/* Duration */}
-      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color ">
+      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color select-none">
         <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
           {formatTime(Math.floor(tracker?.duration / 1000))}
         </span>

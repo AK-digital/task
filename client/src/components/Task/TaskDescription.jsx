@@ -94,7 +94,7 @@ export default function TaskDescription({ project, task, uid }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="flex items-center gap-2 text-large text-text-dark-color font-medium">
+      <span className="flex items-center gap-2 text-large text-text-dark-color font-medium select-none">
         <PanelTop size={16} className="text-text-color-muted" /> Description
       </span>
       {/* If is editing */}
@@ -114,8 +114,11 @@ export default function TaskDescription({ project, task, uid }) {
       {/* If not editing and description is not empty */}
       {!isEditing && description && (
         <div>
-          <div className="relative rounded-lg shadow-small p-4 text-normal cursor-pointer bg-secondary" onClick={handleEditDescription}>
-            <div className="flex items-center gap-2">
+          <div
+            className="relative rounded-lg shadow-small p-4 text-normal cursor-pointer bg-secondary"
+            onClick={handleEditDescription}
+          >
+            <div className="flex items-center gap-2 select-none">
               {descriptionAuthor?.picture ? (
                 <Image
                   src={descriptionAuthor?.picture || "/default-pfp.webp"}
@@ -134,7 +137,9 @@ export default function TaskDescription({ project, task, uid }) {
                   (descriptionAuthor?.lastName || user?.lastName)}
               </span>
               {task?.description?.createdAt && (
-                <span className="text-xs text-text-color-muted">{formattedDate}</span>
+                <span className="text-xs text-text-color-muted">
+                  {formattedDate}
+                </span>
               )}
             </div>
             <div
@@ -179,7 +184,7 @@ export default function TaskDescription({ project, task, uid }) {
         <div
           onClick={handleEditDescription}
           data-role={isAuthorized}
-          className="border border-color-border-color py-3 px-6 rounded-lg text-small data-[role=true]:cursor-pointer"
+          className="border border-color-border-color py-3 px-6 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
         >
           {isAuthorized ? (
             <p>Ajouter une description</p>

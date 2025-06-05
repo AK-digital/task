@@ -14,11 +14,14 @@ export default function ProfilePage() {
 
   return (
     <main className="relative h-full w-full">
-      <div className="absolute top-5 left-[120px] cursor-pointer" onClick={handleBack}>
+      <div
+        className="absolute top-5 left-[120px] cursor-pointer"
+        onClick={handleBack}
+      >
         <ArrowLeftCircle size={32} />
       </div>
       <div className="flex flex-col items-center justify-center gap-6 h-full w-full">
-        <h1>Mon profil</h1>
+        <h1 className="select-none">Mon profil</h1>
         <div className="bg-secondary rounded-2xl w-full p-[44px] max-w-[540px]">
           <PictureForm />
           <ProfileForm />

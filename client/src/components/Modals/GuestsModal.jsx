@@ -68,7 +68,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)]">
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)] select-none">
         <div className="text-[1.4rem] font-medium">
           <span>Inviter d'autres utilisateurs</span>
         </div>
@@ -96,14 +96,14 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         className="rounded-full"
                       />
                       <span
-                        className="w-55 overflow-hidden text-ellipsis"
+                        className="w-55 overflow-hidden text-ellipsis select-all"
                         title={member?.user?.email}
                       >
                         {member?.user?.email}
                       </span>
                       {canEditRole &&
-                        member?.user?._id !== uid &&
-                        member?.role !== "owner" ? (
+                      member?.user?._id !== uid &&
+                      member?.role !== "owner" ? (
                         <DropDown
                           defaultValue={member?.role}
                           options={options}

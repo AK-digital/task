@@ -60,7 +60,7 @@ export default function Attachment({
   return (
     <div>
       <label
-        className="text-small data-[label=false]:text-accent-color-light cursor-pointer"
+        className="text-small data-[label=false]:text-accent-color-light cursor-pointer select-none"
         data-label={isPaperclip}
         htmlFor="attachment"
       >
