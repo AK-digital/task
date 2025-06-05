@@ -607,13 +607,6 @@ export async function updateTaskDescriptionReactions(req, res, next) {
       });
     }
 
-    if (task?.description?.author.equals(authUser._id)) {
-      return res.status(403).send({
-        success: false,
-        message: "Vous ne pouvez pas réagir à votre propre description",
-      });
-    }
-
     if (!task.description || !task.description.text) {
       return res.status(400).send({
         success: false,
@@ -621,37 +614,54 @@ export async function updateTaskDescriptionReactions(req, res, next) {
       });
     }
 
-    if (!task.description.reactions) {
-      task.description.reactions = [];
-    }
-
-    const existingReactionIndex = task.description.reactions.findIndex(
-      (reaction) => reaction.userId.equals(authUser._id)
+    const existingReaction = task.description.reactions?.find((reaction) =>
+      reaction.userId.equals(authUser._id)
     );
 
+    let updateOperation;
     let responseMessage = "";
 
-    if (existingReactionIndex !== -1) {
-      const existingReaction =
-        task.description.reactions[existingReactionIndex];
+    if (existingReaction) {
       if (existingReaction.emoji === emoji) {
-        task.description.reactions.splice(existingReactionIndex, 1);
+        updateOperation = {
+          $pull: {
+            "description.reactions": { userId: authUser._id },
+          },
+        };
         responseMessage = "Réaction supprimée avec succès";
       } else {
-        task.description.reactions[existingReactionIndex].emoji = emoji;
+        updateOperation = {
+          $set: {
+            "description.reactions.$[elem].emoji": emoji,
+          },
+        };
         responseMessage = "Réaction mise à jour avec succès";
       }
     } else {
-      task.description.reactions.push({
-        userId: authUser._id,
-        emoji,
-      });
+      updateOperation = {
+        $push: {
+          "description.reactions": {
+            userId: authUser._id,
+            emoji,
+          },
+        },
+      };
       responseMessage = "Réaction ajoutée avec succès";
     }
 
-    task.markModified("description");
+    const options = {
+      new: true,
+    };
 
-    const updatedTask = await task.save();
+    if (existingReaction && existingReaction.emoji !== emoji) {
+      options.arrayFilters = [{ "elem.userId": authUser._id }];
+    }
+
+    const updatedTask = await TaskModel.findOneAndUpdate(
+      { _id: req.params.id },
+      updateOperation,
+      options
+    );
 
     return res.status(200).send({
       success: true,

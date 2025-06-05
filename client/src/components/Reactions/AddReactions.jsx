@@ -20,23 +20,29 @@ export default function AddReactions({
 
   return (
     <div className="relative top-[0.5px] cursor-pointer">
-      {uid !== author?._id && canReact && (
+      {canReact && (
         <div className="flex">
           <SmilePlus
             size={16}
             onClick={() => setShowEmojiPicker((prev) => !prev)}
           />
           {showEmojiPicker && (
-            <div className="absolute z-2001 top-5 left-3">
-              <EmojiPicker
-                reactionsDefaultOpen={true}
-                height={350}
-                width={300}
-                onEmojiClick={(emoji) => onClickFunction(emoji.emoji)}
-                emojiStyle="native"
-                className="rounded-lg!"
-              />
-            </div>
+            <>
+              <div className="absolute z-2001 top-5 left-3">
+                <EmojiPicker
+                  reactionsDefaultOpen={true}
+                  height={350}
+                  width={300}
+                  onEmojiClick={(emoji) => onClickFunction(emoji.emoji)}
+                  emojiStyle="native"
+                  className="rounded-lg!"
+                />
+              </div>
+              <div
+                className="modal-layout-opacity"
+                onClick={() => setShowEmojiPicker(false)}
+              ></div>
+            </>
           )}
         </div>
       )}

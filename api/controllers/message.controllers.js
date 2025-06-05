@@ -381,13 +381,6 @@ export async function updateReactions(req, res, next) {
 
     const message = await MessageModel.findById({ _id: req.params.id });
 
-    if (message?.author?.equals(authUser?._id)) {
-      return res.status(403).send({
-        success: false,
-        message: "Impossible de réagir à son propre message",
-      });
-    }
-
     if (!message) {
       return res.status(404).send({
         success: false,
