@@ -1,9 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveProject } from "@/actions/project";
-import { createBoard } from "@/actions/board";
-import { saveTask } from "@/actions/task";
 import { MessageSquare, Smartphone, ShoppingCart, Globe, TrendingUp, Zap, Palette, Calendar, Share2 } from "lucide-react";
 
 const PREDEFINED_PROMPTS = [
@@ -277,26 +274,26 @@ export default function IAProjectStep({ onComplete }) {
   };
 
   return (
-    <div className="grid grid-cols-[1fr_2fr] gap-8 h-full max-w-[1200px] mx-auto lg:grid-cols-[1fr_1.5fr] md:grid-cols-1 md:gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
       {/* Colonne de gauche - Prompts prédéfinis */}
-      <div className="bg-secondary rounded-xl shadow-small p-6 flex flex-col overflow-hidden">
-                 <h3 className="text-xl font-semibold mb-6 text-gray-900 m-0">Prompts suggérés</h3>
+      <div className="bg-secondary rounded-xl shadow-sm p-6 flex flex-col overflow-hidden">
+        <h3 className="text-xl font-semibold mb-6 text-text-dark-color">Prompts suggérés</h3>
         <div className="flex flex-col gap-3 overflow-y-auto flex-1 p-1">
           {PREDEFINED_PROMPTS.map((predefinedPrompt) => {
             const IconComponent = predefinedPrompt.icon;
             return (
               <button
                 key={predefinedPrompt.id}
-                className={`bg-primary rounded-lg p-4 cursor-pointer transition-all duration-200 text-left w-full shadow-small border-none hover:bg-secondary hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] ${
-                  selectedPrompt?.id === predefinedPrompt.id ? "bg-secondary shadow-[0_0_0_2px_var(--accent-color)]" : ""
+                className={`bg-primary rounded-lg p-4 cursor-pointer transition-all duration-200 text-left w-full shadow-sm hover:bg-secondary hover:shadow-md ${
+                  selectedPrompt?.id === predefinedPrompt.id ? 'bg-secondary shadow-[0_0_0_2px_var(--accent-color)] border border-accent-color' : ''
                 }`}
                 onClick={() => handlePromptSelect(predefinedPrompt)}
                 type="button"
               >
                 <div className="w-full">
                   <div className="flex items-center gap-3">
-                    <IconComponent size={20} className="text-accent flex-shrink-0" />
-                                         <h4 className="text-base font-semibold m-0 text-gray-900 leading-tight">{predefinedPrompt.title}</h4>
+                    <IconComponent size={20} className="text-accent-color flex-shrink-0" />
+                    <h4 className="text-base font-semibold text-text-dark-color leading-tight">{predefinedPrompt.title}</h4>
                   </div>
                 </div>
               </button>
@@ -306,14 +303,14 @@ export default function IAProjectStep({ onComplete }) {
       </div>
 
       {/* Colonne de droite - Formulaire et résultats */}
-      <div className="bg-secondary rounded-xl shadow-small p-8 overflow-y-auto flex flex-col gap-8 relative z-1">
+      <div className="bg-secondary rounded-xl shadow-sm p-8 overflow-y-auto flex flex-col gap-8 relative z-[1]">
         <div className="flex flex-col gap-4 flex-1 min-h-0">
-                     <h3 className="text-xl font-semibold m-0 text-gray-900">Décrivez votre projet</h3>
-          <p className="text-[0.95rem] text-text-muted m-0 leading-relaxed">L'IA vous proposera une structure de projet complète avec de nombreux tableaux et tâches détaillées. Plus votre description est précise, plus l'IA pourra vous suggérer des éléments pertinents et créatifs auxquels vous n'auriez pas pensé. N'hésitez pas à mentionner vos objectifs, contraintes et attentes.</p>
+          <h3 className="text-xl font-semibold text-text-dark-color">Décrivez votre projet</h3>
+          <p className="text-sm text-text-color-muted leading-relaxed">L'IA vous proposera une structure de projet complète avec de nombreux tableaux et tâches détaillées. Plus votre description est précise, plus l'IA pourra vous suggérer des éléments pertinents et créatifs auxquels vous n'auriez pas pensé. N'hésitez pas à mentionner vos objectifs, contraintes et attentes.</p>
           
           <div className="relative flex-1 flex flex-col">
             <textarea
-              className="w-full p-4 rounded-lg bg-primary text-text-dark text-[0.95rem] leading-relaxed resize-none flex-1 min-h-[200px] shadow-small font-inherit border border-border focus:outline-none focus:shadow-[0_0_0_2px_var(--accent-color)] disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
+              className="w-full p-4 rounded-lg bg-primary text-text-dark-color text-sm leading-relaxed resize-none flex-1 min-h-[200px] shadow-sm font-inherit border border-border-color focus:outline-none focus:shadow-[0_0_0_2px_var(--accent-color)] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
               placeholder="Décrivez votre projet ici ou sélectionnez un prompt suggéré..."
@@ -322,38 +319,38 @@ export default function IAProjectStep({ onComplete }) {
             />
             
             {loading && (
-              <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/90 flex flex-col justify-center items-center gap-4 rounded-lg z-10">
-                <div className="w-10 h-10 border-[3px] border-gray-300 border-t-accent rounded-full animate-spin"></div>
-                <p className="m-0 text-text-dark text-[0.95rem]">Génération en cours...</p>
+              <div className="absolute inset-0 bg-white/90 flex flex-col justify-center items-center gap-4 rounded-lg z-10">
+                <div className="w-10 h-10 border-3 border-gray-300 border-t-accent-color rounded-full animate-spin"></div>
+                <p className="text-text-dark-color text-sm">Génération en cours...</p>
               </div>
             )}
           </div>
           
           <button
-            className="bg-accent text-white border-none rounded-lg py-3 px-6 text-base cursor-pointer transition-all duration-200 font-normal self-end tracking-normal hover:bg-accent-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] disabled:bg-accent-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
+            className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium cursor-pointer transition-all duration-200 font-normal self-end tracking-normal hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] disabled:bg-accent-color-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
             onClick={handleGenerate}
             disabled={loading || !prompt.trim()}
           >
             {loading ? "Génération..." : "Générer avec l'IA"}
           </button>
           
-          {error && <div className="bg-red-50 text-red-600 p-4 rounded-lg mt-4 text-sm shadow-small">{error}</div>}
+          {error && <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm shadow-sm">{error}</div>}
         </div>
 
         {showResults && result && (
-          <div className="absolute top-0 left-0 right-0 bottom-0 bg-secondary rounded-xl z-[5] flex flex-col overflow-hidden">
-            <div className="flex justify-between items-center py-8 px-8 pb-4 bg-secondary sticky top-0 z-10">
-              <h3 className="text-xl font-semibold m-0 text-text-dark">Suggestions IA</h3>
+          <div className="absolute inset-0 bg-secondary rounded-xl z-10 flex flex-col overflow-hidden">
+            <div className="flex justify-between items-center px-8 pt-8 pb-4 bg-secondary sticky top-0 z-20">
+              <h3 className="text-xl font-semibold text-text-dark-color">Suggestions IA</h3>
               <div className="flex gap-4 items-center">
                 <button
-                  className="bg-transparent text-text-muted border border-border rounded-lg py-2 px-4 text-sm cursor-pointer transition-all duration-200 font-normal tracking-normal hover:bg-primary hover:text-text-dark hover:border-accent"
+                  className="bg-transparent text-text-color-muted border border-border-color rounded-large py-2 px-4 text-small cursor-pointer transition-all duration-200 font-normal tracking-normal hover:bg-primary hover:text-text-dark-color hover:border-accent-color"
                   onClick={handleModifyPrompt}
                   type="button"
                 >
                   Modifier le prompt
                 </button>
                 <button
-                  className="bg-accent text-white border-none rounded-lg py-3 px-6 text-base cursor-pointer transition-all duration-200 font-normal tracking-normal whitespace-nowrap hover:bg-accent-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] disabled:bg-accent-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
+                  className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium cursor-pointer transition-all duration-200 font-normal tracking-normal whitespace-nowrap hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)]"
                   onClick={handleCreateProject}
                 >
                   Continuer
@@ -361,14 +358,14 @@ export default function IAProjectStep({ onComplete }) {
               </div>
             </div>
             
-            <div className="bg-primary rounded-lg mx-8 mb-8 p-6 shadow-small relative z-2 flex-1 overflow-y-auto">
-              <div className="text-lg mb-6 pb-4 border-b border-border text-text-dark flex items-center gap-3">
+            <div className="bg-primary rounded-lg mx-8 mb-4 p-6 shadow-sm relative z-[2] flex-1 overflow-y-auto">
+              <div className="text-lg mb-6 pb-4 border-b border-border-color text-text-dark-color flex items-center gap-3">
                 <strong>Nom du projet :</strong>
                 <input
                   type="text"
                   value={result.title}
                   onChange={(e) => handleProjectTitleEdit(e.target.value)}
-                  className="bg-transparent border-none text-lg text-text-dark py-1 px-2 rounded flex-1 font-inherit font-medium transition-all duration-200 focus:outline-none focus:bg-secondary focus:shadow-[0_0_0_2px_var(--accent-color)] hover:bg-secondary"
+                  className="flex-1 bg-transparent border-none text-lg text-text-dark-color py-1 px-2 border-radius-sm font-inherit font-medium transition-all duration-200 focus:outline-none focus:bg-secondary focus:shadow-[0_0_0_2px_var(--accent-color)] hover:bg-secondary"
                 />
               </div>
               
@@ -379,21 +376,21 @@ export default function IAProjectStep({ onComplete }) {
                       type="text"
                       value={board.name}
                       onChange={(e) => handleBoardNameEdit(i, e.target.value)}
-                      className="bg-transparent border-none text-base font-semibold text-accent py-1 px-2 rounded w-full font-inherit transition-all duration-200 focus:outline-none focus:bg-secondary focus:shadow-[0_0_0_2px_var(--accent-color)] hover:bg-secondary"
+                      className="w-full bg-transparent border-none text-base font-semibold text-accent-color py-1 px-2 rounded border-radius-sm font-inherit transition-all duration-200 focus:outline-none focus:bg-secondary focus:shadow-[0_0_0_2px_var(--accent-color)] hover:bg-secondary"
                     />
                   </div>
                   <ul className="list-none p-0 m-0 flex flex-col gap-2">
                     {board.tasks?.map((task, j) => (
-                      <li key={`${i}-${j}`} className="bg-secondary p-2 rounded-md shadow-small flex items-center gap-2">
+                      <li key={`${i}-${j}`} className="bg-secondary p-2 rounded-md shadow-sm flex items-center gap-2">
                         <input
                           type="text"
                           value={task}
                           onChange={(e) => handleTaskEdit(i, j, e.target.value)}
-                          className="flex-1 bg-transparent border-none text-sm text-text-dark py-1 px-1 rounded font-inherit focus:outline-none focus:bg-primary"
+                          className="flex-1 bg-transparent border-none text-sm text-text-dark-color py-1 px-1 rounded border-radius-sm font-inherit focus:outline-none focus:bg-primary"
                         />
                         <button
                           onClick={() => handleRemoveTask(i, j)}
-                          className="bg-transparent border-none text-text-muted cursor-pointer py-1 px-1 rounded text-xl leading-none transition-all duration-200 w-6 h-6 flex items-center justify-center hover:bg-red-50 hover:text-red-600"
+                          className="bg-transparent border-none text-text-color-muted cursor-pointer py-1 px-1.5 rounded border-radius-sm text-xl leading-none transition-all duration-200 w-6 h-6 flex items-center justify-center flex-shrink-0 hover:bg-red-50 hover:text-red-700"
                           type="button"
                         >
                           ×
@@ -403,7 +400,7 @@ export default function IAProjectStep({ onComplete }) {
                     <li className="bg-transparent p-0 shadow-none">
                       <button
                         onClick={() => handleAddTask(i)}
-                        className="bg-transparent border border-dashed border-border text-text-muted cursor-pointer py-3 px-3 rounded-md text-sm w-full transition-all duration-200 font-inherit hover:bg-primary hover:text-text-dark hover:border-accent"
+                        className="bg-transparent border border-dashed border-border-color text-text-color-muted cursor-pointer py-3 px-0 rounded-md text-sm w-full transition-all duration-200 font-inherit hover:bg-primary hover:text-text-dark-color hover:border-accent-color"
                         type="button"
                       >
                         + Ajouter une tâche
@@ -412,6 +409,7 @@ export default function IAProjectStep({ onComplete }) {
                   </ul>
                 </div>
               ))}
+
             </div>
           </div>
         )}

@@ -198,112 +198,95 @@ export default function NewProject() {
       case "template":
         return "Depuis un modèle enregistré";
       case "empty":
-        return "Projet vide";
+        return "Création d'un projet vide";
       default:
-        return "Nouveau projet";
-    }
-  };
-
-  const handleCreateButtonClick = () => {
-    // Déclencher l'événement pour le composant ProjectConfigurationStep
-    if (currentStep === 3) {
-      window.dispatchEvent(new Event('createProject'));
+        return "Création d'un nouveau projet";
     }
   };
 
   const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return <ProjectTypeSelection onTypeSelect={handleTypeSelection} />;
-      case 2:
-        if (selectedType === "ia") {
-          return <IAProjectStep onComplete={handleStepTwoComplete} />;
-        } else if (selectedType === "template") {
-          return <TemplateProjectStep onComplete={handleStepTwoComplete} />;
-        }
-        return null;
-      case 3:
-        return (
-          <ProjectConfigurationStep
-            projectData={projectData}
-            onProjectCreate={handleProjectCreate}
-            creating={creating}
-          />
-        );
+    if (currentStep === 1) {
+      return <ProjectTypeSelection onTypeSelect={handleTypeSelection} />;
+    }
+
+    if (currentStep === 3) {
+      return (
+        <ProjectConfigurationStep 
+          projectData={projectData}
+          onProjectCreate={handleProjectCreate}
+          creating={creating}
+        />
+      );
+    }
+
+    // Étape 2 - selon le type sélectionné (sauf pour empty qui va directement à l'étape 3)
+    switch (selectedType) {
+      case "ia":
+        return <IAProjectStep onComplete={handleStepTwoComplete} />;
+      case "template":
+        return <TemplateProjectStep onComplete={handleStepTwoComplete} />;
       default:
-        return null;
+        return <ProjectTypeSelection onTypeSelect={handleTypeSelection} />;
     }
-  };
-
-  const getCurrentStepForDisplay = () => {
-    if (selectedType === 'empty') {
-      // Pour les projets vides : étape 1 = sélection type, étape 2 = options
-      return currentStep === 1 ? 1 : 2;
-    } else {
-      // Pour les autres : étape 1 = sélection type, étape 2 = génération/template, étape 3 = options
-      return currentStep;
-    }
-  };
-
-  const getTotalStepsForDisplay = () => {
-    return selectedType === 'empty' ? 2 : 3;
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex justify-center items-center h-full w-full text-text-dark">
+    <main className="w-full h-full flex flex-col">
+      <div className="flex justify-center items-center h-full w-full text-text-dark-color">
         <div className="flex flex-col h-full w-full max-w-[1200px]">
-          <div className="w-full py-8 px-[clamp(30px,5%,5%)] pb-4">
+          {/* Header avec bouton retour et titre */}
+          <div className="w-full px-[clamp(30px,5%,5%)] py-8 pb-4">
             <div className="flex items-center justify-between gap-4 relative">
+              <button 
+                className="flex items-center gap-2 bg-transparent border-none text-accent-color text-base cursor-pointer p-2 rounded transition-colors duration-200 hover:bg-secondary"
+                onClick={handleGoBack}
+                type="button"
+              >
+                <ArrowLeft size={20} />
+                Retour
+              </button>
+              <h1 className="text-2xl font-semibold m-0 text-text-dark-color absolute left-1/2 transform -translate-x-1/2 text-center">{getPageTitle()}</h1>
+              
               <div className="flex items-center gap-8">
-                <button
-                  onClick={handleGoBack}
-                  className="flex items-center gap-2 bg-transparent border-none text-accent text-base cursor-pointer p-2 rounded transition-colors hover:bg-secondary"
-                >
-                  <ArrowLeft size={20} />
-                  Retour
-                </button>
-              </div>
-
-              <h1 className="text-2xl font-semibold m-0 text-text-dark absolute left-1/2 transform -translate-x-1/2 text-center">
-                {getPageTitle()}
-              </h1>
-
-              <div className="flex items-center gap-8">
+                {/* Bouton créer le projet (seulement à l'étape 3) */}
                 {currentStep === 3 && (
                   <button
-                    onClick={handleCreateButtonClick}
+                    className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium font-normal cursor-pointer transition-all duration-200 tracking-normal whitespace-nowrap hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] hover:-translate-y-px disabled:bg-accent-color-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none"
+                    onClick={() => {
+                      // Déclencher la création depuis le composant ProjectConfigurationStep
+                      const event = new CustomEvent('createProject');
+                      window.dispatchEvent(event);
+                    }}
                     disabled={creating}
-                    className="bg-accent text-white border-none rounded-lg py-3 px-6 text-base cursor-pointer transition-all duration-200 font-normal tracking-normal whitespace-nowrap hover:bg-accent-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] disabled:bg-accent-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
                   >
-                    {creating ? "Création..." : "Créer le projet"}
+                    {creating ? "Création en cours..." : "Créer le projet"}
                   </button>
                 )}
               </div>
             </div>
-
-            {/* Indicateur d'étapes */}
+            
+            {/* Indicateur d'étapes sous le titre */}
             <div className="flex items-center justify-center gap-2 mt-4">
-              {Array.from({ length: getTotalStepsForDisplay() }, (_, i) => i + 1).map((step) => {
-                const isActive = step === getCurrentStepForDisplay();
-                const isClickable = step < getCurrentStepForDisplay() && !(selectedType === 'empty' && step === 2);
-                
-                return (
-                  <div
-                    key={step}
-                    className={`flex items-center justify-center w-15 h-2 rounded-md bg-secondary text-text-muted text-sm font-medium transition-all duration-200 relative cursor-pointer hover:bg-accent-hover ${isClickable ? 'hover:-translate-y-0.5' : ''} ${isActive ? 'bg-accent text-white' : ''} ${step !== getTotalStepsForDisplay() ? "after:content-[''] after:absolute after:w-5 after:h-0.5 after:bg-border after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10" : ''} ${isActive && step !== getTotalStepsForDisplay() ? 'after:bg-accent' : ''}`}
-                    onClick={() => isClickable && handleStepClick(step)}
-                  />
-                );
-              })}
+              <span 
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 1 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'} ${currentStep > 1 ? 'hover:-translate-y-px' : ''}`}
+                onClick={() => currentStep > 1 && handleStepClick(1)}
+              ></span>
+              <span 
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 2 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'} ${currentStep > 2 && selectedType !== 'empty' ? 'hover:-translate-y-px' : ''}`}
+                onClick={() => currentStep > 2 && selectedType !== 'empty' && handleStepClick(2)}
+              ></span>
+              <span 
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 3 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'}`}
+              ></span>
             </div>
           </div>
 
+          {/* Contenu de l'étape */}
           <div className="flex-1 p-8 overflow-y-auto">
             {renderStepContent()}
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
