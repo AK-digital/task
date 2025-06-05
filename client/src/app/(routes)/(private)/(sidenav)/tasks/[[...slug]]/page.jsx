@@ -64,7 +64,7 @@ function TasksContent() {
 
   return (
     <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
-      <div className="p-[38px] bg-primary h-full rounded-tl-2xl overflow-auto">
+      <div className="p-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto ">
         {/* Header */}
         <div className="flex items-center mb-6 gap-4 bg-primary p-4">
           <span className="text-2xl min-w-max select-none">Mes tâches</span>

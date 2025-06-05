@@ -212,7 +212,7 @@ export function ProjectInvitationsList({
       {projectInvitations.map((inv) => (
         <li
           key={inv?._id}
-          className="flex justify-between items-center gap-3 text-text-color-muted"
+          className="flex justify-between items-center gap-3 text-text-color-muted mt-3"
         >
           <div>
             <Image
@@ -222,7 +222,7 @@ export function ProjectInvitationsList({
               alt={`Photo de profil de ${inv?.guestEmail}`}
               className="rounded-full"
             />
-            <span>{inv?.guestEmail}</span>
+            <span className="w-45 whitespace-nowrap overflow-hidden text-ellipsis">{inv?.guestEmail}</span>
           </div>
           {canEditRole && (
             <DropDown
