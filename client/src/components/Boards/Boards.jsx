@@ -398,7 +398,7 @@ export default function Boards({ boards: initialBoards, tasksData }) {
               );
             })}
         </div>
-        <DragOverlay>
+        <DragOverlay style={{ zIndex: 50000 }}>
           {activeId && activeType === "task" ? (
             <Task
               id={activeId}
@@ -410,7 +410,7 @@ export default function Boards({ boards: initialBoards, tasksData }) {
               archive={archive}
             />
           ) : activeId && activeType === "board" ? (
-            <div>
+            <div className="relative translate-z-0 will-change-transform z-50000">
               <Board
                 tasks={tasks[activeId] || []}
                 board={boards.find((board) => board._id === activeId)}
