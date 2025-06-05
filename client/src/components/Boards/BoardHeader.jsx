@@ -52,6 +52,8 @@ export default function BoardHeader({
   const canArchive = useUserRole(project, ["owner", "manager", "team"]);
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
 
+  console.log(board);
+
   const {
     attributes,
     listeners,
@@ -60,7 +62,7 @@ export default function BoardHeader({
     transition,
     isDragging,
   } = useSortable({
-    id: board._id,
+    id: board?._id,
     data: {
       type: "board",
       board,

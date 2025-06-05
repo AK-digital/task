@@ -110,6 +110,7 @@ export default function Board({
         setSelectedTasks={setSelectedTasks}
         archive={archive}
         isOverlay={isOverlay}
+        displayedElts={displayedElts}
       />
       {/* Board content */}
       {open && !isOverlay && isNotEmpty(tasks) && (
