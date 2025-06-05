@@ -32,7 +32,7 @@ export default function StartDateFilter({ queries, setQueries }) {
         type="date"
         value={startDate}
         onChange={handleStartDateChange}
-        className="border-b-0 cursor-pointer"
+        className="border-b-0 cursor-pointer text-[15px]"
       />
     </div>
   );
