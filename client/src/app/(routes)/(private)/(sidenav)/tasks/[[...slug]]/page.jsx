@@ -23,10 +23,10 @@ const displayedElts = {
 const displayedFilters = {
   isSearch: true,
   isProject: true,
-  isBoard: true,
+  isBoard: false,
   isAdmin: false,
-  isStatus: true,
-  isPriorities: true,
+  isStatus: false,
+  isPriorities: false,
   isDeadline: true,
 };
 
@@ -67,7 +67,7 @@ function TasksContent() {
       <div className="p-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto ">
         {/* Header */}
         <div className="flex items-center mb-6 gap-4 bg-primary p-4">
-          <span className="text-2xl min-w-max">Mes tâches</span>
+          <span className="text-2xl min-w-max select-none">Mes tâches</span>
           {/* Filters */}
           <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
         </div>

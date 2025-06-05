@@ -84,11 +84,14 @@ export default function Message({
         />
       ) : (
         <>
-          <div className="flex flex-col gap-2 transition-opacity duration-[50ms] ease-linear data-[loading=true]:opacity-[0.4] " data-loading={isLoading}>
+          <div
+            className="flex flex-col gap-2 transition-opacity duration-[50ms] ease-linear data-[loading=true]:opacity-[0.4] "
+            data-loading={isLoading}
+          >
             <div className="relative flex justify-between flex-col gap-3.5 py-4 px-6 bg-secondary rounded-lg transition-all duration-[50ms] ease-linear">
               {/* Header auteur */}
               <div className="flex items-center justify-between [&_svg]:cursor-pointer ">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 select-none">
                   <Image
                     src={author?.picture || "/default-pfp.webp"}
                     width={35}
@@ -99,7 +102,9 @@ export default function Message({
                   <span className="text-normal font-medium">
                     {author?.firstName + " " + author?.lastName}
                   </span>
-                  <span className="text-xs text-text-color-muted">{formattedDate}</span>
+                  <span className="text-xs text-text-color-muted">
+                    {formattedDate}
+                  </span>
                 </div>
                 <div>
                   {uid === author?._id && (
@@ -109,7 +114,7 @@ export default function Message({
                     />
                   )}
                   {more && (
-                    <div className="absolute z-2001 right-6 w-fit p-2 bg-secondary rounded-sm shadow-medium">
+                    <div className="absolute z-2001 right-6 w-fit p-2 bg-secondary rounded-sm shadow-medium select-none">
                       <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-third [&_li:hover]:rounded-sm">
                         <li
                           onClick={() => {
@@ -120,7 +125,10 @@ export default function Message({
                         >
                           <FontAwesomeIcon icon={faPen} /> Modifier
                         </li>
-                        <li onClick={handleDeleteMessage} className="flex items-center gap-2 p-2 text-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear">
+                        <li
+                          onClick={handleDeleteMessage}
+                          className="flex items-center gap-2 p-2 text-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
+                        >
                           <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
                         </li>
                       </ul>
@@ -143,7 +151,7 @@ export default function Message({
                 onMouseLeave={() => setShowPeopleRead(false)}
               >
                 <Eye size={16} />
-                <span>{message?.readBy?.length}</span>
+                <span className="select-none">{message?.readBy?.length}</span>
 
                 {showPeopleRead && isNotEmpty(message?.readBy) && (
                   <UsersInfo users={message?.readBy} />
@@ -162,7 +170,10 @@ export default function Message({
           </div>
 
           {more && (
-            <div className="modal-layout-opacity" onClick={() => setMore(false)} />
+            <div
+              className="modal-layout-opacity"
+              onClick={() => setMore(false)}
+            />
           )}
         </>
       )}

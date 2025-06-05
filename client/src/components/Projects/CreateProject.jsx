@@ -1,8 +1,7 @@
 "use client";
 import { saveProject } from "@/actions/project";
-import { instrumentSans } from "@/utils/font";
-import { Plus, X } from "lucide-react";
-import { useActionState, useEffect, useState, useRef } from "react";
+import {  X } from "lucide-react";
+import { useActionState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 const initialState = {
@@ -61,8 +60,6 @@ export default function CreateProject({
       if (response.success) {
         // Appeler la fonction de callback avec le nouveau projet
         onProjectCreated(response.data);
-        // Réinitialiser le formulaire ou fermer la modal
-        // ...
       }
     } catch (error) {
       console.error("Erreur lors de la création du projet:", error);

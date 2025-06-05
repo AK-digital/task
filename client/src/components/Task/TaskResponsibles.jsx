@@ -7,7 +7,6 @@ import socket from "@/utils/socket";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import DisplayPicture from "@/components/User/DisplayPicture.jsx";
 
-
 export default function TaskResponsibles({ task, uid, user }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [responsibles, setResponsibles] = useState(task?.responsibles || []);
@@ -101,7 +100,10 @@ export default function TaskResponsibles({ task, uid, user }) {
         {isNotEmpty(responsibles) ? (
           responsibles.slice(0, 3).map((responsible) => {
             return (
-              <div className="images_TaskResponsibles flex justify-center items-center" key={responsible?._id}>
+              <div
+                className="images_TaskResponsibles flex justify-center items-center"
+                key={responsible?._id}
+              >
                 <DisplayPicture
                   user={responsible}
                   style={{ width: "32px", height: "32px" }}
@@ -114,7 +116,9 @@ export default function TaskResponsibles({ task, uid, user }) {
           <PlusCircle size={24} />
         )}
         {responsibles?.length > 3 && (
-          <span className="absolute flex justify-center items-center bg-primary rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-secondary">+{responsibles?.length - 3}</span>
+          <span className="absolute flex justify-center items-center bg-primary rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-secondary">
+            +{responsibles?.length - 3}
+          </span>
         )}
       </div>
 
@@ -153,7 +157,9 @@ export default function TaskResponsibles({ task, uid, user }) {
                 })}
               </div>
             )}
-            <span className="text-[14px] font-medium text-text-color-muted">Personnes à inviter</span>
+            <span className="text-[14px] font-medium text-text-color-muted select-none">
+              Personnes à inviter
+            </span>
             {/* Members */}
             <div className="scrollable_TaskResponsibles max-h-[200px] overflow-y-auto">
               {isNotEmpty(members) && (

@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Globe, Plus, Delete, Pencil } from "lucide-react";
 import Image from "next/image";
-import styles from "@/styles/pages/options.module.css";
 import { bricolageGrostesque } from "@/utils/font";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ProjectInvitationForm from "./ProjectInvitationForm";
@@ -110,24 +109,24 @@ export default function ProjectConfigurationStep({
   const tasksCount = projectData?.boards?.reduce((total, board) => total + (board.tasks?.length || 0), 0) || 0;
 
   return (
-    <div className={styles.container}>
-      <form className={styles.form}>
+    <div className="relative bg-primary/90 rounded-tl-medium p-8 text-text-dark-color h-full overflow-auto">
+      <form>
         {/* Columns container */}
-        <div className={`${styles.columns} ${styles.wizardColumns}`}>
+        <div className="w-full flex justify-center gap-10">
           {/* Left Column */}
-          <div className={styles.column}>
+          <div className="flex flex-col gap-10 w-2/5">
             {/* Informations */}
-            <div className={styles.wrapper}>
+            <div className="bg-secondary rounded-xl p-8">
               {/* Wrapper header */}
-              <div className={styles.header}>
-                <span className={styles.title}>Informations générales</span>
+              <div className="flex justify-between">
+                <span className="text-large">Informations générales</span>
               </div>
               
               {/* Wrapper content */}
-              <div className={styles.content}>
+              <div className="flex flex-col gap-0 mt-5">
                 {/* Project Logo */}
                 <div
-                  className={styles.picture}
+                  className="relative w-fit"
                   onMouseEnter={() => setEditImg(true)}
                   onMouseLeave={() => setEditImg(false)}
                 >
@@ -137,7 +136,6 @@ export default function ProjectConfigurationStep({
                     width={100}
                     height={100}
                     quality={100}
-                    className={styles.logo}
                     style={{
                       borderRadius: "50%",
                       objectFit: "cover",
@@ -145,8 +143,8 @@ export default function ProjectConfigurationStep({
                     }}
                   />
                   {editImg && (
-                    <label htmlFor="logo" className={styles.editPicture}>
-                      <Pencil size={20} />
+                    <label htmlFor="logo" className="absolute inset-0 bg-black/50 flex justify-center items-center cursor-pointer min-w-[100px] h-[100px] rounded-full">
+                      <Pencil size={20} className="text-white" />
                     </label>
                   )}
                   <input
@@ -165,7 +163,7 @@ export default function ProjectConfigurationStep({
                     type="text"
                     id="project-name"
                     name="project-name"
-                    className={`${styles.projectName} ${bricolageGrostesque.className}`}
+                    className={`text-xl pl-1 border-b-2 border-text-dark-color text-text-color-dark ${bricolageGrostesque.className}`}
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
                     placeholder="Nom du projet"
@@ -174,8 +172,8 @@ export default function ProjectConfigurationStep({
                 </div>
 
                 {(boardsCount > 0 || tasksCount > 0) && (
-                  <div className={styles.footer}>
-                    <div className={styles.counts}>
+                  <div className="mt-6 flex justify-between items-end">
+                    <div className="flex flex-col gap-1">
                       <span>{boardsCount} tableaux</span>
                       <span>{tasksCount} tâches</span>
                     </div>
@@ -185,17 +183,17 @@ export default function ProjectConfigurationStep({
             </div>
             
             {/* Links */}
-            <div className={styles.wrapper}>
-              <div className={styles.title}>
+            <div className="bg-secondary rounded-xl rounded-medium p-8">
+              <div className="text-large">
                 <span>Liens rapides</span>
               </div>
-              <div className={styles.content}>
+              <div className="flex flex-col gap-4 mt-5">
                 {isNotEmpty(links) &&
                   links?.map((link, idx) => {
                     return (
-                      <div className={styles.link} key={idx}>
+                      <div className="flex items-center" key={idx}>
                         <div
-                          className={styles.icon}
+                          className="relative flex items-center justify-center border border-text-medium-color h-11 w-11 cursor-pointer"
                           onClick={() => setMoreIcons(moreIcons === idx ? null : idx)}
                         >
                           {displayIcon(link?.icon)}
@@ -214,9 +212,10 @@ export default function ProjectConfigurationStep({
                           placeholder="https://www.exemple.com"
                           value={link?.url}
                           onChange={(e) => updateLinkUrl(idx, e.target.value)}
+                          className="relative top-0.5 pl-2"
                         />
                         <div
-                          className={styles.remove}
+                          className="text-text-color-red pl-5 cursor-pointer"
                           onClick={(e) => removeLink(e, link)}
                         >
                           <Delete size={20} />
@@ -225,7 +224,7 @@ export default function ProjectConfigurationStep({
                     );
                   })}
                 {links.length < 6 && (
-                  <button onClick={addLink} className={styles.addLink} type="button">
+                  <button onClick={addLink} className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none hover:underline" type="button">
                     Ajouter un lien
                   </button>
                 )}
@@ -236,13 +235,13 @@ export default function ProjectConfigurationStep({
           </div>
 
           {/* Right Column */}
-          <div className={`${styles.column} ${styles.wizardRightColumn}`}>
+          <div className="flex flex-col gap-10 relative top-0 items-start h-full w-1/5 min-w-[400px]">
             {/* Gestion des utilisateurs */}
-            <div className={styles.wrapper} style={{ height: 'fit-content' }}>
-              <div className={styles.title}>
+            <div className="bg-secondary rounded-xl p-8" style={{ height: 'fit-content' }}>
+              <div className="text-large">
                 <span>Gestion de l'équipe</span>
               </div>
-              <div className={styles.content}>
+              <div className="flex flex-col gap-0 mt-5">
                 <ProjectInvitationForm 
                   invitations={invitations}
                   onInvitationsChange={setInvitations}
@@ -254,15 +253,15 @@ export default function ProjectConfigurationStep({
             </div>
             
             {/* Notes */}
-            <div className={`${styles.wrapper} ${styles.flexWrapper}`}>
-              <div className={styles.title}>
+            <div className="flex-1 flex flex-col w-full bg-secondary rounded-xl rounded-medium p-8">
+              <div className="text-large">
                 <span>Notes du projet</span>
               </div>
-              <div className={styles.content}>
+              <div className="flex-1 flex flex-col mt-5">
                 <textarea
                   name="note"
                   id="note"
-                  className={`${styles.note} ${styles.adaptiveNote} ${projectNote.length > 300 ? styles.hasContent : ''} ${bricolageGrostesque.className}`}
+                  className={`flex-1 w-full h-auto min-h-[150px] resize-y box-border overflow-y-hidden border-none text-normal ${projectNote.length > 300 ? 'overflow-y-auto' : ''} ${bricolageGrostesque.className}`}
                   value={projectNote}
                   onChange={(e) => setProjectNote(e.target.value)}
                   placeholder="Ajouter une note sur le projet..."
@@ -284,11 +283,11 @@ function IconList({ setMoreIcons, updateLinkIcon, idx }) {
 
   return (
     <>
-      <div className={styles.iconList}>
+      <div className="absolute z-[2001] -top-6 right-11 h-fit p-3 w-44 flex justify-start items-center flex-wrap bg-secondary rounded-small shadow-small gap-3">
         {icons.map((icon) => (
           <div
             key={icon?.name}
-            className={styles.iconElement}
+            className="flex flex-col items-center justify-center p-1 rounded-small transition-all duration-150 linear hover:bg-third-background-color hover:cursor-pointer"
             onClick={() => handleIconChange(icon?.name)}
           >
             {icon?.icon}

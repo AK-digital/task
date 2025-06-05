@@ -199,12 +199,12 @@ export default function TasksHeader({
       {(canDrag || isDrag) && (
         <div className="ml-1.5 min-w-4 max-w-4 flex justify-center items-center gap-1 w-full cursor-default"></div>
       )}
-      <div className="w-full min-w-[240px] max-w-[740px] text-center ml-[9px]">
+      <div className="w-full min-w-[240px] max-w-[740px] text-center ml-[9px] select-none">
         <span>Tâche</span>
       </div>
       {isProject && (
         <div className="w-20 flex justify-center items-center gap-1 cursor-default">
-          <span>Projets</span>
+          <span className="select-none">Projets</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -225,7 +225,7 @@ export default function TasksHeader({
       )}
       {isBoard && (
         <div className="min-w-[150px] max-w-[170px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span>Tableaux</span>
+          <span className="select-none">Tableaux</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -245,7 +245,7 @@ export default function TasksHeader({
         </div>
       )}
       <div className="min-w-[100px] max-w-[100px] flex justify-center items-center gap-1 w-full cursor-default">
-        <span>Admin</span>
+        <span className="select-none">Admin</span>
         {isAdminFilter && (
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
@@ -261,7 +261,7 @@ export default function TasksHeader({
       </div>
       {isStatus && (
         <div className="w-full min-w-[135px] max-w-[150px] flex justify-center items-center gap-1 cursor-default">
-          <span>Statut</span>
+          <span className="select-none">Statut</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -282,7 +282,7 @@ export default function TasksHeader({
       )}
       {isPriority && (
         <div className="w-full min-w-[135px] max-w-[150px] flex justify-center items-center gap-1  cursor-default">
-          <span>Priorité</span>
+          <span className="select-none">Priorité</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -303,7 +303,7 @@ export default function TasksHeader({
       )}
       {isDeadline && (
         <div className="min-w-[120px] max-w-[150px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span>Échéance</span>
+          <span className="select-none">Échéance</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -324,7 +324,7 @@ export default function TasksHeader({
       )}
       {isEstimate && (
         <div className="min-w-[120px] max-w-[140px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span>Estimation</span>
+          <span className="select-none">Estimation</span>
           {/* <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -341,7 +341,7 @@ export default function TasksHeader({
       )}
       {isTimer && (
         <div className="max-w-[120px] min-w-[120px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span>Temps</span>
+          <span className="select-none">Temps</span>
           {/* <div className="relative flex flex-col items-center top-1">
             <ChevronUp size={14} className="cursor-pointer hover:text-text-color" />
             <ChevronDown size={14} className="cursor-pointer hover:text-text-color relative -top-1" />

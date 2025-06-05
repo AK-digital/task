@@ -176,7 +176,11 @@ export default function TaskTimer({ task }) {
             )}
           </>
         )}
-        <span onClick={() => setMore(true)} ref={refs.setReference}>
+        <span
+          className="select-none"
+          onClick={() => setMore(true)}
+          ref={refs.setReference}
+        >
           {formattedHours + ":" + formattedMinutes + ":" + formattedSeconds}
         </span>
       </span>
@@ -188,10 +192,12 @@ export default function TaskTimer({ task }) {
             className="absolute flex flex-col z-2001 bg-secondary gap-2 top-[44px] right-1 p-0 w-[400px] rounded-lg max-h-[300px] overflow-hidden shadow-small"
           >
             <div className="flex justify-between items-center text-[1.1rem] font-medium bg-third p-2 rounded-t">
-              <span className="text-text-dark-color">Gestion du temps</span>
+              <span className="text-text-dark-color select-none">
+                Gestion du temps
+              </span>
               {addingSession && (
                 <span
-                  className="text-accent-color text-normal cursor-pointer"
+                  className="text-accent-color text-normal cursor-pointer select-none"
                   onClick={(e) => setAddingSession(false)}
                 >
                   Retour
@@ -208,7 +214,10 @@ export default function TaskTimer({ task }) {
               <div className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4">
                 {canAdd && (
                   <div className="flex items-center gap-2">
-                    <button className="w-full p-2 rounded" onClick={() => setAddingSession(true)}>
+                    <button
+                      className="w-full p-2 rounded"
+                      onClick={() => setAddingSession(true)}
+                    >
                       Ajouter une session
                     </button>
                   </div>
@@ -224,7 +233,10 @@ export default function TaskTimer({ task }) {
               </div>
             )}
           </div>
-          <div className="modal-layout-opacity" onClick={(e) => setMore(false)}></div>
+          <div
+            className="modal-layout-opacity"
+            onClick={(e) => setMore(false)}
+          ></div>
         </>
       )}
     </div>
@@ -300,11 +312,15 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
   };
 
   return (
-    <div className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4
-">
+    <div
+      className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4
+"
+    >
       <form action={formAction} className="flex flex-col gap-3">
         <div className="mx-auto">
-          <label className="relative text-text-color-muted text-normal text-left block">Date de début</label>
+          <label className="relative text-text-color-muted text-normal text-left block select-none">
+            Date de début
+          </label>
           <input
             className="border-none input_TimeTrackingForm_TaskTimer"
             type="date"
@@ -315,7 +331,9 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
         </div>
         <div className="flex justify-evenly w-full gap-2">
           <div className="flex flex-col gap-1 items-center">
-            <label className="relative text-color-text-color-muted text-normal text-left block">Heure de début</label>
+            <label className="relative text-color-text-color-muted text-normal text-left block select-none">
+              Heure de début
+            </label>
             <input
               className="w-[65px] !important border-none p-0 !important input_TimeTrackingForm_TaskTimer"
               type="time"
@@ -326,7 +344,9 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
             />
           </div>
           <div className="flex flex-col gap-1 items-center">
-            <label className="relative text-color-text-color-muted text-normal text-left block">Heure de fin</label>
+            <label className="relative text-color-text-color-muted text-normal text-left block select-none">
+              Heure de fin
+            </label>
             <input
               className="w-[65px] border-none p-0 input_TimeTrackingForm_TaskTimer"
               type="time"
@@ -337,8 +357,13 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
           </div>
         </div>
         <div className="flex justify-evenly items-center mb-1 mt-3 w-full">
-          <span>{timeExpected}</span>
-          <button className="p-2 rounded" type="submit" disabled={pending} data-disabled={pending}>
+          <span className="select-none">{timeExpected}</span>
+          <button
+            className="p-2 rounded"
+            type="submit"
+            disabled={pending}
+            data-disabled={pending}
+          >
             Ajouter la session
           </button>
         </div>
@@ -367,7 +392,10 @@ export function TimeTrackingSessions({
   }
 
   return (
-    <div className="overflow-x-auto max-h-[200px] text-[0.85em] text-text-dark-color data-[overflow=true]:pr-5" data-overflow={sessions?.length > 6}>
+    <div
+      className="overflow-x-auto max-h-[200px] text-[0.85em] text-text-dark-color data-[overflow=true]:pr-5"
+      data-overflow={sessions?.length > 6}
+    >
       <ul className="gap-3">
         {sessions.map((session, index) => {
           const user = session?.userId;
@@ -383,7 +411,7 @@ export function TimeTrackingSessions({
               key={`session-${session?._id}-${index}`}
               className="flex justify-between items-center"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 select-none">
                 <Image
                   src={user?.picture || "/default-pfp.webp"}
                   width={25}
@@ -393,10 +421,10 @@ export function TimeTrackingSessions({
                 />
                 <span>{endDate}</span>
               </div>
-              <span className="flex-1 text-center">
+              <span className="flex-1 text-center select-none">
                 {hoursStart} à {hoursEnd}
               </span>
-              <span className="flex justify-end min-w-[70px]">
+              <span className="flex justify-end min-w-[70px] select-none">
                 {formatTime(Math.floor(session?.duration / 1000))}
               </span>
               {uid === user?._id && (

@@ -54,8 +54,6 @@ export default function BoardHeader({
   const canArchive = useUserRole(project, ["owner", "manager", "team"]);
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
 
-  console.log(board);
-
   const {
     attributes,
     listeners,

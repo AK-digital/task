@@ -75,7 +75,7 @@ export default function Header() {
                 width={38}
                 height={38}
                 quality={100}
-                className="rounded-full max-h-[38px] max-w-[38px] object-cover"
+                className="rounded-full max-h-[38px] max-w-[38px] object-cover select-none"
               />
             </Link>
           </li>

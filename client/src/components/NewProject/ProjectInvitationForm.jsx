@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Mail, X, UserPlus } from "lucide-react";
-import styles from "@/styles/components/projects/guest-form-invitation.module.css";
 import { bricolageGrostesque } from "@/utils/font";
 
 export default function ProjectInvitationForm({ 
@@ -54,8 +53,8 @@ export default function ProjectInvitationForm({
   };
 
   return (
-    <div className={styles.container}>
-      <div>
+    <div>
+      <div className="flex flex-col gap-3">
         <input
           type="email"
           name="email"
@@ -72,75 +71,42 @@ export default function ProjectInvitationForm({
               handleAddInvitation(e);
             }
           }}
-          className={bricolageGrostesque.className}
+          className={`border-none bg-third-background-color p-2 rounded-xs transition-colors duration-5000 linear ${bricolageGrostesque.className}`}
+          style={{
+            WebkitTextFillColor: 'var(--text-dark-color)',
+          }}
         />
-        {emailError && <i style={{ color: 'var(--text-color-red)', fontSize: '0.85rem' }}>{emailError}</i>}
-        <button type="button" onClick={handleAddInvitation}>
+        {emailError && <i className="text-text-color-red text-sm">{emailError}</i>}
+        <button 
+          type="button" 
+          onClick={handleAddInvitation}
+          className="w-full rounded-xs text-medium p-2"
+        >
           Ajouter à la liste
         </button>
       </div>
       
       {/* Liste des invitations en attente */}
       {invitations.length > 0 && (
-        <div style={{ marginTop: '20px' }}>
-          <h4 style={{ 
-            fontSize: '0.95rem', 
-            margin: '0 0 10px 0', 
-            color: 'var(--text-dark-color)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}>
+        <div className="mt-5">
+          <h4 className="text-sm m-0 mb-2.5 text-text-dark-color flex items-center gap-2">
             <UserPlus size={16} />
             Invitations en attente ({invitations.length})
           </h4>
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '8px',
-            maxHeight: '150px',
-            overflowY: 'auto'
-          }}>
+          <div className="flex flex-col gap-2 max-h-[150px] overflow-y-auto">
             {invitations.map(invitation => (
               <div 
                 key={invitation.id} 
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '8px 12px',
-                  backgroundColor: 'var(--secondary-background-color)',
-                  borderRadius: '6px',
-                  border: '1px solid var(--border-color)',
-                  fontSize: '0.9rem'
-                }}
+                className="flex items-center justify-between py-2 px-3 bg-secondary rounded-sm border border-border-color text-sm"
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Mail size={14} style={{ color: 'var(--text-color-muted)' }} />
+                <div className="flex items-center gap-2">
+                  <Mail size={14} className="text-text-color-muted" />
                   <span>{invitation.email}</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleRemoveInvitation(invitation.id)}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--text-color-muted)',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.backgroundColor = '#fee';
-                    e.target.style.color = '#c00';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = 'var(--text-color-muted)';
-                  }}
+                  className="bg-transparent border-none text-text-color-muted cursor-pointer p-1 rounded flex items-center justify-center transition-colors duration-200 hover:bg-red-50 hover:text-red-700"
                 >
                   <X size={14} />
                 </button>
