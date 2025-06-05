@@ -30,12 +30,20 @@ export default function TaskRemove({ task, archive, mutate }) {
   return (
     <div className="flex items-center h-full cursor-pointer text-[#41435f] transition-colors duration-150 ease-in-out relative px-[6px] hover:text-danger-color">
       <Trash size={20} onClick={() => setShowConfirm(true)} />
-      <ConfirmDialog
-        isOpen={showConfirm}
-        onClose={() => setShowConfirm(false)}
-        onConfirm={handleDeleteTask}
-        message="Supprimer cette tâche ?"
-      />
+      {showConfirm && (
+        <>
+          <ConfirmDialog
+            isOpen={showConfirm}
+            onClose={() => setShowConfirm(false)}
+            onConfirm={handleDeleteTask}
+            message="Supprimer cette tâche ?"
+          />
+          <div
+            className="modal-layout-opacity"
+            onClick={() => setShowConfirm(false)}
+          ></div>
+        </>
+      )}
     </div>
   );
 }
