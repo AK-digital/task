@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import styles from "@/styles/pages/new-project.module.css";
 import ProjectTypeSelection from "@/components/NewProject/ProjectTypeSelection";
 import IAProjectStep from "@/components/NewProject/IAProjectStep";
 import TemplateProjectStep from "@/components/NewProject/TemplateProjectStep";
@@ -199,95 +198,112 @@ export default function NewProject() {
       case "template":
         return "Depuis un modèle enregistré";
       case "empty":
-        return "Création d'un projet vide";
+        return "Projet vide";
       default:
-        return "Création d'un nouveau projet";
+        return "Nouveau projet";
+    }
+  };
+
+  const handleCreateButtonClick = () => {
+    // Déclencher l'événement pour le composant ProjectConfigurationStep
+    if (currentStep === 3) {
+      window.dispatchEvent(new Event('createProject'));
     }
   };
 
   const renderStepContent = () => {
-    if (currentStep === 1) {
-      return <ProjectTypeSelection onTypeSelect={handleTypeSelection} />;
-    }
-
-    if (currentStep === 3) {
-      return (
-        <ProjectConfigurationStep 
-          projectData={projectData}
-          onProjectCreate={handleProjectCreate}
-          creating={creating}
-        />
-      );
-    }
-
-    // Étape 2 - selon le type sélectionné (sauf pour empty qui va directement à l'étape 3)
-    switch (selectedType) {
-      case "ia":
-        return <IAProjectStep onComplete={handleStepTwoComplete} />;
-      case "template":
-        return <TemplateProjectStep onComplete={handleStepTwoComplete} />;
-      default:
+    switch (currentStep) {
+      case 1:
         return <ProjectTypeSelection onTypeSelect={handleTypeSelection} />;
+      case 2:
+        if (selectedType === "ia") {
+          return <IAProjectStep onComplete={handleStepTwoComplete} />;
+        } else if (selectedType === "template") {
+          return <TemplateProjectStep onComplete={handleStepTwoComplete} />;
+        }
+        return null;
+      case 3:
+        return (
+          <ProjectConfigurationStep
+            projectData={projectData}
+            onProjectCreate={handleProjectCreate}
+            creating={creating}
+          />
+        );
+      default:
+        return null;
     }
   };
 
+  const getCurrentStepForDisplay = () => {
+    if (selectedType === 'empty') {
+      // Pour les projets vides : étape 1 = sélection type, étape 2 = options
+      return currentStep === 1 ? 1 : 2;
+    } else {
+      // Pour les autres : étape 1 = sélection type, étape 2 = génération/template, étape 3 = options
+      return currentStep;
+    }
+  };
+
+  const getTotalStepsForDisplay = () => {
+    return selectedType === 'empty' ? 2 : 3;
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          {/* Header avec bouton retour et titre */}
-          <div className={styles.header}>
-            <div className={styles.headerTop}>
-              <button 
-                className={styles.backButton}
-                onClick={handleGoBack}
-                type="button"
-              >
-                <ArrowLeft size={20} />
-                Retour
-              </button>
-              <h1 className={styles.pageTitle}>{getPageTitle()}</h1>
-              
-              <div className={styles.headerRight}>
-                {/* Bouton créer le projet (seulement à l'étape 3) */}
+    <div className="w-full h-full flex flex-col">
+      <div className="flex justify-center items-center h-full w-full text-text-dark">
+        <div className="flex flex-col h-full w-full max-w-[1200px]">
+          <div className="w-full py-8 px-[clamp(30px,5%,5%)] pb-4">
+            <div className="flex items-center justify-between gap-4 relative">
+              <div className="flex items-center gap-8">
+                <button
+                  onClick={handleGoBack}
+                  className="flex items-center gap-2 bg-transparent border-none text-accent text-base cursor-pointer p-2 rounded transition-colors hover:bg-secondary"
+                >
+                  <ArrowLeft size={20} />
+                  Retour
+                </button>
+              </div>
+
+              <h1 className="text-2xl font-semibold m-0 text-text-dark absolute left-1/2 transform -translate-x-1/2 text-center">
+                {getPageTitle()}
+              </h1>
+
+              <div className="flex items-center gap-8">
                 {currentStep === 3 && (
                   <button
-                    className={styles.createButton}
-                    onClick={() => {
-                      // Déclencher la création depuis le composant ProjectConfigurationStep
-                      const event = new CustomEvent('createProject');
-                      window.dispatchEvent(event);
-                    }}
+                    onClick={handleCreateButtonClick}
                     disabled={creating}
+                    className="bg-accent text-white border-none rounded-lg py-3 px-6 text-base cursor-pointer transition-all duration-200 font-normal tracking-normal whitespace-nowrap hover:bg-accent-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] disabled:bg-accent-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
                   >
-                    {creating ? "Création en cours..." : "Créer le projet"}
+                    {creating ? "Création..." : "Créer le projet"}
                   </button>
                 )}
               </div>
             </div>
-            
-            {/* Indicateur d'étapes sous le titre */}
-            <div className={styles.stepIndicator}>
-              <span 
-                className={`${styles.step} ${currentStep >= 1 ? styles.active : ""} ${currentStep > 1 ? styles.clickable : ""}`}
-                onClick={() => currentStep > 1 && handleStepClick(1)}
-              ></span>
-              <span 
-                className={`${styles.step} ${currentStep >= 2 ? styles.active : ""} ${currentStep > 2 && selectedType !== 'empty' ? styles.clickable : ""}`}
-                onClick={() => currentStep > 2 && selectedType !== 'empty' && handleStepClick(2)}
-              ></span>
-              <span 
-                className={`${styles.step} ${currentStep >= 3 ? styles.active : ""}`}
-              ></span>
+
+            {/* Indicateur d'étapes */}
+            <div className="flex items-center justify-center gap-2 mt-4">
+              {Array.from({ length: getTotalStepsForDisplay() }, (_, i) => i + 1).map((step) => {
+                const isActive = step === getCurrentStepForDisplay();
+                const isClickable = step < getCurrentStepForDisplay() && !(selectedType === 'empty' && step === 2);
+                
+                return (
+                  <div
+                    key={step}
+                    className={`flex items-center justify-center w-15 h-2 rounded-md bg-secondary text-text-muted text-sm font-medium transition-all duration-200 relative cursor-pointer hover:bg-accent-hover ${isClickable ? 'hover:-translate-y-0.5' : ''} ${isActive ? 'bg-accent text-white' : ''} ${step !== getTotalStepsForDisplay() ? "after:content-[''] after:absolute after:w-5 after:h-0.5 after:bg-border after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10" : ''} ${isActive && step !== getTotalStepsForDisplay() ? 'after:bg-accent' : ''}`}
+                    onClick={() => isClickable && handleStepClick(step)}
+                  />
+                );
+              })}
             </div>
           </div>
 
-          {/* Contenu de l'étape */}
-          <div className={styles.content}>
+          <div className="flex-1 p-8 overflow-y-auto">
             {renderStepContent()}
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

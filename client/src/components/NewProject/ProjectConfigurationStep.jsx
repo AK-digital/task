@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Globe, Plus, Delete, Pencil } from "lucide-react";
 import Image from "next/image";
-import styles from "@/styles/pages/options.module.css";
 import { bricolageGrostesque } from "@/utils/font";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ProjectInvitationForm from "./ProjectInvitationForm";
@@ -103,31 +102,29 @@ export default function ProjectConfigurationStep({
     setMoreIcons(null);
   };
 
-
-
   // Données simulées pour les compteurs
   const boardsCount = projectData?.boards?.length || 0;
   const tasksCount = projectData?.boards?.reduce((total, board) => total + (board.tasks?.length || 0), 0) || 0;
 
   return (
-    <div className={styles.container}>
-      <form className={styles.form}>
+    <div className="relative bg-primary/90 rounded-tl-lg p-8 text-text-dark h-full overflow-auto">
+      <div className="w-full h-full">
         {/* Columns container */}
-        <div className={`${styles.columns} ${styles.wizardColumns}`}>
+        <div className="w-full flex justify-center gap-10">
           {/* Left Column */}
-          <div className={styles.column}>
+          <div className="flex flex-col gap-10 w-2/5">
             {/* Informations */}
-            <div className={styles.wrapper}>
+            <div className="bg-white/50 rounded-lg p-8">
               {/* Wrapper header */}
-              <div className={styles.header}>
-                <span className={styles.title}>Informations générales</span>
+              <div className="flex justify-between mb-5">
+                <span className="text-lg font-medium">Informations générales</span>
               </div>
               
               {/* Wrapper content */}
-              <div className={styles.content}>
+              <div className="flex flex-col gap-0 mt-5">
                 {/* Project Logo */}
                 <div
-                  className={styles.picture}
+                  className="relative w-fit mb-4"
                   onMouseEnter={() => setEditImg(true)}
                   onMouseLeave={() => setEditImg(false)}
                 >
@@ -137,16 +134,11 @@ export default function ProjectConfigurationStep({
                     width={100}
                     height={100}
                     quality={100}
-                    className={styles.logo}
-                    style={{
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      objectPosition: "center",
-                    }}
+                    className="rounded-full object-cover object-center"
                   />
                   {editImg && (
-                    <label htmlFor="logo" className={styles.editPicture}>
-                      <Pencil size={20} />
+                    <label htmlFor="logo" className="absolute inset-0 bg-black/50 flex justify-center items-center cursor-pointer min-w-[100px] h-[100px] rounded-full">
+                      <Pencil size={20} className="text-white" />
                     </label>
                   )}
                   <input
@@ -165,7 +157,7 @@ export default function ProjectConfigurationStep({
                     type="text"
                     id="project-name"
                     name="project-name"
-                    className={`${styles.projectName} ${bricolageGrostesque.className}`}
+                    className={`text-xl pl-1 border-b-2 border-text-dark text-text-dark bg-transparent focus:outline-none w-full ${bricolageGrostesque.className}`}
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
                     placeholder="Nom du projet"
@@ -174,10 +166,10 @@ export default function ProjectConfigurationStep({
                 </div>
 
                 {(boardsCount > 0 || tasksCount > 0) && (
-                  <div className={styles.footer}>
-                    <div className={styles.counts}>
-                      <span>{boardsCount} tableaux</span>
-                      <span>{tasksCount} tâches</span>
+                  <div className="mt-6 flex justify-between items-end">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm">{boardsCount} tableaux</span>
+                      <span className="text-sm">{tasksCount} tâches</span>
                     </div>
                   </div>
                 )}
@@ -185,123 +177,106 @@ export default function ProjectConfigurationStep({
             </div>
             
             {/* Links */}
-            <div className={styles.wrapper}>
-              <div className={styles.title}>
+            <div className="bg-white/50 rounded-lg p-8">
+              <div className="text-lg font-medium mb-5">
                 <span>Liens rapides</span>
               </div>
-              <div className={styles.content}>
+              <div className="flex flex-col gap-4">
                 {isNotEmpty(links) &&
                   links?.map((link, idx) => {
                     return (
-                      <div className={styles.link} key={idx}>
+                      <div className="flex items-center" key={idx}>
                         <div
-                          className={styles.icon}
+                          className="relative flex items-center justify-center border border-border h-11 w-11 cursor-pointer"
                           onClick={() => setMoreIcons(moreIcons === idx ? null : idx)}
                         >
-                          {displayIcon(link?.icon)}
+                          {displayIcon(link.icon)}
                           {moreIcons === idx && (
                             <IconList
                               setMoreIcons={setMoreIcons}
-                              links={links}
-                              setLinks={setLinks}
                               updateLinkIcon={updateLinkIcon}
                               idx={idx}
                             />
                           )}
                         </div>
                         <input
-                          type="url"
-                          placeholder="https://www.exemple.com"
-                          value={link?.url}
+                          type="text"
+                          value={link.url}
                           onChange={(e) => updateLinkUrl(idx, e.target.value)}
+                          placeholder="https://example.com"
+                          className="relative top-0.5 pl-2 bg-transparent border-none focus:outline-none flex-1"
                         />
-                        <div
-                          className={styles.remove}
+                        <button
+                          className="text-red-600 pl-5 cursor-pointer bg-transparent border-none"
                           onClick={(e) => removeLink(e, link)}
                         >
-                          <Delete size={20} />
-                        </div>
+                          <Delete size={16} />
+                        </button>
                       </div>
                     );
                   })}
-                {links.length < 6 && (
-                  <button onClick={addLink} className={styles.addLink} type="button">
-                    Ajouter un lien
-                  </button>
-                )}
+
+                <button
+                  onClick={addLink}
+                  className="bg-transparent text-accent w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none hover:underline border-none cursor-pointer"
+                  disabled={links.length >= 6}
+                >
+                  <Plus size={16} className="inline mr-1" />
+                  Ajouter un lien
+                </button>
               </div>
             </div>
-
-
           </div>
 
           {/* Right Column */}
-          <div className={`${styles.column} ${styles.wizardRightColumn}`}>
-            {/* Gestion des utilisateurs */}
-            <div className={styles.wrapper} style={{ height: 'fit-content' }}>
-              <div className={styles.title}>
-                <span>Gestion de l'équipe</span>
-              </div>
-              <div className={styles.content}>
-                <ProjectInvitationForm 
-                  invitations={invitations}
-                  onInvitationsChange={setInvitations}
-                />
-                <div style={{ marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-color-muted)' }}>
-                  <p>💡 Les invitations seront envoyées après la création du projet</p>
+          <div className="relative top-0 w-1/5 min-w-[400px] flex flex-col items-start h-full">
+            <div className="flex-1 flex flex-col w-full">
+              <div className="flex-1 bg-white/50 rounded-lg p-8 flex flex-col w-full">
+                <div className="text-lg font-medium mb-5">
+                  <span>Notes du projet</span>
+                </div>
+                <div className="flex-1 flex flex-col">
+                  <textarea
+                    value={projectNote}
+                    onChange={(e) => setProjectNote(e.target.value)}
+                    placeholder="Ajoutez vos notes sur le projet..."
+                    className="flex-1 w-full h-auto min-h-[150px] resize-y box-border bg-transparent border-none text-base focus:outline-none overflow-y-hidden"
+                  />
                 </div>
               </div>
             </div>
             
-            {/* Notes */}
-            <div className={`${styles.wrapper} ${styles.flexWrapper}`}>
-              <div className={styles.title}>
-                <span>Notes du projet</span>
-              </div>
-              <div className={styles.content}>
-                <textarea
-                  name="note"
-                  id="note"
-                  className={`${styles.note} ${styles.adaptiveNote} ${projectNote.length > 300 ? styles.hasContent : ''} ${bricolageGrostesque.className}`}
-                  value={projectNote}
-                  onChange={(e) => setProjectNote(e.target.value)}
-                  placeholder="Ajouter une note sur le projet..."
-                />
-              </div>
+            {/* Invitations */}
+            <div className="w-full mt-8">
+              <ProjectInvitationForm
+                onInvitationsChange={setInvitations}
+                disabled={creating}
+              />
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
 
-// Composant pour la liste des icônes
 function IconList({ setMoreIcons, updateLinkIcon, idx }) {
   function handleIconChange(iconName) {
     updateLinkIcon(idx, iconName);
+    setMoreIcons(null);
   }
 
   return (
-    <>
-      <div className={styles.iconList}>
-        {icons.map((icon) => (
-          <div
-            key={icon?.name}
-            className={styles.iconElement}
-            onClick={() => handleIconChange(icon?.name)}
-          >
-            {icon?.icon}
-          </div>
-        ))}
-      </div>
-      <div
-        id="modal-layout-opacity"
-        onClick={(e) => {
-          e.stopPropagation();
-          setMoreIcons(null);
-        }}
-      />
-    </>
+    <div className="absolute z-[2001] -top-6 right-11 h-fit p-3 w-44 flex justify-start items-center flex-wrap bg-secondary rounded-sm shadow-small gap-3">
+      {icons.map((icon, index) => (
+        <div
+          key={index}
+          className="flex flex-col items-center justify-center p-1 rounded-sm transition-all duration-150 hover:bg-third cursor-pointer"
+          onClick={() => handleIconChange(icon.name)}
+        >
+          <span className="text-xs">{icon.icon}</span>
+        </div>
+      ))}
+    </div>
   );
 } 

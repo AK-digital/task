@@ -1,154 +1,87 @@
 "use client";
 import { useState } from "react";
-import { Mail, X, UserPlus } from "lucide-react";
-import styles from "@/styles/components/projects/guest-form-invitation.module.css";
-import { bricolageGrostesque } from "@/utils/font";
+import { Plus, X } from "lucide-react";
 
 export default function ProjectInvitationForm({ 
-  invitations = [], 
-  onInvitationsChange 
+  onInvitationsChange, 
+  disabled = false 
 }) {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const [invitations, setInvitations] = useState([]);
+  const [newEmail, setNewEmail] = useState("");
 
   const handleAddInvitation = (e) => {
     e.preventDefault();
-    
-    // Validation
-    if (!email.trim()) {
-      setEmailError("L'email est requis");
-      return;
-    }
-    
-    if (!validateEmail(email)) {
-      setEmailError("Format d'email invalide");
-      return;
-    }
-    
-    // Vérifier si l'email n'est pas déjà dans la liste
-    if (invitations.some(invitation => invitation.email.toLowerCase() === email.toLowerCase())) {
-      setEmailError("Cet email est déjà dans la liste");
-      return;
-    }
-    
-    // Ajouter l'invitation
+    if (!newEmail.trim() || !isValidEmail(newEmail)) return;
+
     const newInvitation = {
-      id: Date.now(), // ID temporaire
-      email: email.trim(),
+      email: newEmail.trim(),
+      id: Date.now() // Simple ID for React keys
     };
-    
-    onInvitationsChange([...invitations, newInvitation]);
-    
-    // Reset du formulaire
-    setEmail("");
-    setEmailError("");
+
+    const updatedInvitations = [...invitations, newInvitation];
+    setInvitations(updatedInvitations);
+    setNewEmail("");
+    onInvitationsChange(updatedInvitations);
   };
 
   const handleRemoveInvitation = (invitationId) => {
-    onInvitationsChange(invitations.filter(invitation => invitation.id !== invitationId));
+    const updatedInvitations = invitations.filter(inv => inv.id !== invitationId);
+    setInvitations(updatedInvitations);
+    onInvitationsChange(updatedInvitations);
+  };
+
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   return (
-    <div className={styles.container}>
-      <div>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          placeholder="Inviter par e-mail"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setEmailError("");
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              handleAddInvitation(e);
-            }
-          }}
-          className={bricolageGrostesque.className}
-        />
-        {emailError && <i style={{ color: 'var(--text-color-red)', fontSize: '0.85rem' }}>{emailError}</i>}
-        <button type="button" onClick={handleAddInvitation}>
-          Ajouter à la liste
-        </button>
+    <div className="bg-white/50 rounded-lg p-8">
+      <div className="text-lg font-medium mb-5">
+        <span>Gestion de l'équipe</span>
       </div>
       
-      {/* Liste des invitations en attente */}
-      {invitations.length > 0 && (
-        <div style={{ marginTop: '20px' }}>
-          <h4 style={{ 
-            fontSize: '0.95rem', 
-            margin: '0 0 10px 0', 
-            color: 'var(--text-dark-color)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}>
-            <UserPlus size={16} />
-            Invitations en attente ({invitations.length})
-          </h4>
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '8px',
-            maxHeight: '150px',
-            overflowY: 'auto'
-          }}>
-            {invitations.map(invitation => (
-              <div 
-                key={invitation.id} 
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '8px 12px',
-                  backgroundColor: 'var(--secondary-background-color)',
-                  borderRadius: '6px',
-                  border: '1px solid var(--border-color)',
-                  fontSize: '0.9rem'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Mail size={14} style={{ color: 'var(--text-color-muted)' }} />
-                  <span>{invitation.email}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveInvitation(invitation.id)}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--text-color-muted)',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.backgroundColor = '#fee';
-                    e.target.style.color = '#c00';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = 'var(--text-color-muted)';
-                  }}
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
+      <div className="flex flex-col gap-3">
+        {/* Liste des invitations */}
+        {invitations.map((invitation) => (
+          <div key={invitation.id} className="flex items-center gap-2 p-2 bg-primary rounded-md">
+            <span className="flex-1 text-sm text-text-dark">{invitation.email}</span>
+            <button
+              onClick={() => handleRemoveInvitation(invitation.id)}
+              className="bg-transparent border-none text-text-muted cursor-pointer p-1 rounded hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+              disabled={disabled}
+              type="button"
+            >
+              <X size={16} />
+            </button>
           </div>
-        </div>
-      )}
+        ))}
+
+        {/* Formulaire d'ajout */}
+        <form onSubmit={handleAddInvitation} className="flex gap-3">
+          <input
+            type="email"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            placeholder="email@exemple.com"
+            className="flex-1 border-none bg-third py-2 px-2 rounded-xs text-base focus:outline-none"
+            disabled={disabled}
+          />
+          <button
+            type="submit"
+            disabled={disabled || !newEmail.trim() || !isValidEmail(newEmail)}
+            className="w-full rounded-xs text-base py-2 px-2 bg-accent text-white border-none cursor-pointer transition-all duration-200 hover:bg-accent-hover disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            <Plus size={16} className="inline mr-1" />
+            Inviter
+          </button>
+        </form>
+
+        {invitations.length > 0 && (
+          <div className="mt-5 text-sm text-text-muted">
+            <p className="m-0">💡 Les invitations seront envoyées après la création du projet</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 } 

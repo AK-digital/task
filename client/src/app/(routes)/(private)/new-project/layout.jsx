@@ -1,10 +1,9 @@
 "use client";
-import styles from "@/styles/layouts/new-project-layout.module.css";
 
 export default function NewProjectLayout({ children }) {
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
+    <div className="h-screen w-screen bg-primary flex flex-col overflow-hidden">
+      <div className="w-full h-full bg-primary flex flex-col overflow-hidden">
         {children}
       </div>
     </div>
