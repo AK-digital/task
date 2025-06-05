@@ -1,5 +1,4 @@
 import { useState } from "react";
-import styles from "@/styles/components/modals/ia-project-modal.module.css";
 import { getTasks } from "@/api/task";
 import { createBoard } from "@/actions/board";
 import { saveTask } from "@/actions/task";
@@ -138,43 +137,52 @@ export default function AddBoardIAModal({ project, onClose }) {
   };
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal} style={{ zIndex: 2002, left: '50%', top: '50%', transform: 'translate(-50%, -50%)', position: 'fixed' }}>
-        <button className={styles.close} onClick={onClose}>&times;</button>
-        <h2>Ajout de tableau par IA</h2>
-        <p>Proposez des tableaux et tâches supplémentaires pertinents à partir du contexte du projet.</p>
+    <div className="fixed top-0 left-0 w-screen h-screen z-[2000]">
+      <div 
+        className="fixed top-0 left-0 w-screen h-screen bg-black/[0.18] z-[2001]" 
+        onClick={onClose}
+      ></div>
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-secondary rounded-xl shadow-[2px_2px_8px_var(--foreground)] p-8 z-[2002] min-w-[350px] max-w-[95vw] min-h-[200px] max-h-[80vh] overflow-y-auto flex flex-col gap-5 text-text-dark-color">
+        <button 
+          className="absolute top-4 right-4 bg-none border-none text-2xl cursor-pointer text-text-color-muted transition-colors duration-200 hover:text-accent-color" 
+          onClick={onClose}
+        >
+          &times;
+        </button>
+        <h2 className="text-2xl font-semibold mb-1">Ajout de tableau par IA</h2>
+        <p className="text-lg text-text-color-muted mb-2">Proposez des tableaux et tâches supplémentaires pertinents à partir du contexte du projet.</p>
         <textarea
-          className={styles.textarea}
+          className="w-full min-h-[80px] rounded-lg border border-border-color p-3 text-base resize-y bg-[#efece0] text-text-dark-color mb-2"
           value={prompt}
           onChange={e => setPrompt(e.target.value)}
           rows={8}
           disabled={true}
         />
         <button
-          className={styles.generate}
+          className="bg-accent-color text-white border-2 border-accent-color rounded-lg py-3 px-6 text-base cursor-pointer mt-2 transition-all duration-200 font-medium shadow-none disabled:bg-[#c7c7c7] disabled:border-[#c7c7c7] disabled:text-text-color-muted disabled:cursor-not-allowed"
           onClick={handleGenerate}
           disabled={loading}
         >
           {loading ? "Génération..." : "Générer avec l'IA"}
         </button>
-        {error && <div className={styles.error}>{error}</div>}
+        {error && <div className="text-[#c00] bg-[#ffeaea] rounded-md p-2 mt-2 text-sm">{error}</div>}
         {result && result.boards && (
-          <div className={styles.result}>
-            <h3 style={{ textAlign: 'left', marginBottom: 12 }}>Suggestions IA</h3>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+          <div className="mt-6 bg-secondary rounded-small shadow-none p-6 flex flex-col gap-4 border-[1.5px] border-border-color text-left">
+            <h3 className="text-left mb-3">Suggestions IA</h3>
+            <div className="flex items-center mb-3">
               <input
                 type="checkbox"
                 checked={allChecked}
                 onChange={handleToggleAll}
-                style={{ marginRight: 8 }}
+                className="mr-2"
               />
-              <span style={{ fontWeight: 500 }}>Tout cocher/décocher</span>
+              <span className="font-medium">Tout cocher/décocher</span>
             </div>
-            <ul style={{ listStyle: "none", padding: 0, textAlign: 'left' }}>
+            <ul className="list-none p-0 text-left">
               {result.boards.map((board, i) => (
-                <li key={i} style={{ marginBottom: 16 }}>
-                  <label style={{ fontWeight: 600, display: "flex", alignItems: "center", gap: 8, textAlign: 'left' }}>
-                    <span className={styles.checkboxContainer}>
+                <li key={i} className="mb-4">
+                  <label className="font-semibold flex items-center gap-2 text-left">
+                    <span className="w-15 min-w-10 max-w-15 flex items-center justify-start mr-2">
                       <input
                         type="checkbox"
                         checked={selectedBoards[i]?.checked || false}
@@ -183,10 +191,10 @@ export default function AddBoardIAModal({ project, onClose }) {
                     </span>
                     {board.name}
                   </label>
-                  <ul style={{ marginLeft: 24, marginTop: 6, textAlign: 'left' }}>
+                  <ul className="ml-6 mt-1.5 text-left">
                     {board.tasks.map((task, j) => (
-                      <li key={j} style={{ display: "flex", alignItems: "center", gap: 8, textAlign: 'left' }}>
-                        <span className={styles.checkboxContainer}>
+                      <li key={j} className="flex items-center gap-2 text-left">
+                        <span className="w-15 min-w-10 max-w-15 flex items-center justify-start mr-2">
                           <input
                             type="checkbox"
                             checked={selectedBoards[i]?.tasks[j] || false}
@@ -200,27 +208,25 @@ export default function AddBoardIAModal({ project, onClose }) {
                 </li>
               ))}
             </ul>
-            <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+            <div className="flex gap-3 mt-4">
               <button
-                className={styles.generate}
+                className="bg-accent-color text-white border-2 border-accent-color rounded-lg py-3 px-6 text-base cursor-pointer transition-all duration-200 font-medium shadow-none disabled:bg-[#c7c7c7] disabled:border-[#c7c7c7] disabled:text-text-color-muted disabled:cursor-not-allowed"
                 onClick={handleAccept}
                 disabled={accepting}
               >
                 {accepting ? "Ajout en cours..." : "Accepter la sélection"}
               </button>
               <button
-                className={styles.generate}
+                className="bg-[#b3cdfa] text-[#222] border-2 border-[#b3cdfa] rounded-lg py-3 px-6 text-base cursor-pointer transition-all duration-200 font-medium shadow-none disabled:bg-[#c7c7c7] disabled:border-[#c7c7c7] disabled:text-text-color-muted disabled:cursor-not-allowed"
                 onClick={handleToggleAll}
                 disabled={accepting}
-                style={{ background: "#b3cdfa", color: "#222" }}
               >
                 {allChecked ? "Tout décocher" : "Tout cocher"}
               </button>
               <button
-                className={styles.generate}
+                className="bg-[#eee] text-[#222] border-2 border-[#eee] rounded-lg py-3 px-6 text-base cursor-pointer transition-all duration-200 font-medium shadow-none disabled:bg-[#c7c7c7] disabled:border-[#c7c7c7] disabled:text-text-color-muted disabled:cursor-not-allowed"
                 onClick={onClose}
                 disabled={accepting}
-                style={{ background: "#eee", color: "#222" }}
               >
                 Annuler
               </button>
@@ -228,7 +234,6 @@ export default function AddBoardIAModal({ project, onClose }) {
           </div>
         )}
       </div>
-      <div className={styles.backdrop} style={{ zIndex: 2001 }} onClick={onClose}></div>
     </div>
   );
 } 
