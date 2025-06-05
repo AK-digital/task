@@ -74,7 +74,7 @@ export default function AdminFilter({ projects, queries, setQueries }) {
         {hasMembers ? (
           <>
             <span className="flex justify-center gap-1">
-              {currentMembers?.map((m) => {
+              {currentMembers?.slice(0, 3)?.map((m) => {
                 return (
                   <React.Fragment key={m?.user?._id}>
                     <DisplayPicture
@@ -85,21 +85,30 @@ export default function AdminFilter({ projects, queries, setQueries }) {
                   </React.Fragment>
                 );
               })}
+              {currentMembers?.length > 3 && (
+                <span className="text-xs font-bold text-text-dark-color bg-primary rounded-full w-6 h-6 flex items-center justify-center">
+                  +{currentMembers?.length - 3}
+                </span>
+              )}
             </span>
           </>
         ) : (
-          <span className="flex justify-center gap-1">Tous les membres</span>
+          <span className="flex justify-center gap-1 text-[15px]">
+            Tous les membres
+          </span>
         )}
         {!isOpen && (
           <ChevronDownIcon size={16} className="absolute right-1.5" />
         )}
-
         {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
       </div>
       {isOpen && (
-        <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-2.5 z-[2000] max-h-[300px] overflow-y-auto">
-          <ul>
-            <li className="flex items-center py-1.5 text-small gap-1 cursor-pointer" onClick={handleReset}>
+        <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-1.5 z-[2000] max-h-[300px] overflow-y-auto">
+          <ul className="[&>li]:hover:rounded-sm [&>li]:hover:shadow-small [&>li]:hover:bg-third">
+            <li
+              className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
+              onClick={handleReset}
+            >
               <Undo size={16} />
               Supprimer les filtres
             </li>
@@ -107,19 +116,18 @@ export default function AdminFilter({ projects, queries, setQueries }) {
               return (
                 <li
                   key={member?.user?._id}
-                  className="flex items-center py-1.5 text-small gap-1 cursor-pointer"
+                  className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
                 >
                   <input
                     type="checkbox"
                     id={`user-${member?.user?._id}`}
                     name="user"
                     onChange={(e) => handleMemberChange(e, member)}
-                    value={member?.user?._id}       
+                    value={member?.user?._id}
                     checked={Boolean(
                       queries?.members?.includes(member?.user?._id)
                     )}
                     className="max-w-4 max-h-4 cursor-pointer"
-
                   />
                   <label
                     htmlFor={`user-${member?.user?._id}`}

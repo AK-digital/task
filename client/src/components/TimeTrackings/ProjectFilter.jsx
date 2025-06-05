@@ -44,7 +44,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
         {hasProjects ? (
           <>
             <span className="flex justify-center gap-1">
-              {currentProjects?.map((project) => {
+              {currentProjects?.slice(0, 3)?.map((project) => {
                 return (
                   <Image
                     src={project?.logo || "/default-project-logo.svg"}
@@ -56,10 +56,17 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                   />
                 );
               })}
+              {currentProjects?.length > 3 && (
+                <span className="text-xs font-bold text-text-dark-color bg-primary rounded-full w-6 h-6 flex items-center justify-center">
+                  +{currentProjects?.length - 3}
+                </span>
+              )}
             </span>
           </>
         ) : (
-          <span className="flex justify-center gap-1">Choisir un projet</span>
+          <span className="flex justify-center gap-1 text-[15px]">
+            Choisir un projet
+          </span>
         )}
         {!isOpen && (
           <ChevronDownIcon size={16} className="absolute right-1.5" />
@@ -67,10 +74,10 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
         {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
       </div>
       {isOpen && (
-        <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-2.5 z-[2000] max-h-[300px] overflow-y-auto">
-          <ul>
+        <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-1.5 z-[2000] max-h-[300px] overflow-y-auto">
+          <ul className="[&>li]:hover:rounded-sm [&>li]:hover:shadow-small [&>li]:hover:bg-third">
             <li
-              className="flex items-center gap-1 cursor-pointer py-1.5 text-small"
+              className="flex items-center gap-1 cursor-pointer p-1.5 text-xs"
               onClick={handleReset}
             >
               <Undo size={16} />
@@ -79,7 +86,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
             {projects?.map((project) => {
               return (
                 <li
-                  className="flex items-center gap-1 cursor-pointer py-1.5 text-small"
+                  className="flex items-center gap-1 cursor-pointer p-1.5 text-xs"
                   key={project?._id}
                 >
                   <input

@@ -1,14 +1,6 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import {
-  Crown,
-  Figma,
-  Github,
-  Gitlab,
-  Globe,
-  Layout,
-  Youtube,
-} from "lucide-react";
+import { Figma, Github, Gitlab, Globe, Layout, Youtube } from "lucide-react";
 import socket from "./socket";
 
 export function isNotEmpty(arr) {
@@ -88,7 +80,7 @@ export function exportTimeTracking(projects, trackers) {
     // Titre
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
-    doc.text("Relevé de temps - AK Digital", pageWidth / 2, 20, {
+    doc.text("Relevé de temps", pageWidth / 2, 20, {
       align: "center",
     });
 
