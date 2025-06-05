@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import styles from "@/styles/pages/new-project.module.css";
 import ProjectTypeSelection from "@/components/NewProject/ProjectTypeSelection";
 import IAProjectStep from "@/components/NewProject/IAProjectStep";
 import TemplateProjectStep from "@/components/NewProject/TemplateProjectStep";
@@ -232,27 +231,27 @@ export default function NewProject() {
   };
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
+    <main className="w-full h-full flex flex-col">
+      <div className="flex justify-center items-center h-full w-full text-text-dark-color">
+        <div className="flex flex-col h-full w-full max-w-[1200px]">
           {/* Header avec bouton retour et titre */}
-          <div className={styles.header}>
-            <div className={styles.headerTop}>
+          <div className="w-full px-[clamp(30px,5%,5%)] py-8 pb-4">
+            <div className="flex items-center justify-between gap-4 relative">
               <button 
-                className={styles.backButton}
+                className="flex items-center gap-2 bg-transparent border-none text-accent-color text-base cursor-pointer p-2 rounded transition-colors duration-200 hover:bg-secondary"
                 onClick={handleGoBack}
                 type="button"
               >
                 <ArrowLeft size={20} />
                 Retour
               </button>
-              <h1 className={styles.pageTitle}>{getPageTitle()}</h1>
+              <h1 className="text-2xl font-semibold m-0 text-text-dark-color absolute left-1/2 transform -translate-x-1/2 text-center">{getPageTitle()}</h1>
               
-              <div className={styles.headerRight}>
+              <div className="flex items-center gap-8">
                 {/* Bouton créer le projet (seulement à l'étape 3) */}
                 {currentStep === 3 && (
                   <button
-                    className={styles.createButton}
+                    className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium font-normal cursor-pointer transition-all duration-200 tracking-normal whitespace-nowrap hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] hover:-translate-y-px disabled:bg-accent-color-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none"
                     onClick={() => {
                       // Déclencher la création depuis le composant ProjectConfigurationStep
                       const event = new CustomEvent('createProject');
@@ -267,23 +266,23 @@ export default function NewProject() {
             </div>
             
             {/* Indicateur d'étapes sous le titre */}
-            <div className={styles.stepIndicator}>
+            <div className="flex items-center justify-center gap-2 mt-4">
               <span 
-                className={`${styles.step} ${currentStep >= 1 ? styles.active : ""} ${currentStep > 1 ? styles.clickable : ""}`}
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 1 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'} ${currentStep > 1 ? 'hover:-translate-y-px' : ''}`}
                 onClick={() => currentStep > 1 && handleStepClick(1)}
               ></span>
               <span 
-                className={`${styles.step} ${currentStep >= 2 ? styles.active : ""} ${currentStep > 2 && selectedType !== 'empty' ? styles.clickable : ""}`}
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 2 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'} ${currentStep > 2 && selectedType !== 'empty' ? 'hover:-translate-y-px' : ''}`}
                 onClick={() => currentStep > 2 && selectedType !== 'empty' && handleStepClick(2)}
               ></span>
               <span 
-                className={`${styles.step} ${currentStep >= 3 ? styles.active : ""}`}
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 3 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'}`}
               ></span>
             </div>
           </div>
 
           {/* Contenu de l'étape */}
-          <div className={styles.content}>
+          <div className="flex-1 p-8 overflow-y-auto">
             {renderStepContent()}
           </div>
         </div>

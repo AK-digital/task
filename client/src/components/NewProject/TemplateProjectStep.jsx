@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getTemplates, useTemplate, useCustomTemplate, deleteTemplate } from "@/api/template";
 import { List, ListTodo, X, Plus } from "lucide-react";
-import styles from "@/styles/components/new-project/template-project-step.module.css";
 
 export default function TemplateProjectStep({ onComplete }) {
   const [templates, setTemplates] = useState([]);
@@ -179,65 +178,65 @@ export default function TemplateProjectStep({ onComplete }) {
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Chargement des modèles...</div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
+        <div className="flex justify-center items-center h-full text-lg text-text-color-muted">Chargement des modèles...</div>
       </div>
     );
   }
 
   if (error && templates.length === 0) {
     return (
-      <div className={styles.container}>
-        <div className={styles.error}>{error}</div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
+        <div className="flex justify-center items-center h-full text-lg text-red-700">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
       {/* Colonne de gauche - Liste des modèles */}
-      <div className={styles.templatesColumn}>
-        <h3>Modèles disponibles</h3>
+      <div className="bg-secondary rounded-xl shadow-sm p-6 flex flex-col overflow-hidden">
+        <h3 className="text-xl font-semibold mb-6 text-text-dark-color">Modèles disponibles</h3>
         {templates.length === 0 ? (
-          <div className={styles.noTemplates}>
-            <p>Aucun modèle disponible</p>
-            <p>Créez d'abord des modèles depuis vos projets existants.</p>
+          <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
+            <p className="font-semibold text-text-dark-color mb-2">Aucun modèle disponible</p>
+            <p className="text-sm leading-relaxed">Créez d'abord des modèles depuis vos projets existants.</p>
           </div>
         ) : (
-          <div className={styles.templatesList}>
+          <div className="flex flex-col gap-3 overflow-y-auto flex-1 p-1">
             {templates.map((template) => (
             <button
               key={template._id}
-              className={`${styles.templateItem} ${
-                selectedTemplate?._id === template._id ? styles.selected : ""
+              className={`bg-primary rounded-lg p-4 cursor-pointer transition-all duration-200 text-left w-full shadow-sm hover:bg-secondary hover:shadow-md ${
+                selectedTemplate?._id === template._id ? 'bg-secondary shadow-[0_0_0_2px_var(--accent-color)] border border-accent-color' : ""
               }`}
               onClick={() => handleTemplateSelect(template)}
               type="button"
             >
-              <div className={styles.templateInfo}>
-                <div className={styles.templateHeader}>
-                  <h4>{template.name}</h4>
+              <div className="w-full">
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="text-base font-semibold text-text-dark-color">{template.name}</h4>
                   {template.creator?.picture && (
                     <img 
                       src={template.creator.picture} 
                       alt={template.creator.name}
-                      className={styles.creatorAvatar}
+                      className="w-6 h-6 rounded-full object-cover"
                     />
                   )}
                 </div>
-                <div className={styles.templateMeta}>
-                  <div className={styles.templateStats}>
-                    <span>
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-4 text-sm text-text-color-muted">
+                    <span className="flex items-center gap-1">
                       <List size={16} />
                       {template.boardsCount} tableaux
                     </span>
-                    <span>
+                    <span className="flex items-center gap-1">
                       <ListTodo size={16} />
                       {template.tasksCount} tâches
                     </span>
                   </div>
                   {template.createdAt && (
-                    <div className={styles.createdDate}>
+                    <div className="text-xs text-text-color-muted">
                       {new Date(template.createdAt).toLocaleDateString('fr-FR')}
                     </div>
                   )}
@@ -250,19 +249,19 @@ export default function TemplateProjectStep({ onComplete }) {
       </div>
 
       {/* Colonne de droite - Preview */}
-      <div className={styles.previewColumn}>
+      <div className="bg-secondary rounded-xl shadow-sm p-8 overflow-y-auto relative">
         {!showPreview ? (
-          <div className={styles.noSelection}>
+          <div className="flex justify-center items-center h-full text-text-color-muted text-lg">
             <p>Sélectionnez un modèle pour voir l'aperçu</p>
           </div>
         ) : (
           selectedTemplate && (
-            <div className={styles.templateOverlay}>
-              <div className={styles.overlayHeader}>
-                <h3>Aperçu du modèle</h3>
-                <div className={styles.headerButtons}>
+            <div className="absolute inset-0 bg-secondary rounded-xl z-10 flex flex-col overflow-hidden">
+              <div className="flex justify-between items-center px-8 pt-8 pb-4 bg-secondary sticky top-0 z-20">
+                <h3 className="text-xl font-semibold text-text-dark-color">Aperçu du modèle</h3>
+                <div className="flex gap-4 items-center">
                   <button
-                    className={styles.useTemplateButton}
+                    className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium cursor-pointer transition-all duration-200 font-normal tracking-normal whitespace-nowrap hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)]"
                     onClick={handleUseTemplate}
                   >
                     Continuer
@@ -270,8 +269,8 @@ export default function TemplateProjectStep({ onComplete }) {
                 </div>
               </div>
               
-              <div className={styles.templatePreview}>
-                <div className={styles.projectTitle}>
+              <div className="bg-primary rounded-lg mx-8 mb-4 p-6 shadow-sm relative z-[2] flex-1 overflow-y-auto">
+                <div className="text-lg mb-6 pb-4 border-b border-border-color text-text-dark-color flex items-center gap-3">
                   <strong>Nom du projet :</strong>
                   {editingProjectTitle ? (
                     <input
@@ -280,13 +279,13 @@ export default function TemplateProjectStep({ onComplete }) {
                       onChange={handleProjectNameChange}
                       onBlur={handleProjectTitleBlur}
                       onKeyDown={handleProjectTitleKeyDown}
-                      className={styles.projectNameInput}
+                      className="flex-1 bg-secondary border border-border-color rounded-md py-2 px-3 text-base text-text-dark-color transition-all duration-200 focus:outline-none focus:border-accent-color focus:shadow-[0_0_0_2px_rgba(151,112,69,0.1)]"
                       placeholder="Nom du projet"
                       autoFocus
                     />
                   ) : (
                     <span 
-                      className={styles.projectNameText}
+                      className="flex-1 py-2 px-3 text-base text-text-dark-color cursor-pointer rounded-md transition-all duration-200 bg-transparent hover:bg-primary"
                       onClick={handleProjectTitleClick}
                     >
                       {editableProjectName}
@@ -295,14 +294,14 @@ export default function TemplateProjectStep({ onComplete }) {
                 </div>
                 
                 {selectedTemplate.description && (
-                  <div className={styles.projectDescription}>
+                  <div className="text-base mb-6 pb-4 border-b border-border-color text-text-dark-color">
                     <strong>Description :</strong> {selectedTemplate.description}
                   </div>
                 )}
                 
                 {editableBoards?.map((board, i) => (
-                  <div key={i} className={styles.boardPreview}>
-                    <div className={styles.boardHeader}>
+                  <div key={i} className="mb-6">
+                    <div className="mb-3">
                       {editingBoardTitle === i ? (
                         <input
                           type="text"
@@ -310,31 +309,31 @@ export default function TemplateProjectStep({ onComplete }) {
                           onChange={(e) => handleBoardTitleChange(i, e.target.value)}
                           onBlur={handleBoardTitleBlur}
                           onKeyDown={handleBoardTitleKeyDown}
-                          className={styles.boardTitleInput}
+                          className="w-full bg-secondary border border-border-color rounded-md py-2 px-3 text-base font-semibold text-accent-color transition-all duration-200 focus:outline-none focus:border-accent-color focus:shadow-[0_0_0_2px_rgba(151,112,69,0.1)]"
                           placeholder="Titre du tableau"
                           autoFocus
                         />
                       ) : (
                         <h4 
-                          className={styles.boardTitleText}
+                          className="text-base font-semibold text-accent-color cursor-pointer py-2 px-3 rounded-md transition-all duration-200 bg-transparent hover:bg-primary"
                           onClick={() => handleBoardTitleClick(i)}
                         >
                           {board.title}
                         </h4>
                       )}
                     </div>
-                    <ul className={styles.tasksList}>
+                    <ul className="list-none p-0 m-0 flex flex-col gap-2">
                       {board.tasks?.map((task, j) => (
-                        <li key={`${i}-${j}`} className={styles.taskItem}>
+                        <li key={`${i}-${j}`} className="bg-secondary pl-3 rounded-md shadow-sm flex items-start gap-3">
                           <input
                             type="text"
                             value={task.text}
                             onChange={(e) => handleTaskChange(i, j, e.target.value)}
-                            className={styles.taskInput}
+                            className="flex-1 bg-transparent border-none text-sm text-text-dark-color font-inherit leading-relaxed py-3"
                             placeholder="Description de la tâche"
                           />
                           <button
-                            className={styles.deleteTaskButton}
+                            className="bg-transparent border-none text-text-color-muted cursor-pointer py-3 px-3 pr-3 rounded border-radius-sm transition-all duration-200 flex items-center justify-center flex-shrink-0 hover:bg-red-50 hover:text-red-700"
                             onClick={() => handleDeleteTask(i, j)}
                             type="button"
                             title="Supprimer cette tâche"
@@ -344,11 +343,11 @@ export default function TemplateProjectStep({ onComplete }) {
                         </li>
                       ))}
                       {(!board.tasks || board.tasks.length === 0) && (
-                        <li className={styles.emptyTasks}>Aucune tâche dans ce tableau</li>
+                        <li className="bg-secondary py-3 px-3 rounded-md text-sm text-text-color-muted italic text-center">Aucune tâche dans ce tableau</li>
                       )}
-                      <li className={styles.addTaskItem}>
+                      <li className="mt-2">
                         <button
-                          className={styles.addTaskButton}
+                          className="bg-transparent border border-dashed border-border-color rounded-md py-3 px-0 w-full text-text-color-muted cursor-pointer transition-all duration-200 flex items-center justify-center gap-2 text-sm hover:bg-primary hover:border-accent-color hover:text-accent-color"
                           onClick={() => handleAddTask(i)}
                           type="button"
                         >
@@ -360,11 +359,11 @@ export default function TemplateProjectStep({ onComplete }) {
                   </div>
                 ))}
                 
-                {error && <div className={styles.error}>{error}</div>}
+                {error && <div className="text-red-700 bg-red-50 rounded-md p-3 mt-4 text-sm border border-red-200">{error}</div>}
               </div>
               
               <a
-                className={styles.deleteTemplateLink}
+                className="text-text-color-red cursor-pointer underline text-small self-start ml-8 mb-4 hover:no-underline"
                 onClick={() => handleDeleteTemplate(selectedTemplate._id, selectedTemplate.name)}
                 style={{ opacity: deletingTemplate === selectedTemplate._id ? 0.6 : 1, pointerEvents: deletingTemplate === selectedTemplate._id ? 'none' : 'auto' }}
               >
