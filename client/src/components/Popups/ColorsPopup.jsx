@@ -6,8 +6,8 @@ export default function ColorsPopup({
 }) {
   return (
     <>
-      <div className="absolute z-2001 top-6 left-0 bg-secondary p-2 rounded-lg shadow-small">
-        <ul className="grid grid-cols-6 justify-center gap-1">
+      <div className="absolute z-2001 top-6 left-0 bg-secondary p-2 rounded-lg shadow-small w-[180px]">
+        <ul className="grid grid-cols-6 justify-center gap-1.5 flex-wrap">
           {colors?.map((color, idx) => {
             return (
               <li
@@ -23,7 +23,10 @@ export default function ColorsPopup({
           })}
         </ul>
       </div>
-      <div id="modal-layout-opacity" onClick={() => setMoreColor(false)}></div>
+      <div
+        className="modal-layout-opacity"
+        onClick={() => setMoreColor(false)}
+      ></div>
     </>
   );
 }
