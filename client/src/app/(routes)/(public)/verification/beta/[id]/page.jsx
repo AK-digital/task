@@ -1,6 +1,5 @@
 "use client";
 import { confirmBetaRequest } from "@/api/beta";
-import styles from "@/styles/pages/verification.module.css";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
