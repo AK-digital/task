@@ -55,12 +55,16 @@ export default function PictureForm() {
 
   return (
     <>
-      <form action={formAction} ref={formRef} className="flex justify-center mb-4">
+      <form
+        action={formAction}
+        ref={formRef}
+        className="flex justify-center mb-4"
+      >
         <input type="hidden" name="userId" defaultValue={user?._id} />
         <div
           onMouseEnter={() => setEditImg(true)}
           onMouseLeave={() => setEditImg(false)}
-          className="relative inline-block w-25 h-25 m-auto"
+          className="relative inline-block w-25 h-25 m-auto select-none"
         >
           <Image
             src={user?.picture || "/default-pfp.webp"}
@@ -71,8 +75,14 @@ export default function PictureForm() {
             className="rounded-full object-cover max-h-[100px] max-w-[100px]"
           />
           {editImg && !pending && (
-            <label htmlFor="picture" className="absolute flex justify-center items-center z-2001 left-1/2 top-1/2 w-25 h-25 bg-black/30 rounded-full -translate-1/2 cursor-pointer">
-              <FontAwesomeIcon icon={faPenToSquare} className="w-5 h-5 text-white" />
+            <label
+              htmlFor="picture"
+              className="absolute flex justify-center items-center z-2001 left-1/2 top-1/2 w-25 h-25 bg-black/30 rounded-full -translate-1/2 cursor-pointer"
+            >
+              <FontAwesomeIcon
+                icon={faPenToSquare}
+                className="w-5 h-5 text-white"
+              />
             </label>
           )}
           <input

@@ -67,7 +67,7 @@ function TasksContent() {
       <div className="p-[38px] bg-primary h-full rounded-tl-2xl overflow-auto">
         {/* Header */}
         <div className="flex items-center mb-6 gap-4 bg-primary p-4">
-          <span className="text-2xl min-w-max">Mes tâches</span>
+          <span className="text-2xl min-w-max select-none">Mes tâches</span>
           {/* Filters */}
           <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
         </div>

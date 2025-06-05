@@ -52,18 +52,20 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
 
   return (
     <>
-      <div className="absolute z-2001 bg-secondary rounded-lg top-[25px] -left-[13px] w-max text-small py-2 px-4 shadow-small text-text-dark-color no-underline [&_a]:text-text-dark-color [&_a]:no-underline ">
+      <div className="absolute z-2001 bg-secondary rounded-lg top-[25px] -left-[13px] w-max text-small py-2 px-4 shadow-small text-text-dark-color no-underline [&_a]:text-text-dark-color [&_a]:no-underline select-none">
         {isOpen && (
           <ul>
             {options.map((option, idx) => {
               if (option?.authorized === false) return null;
 
               return (
-                <li {...itemProps(option)} key={idx} className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light last:border-b-0 data-[remove=true]:text-text-color-red hover:[&_a]:text-accent-color-light [&_span]:flex [&_span]:items-center [&_span]:gap-2 ">
+                <li
+                  {...itemProps(option)}
+                  key={idx}
+                  className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light last:border-b-0 data-[remove=true]:text-text-color-red hover:[&_a]:text-accent-color-light [&_span]:flex [&_span]:items-center [&_span]:gap-2 "
+                >
                   {option?.link ? (
-                    <Link href={option?.link}>
-                      {content(option)}
-                    </Link>
+                    <Link href={option?.link}>{content(option)}</Link>
                   ) : (
                     content(option)
                   )}
@@ -73,7 +75,9 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
           </ul>
         )}
       </div>
-      {isOpen && <div className="modal-layout-opacity" onClick={handleIsOpen}></div>}
+      {isOpen && (
+        <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
+      )}
     </>
   );
 }

@@ -116,10 +116,13 @@ export default function TaskEstimate({ task, uid }) {
         ref={refs.setReference}
         className="bg-primary py-1 px-0.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
       >
-        <span>{estimation}</span>
+        <span className="select-none">{estimation}</span>
       </div>
       {hover && hasEstimation && (
-        <div className="relative top-0.5 cursor-pointer" onClick={handleDeleteEstimation}>
+        <div
+          className="relative top-0.5 cursor-pointer"
+          onClick={handleDeleteEstimation}
+        >
           <XCircle size={16} className="hover:text-danger-color" />
         </div>
       )}
@@ -132,44 +135,47 @@ export default function TaskEstimate({ task, uid }) {
           >
             <div className="flex justify-center flex-wrap gap-2">
               <span
-                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 15 minutes
               </span>
               <span
-                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 30 minutes
               </span>
               <span
-                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 45 minutes
               </span>
               <span
-                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 1 heure
               </span>
               <span
-                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 2 heures
               </span>
               <span
-                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary"
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 1 jour
               </span>
             </div>
             <div className="mt-2">
-              <form className="flex flex-col gap-0" onSubmit={handleCustomeEstimation}>
+              <form
+                className="flex flex-col gap-0"
+                onSubmit={handleCustomeEstimation}
+              >
                 <div className="flex flex-row gap-0">
                   <input
                     type="number"

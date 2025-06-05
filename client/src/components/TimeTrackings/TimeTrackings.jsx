@@ -72,7 +72,7 @@ export default function TimeTrackings({ searchParams }) {
   return (
     <div className="h-full">
       <div className="flex items-center gap-6">
-        <h1 className="mb-[inherit] min-w-fit">Suivi du temps</h1>
+        <h1 className="mb-[inherit] min-w-fit select-none">Suivi du temps</h1>
         {/* Filters */}
         {!projectsLoading && (
           <Filters
@@ -83,7 +83,7 @@ export default function TimeTrackings({ searchParams }) {
         )}
 
         {/* Total duration */}
-        <span className="font-bold">
+        <span className="font-bold select-none">
           Temps total :
           {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
         </span>

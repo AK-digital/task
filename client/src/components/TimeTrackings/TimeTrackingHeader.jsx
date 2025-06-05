@@ -145,7 +145,7 @@ export default function TimeTrackingHeader({
   };
 
   return (
-    <div className="sticky flex items-center top-0 bg-secondary border-b border-text-light-color text-small h-[38px] text-text-color-muted font-medium rounded-t-lg z-10 last:border-b-0">
+    <div className="sticky flex items-center top-0 bg-secondary border-b border-text-light-color text-small h-[38px] text-text-color-muted font-medium rounded-t-lg z-10 last:border-b-0 select-none">
       <div className="min-w-[40px] max-w-[40px] flex justify-center items-center w-full h-full gap-2 cursor-default">
         <input
           type="checkbox"
@@ -156,10 +156,14 @@ export default function TimeTrackingHeader({
         />
       </div>
       <div className="w-full min-w-[200px] max-w-[700px]">
-        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Description</span>
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
+          Description
+        </span>
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color">
-        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Projet</span>
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
+          Projet
+        </span>
         <div className="flex flex-col">
           <ChevronUp
             size={15}
@@ -178,7 +182,9 @@ export default function TimeTrackingHeader({
         </div>
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color">
-        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Utilisateur</span>
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
+          Utilisateur
+        </span>
         <div className="flex flex-col">
           <ChevronUp
             size={15}
@@ -197,7 +203,9 @@ export default function TimeTrackingHeader({
         </div>
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color">
-        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Date</span>
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
+          Date
+        </span>
         <div className="flex flex-col">
           <ChevronUp
             size={15}
@@ -217,7 +225,9 @@ export default function TimeTrackingHeader({
       </div>
 
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color">
-        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Temps</span>
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
+          Temps
+        </span>
         <div className="flex flex-col">
           <ChevronUp
             size={15}
@@ -236,7 +246,9 @@ export default function TimeTrackingHeader({
         </div>
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[120px] min-w-[120px] border-r border-text-light-color">
-        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">Facturable</span>
+        <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
+          Facturable
+        </span>
         <div className="flex flex-col gap-0">
           <ChevronUp
             size={15}

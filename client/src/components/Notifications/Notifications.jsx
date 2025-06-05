@@ -49,7 +49,7 @@ export default function Notifications({
 
   return (
     <>
-      <div className="absolute flex flex-col top-[54px] right-0 w-[560px] z-2001 p-0 pr-2 max-h-[400px] overflow-y-auto rounded-lg bg-secondary shadow-medium">
+      <div className="absolute flex flex-col top-[54px] right-0 w-[560px] z-2001 p-0 pr-2 max-h-[400px] overflow-y-auto rounded-lg bg-secondary shadow-medium select-none">
         <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px]">
           <span>Notifications</span>
           {unreadCount > 0 && (
@@ -109,7 +109,9 @@ export default function Notifications({
                     </div>
                   </div>
                   <div className="flex flex-col items-end justify-center border-b-0 gap-2">
-                    <div className="text-small text-text-color-muted self-start text-right min-w-max">{dateFromNow}</div>
+                    <div className="text-small text-text-color-muted self-start text-right min-w-max">
+                      {dateFromNow}
+                    </div>
                   </div>
                 </li>
               );
@@ -118,7 +120,10 @@ export default function Notifications({
         )}
       </div>
 
-      <div className="modal-layout-opacity" onClick={(e) => setNotifOpen(false)}></div>
+      <div
+        className="modal-layout-opacity"
+        onClick={(e) => setNotifOpen(false)}
+      ></div>
     </>
   );
 }

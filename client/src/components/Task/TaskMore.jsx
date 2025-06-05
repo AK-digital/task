@@ -109,7 +109,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
         {/* Description */}
         <div className="flex flex-col gap-2 mb-6">
           <p className="text-large font-medium">{task?.text}</p>
-          <span className="flex items-center gap-1 text-small text-text-color-muted">
+          <span className="flex items-center gap-1 text-small text-text-color-muted select-none">
             Par{" "}
             <Image
               src={task?.author?.picture || "/default-pfp.webp"}

@@ -66,7 +66,13 @@ export default function ProfileForm() {
         <input type="hidden" name="userId" defaultValue={user?._id} />
 
         <div className="form-group">
-          <label htmlFor="firstName" data-active={firstName ? true : false}>Prénom</label>
+          <label
+            className="select-none"
+            htmlFor="firstName"
+            data-active={firstName ? true : false}
+          >
+            Prénom
+          </label>
           <input
             type="text"
             id="firstName"
@@ -75,13 +81,17 @@ export default function ProfileForm() {
             onChange={(e) => setFirstName(e.target.value)}
             className="font-bricolage text-medium focus:outline-none"
           />
-          {state?.errors?.firstName && (
-            <span>{state.errors.firstName}</span>
-          )}
+          {state?.errors?.firstName && <span>{state.errors.firstName}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="lastName" data-active={lastName ? true : false}>Nom</label>
+          <label
+            className="select-none"
+            htmlFor="lastName"
+            data-active={lastName ? true : false}
+          >
+            Nom
+          </label>
           <input
             type="text"
             id="lastName"
@@ -90,13 +100,17 @@ export default function ProfileForm() {
             onChange={(e) => setLastName(e.target.value)}
             className="font-bricolage text-medium focus:outline-none"
           />
-          {state?.errors?.lastName && (
-            <span>{state.errors.lastName}</span>
-          )}
+          {state?.errors?.lastName && <span>{state.errors.lastName}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="company" data-active={company ? true : false}>Entreprise</label>
+          <label
+            className="select-none"
+            htmlFor="company"
+            data-active={company ? true : false}
+          >
+            Entreprise
+          </label>
           <input
             type="text"
             id="company"
@@ -105,13 +119,17 @@ export default function ProfileForm() {
             onChange={(e) => setCompany(e.target.value)}
             className="font-bricolage text-medium focus:outline-none"
           />
-          {state?.errors?.company && (
-            <span>{state.errors.company}</span>
-          )}
+          {state?.errors?.company && <span>{state.errors.company}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="position" data-active={position ? true : false}>Poste</label>
+          <label
+            className="select-none"
+            htmlFor="position"
+            data-active={position ? true : false}
+          >
+            Poste
+          </label>
           <input
             type="text"
             id="position"
@@ -120,9 +138,7 @@ export default function ProfileForm() {
             onChange={(e) => setPosition(e.target.value)}
             className="font-bricolage text-medium focus:outline-none"
           />
-          {state?.errors?.position && (
-            <span>{state.errors.position}</span>
-          )}
+          {state?.errors?.position && <span>{state.errors.position}</span>}
         </div>
         <button
           type="submit"

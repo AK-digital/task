@@ -45,7 +45,7 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
           }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="rounded-full"
+          className="rounded-full select-none"
         />
       ) : (
         <div
@@ -53,6 +53,7 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           style={{ border: "none" }}
+          className="select-none"
         >
           <NoPicture width={style?.width} height={style?.height} user={user} />
         </div>
