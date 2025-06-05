@@ -42,14 +42,12 @@
   --color-third: #eae7de;
   --color-side: rgba(45, 63, 68, 0.9);
 
-  --background-gradient-dark: linear-gradient(
-    140deg,
-    #39545b,
-    #2a4046 17%,
-    #16363c 52%,
-    #2a4046 86%,
-    #32484e 100%
-  );
+  --background-gradient-dark: linear-gradient(140deg,
+      #39545b,
+      #2a4046 17%,
+      #16363c 52%,
+      #2a4046 86%,
+      #32484e 100%);
 
   /* TEXT SIZES */
   --text-large: 1.2rem;
@@ -68,11 +66,13 @@
   --animate-bounce-light: bounce-light 1s infinite;
 
   @keyframes bounce-light {
+
     0%,
     100% {
       transform: translateY(0);
       animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
     }
+
     50% {
       transform: translateY(-5%);
       animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
@@ -81,6 +81,7 @@
 }
 
 @layer components {
+
   /* Components/Auth Folder */
   .form-group {
     position: relative;
@@ -178,8 +179,7 @@
   }
 
   /* BoardHeader */
-  .container_BoardHeader[data-archive="false"]
-    .dataTitle_BoardHeader[data-authorized="true"]:hover {
+  .container_BoardHeader[data-archive="false"] .dataTitle_BoardHeader[data-authorized="true"]:hover {
     border: 1px solid var(--color-color-border-color);
     cursor: inherit !important;
   }
@@ -204,7 +204,7 @@
   }
 
   /* Task */
-  .container_Task > div > span {
+  .container_Task>div>span {
     display: block;
     overflow: hidden;
     white-space: nowrap;
@@ -287,11 +287,13 @@
     width: 220px !important;
   }
 
-  .containerIcon_SideNav:hover div {
+  .containerIcon_SideNav:hover div,
+  .containerIcon_SideNav[data-active="true"] div {
     border: 2px solid var(--color-accent-color);
   }
 
-  .containerIcon_SideNav:hover:after {
+  .containerIcon_SideNav:hover:after,
+  .containerIcon_SideNav[data-active="true"]:after {
     content: "";
     position: absolute;
     top: 0;
@@ -302,11 +304,6 @@
     border-right: 2px solid var(--color-accent-color);
     z-index: -1;
     border-radius: 33px 0 0 33px;
-  }
-
-  .containerIcon_SideNav[data-active="true"] span {
-    font-weight: 400;
-    transition: all linear 150ms;
   }
 
   /* ProjectSideNav */
@@ -684,6 +681,7 @@
     from {
       transform: rotateY(0deg);
     }
+
     to {
       transform: rotateY(360deg);
     }
@@ -720,13 +718,13 @@
     background-color: #e9e7dd;
   }
 
-  .statusBar_ProjectCard > div:first-child {
+  .statusBar_ProjectCard>div:first-child {
     min-width: 12px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
   }
 
-  .statusBar_ProjectCard > div:last-child {
+  .statusBar_ProjectCard>div:last-child {
     min-width: 12px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;

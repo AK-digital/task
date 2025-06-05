@@ -125,7 +125,9 @@ export default function TaskPriority({ task }) {
       {isOpen && (
         <>
           <div
-            className={`absolute z-[2001] top-[45px] left-1/2 -translate-x-1/2 p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${listWidth() ? 'w-[380px]' : 'w-[220px]'}`}
+            className={`absolute z-[2001] top-[45px] p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${
+              listWidth() ? "w-[380px]" : "w-[220px]"
+            }`}
             ref={refs.setFloating}
             style={floatingStyles}
           >
@@ -165,20 +167,23 @@ export default function TaskPriority({ task }) {
               )}
             </ul>
             {isEdit ? (
-              <button className="bg-none w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none" onClick={handleEditPriority}>
+              <button
+                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
+                onClick={handleEditPriority}
+              >
                 <Save size={16} />
                 Appliquer
               </button>
             ) : (
-              <button className="bg-none w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none" onClick={handleEditPriority}>
+              <button
+                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
+                onClick={handleEditPriority}
+              >
                 <Pen size={16} /> Modifier les priorités
               </button>
             )}
           </div>
-          <div
-            className="modal-layout-opacity"
-            onClick={handleIsOpen}
-          ></div>
+          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
         </>
       )}
     </div>

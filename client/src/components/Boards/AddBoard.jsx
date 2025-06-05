@@ -5,10 +5,13 @@ import { mutate } from "swr";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { useState } from "react";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
+import AddBoardIAModal from "../Modals/AddBoardIAModal";
+import { bricolageGrostesque } from "@/utils/font";
 
 export default function AddBoard({ project }) {
   const [isLoading, setIsLoading] = useState(false);
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
+  const [showIAModal, setShowIAModal] = useState(false);
   const isAuthorized = useUserRole(project, [
     "owner",
     "manager",
@@ -49,10 +52,24 @@ export default function AddBoard({ project }) {
         <Plus size={18} />
         Modèle de tableau
       </button>
+      <button
+        type="button"
+        className="font-bricolage"
+        onClick={() => setShowIAModal(true)}
+      >
+        <Plus size={18} />
+        Ajout de tableau par IA
+      </button>
       {addBoardTemplate && (
         <BoardsTemplateList
           project={project}
           setAddBoardTemplate={setAddBoardTemplate}
+        />
+      )}
+      {showIAModal && (
+        <AddBoardIAModal
+          project={project}
+          onClose={() => setShowIAModal(false)}
         />
       )}
     </div>

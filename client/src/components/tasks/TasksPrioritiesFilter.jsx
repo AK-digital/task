@@ -44,7 +44,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
         data-open={isOpen}
       >
         <Star size={16} />
-        <span className="flex-1">Priorité</span>
+        <span className="flex-1 text-[15px]">Priorité</span>
         {hasPriorities && (
           <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {queriesPriorities?.length}
@@ -62,7 +62,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
           <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full font-medium text-small">
             <ul className="flex flex-col">
               <li
-                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third hover:shadow-small hover:rounded-sm"
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
                 onClick={handleResetPriorities}
               >
                 <Undo size={14} />
@@ -71,7 +71,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
               {priorities.map((priority) => (
                 <li
                   key={priority?._id}
-                  className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third hover:shadow-small hover:rounded-sm"
+                  className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
                 >
                   <input
                     type="checkbox"

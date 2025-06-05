@@ -413,8 +413,11 @@ export default function Boards({ boards: initialBoards, tasksData }) {
             <div>
               <Board
                 tasks={tasks[activeId] || []}
+                board={boards.find((board) => board._id === activeId)}
                 project={project}
                 archive={archive}
+                isOverlay={true}
+                displayedElts={displayedElts}
               />
             </div>
           ) : null}
