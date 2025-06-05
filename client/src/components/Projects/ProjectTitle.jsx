@@ -45,11 +45,10 @@ export default function ProjectTitle({ project }) {
     const response = await deleteProject(project?._id);
 
     if (response?.success) {
+      mutate("/favorite");
+      mutate(`/project/${project?._id}`);
       router.push("/projects");
     }
-
-    mutate(`/project/${project?._id}`);
-    setIsMoreOpen(false);
   }
 
   function handleAddTemplate() {

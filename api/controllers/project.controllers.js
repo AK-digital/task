@@ -4,7 +4,6 @@ import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectInvitationModel from "../models/ProjectInvitation.model.js";
 import UserModel from "../models/User.model.js";
 import BoardModel from "../models/Board.model.js";
-import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
 import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 import StatusModel from "../models/Status.model.js";
@@ -13,6 +12,7 @@ import {
   getDefaultStatuses,
 } from "../helpers/defaultStatuses.js";
 import PriorityModel from "../models/Priority.model.js";
+import FavoriteModel from "../models/Favorite.model.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
@@ -70,6 +70,13 @@ export async function saveProject(req, res, next) {
 
     await StatusModel.insertMany(defaultStatuses);
     await PriorityModel.insertMany(defaultPriorities);
+
+    const newFavorite = new FavoriteModel({
+      user: authUser._id,
+      project: savedProject._id,
+    });
+
+    await newFavorite.save();
 
     return res.status(201).send({
       success: true,
