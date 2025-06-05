@@ -19,8 +19,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/ai/:path*',
-        destination: 'http://localhost:5000/api/ai/:path*',
+        source: "/api/ai/:path*",
+        destination: "https://api.clynt.io/api/ai/:path*",
       },
     ];
   },
