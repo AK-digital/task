@@ -84,7 +84,7 @@ export default function TimeTrackings({ searchParams }) {
 
         {/* Total duration */}
         <span className="font-bold">
-          Temps total :
+          Temps total :{" "}
           {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
         </span>
 

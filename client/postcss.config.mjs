@@ -1,13 +1,6 @@
 const config = {
-    plugins: {
-        "@tailwindcss/postcss": {},
-        "postcss-remove-rules": {
-            rulesToRemove: {
-                "img, video": "height",
-                "img, video": "max-width",
-                "html, :host": "line-height",
-            },
-        },
-    },
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
 };
 export default config;

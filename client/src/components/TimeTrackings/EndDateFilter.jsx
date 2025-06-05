@@ -30,7 +30,7 @@ export default function EndDateFilter({ queries, setQueries }) {
         type="date"
         value={endDate}
         onChange={handleEndDateChange}
-        className="border-b-0 cursor-pointer"
+        className="border-b-0 cursor-pointer text-[15px]"
       />
     </div>
   );
