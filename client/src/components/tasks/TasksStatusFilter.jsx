@@ -6,7 +6,6 @@ export default function TasksStatusFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
   const QueriesStatus = queries?.status;
   const hasStatus = QueriesStatus?.length > 0;
-
   const { statuses } = useProjectContext();
 
   function handleResetStatus() {
@@ -70,7 +69,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
-              {statuses.map((elt) => (
+              {statuses?.map((elt) => (
                 <li
                   key={elt?._id}
                   className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"

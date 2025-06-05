@@ -23,10 +23,10 @@ const displayedElts = {
 const displayedFilters = {
   isSearch: true,
   isProject: true,
-  isBoard: true,
+  isBoard: false,
   isAdmin: false,
-  isStatus: true,
-  isPriorities: true,
+  isStatus: false,
+  isPriorities: false,
   isDeadline: true,
 };
 
