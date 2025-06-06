@@ -38,6 +38,7 @@ export default function ProjectTitle({ project }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const formRef = useRef(null);
   const inputRef = useRef(null);
+  const moreButtonRef = useRef(null);
 
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
 
@@ -201,14 +202,17 @@ export default function ProjectTitle({ project }) {
       </div>
 
       <div className="relative top-0.5 cursor-pointer transition-[background-color] duration-200 rounded-lg">
-        <MoreVertical size={20} onClick={() => setIsMoreOpen(true)} />
-        {isMoreOpen && (
-          <MoreMenu
-            isOpen={isMoreOpen}
-            setIsOpen={setIsMoreOpen}
-            options={options}
-          />
-        )}
+        <MoreVertical
+          ref={moreButtonRef}
+          size={20}
+          onClick={() => setIsMoreOpen(true)}
+        />
+        <MoreMenu
+          isOpen={isMoreOpen}
+          setIsOpen={setIsMoreOpen}
+          options={options}
+          triggerRef={moreButtonRef}
+        />
       </div>
 
       {isNotEmpty(project?.urls) && (
