@@ -6,7 +6,6 @@ import NoPicture from "../User/NoPicture";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { readNotification, readNotifications } from "@/api/notification";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function Notifications({
@@ -100,7 +99,7 @@ export default function Notifications({
                       />
                     )}
                     <div className="flex flex-col gap-1">
-                      <div className="text-normal font-medium">
+                      <div className="text-normal font-medium text-text-darker-color">
                         <span>{notif?.message?.title}</span>
                       </div>
                       <div className="text-small text-text-color-muted">
