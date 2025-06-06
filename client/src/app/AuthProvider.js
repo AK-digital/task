@@ -32,14 +32,21 @@ export default function AuthProvider({ children }) {
       setUser(data);
     });
 
-    socket.on("updated-project-role", () => {
+    socket.on("project-updated", () => {
       revalidatePage();
+    });
+
+    socket.on("member-revoked", (revokedUserId) => {
+      if (revokedUserId === uid) {
+        router.push("/projects");
+      }
     });
 
     return () => {
       socket.off("logged in");
+      socket.off("member-revoked");
     };
-  }, [socket]);
+  }, [socket, uid, router]);
 
   // Returns to auth page
   if (error) {

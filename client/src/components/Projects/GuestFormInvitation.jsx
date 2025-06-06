@@ -46,6 +46,7 @@ export default function GuestFormInvitation({
       const link = "/invitation/" + state?.data?._id;
 
       socket.emit("create notification", user, value, message, link);
+      socket.emit("update-project-invitation", project?._id);
     }
 
     if (state?.status === "failure" && state?.errors === null) {
@@ -55,10 +56,6 @@ export default function GuestFormInvitation({
         message: state?.message,
       });
     }
-
-    return () => {
-      socket.off("create notification");
-    };
   }, [state]);
 
   return (
@@ -75,7 +72,11 @@ export default function GuestFormInvitation({
             className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm"
           />
           {errors && <i>{errors?.email}</i>}
-          <button type="submit" data-disabled={pending} className="w-full rounded-sm text-medium p-2">
+          <button
+            type="submit"
+            data-disabled={pending}
+            className="w-full rounded-sm text-medium p-2"
+          >
             Envoyer une invitation
           </button>
         </form>

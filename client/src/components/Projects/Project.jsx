@@ -4,6 +4,7 @@ import Boards from "@/components/Boards/Boards";
 import { useEffect } from "react";
 import socket from "@/utils/socket";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
 
 const displayedFilters = {
   isSearch: true,
@@ -16,19 +17,23 @@ const displayedFilters = {
 };
 
 export default function Project() {
-  const { boards, tasks, mutateProject } = useProjectContext();
+  const { boards, tasks, mutateProject, project } = useProjectContext();
+  const { mutateProjectInvitation } = useProjectInvitation(project?._id);
 
   useEffect(() => {
     function handleRevalidate() {
-      mutateProject();
+      mutateProject(undefined, { revalidate: true });
+      mutateProjectInvitation();
     }
 
-    socket.on("accepted project invitation", handleRevalidate);
+    socket.on("project-updated", handleRevalidate);
+    socket.on("project-invitation-updated", handleRevalidate);
 
     return () => {
-      socket.off("accepted project invitation");
+      socket.off("project-updated");
+      socket.off("project-invitation-updated");
     };
-  }, [socket]);
+  }, [socket, mutateProject, mutateProjectInvitation]);
 
   return (
     <div className="flex flex-col bg-[#dad6c799] min-h-full h-full rounded-tl-2xl pt-6 pl-6 pr-3 pb-0">

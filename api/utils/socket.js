@@ -3,12 +3,47 @@ import NotificationModel from "../models/Notification.model.js";
 import ProjectModel from "../models/Project.model.js";
 import TimeTrackingModel from "../models/TimeTracking.model.js";
 
+const userCache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+async function getCachedUser(userId) {
+  const cacheKey = userId.toString();
+  const cached = userCache.get(cacheKey);
+
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.user;
+  }
+
+  const user = await UserModel.findById({ _id: userId });
+
+  if (user) {
+    userCache.set(cacheKey, {
+      user,
+      timestamp: Date.now(),
+    });
+  }
+
+  return user;
+}
+
+function clearExpiredCache() {
+  const now = Date.now();
+  for (const [key, value] of userCache.entries()) {
+    if (now - value.timestamp >= CACHE_TTL) {
+      userCache.delete(key);
+    }
+  }
+}
+
+// Nettoyer le cache toutes les 10 minutes
+setInterval(clearExpiredCache, 10 * 60 * 1000);
+
 export default function socketHandler(io) {
   io.on("connection", (socket) => {
     socket.on("logged in", async (userId) => {
       if (!userId) return;
 
-      const user = await UserModel.findById({ _id: userId });
+      const user = await getCachedUser(userId);
 
       if (!user) {
         throw new Error("Aucun utilisateur trouvé avec cette ID : ", userId);
@@ -19,6 +54,12 @@ export default function socketHandler(io) {
         { $set: { socketId: socket?.id } },
         { new: true, setDefaultsOnInsert: true }
       );
+
+      // Mettre à jour le cache avec le nouveau socketId
+      userCache.set(userId.toString(), {
+        user: userWithSocketId,
+        timestamp: Date.now(),
+      });
 
       const projects = await ProjectModel.find({ "members.user": user?._id });
       const projectIds = projects.map((project) => project._id.toString());
@@ -31,7 +72,7 @@ export default function socketHandler(io) {
     socket.on(
       "create notification",
       async (sender, receiver, message, link) => {
-        const senderUser = await UserModel.findById({ _id: sender?._id });
+        const senderUser = await getCachedUser(sender?._id);
 
         if (senderUser) {
           let receiverUser = null;
@@ -41,7 +82,7 @@ export default function socketHandler(io) {
               email: receiver,
             });
           } else {
-            receiverUser = await UserModel.findById({ _id: receiver });
+            receiverUser = await getCachedUser(receiver);
           }
 
           const newNotification = new NotificationModel({
@@ -59,9 +100,7 @@ export default function socketHandler(io) {
     );
 
     socket.on("unread notifications", async (unreadNotifications) => {
-      const user = await UserModel.findById({
-        _id: unreadNotifications[0]?.userId,
-      });
+      const user = await getCachedUser(unreadNotifications[0]?.userId);
 
       unreadNotifications?.forEach(async (notif) => {
         await NotificationModel.findByIdAndUpdate(
@@ -81,27 +120,18 @@ export default function socketHandler(io) {
       io.to(user?.socketId).emit("notifications read");
     });
 
-    socket.on("accept project invitation", async (projectId) => {
-      await emitToProjectMembers(
-        projectId,
-        "accepted project invitation",
-        io,
-        projectId
-      );
-    });
-
     socket.on("update board", async (projectId) => {
       const project = await ProjectModel.findById({ _id: projectId });
 
       if (!project) return;
 
-      project?.members?.forEach(async (member) => {
-        const user = await UserModel.findById({ _id: member?.user });
-
-        if (!user) return;
-
-        io.to(user?.socketId).emit("board updated");
-      });
+      await Promise.all(
+        project?.members?.map(async (member) => {
+          const user = await getCachedUser(member?.user);
+          if (!user) return;
+          io.to(user?.socketId).emit("board updated");
+        })
+      );
     });
 
     socket.on("update task", async (projectId) => {
@@ -112,12 +142,23 @@ export default function socketHandler(io) {
       await emitToProjectMembers(projectId, "message updated", socket);
     });
 
-    socket.on("update-project-role", async (memberId) => {
-      const user = await UserModel.findById({ _id: memberId });
-
-      if (user) {
-        io.to(user?.socketId).emit("updated-project-role");
+    socket.on("update-project", async (memberId, projectId) => {
+      if (memberId) {
+        const revokedUser = await getCachedUser(memberId);
+        if (revokedUser?.socketId) {
+          io.to(revokedUser.socketId).emit("member-revoked", memberId);
+        }
       }
+
+      await emitToProjectMembers(projectId, "project-updated", socket);
+    });
+
+    socket.on("update-project-invitation", async (projectId) => {
+      await emitToProjectMembers(
+        projectId,
+        "project-invitation-updated",
+        socket
+      );
     });
 
     socket.on("update time tracking", async (trackingId) => {
@@ -135,13 +176,11 @@ export default function socketHandler(io) {
 }
 
 async function emitToProjectMembers(projectId, event, socket, ...args) {
-  const project = await ProjectModel.findById({ _id: projectId });
+  if (!projectId) return;
 
-  if (!project) return;
+  const projectIdString = projectId.toString();
 
-  const projectIdString = project?._id.toString();
-
-  if (args) {
+  if (args.length > 0) {
     socket.to(projectIdString).emit(event, ...args);
   } else {
     socket.to(projectIdString).emit(event);
