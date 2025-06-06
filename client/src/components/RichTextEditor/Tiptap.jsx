@@ -12,6 +12,8 @@ import Strike from "@tiptap/extension-strike";
 import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import CodeBlock from "@tiptap/extension-code-block";
@@ -34,6 +36,7 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
   Undo2,
+  CheckSquare,
 } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
@@ -155,6 +158,10 @@ export default function Tiptap({
       Heading.configure({ levels: [1, 2, 3] }),
       BulletList,
       OrderedList,
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
       Link.configure({
         openOnClick: false,
         autolink: true,
@@ -622,6 +629,11 @@ export default function Tiptap({
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
             <ListOrderedIcon size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleTaskList().run()}
+          >
+            <CheckSquare size={16} />
           </button>
 
           <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
