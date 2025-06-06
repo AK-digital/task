@@ -10,7 +10,7 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
@@ -42,6 +42,7 @@ export default function BoardHeader({
   const { openedTask } = useTaskContext();
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const moreButtonRef = useRef(null);
   const [edit, setEdit] = useState(false);
   const [openColors, setOpenColors] = useState(false);
   const [title, setTitle] = useState(board?.title);
@@ -323,15 +324,18 @@ export default function BoardHeader({
         )}
         {canArchive && (
           <div className="relative text-text-color-muted">
-            <EllipsisVertical size={18} onClick={(e) => setIsMoreOpen(true)} />
-            {isMoreOpen && (
-              <MoreMenu
-                isOpen={isMoreOpen}
-                setIsOpen={setIsMoreOpen}
-                options={options}
-                className="hover:text-text-color"
-              />
-            )}
+            <EllipsisVertical
+              ref={moreButtonRef}
+              size={18}
+              onClick={(e) => setIsMoreOpen(true)}
+            />
+            <MoreMenu
+              isOpen={isMoreOpen}
+              setIsOpen={setIsMoreOpen}
+              options={options}
+              triggerRef={moreButtonRef}
+              className="hover:text-text-color"
+            />
           </div>
         )}
       </div>
