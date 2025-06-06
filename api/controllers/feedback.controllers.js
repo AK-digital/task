@@ -6,11 +6,11 @@ import { sendEmail } from "../helpers/nodemailer.js";
 export async function saveFeedback(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { message } = req.body;
+    const { note, message } = req.body;
 
     const sanitizedMessage = sanitizeHtml(message);
 
-    if (!message) {
+    if (!message || !note) {
       return res.status(400).send({
         success: false,
         message: "Missing parameters",
@@ -19,12 +19,13 @@ export async function saveFeedback(req, res, next) {
 
     const newFeedback = new FeedbackModel({
       userId: authUser._id,
+      note: note,
       message: sanitizedMessage,
     });
 
     await newFeedback.save();
 
-    const templateFeedback = emailFeedback(authUser, sanitizedMessage);
+    const templateFeedback = emailFeedback(authUser, note, sanitizedMessage);
 
     await sendEmail(
       "notifications@clynt.io",

@@ -12,7 +12,7 @@ const emailStyles = {
   highlight: "color: #a87e51;",
 };
 
-export function emailFeedback(user, feedback) {
+export function emailFeedback(user, note, feedback) {
   const templates = {
     subject: "Nouveau feedback d'un utilisateur",
     text: `
@@ -26,6 +26,7 @@ export function emailFeedback(user, feedback) {
           </p>
         </div>
         <p style="${emailStyles.content}">Voici le feedback :</p>
+        <p style="${emailStyles.content}">Note : ${note}</p>
         <p style="${emailStyles.content}">${feedback}</p>
       </div>
     `,

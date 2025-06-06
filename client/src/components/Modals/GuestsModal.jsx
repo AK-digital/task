@@ -64,6 +64,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
       });
     }
   }, [state]);
+
   const options = ["owner", "manager", "team", "customer", "guest"];
 
   return (
@@ -222,7 +223,9 @@ export function ProjectInvitationsList({
               alt={`Photo de profil de ${inv?.guestEmail}`}
               className="rounded-full"
             />
-            <span className="w-45 whitespace-nowrap overflow-hidden text-ellipsis">{inv?.guestEmail}</span>
+            <span className="w-45 whitespace-nowrap overflow-hidden text-ellipsis">
+              {inv?.guestEmail}
+            </span>
           </div>
           {canEditRole && (
             <DropDown
