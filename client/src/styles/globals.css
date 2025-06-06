@@ -1010,6 +1010,7 @@
     border-radius: 0;
     background-color: transparent;
     opacity: 1;
+    outline: none !important;
   }
 
   input,

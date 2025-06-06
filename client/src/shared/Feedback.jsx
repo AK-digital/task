@@ -24,8 +24,6 @@ export default function Feedback() {
     initialState
   );
 
-  console.log(state);
-
   function handleRating(rating) {
     resetStars();
     setRating(rating);
@@ -39,16 +37,16 @@ export default function Feedback() {
   }
 
   function fillStar(star) {
-    star.classList.add("fill-accent-color-light");
-    star.classList.add("text-accent-color-light");
+    star.classList.add("fill-yellow-500");
+    star.classList.add("text-yellow-500");
   }
 
   function resetStars() {
     const stars = document.getElementsByClassName("star");
 
     for (let i = 0; i < stars.length; i++) {
-      stars[i].classList.remove("fill-accent-color-light");
-      stars[i].classList.remove("text-accent-color-light");
+      stars[i].classList.remove("fill-yellow-500");
+      stars[i].classList.remove("text-yellow-500");
     }
   }
 
@@ -84,8 +82,8 @@ export default function Feedback() {
     if (!hoverRating) return;
     const stars = document.getElementsByClassName("star");
     for (let i = 0; i < stars.length; i++) {
-      stars[i].classList.remove("fill-accent-color-light");
-      stars[i].classList.remove("text-accent-color-light");
+      stars[i].classList.remove("fill-yellow-500");
+      stars[i].classList.remove("text-yellow-500");
     }
   }
   useEffect(() => {
@@ -113,7 +111,7 @@ export default function Feedback() {
       {!isOpen && (
         <div
           onClick={() => setIsOpen(true)}
-          className="bg-accent-color p-2 flex items-center justify-center gap-1  rounded-full shadow-md cursor-pointer hover:bg-accent-color/90 transition-all duration-300"
+          className="bg-accent-color p-2 flex items-center justify-center gap-1 rounded-full shadow-md cursor-pointer hover:bg-accent-color/90 transition-all duration-300"
         >
           <MessageCircle size={24} color="white" className="scale-x-[-1]" />
           <span className="text-white text-sm font-medium">Feedback</span>
