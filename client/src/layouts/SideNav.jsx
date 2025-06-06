@@ -34,7 +34,7 @@ export default function SideNav() {
       data-open={isMenuOpen}
       className="container_SideNav min-w-aside-width w-aside-width transition-[width,min-width] duration-[150ms] ease-linear select-none data-[open=true]:w-[220px] data-[open=true]:min-w-[220px]"
     >
-      <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-7 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730] [&_a]:no-underline">
+      <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-2 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730] [&_a]:no-underline">
         <div>
           <Link href={"/projects"}>
             <Image
@@ -56,8 +56,8 @@ export default function SideNav() {
             <Link
               href={"/tasks"}
               title="Mes tâches"
-              className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
               data-active={isTasksPage}
+              className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             >
               <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
                 <ClipboardList
@@ -72,7 +72,7 @@ export default function SideNav() {
               )}
             </Link>
           </div>
-          <nav className="relative flex flex-col gap-2 max-h-[65svh] overflow-y-auto scroll-smooth">
+          <nav className="relative flex flex-col gap-2 flex-1 max-h-[60svh] overflow-y-auto scroll-smooth">
             {favoritesLoading ? (
               <ProjectSideNavSkeleton />
             ) : (
@@ -87,7 +87,7 @@ export default function SideNav() {
             )}
           </nav>
         </div>
-        <div className="flex justify-center items-start flex-col gap-3 min-w-10 min-h-10 rounded-full">
+        <div className="flex justify-center items-start flex-col gap-3 min-w-10 rounded-full">
           <Link
             className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             href={"/projects"}
