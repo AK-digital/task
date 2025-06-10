@@ -188,6 +188,15 @@ export default function socketHandler(io) {
       );
     });
 
+    socket.on("update-project-invitation-role", async (projectId, roleData) => {
+      await emitToProjectMembers(
+        projectId,
+        "project-invitation-role-updated",
+        socket,
+        roleData
+      );
+    });
+
     socket.on("update time tracking", async (trackingId) => {
       const timeTracking = await TimeTrackingModel.findById(trackingId);
       if (timeTracking) {

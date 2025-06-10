@@ -50,7 +50,10 @@ export function DropDown({
           return;
         }
 
-        socket.emit("update-project-invitation", project?._id);
+        socket.emit("update-project-invitation-role", project?._id, {
+          invitationId: invitation._id,
+          newRole: role,
+        });
       } else {
         const memberId = member?.user?._id;
         const res = await updateProjectRole(project?._id, memberId, role);

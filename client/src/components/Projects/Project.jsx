@@ -23,22 +23,43 @@ export default function Project() {
   const router = useRouter();
 
   useEffect(() => {
-    function handleRevalidate() {
+    function handleProjectRevalidate() {
       mutateProject(undefined, { revalidate: true });
-      mutateProjectInvitation();
+    }
+
+    function handleInvitationRevalidate() {
+      mutateProjectInvitation(undefined, { revalidate: true });
+    }
+
+    function handleInvitationRoleUpdate(roleData) {
+      const { invitationId, newRole } = roleData || {};
+
+      if (!invitationId || !newRole) return;
+
+      mutateProjectInvitation(
+        (currentInvitations) =>
+          currentInvitations?.map((invitation) =>
+            invitation._id === invitationId
+              ? { ...invitation, role: newRole }
+              : invitation
+          ),
+        { revalidate: false }
+      );
     }
 
     function handleRedirect() {
       router.push("/projects");
     }
 
-    socket.on("project-updated", handleRevalidate);
-    socket.on("project-invitation-updated", handleRevalidate);
+    socket.on("project-updated", handleProjectRevalidate);
+    socket.on("project-invitation-updated", handleInvitationRevalidate);
+    socket.on("project-invitation-role-updated", handleInvitationRoleUpdate);
     socket.on("project-redirected", handleRedirect);
 
     return () => {
       socket.off("project-updated");
       socket.off("project-invitation-updated");
+      socket.off("project-invitation-role-updated");
       socket.off("project-redirected");
     };
   }, [socket, mutateProject, mutateProjectInvitation, router]);
