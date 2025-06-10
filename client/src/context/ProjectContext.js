@@ -2,7 +2,6 @@
 import { useBoards } from "@/app/hooks/useBoards";
 import { usePriorities } from "@/app/hooks/usePriorities";
 import { useProject } from "@/app/hooks/useProject";
-import { useProjectsStatus } from "@/app/hooks/useProjectsStatus";
 import { useStatuses } from "@/app/hooks/useStatus";
 import { useTasks } from "@/app/hooks/useTasks";
 import { createContext, useContext, useState } from "react";
