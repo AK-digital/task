@@ -44,6 +44,7 @@ export default function ProjectTitle({ project }) {
 
   async function handleDeleteProject() {
     socket.emit("redirect-project", project?._id);
+    socket.emit("update-project", null, project?._id);
 
     const response = await deleteProject(project?._id);
 

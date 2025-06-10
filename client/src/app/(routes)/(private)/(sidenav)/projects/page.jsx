@@ -5,7 +5,8 @@ import ProjectCard from "@/components/Projects/ProjectCard";
 import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
 import { useProjects } from "@/app/hooks/useProjects";
 import { AuthContext } from "@/context/auth";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import socket from "@/utils/socket";
 
 export default function Projects() {
   const { uid } = useContext(AuthContext);
@@ -18,6 +19,18 @@ export default function Projects() {
 
     return bIsFavorite - aIsFavorite;
   });
+
+  useEffect(() => {
+    function handleProjectUpdate() {
+      mutateProjects();
+    }
+
+    socket.on("project-updated", handleProjectUpdate);
+
+    return () => {
+      socket.off("project-updated", handleProjectUpdate);
+    };
+  }, []);
 
   return (
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">
