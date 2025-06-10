@@ -5,6 +5,8 @@ import useSWR from "swr";
 export function useTasks(queries, fallbackData = null) {
   const fetcher = getTasks.bind(null, queries);
 
+  console.log(generateUrlParams(queries));
+
   const options = {
     revalidateOnFocus: false,
     revalidateOnMount: true,

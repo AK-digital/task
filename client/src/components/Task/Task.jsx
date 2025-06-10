@@ -13,7 +13,7 @@ import TaskRemove from "./TaskRemove";
 import TaskConversation from "./TaskConversation";
 import TaskCheckbox from "./TaskCheckbox";
 import TaskDrag from "./TaskDrag";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskMore from "./TaskMore";
 import { useSortable } from "@dnd-kit/sortable";
@@ -67,7 +67,9 @@ export default function Task({
     <div
       ref={setNodeRef}
       style={style}
-      className={`container_Task flex items-center border-t border-text-color h-[46px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] hover:shadow-[0_4px_2px_-2px_rgba(0,0,0,0.1)] ${isDragging ? "opacity-0" : ""}`}
+      className={`container_Task flex items-center border-t border-text-color h-[46px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] hover:shadow-[0_4px_2px_-2px_rgba(0,0,0,0.1)] ${
+        isDragging ? "opacity-0" : ""
+      }`}
       suppressHydrationWarning
       data-openned={openedTask === task?._id}
       data-done={task?.status === "Terminée"}
@@ -78,7 +80,10 @@ export default function Task({
       )}
       {/* Drag */}
       {isDrag && (
-        <div className="data-[drag=false]:cursor-[inherit]! data-[drag=false]:invisible" data-drag={canDrag}>
+        <div
+          className="data-[drag=false]:cursor-[inherit]! data-[drag=false]:invisible"
+          data-drag={canDrag}
+        >
           <TaskDrag attributes={attributes} listeners={listeners} />
         </div>
       )}

@@ -40,8 +40,8 @@ export async function updateRoleUserInvitation(req, res, next) {
     }
 
     const projectInvitation = await ProjectInvitationModel.findOneAndUpdate(
-      { guestEmail: req.body.email },
-      { role: req.body.role },
+      { _id: req.params.id },
+      { role: role },
       { new: true, setDefaultsOnInsert: true }
     );
 
