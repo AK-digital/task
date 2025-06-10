@@ -134,8 +134,35 @@ export default function socketHandler(io) {
       );
     });
 
+    socket.on("update template", async (projectId) => {
+      const project = await ProjectModel.findById({ _id: projectId });
+      if (!project) return;
+      await emitToProjectMembers(projectId, "template updated", socket);
+    });
+
     socket.on("update task", async (projectId) => {
       await emitToProjectMembers(projectId, "task updated", socket);
+    });
+
+    socket.on("archive board", async (data) => {
+      const { projectId, action } = data;
+      let firstEvent;
+      let secondEvent;
+
+      if (!projectId) return;
+
+      if (action === "archive") {
+        firstEvent = "board updated";
+        secondEvent = "task updated";
+      } else if (action === "restore") {
+        firstEvent = "task updated";
+        secondEvent = "board updated";
+      }
+
+      await Promise.all([
+        emitToProjectMembers(projectId, firstEvent, socket),
+        emitToProjectMembers(projectId, secondEvent, socket),
+      ]);
     });
 
     socket.on("update message", async (projectId) => {
@@ -171,6 +198,20 @@ export default function socketHandler(io) {
           trackingId
         );
       }
+    });
+
+    socket.on("redirect-project", async (projectId) => {
+      const project = await ProjectModel.findById({ _id: projectId });
+
+      if (!project) return;
+
+      await Promise.all(
+        project?.members?.map(async (member) => {
+          const user = await getCachedUser(member?.user);
+          if (!user) return;
+          io.to(user?.socketId).emit("project-redirected");
+        })
+      );
     });
   });
 }
