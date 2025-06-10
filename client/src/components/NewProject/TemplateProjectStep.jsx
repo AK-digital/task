@@ -1,61 +1,53 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { getTemplates, useTemplate, useCustomTemplate, deleteTemplate } from "@/api/template";
+import { getTemplates, useTemplate, useCustomTemplate, deleteTemplate, getPublicTemplates } from "@/api/template";
 import { List, ListTodo, X, Plus } from "lucide-react";
+import { usePrivateTemplate } from "@/app/hooks/usePrivateTemplate";
+import { usePublicTemplate } from "@/app/hooks/usePublicTemplate";
+import { isNotEmpty } from "@/utils/utils";
+import { AuthContext } from "@/context/auth";
 
 export default function TemplateProjectStep({ onComplete }) {
-  const [templates, setTemplates] = useState([]);
+  const { uid } = useContext(AuthContext)
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [deletingTemplate, setDeletingTemplate] = useState(null);
-  
+
   // États pour l'édition
   const [editableProjectName, setEditableProjectName] = useState("");
   const [editableBoards, setEditableBoards] = useState([]);
-  
+
   // États pour l'édition des titres
   const [editingProjectTitle, setEditingProjectTitle] = useState(false);
   const [editingBoardTitle, setEditingBoardTitle] = useState(null); // index du board en cours d'édition
-  
-  const router = useRouter();
 
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const response = await getTemplates();
-        if (response?.success && response?.data) {
-          setTemplates(response.data);
-          // Sélectionner le premier modèle par défaut
-          if (response.data.length > 0) {
-            setSelectedTemplate(response.data[0]);
-          }
-        } else {
-          setError("Aucun modèle disponible");
-        }
-      } catch (err) {
-        setError("Erreur lors du chargement des modèles");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [showPrivateTemplate, setShowPrivateTemplate] = useState(false);
 
-    fetchTemplates();
-  }, []);
+  const { privateTemplates, mutatePrivateTemplates } = usePrivateTemplate(true);
+  const { publicTemplates, mutatePublicTemplates } = usePublicTemplate(false);
+
+  console.log(publicTemplates, "publicTemplates");
+  console.log(privateTemplates, "privateTemplates");
+
+  // Sélectionner automatiquement le premier template public
+  const shouldShowFirstTemplate = !selectedTemplate && publicTemplates?.length > 0;
+
+  if (shouldShowFirstTemplate) {
+    setTimeout(() => handleTemplateSelect(publicTemplates[0]), 0);
+  }
 
   const handleTemplateSelect = (template) => {
     setSelectedTemplate(template);
     setShowPreview(true);
-    
+
     // Initialiser les données éditables
     setEditableProjectName(template.name);
     setEditableBoards(template.boardsWithTasks?.map(board => ({
       ...board,
       tasks: board.tasks?.map(task => ({ ...task })) || []
     })) || []);
-    
+
     // Réinitialiser les états d'édition
     setEditingProjectTitle(false);
     setEditingBoardTitle(null);
@@ -133,25 +125,19 @@ export default function TemplateProjectStep({ onComplete }) {
     if (!confirm(`Êtes-vous sûr de vouloir supprimer le modèle "${templateName}" ? Cette action est irréversible.`)) {
       return;
     }
-    
+
     setDeletingTemplate(templateId);
     try {
       const result = await deleteTemplate(templateId);
       if (result?.success) {
-        // Mettre à jour la liste des modèles
-        const updatedTemplates = templates.filter(t => t._id !== templateId);
-        setTemplates(updatedTemplates);
-        
+        // Actualiser les données via les hooks
+        mutatePrivateTemplates();
+        mutatePublicTemplates();
+
         // Si le modèle supprimé était sélectionné, réinitialiser la sélection
         if (selectedTemplate?._id === templateId) {
-          if (updatedTemplates.length > 0) {
-            setSelectedTemplate(updatedTemplates[0]);
-            // Garder la preview ouverte avec le nouveau modèle sélectionné
-            handleTemplateSelect(updatedTemplates[0]);
-          } else {
-            setSelectedTemplate(null);
-            setShowPreview(false);
-          }
+          setSelectedTemplate(null);
+          setShowPreview(false);
         }
       } else {
         alert("Erreur lors de la suppression du modèle");
@@ -166,7 +152,7 @@ export default function TemplateProjectStep({ onComplete }) {
 
   const handleUseTemplate = () => {
     if (!selectedTemplate || !editableProjectName.trim()) return;
-    
+
     // Passer les données à l'étape 3
     onComplete({
       type: 'template',
@@ -176,80 +162,132 @@ export default function TemplateProjectStep({ onComplete }) {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
-        <div className="flex justify-center items-center h-full text-lg text-text-color-muted">Chargement des modèles...</div>
-      </div>
-    );
-  }
-
-  if (error && templates.length === 0) {
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
-        <div className="flex justify-center items-center h-full text-lg text-red-700">{error}</div>
-      </div>
-    );
-  }
+  const bothNotEmpty = isNotEmpty(publicTemplates) && isNotEmpty(privateTemplates)
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
       {/* Colonne de gauche - Liste des modèles */}
-      <div className="bg-secondary rounded-xl shadow-sm p-6 flex flex-col overflow-hidden">
-        <h3 className="text-xl font-semibold mb-6 text-text-dark-color">Modèles disponibles</h3>
-        {templates.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
-            <p className="font-semibold text-text-dark-color mb-2">Aucun modèle disponible</p>
-            <p className="text-sm leading-relaxed">Créez d'abord des modèles depuis vos projets existants.</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3 overflow-y-auto flex-1 p-1">
-            {templates.map((template) => (
-            <button
-              key={template._id}
-              className={`bg-primary rounded-lg p-4 cursor-pointer transition-all duration-200 text-left w-full shadow-sm hover:bg-secondary hover:shadow-md ${
-                selectedTemplate?._id === template._id ? 'bg-secondary shadow-[0_0_0_2px_var(--accent-color)] border border-accent-color' : ""
-              }`}
-              onClick={() => handleTemplateSelect(template)}
-              type="button"
-            >
-              <div className="w-full">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="text-base font-semibold text-text-dark-color">{template.name}</h4>
-                  {template.creator?.picture && (
-                    <img 
-                      src={template.creator.picture} 
-                      alt={template.creator.name}
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                  )}
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-4 text-sm text-text-color-muted">
-                    <span className="flex items-center gap-1">
-                      <List size={16} />
-                      {template.boardsCount} tableaux
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <ListTodo size={16} />
-                      {template.tasksCount} tâches
-                    </span>
+      <div className="flex flex-col gap-4 bg-secondary rounded-xl shadow-sm p-6 overflow-hidden">
+        <h2 className="text-xl font-semibold mb-6 text-text-dark-color">Modèles Disponible</h2>
+        <div className="flex items-center justify-center rounded-lg border border-border-color">
+          <button
+            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tl-lg rounded-bl-lg rounded-none ${showPrivateTemplate ? 'bg-white' : 'bg-primary'}`}
+            onClick={() => setShowPrivateTemplate(false)}
+          >
+            <div className="flex justify-center items-center">
+              <p className="text-normal font-medium text-text-dark-color">La communauté</p>
+            </div>
+          </button>
+          <button
+            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tr-lg rounded-br-lg rounded-none ${showPrivateTemplate ? 'bg-primary' : 'bg-white'}`}
+            onClick={() => setShowPrivateTemplate(true)}
+          >
+            <div className="flex justify-center items-center">
+              <p className="text-normal font-medium text-text-dark-color">Les vôtres</p>
+            </div>
+          </button>
+        </div>
+        <div className="flex flex-col gap-3 overflow-y-auto flex-1">
+          {bothNotEmpty ? (
+            <>
+              {showPrivateTemplate && privateTemplates?.length > 0 && (
+                <>
+                  <div className={`flex flex-col gap-3 overflow-y-auto flex-1 ${privateTemplates?.length > 5 ? 'pr-1' : ''}`}>
+                    {privateTemplates.map((template) => (
+                      <button
+                        key={template._id}
+                        onClick={() => handleTemplateSelect(template)}
+                        type="button"
+                        className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${selectedTemplate?._id === template._id ? 'bg-primary shadow-[0_0_0_2px_var(--accent-color)]' : 'bg-white hover:bg-primary hover:shadow-md'}`}>
+                        <div className="w-full">
+                          <div className="flex justify-between items-center mb-2">
+                            <h4 className="text-base font-semibold text-text-dark-color">{template.name}</h4>
+                            {template.creator?.picture && (
+                              <img
+                                src={template.creator.picture}
+                                alt={template.creator.name}
+                                className="w-6 h-6 rounded-full object-cover"
+                              />
+                            )}
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="flex gap-4 text-sm text-text-color-muted">
+                              <span className="flex items-center gap-1">
+                                <List size={16} />
+                                {template.boardsCount} tableaux
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <ListTodo size={16} />
+                                {template.tasksCount} tâches
+                              </span>
+                            </div>
+                            {template.createdAt && (
+                              <div className="text-xs text-text-color-muted">
+                                {new Date(template.createdAt).toLocaleDateString('fr-FR')}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
                   </div>
-                  {template.createdAt && (
-                    <div className="text-xs text-text-color-muted">
-                      {new Date(template.createdAt).toLocaleDateString('fr-FR')}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </button>
-                      ))}
-          </div>
-        )}
-      </div>
+                </>
+              )}
+              {!showPrivateTemplate && publicTemplates?.length > 0 && (
+                <>
+                  <div className={`flex flex-col gap-3 overflow-y-auto flex-1 ${publicTemplates?.length > 5 ? 'pr-1' : ''}`}>
+                    {publicTemplates.map((template) => (
+                      <button
+                        key={template._id}
+                        onClick={() => handleTemplateSelect(template)}
+                        type="button"
+                        className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${selectedTemplate?._id === template._id ? 'bg-primary shadow-[0_0_0_2px_var(--accent-color)]' : 'bg-white hover:bg-primary hover:shadow-md'}`}>
+                        <div className="w-full">
+                          <div className="flex justify-between items-center mb-2">
+                            <h4 className="text-base font-semibold text-text-dark-color">{template.name}</h4>
+                            {template.creator?.picture && (
+                              <img
+                                src={template.creator.picture}
+                                alt={template.creator.name}
+                                className="w-6 h-6 rounded-full object-cover"
+                              />
+                            )}
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="flex gap-4 text-sm text-text-color-muted">
+                              <span className="flex items-center gap-1">
+                                <List size={16} />
+                                {template.boardsCount} tableaux
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <ListTodo size={16} />
+                                {template.tasksCount} tâches
+                              </span>
+                            </div>
+                            {template.createdAt && (
+                              <div className="text-xs text-text-color-muted">
+                                {new Date(template.createdAt).toLocaleDateString('fr-FR')}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
+              <p className="font-semibold text-text-dark-color mb-2">Aucun modèle disponible</p>
+              <p className="text-sm leading-relaxed">Créez d'abord des modèles depuis vos projets existants.</p>
+            </div>
+          )}
+        </div>
+      </div >
 
       {/* Colonne de droite - Preview */}
-      <div className="bg-secondary rounded-xl shadow-sm p-8 overflow-y-auto relative">
+      < div className="bg-secondary rounded-xl shadow-sm p-8 overflow-y-auto relative" >
         {!showPreview ? (
           <div className="flex justify-center items-center h-full text-text-color-muted text-lg">
             <p>Sélectionnez un modèle pour voir l'aperçu</p>
@@ -268,7 +306,7 @@ export default function TemplateProjectStep({ onComplete }) {
                   </button>
                 </div>
               </div>
-              
+
               <div className="bg-primary rounded-lg mx-8 mb-4 p-6 shadow-sm relative z-[2] flex-1 overflow-y-auto">
                 <div className="text-lg mb-6 pb-4 border-b border-border-color text-text-dark-color flex items-center gap-3">
                   <strong>Nom du projet :</strong>
@@ -284,7 +322,7 @@ export default function TemplateProjectStep({ onComplete }) {
                       autoFocus
                     />
                   ) : (
-                    <span 
+                    <span
                       className="flex-1 py-2 px-3 text-base text-text-dark-color cursor-pointer rounded-md transition-all duration-200 bg-transparent hover:bg-primary"
                       onClick={handleProjectTitleClick}
                     >
@@ -292,13 +330,13 @@ export default function TemplateProjectStep({ onComplete }) {
                     </span>
                   )}
                 </div>
-                
+
                 {selectedTemplate.description && (
                   <div className="text-base mb-6 pb-4 border-b border-border-color text-text-dark-color">
                     <strong>Description :</strong> {selectedTemplate.description}
                   </div>
                 )}
-                
+
                 {editableBoards?.map((board, i) => (
                   <div key={i} className="mb-6">
                     <div className="mb-3">
@@ -314,7 +352,7 @@ export default function TemplateProjectStep({ onComplete }) {
                           autoFocus
                         />
                       ) : (
-                        <h4 
+                        <h4
                           className="text-base font-semibold text-accent-color cursor-pointer py-2 px-3 rounded-md transition-all duration-200 bg-transparent hover:bg-primary"
                           onClick={() => handleBoardTitleClick(i)}
                         >
@@ -358,21 +396,23 @@ export default function TemplateProjectStep({ onComplete }) {
                     </ul>
                   </div>
                 ))}
-                
-                {error && <div className="text-red-700 bg-red-50 rounded-md p-3 mt-4 text-sm border border-red-200">{error}</div>}
+
+
               </div>
-              
-              <a
-                className="text-text-color-red cursor-pointer underline text-small self-start ml-8 mb-4 hover:no-underline"
-                onClick={() => handleDeleteTemplate(selectedTemplate._id, selectedTemplate.name)}
-                style={{ opacity: deletingTemplate === selectedTemplate._id ? 0.6 : 1, pointerEvents: deletingTemplate === selectedTemplate._id ? 'none' : 'auto' }}
-              >
-                {deletingTemplate === selectedTemplate._id ? "Suppression..." : "Supprimer le modèle"}
-              </a>
+
+              {selectedTemplate?.author?.toString() === uid && (
+                <a
+                  className="text-text-color-red cursor-pointer underline text-small self-start ml-8 mb-4 hover:no-underline"
+                  onClick={() => handleDeleteTemplate(selectedTemplate._id, selectedTemplate.name)}
+                  style={{ opacity: deletingTemplate === selectedTemplate._id ? 0.6 : 1, pointerEvents: deletingTemplate === selectedTemplate._id ? 'none' : 'auto' }}
+                >
+                  {deletingTemplate === selectedTemplate._id ? "Suppression..." : "Supprimer le modèle"}
+                </a>
+              )}
             </div>
           )
         )}
-      </div>
-    </div>
+      </div >
+    </div >
   );
 } 
