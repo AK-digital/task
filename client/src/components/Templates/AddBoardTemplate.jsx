@@ -1,6 +1,8 @@
 import { saveBoardTemplate } from "@/actions/boardTemplate";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useActionState, useEffect, useState } from "react";
+import socket from "@/utils/socket";
+import { mutate } from "swr";
 
 const initialState = {
   success: null,
@@ -19,6 +21,8 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   useEffect(() => {
     if (state?.success) {
       setAddTemplate(false);
+      mutate(`/board-template`);
+      socket.emit("update template", project?._id);
     }
 
     if (state?.success === false) {
@@ -74,7 +78,10 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
           </button>
         </form>
       </div>
-      <div className="modal-layout" onClick={(e) => setAddTemplate(false)}></div>
+      <div
+        className="modal-layout"
+        onClick={(e) => setAddTemplate(false)}
+      ></div>
       {popup && (
         <PopupMessage
           status={popup.status}

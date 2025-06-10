@@ -86,12 +86,22 @@ export default function BoardHeader({
     e.preventDefault();
     await addBoardToArchive(board?._id, project?._id);
 
-    await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+    mutate(`/boards?projectId=${project?._id}&archived=false`);
+    socket.emit("archive board", {
+      projectId: project?._id,
+      action: "archive",
+    });
   }
 
   async function handleRestoreArchive(e) {
     e.preventDefault();
     await removeBoardFromArchive(board?._id, project?._id);
+
+    mutate(`/task?projectId=${project?._id}&archived=true`);
+    socket.emit("archive board", {
+      projectId: project?._id,
+      action: "restore",
+    });
   }
 
   async function handleDeleteBoard(e) {
@@ -99,7 +109,7 @@ export default function BoardHeader({
 
     if (!response?.success) return;
 
-    await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+    socket.emit("update board", board?.projectId);
   }
 
   const options = [

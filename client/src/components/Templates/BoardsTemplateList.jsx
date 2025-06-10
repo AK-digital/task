@@ -6,13 +6,19 @@ import {
 } from "@/api/boardTemplate";
 import { isNotEmpty } from "@/utils/utils";
 import useSWR, { mutate } from "swr";
+import socket from "@/utils/socket";
+import { useEffect } from "react";
 
 export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
   const { data: boardsTemplates } = useSWR(
     "/board-template",
     getBoardsTemplates
   );
-  const templates = boardsTemplates?.data || [];
+  let templates = boardsTemplates?.data || [];
+
+  useEffect(() => {
+    templates = boardsTemplates?.data || [];
+  }, [boardsTemplates]);
 
   async function handleUseBoardTemplate(e, templateId) {
     e.preventDefault();
@@ -21,8 +27,9 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
 
     if (!response.success) return;
 
-    await mutate(`/boards?projectId=${project?._id}&archived=false`);
     await mutate(`/task?projectId=${project?._id}&archived=false`);
+    socket.emit("update board", project?._id);
+    socket.emit("update task", project?._id);
 
     setAddBoardTemplate(false);
   }
@@ -31,6 +38,8 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
     await deleteBoardTemplate(templateId);
 
     await mutate("/board-template");
+    socket.emit("update template", project?._id);
+    socket.emit("update board", project?._id);
   }
 
   return (
@@ -44,7 +53,10 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
           {isNotEmpty(templates) ? (
             <ul className="flex flex-col gap-3">
               {templates.map((template) => (
-                <li key={template._id} className="flex items-center justify-between">
+                <li
+                  key={template._id}
+                  className="flex items-center justify-between"
+                >
                   <div>
                     <span>{template.name}</span>
                   </div>
@@ -76,7 +88,10 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
           )}
         </div>
       </div>
-      <div className="modal-layout" onClick={() => setAddBoardTemplate(false)}></div>
+      <div
+        className="modal-layout"
+        onClick={() => setAddBoardTemplate(false)}
+      ></div>
     </>
   );
 }

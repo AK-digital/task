@@ -49,6 +49,9 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   // Transformer les résultats en un objet avec les tâches par board
   const initialTasksData = useMemo(() => {
+    if (!tasksData || !Array.isArray(tasksData)) {
+      return {};
+    }
     return tasksData.reduce((acc, task) => {
       const boardId = task.boardId?._id.toString();
       if (!acc[boardId]) acc[boardId] = [];
@@ -63,7 +66,7 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   // Mettre à jour l'état local quand les données tasksData changent
   useEffect(() => {
-    if (tasksData?.length > 0) {
+    if (tasksData && Array.isArray(tasksData) && tasksData.length > 0) {
       // Mettre à jour l'état local avec les données provenant de SWR
       const updatedTasksByBoard = tasksData.reduce((acc, task) => {
         const boardId = task.boardId.toString();
@@ -85,19 +88,25 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   useEffect(() => {
     const handleTaskUpdate = async () => {
-      await mutateTasks();
+      mutateTasks();
     };
 
     const handleBoardUpdate = async () => {
       mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
     };
 
+    const handleTemplateUpdate = async () => {
+      mutate(`/board-template`);
+    };
+
     socket.on("task updated", handleTaskUpdate);
     socket.on("board updated", handleBoardUpdate);
+    socket.on("template updated", handleTemplateUpdate);
 
     return () => {
       socket.off("task updated", handleTaskUpdate);
       socket.off("board updated", handleBoardUpdate);
+      socket.off("template updated", handleTemplateUpdate);
     };
   }, [socket, project, archive]);
 
