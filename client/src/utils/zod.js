@@ -49,3 +49,10 @@ export const userUpdateValidation = z.object({
     .optional()
     .nullable(),
 });
+
+export const feedbackValidation = z.object({
+  message: z
+    .string()
+    .min(1, "Le message doit contenir au moins 1 caractères")
+    .max(1200, "Le message ne peut pas dépasser 1200 caractères"),
+});

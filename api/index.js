@@ -24,6 +24,7 @@ import favoriteRouter from "./routes/favorite.routes.js";
 import betaRouter from "./routes/beta.routes.js";
 import socketHandler from "./utils/socket.js";
 import aiRouter from "./routes/ai.routes.js";
+import feedbackRouter from "./routes/feedback.routes.js";
 
 const app = express();
 const server = createServer(app);
@@ -71,7 +72,7 @@ app.use("/api/draft", draftRouter);
 app.use("/api/time-tracking", timeTrackingRouter);
 app.use("/api/ai", aiRouter);
 app.use("/api/favorite", favoriteRouter);
-
+app.use("/api/feedback", feedbackRouter);
 app.use("/api/beta", betaRouter);
 
 // SOCKET LOGIC

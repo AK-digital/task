@@ -12,6 +12,28 @@ const emailStyles = {
   highlight: "color: #a87e51;",
 };
 
+export function emailFeedback(user, note, feedback) {
+  const templates = {
+    subject: "Nouveau feedback d'un utilisateur",
+    text: `
+      <div style="${emailStyles.container}">
+        <h1 style="${emailStyles.title}">Nouveau feedback</h1>
+        <p style="${emailStyles.paragraph}">Bonjour,</p>
+        <p style="${emailStyles.content}">Un nouvel utilisateur vient de nous envoyer un feedback !</p>
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #a87e51;">
+          <p style="margin: 0; font-size: 18px; font-weight: 500;">
+            Email : <span style="${emailStyles.highlight}">${user?.email}</span>
+          </p>
+        </div>
+        <p style="${emailStyles.content}">Voici le feedback :</p>
+        <p style="${emailStyles.content}">Note : ${note}</p>
+        <p style="${emailStyles.content}">${feedback}</p>
+      </div>
+    `,
+  };
+  return templates;
+}
+
 export function emailBetaRequest(link) {
   const templates = {
     subject: "Demande de participation à la beta - Confirmation requise",

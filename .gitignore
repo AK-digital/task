@@ -6,3 +6,4 @@
 /client/node_modules
 /client/.next
 /.history
+/.vscode

@@ -9,7 +9,7 @@ import DisplayPicture from "@/components/User/DisplayPicture";
 import { useProjectContext } from "@/context/ProjectContext";
 
 export default function ProjectHeader({ displayedFilters }) {
-  const { project, mutateProject, queries, setQueries } = useProjectContext();
+  const { project, mutateProject } = useProjectContext();
   const [isOpen, setIsOpen] = useState(false);
   const members = project?.members;
 

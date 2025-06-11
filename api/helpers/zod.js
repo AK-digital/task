@@ -59,3 +59,10 @@ export const betaRequestValidation = z.object({
     .max(50)
     .regex(regex.email, "L'adresse mail saisie est invalide"),
 });
+
+export const feedbackValidation = z.object({
+  message: z
+    .string()
+    .min(1)
+    .max(1200, "Le message ne peut pas dépasser 1200 caractères"),
+});
