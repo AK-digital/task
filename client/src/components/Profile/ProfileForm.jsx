@@ -1,8 +1,6 @@
 "use client";
-import styles from "@/styles/components/profile/profile-form.module.css";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { updateUserProfile } from "@/actions/user";
-import { bricolageGrostesque } from "@/utils/font";
 import { translateValidationErrors } from "@/utils/zod";
 import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
@@ -74,7 +72,11 @@ export default function ProfileForm() {
         <input type="hidden" name="userId" defaultValue={user?._id} />
 
         <div className="form-group">
-          <label htmlFor="firstName" data-active={firstName ? true : false}>
+          <label
+            className="select-none"
+            htmlFor="firstName"
+            data-active={firstName ? true : false}
+          >
             {t("profile.first_name")}
           </label>
           <input
@@ -82,18 +84,18 @@ export default function ProfileForm() {
             id="firstName"
             name="firstName"
             defaultValue={user?.firstName || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setFirstName(e.target.value)}
+            className="font-bricolage text-medium focus:outline-none"
           />
-          {state?.errors?.firstName && (
-            <span className={styles.error}>
-              {translateValidationErrors(state.errors.firstName, t)}
-            </span>
-          )}
+          {state?.errors?.firstName && <span>{state.errors.firstName}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="lastName" data-active={lastName ? true : false}>
+          <label
+            className="select-none"
+            htmlFor="lastName"
+            data-active={lastName ? true : false}
+          >
             {t("profile.last_name")}
           </label>
           <input
@@ -101,18 +103,20 @@ export default function ProfileForm() {
             id="lastName"
             name="lastName"
             defaultValue={user?.lastName || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setLastName(e.target.value)}
+            className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.lastName && (
-            <span className={styles.error}>
-              {translateValidationErrors(state.errors.lastName, t)}
-            </span>
+            <span>{translateValidationErrors(state.errors.lastName, t)}</span>
           )}
         </div>
 
         <div className="form-group">
-          <label htmlFor="company" data-active={company ? true : false}>
+          <label
+            className="select-none"
+            htmlFor="company"
+            data-active={company ? true : false}
+          >
             {t("profile.company")}
           </label>
           <input
@@ -120,18 +124,20 @@ export default function ProfileForm() {
             id="company"
             name="company"
             defaultValue={user?.company || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setCompany(e.target.value)}
+            className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.company && (
-            <span className={styles.error}>
-              {translateValidationErrors(state.errors.company, t)}
-            </span>
+            <span>{translateValidationErrors(state.errors.company, t)}</span>
           )}
         </div>
 
         <div className="form-group">
-          <label htmlFor="position" data-active={position ? true : false}>
+          <label
+            className="select-none"
+            htmlFor="position"
+            data-active={position ? true : false}
+          >
             {t("profile.position")}
           </label>
           <input
@@ -139,19 +145,17 @@ export default function ProfileForm() {
             id="position"
             name="position"
             defaultValue={user?.position || ""}
-            className={`${bricolageGrostesque.className} ${styles.input}`}
             onChange={(e) => setPosition(e.target.value)}
+            className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.position && (
-            <span className={styles.error}>
-              {translateValidationErrors(state.errors.position, t)}
-            </span>
+            <span>{translateValidationErrors(state.errors.position, t)}</span>
           )}
         </div>
         <button
           type="submit"
-          className={`${bricolageGrostesque.className} ${styles.submitBtn}`}
           data-disabled={pending}
+          className="font-bricolage ml-auto mt-6"
         >
           {t("profile.update_button")}
         </button>

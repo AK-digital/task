@@ -1,5 +1,4 @@
 import { useProjects } from "@/app/hooks/useProjects";
-import styles from "@/styles/components/tasks/tasks-select-project.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import { ChevronDown, FolderOpenDot, Undo } from "lucide-react";
 import Image from "next/image";
@@ -35,9 +34,11 @@ export default function TasksProjectFilter({ queries, setQueries }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="relative">
       <div
-        className={styles.current}
+        className={`flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[195px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${
+          isOpen ? "bg-[#f9f7efb3] shadow-small" : ""
+        }`}
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
       >
@@ -48,25 +49,36 @@ export default function TasksProjectFilter({ queries, setQueries }) {
             height={18}
             quality={100}
             alt={`${t("projects.project_logo_alt")} ${theProject?.name}`}
+            className="rounded-full"
           />
         ) : (
           <FolderOpenDot size={16} />
         )}
-        <span>{theProject?.name || t("projects.choose_project")} </span>
-        <ChevronDown size={16} />
+        <span className="max-w-[140px] flex-1 whitespace-nowrap text-ellipsis overflow-hidden block">
+          {theProject?.name || t("projects.choose_project")}
+        </span>
+        <ChevronDown
+          size={16}
+          className={`transition-all duration-[120ms] ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </div>
       {isOpen && (
-        <div className={styles.dropdown}>
+        <div className="absolute top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full z-[9991]">
           {isNotEmpty(projects) ? (
             <ul>
-              <li className={styles.item} onClick={() => handleSelectProject()}>
+              <li
+                className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+                onClick={() => handleSelectProject()}
+              >
                 <Undo size={16} />
                 {t("tasks.remove_filters")}
               </li>
               {projects.map((project) => (
                 <li
                   key={project._id}
-                  className={styles.item}
+                  className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
                   onClick={() => handleSelectProject(project._id)}
                 >
                   <Image
@@ -74,8 +86,11 @@ export default function TasksProjectFilter({ queries, setQueries }) {
                     width={24}
                     height={24}
                     alt={`${t("projects.project_logo_alt")} ${project?.name}`}
+                    className="rounded-full"
                   />
-                  <span>{project?.name}</span>
+                  <span className="whitespace-nowrap text-ellipsis overflow-hidden block">
+                    {project?.name}
+                  </span>
                 </li>
               ))}
             </ul>

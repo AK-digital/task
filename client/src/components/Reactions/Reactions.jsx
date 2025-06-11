@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/reactions/reactions.module.css";
 import { groupReactionsByEmoji, isNotEmpty } from "@/utils/utils";
 import AddReactions from "./AddReactions";
 import socket from "@/utils/socket";
@@ -79,7 +78,7 @@ export default function Reactions({
   }
 
   return (
-    <div className={styles.container}>
+    <div className="flex items-center gap-2">
       {isNotEmpty(element?.reactions) &&
         uniqueReactions.map((reaction, idx) => {
           const emoji = reaction?.emoji;
@@ -89,14 +88,14 @@ export default function Reactions({
           return (
             <div
               key={idx}
-              className={styles.wrapper}
               onClick={() => handleReactionClick(emoji)}
               onMouseEnter={() => setHoveredEmoji(emoji)}
               onMouseLeave={() => setHoveredEmoji(null)}
               title={hasUserReacted ? t("tasks.remove_reaction") : ""}
+              className="relative flex items-center gap-1 p-1 text-center bg-secondary rounded-sm transition-all duration-200 ease-in-out cursor-pointer hover:shadow-small"
             >
-              <span className={styles.emojiIcon}>{emoji}</span>
-              <span className={styles.emojiCount}>{total}</span>
+              <span>{emoji}</span>
+              <span>{total}</span>
               {/* Affichage des avatars des utilisateurs qui ont réagi */}
               {hoveredEmoji === emoji && <UsersInfo users={users} />}
             </div>

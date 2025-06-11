@@ -1,6 +1,5 @@
 "use client";
 import ProjectHeader from "@/layouts/ProjectHeader";
-import styles from "@/styles/pages/project.module.css";
 import Boards from "@/components/Boards/Boards";
 import { useEffect } from "react";
 import socket from "@/utils/socket";
@@ -32,7 +31,7 @@ export default function Project() {
   }, [socket]);
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col bg-[#dad6c799] min-h-full h-full rounded-tl-2xl pt-6 pl-6 pr-3 pb-0">
       <ProjectHeader displayedFilters={displayedFilters} />
       <Boards boards={boards} tasksData={tasks} />
     </div>

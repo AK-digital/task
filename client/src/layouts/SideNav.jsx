@@ -1,6 +1,5 @@
 "use client";
-import styles from "@/styles/layouts/side-nav.module.css";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   ArrowLeftFromLine,
@@ -12,7 +11,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import moment from "moment";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
@@ -20,6 +18,7 @@ import { useTranslation } from "react-i18next";
 
 export default function SideNav() {
   const { t } = useTranslation();
+  const pathname = usePathname();
   const params = useParams();
   const { slug } = params;
   const id = slug ? slug[0] : null;
@@ -28,36 +27,54 @@ export default function SideNav() {
   const projects = favorites?.map((favorite) => favorite.project);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const firstDayOfTheMonth = moment().startOf("month").format("YYYY-MM-DD");
-  const lastDayOfTheMonth = moment().endOf("month").format("YYYY-MM-DD");
+  const isProjectsPage = pathname === "/projects";
+  const isTasksPage = pathname === "/tasks";
+  const isTimesPage = pathname === "/times";
 
   return (
-    <aside className={styles.container} data-open={isMenuOpen}>
-      <div className={styles.wrapper}>
-        <div className={styles.top}>
-          <Image
-            src={"/clynt-logo-dark.svg"}
-            width={32}
-            height={32}
-            alt={t("navigation.logo_alt")}
-            className={styles.logo}
-          />
+    <aside
+      data-open={isMenuOpen}
+      className="container_SideNav min-w-aside-width w-aside-width transition-[width,min-width] duration-[150ms] ease-linear select-none data-[open=true]:w-[220px] data-[open=true]:min-w-[220px]"
+    >
+      <div className="wrapper_SideNav fixed top-0 min-w-aside-width flex flex-col justify-between gap-2 w-aside-width pt-[22px] pr-0 pb-8 pl-[11px] h-full transition-[width,min-width] duration-[150ms] ease-linear bg-[#2a3730] [&_a]:no-underline">
+        <div>
+          <Link href={"/projects"}>
+            <Image
+              src={"/clynt-logo-dark.svg"}
+              width={32}
+              height={32}
+              alt={t("navigation.logo_alt")}
+              className="block ml-[5px] mr-auto"
+            />
+          </Link>
           <div
-            className={styles.openArrow}
             onClick={(e) => setIsMenuOpen(!isMenuOpen)}
+            className="flex justify-center items-center w-[42px] h-[42px] min-h-[42px] cursor-pointer rounded-full text-text-color my-5 hover:text-accent-color-hover"
           >
             {isMenuOpen && <ArrowLeftFromLine size={24} />}
             {!isMenuOpen && <ArrowRightFromLine size={24} />}
           </div>
-          <div className={styles.myTasks}>
-            <Link href={"/tasks"} title={t("navigation.my_tasks")}>
-              <div>
-                <ClipboardList size={24} />
+          <div className="flex justify-start items-center -mt-3 mb-[18px]">
+            <Link
+              href={"/tasks"}
+              title={t("navigation.my_tasks")}
+              data-active={isTasksPage}
+              className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+            >
+              <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+                <ClipboardList
+                  size={24}
+                  className="bg-transparent text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+                />
               </div>
-              <span>{t("navigation.my_tasks")}</span>
+              {isMenuOpen && (
+                <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                  {t("navigation.my_tasks")}
+                </span>
+              )}
             </Link>
           </div>
-          <nav className={styles.nav}>
+          <nav className="relative flex flex-col gap-2 flex-1 max-h-[60svh] overflow-y-auto scroll-smooth">
             {favoritesLoading ? (
               <ProjectSideNavSkeleton />
             ) : (
@@ -72,31 +89,56 @@ export default function SideNav() {
             )}
           </nav>
         </div>
-        <div className={styles.actions}>
-          <Link href={"/projects"} data-active={projectId === ""}>
-            <div>
-              <LayoutGrid size={24} />
+        <div className="flex justify-center items-start flex-col gap-3 min-w-10 rounded-full">
+          <Link
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+            href={"/projects"}
+            data-active={isProjectsPage}
+          >
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <LayoutGrid
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
             </div>
-            <span>{t("navigation.my_projects")}</span>
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                {t("navigation.my_projects")}
+              </span>
+            )}
           </Link>
           <Link
-            href={
-              "/times?startingDate=" +
-              firstDayOfTheMonth +
-              "&endingDate=" +
-              lastDayOfTheMonth
-            }
+            href={"/times"}
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+            data-active={isTimesPage}
           >
-            <div>
-              <Clock3 size={24} />
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <Clock3
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
             </div>
-            <span>{t("navigation.time_tracking")}</span>
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                {t("navigation.time_tracking")}
+              </span>
+            )}
           </Link>
-          <Link href={"/new-project"}>
-            <div>
-              <Plus size={24} />
+          <Link
+            href={"/new-project"}
+            className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
+          >
+            <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
+              <Plus
+                size={24}
+                className="bg-primary text-side transition-all ease-linear duration-150 group-hover:animate-bounce-light"
+              />
             </div>
-            <span>{t("navigation.add_project")}</span>
+            {isMenuOpen && (
+              <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
+                {t("navigation.add_project")}
+              </span>
+            )}
           </Link>
         </div>
       </div>

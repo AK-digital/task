@@ -8,7 +8,7 @@ import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
 import UserModel from "../models/User.model.js";
 import { emailDescription } from "../templates/emails.js";
-import { allowedStatus, getMatches } from "../utils/utils.js";
+import { getMatches } from "../utils/utils.js";
 import { emailTaskAssigned } from "../templates/emails.js";
 import MessageModel from "../models/Message.model.js";
 import StatusModel from "../models/Status.model.js";

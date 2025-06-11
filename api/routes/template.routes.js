@@ -19,6 +19,12 @@ router.post(
   templateControllers.useTemplate
 );
 
+router.post(
+  "/use/custom",
+  authMiddlewares.auth,
+  templateControllers.useCustomTemplate
+);
+
 router.put("/:id", authMiddlewares.auth, templateControllers.updateTemplate);
 
 router.delete("/:id", authMiddlewares.auth, templateControllers.deleteTemplate);

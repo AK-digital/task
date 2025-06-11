@@ -1,6 +1,5 @@
 "use client";
 import { userLogout } from "@/api/auth";
-import styles from "@/styles/components/profile/profile-form.module.css";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -19,7 +18,10 @@ export default function SignOut() {
     router.push("/");
   }
   return (
-    <a className={styles.signOut} onClick={handleLogout}>
+    <a
+      onClick={handleLogout}
+      className="flex items-center flex-row my-6 gap-2 cursor-pointer select-none"
+    >
       <LogOut size={18} /> {t("profile.sign_out")}
     </a>
   );

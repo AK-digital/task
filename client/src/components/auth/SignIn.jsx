@@ -2,8 +2,6 @@
 
 import { signIn } from "@/actions/auth";
 import { reSendVerificationEmail } from "@/api/auth";
-import styles from "@/styles/components/auth/sign.module.css";
-import { bricolageGrostesque } from "@/utils/font";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
@@ -53,7 +51,10 @@ export default function SignIn() {
       setStatus("success");
     }
     if (state?.status === "failure" && state?.errors === null) {
-      setMessage(state?.message || t("auth.signin.connection_error"));
+      setMessage(
+        state?.message ||
+        t("auth.signin.connection_error")
+      );
       setStatus("failure");
     }
     if (state?.message.includes("vérifié")) {
@@ -71,14 +72,16 @@ export default function SignIn() {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>
+    <div className="flex flex-col w-full p-10 max-w-115 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)]">
+      <div className="text-[1.9rem] font-bold mb-15">
         <span>{t("auth.signin.title")}</span>
       </div>
       {message && (
-        <div className={styles.messageStatus}>
-          <span data-status={status}>{message}</span>
-          <button className={styles.resend} onClick={handleResendEmail}>
+        <div className="text-center mb-6">
+          <span data-status={status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">
+            {message}
+          </span>
+          <button className="bg-transparent text-accent-color text-small" onClick={handleResendEmail}>
             {t("auth.signin.resend_email")}
           </button>
         </div>
@@ -88,32 +91,26 @@ export default function SignIn() {
           <i data-error={true}>{t("auth.signin.incorrect_credentials")}</i>
         </div>
       )}
-      <form className={styles.form} action={formAction}>
+      <form action={formAction} className="flex items-center flex-col gap-8">
         <div className="form-group">
-          <label
-            htmlFor="email"
-            className={styles.emailLabel}
-            data-active={email ? true : false}
-          >
+          <label htmlFor="email" data-active={email ? true : false} className="text-text-lighter-color">
             {t("auth.signin.email_label")}
           </label>
           <input
             type="email"
             name="email"
             id="email"
-            className={`${styles.email} ${bricolageGrostesque.className}`}
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-          />
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium" />
         </div>
         <div className="form-group">
           <label
             htmlFor="password"
-            className={styles.passwordLabel}
             data-active={password ? true : false}
-          >
+            className="text-text-lighter-color">
             {t("auth.signin.password_label")}
           </label>
           <input
@@ -121,55 +118,47 @@ export default function SignIn() {
             name="password"
             id="password"
             autoComplete="current-password"
-            className={styles.password}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-          />
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10" />
           {hiddenPassword ? (
             <Eye
-              className={styles.eye}
               onClick={(e) => setHiddenPassword(false)}
-            />
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
           ) : (
             <EyeOff
-              className={styles.eye}
               onClick={(e) => setHiddenPassword(true)}
-            />
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
           )}
-          <a className={styles.forgotPassword} onClick={handleForgotPassword}>
+          <a
+            onClick={handleForgotPassword}
+            className="float-right mt-3 text-small">
             {t("auth.signin.forgot_password")}
           </a>
         </div>
 
-        <div className={styles.buttons}>
+        <div className="ml-auto">
           <button
             data-disabled={pending}
             type="submit"
-            className={bricolageGrostesque.className}
-            disabled={pending}
-          >
-            {pending
-              ? t("auth.signin.submit_button_loading")
-              : t("auth.signin.submit_button")}
+            disabled={pending}>
+            {pending ? t("auth.signin.submit_button_loading") : t("auth.signin.submit_button")}
           </button>
-          {/* <button
-            className={`${instrumentSans.className} ${styles.google}`}
-            onClick={handleGoogleAuth}
-            >
+          {/* <button onClick={handleGoogleAuth} className={`${instrumentSans.className} relative bg-[#3184FC] text-text-lighter-color hover:transition-all hover:duration-[120ms] hover:ease-linear`}>
             {" "}
-            <span>
-            <Image src={"/google.svg"} width={25} height={25} alt="Google" />
+            <span className="absolute flex justify-center items-center left-0.5 top-[1px] bg-text-lighter-color rounded-sm w-[34px] h-[34px] scale-90">
+              <Image src={"/google.svg"} width={25} height={25} alt="Google" />
             </span>{" "}
             Se connecter avec Google
-            </button> */}
+          </button> */}
         </div>
       </form>
 
-      <div className={styles.text}>
+      <div className="text-center text-text-color mt-15 font-light">
         <p>
           {t("auth.signin.no_account")}{" "}
-          <span onClick={handleSignUp}>{t("auth.signin.signup_link")}</span>
+          <span onClick={handleSignUp} className="text-accent-color-light cursor-pointer ml-1 hover:underline">{t("auth.signin.signup_link")}</span>
         </p>
       </div>
     </div>

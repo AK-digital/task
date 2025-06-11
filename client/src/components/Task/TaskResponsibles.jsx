@@ -1,4 +1,3 @@
-import styles from "@/styles/components/task/task-responsibles.module.css";
 import { isNotEmpty, sendNotification } from "@/utils/utils";
 import { PlusCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -94,24 +93,23 @@ export default function TaskResponsibles({ task, uid, user }) {
   }, [task?.responsibles]);
 
   return (
-    <div className={styles.container} id="task-row">
+    <div className="relative flex items-center justify-center px-3 min-w-[100px] max-w-[100px] w-full h-full border-r border-l border-text-color">
       <div
-        className={styles.wrapper}
-        id="task-row"
+        className="flex items-center h-full"
         onClick={handleIsMoreOpen}
         ref={refs.setReference}
       >
         {isNotEmpty(responsibles) ? (
           responsibles.slice(0, 3).map((responsible) => {
             return (
-              <div className={styles.images} key={responsible?._id}>
+              <div
+                className="images_TaskResponsibles flex justify-center items-center"
+                key={responsible?._id}
+              >
                 <DisplayPicture
                   user={responsible}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    borderRadius: "50%",
-                  }}
+                  style={{ width: "32px", height: "32px" }}
+                  className="rounded-full"
                 />
               </div>
             );
@@ -120,24 +118,26 @@ export default function TaskResponsibles({ task, uid, user }) {
           <PlusCircle size={24} />
         )}
         {responsibles?.length > 3 && (
-          <span className={styles.length}>+{responsibles?.length - 3}</span>
+          <span className="absolute flex justify-center items-center bg-primary rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-secondary">
+            +{responsibles?.length - 3}
+          </span>
         )}
       </div>
 
       {isMoreOpen && (
         <>
           <div
-            className={styles.modal}
             ref={refs.setFloating}
             style={floatingStyles}
+            className="absolute w-[300px] bg-secondary shadow-medium rounded-lg top-[50px] z-[2001] p-2"
           >
             {/* Responsibles */}
             {isNotEmpty(responsibles) && (
-              <div className={styles.responsibles}>
+              <div className="flex flex-wrap gap-1 mb-2">
                 {responsibles?.map((responsible) => {
                   return (
                     <div
-                      className={styles.responsible}
+                      className="flex items-center gap-1 bg-third p-1 rounded-lg text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-primary"
                       key={responsible?._id}
                       onClick={() => handleRemoveResponsible(responsible)}
                     >
@@ -146,8 +146,8 @@ export default function TaskResponsibles({ task, uid, user }) {
                         style={{
                           width: "24px",
                           height: "24px",
-                          borderRadius: "50%",
                         }}
+                        className="rounded-full"
                         isPopup={false}
                       />
                       <span>
@@ -159,16 +159,17 @@ export default function TaskResponsibles({ task, uid, user }) {
                 })}
               </div>
             )}
-            <span className={styles.subtitle}>
+            <span className="text-[14px] font-medium text-text-color-muted select-none">
               {t("tasks.people_to_invite")}
             </span>
             {/* Members */}
-            <div className={`${styles.members} ${styles.scrollable}`}>
+            <div className="scrollable_TaskResponsibles max-h-[200px] overflow-y-auto">
               {isNotEmpty(members) && (
-                <ul>
+                <ul className="mt-1.5">
                   {members?.map((member) => {
                     return (
                       <li
+                        className="flex items-center gap-1 p-2 rounded-lg hover:bg-third"
                         key={member?.user?._id}
                         onClick={() => handleAddResponsible(member?.user)}
                       >
@@ -177,8 +178,8 @@ export default function TaskResponsibles({ task, uid, user }) {
                           style={{
                             width: "24px",
                             height: "24px",
-                            borderRadius: "50%",
                           }}
+                          className="rounded-full"
                         />
                         <span>{member?.user?.email}</span>
                       </li>
@@ -189,7 +190,7 @@ export default function TaskResponsibles({ task, uid, user }) {
             </div>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={(e) => setIsMoreOpen(false)}
           ></div>
         </>

@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/boards/update-board.module.css";
 import { updateBoard } from "@/actions/board";
 import { useActionState, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -37,7 +36,7 @@ export default function UpdateBoard({ board, projectId }) {
   }, [state]);
 
   return (
-    <div className={styles["update-board__container"]} data-pending={pending}>
+    <div data-pending={pending} className="[&>input]:max-w-max">
       <form action={formAction}>
         {isEdit ? (
           <div>
@@ -52,10 +51,10 @@ export default function UpdateBoard({ board, projectId }) {
                 zIndex: "2001",
               }}
             />
-            <div id="overlay-hidden" onClick={(e) => setIsEdit(false)}></div>
+            <div onClick={(e) => setIsEdit(false)} className="absolute left-0 top-0 w-full h-full z-2001"></div>
           </div>
         ) : (
-          <div className={styles["update-board__title"]}>
+          <div className="flex items-center gap-2.5">
             <span
               onClick={(e) => setIsEdit(true)}
               style={{ color: `${board?.color}` }}
@@ -65,6 +64,7 @@ export default function UpdateBoard({ board, projectId }) {
             <span
               style={{ backgroundColor: `${board?.color}` }}
               onClick={(e) => setOpenColor(!openColor)}
+              className="w-4 h-4 rounded-full cursor-pointer"
             ></span>
             {openColor && (
               <div>

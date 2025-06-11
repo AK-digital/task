@@ -40,9 +40,14 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
           height={style?.height?.replace("px", "")}
           quality={100}
           alt={`${t("tasks.photo_of")} ${user?.firstName}`}
-          style={{ ...style }}
+          style={{
+            ...style,
+            minHeight: style?.height,
+            minWidth: style?.width,
+          }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          className="rounded-full select-none"
         />
       ) : (
         <div
@@ -50,6 +55,7 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           style={{ border: "none" }}
+          className="select-none"
         >
           <NoPicture width={style?.width} height={style?.height} user={user} />
         </div>

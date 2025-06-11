@@ -4,7 +4,6 @@ import { sendEmail } from "../helpers/nodemailer.js";
 import ProjectInvitationModel from "../models/ProjectInvitation.model.js";
 import UserModel from "../models/User.model.js";
 import BoardModel from "../models/Board.model.js";
-import TaskModel from "../models/Task.model.js";
 import { emailProjectInvitation } from "../templates/emails.js";
 import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 import StatusModel from "../models/Status.model.js";
@@ -13,12 +12,13 @@ import {
   getDefaultStatuses,
 } from "../helpers/defaultStatuses.js";
 import PriorityModel from "../models/Priority.model.js";
+import FavoriteModel from "../models/Favorite.model.js";
 
 // When an user creates a new project, his uid will be set in the author field
 export async function saveProject(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { name } = req.body;
+    const { name, skipDefaultBoard } = req.body;
 
     if (!name) {
       return res
@@ -38,36 +38,45 @@ export async function saveProject(req, res, next) {
 
     const savedProject = await newProject.save();
 
-    // Créer un tableau par défaut
-    const newBoard = new BoardModel({
-      projectId: savedProject._id,
-      title: "Votre premier tableau",
-    });
+    // Créer un tableau par défaut seulement si skipDefaultBoard n'est pas true
+    if (!skipDefaultBoard) {
+      const newBoard = new BoardModel({
+        projectId: savedProject._id,
+        title: "Votre premier tableau",
+      });
 
-    const savedBoard = await newBoard.save();
+      const savedBoard = await newBoard.save();
 
-    // Utiliser la même logique que dans board.controllers.js
-    const randomIndex = Math.floor(Math.random() * savedBoard?.colors.length);
-    const randomColor = savedBoard?.colors[randomIndex];
+      // Utiliser la même logique que dans board.controllers.js
+      const randomIndex = Math.floor(Math.random() * savedBoard?.colors.length);
+      const randomColor = savedBoard?.colors[randomIndex];
 
-    await BoardModel.findByIdAndUpdate(
-      { _id: savedBoard._id },
-      {
-        $set: {
-          color: randomColor,
+      await BoardModel.findByIdAndUpdate(
+        { _id: savedBoard._id },
+        {
+          $set: {
+            color: randomColor,
+          },
         },
-      },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    }
 
     const defaultStatuses = getDefaultStatuses(savedProject?._id);
     const defaultPriorities = getDefaultPriorities(savedProject?._id);
 
     await StatusModel.insertMany(defaultStatuses);
     await PriorityModel.insertMany(defaultPriorities);
+
+    const newFavorite = new FavoriteModel({
+      user: authUser._id,
+      project: savedProject._id,
+    });
+
+    await newFavorite.save();
 
     return res.status(201).send({
       success: true,

@@ -1,10 +1,8 @@
 "use client";
-import styles from "@/styles/components/projects/guest-form-invitation.module.css";
 import { sendProjectInvitationToGuest } from "@/actions/project";
 import socket from "@/utils/socket";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
-import { bricolageGrostesque } from "@/utils/font";
 import { useTranslation } from "react-i18next";
 
 const initialState = {
@@ -68,8 +66,8 @@ export default function GuestFormInvitation({
 
   return (
     <>
-      <div className={styles.container}>
-        <form action={formAction}>
+      <div>
+        <form action={formAction} className="gap-3">
           <input
             type="email"
             name="email"
@@ -77,10 +75,14 @@ export default function GuestFormInvitation({
             placeholder={t("projects.invite_by_email")}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className={bricolageGrostesque.className}
+            className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm"
           />
           {errors && <i>{errors?.email}</i>}
-          <button type="submit" data-disabled={pending}>
+          <button
+            type="submit"
+            data-disabled={pending}
+            className="w-full rounded-sm text-medium p-2"
+          >
             {t("projects.send_invitation")}
           </button>
         </form>

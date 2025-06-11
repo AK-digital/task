@@ -1,7 +1,5 @@
 import { saveTemplate } from "@/actions/template";
 import PopupMessage from "@/layouts/PopupMessage";
-import styles from "@/styles/components/templates/add-template.module.css";
-import { bricolageGrostesque } from "@/utils/font";
 import { useActionState, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -44,11 +42,11 @@ export default function AddTemplate({ project, setAddTemplate }) {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.header}>
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 w-[400px] bg-secondary p-6 rounded-lg shadow-medium">
+        <div className="text-center text-large text-text-dark-color">
           <span>{t("templates.save_project_as_template")}</span>
         </div>
-        <form action={formAction} className={styles.form}>
+        <form action={formAction} className="flex flex-col gap-3">
           <input
             type="text"
             id="project-id"
@@ -62,10 +60,11 @@ export default function AddTemplate({ project, setAddTemplate }) {
             name="template-name"
             placeholder={t("templates.template_name")}
             autoFocus
+            className="border-none bg-third border border-third w-full p-2 text-text-color-muted font-medium text-center transition-all duration-[150ms] ease-linear focus:outline-none focus:border-primary focus:shadow-small"
           />
 
           <button
-            className={bricolageGrostesque.className}
+            className="font-bricolage w-full p-2 rounded-sm text-medium"
             disabled={pending}
             data-disabled={pending}
           >
@@ -73,7 +72,10 @@ export default function AddTemplate({ project, setAddTemplate }) {
           </button>
         </form>
       </div>
-      <div id="modal-layout" onClick={(e) => setAddTemplate(false)}></div>
+      <div
+        className="modal-layout"
+        onClick={(e) => setAddTemplate(false)}
+      ></div>
       {popup && (
         <PopupMessage
           status={popup.status}

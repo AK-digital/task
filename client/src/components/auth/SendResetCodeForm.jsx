@@ -1,6 +1,4 @@
 import { sendResetCode } from "@/actions/auth";
-import styles from "@/styles/components/auth/sign.module.css";
-import { bricolageGrostesque, instrumentSans } from "@/utils/font";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -37,20 +35,19 @@ export default function SendResetCodeForm() {
   }, [state, t]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>{t("auth.forgot_password.title")}</div>
+    <div className="flex flex-col w-full p-10 max-w-115 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)]">
+      <div className="text-[1.9rem] font-bold mb-15">{t("auth.forgot_password.title")}</div>
       {messageStatus && (
-        <div className={styles.messageStatus}>
+        <div className="text-center mb-6">
           <span data-status={state?.status}>{messageStatus}</span>
         </div>
       )}
-      <form className={styles.form} action={formAction}>
+      <form action={formAction} className="flex items-center flex-col gap-8">
         <div className="form-group">
           <label
             htmlFor="email"
-            className={styles.emailLabel}
             data-active={email.length > 0}
-          >
+            className="text-text-lighter-color">
             {t("auth.forgot_password.email_label")}
           </label>
           <input
@@ -59,19 +56,20 @@ export default function SendResetCodeForm() {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={styles.email}
             required
-          />
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
+            />
+
           {state?.errors?.email && (
-            <div className={styles.emailErr}>
+            <div className="mt-1 text-left ml-1">
               <i data-error={true}>{state?.errors?.email}</i>
             </div>
           )}
         </div>
-        <div className={styles.buttons}>
+        <div className="ml-auto">
           <button
             type="submit"
-            className={bricolageGrostesque.className}
+            className="font-bricolage"
             data-disabled={pending}
             disabled={pending}
           >
@@ -79,12 +77,13 @@ export default function SendResetCodeForm() {
           </button>
         </div>
       </form>
-      <div className={styles.text}>
+      <div className="text-center text-text-color mt-15 font-light">
         <p>
           <span
             onClick={(e) => {
               router.push("/");
             }}
+          className="text-accent-color-light cursor-pointer ml-1 hover:underline"
           >
             {t("auth.forgot_password.back_to_login")}
           </span>

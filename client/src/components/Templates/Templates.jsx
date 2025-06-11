@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/templates/templates.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Template from "./Template";
 import { useRouter } from "next/navigation";
@@ -16,12 +15,12 @@ export default function Templates({ templates }) {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col justify-around items-center h-full w-full">
       {/* Filters */}
       {/* <div></div> */}
       {/* Templates */}
       {isNotEmpty(data) ? (
-        <div className={styles.templates}>
+        <div className="flex flex-col gap-3">
           {data.map((elt) => {
             return <Template elt={elt} key={elt?._id} />;
           })}
@@ -34,7 +33,11 @@ export default function Templates({ templates }) {
 
       {/* buttons */}
 
-      <button type="button" onClick={handleGoBack} className={styles.back}>
+      <button
+        type="button"
+        onClick={handleGoBack}
+        className="bg-transparent shadow-none max-w-fit hover:bg-transparent hover:shadow-none hover:text-accent-color-light"
+      >
         {t("templates.back")}
       </button>
     </div>

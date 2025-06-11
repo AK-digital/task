@@ -1,8 +1,7 @@
 "use client";
 import { resetForgotPassword } from "@/actions/auth";
-import styles from "@/styles/components/auth/sign.module.css";
-import { translateValidationErrors } from "@/utils/zod";
 import { Eye, EyeOff } from "lucide-react";
+import { translateValidationErrors } from "@/utils/zod";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -44,22 +43,22 @@ export default function ResetForgotPasswordForm({ resetCode }) {
   }, [state, t]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>
+    <div className="flex flex-col w-full p-10 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)] max-w-125">
+      <div className="text-[1.9rem] font-bold mb-15">
         {t("auth.forgot_password.reset_title")}
       </div>
       {statusMessage && (
-        <div className={styles.messageStatus}>
-          <span data-status={state?.status}>{statusMessage}</span>
+        <div className="text-center mb-6">
+          <span data-status={state?.status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">{statusMessage}</span>
         </div>
       )}
       {state?.status !== "success" && (
-        <form className={styles.form} action={formAction}>
+        <form action={formAction} className="flex items-center flex-col gap-8">
           <div className="form-group">
             <label
               htmlFor="newPassword"
-              className={styles.passwordLabel}
               data-active={password.length > 0}
+              className="text-text-lighter-color"
             >
               {t("auth.forgot_password.new_password")}
             </label>
@@ -69,19 +68,17 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               name="newPassword"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={styles.password}
               required
+              className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
             />
             {hiddenPassword ? (
               <Eye
-                className={styles.eye}
                 onClick={(e) => setHiddenPassword(false)}
-              />
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             ) : (
               <EyeOff
-                className={styles.eye}
                 onClick={(e) => setHiddenPassword(true)}
-              />
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             )}
             {state?.errors?.newPassword && (
               <i>{translateValidationErrors(state.errors.newPassword, t)}</i>
@@ -90,8 +87,8 @@ export default function ResetForgotPasswordForm({ resetCode }) {
           <div className="form-group">
             <label
               htmlFor="confirmPassword"
-              className={styles.confirmPasswordLabel}
               data-active={confirmPassword.length > 0}
+              className="text-text-lighter-color"
             >
               {t("auth.forgot_password.confirm_password")}
             </label>
@@ -99,21 +96,19 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               type={hiddenPassword ? "password" : "text"}
               id="confirmPassword"
               name="confirmPassword"
-              className={styles.confirmPassword}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
             />
             {hiddenPassword ? (
               <Eye
-                className={styles.eye}
-                onClick={(e) => setHiddenPassword(false)}
-              />
+              onClick={(e) => setHiddenPassword(false)}
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             ) : (
               <EyeOff
-                className={styles.eye}
-                onClick={(e) => setHiddenPassword(true)}
-              />
+              onClick={(e) => setHiddenPassword(true)}
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
             )}
             {state?.errors?.confirmPassword && (
               <i>
@@ -127,6 +122,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             name="reset-code"
             defaultValue={resetCode}
             hidden
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
           />
           <button type="submit" disabled={pending} data-disabled={pending}>
             {t("auth.forgot_password.reset_password_button")}

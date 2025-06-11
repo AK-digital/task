@@ -1,9 +1,7 @@
 "use client";
 import { saveProject } from "@/actions/project";
-import styles from "@/styles/components/projects/create-project.module.css";
-import { instrumentSans } from "@/utils/font";
-import { Plus, X } from "lucide-react";
-import { useActionState, useEffect, useState, useRef } from "react";
+import { X } from "lucide-react";
+import { useActionState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
@@ -66,8 +64,6 @@ export default function CreateProject({
       if (response.success) {
         // Appeler la fonction de callback avec le nouveau projet
         onProjectCreated(response.data);
-        // Réinitialiser le formulaire ou fermer la modal
-        // ...
       }
     } catch (error) {
       console.error("Erreur lors de la création du projet:", error);
@@ -75,15 +71,19 @@ export default function CreateProject({
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.overlay}>
+    <div className="relative w-full">
+      <div className="fixed top-0 right-0 bottom-0 bg-primary gap-1.5 w-full z-9999">
         <span
-          className={styles.closeButton}
+          className="absolute top-16 right-16 bg-none bg-transparent border-none cursor-pointer"
           onClick={() => setIsCreating(false)}
         >
           <X size={32} />
         </span>
-        <form ref={formRef} action={formAction} className={styles.form}>
+        <form
+          ref={formRef}
+          action={formAction}
+          className="flex justify-start items-center flex-col mt-[15%]"
+        >
           <input
             ref={inputRef}
             type="text"
@@ -93,18 +93,26 @@ export default function CreateProject({
             required
             minLength={2}
             maxLength={250}
+            className="w-fit mt-2.5 h-[150px] text-[2.5rem] bg-transparent border-none text-center"
           />
-          <span className={styles.projectCreationInfo}>
+          <span className="text-[0.82rem] text-text-color-muted mb-3">
             {t("projects.press_enter_create")}
           </span>
-          <span className={styles.projectCreationInfo}>OU</span>
-          <button type="submit" data-disabled={pending} disabled={pending}>
+          <span className="text-[0.82rem] text-text-color-muted mb-3">
+            {t("projects.or")}
+          </span>
+          <button
+            type="submit"
+            data-disabled={pending}
+            disabled={pending}
+            className="py-3.5 px-[22px]"
+          >
             {t("projects.click_create")}
           </button>
         </form>
       </div>
       <div
-        id="modal-layout-opacity"
+        className="modal-layout-opacity"
         onClick={(e) => setIsCreating(false)}
       ></div>
     </div>

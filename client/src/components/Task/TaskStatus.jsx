@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/task/task-status.module.css";
 import { updateTaskStatus } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
@@ -109,9 +108,9 @@ export default function TaskStatus({ task, uid }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="relative flex items-center select-none border-r border-text-light-color text-normal text-foreground min-w-[135px] max-w-[150px] w-full h-full">
       <div
-        className={styles.current}
+        className="relative w-full min-w-[110px] text-center cursor-pointer py-2 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -121,18 +120,19 @@ export default function TaskStatus({ task, uid }) {
       {isOpen && (
         <>
           <div
-            className={styles.list}
-            data-big={listWidth()}
             ref={refs.setFloating}
             style={floatingStyles}
+            className={`absolute z-2001 top-[45px] p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${
+              listWidth() ? "w-[380px]" : "w-[220px]"
+            }`}
           >
-            <ul className={styles.items}>
+            <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 px-3 pb-3 border-b border-color-border-color">
               {statuses?.map((status) => {
                 if (!isEdit) {
                   return (
                     <li
                       key={status?._id}
-                      className={styles.item}
+                      className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-3xl text-center min-h-[34px] transition-all duration-[60ms] linear hover:opacity-80"
                       onClick={() => handleTaskUpdateStatus(status)}
                       style={{ backgroundColor: status?.color }}
                     >
@@ -152,7 +152,7 @@ export default function TaskStatus({ task, uid }) {
               })}
               {isEdit && !maxStatuses && (
                 <li
-                  className={`${styles.item} ${styles.add}`}
+                  className="flex items-center gap-1 border-none py-2 px-4 rounded-3xl bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer"
                   onClick={handleAddStatus}
                 >
                   <Plus size={16} />
@@ -161,17 +161,23 @@ export default function TaskStatus({ task, uid }) {
               )}
             </ul>
             {isEdit ? (
-              <button className={styles.edit} onClick={handleEditStatus}>
+              <button
+                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none"
+                onClick={handleEditStatus}
+              >
                 <Save size={16} />
                 {t("tasks.apply")}
               </button>
             ) : (
-              <button className={styles.edit} onClick={handleEditStatus}>
+              <button
+                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none"
+                onClick={handleEditStatus}
+              >
                 <Pen size={16} /> {t("tasks.edit_statuses")}
               </button>
             )}
           </div>
-          <div id="modal-layout-opacity" onClick={handleIsOpen}></div>
+          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
         </>
       )}
     </div>

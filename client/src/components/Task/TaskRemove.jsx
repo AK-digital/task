@@ -1,5 +1,4 @@
 import { deleteTask } from "@/api/task";
-import styles from "@/styles/components/task/task-remove.module.css";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
@@ -31,14 +30,22 @@ export default function TaskRemove({ task, archive, mutate }) {
   if (!canDelete) return null;
 
   return (
-    <div className={styles.container} id="task-row">
+    <div className="flex items-center h-full cursor-pointer text-[#41435f] transition-colors duration-150 ease-in-out relative px-[6px] hover:text-danger-color">
       <Trash size={20} onClick={() => setShowConfirm(true)} />
-      <ConfirmDialog
-        isOpen={showConfirm}
-        onClose={() => setShowConfirm(false)}
-        onConfirm={handleDeleteTask}
-        message={t("tasks.confirm_delete")}
-      />
+      {showConfirm && (
+        <>
+          <ConfirmDialog
+            isOpen={showConfirm}
+            onClose={() => setShowConfirm(false)}
+            onConfirm={handleDeleteTask}
+            message={t("tasks.confirm_delete")}
+          />
+          <div
+            className="modal-layout-opacity"
+            onClick={() => setShowConfirm(false)}
+          ></div>
+        </>
+      )}
     </div>
   );
 }

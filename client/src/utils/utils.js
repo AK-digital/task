@@ -1,16 +1,6 @@
-import NoPicture from "@/components/User/NoPicture";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import {
-  Crown,
-  Figma,
-  Github,
-  Gitlab,
-  Globe,
-  Layout,
-  Youtube,
-} from "lucide-react";
-import Image from "next/image";
+import { Figma, Github, Gitlab, Globe, Layout, Youtube } from "lucide-react";
 import socket from "./socket";
 
 export function isNotEmpty(arr) {
@@ -95,15 +85,15 @@ export function exportTimeTracking(projects, trackers, t) {
     });
 
     const filteredTrackers = trackers?.filter(
-      (tracker) => tracker?.project?._id === project?._id
+      (tracker) => tracker?.projectId?._id === project?._id
     );
 
     // Séparer les trackers facturables et non facturables
     const billableTrackers = filteredTrackers?.filter(
-      (tracker) => tracker.billable === true
+      (tracker) => tracker?.billable === true
     );
     const nonBillableTrackers = filteredTrackers?.filter(
-      (tracker) => tracker.billable === false
+      (tracker) => tracker?.billable === false
     );
 
     // Calculer les durées totales
@@ -215,8 +205,8 @@ export function exportTimeTracking(projects, trackers, t) {
         ],
         body: billableTrackers?.map((tracker) => {
           return [
-            tracker?.taskText || tracker?.task[0]?.text,
-            tracker?.user?.firstName + " " + tracker?.user?.lastName,
+            tracker?.taskText || tracker?.taskId?.text,
+            tracker?.userId?.firstName + " " + tracker?.userId?.lastName,
             formatTime(Math.floor(tracker?.duration / 1000)),
             new Date(tracker?.startTime).toLocaleDateString("fr-FR", {
               day: "2-digit",
@@ -275,8 +265,8 @@ export function exportTimeTracking(projects, trackers, t) {
         ],
         body: nonBillableTrackers?.map((tracker) => {
           return [
-            tracker?.taskText || tracker?.task[0]?.text,
-            tracker?.user?.firstName + " " + tracker?.user?.lastName,
+            tracker?.taskText || tracker?.taskId?.text,
+            tracker?.userId?.firstName + " " + tracker?.userId?.lastName,
             formatTime(Math.floor(tracker?.duration / 1000)),
             new Date(tracker?.startTime).toLocaleDateString("fr-FR", {
               day: "2-digit",

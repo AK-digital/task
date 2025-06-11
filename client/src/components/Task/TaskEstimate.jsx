@@ -1,9 +1,7 @@
 "use client";
 import { updateTaskEstimate } from "@/api/task";
 import { useUserRole } from "@/app/hooks/useUserRole";
-import styles from "@/styles/components/task/task-estimate.module.css";
 import { getFloating, usePreventScroll } from "@/utils/floating";
-import { bricolageGrostesque } from "@/utils/font";
 import socket from "@/utils/socket";
 import { XCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -110,72 +108,74 @@ export default function TaskEstimate({ task, uid }) {
 
   return (
     <div
-      className={styles.container}
+      className="relative flex justify-center items-center py-1 px-2 border-r border-text-light-color min-w-30 max-w-35 w-full h-full gap-0.5"
       onMouseEnter={handleHover}
       onMouseLeave={() => setHover(false)}
     >
       <div
         data-estimation={hasEstimation}
-        className={styles.wrapper}
         onClick={handleIsEditing}
         ref={refs.setReference}
+        className="bg-primary py-1 px-0.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
       >
-        <span>{estimation}</span>
+        <span className="select-none">{estimation}</span>
       </div>
       {hover && hasEstimation && (
-        <div className={styles.delete} onClick={handleDeleteEstimation}>
-          <XCircle size={16} />
+        <div
+          className="relative top-0.5 cursor-pointer"
+          onClick={handleDeleteEstimation}
+        >
+          <XCircle size={16} className="hover:text-danger-color" />
         </div>
       )}
       {isEditing && (
         <>
           <div
-            className={styles.edit}
-            id="popover"
+            className="absolute z-2001 bg-secondary rounded-lg top-[45px] p-2 w-[305px] shadow-medium select-none"
             ref={refs.setFloating}
             style={floatingStyles}
           >
-            <div className={styles.suggestions}>
+            <div className="flex justify-center flex-wrap gap-2">
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 {t("tasks.n_minutes", { n: 15 })}
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 {t("tasks.n_minutes", { n: 30 })}
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 {t("tasks.n_minutes", { n: 45 })}
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 {t("tasks.1_hour")}
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 {t("tasks.2_hours")}
               </span>
               <span
-                className={styles.suggestion}
+                className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
                 {t("tasks.1_day")}
               </span>
             </div>
-            <div className={styles.custom}>
-              <form className={styles.form} onSubmit={handleCustomeEstimation}>
-                <div className={styles.row}>
+            <div className="mt-2">
+              <form className="flex items-center justify-between flex-row border-t border-text-light-color mt-3 pt-3" onSubmit={handleCustomeEstimation}>
+                <div className="group flex flex-row gap-0">
                   <input
                     type="number"
                     id="number"
@@ -185,13 +185,13 @@ export default function TaskEstimate({ task, uid }) {
                     step={0.1}
                     min={1}
                     max={99}
-                    className={bricolageGrostesque.className}
+                    className="input_TaskEstimate font-bricolage cursor-pointer text-small text-text-dark-color font-semibold p-1.5 w-10 bg-third rounded-2xl rounded-tr-[inherit] rounded-br-[inherit] border-none text-center group-hover:bg-primary"
                   />
                   <select
                     name=""
                     id=""
-                    className={bricolageGrostesque.className}
                     onChange={(e) => setWeek(e.target.value)}
+                    className="font-bricolage text-small text-text-dark-color cursor-pointer font-semibold bg-third outline-none border-none rounded-2xl rounded-tl-[inherit] rounded-bl-[inherit] group-hover:bg-primary"
                   >
                     <option value="minutes">{t("tasks.minutes")}</option>
                     <option value="heures">{t("tasks.hours")}</option>
@@ -200,9 +200,9 @@ export default function TaskEstimate({ task, uid }) {
                   </select>
                 </div>
                 {number >= 1 && (
-                  <div className={styles.buttons}>
+                  <div className="w-full">
                     <button
-                      className={bricolageGrostesque.className}
+                      className="font-bricolage text-small font-normal p-1.5 w-full text-white"
                       type="submit"
                     >
                       {t("tasks.validate")}
@@ -213,7 +213,7 @@ export default function TaskEstimate({ task, uid }) {
             </div>
           </div>
           <div
-            id="modal-layout-opacity"
+            className="modal-layout-opacity"
             onClick={() => setIsEditing(false)}
           ></div>
         </>

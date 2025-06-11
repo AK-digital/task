@@ -1,4 +1,3 @@
-import styles from "@/styles/components/tasks/tasks-filters.module.css";
 import TasksSearch from "./TasksSearch";
 import TasksStatusFilter from "./TasksStatusFilter";
 import TasksPrioritiesFilter from "./TasksPrioritiesFilter";
@@ -13,7 +12,7 @@ export default function TasksFilters({ displayedFilters }) {
     displayedFilters;
 
   return (
-    <div className={styles.container}>
+    <div className="relative flex items-center flex-wrap gap-4 select-none w-full">
       {isSearch && <TasksSearch setQueries={setQueries} />}
       {isProject && (
         <TasksProjectFilter queries={queries} setQueries={setQueries} />

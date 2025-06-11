@@ -78,24 +78,23 @@ export async function getStatusByProject(req, res) {
   }
 }
 
-export async function getUserProjectsStatuses(req, res) {
+export async function getStatusesByProjects(req, res) {
   try {
-    const authUser = res.locals.user;
+    const { projects } = req.query;
 
-    const projects = await ProjectModel.find({
-      members: { $in: [authUser._id] },
-    });
+    console.log(projects);
 
-    if (!projects.length === 0) {
-      return res.status(404).send({
+    if (!projects) {
+      return res.status(400).send({
         success: false,
-        message: "Projects not found",
-        data: [],
+        message: "Missing parameters",
       });
     }
 
+    const splittedProjects = projects.split(",");
+
     const statuses = await StatusModel.find({
-      projectId: { $in: projects.map((project) => project._id) },
+      projectId: { $in: splittedProjects },
     });
 
     if (!statuses.length === 0) {

@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/components/notifications/notifications.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
 import NoPicture from "../User/NoPicture";
@@ -52,22 +51,22 @@ export default function Notifications({
 
   return (
     <>
-      <div className={styles.container} id="popover">
-        <div className={styles.header}>
+      <div className="absolute flex flex-col top-[54px] right-0 w-[560px] z-2001 p-0 pr-2 max-h-[400px] overflow-y-auto rounded-lg bg-secondary shadow-medium select-none">
+        <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px]">
           <span>{t("notifications.title")}</span>
           {unreadCount > 0 && (
-            <div className={styles.headerActions}>
-              <div className={styles.unreadCount}>
+            <div className="flex items-center gap-2.5">
+              <div className="py-0.5 px-2 bg-accent-color text-small rounded-xl font-medium text-white">
                 {unreadCount}{" "}
                 {unreadCount === 1
                   ? t("notifications.unread_singular")
                   : t("notifications.unread_plural")}
               </div>
               <button
-                className={styles.readAllButton}
                 onClick={handleReadNotifications}
                 data-disabled={isLoading}
                 disabled={isLoading}
+                className="bg-transparent text-accent-color-light text-small rounded-sm shadow-none hover:bg-[#a87e511a] hover:shadow-none data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-[#a87e511a]"
               >
                 {t("notifications.mark_all_read")}
               </button>
@@ -75,21 +74,21 @@ export default function Notifications({
           )}
         </div>
         {!isNotEmpty(notifications) ? (
-          <div className={styles.empty}>
+          <div className="text-center p-6 text-text-color-muted italic">
             <span>{t("notifications.empty_message")}</span>
           </div>
         ) : (
-          <ul className={styles.notifications}>
+          <ul className="h-full overflow-y-auto">
             {notifications?.map((notif, idx) => {
               const dateFromNow = moment(notif?.createdAt).fromNow();
               return (
                 <li
-                  className={styles.notification}
                   data-read={notif?.read}
                   key={idx}
                   onClick={(e) => handleReadNotification(e, notif)}
+                  className="flex justify-between flex-row gap-1 cursor-pointer no-underline w-full text-text-medium-color transition-[background-color] duration-200 p-[14px] hover:bg-third data-[read=false]:bg-accent-color-transparent"
                 >
-                  <div className={styles.left}>
+                  <div className="flex gap-2">
                     {notif?.senderId?.picture ? (
                       <Image
                         src={notif?.senderId?.picture}
@@ -99,6 +98,7 @@ export default function Notifications({
                           notif?.senderId?.firstName
                         }`}
                         style={{ borderRadius: "50%" }}
+                        className="rounded-full max-h-[30px] min-w-[30px]"
                       />
                     ) : (
                       <NoPicture
@@ -107,17 +107,19 @@ export default function Notifications({
                         height={"30px"}
                       />
                     )}
-                    <div className={styles.message}>
-                      <div className={styles.title}>
+                    <div className="flex flex-col gap-1">
+                      <div className="text-normal font-medium text-text-darker-color">
                         <span>{getNotificationTitle(notif, t)}</span>
                       </div>
-                      <div className={styles.content}>
+                      <div className="text-small text-text-color-muted">
                         {getNotificationContent(notif, t)}
                       </div>
                     </div>
                   </div>
-                  <div className={styles.right}>
-                    <div className={styles.date}>{dateFromNow}</div>
+                  <div className="flex flex-col items-end justify-center border-b-0 gap-2">
+                    <div className="text-small text-text-color-muted self-start text-right min-w-max">
+                      {dateFromNow}
+                    </div>
                   </div>
                 </li>
               );
@@ -126,7 +128,10 @@ export default function Notifications({
         )}
       </div>
 
-      <div id="modal-layout-opacity" onClick={(e) => setNotifOpen(false)}></div>
+      <div
+        className="modal-layout-opacity"
+        onClick={(e) => setNotifOpen(false)}
+      ></div>
     </>
   );
 }

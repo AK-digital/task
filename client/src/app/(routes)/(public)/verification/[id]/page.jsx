@@ -1,6 +1,6 @@
 "use client";
-import styles from "@/styles/pages/verification.module.css";
 import { verification } from "@/api/auth";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -46,11 +46,20 @@ export default function Verification() {
   }, [data, error, isLoading, router, t]);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <h1>{t("verification.title")}</h1>
-        <p>{text}</p>
-        {success && <p>{t("verification.redirecting")}</p>}
+    <main className="flex justify-center items-center mx-10 mb-10 h-[100svh]">
+      <div className="text-center">
+        <h1 className="text-[2.5rem] mb-5 font-bold">
+          {t("verification.title")}
+        </h1>
+        <p className="mb-8">{text}</p>
+        {success && (
+          <Link
+            href="/"
+            className="p-4 bg-accent-color text-white rounded-4xl no-underline hover:bg-accent-color-hover transition-all duration-200 ease-in-out"
+          >
+            {t("verification.redirecting")}
+          </Link>
+        )}
       </div>
     </main>
   );

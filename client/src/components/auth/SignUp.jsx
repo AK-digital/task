@@ -1,8 +1,6 @@
 import { signUp } from "@/actions/auth";
-import styles from "@/styles/components/auth/sign.module.css";
-import { bricolageGrostesque } from "@/utils/font";
-import { translateValidationErrors } from "@/utils/zod";
 import { Eye, EyeOff } from "lucide-react";
+import { translateValidationErrors } from "@/utils/zod";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -40,39 +38,46 @@ export default function SignUp() {
   useEffect(() => {
     setMessage("");
     if (state?.status === "failure" && state?.errors === null) {
-      setMessage(
-        state?.message ||
-          "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."
-      );
+      setMessage(state?.message || t("auth.signup.account_creation_error"));
     }
   }, [state]);
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col w-full p-10 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)] max-w-125">
       {state?.status === "success" ? (
-        <div className={styles.accountCreated}>
-          <span>{t("auth.signup.account_created_title")}</span>
+        <div className="flex flex-col gap-2">
+          <span className="text-2xl font-bold">
+            {t("auth.signup.account_created_title")}
+          </span>
           <p>{t("auth.signup.account_created_message")}</p>
-          <button type="button" onClick={handleSignIn}>
+          <button type="button" onClick={handleSignIn} className="mt-2">
             {t("auth.signup.back_to_signin")}
           </button>
         </div>
       ) : (
         <>
-          <div className={styles.title}>
+          <div className="text-[1.9rem] font-bold mb-15">
             <span>{t("auth.signup.title")}</span>
           </div>
           {message && (
-            <div className={styles.messageStatus}>
-              <span data-status={state?.status}>{message}</span>
+            <div className="text-center mb-6">
+              <span
+                data-status={state?.status}
+                className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color"
+              >
+                {message}
+              </span>
             </div>
           )}
-          <form className={styles.form} action={formAction}>
+          <form
+            action={formAction}
+            className="flex items-center flex-col gap-8"
+          >
             <div className="form-group">
               <label
                 htmlFor="last-name"
-                className={styles.lastNameLabel}
                 data-active={lastName.length > 0}
+                className="text-text-lighter-color"
               >
                 {t("auth.signup.lastname_label")}
               </label>
@@ -81,10 +86,10 @@ export default function SignUp() {
                 name="last-name"
                 id="last-name"
                 autoComplete="last-name"
-                className={`${styles.lastName} ${bricolageGrostesque.className}`}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.lastName && (
                 <i>{translateValidationErrors(state.errors.lastName, t)}</i>
@@ -93,8 +98,8 @@ export default function SignUp() {
             <div className="form-group">
               <label
                 htmlFor="first-name"
-                className={styles.firstNameLabel}
                 data-active={firstName.length > 0}
+                className="text-text-lighter-color"
               >
                 {t("auth.signup.firstname_label")}
               </label>
@@ -103,10 +108,10 @@ export default function SignUp() {
                 name="first-name"
                 id="first-name"
                 autoComplete="first-name"
-                className={`${styles.firstName} ${bricolageGrostesque.className}`}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.firstName && (
                 <i>{translateValidationErrors(state.errors.firstName, t)}</i>
@@ -115,8 +120,8 @@ export default function SignUp() {
             <div className="form-group">
               <label
                 htmlFor="email"
-                className={styles.emailLabel}
                 data-active={email.length > 0}
+                className="text-text-lighter-color"
               >
                 {t("auth.signup.email_label")}
               </label>
@@ -124,11 +129,11 @@ export default function SignUp() {
                 type="email"
                 name="email"
                 id="email"
-                className={`${styles.email} ${bricolageGrostesque.className}`}
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.email && (
                 <i>{translateValidationErrors(state.errors.email, t)}</i>
@@ -137,8 +142,8 @@ export default function SignUp() {
             <div className="form-group">
               <label
                 htmlFor="password"
-                className={styles.passwordLabel}
                 data-active={password.length > 0}
+                className="text-text-lighter-color"
               >
                 {t("auth.signup.password_label")}
               </label>
@@ -147,26 +152,28 @@ export default function SignUp() {
                 name="password"
                 id="password"
                 autoComplete="password"
-                className={styles.password}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10"
               />
               {hiddenPassword ? (
                 <Eye
-                  className={styles.eye}
                   onClick={(e) => setHiddenPassword(false)}
+                  className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
                 />
               ) : (
                 <EyeOff
-                  className={styles.eye}
                   onClick={(e) => setHiddenPassword(true)}
+                  className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
                 />
               )}
               {state?.errors?.password && (
-                <div className={styles.passwordErr}>
-                  <i>{t("auth.signup.password_requirements")}</i>
-                  <ul>
+                <div className="text-left text-[#DC3545] italic text-sm">
+                  <i className="block mt-1">
+                    {t("auth.signup.password_requirements")}
+                  </i>
+                  <ul className="ml-6 mt-[5px]">
                     <li>{t("auth.signup.password_min_chars")}</li>
                     <li>{t("auth.signup.password_uppercase")}</li>
                     <li>{t("auth.signup.password_number")}</li>
@@ -176,33 +183,35 @@ export default function SignUp() {
               )}
             </div>
             {/* Buttons */}
-            <div className={styles.buttons}>
+            <div className="ml-auto">
               <button
                 type="submit"
                 data-disabled={pending}
-                className={bricolageGrostesque.className}
                 disabled={pending}
+                className="font-bricolage"
               >
                 {pending
                   ? t("auth.signup.submit_button_loading")
                   : t("auth.signup.submit_button")}
               </button>
-              {/* <button
-            className={`${instrumentSans.className} ${styles.google}`}
-            onClick={handleGoogleAuth}
-          >
+              {/* <button onClick={handleGoogleAuth} className={`${instrumentSans.className} relative bg-[#3184FC] text-text-lighter-color hover:transition-all hover:duration-[120ms] hover:ease-linear`}>
             {" "}
-            <span>
+            <span className="absolute flex justify-center items-center left-0.5 top-[1px] bg-text-lighter-color rounded-sm w-[34px] h-[34px] scale-90">
               <Image src={"/google.svg"} width={25} height={25} alt="Google" />
             </span>{" "}
-            S'inscrire avec Google
+            Se connecter avec Google
           </button> */}
             </div>
           </form>
-          <div className={styles.text}>
+          <div className="text-center text-text-color mt-15 font-light">
             <p>
               {t("auth.signup.have_account")}{" "}
-              <span onClick={handleSignIn}>{t("auth.signup.signin_link")}</span>
+              <span
+                onClick={handleSignIn}
+                className="text-accent-color-light cursor-pointer ml-1 hover:underline"
+              >
+                {t("auth.signup.signin_link")}
+              </span>
             </p>
           </div>
         </>

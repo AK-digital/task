@@ -8,6 +8,9 @@ export function useProjectInvitation(projectId) {
     fetcher,
     {
       revalidateOnMount: true,
+      revalidateOnFocus: true,
+      refreshInterval: 0, // Pas de refresh automatique
+      dedupingInterval: 2000, // Réduire l'intervalle de déduplication
     }
   );
 

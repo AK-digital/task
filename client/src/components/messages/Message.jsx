@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/components/messages/message.module.css";
 import { useCallback, useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -87,11 +86,14 @@ export default function Message({
         />
       ) : (
         <>
-          <div className={styles.container} data-loading={isLoading}>
-            <div className={styles.wrapper}>
+          <div
+            className="flex flex-col gap-2 transition-opacity duration-[50ms] ease-linear data-[loading=true]:opacity-[0.4] "
+            data-loading={isLoading}
+          >
+            <div className="relative flex justify-between flex-col gap-3.5 py-4 px-6 bg-secondary rounded-lg transition-all duration-[50ms] ease-linear">
               {/* Header auteur */}
-              <div className={styles.header}>
-                <div className={styles.user}>
+              <div className="flex items-center justify-between [&_svg]:cursor-pointer ">
+                <div className="flex items-center gap-2 select-none">
                   <Image
                     src={author?.picture || "/default-pfp.webp"}
                     width={35}
@@ -100,13 +102,16 @@ export default function Message({
                       author?.firstName
                     }`}
                     style={{ borderRadius: "50%" }}
+                    className="rounded-full w-[35px] h-[35px] max-w-[35px] max-h-[35px]"
                   />
-                  <span className={styles.names}>
+                  <span className="text-normal font-medium">
                     {author?.firstName + " " + author?.lastName}
                   </span>
-                  <span className={styles.date}>{formattedDate}</span>
+                  <span className="text-xs text-text-color-muted">
+                    {formattedDate}
+                  </span>
                 </div>
-                <div className={styles.ellipsis}>
+                <div>
                   {uid === author?._id && (
                     <FontAwesomeIcon
                       icon={faEllipsisH}
@@ -114,17 +119,21 @@ export default function Message({
                     />
                   )}
                   {more && (
-                    <div className={styles.more}>
-                      <ul>
+                    <div className="absolute z-2001 right-6 w-fit p-2 bg-secondary rounded-sm shadow-medium select-none">
+                      <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-third [&_li:hover]:rounded-sm">
                         <li
                           onClick={() => {
                             setEdit(true);
                             setMore(false);
                           }}
+                          className="flex items-center gap-2 p-2 text-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
                         >
                           <FontAwesomeIcon icon={faPen} /> {t("messages.edit")}
                         </li>
-                        <li onClick={handleDeleteMessage}>
+                        <li
+                          onClick={handleDeleteMessage}
+                          className="flex items-center gap-2 p-2 text-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
+                        >
                           <FontAwesomeIcon icon={faTrashAlt} />{" "}
                           {t("messages.delete")}
                         </li>
@@ -135,25 +144,20 @@ export default function Message({
               </div>
 
               {/* Message */}
-              <div className={styles.text}>
+              <div className="text_Message">
                 <div dangerouslySetInnerHTML={{ __html: message?.message }} />
               </div>
             </div>
 
-            <div className={styles.informations}>
-              {/* Attachments */}
-              {isNotEmpty(message?.files) && (
-                <AttachmentsInfo attachments={message?.files} />
-              )}
-
+            <div className="flex items-center ml-3 gap-2">
               {/* Lecteurs */}
               <div
-                className={styles.readBy}
+                className="relative flex items-center gap-1"
                 onMouseEnter={() => setShowPeopleRead(true)}
                 onMouseLeave={() => setShowPeopleRead(false)}
               >
                 <Eye size={16} />
-                <span>{message?.readBy?.length}</span>
+                <span className="select-none">{message?.readBy?.length}</span>
 
                 {showPeopleRead && isNotEmpty(message?.readBy) && (
                   <UsersInfo users={message?.readBy} />
@@ -172,7 +176,10 @@ export default function Message({
           </div>
 
           {more && (
-            <div id="modal-layout-opacity" onClick={() => setMore(false)} />
+            <div
+              className="modal-layout-opacity"
+              onClick={() => setMore(false)}
+            />
           )}
         </>
       )}

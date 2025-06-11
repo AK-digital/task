@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/richTextEditor/mentions-list.module.css";
 import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -115,7 +114,7 @@ export default function MentionsList({
 
   return (
     <div
-      className={styles.container}
+      className="absolute z-9999 bg-secondary shadow-small rounded-lg p-2"
       style={{
         top: mentionPosition?.top,
         left: mentionPosition?.left,
@@ -123,12 +122,12 @@ export default function MentionsList({
       onMouseEnter={resetIdxOnMouseEnter}
     >
       {isNotEmpty(members) && (
-        <div className={styles.guests}>
-          <ul className={styles.items}>
+        <div>
+          <ul>
             {members?.map((member, idx) => {
               return (
                 <li
-                  className={styles.item}
+                  className="flex items-center gap-1.5 text-small p-1 cursor-pointer transition-colors duration-[120ms] ease-linear hover:bg-third hover:rounded-sm data-[active=true]:bg-third data-[active=true]:rounded-sm"
                   key={member?.user?._id}
                   data-active={idx === selectedIdx}
                   onClick={() => addMention(member?.user)}
@@ -142,6 +141,7 @@ export default function MentionsList({
                         member?.user?.firstName
                       }`}
                       style={{ borderRadius: "50%" }}
+                      className="rounded-full max-h-[22px] max-w-[22px]"
                     />
                   ) : (
                     <NoPicture user={member?.user} width={22} height={22} />

@@ -2,7 +2,6 @@
 
 import { getProject } from "@/api/project";
 import { getBoards } from "@/api/board";
-import styles from "@/styles/pages/project.module.css";
 import { notFound } from "next/navigation";
 import Project from "@/components/Projects/Project";
 import { getTasks } from "@/api/task";
@@ -50,7 +49,7 @@ export default async function ProjectPage({ params }) {
       archive={archive}
       defaultQueries={defaultQueries}
     >
-      <main className={styles.main}>
+      <main className="w-full ml-6 min-w-0 max-h-[calc(100svh-64px)]">
         {!options && !timeTracking && <Project />}
         {options && <ProjectOptions project={initialProject} />}
         {timeTracking && <ProjectTimeTracking project={initialProject} />}

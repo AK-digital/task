@@ -95,6 +95,30 @@ export async function useTemplate(templateId) {
   }
 }
 
+export async function useCustomTemplate(projectName, boards) {
+  try {
+    const res = await useAuthFetch(
+      "template/use/custom",
+      "POST",
+      "application/json",
+      { projectName, boards }
+    );
+
+    const data = await res.json();
+
+    if (!data?.success) {
+      throw new Error(data?.message || "Une erreur s'est produite");
+    }
+
+    revalidateTag("projects");
+
+    return data;
+  } catch (err) {
+    console.log(err.message || "Une erreur s'est produite");
+    throw err;
+  }
+}
+
 export async function deleteTemplate(templateId) {
   try {
     const res = await useAuthFetch(

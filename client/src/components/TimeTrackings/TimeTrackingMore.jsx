@@ -1,5 +1,4 @@
 import { deleteTimeTracking } from "@/api/timeTracking";
-import styles from "@/styles/components/timeTrackings/time-tracking-more.module.css";
 import { PenBox, Trash } from "lucide-react";
 import socket from "@/utils/socket";
 import { extractId } from "@/utils/extractId";
@@ -17,36 +16,15 @@ export default function TimeTrackingMore({
   const handleDeleteTracker = async () => {
     const projectId = extractId(tracker?.projectId);
 
-    mutateTimeTrackings(
-      (currentData) => {
-        if (!currentData?.data) return currentData;
-        return {
-          ...currentData,
-          data: currentData.data.filter((t) => t._id !== tracker._id),
-        };
-      },
-      false // Ne pas revalider immédiatement
-    );
-
     const response = await deleteTimeTracking([tracker._id], projectId);
 
     if (!response.success) {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
       return;
     }
 
-    socket.emit("time tracking deleted", tracker._id, projectId);
+    socket.emit("update task", projectId);
 
-    setTimeout(() => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
-    }, 50);
-
+    mutateTimeTrackings();
     handleMore();
   };
 
@@ -62,18 +40,24 @@ export default function TimeTrackingMore({
 
   return (
     <>
-      <div id="more" className={styles.container}>
-        <ul>
-          <li className={styles.item} onClick={handleEditDescription}>
+      <div className="absolute z-2001 bg-secondary rounded-sm shadow-medium p-2 text-small text-text-dark-color select-none top-[30px] left-2 w-max">
+        <ul className="flex flex-col gap-2">
+          <li
+            className="flex items-center gap-1 cursor-pointer"
+            onClick={handleEditDescription}
+          >
             <PenBox size={14} /> {t("time_tracking.edit_description")}
           </li>
-          <li className={styles.item} onClick={handleDeleteTracker}>
+          <li
+            className="flex items-center gap-1 cursor-pointer text-color-red"
+            onClick={handleDeleteTracker}
+          >
             <Trash size={14} />
             {t("time_tracking.delete_tracking")}
           </li>
         </ul>
       </div>
-      <div id="modal-layout-opacity" onClick={handleMore}></div>
+      <div className="modal-layout-opacity" onClick={handleMore}></div>
     </>
   );
 }

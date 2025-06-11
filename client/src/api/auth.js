@@ -13,7 +13,7 @@ export async function decryptToken() {
       throw new Error(response?.message);
     }
 
-    console.log("Session decrypted:", response);
+    // console.log("Session decrypted:", response);
     return response;
   } catch (err) {
     console.log("Erreur dans decryptToken:", err.message);

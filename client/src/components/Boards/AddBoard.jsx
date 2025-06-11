@@ -1,18 +1,18 @@
 "use client";
-import styles from "@/styles/components/boards/add-board.module.css";
 import { Plus } from "lucide-react";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
-import { bricolageGrostesque } from "@/utils/font";
 import { useUserRole } from "@/app/hooks/useUserRole";
 import { useState } from "react";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
 import { useTranslation } from "react-i18next";
+import AddBoardIAModal from "../Modals/AddBoardIAModal";
 
 export default function AddBoard({ project }) {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
+  const [showIAModal, setShowIAModal] = useState(false);
   const isAuthorized = useUserRole(project, [
     "owner",
     "manager",
@@ -34,29 +34,43 @@ export default function AddBoard({ project }) {
   if (!isAuthorized) return null;
 
   return (
-    <div className={styles.container}>
+    <div className="flex gap-3">
       <button
         type="submit"
-        className={bricolageGrostesque.className}
         data-disabled={isLoading}
         disabled={isLoading}
         onClick={() => handleAddBoard(project?._id)}
+        className="font-bricolage flex justify-center items-center gap-1.5"
       >
         <Plus size={18} />
         {t("boards.empty_board")}
       </button>
       <button
         type="button"
-        className={bricolageGrostesque.className}
         onClick={() => setAddBoardTemplate(true)}
+        className="font-bricolage flex justify-center items-center gap-1.5"
       >
         <Plus size={18} />
         {t("boards.board_template")}
       </button>
+      {/* <button
+        type="button"
+        className="font-bricolage flex justify-center items-center gap-1.5"
+        onClick={() => setShowIAModal(true)}
+      >
+        <Plus size={18} />
+        Ajout de tableau par IA
+      </button> */}
       {addBoardTemplate && (
         <BoardsTemplateList
           project={project}
           setAddBoardTemplate={setAddBoardTemplate}
+        />
+      )}
+      {showIAModal && (
+        <AddBoardIAModal
+          project={project}
+          onClose={() => setShowIAModal(false)}
         />
       )}
     </div>

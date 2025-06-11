@@ -2,7 +2,6 @@
 
 import { updateProjectRole } from "@/api/project";
 import { updateProjectInvitationRole } from "@/actions/projectInvitation";
-import styles from "@/styles/components/dropdown/dropdown.module.css";
 import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
 import { useState } from "react";
@@ -59,27 +58,36 @@ export function DropDown({
 
   return (
     <>
-      <div className={styles.container}>
-        <div onClick={handleIsOpen} className={styles.current}>
-          <span>{memberRole(current, t)}</span>
+      <div className="relative select-none">
+        <div
+          onClick={handleIsOpen}
+          className="p-2 bg-accent-color text-small rounded-sm cursor-pointer w-25 transition-all ease-in duration-[80ms] hover:bg-accent-color-hover"
+        >
+          <span className="flex items-center justify-center text-white text-center w-full">
+            {memberRole(current, t)}
+          </span>
         </div>
         {isOpen && (
-          <ul className={styles.options}>
+          <ul className="absolute flex flex-col z-9999 top-10 left-0 gap-0 w-full bg-secondary text-small rounded-sm max-h-50 overflow-auto text-left shadow-medium">
             {options.map((option, idx) => {
               return (
                 <li
                   key={idx}
-                  className={styles.option}
+                  className="flex items-center justify-start p-2 cursor-pointer hover:bg-third text-text-darker-color"
                   onClick={handleChangeRole}
                   data-value={option}
                 >
-                  <span>{memberRole(option, t)}</span>
+                  <span className="flex items-center justify-center">
+                    {memberRole(option, t)}
+                  </span>
                 </li>
               );
             })}
           </ul>
         )}
-        {isOpen && <div id="modal-layout-opacity" onClick={handleIsOpen}></div>}
+        {isOpen && (
+          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
+        )}
       </div>
     </>
   );

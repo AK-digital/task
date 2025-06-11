@@ -27,9 +27,13 @@ export async function getStatusByProject(projectId) {
   }
 }
 
-export async function getUserProjectsStatuses() {
+export async function getStatusesByProjects(projectsIds) {
   try {
-    const res = await useAuthFetch("/status", "GET", "application/json");
+    const res = await useAuthFetch(
+      `status?projects=${projectsIds.join(",")}`,
+      "GET",
+      "application/json"
+    );
 
     if (res.status === 404) {
       return {

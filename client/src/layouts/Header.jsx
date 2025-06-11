@@ -1,6 +1,5 @@
 "use client";
 
-import styles from "@/styles/layouts/header.module.css";
 import Notifications from "@/components/Notifications/Notifications";
 import LanguageSwitcher from "@/components/Header/LanguageSwitcher";
 import { AuthContext } from "@/context/auth";
@@ -41,20 +40,26 @@ export default function Header() {
   const unreadCount = unreadNotifications?.length;
 
   return (
-    <header className={styles.container}>
-      <nav className={styles.nav}>
-        <ul className={styles.actions}>
-          <li className={styles.languageSelector}>
-            <LanguageSwitcher />
-          </li>
-          <li className={styles.action}>
-            <Bell
-              size={22}
+    <header className="w-full py-2.5 h-header-height">
+      <nav className="flex justify-end items-center h-full ml-30 mr-10">
+        <ul className="relative flex items-center gap-6 overflow-visible">
+          <li className="relative flex justify-center items-center h-full overflow-visible">
+            <button
               onClick={(e) => setNotifOpen(true)}
-              data-open={notifOpen}
-              className={styles.bell}
-            />
-            {unreadCount > 0 && <div className={styles.unread}></div>}
+              className="group relative px-0.5 h-full bg-transparent overflow-visible shadow-none"
+            >
+              <Bell
+                size={22}
+                data-open={notifOpen}
+                className="group-hover:fill-text-darker-color  data-[open=true]:fill-text-darker-color text-text-darker-color"
+              />
+              {/* {unreadCount > 0 && (
+                <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-red-500 animate-ping"></div>
+              )} */}
+              {unreadCount > 0 && (
+                <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-text-color-red"></div>
+              )}
+            </button>
             {notifOpen && (
               <Notifications
                 setNotifOpen={setNotifOpen}
@@ -65,7 +70,7 @@ export default function Header() {
               />
             )}
           </li>
-          <li className={styles.user}>
+          <li>
             <Link href={"/profile"}>
               <Image
                 src={user?.picture || "/default-pfp.webp"}
@@ -73,7 +78,7 @@ export default function Header() {
                 width={38}
                 height={38}
                 quality={100}
-                style={{ borderRadius: "50%" }}
+                className="rounded-full max-h-[38px] max-w-[38px] object-cover select-none"
               />
             </Link>
           </li>

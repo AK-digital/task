@@ -1,25 +1,13 @@
 "use server";
-import styles from "@/styles/pages/time-trackings.module.css";
-import { getTimeTrackings } from "@/api/timeTracking";
 import TimeTrackings from "@/components/TimeTrackings/TimeTrackings";
-import { getProjects } from "@/api/project";
 
 export default async function TimeTrackingsPage({ searchParams }) {
-  const queryParams = await searchParams;
-
-  // Get trackers based on query params, if no query params return an empty array
-  const trackers = await getTimeTrackings(queryParams);
-  const projects = await getProjects(); // Fetch all projects
-  projects?.sort((a, b) => a.name.localeCompare(b.name)); // Sort projects by name
+  const params = await searchParams;
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <TimeTrackings
-          trackers={trackers?.data}
-          projects={projects}
-          searchParams={queryParams}
-        />
+    <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
+      <div className="flex flex-col bg-primary-transparent rounded-tl-2xl h-full pt-6 pl-6 overflow-hidden pb-10">
+        <TimeTrackings searchParams={params} />
       </div>
     </main>
   );

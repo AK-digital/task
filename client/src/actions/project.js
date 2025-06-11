@@ -287,3 +287,61 @@ export async function updateProject(t, prevState, formData) {
     };
   }
 }
+
+export async function updateProjectsOrder(projects, t) {
+  try {
+    const res = await useAuthFetch(
+      `project/reorder`,
+      "PATCH",
+      "application/json",
+      { projects }
+    );
+
+    const response = await res.json();
+    return response; // Retourne la réponse complète
+  } catch (err) {
+    console.error("Erreur lors de la mise à jour de l'ordre des projets:", err);
+    throw err; // Propage l'erreur pour la gestion dans handleDragEnd
+  }
+}
+
+export async function sendProjectInvitationFromWizard(projectId, email, t) {
+  try {
+    const rawData = {
+      email: email,
+    };
+
+    const res = await useAuthFetch(
+      `project/${projectId}/send-invitation`,
+      "POST",
+      "application/json",
+      rawData
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return {
+      success: true,
+      message: `Invitation envoyée à ${email} avec succès`,
+      data: response?.data,
+    };
+  } catch (err) {
+    console.log(err?.message || "Une erreur est survenue");
+
+    if (err?.message.includes("E11000 duplicate")) {
+      return {
+        success: false,
+        message: "Une invitation a déjà été envoyée à cet utilisateur",
+      };
+    }
+
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue",
+    };
+  }
+}

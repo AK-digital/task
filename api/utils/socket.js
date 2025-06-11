@@ -121,7 +121,7 @@ export default function socketHandler(io) {
       }
     });
 
-    socket.on("time tracking updated", async (trackingId) => {
+    socket.on("update time tracking", async (trackingId) => {
       const timeTracking = await TimeTrackingModel.findById(trackingId);
       if (timeTracking) {
         await emitToProjectMembers(
@@ -130,32 +130,6 @@ export default function socketHandler(io) {
           socket,
           trackingId
         );
-      }
-    });
-
-    socket.on("time tracking deleted", async (trackingId, projectId) => {
-      if (projectId) {
-        await emitToProjectMembers(
-          projectId,
-          "time tracking deleted",
-          socket,
-          trackingId
-        );
-      } else {
-        socket.broadcast.emit("time tracking deleted", trackingId);
-      }
-    });
-
-    socket.on("time tracking deleted batch", async (trackingIds, projectId) => {
-      if (projectId) {
-        await emitToProjectMembers(
-          projectId,
-          "time tracking deleted batch",
-          socket,
-          trackingIds
-        );
-      } else {
-        socket.broadcast.emit("time tracking deleted batch", trackingIds);
       }
     });
   });

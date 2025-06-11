@@ -1,176 +1,138 @@
 "use client";
-import styles from "@/styles/components/timeTrackings/time-trackings.module.css";
 import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
-import TimeTracking from "./TimeTracking";
 import Filters from "./Filters";
-import TimeTrackingHeader from "./TimeTrackingHeader";
 import { useEffect, useMemo, useState } from "react";
-import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import ExportPdfBtn from "./ExportPdfBtn";
 import { useTimeTrackings } from "@/app/hooks/useTimeTrackings";
 import socket from "@/utils/socket";
+import { useProjects } from "@/app/hooks/useProjects";
+import TimeTracking from "./TimeTracking";
+import SelectedTimeTrackings from "./SelectedTimeTrackings";
+import TimeTrackingHeader from "./TimeTrackingHeader";
+import TimeTrackingsSkeletons from "./TimeTrackingsSkeletons";
 import { useTranslation } from "react-i18next";
 
-export default function TimeTrackings({
-  trackers: initialTrackers,
-  projects,
-  searchParams,
-}) {
+export default function TimeTrackings({ searchParams }) {
   const { t } = useTranslation();
-  const [selectedProjects, setSelectedProjects] = useState([]);
-  const [filteredTrackers, setFilteredTrackers] = useState(
-    initialTrackers || []
-  );
+  const [queries, setQueries] = useState(searchParams);
+  const { projects, projectsLoading } = useProjects();
+  const { timeTrackings, timeTrackingsLoading, mutateTimeTrackings } =
+    useTimeTrackings(queries);
+
+  const [filteredTrackers, setFilteredTrackers] = useState(timeTrackings || []);
   const [selectedTrackers, setSelectedTrackers] = useState([]);
 
-  // Utiliser le hook pour les données en temps réel
-  const { timeTrackings, mutateTimeTrackings } = useTimeTrackings(
-    searchParams,
-    { data: initialTrackers }
-  );
-
-  // Utiliser les données du hook ou les données initiales
-  const trackers = timeTrackings?.data || initialTrackers || [];
-
-  const projectsWithTrackers = projects?.filter((project) =>
-    filteredTrackers?.some((tracker) => tracker?.project?._id === project?._id)
-  );
-  const queries = new URLSearchParams(searchParams);
+  useEffect(() => {
+    setFilteredTrackers(timeTrackings || []);
+  }, [timeTrackings]);
 
   const totalDuration = useMemo(() => {
-    return trackers?.reduce((acc, tracker) => {
+    return timeTrackings?.reduce((acc, tracker) => {
       return acc + Math.floor(tracker?.duration / 1000) * 1000;
     }, 0);
-  }, [trackers]);
-
-  const hasSelectedProjects = selectedProjects?.length > 0;
-  const hasSelectedTrackers = selectedTrackers?.length > 0;
+  }, [timeTrackings]);
 
   useEffect(() => {
-    setFilteredTrackers(trackers);
-  }, [trackers]);
-
-  useEffect(() => {
-    const handleTaskUpdated = (projectId) => {
-      // Revalider seulement si on n'a pas de filtre de projet ou si c'est un projet concerné
-      const projectsParam = searchParams?.projects;
-      if (!projectsParam || projectsParam.includes(projectId)) {
-        mutateTimeTrackings(undefined, {
-          revalidate: true,
-          populateCache: false,
-        });
-      }
+    const handleTaskUpdated = () => {
+      mutateTimeTrackings();
     };
-
     const handleTimeTrackingUpdated = () => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
+      mutateTimeTrackings();
     };
-
-    const handleTimeTrackingDeleted = () => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
-    };
-
-    const handleTimeTrackingDeletedBatch = () => {
-      mutateTimeTrackings(undefined, {
-        revalidate: true,
-        populateCache: false,
-      });
-    };
-
     socket.on("task updated", handleTaskUpdated);
     socket.on("time tracking updated", handleTimeTrackingUpdated);
-    socket.on("time tracking deleted", handleTimeTrackingDeleted);
-    socket.on("time tracking deleted batch", handleTimeTrackingDeletedBatch);
-
     return () => {
       socket.off("task updated", handleTaskUpdated);
       socket.off("time tracking updated", handleTimeTrackingUpdated);
-      socket.off("time tracking deleted", handleTimeTrackingDeleted);
-      socket.off("time tracking deleted batch", handleTimeTrackingDeletedBatch);
     };
   }, [mutateTimeTrackings, searchParams]);
 
-  useEffect(() => {
-    // Get the "projects" query parameter from the URL search params
-    const projectsNames = queries?.get("projects")?.split(",") || [];
+  const hasSelectedTrackers = selectedTrackers?.length > 0;
+  const hasSelectedProjects = queries?.projects?.length > 0;
 
-    if (projects?.length <= 0) setSelectedProjects([]);
-
-    // If there are project names, filter the projects array to find matching projects
-    setSelectedProjects(
-      projects.filter((project) => projectsNames.includes(project?.name))
-    );
-  }, [searchParams]);
+  function giveProjectsToExport() {
+    if (hasSelectedProjects) {
+      // give projects selected in the queries
+      return projects?.filter((project) =>
+        queries?.projects?.includes(project?._id)
+      );
+    } else {
+      // give all projects of current returned time trackings
+      return timeTrackings?.reduce((acc, tracker) => {
+        if (!acc.find((project) => project?._id === tracker?.projectId?._id)) {
+          acc.push(tracker?.projectId);
+        }
+        return acc;
+      }, []);
+    }
+  }
 
   function handleExport() {
-    exportTimeTracking(
-      hasSelectedProjects ? selectedProjects : projectsWithTrackers,
-      filteredTrackers,
-      t
-    );
+    exportTimeTracking(giveProjectsToExport(), timeTrackings);
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>{t("navigation.time_tracking")}</h1>
+    <div className="h-full">
+      <div className="flex items-center gap-6">
+        <h1 className="mb-[inherit] min-w-fit select-none">
+          {t("time_tracking.time_tracking")}
+        </h1>
         {/* Filters */}
-        <Filters
-          projects={projects}
-          selectedProjects={selectedProjects}
-          searchParams={searchParams}
-          hasSelectedProjects={hasSelectedProjects}
-          projectsWithTrackers={projectsWithTrackers}
-        />
-        {/* Total duration */}
-        {totalDuration && (
-          <span className={styles.total}>
-            {t("time_tracking.total_time")}{" "}
-            {formatTime(Math.floor(totalDuration / 1000))}
-          </span>
+        {!projectsLoading && (
+          <Filters
+            projects={projects}
+            queries={queries}
+            setQueries={setQueries}
+          />
         )}
+
+        {/* Total duration */}
+        <span className="font-bold select-none">
+          {t("time_tracking.total_time")} :{" "}
+          {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
+        </span>
+
         {/* Export PDF Button */}
         <ExportPdfBtn handleExport={handleExport} />
       </div>
+
       {/* Time tracking list */}
-      {isNotEmpty(filteredTrackers) ? (
-        <div className={styles.content}>
-          <TimeTrackingHeader
-            trackers={trackers}
-            setFilteredTrackers={setFilteredTrackers}
-            setSelectedTrackers={setSelectedTrackers}
-          />
-          {filteredTrackers?.map((tracker) => {
-            return (
-              <TimeTracking
-                tracker={tracker}
-                setSelectedTrackers={setSelectedTrackers}
-                mutateTimeTrackings={mutateTimeTrackings}
-                key={tracker?._id}
-              />
-            );
-          })}
-          {/* Selected time tracking list */}
-          {hasSelectedTrackers && (
-            <SelectedTimeTrackings
-              selectedTrackers={selectedTrackers}
+      <div className="boards_Boards mt-3 overflow-auto h-full pr-3 mr-3 pb-10 rounded-lg">
+        {timeTrackingsLoading ? (
+          <TimeTrackingsSkeletons />
+        ) : isNotEmpty(timeTrackings) ? (
+          <>
+            <TimeTrackingHeader
+              trackers={timeTrackings}
+              setFilteredTrackers={setFilteredTrackers}
               setSelectedTrackers={setSelectedTrackers}
-              mutateTimeTrackings={mutateTimeTrackings}
-              trackers={filteredTrackers}
             />
-          )}
-        </div>
-      ) : (
-        <div className={styles.empty}>
-          <h2>{t("time_tracking.no_tracking_message")}</h2>
-        </div>
-      )}
+            {filteredTrackers.map((tracker) => {
+              return (
+                <TimeTracking
+                  tracker={tracker}
+                  setSelectedTrackers={setSelectedTrackers}
+                  mutateTimeTrackings={mutateTimeTrackings}
+                  key={tracker?._id}
+                />
+              );
+            })}
+          </>
+        ) : (
+          <div className="flex items-center justify-center h-full text-2xl">
+            <h2>{t("time_tracking.no_tracking_message")}</h2>
+          </div>
+        )}
+        {/* Selected time tracking list */}
+        {hasSelectedTrackers && (
+          <SelectedTimeTrackings
+            selectedTrackers={selectedTrackers}
+            setSelectedTrackers={setSelectedTrackers}
+            mutateTimeTrackings={mutateTimeTrackings}
+            trackers={filteredTrackers}
+          />
+        )}
+      </div>
     </div>
   );
 }

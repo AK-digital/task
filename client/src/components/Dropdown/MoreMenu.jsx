@@ -1,19 +1,29 @@
 "use client";
-import styles from "@/styles/components/dropdown/more.module.css";
 import Link from "next/link";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
 import Portal from "../Portal/Portal";
 import { useTranslation } from "react-i18next";
 
-export function MoreMenu({ isOpen, setIsOpen, options }) {
+export function MoreMenu({ isOpen, setIsOpen, options, triggerRef }) {
   const { t } = useTranslation();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
   const [deleteOption, setDeleteOption] = useState(null);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
 
   const isProject = options.some((option) => option?.project);
+
+  useEffect(() => {
+    if (isOpen && triggerRef?.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX - 13,
+      });
+    }
+  }, [isOpen, triggerRef]);
 
   const handleIsOpen = () => {
     setIsOpen((prev) => !prev);
@@ -47,7 +57,6 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
 
   function itemProps(option) {
     const props = {
-      className: styles.option,
       onClick: () => handleClick(option),
       "data-remove": option?.remove,
     };
@@ -56,40 +65,52 @@ export function MoreMenu({ isOpen, setIsOpen, options }) {
 
   return (
     <>
-      <div className={styles.container} id="popover">
-        {isOpen && (
-          <ul className={styles.options}>
-            {options.map((option, idx) => {
-              if (option?.authorized === false) return null;
+      {isOpen && (
+        <Portal>
+          <div
+            className="fixed z-20001 bg-secondary rounded-lg w-max text-small py-2 px-4 shadow-small text-text-dark-color no-underline [&_a]:text-text-dark-color [&_a]:no-underline select-none"
+            style={{
+              top: `${position.top}px`,
+              left: `${position.left}px`,
+            }}
+          >
+            <ul>
+              {options.map((option, idx) => {
+                if (option?.authorized === false) return null;
 
-              return (
-                <li {...itemProps(option)} key={idx}>
-                  {option?.link ? (
-                    <Link href={option?.link} className={styles.link}>
-                      {content(option)}
-                    </Link>
-                  ) : (
-                    content(option)
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-      {isOpen && <div id="modal-layout-opacity" onClick={handleIsOpen}></div>}
-
-      {/* Popup de confirmation */}
+                return (
+                  <li
+                    {...itemProps(option)}
+                    key={idx}
+                    className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light last:border-b-0 data-[remove=true]:text-text-color-red hover:[&_a]:text-accent-color-light [&_span]:flex [&_span]:items-center [&_span]:gap-2 "
+                  >
+                    {option?.link ? (
+                      <Link href={option?.link}>{content(option)}</Link>
+                    ) : (
+                      content(option)
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
+        </Portal>
+      )}
       {confirmOpen && (
         <Portal>
           <ConfirmationDelete
+            isOpen={confirmOpen}
+            setIsOpen={setConfirmOpen}
+            onConfirm={handleConfirm}
             title={`${
               isProject
                 ? t("general.project_lowercase")
                 : t("general.board_lowercase")
             } ${deleteOption?.deletionName}`}
             onCancel={() => setConfirmOpen(false)}
-            onConfirm={handleConfirm}
+            deletionName={deleteOption?.deletionName}
+            project={isProject}
           />
         </Portal>
       )}

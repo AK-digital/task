@@ -16,6 +16,14 @@ const nextConfig = {
     },
     serverActions: { bodySizeLimit: "20mb" },
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/ai/:path*",
+        destination: "https://api.clynt.io/api/ai/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

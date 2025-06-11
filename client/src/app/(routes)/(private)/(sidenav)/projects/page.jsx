@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/pages/projects.module.css";
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/Projects/ProjectCard";
@@ -24,14 +23,11 @@ export default function Projects() {
   });
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.back} onClick={() => router.back()}>
-            <ArrowLeftCircle size={32} />
-          </div>
-          <h1 className={styles.headerH1}>{t("projects.your_projects")}</h1>
-          <div className={styles.projectCount}>
+    <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">
+      <div className="relative flex items-center flex-col rounded-tl-2xl bg-primary-transparent h-full pl-6 pt-6">
+        <div className="flex justify-between items-start w-full pr-6 mb-5">
+          <h1 className="ml-[175px] select-none">{t("projects.your_projects")}</h1>
+          <div className="text-text-color-muted text-[0.85rem] font-medium bg-secondary px-3 py-1.5 rounded-lg select-none">
             <span>
               {projectsLoading
                 ? "..."
@@ -39,8 +35,8 @@ export default function Projects() {
             </span>
           </div>
         </div>
-        <div className={styles.wrapper}>
-          <div className={styles.elements}>
+        <div className="w-full overflow-auto">
+          <div className="grid grid-cols-4 gap-[70px] max-w-[1400px] mx-auto py-4 px-3 mt-6">
             {projectsLoading ? (
               <ProjectCardSkeleton />
             ) : (

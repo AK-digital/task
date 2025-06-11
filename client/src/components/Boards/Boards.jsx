@@ -1,5 +1,4 @@
 "use client";
-import styles from "@/styles/components/boards/boards.module.css";
 import Board from "./Board";
 import {
   DndContext,
@@ -341,12 +340,12 @@ export default function Boards({ boards: initialBoards, tasksData }) {
   const boardIds = useMemo(() => boards.map((board) => board._id), [boards]);
 
   return (
-    <div className={styles["boards"]}>
+    <div className="boards_Boards relative flex flex-col gap-11 h-full overflow-y-auto pr-2.5 pb-6 z-1000 border-r-[3px] border-transparent rounded-2xl">
       {archive && (
         <>
-          <div className={styles.archiveTitle}>
+          <div className="flex items-center gap-2 font-semibold text-large -mb-5 select-none">
             <div
-              className={styles.back}
+              className="relative top-[3px] cursor-pointer"
               onClick={() => router.push(`/projects/${project?._id}`)}
             >
               <ArrowLeftCircle size={32} />
@@ -355,8 +354,8 @@ export default function Boards({ boards: initialBoards, tasksData }) {
           </div>
 
           {Object.values(tasks).flat()?.length === 0 && (
-            <div>
-              <p>{t("boards.no_archives_available")}</p>
+            <div className="select-none">
+              <p>{t("boards.no_archive_available")}</p>
             </div>
           )}
         </>
@@ -368,46 +367,40 @@ export default function Boards({ boards: initialBoards, tasksData }) {
         onDragEnd={handleDragEnd}
         modifiers={[restrictToVerticalAxis]}
       >
-        {/* Contexte pour les boards */}
-        <SortableContext
-          items={boardIds}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className={styles.boardsContainer}>
-            {boards
-              ?.filter((board) =>
-                archive
-                  ? tasks[board?._id] && tasks[board?._id]?.length > 0
-                  : true
-              )
-              ?.map((board) => {
-                return (
-                  <SortableBoard
-                    key={board?._id}
-                    board={board}
-                    data-board-id={board?._id}
+        <div className="flex flex-col gap-11 w-full">
+          {boards
+            ?.filter((board) =>
+              archive
+                ? tasks[board?._id] && tasks[board?._id]?.length > 0
+                : true
+            )
+            ?.map((board) => {
+              return (
+                <SortableBoard
+                  key={board?._id}
+                  board={board}
+                  data-board-id={board?._id}
+                >
+                  {/* Contexte pour les tâches à l'intérieur du board */}
+                  <SortableContext
+                    id={board?._id}
+                    items={tasks[board._id]?.map((task) => task?._id) || []}
+                    strategy={verticalListSortingStrategy}
                   >
-                    {/* Contexte pour les tâches à l'intérieur du board */}
-                    <SortableContext
-                      id={board?._id}
-                      items={tasks[board._id]?.map((task) => task?._id) || []}
-                      strategy={verticalListSortingStrategy}
-                    >
-                      <Board
-                        tasks={tasks[board._id] || []}
-                        displayedElts={displayedElts}
-                        board={board}
-                        activeId={activeId}
-                        selectedTasks={selectedTasks}
-                        setSelectedTasks={setSelectedTasks}
-                      />
-                    </SortableContext>
-                  </SortableBoard>
-                );
-              })}
-          </div>
-        </SortableContext>
-        <DragOverlay>
+                    <Board
+                      tasks={tasks[board._id] || []}
+                      displayedElts={displayedElts}
+                      board={board}
+                      activeId={activeId}
+                      selectedTasks={selectedTasks}
+                      setSelectedTasks={setSelectedTasks}
+                    />
+                  </SortableContext>
+                </SortableBoard>
+              );
+            })}
+        </div>
+        <DragOverlay style={{ zIndex: 50000 }}>
           {activeId && activeType === "task" ? (
             <Task
               id={activeId}
@@ -419,20 +412,21 @@ export default function Boards({ boards: initialBoards, tasksData }) {
               archive={archive}
             />
           ) : activeId && activeType === "board" ? (
-            <div className={styles.boardOverlay}>
+            <div className="relative translate-z-0 will-change-transform z-50000">
               <Board
                 tasks={tasks[activeId] || []}
-                project={project}
                 board={boards.find((board) => board._id === activeId)}
-                isOverlay={true}
+                project={project}
                 archive={archive}
+                isOverlay={true}
+                displayedElts={displayedElts}
               />
             </div>
           ) : null}
         </DragOverlay>
       </DndContext>
       {!archive && canPost && (
-        <div className={styles.options}>
+        <div>
           <AddBoard project={project} />
         </div>
       )}

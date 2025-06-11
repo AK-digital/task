@@ -1,5 +1,4 @@
 import { Paperclip } from "lucide-react";
-import styles from "@/styles/components/attachment/attachment.module.css";
 
 export default function Attachment({
   attachments,
@@ -61,7 +60,7 @@ export default function Attachment({
   return (
     <div>
       <label
-        className={styles.label}
+        className="text-small data-[label=false]:text-accent-color-light cursor-pointer select-none"
         data-label={isPaperclip}
         htmlFor="attachment"
       >

@@ -21,7 +21,10 @@ import messageRouter from "./routes/message.routes.js";
 import draftRouter from "./routes/draft.routes.js";
 import timeTrackingRouter from "./routes/timeTracking.routes.js";
 import favoriteRouter from "./routes/favorite.routes.js";
+import betaRouter from "./routes/beta.routes.js";
 import socketHandler from "./utils/socket.js";
+import aiRouter from "./routes/ai.routes.js";
+import feedbackRouter from "./routes/feedback.routes.js";
 
 const app = express();
 const server = createServer(app);
@@ -30,7 +33,7 @@ const io = new Server(server, {
   addTrailingSlash: false,
   transports: ["websocket", "polling"],
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: [process.env.CLIENT_URL, process.env.LANDING_URL],
     methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -38,7 +41,7 @@ const io = new Server(server, {
 });
 
 const corsOptions = {
-  origin: process.env.CLIENT_URL,
+  origin: [process.env.CLIENT_URL, process.env.LANDING_URL],
   methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -67,7 +70,10 @@ app.use("/api/task", taskRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/draft", draftRouter);
 app.use("/api/time-tracking", timeTrackingRouter);
+app.use("/api/ai", aiRouter);
 app.use("/api/favorite", favoriteRouter);
+app.use("/api/feedback", feedbackRouter);
+app.use("/api/beta", betaRouter);
 
 // SOCKET LOGIC
 socketHandler(io);

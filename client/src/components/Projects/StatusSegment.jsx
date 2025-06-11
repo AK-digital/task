@@ -1,4 +1,3 @@
-import styles from "@/styles/components/projects/statusSegment.module.css";
 import { useState } from "react";
 import TaskInfo from "../Popups/TaskInfo";
 import { useTranslation } from "react-i18next";
@@ -31,7 +30,7 @@ export default function StatusSegment({ status, totalTasks }) {
 
   return (
     <div
-      className={styles.statusSegment}
+      className="relative h-full transition-width duration-300"
       style={{
         width: `${percentage}%`,
         backgroundColor: status?.color || "#ccc",

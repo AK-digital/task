@@ -1,5 +1,3 @@
-import styles from "@/styles/components/tasks/tasks-search.module.css";
-import { bricolageGrostesque } from "@/utils/font";
 import { Search } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { useTranslation } from "react-i18next";
@@ -20,7 +18,7 @@ export default function TasksSearch({ setQueries }) {
   }, 600);
 
   return (
-    <div className={styles.container}>
+    <div className="container_TasksSearch flex items-center gap-2 p-2 w-full max-w-[250px] transition-all duration-150 ease-in-out border-b border-color-border-color">
       <Search size={24} />
       <input
         type="search"
@@ -28,7 +26,7 @@ export default function TasksSearch({ setQueries }) {
         id="search"
         placeholder={t("tasks.search_task_placeholder")}
         onChange={handleSearch}
-        className={bricolageGrostesque.className}
+        className="input_TasksSearch border-0 p-0 text-color-text-dark-color text-normal font-bricolage placeholder:text-color-text-color-muted"
       />
     </div>
   );

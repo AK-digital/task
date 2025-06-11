@@ -16,13 +16,17 @@ export async function getTimeTrackings(queries) {
       "trackers"
     );
 
+    if (res.status === 404) {
+      return [];
+    }
+
     const response = await res.json();
 
     if (!response?.success) {
       throw new Error(response?.message || "Une erreur est survenue");
     }
 
-    return response;
+    return response.data;
   } catch (err) {
     console.log(
       err?.message ||
