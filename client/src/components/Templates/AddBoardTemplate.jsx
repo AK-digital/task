@@ -2,6 +2,7 @@ import { saveBoardTemplate } from "@/actions/boardTemplate";
 import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useActionState, useContext, useEffect, useState } from "react";
+import Portal from "../Portal/Portal";
 
 const initialState = {
   success: null,
@@ -39,7 +40,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   }, [state]);
 
   return (
-    <>
+    <Portal>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 bg-secondary p-6 rounded-lg shadow-medium">
         <div className="text-center text-large text-text-dark-color">
           <span>Enregistrer ce tableau comme modèle</span>
@@ -96,6 +97,6 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
           message={popup.message}
         />
       )}
-    </>
+    </Portal>
   );
 }

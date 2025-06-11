@@ -1,6 +1,7 @@
 import { saveTemplate } from "@/actions/template";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useActionState, useEffect, useState } from "react";
+import Portal from "../Portal/Portal";
 
 const initialState = {
   success: null,
@@ -38,7 +39,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
   }, [state]);
 
   return (
-    <>
+    <Portal>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 bg-secondary p-6 rounded-lg shadow-medium">
         <div className="text-center text-large text-text-dark-color">
           <span>Enregistrer ce projet comme modèle</span>
@@ -88,6 +89,6 @@ export default function AddTemplate({ project, setAddTemplate }) {
           message={popup.message}
         />
       )}
-    </>
+    </Portal>
   );
 }

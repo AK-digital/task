@@ -26,6 +26,7 @@ import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useTaskContext } from "@/context/TaskContext";
+import Portal from "../Portal/Portal";
 
 export default function BoardHeader({
   board,
@@ -234,9 +235,8 @@ export default function BoardHeader({
 
   return (
     <div
-      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
-        openedTask ? "z-1000" : "z-2000"
-      }`}
+      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${openedTask ? "z-1000" : "z-2000"
+        }`}
       // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
@@ -361,11 +361,13 @@ export default function BoardHeader({
         </>
       )}
       {addBoardTemplate && (
-        <AddBoardTemplate
-          project={project}
-          board={board}
-          setAddTemplate={setAddBoardTemplate}
-        />
+        <Portal>
+          <AddBoardTemplate
+            project={project}
+            board={board}
+            setAddTemplate={setAddBoardTemplate}
+          />
+        </Portal>
       )}
     </div>
   );

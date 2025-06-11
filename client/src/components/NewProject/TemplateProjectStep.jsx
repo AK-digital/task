@@ -1,7 +1,13 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { getTemplates, useTemplate, useCustomTemplate, deleteTemplate, getPublicTemplates } from "@/api/template";
+import {
+  getTemplates,
+  useTemplate,
+  useCustomTemplate,
+  deleteTemplate,
+  getPublicTemplates,
+} from "@/api/template";
 import { List, ListTodo, X, Plus } from "lucide-react";
 import { usePrivateTemplate } from "@/app/hooks/usePrivateTemplate";
 import { usePublicTemplate } from "@/app/hooks/usePublicTemplate";
@@ -9,7 +15,7 @@ import { isNotEmpty } from "@/utils/utils";
 import { AuthContext } from "@/context/auth";
 
 export default function TemplateProjectStep({ onComplete }) {
-  const { uid } = useContext(AuthContext)
+  const { uid } = useContext(AuthContext);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [deletingTemplate, setDeletingTemplate] = useState(null);
@@ -30,11 +36,18 @@ export default function TemplateProjectStep({ onComplete }) {
   console.log(publicTemplates, "publicTemplates");
   console.log(privateTemplates, "privateTemplates");
 
-  // Sélectionner automatiquement le premier template public
-  const shouldShowFirstTemplate = !selectedTemplate && publicTemplates?.length > 0;
+  // Sélectionner automatiquement le premier template selon l'onglet actuel
+  const shouldShowFirstTemplate =
+    !selectedTemplate &&
+    ((showPrivateTemplate && privateTemplates?.length > 0) ||
+      (!showPrivateTemplate && publicTemplates?.length > 0));
 
   if (shouldShowFirstTemplate) {
-    setTimeout(() => handleTemplateSelect(publicTemplates[0]), 0);
+    if (showPrivateTemplate && privateTemplates?.length > 0) {
+      setTimeout(() => handleTemplateSelect(privateTemplates[0]), 0);
+    } else if (!showPrivateTemplate && publicTemplates?.length > 0) {
+      setTimeout(() => handleTemplateSelect(publicTemplates[0]), 0);
+    }
   }
 
   const handleTemplateSelect = (template) => {
@@ -43,10 +56,12 @@ export default function TemplateProjectStep({ onComplete }) {
 
     // Initialiser les données éditables
     setEditableProjectName(template.name);
-    setEditableBoards(template.boardsWithTasks?.map(board => ({
-      ...board,
-      tasks: board.tasks?.map(task => ({ ...task })) || []
-    })) || []);
+    setEditableBoards(
+      template.boardsWithTasks?.map((board) => ({
+        ...board,
+        tasks: board.tasks?.map((task) => ({ ...task })) || [],
+      })) || []
+    );
 
     // Réinitialiser les états d'édition
     setEditingProjectTitle(false);
@@ -75,7 +90,7 @@ export default function TemplateProjectStep({ onComplete }) {
   };
 
   const handleProjectTitleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       setEditingProjectTitle(false);
     }
   };
@@ -95,7 +110,7 @@ export default function TemplateProjectStep({ onComplete }) {
   };
 
   const handleBoardTitleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       setEditingBoardTitle(null);
     }
   };
@@ -116,13 +131,17 @@ export default function TemplateProjectStep({ onComplete }) {
     const updatedBoards = [...editableBoards];
     updatedBoards[boardIndex].tasks.push({
       _id: `temp-${Date.now()}`,
-      text: "Nouvelle tâche"
+      text: "Nouvelle tâche",
     });
     setEditableBoards(updatedBoards);
   };
 
   const handleDeleteTemplate = async (templateId, templateName) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer le modèle "${templateName}" ? Cette action est irréversible.`)) {
+    if (
+      !confirm(
+        `Êtes-vous sûr de vouloir supprimer le modèle "${templateName}" ? Cette action est irréversible.`
+      )
+    ) {
       return;
     }
 
@@ -155,139 +174,192 @@ export default function TemplateProjectStep({ onComplete }) {
 
     // Passer les données à l'étape 3
     onComplete({
-      type: 'template',
+      type: "template",
       title: editableProjectName,
       boards: editableBoards,
-      templateId: selectedTemplate._id
+      templateId: selectedTemplate._id,
     });
   };
-
-  const bothNotEmpty = isNotEmpty(publicTemplates) && isNotEmpty(privateTemplates)
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 h-full max-w-6xl mx-auto">
       {/* Colonne de gauche - Liste des modèles */}
       <div className="flex flex-col gap-4 bg-secondary rounded-xl shadow-sm p-6 overflow-hidden">
-        <h2 className="text-xl font-semibold mb-6 text-text-dark-color">Modèles Disponible</h2>
+        <h2 className="text-xl font-semibold mb-6 text-text-dark-color">
+          Modèles Disponible
+        </h2>
         <div className="flex items-center justify-center rounded-lg border border-border-color">
           <button
-            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tl-lg rounded-bl-lg rounded-none ${showPrivateTemplate ? 'bg-white' : 'bg-primary'}`}
-            onClick={() => setShowPrivateTemplate(false)}
+            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tl-lg rounded-bl-lg rounded-none ${
+              showPrivateTemplate ? "bg-white" : "bg-primary"
+            }`}
+            onClick={() => {
+              setShowPrivateTemplate(false);
+              setSelectedTemplate(null);
+              setShowPreview(false);
+              setEditableProjectName("");
+              setEditableBoards([]);
+              setEditingProjectTitle(false);
+              setEditingBoardTitle(null);
+            }}
           >
             <div className="flex justify-center items-center">
-              <p className="text-normal font-medium text-text-dark-color">La communauté</p>
+              <p className="text-normal font-medium text-text-dark-color">
+                La communauté
+              </p>
             </div>
           </button>
           <button
-            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tr-lg rounded-br-lg rounded-none ${showPrivateTemplate ? 'bg-primary' : 'bg-white'}`}
-            onClick={() => setShowPrivateTemplate(true)}
+            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tr-lg rounded-br-lg rounded-none ${
+              showPrivateTemplate ? "bg-primary" : "bg-white"
+            }`}
+            onClick={() => {
+              setShowPrivateTemplate(true);
+              setSelectedTemplate(null);
+              setShowPreview(false);
+              setEditableProjectName("");
+              setEditableBoards([]);
+              setEditingProjectTitle(false);
+              setEditingBoardTitle(null);
+            }}
           >
             <div className="flex justify-center items-center">
-              <p className="text-normal font-medium text-text-dark-color">Les vôtres</p>
+              <p className="text-normal font-medium text-text-dark-color">
+                Les vôtres
+              </p>
             </div>
           </button>
         </div>
         <div className="flex flex-col gap-3 overflow-y-auto flex-1">
-          {bothNotEmpty ? (
-            <>
-              {showPrivateTemplate && privateTemplates?.length > 0 && (
-                <>
-                  <div className={`flex flex-col gap-3 overflow-y-auto flex-1 ${privateTemplates?.length > 5 ? 'pr-1' : ''}`}>
-                    {privateTemplates.map((template) => (
-                      <button
-                        key={template._id}
-                        onClick={() => handleTemplateSelect(template)}
-                        type="button"
-                        className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${selectedTemplate?._id === template._id ? 'bg-primary shadow-[0_0_0_2px_var(--accent-color)]' : 'bg-white hover:bg-primary hover:shadow-md'}`}>
-                        <div className="w-full">
-                          <div className="flex justify-between items-center mb-2">
-                            <h4 className="text-base font-semibold text-text-dark-color">{template.name}</h4>
-                            {template.creator?.picture && (
-                              <img
-                                src={template.creator.picture}
-                                alt={template.creator.name}
-                                className="w-6 h-6 rounded-full object-cover"
-                              />
-                            )}
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <div className="flex gap-4 text-sm text-text-color-muted">
-                              <span className="flex items-center gap-1">
-                                <List size={16} />
-                                {template.boardsCount} tableaux
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <ListTodo size={16} />
-                                {template.tasksCount} tâches
-                              </span>
-                            </div>
-                            {template.createdAt && (
-                              <div className="text-xs text-text-color-muted">
-                                {new Date(template.createdAt).toLocaleDateString('fr-FR')}
-                              </div>
-                            )}
-                          </div>
+          <>
+            {showPrivateTemplate && privateTemplates?.length > 0 && (
+              <>
+                <div
+                  className={`flex flex-col gap-3 overflow-y-auto flex-1 ${
+                    privateTemplates?.length > 5 ? "pr-1" : ""
+                  }`}
+                >
+                  {privateTemplates.map((template) => (
+                    <button
+                      key={template._id}
+                      onClick={() => handleTemplateSelect(template)}
+                      type="button"
+                      className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${
+                        selectedTemplate?._id === template._id
+                          ? "bg-primary shadow-[0_0_0_2px_var(--accent-color)]"
+                          : "bg-white hover:bg-primary hover:shadow-md"
+                      }`}
+                    >
+                      <div className="w-full">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="text-base font-semibold text-text-dark-color">
+                            {template.name}
+                          </h4>
+                          {template.creator?.picture && (
+                            <img
+                              src={template.creator.picture}
+                              alt={template.creator.name}
+                              className="w-6 h-6 rounded-full object-cover"
+                            />
+                          )}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-              {!showPrivateTemplate && publicTemplates?.length > 0 && (
-                <>
-                  <div className={`flex flex-col gap-3 overflow-y-auto flex-1 ${publicTemplates?.length > 5 ? 'pr-1' : ''}`}>
-                    {publicTemplates.map((template) => (
-                      <button
-                        key={template._id}
-                        onClick={() => handleTemplateSelect(template)}
-                        type="button"
-                        className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${selectedTemplate?._id === template._id ? 'bg-primary shadow-[0_0_0_2px_var(--accent-color)]' : 'bg-white hover:bg-primary hover:shadow-md'}`}>
-                        <div className="w-full">
-                          <div className="flex justify-between items-center mb-2">
-                            <h4 className="text-base font-semibold text-text-dark-color">{template.name}</h4>
-                            {template.creator?.picture && (
-                              <img
-                                src={template.creator.picture}
-                                alt={template.creator.name}
-                                className="w-6 h-6 rounded-full object-cover"
-                              />
-                            )}
+                        <div className="flex justify-between items-center">
+                          <div className="flex gap-4 text-sm text-text-color-muted">
+                            <span className="flex items-center gap-1">
+                              <List size={16} />
+                              {template.boardsCount} tableaux
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <ListTodo size={16} />
+                              {template.tasksCount} tâches
+                            </span>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <div className="flex gap-4 text-sm text-text-color-muted">
-                              <span className="flex items-center gap-1">
-                                <List size={16} />
-                                {template.boardsCount} tableaux
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <ListTodo size={16} />
-                                {template.tasksCount} tâches
-                              </span>
+                          {template.createdAt && (
+                            <div className="text-xs text-text-color-muted">
+                              {new Date(template.createdAt).toLocaleDateString(
+                                "fr-FR"
+                              )}
                             </div>
-                            {template.createdAt && (
-                              <div className="text-xs text-text-color-muted">
-                                {new Date(template.createdAt).toLocaleDateString('fr-FR')}
-                              </div>
-                            )}
-                          </div>
+                          )}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </>
-          ) : (
-            <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
-              <p className="font-semibold text-text-dark-color mb-2">Aucun modèle disponible</p>
-              <p className="text-sm leading-relaxed">Créez d'abord des modèles depuis vos projets existants.</p>
-            </div>
-          )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {!showPrivateTemplate && publicTemplates?.length > 0 && (
+              <>
+                <div
+                  className={`flex flex-col gap-3 overflow-y-auto flex-1 ${
+                    publicTemplates?.length > 5 ? "pr-1" : ""
+                  }`}
+                >
+                  {publicTemplates.map((template) => (
+                    <button
+                      key={template._id}
+                      onClick={() => handleTemplateSelect(template)}
+                      type="button"
+                      className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${
+                        selectedTemplate?._id === template._id
+                          ? "bg-primary shadow-[0_0_0_2px_var(--accent-color)]"
+                          : "bg-white hover:bg-primary hover:shadow-md"
+                      }`}
+                    >
+                      <div className="w-full">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="text-base font-semibold text-text-dark-color">
+                            {template.name}
+                          </h4>
+                          {template.creator?.picture && (
+                            <img
+                              src={template.creator.picture}
+                              alt={template.creator.name}
+                              className="w-6 h-6 rounded-full object-cover"
+                            />
+                          )}
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <div className="flex gap-4 text-sm text-text-color-muted">
+                            <span className="flex items-center gap-1">
+                              <List size={16} />
+                              {template.boardsCount} tableaux
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <ListTodo size={16} />
+                              {template.tasksCount} tâches
+                            </span>
+                          </div>
+                          {template.createdAt && (
+                            <div className="text-xs text-text-color-muted">
+                              {new Date(template.createdAt).toLocaleDateString(
+                                "fr-FR"
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {!isNotEmpty(publicTemplates) && !isNotEmpty(privateTemplates) && (
+              <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
+                <p className="font-semibold text-text-dark-color mb-2">
+                  Aucun modèle disponible
+                </p>
+                <p className="text-sm leading-relaxed">
+                  Créez d'abord des modèles depuis vos projets existants.
+                </p>
+              </div>
+            )}
+          </>
         </div>
-      </div >
+      </div>
 
       {/* Colonne de droite - Preview */}
-      < div className="bg-secondary rounded-xl shadow-sm p-8 overflow-y-auto relative" >
+      <div className="bg-secondary rounded-xl shadow-sm p-8 overflow-y-auto relative">
         {!showPreview ? (
           <div className="flex justify-center items-center h-full text-text-color-muted text-lg">
             <p>Sélectionnez un modèle pour voir l'aperçu</p>
@@ -296,7 +368,9 @@ export default function TemplateProjectStep({ onComplete }) {
           selectedTemplate && (
             <div className="absolute inset-0 bg-secondary rounded-xl z-10 flex flex-col overflow-hidden">
               <div className="flex justify-between items-center px-8 pt-8 pb-4 bg-secondary sticky top-0 z-20">
-                <h3 className="text-xl font-semibold text-text-dark-color">Aperçu du modèle</h3>
+                <h3 className="text-xl font-semibold text-text-dark-color">
+                  Aperçu du modèle
+                </h3>
                 <div className="flex gap-4 items-center">
                   <button
                     className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium cursor-pointer transition-all duration-200 font-normal tracking-normal whitespace-nowrap hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)]"
@@ -333,7 +407,8 @@ export default function TemplateProjectStep({ onComplete }) {
 
                 {selectedTemplate.description && (
                   <div className="text-base mb-6 pb-4 border-b border-border-color text-text-dark-color">
-                    <strong>Description :</strong> {selectedTemplate.description}
+                    <strong>Description :</strong>{" "}
+                    {selectedTemplate.description}
                   </div>
                 )}
 
@@ -344,7 +419,9 @@ export default function TemplateProjectStep({ onComplete }) {
                         <input
                           type="text"
                           value={board.title}
-                          onChange={(e) => handleBoardTitleChange(i, e.target.value)}
+                          onChange={(e) =>
+                            handleBoardTitleChange(i, e.target.value)
+                          }
                           onBlur={handleBoardTitleBlur}
                           onKeyDown={handleBoardTitleKeyDown}
                           className="w-full bg-secondary border border-border-color rounded-md py-2 px-3 text-base font-semibold text-accent-color transition-all duration-200 focus:outline-none focus:border-accent-color focus:shadow-[0_0_0_2px_rgba(151,112,69,0.1)]"
@@ -362,11 +439,16 @@ export default function TemplateProjectStep({ onComplete }) {
                     </div>
                     <ul className="list-none p-0 m-0 flex flex-col gap-2">
                       {board.tasks?.map((task, j) => (
-                        <li key={`${i}-${j}`} className="bg-secondary pl-3 rounded-md shadow-sm flex items-start gap-3">
+                        <li
+                          key={`${i}-${j}`}
+                          className="bg-secondary pl-3 rounded-md shadow-sm flex items-start gap-3"
+                        >
                           <input
                             type="text"
                             value={task.text}
-                            onChange={(e) => handleTaskChange(i, j, e.target.value)}
+                            onChange={(e) =>
+                              handleTaskChange(i, j, e.target.value)
+                            }
                             className="flex-1 bg-transparent border-none text-sm text-text-dark-color font-inherit leading-relaxed py-3"
                             placeholder="Description de la tâche"
                           />
@@ -381,7 +463,9 @@ export default function TemplateProjectStep({ onComplete }) {
                         </li>
                       ))}
                       {(!board.tasks || board.tasks.length === 0) && (
-                        <li className="bg-secondary py-3 px-3 rounded-md text-sm text-text-color-muted italic text-center">Aucune tâche dans ce tableau</li>
+                        <li className="bg-secondary py-3 px-3 rounded-md text-sm text-text-color-muted italic text-center">
+                          Aucune tâche dans ce tableau
+                        </li>
                       )}
                       <li className="mt-2">
                         <button
@@ -396,23 +480,35 @@ export default function TemplateProjectStep({ onComplete }) {
                     </ul>
                   </div>
                 ))}
-
-
               </div>
 
               {selectedTemplate?.author?.toString() === uid && (
                 <a
                   className="text-text-color-red cursor-pointer underline text-small self-start ml-8 mb-4 hover:no-underline"
-                  onClick={() => handleDeleteTemplate(selectedTemplate._id, selectedTemplate.name)}
-                  style={{ opacity: deletingTemplate === selectedTemplate._id ? 0.6 : 1, pointerEvents: deletingTemplate === selectedTemplate._id ? 'none' : 'auto' }}
+                  onClick={() =>
+                    handleDeleteTemplate(
+                      selectedTemplate._id,
+                      selectedTemplate.name
+                    )
+                  }
+                  style={{
+                    opacity:
+                      deletingTemplate === selectedTemplate._id ? 0.6 : 1,
+                    pointerEvents:
+                      deletingTemplate === selectedTemplate._id
+                        ? "none"
+                        : "auto",
+                  }}
                 >
-                  {deletingTemplate === selectedTemplate._id ? "Suppression..." : "Supprimer le modèle"}
+                  {deletingTemplate === selectedTemplate._id
+                    ? "Suppression..."
+                    : "Supprimer le modèle"}
                 </a>
               )}
             </div>
           )
         )}
-      </div >
-    </div >
+      </div>
+    </div>
   );
-} 
+}
