@@ -134,10 +134,10 @@ export default function socketHandler(io) {
       );
     });
 
-    socket.on("update template", async (projectId) => {
+    socket.on("update board templates", async (projectId) => {
       const project = await ProjectModel.findById({ _id: projectId });
       if (!project) return;
-      await emitToProjectMembers(projectId, "template updated", socket);
+      await emitToProjectMembers(projectId, "board templates updated", socket);
     });
 
     socket.on("update task", async (projectId) => {

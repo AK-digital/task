@@ -101,12 +101,12 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
     socket.on("task updated", handleTaskUpdate);
     socket.on("board updated", handleBoardUpdate);
-    socket.on("template updated", handleTemplateUpdate);
+    socket.on("board templates updated", handleTemplateUpdate);
 
     return () => {
       socket.off("task updated", handleTaskUpdate);
       socket.off("board updated", handleBoardUpdate);
-      socket.off("template updated", handleTemplateUpdate);
+      socket.off("board templates updated", handleTemplateUpdate);
     };
   }, [socket, project, archive]);
 

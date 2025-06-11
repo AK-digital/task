@@ -22,7 +22,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
     if (state?.success) {
       setAddTemplate(false);
       mutate(`/board-template`);
-      socket.emit("update template", project?._id);
+      socket.emit("update board templates", project?._id);
     }
 
     if (state?.success === false) {

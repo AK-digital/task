@@ -38,7 +38,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
     await deleteBoardTemplate(templateId);
 
     await mutate("/board-template");
-    socket.emit("update template", project?._id);
+    socket.emit("update board templates", project?._id);
     socket.emit("update board", project?._id);
   }
 
