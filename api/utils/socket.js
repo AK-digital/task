@@ -222,6 +222,24 @@ export default function socketHandler(io) {
         })
       );
     });
+
+    socket.on("update user picture", async (userId) => {
+      const user = await getCachedUser(userId);
+      if (!user) return;
+
+      const projects = await ProjectModel.find({ "members.user": userId });
+
+      await Promise.all(
+        projects.map(async (project) => {
+          await emitToProjectMembers(
+            project._id,
+            "user picture updated",
+            socket,
+            userId
+          );
+        })
+      );
+    });
   });
 }
 

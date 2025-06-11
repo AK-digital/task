@@ -26,11 +26,13 @@ export default function Projects() {
     }
 
     socket.on("project-updated", handleProjectUpdate);
+    socket.on("user picture updated", handleProjectUpdate);
 
     return () => {
       socket.off("project-updated", handleProjectUpdate);
+      socket.off("user picture updated", handleProjectUpdate);
     };
-  }, []);
+  }, [mutateProjects, socket]);
 
   return (
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">

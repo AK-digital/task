@@ -22,6 +22,7 @@ import { mutate } from "swr";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
 import socket from "@/utils/socket";
+import { useFavorites } from "@/app/hooks/useFavorites";
 moment.locale("fr");
 
 const initialState = {
@@ -33,7 +34,7 @@ const initialState = {
 export default function ProjectOptions({ project }) {
   const router = useRouter();
   const [links, setLinks] = useState(project?.urls || []);
-
+  const { favoritesMutate } = useFavorites();
   const [projectName, setProjectName] = useState(project?.name || "");
   const [note, setNote] = useState(project?.note || "");
   const [moreIcons, setMoreIcons] = useState(null);
@@ -125,10 +126,13 @@ export default function ProjectOptions({ project }) {
   async function handleUpdateLogo(e) {
     e.preventDefault();
 
-    await updateProjectLogo(project?._id, e.target.files[0]);
+    const response = await updateProjectLogo(project?._id, e.target.files[0]);
 
-    mutate(`/project/${project?._id}`);
-    socket.emit("update-project", null, project?._id);
+    if (response?.status === "success") {
+      mutate(`/project/${project?._id}`);
+      favoritesMutate();
+      socket.emit("update-project", null, project?._id);
+    }
   }
 
   async function handleDeleteProject() {

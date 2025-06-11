@@ -6,6 +6,7 @@ import socket from "@/utils/socket";
 import { useProjectContext } from "@/context/ProjectContext";
 import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
 import { useRouter } from "next/navigation";
+import { useFavorites } from "@/app/hooks/useFavorites";
 
 const displayedFilters = {
   isSearch: true,
@@ -21,10 +22,12 @@ export default function Project() {
   const { boards, tasks, mutateProject, project } = useProjectContext();
   const { mutateProjectInvitation } = useProjectInvitation(project?._id);
   const router = useRouter();
+  const { favoritesMutate } = useFavorites();
 
   useEffect(() => {
     function handleProjectRevalidate() {
       mutateProject(undefined, { revalidate: true });
+      favoritesMutate();
     }
 
     function handleInvitationRevalidate() {
@@ -55,14 +58,16 @@ export default function Project() {
     socket.on("project-invitation-updated", handleInvitationRevalidate);
     socket.on("project-invitation-role-updated", handleInvitationRoleUpdate);
     socket.on("project-redirected", handleRedirect);
+    socket.on("user picture updated", handleProjectRevalidate);
 
     return () => {
       socket.off("project-updated");
       socket.off("project-invitation-updated");
       socket.off("project-invitation-role-updated");
       socket.off("project-redirected");
+      socket.off("user picture updated");
     };
-  }, [socket, mutateProject, mutateProjectInvitation, router]);
+  }, [socket, mutateProject, mutateProjectInvitation, router, favoritesMutate]);
 
   return (
     <div className="flex flex-col bg-[#dad6c799] min-h-full h-full rounded-tl-2xl pt-6 pl-6 pr-3 pb-0">
