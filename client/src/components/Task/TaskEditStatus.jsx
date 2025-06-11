@@ -5,7 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 import ColorsPopup from "../Popups/ColorsPopup";
 import { colors } from "@/utils/utils";
 import { useProjectContext } from "@/context/ProjectContext";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 
 export default function TaskEditStatus({
   status,
@@ -115,7 +115,7 @@ export default function TaskEditStatus({
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <div 
+      <div
         className="absolute flex justify-center items-center text-text-light-color h-5.5 w-5.5 left-1 rounded-3xl"
         style={{ backgroundColor: color }}
       >

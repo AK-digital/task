@@ -17,7 +17,7 @@ import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
 import PopupMessage from "@/layouts/PopupMessage";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { mutate } from "swr";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
@@ -153,7 +153,10 @@ export default function ProjectOptions({ project }) {
 
   return (
     <div className="relative bg-primary-transparent rounded-t-2xl p-8 text-text-dark-color h-full overflow-auto">
-      <div onClick={() => router.back()} className="absolute top-[45px] left-[45px] cursor-pointer">
+      <div
+        onClick={() => router.back()}
+        className="absolute top-[45px] left-[45px] cursor-pointer"
+      >
         <ArrowLeftCircle size={32} />
       </div>
       <form action={formAction}>
@@ -193,8 +196,13 @@ export default function ProjectOptions({ project }) {
                     className="rounded-full object-cover object-center"
                   />
                   {(editImg || isPictLoading) && (
-                    <label htmlFor="logo" className="absolute flex justify-center items-center inset-0 bg-black/50 cursor-pointer min-w-25 h-25 rounded-full">
-                      {!isPictLoading && <Pencil size={20} className="text-white" />}
+                    <label
+                      htmlFor="logo"
+                      className="absolute flex justify-center items-center inset-0 bg-black/50 cursor-pointer min-w-25 h-25 rounded-full"
+                    >
+                      {!isPictLoading && (
+                        <Pencil size={20} className="text-white" />
+                      )}
                     </label>
                   )}
                   <input
@@ -228,7 +236,10 @@ export default function ProjectOptions({ project }) {
                   {/* Project archive */}
                   <div className="flex items-center gap-1">
                     <Archive size={16} />
-                    <Link href={`/projects/${project?._id}/archive`} className="underline text-text-dark-color text-small">
+                    <Link
+                      href={`/projects/${project?._id}/archive`}
+                      className="underline text-text-dark-color text-small"
+                    >
                       Archive du projet
                     </Link>
                   </div>
@@ -289,7 +300,10 @@ export default function ProjectOptions({ project }) {
                     );
                   })}
                 {links.length < 6 && (
-                  <button onClick={addLink} className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none underline">
+                  <button
+                    onClick={addLink}
+                    className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none underline"
+                  >
                     Ajouter un lien
                   </button>
                 )}

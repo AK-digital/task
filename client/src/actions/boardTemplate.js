@@ -7,12 +7,17 @@ export async function saveBoardTemplate(prevState, formData) {
     const projectId = formData.get("project-id");
     const boardId = formData.get("board-id");
     const name = formData.get("template-name");
+    const isPrivate = formData.get("template-private");
 
     const res = await useAuthFetch(
       `board-template?projectId=${projectId}`,
       "POST",
       "application/json",
-      { boardId: boardId, name: name }
+      {
+        boardId: boardId,
+        name: name,
+        isPrivate: isPrivate !== "on",
+      }
     );
 
     const response = await res.json();
@@ -20,7 +25,7 @@ export async function saveBoardTemplate(prevState, formData) {
     if (!response.success) {
       throw new Error(
         response?.message ||
-          "Une erreur est survenue lors de la création du modèle de tableau"
+        "Une erreur est survenue lors de la création du modèle de tableau"
       );
     }
 
@@ -28,7 +33,7 @@ export async function saveBoardTemplate(prevState, formData) {
   } catch (err) {
     console.error(
       err.message ||
-        "Une erreur est survenue lors de la création du modèle de tableau"
+      "Une erreur est survenue lors de la création du modèle de tableau"
     );
     return {
       success: false,

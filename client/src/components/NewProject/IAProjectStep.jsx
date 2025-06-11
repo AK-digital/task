@@ -223,7 +223,7 @@ export default function IAProjectStep({ onComplete }) {
 
   const handleTaskEdit = (boardIndex, taskIndex, newValue) => {
     if (!result) return;
-    
+
     const updatedResult = { ...result };
     updatedResult.boards[boardIndex].tasks[taskIndex] = newValue;
     setResult(updatedResult);
@@ -231,7 +231,7 @@ export default function IAProjectStep({ onComplete }) {
 
   const handleRemoveTask = (boardIndex, taskIndex) => {
     if (!result) return;
-    
+
     const updatedResult = { ...result };
     updatedResult.boards[boardIndex].tasks.splice(taskIndex, 1);
     setResult(updatedResult);
@@ -239,7 +239,7 @@ export default function IAProjectStep({ onComplete }) {
 
   const handleAddTask = (boardIndex) => {
     if (!result) return;
-    
+
     const updatedResult = { ...result };
     updatedResult.boards[boardIndex].tasks.push("Nouvelle tâche");
     setResult(updatedResult);
@@ -247,7 +247,7 @@ export default function IAProjectStep({ onComplete }) {
 
   const handleBoardNameEdit = (boardIndex, newName) => {
     if (!result) return;
-    
+
     const updatedResult = { ...result };
     updatedResult.boards[boardIndex].name = newName;
     setResult(updatedResult);
@@ -255,7 +255,7 @@ export default function IAProjectStep({ onComplete }) {
 
   const handleProjectTitleEdit = (newTitle) => {
     if (!result) return;
-    
+
     const updatedResult = { ...result };
     updatedResult.title = newTitle;
     setResult(updatedResult);
@@ -263,7 +263,7 @@ export default function IAProjectStep({ onComplete }) {
 
   const handleCreateProject = () => {
     if (!result?.title || !Array.isArray(result?.boards)) return;
-    
+
     // Passer les données à l'étape 3
     onComplete({
       type: 'ia',
@@ -278,15 +278,13 @@ export default function IAProjectStep({ onComplete }) {
       {/* Colonne de gauche - Prompts prédéfinis */}
       <div className="bg-secondary rounded-xl shadow-sm p-6 flex flex-col overflow-hidden">
         <h3 className="text-xl font-semibold mb-6 text-text-dark-color">Prompts suggérés</h3>
-        <div className="flex flex-col gap-3 overflow-y-auto flex-1 p-1">
+        <div className={`flex flex-col gap-3 overflow-y-auto flex-1 ${PREDEFINED_PROMPTS?.length > 5 ? 'pr-1' : ''}`}>
           {PREDEFINED_PROMPTS.map((predefinedPrompt) => {
             const IconComponent = predefinedPrompt.icon;
             return (
               <button
                 key={predefinedPrompt.id}
-                className={`bg-primary rounded-lg p-4 cursor-pointer transition-all duration-200 text-left w-full shadow-sm hover:bg-secondary hover:shadow-md ${
-                  selectedPrompt?.id === predefinedPrompt.id ? 'bg-secondary shadow-[0_0_0_2px_var(--accent-color)] border border-accent-color' : ''
-                }`}
+                className={`rounded-lg min-h-[100px] px-4 py-2 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${selectedPrompt?.id === predefinedPrompt.id ? 'bg-primary shadow-[0_0_0_2px_var(--accent-color)]' : 'bg-white hover:bg-primary hover:shadow-md'}`}
                 onClick={() => handlePromptSelect(predefinedPrompt)}
                 type="button"
               >
@@ -307,7 +305,7 @@ export default function IAProjectStep({ onComplete }) {
         <div className="flex flex-col gap-4 flex-1 min-h-0">
           <h3 className="text-xl font-semibold text-text-dark-color">Décrivez votre projet</h3>
           <p className="text-sm text-text-color-muted leading-relaxed">L'IA vous proposera une structure de projet complète avec de nombreux tableaux et tâches détaillées. Plus votre description est précise, plus l'IA pourra vous suggérer des éléments pertinents et créatifs auxquels vous n'auriez pas pensé. N'hésitez pas à mentionner vos objectifs, contraintes et attentes.</p>
-          
+
           <div className="relative flex-1 flex flex-col">
             <textarea
               className="w-full p-4 rounded-lg bg-primary text-text-dark-color text-sm leading-relaxed resize-none flex-1 min-h-[200px] shadow-sm font-inherit border border-border-color focus:outline-none focus:shadow-[0_0_0_2px_var(--accent-color)] disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
@@ -317,7 +315,7 @@ export default function IAProjectStep({ onComplete }) {
               rows={8}
               disabled={loading}
             />
-            
+
             {loading && (
               <div className="absolute inset-0 bg-white/90 flex flex-col justify-center items-center gap-4 rounded-lg z-10">
                 <div className="w-10 h-10 border-3 border-gray-300 border-t-accent-color rounded-full animate-spin"></div>
@@ -325,7 +323,7 @@ export default function IAProjectStep({ onComplete }) {
               </div>
             )}
           </div>
-          
+
           <button
             className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium cursor-pointer transition-all duration-200 font-normal self-end tracking-normal hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] disabled:bg-accent-color-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
             onClick={handleGenerate}
@@ -333,7 +331,7 @@ export default function IAProjectStep({ onComplete }) {
           >
             {loading ? "Génération..." : "Générer avec l'IA"}
           </button>
-          
+
           {error && <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm shadow-sm">{error}</div>}
         </div>
 
@@ -357,7 +355,7 @@ export default function IAProjectStep({ onComplete }) {
                 </button>
               </div>
             </div>
-            
+
             <div className="bg-primary rounded-lg mx-8 mb-4 p-6 shadow-sm relative z-[2] flex-1 overflow-y-auto">
               <div className="text-lg mb-6 pb-4 border-b border-border-color text-text-dark-color flex items-center gap-3">
                 <strong>Nom du projet :</strong>
@@ -368,7 +366,7 @@ export default function IAProjectStep({ onComplete }) {
                   className="flex-1 bg-transparent border-none text-lg text-text-dark-color py-1 px-2 border-radius-sm font-inherit font-medium transition-all duration-200 focus:outline-none focus:bg-secondary focus:shadow-[0_0_0_2px_var(--accent-color)] hover:bg-secondary"
                 />
               </div>
-              
+
               {result.boards?.map((board, i) => (
                 <div key={i} className="mb-6">
                   <div className="mb-3">

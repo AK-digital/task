@@ -3,7 +3,7 @@ import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/Projects/ProjectCard";
 import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
-import { useProjects } from "@/app/hooks/useProjects";
+import { useProjects } from "../../../../../../hooks/useProjects";
 import { AuthContext } from "@/context/auth";
 import { useContext } from "react";
 

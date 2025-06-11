@@ -42,12 +42,14 @@
   --color-third: #eae7de;
   --color-side: rgba(45, 63, 68, 0.9);
 
-  --background-gradient-dark: linear-gradient(140deg,
-      #39545b,
-      #2a4046 17%,
-      #16363c 52%,
-      #2a4046 86%,
-      #32484e 100%);
+  --background-gradient-dark: linear-gradient(
+    140deg,
+    #39545b,
+    #2a4046 17%,
+    #16363c 52%,
+    #2a4046 86%,
+    #32484e 100%
+  );
 
   /* TEXT SIZES */
   --text-large: 1.2rem;
@@ -66,7 +68,6 @@
   --animate-bounce-light: bounce-light 1s infinite;
 
   @keyframes bounce-light {
-
     0%,
     100% {
       transform: translateY(0);
@@ -81,7 +82,6 @@
 }
 
 @layer components {
-
   /* Components/Auth Folder */
   .form-group {
     position: relative;
@@ -179,7 +179,8 @@
   }
 
   /* BoardHeader */
-  .container_BoardHeader[data-archive="false"] .dataTitle_BoardHeader[data-authorized="true"]:hover {
+  .container_BoardHeader[data-archive="false"]
+    .dataTitle_BoardHeader[data-authorized="true"]:hover {
     border: 1px solid var(--color-color-border-color);
     cursor: inherit !important;
   }
@@ -204,7 +205,7 @@
   }
 
   /* Task */
-  .container_Task>div>span {
+  .container_Task > div > span {
     display: block;
     overflow: hidden;
     white-space: nowrap;
@@ -723,13 +724,13 @@
     background-color: #e9e7dd;
   }
 
-  .statusBar_ProjectCard>div:first-child {
+  .statusBar_ProjectCard > div:first-child {
     min-width: 12px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
   }
 
-  .statusBar_ProjectCard>div:last-child {
+  .statusBar_ProjectCard > div:last-child {
     min-width: 12px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -805,7 +806,8 @@
   .feedback-success {
     width: 400px;
     opacity: 1;
-    animation: success-animation 350ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: success-animation 350ms cubic-bezier(0.34, 1.56, 0.64, 1)
+      forwards;
     overflow: hidden;
     transform-origin: right center;
   }
@@ -824,7 +826,6 @@
 }
 
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -841,15 +842,16 @@
     line-height: unset;
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
-    font-family: var(--default-font-family,
-        ui-sans-serif,
-        system-ui,
-        sans-serif,
-        "Apple Color Emoji",
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-        "Noto Color Emoji"
-      );
+    font-family: var(
+      --default-font-family,
+      ui-sans-serif,
+      system-ui,
+      sans-serif,
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Segoe UI Symbol",
+      "Noto Color Emoji"
+    );
     font-feature-settings: var(--default-font-feature-settings, normal);
     font-variation-settings: var(--default-font-variation-settings, normal);
     -webkit-tap-highlight-color: transparent;
@@ -919,18 +921,22 @@
   kbd,
   samp,
   pre {
-    font-family: var(--default-mono-font-family,
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        "Liberation Mono",
-        "Courier New",
-        monospace);
+    font-family: var(
+      --default-mono-font-family,
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      "Liberation Mono",
+      "Courier New",
+      monospace
+    );
     font-feature-settings: var(--default-mono-font-feature-settings, normal);
-    font-variation-settings: var(--default-mono-font-variation-settings,
-        normal);
+    font-variation-settings: var(
+      --default-mono-font-variation-settings,
+      normal
+    );
     font-size: 1em;
   }
 
@@ -1058,7 +1064,8 @@
     opacity: 1;
   }
 
-  @supports (not (-webkit-appearance: -apple-pay-button)) or (contain-intrinsic-size: 1px) {
+  @supports (not (-webkit-appearance: -apple-pay-button)) or
+    (contain-intrinsic-size: 1px) {
     ::placeholder {
       color: currentcolor;
 

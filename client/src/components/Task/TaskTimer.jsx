@@ -4,7 +4,7 @@ import {
   timeTrackingStart,
   timeTrackingStop,
 } from "@/api/timeTracking";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
@@ -157,8 +157,14 @@ export default function TaskTimer({ task }) {
   };
 
   return (
-    <div className="relative flex items-center justify-start max-w-[120px] h-full w-full px-1.5 border-r border-text-light-color data-[running=true]:text-inherit" data-running={isRunning}>
-      <span className="flex items-center justify-center gap-2 text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center" data-center={!canAdd}>
+    <div
+      className="relative flex items-center justify-start max-w-[120px] h-full w-full px-1.5 border-r border-text-light-color data-[running=true]:text-inherit"
+      data-running={isRunning}
+    >
+      <span
+        className="flex items-center justify-center gap-2 text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center"
+        data-center={!canAdd}
+      >
         {canAdd && (
           <>
             {isRunning ? (
