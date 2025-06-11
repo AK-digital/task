@@ -108,7 +108,7 @@ export default function Boards({ boards: initialBoards, tasksData }) {
       socket.off("board updated", handleBoardUpdate);
       socket.off("board templates updated", handleTemplateUpdate);
     };
-  }, [socket, project, archive]);
+  }, [mutateTasks, mutate, project?._id, archive]);
 
   useEffect(() => {
     if (initialTasksData) {

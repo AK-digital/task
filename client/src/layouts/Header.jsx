@@ -30,7 +30,7 @@ export default function Header() {
     return () => {
       socket.off("new notification", handleNewNotification);
     };
-  }, [socket, mutate]);
+  }, [mutate]);
 
   // Count the number of unread notifications
   const unreadNotifications = notificationsData?.filter((notif) => !notif.read);

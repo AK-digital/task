@@ -77,14 +77,14 @@ export default function BoardHeader({
   };
 
   async function handleAddBoardTemplate(e) {
-    e.preventDefault();
+    e?.preventDefault();
 
     setIsMoreOpen(false);
     setAddBoardTemplate((prev) => !prev);
   }
 
   async function handleAddArchive(e) {
-    e.preventDefault();
+    e?.preventDefault();
     await addBoardToArchive(board?._id, project?._id);
 
     mutate(`/boards?projectId=${project?._id}&archived=false`);
@@ -95,7 +95,7 @@ export default function BoardHeader({
   }
 
   async function handleRestoreArchive(e) {
-    e.preventDefault();
+    e?.preventDefault();
     await removeBoardFromArchive(board?._id, project?._id);
 
     mutate(`/task?projectId=${project?._id}&archived=true`);

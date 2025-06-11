@@ -48,6 +48,7 @@ import Attachment from "../Attachment/Attachment";
 import Reactions from "../Reactions/Reactions";
 import { isNotEmpty } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
+import { useProjectContext } from "@/context/ProjectContext";
 
 export default function Tiptap({
   project,
@@ -65,6 +66,7 @@ export default function Tiptap({
   handleDeleteMessage,
   handleRemoveDescription,
 }) {
+  const { mutateTasks } = useProjectContext();
   const [isSent, setIsSent] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
@@ -120,8 +122,8 @@ export default function Tiptap({
     message
       ? message?.message || message
       : type === "description"
-        ? description
-        : ""
+      ? description
+      : ""
   );
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
   const [taggedUsers, setTaggedUsers] = useState([]);
@@ -130,8 +132,8 @@ export default function Tiptap({
     message
       ? message?.message || message
       : type === "description"
-        ? description
-        : ""
+      ? description
+      : ""
   );
 
   useEffect(() => {
@@ -360,7 +362,7 @@ export default function Tiptap({
     }
 
     setIsSent(true);
-    await mutate(`/task?projectId=${project?._id}&archived=false`);
+    await mutateTasks();
 
     // Update description for every guests
     socket.emit("update task", task?.projectId?._id);
@@ -446,7 +448,7 @@ export default function Tiptap({
       await mutateMessage();
     }
 
-    await mutate(`/task?projectId=${project?._id}&archived=false`);
+    await mutateTasks();
 
     socket.emit("update message", task?.projectId?._id);
     socket.emit("update task", task?.projectId?._id);
@@ -645,7 +647,10 @@ export default function Tiptap({
           </button>
         </div>
         {/* Contenu de l'éditeur */}
-        <EditorContent editor={editor} className="content_Tiptap flex-1 min-h-[150px] p-[15px] text-[16px] outline-none rounded-t-none rounded-b-lg cursor-text" />
+        <EditorContent
+          editor={editor}
+          className="content_Tiptap flex-1 min-h-[150px] p-[15px] text-[16px] outline-none rounded-t-none rounded-b-lg cursor-text"
+        />
         {isTaggedUsers && (
           <MentionsList
             project={project}

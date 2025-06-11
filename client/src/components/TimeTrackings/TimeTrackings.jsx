@@ -43,7 +43,7 @@ export default function TimeTrackings({ searchParams }) {
       socket.off("task updated", handleTaskUpdated);
       socket.off("time tracking updated", handleTimeTrackingUpdated);
     };
-  }, [mutateTimeTrackings, searchParams]);
+  }, [mutateTimeTrackings]);
 
   const hasSelectedTrackers = selectedTrackers?.length > 0;
   const hasSelectedProjects = queries?.projects?.length > 0;

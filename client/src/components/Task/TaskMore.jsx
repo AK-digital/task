@@ -5,6 +5,7 @@ import Image from "next/image";
 import moment from "moment";
 import TaskDescription from "./TaskDescription";
 import { usePathname } from "next/navigation";
+import socket from "@/utils/socket";
 moment.locale("fr");
 
 export default function TaskMore({ task, archive = false, uid, mutateTasks }) {

@@ -90,6 +90,18 @@ export default function ProjectOptions({ project }) {
   }, [popup]);
 
   useEffect(() => {
+    function handleRedirect() {
+      router.push("/projects");
+    }
+
+    socket.on("project-redirected", handleRedirect);
+
+    return () => {
+      socket.off("project-redirected", handleRedirect);
+    };
+  }, [router]);
+
+  useEffect(() => {
     const nameChanged = projectName !== project?.name;
     const noteChanged = note !== project?.note;
 
@@ -124,7 +136,7 @@ export default function ProjectOptions({ project }) {
   }, [project?.name, project?.note, project?.urls]);
 
   async function handleUpdateLogo(e) {
-    e.preventDefault();
+    e?.preventDefault();
 
     const response = await updateProjectLogo(project?._id, e.target.files[0]);
 
@@ -142,10 +154,10 @@ export default function ProjectOptions({ project }) {
     const response = await deleteProject(project?._id);
 
     if (response?.success) {
+      mutate("/favorite");
+      mutate(`/project/${project?._id}`);
       router.push("/projects");
     }
-
-    mutate(`/project/${project?._id}`);
   }
 
   function displayIcon(name) {
@@ -154,7 +166,7 @@ export default function ProjectOptions({ project }) {
   }
 
   function addLink(e) {
-    e.preventDefault();
+    e?.preventDefault();
     if (links.length >= 6) return;
 
     setLinks((prevLinks) => [
@@ -167,7 +179,7 @@ export default function ProjectOptions({ project }) {
   }
 
   function removeLink(e, link) {
-    e.preventDefault();
+    e?.preventDefault();
     const updatedLinks = links.filter((l) => l !== link);
     setLinks(updatedLinks);
   }

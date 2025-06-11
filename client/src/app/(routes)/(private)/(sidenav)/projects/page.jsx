@@ -26,13 +26,19 @@ export default function Projects() {
     }
 
     socket.on("project-updated", handleProjectUpdate);
+    socket.on("task updated", handleProjectUpdate);
     socket.on("user picture updated", handleProjectUpdate);
+    socket.on("project-invitation-updated", handleProjectUpdate);
+    socket.on("board updated", handleProjectUpdate);
 
     return () => {
       socket.off("project-updated", handleProjectUpdate);
+      socket.off("task updated", handleProjectUpdate);
       socket.off("user picture updated", handleProjectUpdate);
+      socket.off("project-invitation-updated", handleProjectUpdate);
+      socket.off("board updated", handleProjectUpdate);
     };
-  }, [mutateProjects, socket]);
+  }, [mutateProjects]);
 
   return (
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">

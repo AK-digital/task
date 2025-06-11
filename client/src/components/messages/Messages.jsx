@@ -28,14 +28,16 @@ export default function Messages({ task, project, mutateTasks }) {
   ]);
 
   useEffect(() => {
-    socket.on("message updated", () => {
+    const handleMessageUpdate = () => {
       mutate();
-    });
+    };
+
+    socket.on("message updated", handleMessageUpdate);
 
     return () => {
-      socket.off("message updated");
+      socket.off("message updated", handleMessageUpdate);
     };
-  }, [socket]);
+  }, [mutate]);
 
   useEffect(() => {
     setIsOpen(false);

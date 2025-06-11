@@ -240,6 +240,18 @@ export default function socketHandler(io) {
         })
       );
     });
+
+    socket.on("refresh-project-rooms", async (userId) => {
+      if (!userId) return;
+
+      const user = await getCachedUser(userId);
+      if (!user) return;
+
+      const projects = await ProjectModel.find({ "members.user": user?._id });
+      const projectIds = projects.map((project) => project._id.toString());
+
+      socket.join(projectIds);
+    });
   });
 }
 

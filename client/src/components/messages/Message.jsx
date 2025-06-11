@@ -47,7 +47,7 @@ export default function Message({
         if (!response?.success) return;
 
         mutateMessage();
-        socket.emit("update task", project?._id);
+        socket.emit("update message", project?._id);
       }
     }
 

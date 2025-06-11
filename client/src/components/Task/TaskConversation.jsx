@@ -52,7 +52,7 @@ export default function TaskConversation({ task, archive = false, uid }) {
       {messagesCount > 0 && (
         <span
           data-read={hasReadMessage}
-          className="absolute flex justify-center items-center bottom-2 right-1 p-1 w-4 h-4 bg-primary rounded-full text-small select-none"
+          className="absolute flex justify-center items-center bottom-2 right-1 p-1 w-4 h-4 bg-primary rounded-full text-small select-none [&[data-read='false']]:bg-accent-color"
         >
           {messagesCount}
         </span>

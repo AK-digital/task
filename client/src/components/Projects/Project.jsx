@@ -31,6 +31,7 @@ export default function Project() {
     }
 
     function handleInvitationRevalidate() {
+      mutateProject(undefined, { revalidate: true });
       mutateProjectInvitation(undefined, { revalidate: true });
     }
 
@@ -61,13 +62,13 @@ export default function Project() {
     socket.on("user picture updated", handleProjectRevalidate);
 
     return () => {
-      socket.off("project-updated");
-      socket.off("project-invitation-updated");
-      socket.off("project-invitation-role-updated");
-      socket.off("project-redirected");
-      socket.off("user picture updated");
+      socket.off("project-updated", handleProjectRevalidate);
+      socket.off("project-invitation-updated", handleInvitationRevalidate);
+      socket.off("project-invitation-role-updated", handleInvitationRoleUpdate);
+      socket.off("project-redirected", handleRedirect);
+      socket.off("user picture updated", handleProjectRevalidate);
     };
-  }, [socket, mutateProject, mutateProjectInvitation, router, favoritesMutate]);
+  }, [mutateProject, mutateProjectInvitation, router, favoritesMutate]);
 
   return (
     <div className="flex flex-col bg-[#dad6c799] min-h-full h-full rounded-tl-2xl pt-6 pl-6 pr-3 pb-0">
