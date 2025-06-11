@@ -8,7 +8,7 @@ import socket from "@/utils/socket";
 import { useDebouncedCallback } from "use-debounce";
 import { MoreVerticalIcon, BadgeEuro } from "lucide-react";
 import TimeTrackingMore from "./TimeTrackingMore";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { updateTaskText } from "@/api/task";
 import {
   updateTimeTrackingText,

@@ -1,7 +1,7 @@
 import { updateTaskPriority } from "@/actions/task";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { Pen, Plus, Save } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditPriority from "./TaskEditPriority";

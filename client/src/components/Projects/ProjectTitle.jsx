@@ -10,7 +10,7 @@ import {
   Settings2,
   Trash2,
 } from "lucide-react";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
 import { useRouter } from "next/navigation";
 import { deleteProject } from "@/api/project";

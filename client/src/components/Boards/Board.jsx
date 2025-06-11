@@ -4,7 +4,7 @@ import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
 import socket from "@/utils/socket";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { useDroppable } from "@dnd-kit/core";
 import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";

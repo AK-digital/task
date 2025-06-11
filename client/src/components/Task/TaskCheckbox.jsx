@@ -1,4 +1,4 @@
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function TaskCheckbox({ task, setSelectedTasks }) {
   const project = task?.projectId;

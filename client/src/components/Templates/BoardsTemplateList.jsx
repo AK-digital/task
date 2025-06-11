@@ -1,27 +1,24 @@
 "use client";
 import {
   deleteBoardTemplate,
-  getPublicBoardsTemplates,
+  getBoardsTemplates,
   useBoardTemplate,
 } from "@/api/boardTemplate";
-import { usePrivateBoardTemplate } from "@/app/hooks/usePrivateBoardTemplate";
-import { usePublicBoardTemplate } from "@/app/hooks/usePublicBoardTemplate";
-import { AuthContext } from "@/context/auth";
 import { isNotEmpty } from "@/utils/utils";
-import { useContext, useState } from "react";
 import useSWR, { mutate } from "swr";
 import socket from "@/utils/socket";
 import { useEffect } from "react";
 
 export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
-  const { uid } = useContext(AuthContext);
+  const { data: boardsTemplates } = useSWR(
+    "/board-template",
+    getBoardsTemplates
+  );
+  let templates = boardsTemplates?.data || [];
 
-  const [showPrivateTemplate, setShowPrivateTemplate] = useState(false);
-
-  const { privateBoardTemplates, mutatePrivateBoardTemplates } =
-    usePrivateBoardTemplate(true);
-  const { publicBoardTemplates, mutatePublicBoardTemplates } =
-    usePublicBoardTemplate(false);
+  useEffect(() => {
+    templates = boardsTemplates?.data || [];
+  }, [boardsTemplates]);
 
   async function handleUseBoardTemplate(e, templateId) {
     e.preventDefault();
@@ -37,23 +34,12 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
     setAddBoardTemplate(false);
   }
 
-  async function handleDeleteBoardTemplate(e, templateId, isPrivate) {
+  async function handleDeleteBoardTemplate(e, templateId) {
     await deleteBoardTemplate(templateId);
-    await mutatePrivateBoardTemplates();
-    await mutatePublicBoardTemplates();
-  }
 
-  const bothNotEmpty =
-    isNotEmpty(publicBoardTemplates) && isNotEmpty(privateBoardTemplates);
-
-  {
-    console.log("bothNotEmpty :", bothNotEmpty);
-  }
-  {
-    console.log("privateBoardTemplates :", privateBoardTemplates);
-  }
-  {
-    console.log("publicBoardTemplates :", publicBoardTemplates);
+    await mutate("/board-template");
+    socket.emit("update board templates", project?._id);
+    socket.emit("update board", project?._id);
   }
 
   return (
@@ -62,145 +48,44 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
         <div className="text-center text-large border-b border-primary pb-6">
           <span>Liste de modèle des tableaux</span>
         </div>
-        <div className="flex items-center justify-center rounded-lg border border-border-color">
-          <button
-            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tl-lg rounded-bl-lg rounded-none ${
-              showPrivateTemplate ? "bg-white" : "bg-primary"
-            }`}
-            onClick={() => setShowPrivateTemplate(false)}
-          >
-            <div className="flex justify-center items-center">
-              <p className="text-normal font-medium text-text-dark-color">
-                La communauté
-              </p>
-            </div>
-          </button>
-          <button
-            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tr-lg rounded-br-lg rounded-none ${
-              showPrivateTemplate ? "bg-primary" : "bg-white"
-            }`}
-            onClick={() => setShowPrivateTemplate(true)}
-          >
-            <div className="flex justify-center items-center">
-              <p className="text-normal font-medium text-text-dark-color">
-                Les vôtres
-              </p>
-            </div>
-          </button>
-        </div>
-
         {/* Boards templates */}
         <div className="mt-6">
-          <>
-            {showPrivateTemplate ? (
-              // Onglet "Les vôtres" - Templates privés
-              privateBoardTemplates?.length > 0 ? (
-                <ul
-                  className={`flex flex-col gap-3 max-h-[320px] ${
-                    privateBoardTemplates?.length > 7
-                      ? "overflow-y-scroll pr-1"
-                      : ""
-                  }`}
+          {isNotEmpty(templates) ? (
+            <ul className="flex flex-col gap-3">
+              {templates.map((template) => (
+                <li
+                  key={template._id}
+                  className="flex items-center justify-between"
                 >
-                  {privateBoardTemplates.map((template) => (
-                    <li
-                      key={template._id}
-                      className="flex items-center justify-between"
+                  <div>
+                    <span>{template.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      className="p-2 rounded-sm"
+                      onClick={(e) => handleUseBoardTemplate(e, template?._id)}
                     >
-                      <div>
-                        <span>{template.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          className="p-2 rounded-sm"
-                          onClick={(e) =>
-                            handleUseBoardTemplate(
-                              e,
-                              template?._id,
-                              template?.private
-                            )
-                          }
-                        >
-                          Utiliser
-                        </button>
-                        <button
-                          type="button"
-                          className="p-2 rounded-sm bg-danger-color"
-                          onClick={(e) =>
-                            handleDeleteBoardTemplate(e, template?._id)
-                          }
-                        >
-                          Supprimer
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
-                  <p className="font-semibold text-text-dark-color mb-2">
-                    Aucun modèle disponible
-                  </p>
-                </div>
-              )
-            ) : // Onglet "La communauté" - Templates publics
-            publicBoardTemplates?.length > 0 ? (
-              <ul
-                className={`flex flex-col gap-3 max-h-[320px] ${
-                  publicBoardTemplates?.length > 7
-                    ? "overflow-y-scroll pr-1"
-                    : ""
-                }`}
-              >
-                {publicBoardTemplates.map((template) => (
-                  <li
-                    key={template._id}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex justify-center items-center gap-2 ">
-                      <span>{template.name}</span>
-                      {template?.author?.toString() === uid && (
-                        <span className="text-small">(vous)</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        className="p-2 rounded-sm"
-                        onClick={(e) =>
-                          handleUseBoardTemplate(e, template?._id)
-                        }
-                      >
-                        Utiliser
-                      </button>
-                      {template?.author?.toString() === uid && (
-                        <button
-                          type="button"
-                          className="p-2 rounded-sm bg-danger-color"
-                          onClick={(e) =>
-                            handleDeleteBoardTemplate(
-                              e,
-                              template?._id,
-                              template?.private
-                            )
-                          }
-                        >
-                          Supprimer
-                        </button>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
-                <p className="font-semibold text-text-dark-color mb-2">
-                  Aucun modèle disponible
-                </p>
-              </div>
-            )}
-          </>
+                      Utiliser
+                    </button>
+                    <button
+                      type="button"
+                      className="p-2 rounded-sm bg-danger-color"
+                      onClick={(e) =>
+                        handleDeleteBoardTemplate(e, template?._id)
+                      }
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div>
+              <span>Aucun modèle de tableau n'a été trouvé</span>
+            </div>
+          )}
         </div>
       </div>
       <div

@@ -359,9 +359,3 @@ export const priorityColors = [
   "#FF7043", // Sécurité
   "#FF8A65", // Alerte modérée
 ];
-
-export function isMeaningfulContent(html) {
-  const temp = document.createElement("div");
-  temp.innerHTML = html;
-  return !!temp.textContent.trim(); // retourne true s'il y a du texte non vide
-}

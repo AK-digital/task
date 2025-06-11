@@ -507,11 +507,6 @@ export async function removeGuest(req, res, next) {
       }
     );
 
-    await FavoriteModel.findOneAndDelete({
-      user: guestId,
-      project: req.params.id,
-    });
-
     if (!updatedProject) {
       return res.status(404).send({
         success: false,

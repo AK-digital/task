@@ -9,7 +9,7 @@ export async function saveStatus(req, res) {
     if (!color) {
       return res.status(400).send({
         success: false,
-        message: "Missing parameters",
+        message: "Missings parameters",
       });
     }
 
@@ -80,26 +80,21 @@ export async function getStatusByProject(req, res) {
 
 export async function getStatusesByProjects(req, res) {
   try {
-    const authUser = res.locals.user;
+    const { projects } = req.query;
 
-    const tasks = await TaskModel.find({
-      responsibles: authUser?._id,
-    });
+    console.log(projects);
 
-    if (!tasks) {
-      return res.status(404).send({
+    if (!projects) {
+      return res.status(400).send({
         success: false,
-        message: "Tasks not found",
-        data: [],
+        message: "Missing parameters",
       });
     }
 
-    const projectsIds = [
-      ...new Set(tasks?.map((task) => task?.projectId?._id)),
-    ];
+    const splittedProjects = projects.split(",");
 
     const statuses = await StatusModel.find({
-      projectId: { $in: projectsIds },
+      projectId: { $in: splittedProjects },
     });
 
     if (!statuses.length === 0) {
