@@ -8,6 +8,22 @@ export default function TasksStatusFilter({ queries, setQueries }) {
   const hasStatus = QueriesStatus?.length > 0;
   const { statuses } = useProjectContext();
 
+  // Créer des statuts uniques basés sur le nom en utilisant reduce
+  const uniqueStatuses =
+    statuses?.reduce((acc, currentStatus) => {
+      // Vérifier si un statut avec le même nom existe déjà
+      const existingStatus = acc.find(
+        (status) => status.name === currentStatus.name
+      );
+
+      // Si aucun statut avec ce nom n'existe, l'ajouter à l'accumulateur
+      if (!existingStatus) {
+        acc.push(currentStatus);
+      }
+
+      return acc;
+    }, []) || [];
+
   function handleResetStatus() {
     setQueries((prev) => ({
       ...prev,
@@ -16,22 +32,33 @@ export default function TasksStatusFilter({ queries, setQueries }) {
     setIsOpen(false);
   }
 
-  function handleStatusChange(e) {
+  function handleStatusChange(e, elt) {
     const { value, checked } = e.target;
+
+    const getAllStatusesWhereSameName = statuses?.filter(
+      (status) => status?.name === elt?.name
+    );
+
+    const getAllStatusesIds = getAllStatusesWhereSameName?.map(
+      (status) => status?._id
+    );
 
     if (checked) {
       setQueries((prev) => ({
         ...prev,
-        status: prev?.status ? [...prev.status, value] : [value],
+        status: prev?.status
+          ? [...prev.status, getAllStatusesIds]
+          : [getAllStatusesIds],
       }));
     } else {
+      // Supprimer le tableau qui contient l'ID du statut décoché
       const deletedStatus = queries?.status?.filter(
-        (status) => status !== value
+        (statusArray) => !statusArray.includes(value)
       );
 
       setQueries((prev) => ({
         ...prev,
-        status: deletedStatus,
+        status: deletedStatus?.length > 0 ? deletedStatus : null,
       }));
     }
   }
@@ -69,7 +96,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
-              {statuses?.map((elt) => (
+              {uniqueStatuses?.map((elt) => (
                 <li
                   key={elt?._id}
                   className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
@@ -79,9 +106,13 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                     id={elt?._id}
                     name={elt?.name}
                     value={elt?._id}
-                    onChange={handleStatusChange}
+                    onChange={(e) => handleStatusChange(e, elt)}
                     checked={
-                      hasStatus ? QueriesStatus?.includes(elt?._id) : false
+                      hasStatus
+                        ? QueriesStatus?.some((statusArray) =>
+                            statusArray.includes(elt?._id)
+                          )
+                        : false
                     }
                     className="w-auto cursor-pointer"
                   />

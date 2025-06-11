@@ -1,7 +1,7 @@
 import { isNotEmpty, sendNotification } from "@/utils/utils";
 import { PlusCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
 import socket from "@/utils/socket";
 import { getFloating, usePreventScroll } from "@/utils/floating";

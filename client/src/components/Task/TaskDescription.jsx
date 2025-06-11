@@ -7,7 +7,7 @@ import { PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
 import useSWR, { mutate } from "swr";
 import { getDrafts } from "@/api/draft";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import NoPicture from "../User/NoPicture";
 

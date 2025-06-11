@@ -17,6 +17,12 @@ router.get(
   priorityControllers.getPriorityByProject
 );
 
+router.get(
+  "/",
+  authMiddlewares.auth,
+  priorityControllers.getPrioritiesByProjects
+);
+
 router.put(
   "/:id",
   authMiddlewares.auth,

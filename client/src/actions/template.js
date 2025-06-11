@@ -5,6 +5,7 @@ export async function saveTemplate(prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const name = formData.get("template-name");
+    const isPrivate = formData.get("template-private");
 
     const res = await useAuthFetch(
       `template?projectId=${projectId}`,
@@ -13,6 +14,7 @@ export async function saveTemplate(prevState, formData) {
       {
         projectId: projectId,
         name: name,
+        isPrivate: isPrivate !== "on",
       }
     );
 

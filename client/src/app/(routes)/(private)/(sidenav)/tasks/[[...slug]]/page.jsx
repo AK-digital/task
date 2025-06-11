@@ -1,5 +1,4 @@
 "use client";
-
 import { AuthContext } from "@/context/auth";
 import { useContext, useMemo, useState, useEffect } from "react";
 import Tasks from "@/components/tasks/Tasks";
@@ -26,8 +25,8 @@ const displayedFilters = {
   isProject: true,
   isBoard: false,
   isAdmin: false,
-  isStatus: false,
-  isPriorities: false,
+  isStatus: true,
+  isPriorities: true,
   isDeadline: true,
 };
 

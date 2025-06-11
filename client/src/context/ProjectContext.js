@@ -1,8 +1,11 @@
 "use client";
 import { useBoards } from "@/app/hooks/useBoards";
-import { usePriorities } from "@/app/hooks/usePriorities";
+import {
+  usePriorities,
+  usePrioritiesByProjects,
+} from "@/app/hooks/usePriorities";
 import { useProject } from "@/app/hooks/useProject";
-import { useStatuses } from "@/app/hooks/useStatus";
+import { useStatuses, useStatusesByProjects } from "@/app/hooks/useStatus";
 import { useTasks } from "@/app/hooks/useTasks";
 import { createContext, useContext, useState } from "react";
 
@@ -19,7 +22,6 @@ export function ProjectProvider({
   defaultQueries,
 }) {
   const [queries, setQueries] = useState(defaultQueries);
-  let uniqueProjects = [];
 
   const { project, mutateProject } = initialProject
     ? useProject(initialProject?._id, initialProject)
@@ -31,18 +33,13 @@ export function ProjectProvider({
 
   const { tasks, tasksLoading, mutateTasks } = useTasks(queries, initialTasks);
 
-  if (!initialProject) {
-    const uniqueProjectsByTasks = tasks?.map((task) => task?.projectId?._id);
-    uniqueProjects = [...new Set(uniqueProjectsByTasks)];
-  }
-
   const { statuses, mutateStatuses } = initialProject
     ? useStatuses(initialProject?._id, initialStatuses)
-    : { statuses: [], mutateStatuses: null };
+    : useStatusesByProjects();
 
   const { priorities, mutatePriorities } = initialProject
     ? usePriorities(initialProject?._id, initialPriorities)
-    : { priorities: [], mutatePriorities: null };
+    : usePrioritiesByProjects();
 
   return (
     <ProjectContext.Provider
