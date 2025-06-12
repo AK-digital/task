@@ -67,6 +67,25 @@ const projectSchema = new Schema(
   }
 );
 
+// projectSchema.pre("findOneAndDelete", async function (next) {
+//   const query = this;
+//   const projectToDelete = await query.model.findOne(query.getQuery());
+
+//   if (!projectToDelete) return next();
+
+//   const projectId = projectToDelete._id;
+
+//   await BoardModel.deleteMany({ projectId: projectId });
+//   await TaskModel.deleteMany({ projectId: projectId });
+//   await MessageModel.deleteMany({ projectId: projectId });
+
+//   await ProjectInvitationModel.deleteMany({ projectId: projectId });
+//   await FavoriteModel.deleteMany({ project: projectId });
+//   await DraftModel.deleteMany({ projectId: projectId });
+
+//   next();
+// });
+
 projectSchema.pre("aggregate", function () {
   this.lookup({
     from: "users",
@@ -153,7 +172,7 @@ projectSchema.pre("aggregate", function () {
 });
 
 // Middleware pour la suppression en cascade
-projectSchema.post(["deleteOne", "findOneAndDelete"], async function () {
+projectSchema.post(["deleteOne", "findOneAndDelete", "findByIdAndDelete"], async function () {
   const projectId = this.getQuery()._id;
 
   // Suppression en cascade des éléments liés au projet

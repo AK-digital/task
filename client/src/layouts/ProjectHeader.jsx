@@ -1,6 +1,6 @@
 "use client";
 import ProjectTitle from "@/components/Projects/ProjectTitle";
-import { UserPlus2 } from "lucide-react";
+import { UserCog } from "lucide-react";
 import { useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import { isNotEmpty } from "@/utils/utils";
@@ -39,7 +39,7 @@ export default function ProjectHeader({ displayedFilters }) {
               className="flex justify-center items-center cursor-pointer rounded-lg py-1.5 px-[7px] transition-all duration-200 ease-in-out hover:text-accent-color hover:bg-white/3"
               onClick={(e) => setIsOpen(true)}
             >
-              <UserPlus2 size={24} />
+              <UserCog size={24} />
             </div>
           </div>
         </nav>

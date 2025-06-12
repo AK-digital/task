@@ -32,6 +32,13 @@ router.patch(
   projectControllers.updateProjectLogo
 );
 
+router.patch(
+  "/:id/leave-project",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer", "guest"]),
+  projectControllers.leaveProject
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

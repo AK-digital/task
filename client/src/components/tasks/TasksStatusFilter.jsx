@@ -126,7 +126,10 @@ export default function TasksStatusFilter({ queries, setQueries }) {
               ))}
             </ul>
           </div>
-          <div id="modal-layout-opacity" onClick={() => setIsOpen(false)}></div>
+          <div
+            onClick={() => setIsOpen(false)}
+            className="modal-layout-opacity"
+          ></div>
         </>
       )}
     </div>

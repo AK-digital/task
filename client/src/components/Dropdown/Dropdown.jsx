@@ -57,8 +57,13 @@ export function DropDown({
   return (
     <>
       <div className="relative select-none">
-        <div onClick={handleIsOpen} className="p-2 bg-accent-color text-small rounded-sm cursor-pointer w-25 transition-all ease-in duration-[80ms] hover:bg-accent-color-hover">
-          <span className="flex items-center justify-center text-white text-center w-full">{memberRole(current)}</span>
+        <div
+          onClick={handleIsOpen}
+          className="bg-accent-color cursor-pointer duration-[80ms] ease-in hover:bg-accent-color-hover p-2 rounded-sm text-small transition-all w-25 h-8"
+        >
+          <span className="flex items-center justify-center text-white text-center w-full">
+            {memberRole(current)}
+          </span>
         </div>
         {isOpen && (
           <ul className="absolute flex flex-col z-9999 top-10 left-0 gap-0 w-full bg-secondary text-small rounded-sm max-h-50 overflow-auto text-left shadow-medium">
@@ -70,13 +75,17 @@ export function DropDown({
                   onClick={handleChangeRole}
                   data-value={option}
                 >
-                  <span className="flex items-center justify-center">{memberRole(option)}</span>
+                  <span className="flex items-center justify-center">
+                    {memberRole(option)}
+                  </span>
                 </li>
               );
             })}
           </ul>
         )}
-        {isOpen && <div className="modal-layout-opacity" onClick={handleIsOpen}></div>}
+        {isOpen && (
+          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
+        )}
       </div>
     </>
   );

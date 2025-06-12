@@ -3,6 +3,7 @@ import { sendProjectInvitationToGuest } from "@/actions/project";
 import socket from "@/utils/socket";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
+import { RotateCw } from "lucide-react";
 
 const initialState = {
   status: "pending",
@@ -11,10 +12,11 @@ const initialState = {
   errors: null,
 };
 
-export default function GuestFormInvitation({
+export default function GuestFormResend({
   project,
   setIsPopup,
   mutateProjectInvitation,
+  currentEmail,
 }) {
   const { user } = useContext(AuthContext);
   const sendProjectInvitationToGuestWithId = sendProjectInvitationToGuest.bind(
@@ -26,15 +28,13 @@ export default function GuestFormInvitation({
     initialState
   );
   const errors = state?.errors;
-  const [valueEmail, setValueEmail] = useState("");
 
   useEffect(() => {
     if (state?.status === "success") {
       mutateProjectInvitation();
-      setValueEmail("");
       setIsPopup({
         status: state?.status,
-        title: "Invitation envoyé avec succès",
+        title: "Nouvelle invitation envoyée avec succès",
         message: state?.message,
       });
 
@@ -45,7 +45,7 @@ export default function GuestFormInvitation({
 
       const link = "/invitation/" + state?.data?._id;
 
-      socket.emit("create notification", user, valueEmail, message, link);
+      socket.emit("create notification", user, currentEmail, message, link);
     }
 
     if (state?.status === "failure" && state?.errors === null) {
@@ -62,28 +62,26 @@ export default function GuestFormInvitation({
   }, [state]);
 
   return (
-    <>
-      <div>
-        <form action={formAction} className="gap-3">
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Inviter par e-mail"
-            value={valueEmail}
-            onChange={(e) => setValueEmail(e.target.value)}
-            className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm"
-          />
-          {errors && <i>{errors?.email}</i>}
-          <button
-            type="submit"
-            data-disabled={pending}
-            className="w-full rounded-sm text-medium p-2"
-          >
-            Envoyer une invitation
-          </button>
-        </form>
-      </div>
-    </>
+    <div>
+      <form action={formAction} className="gap-3">
+        <input
+          type="email"
+          name="email"
+          id="email"
+          defaultValue={currentEmail}
+          hidden
+          className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm"
+        />
+        {errors && <i>{errors?.email}</i>}
+        <button
+          type="submit"
+          data-disabled={pending}
+          className="flex items-center justify-center gap-[15px] rounded-sm text-medium py-2 px-[5px] bg-secondary transition-all duration-200 text-text-color-muted group-hover:text-text-dark-color w-full hover:bg-third"
+        >
+          <RotateCw size={16} />
+          <p className="text-small">Renvoyer</p>
+        </button>
+      </form>
+    </div>
   );
 }

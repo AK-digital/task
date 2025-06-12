@@ -117,7 +117,10 @@ export default function TasksAdminFilter({ queries, setQueries }) {
               <span>Aucun membre n'a été trouvé</span>
             )}
           </div>
-          <div id="modal-layout-opacity" onClick={() => setIsOpen(false)}></div>
+          <div
+            className="modal-layout-opacity"
+            onClick={() => setIsOpen(false)}
+          ></div>
         </>
       )}
     </div>

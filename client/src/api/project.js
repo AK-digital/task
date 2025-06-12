@@ -21,7 +21,7 @@ export async function getProject(id) {
   } catch (err) {
     console.log(
       err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
+      "Une erreur est survenue lors de la récupération des projets"
     );
   }
 }
@@ -46,7 +46,7 @@ export async function getProjects() {
   } catch (err) {
     console.log(
       err?.message ||
-        "Une erreur est survenue lors de la récupération des projets"
+      "Une erreur est survenue lors de la récupération des projets"
     );
     return [];
   }
@@ -134,6 +134,31 @@ export async function updateProjectRole(projectId, memberId, role) {
   }
 }
 
+export async function leaveProject(projectId) {
+  try {
+    const res = await useAuthFetch(
+      `project/${projectId}/leave-project`,
+      "PATCH",
+      "application/json",
+      null
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    revalidateTag("projects");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de la sortie du projet"
+    );
+  }
+}
+
 export async function deleteProject(projectId) {
   try {
     const res = await useAuthFetch(`project/${projectId}`, "DELETE");
@@ -150,7 +175,7 @@ export async function deleteProject(projectId) {
   } catch (err) {
     console.log(
       err?.message ||
-        "Une erreur est survenue lors de la récupération des tableaux"
+      "Une erreur est survenue lors de la récupération des tableaux"
     );
   }
 }

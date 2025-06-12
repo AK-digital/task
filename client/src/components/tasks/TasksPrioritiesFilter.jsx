@@ -124,7 +124,10 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
               ))}
             </ul>
           </div>
-          <div id="modal-layout-opacity" onClick={() => setIsOpen(false)}></div>
+          <div
+            className="modal-layout-opacity"
+            onClick={() => setIsOpen(false)}
+          ></div>
         </>
       )}
     </div>
