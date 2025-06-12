@@ -6,7 +6,7 @@ import TemplateModel from "../models/Template.model.js";
 export async function saveTemplate(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { name, description, projectId, isPrivate } = req.body;
+    const { name, description, projectId } = req.body;
 
     // Check if the required fields are provided
     if (!name || !projectId) {
@@ -21,7 +21,6 @@ export async function saveTemplate(req, res, next) {
       description: description,
       author: authUser?._id,
       project: projectId,
-      private: isPrivate,
     });
 
     const savedTemplate = await newTemplate.save();
@@ -178,44 +177,72 @@ export async function useBoardTemplate(req, res, next) {
   }
 }
 
-export async function getPublicTemplates(req, res, next) {
+export async function getTemplates(req, res, next) {
   try {
     const templates = await TemplateModel.aggregate([
       {
-        $match: {
-          private: false,
+        $lookup: {
+          from: "boards",
+          localField: "project",
+          foreignField: "projectId",
+          as: "boards",
         },
       },
-    ]);
-
-    if (templates.length === 0) {
-      return res.status(404).send({
-        success: false,
-        message: "Aucun modèle trouvé",
-      });
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: "Modèles récupérés avec succès",
-      data: templates,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de la récupération des modèles",
-    });
-  }
-}
-
-export async function getUserPrivateTemplates(req, res, next) {
-  try {
-    const templates = await TemplateModel.aggregate([
       {
-        $match: {
-          private: true,
+        $lookup: {
+          from: "tasks",
+          localField: "project",
+          foreignField: "projectId",
+          as: "tasks",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $addFields: {
+          boardsCount: { $size: "$boards" },
+          tasksCount: { $size: "$tasks" },
+          creator: { $arrayElemAt: ["$creator", 0] },
+          // Grouper les tâches par board
+          boardsWithTasks: {
+            $map: {
+              input: "$boards",
+              as: "board",
+              in: {
+                _id: "$$board._id",
+                title: "$$board.title",
+                color: "$$board.color",
+                tasks: {
+                  $filter: {
+                    input: "$tasks",
+                    as: "task",
+                    cond: { $eq: ["$$task.boardId", "$$board._id"] }
+                  }
+                }
+              }
+            }
+          }
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          description: 1,
+          author: 1,
+          project: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          boardsCount: 1,
+          tasksCount: 1,
+          boardsWithTasks: 1,
+          "creator.name": 1,
+          "creator.picture": 1
         },
       },
     ]);

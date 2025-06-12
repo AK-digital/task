@@ -9,20 +9,6 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
 
   const { priorities } = useProjectContext();
 
-  const uniquePriorities =
-    priorities?.reduce((acc, currentPriority) => {
-      // Vérifier si un statut avec le même nom existe déjà
-      const existingPriority = acc.find(
-        (priority) => priority.name === currentPriority.name
-      );
-
-      // Si aucun statut avec ce nom n'existe, l'ajouter à l'accumulateur
-      if (!existingPriority) {
-        acc.push(currentPriority);
-      }
-
-      return acc;
-    }, []) || [];
   function handleResetPriorities() {
     setQueries((prev) => ({
       ...prev,
@@ -31,33 +17,21 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
     setIsOpen(false);
   }
 
-  function handlePrioritiesChange(e, elt) {
+  function handlePrioritiesChange(e) {
     const { value, checked } = e.target;
-
-    const getAllPrioritiesWhereSameName = priorities?.filter(
-      (priority) => priority?.name === elt?.name
-    );
-
-    const getAllPrioritiesIds = getAllPrioritiesWhereSameName?.map(
-      (priority) => priority?._id
-    );
-
     if (checked) {
       setQueries((prev) => ({
         ...prev,
-        priorities: prev?.priorities
-          ? [...prev.priorities, getAllPrioritiesIds]
-          : [getAllPrioritiesIds],
+        priorities: prev?.priorities ? [...prev.priorities, value] : [value],
       }));
     } else {
-      // Supprimer le tableau qui contient l'ID du statut décoché
       const deletedPriorities = queries?.priorities?.filter(
-        (prioritiesArray) => !prioritiesArray.includes(value)
+        (priority) => priority !== value
       );
 
       setQueries((prev) => ({
         ...prev,
-        priorities: deletedPriorities?.length > 0 ? deletedPriorities : null,
+        priorities: deletedPriorities,
       }));
     }
   }
@@ -94,7 +68,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                 <Undo size={14} />
                 <span>Effacer</span>
               </li>
-              {uniquePriorities?.map((priority) => (
+              {priorities.map((priority) => (
                 <li
                   key={priority?._id}
                   className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
@@ -104,12 +78,10 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                     id={priority?._id}
                     name={priority?.name}
                     value={priority?._id}
-                    onChange={(e) => handlePrioritiesChange(e, priority)}
+                    onChange={handlePrioritiesChange}
                     checked={
                       hasPriorities
-                        ? queriesPriorities?.some((prioritiesArray) =>
-                            prioritiesArray.includes(priority?._id)
-                          )
+                        ? queriesPriorities?.includes(priority?._id)
                         : false
                     }
                     className="w-auto cursor-pointer"

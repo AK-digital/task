@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import ColorsPopup from "../Popups/ColorsPopup";
 import { useProjectContext } from "@/context/ProjectContext";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { priorityColors } from "@/utils/utils";
 
 export default function TaskEditPriority({
@@ -112,7 +112,7 @@ export default function TaskEditPriority({
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <div
+      <div 
         className="absolute flex justify-center items-center text-text-light-color h-5.5 w-5.5 left-1 rounded-3xl"
         style={{ backgroundColor: color }}
       >

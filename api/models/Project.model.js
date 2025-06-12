@@ -133,15 +133,34 @@ projectSchema.pre("aggregate", function () {
             $size: {
               $filter: {
                 input: "$tasks",
-                cond: { $eq: ["$$this.status", "$$status._id"] },
+                cond: {
+                  $and: [
+                    { $eq: ["$$this.status", "$$status._id"] },
+                    { $ne: ["$$this.archived", true] },
+                  ],
+                },
               },
             },
           },
         },
       },
     },
-    tasksCount: { $size: "$tasks" },
-    boardsCount: { $size: "$boards" },
+    tasksCount: {
+      $size: {
+        $filter: {
+          input: "$tasks",
+          cond: { $ne: ["$$this.archived", true] },
+        },
+      },
+    },
+    boardsCount: {
+      $size: {
+        $filter: {
+          input: "$boards",
+          cond: { $ne: ["$$this.archived", true] },
+        },
+      },
+    },
   });
   // We don't want to return the tasks and boards and membersData in the response
   this.project({

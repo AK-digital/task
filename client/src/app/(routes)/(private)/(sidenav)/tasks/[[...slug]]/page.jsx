@@ -1,9 +1,11 @@
 "use client";
+
 import { AuthContext } from "@/context/auth";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import Tasks from "@/components/tasks/Tasks";
 import TasksFilters from "@/components/tasks/TasksFilters";
 import { ProjectProvider, useProjectContext } from "@/context/ProjectContext";
+import socket from "@/utils/socket";
 
 // This is where you define the task elements you want to display
 const displayedElts = {
@@ -24,8 +26,8 @@ const displayedFilters = {
   isProject: true,
   isBoard: false,
   isAdmin: false,
-  isStatus: true,
-  isPriorities: true,
+  isStatus: false,
+  isPriorities: false,
   isDeadline: true,
 };
 
@@ -61,11 +63,23 @@ function TasksContent() {
   // Utilisez le contexte du projet pour récupérer les tâches
   const { tasks, tasksLoading, mutateTasks } = useProjectContext();
 
+  useEffect(() => {
+    const handleTaskUpdate = async () => {
+      mutateTasks();
+    };
+
+    socket.on("task updated", handleTaskUpdate);
+
+    return () => {
+      socket.off("task updated", handleTaskUpdate);
+    };
+  }, [mutateTasks]);
+
   return (
     <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
       <div className="p-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto ">
         {/* Header */}
-        <div className="flex items-center mb-6 gap-4 p-4">
+        <div className="flex items-center mb-6 gap-4 bg-transparent p-4">
           <span className="text-2xl min-w-max select-none">Mes tâches</span>
           {/* Filters */}
           <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />

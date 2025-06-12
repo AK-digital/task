@@ -13,7 +13,7 @@ import TaskRemove from "./TaskRemove";
 import TaskConversation from "./TaskConversation";
 import TaskCheckbox from "./TaskCheckbox";
 import TaskDrag from "./TaskDrag";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskMore from "./TaskMore";
 import { useSortable } from "@dnd-kit/sortable";

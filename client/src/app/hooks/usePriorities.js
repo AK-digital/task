@@ -1,4 +1,4 @@
-import { getPrioritiesByProjects, getPriorityByProject } from "@/api/priority";
+import { getPriorityByProject } from "@/api/priority";
 import useSWR from "swr";
 
 export function usePriorities(projectId, initialPriorities) {
@@ -16,19 +16,6 @@ export function usePriorities(projectId, initialPriorities) {
     fetcher,
     options
   );
-
-  return { priorities: data, mutatePriorities: mutate };
-}
-
-export function usePrioritiesByProjects() {
-  const fetcher = getPrioritiesByProjects;
-
-  const options = {
-    revalidateOnMount: true,
-    revalidateOnFocus: false,
-  };
-
-  const { data, isLoading, mutate } = useSWR(`/priority`, fetcher, options);
 
   return { priorities: data, mutatePriorities: mutate };
 }

@@ -33,40 +33,6 @@ export async function getPriorityByProject(projectId) {
   }
 }
 
-export async function getPrioritiesByProjects() {
-  try {
-    const res = await useAuthFetch(`priority`, "GET", "application/json");
-
-    if (res.status === 404) {
-      return {
-        success: false,
-        message: "Priorities not found",
-        data: [],
-      };
-    }
-
-    const response = await res.json();
-
-    if (!response.success) {
-      throw new Error(
-        response.message ||
-          "An error occurred while fetching user projects priorities"
-      );
-    }
-
-    return response?.data || [];
-  } catch (err) {
-    console.error(err);
-
-    return {
-      success: false,
-      message:
-        err.message || "An error occurred while fetching custom priority",
-      data: [],
-    };
-  }
-}
-
 export async function savePriority(projectId, priorityData) {
   try {
     const res = await useAuthFetch(

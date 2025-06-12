@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,6 +17,7 @@ import { Eye } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
 import Reactions from "../Reactions/Reactions";
+import AttachmentsInfo from "../Popups/AttachmentsInfo";
 
 export default function Message({
   task,
@@ -46,7 +47,7 @@ export default function Message({
         if (!response?.success) return;
 
         mutateMessage();
-        socket.emit("update task", project?._id);
+        socket.emit("update message", project?._id);
       }
     }
 

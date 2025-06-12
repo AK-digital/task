@@ -5,7 +5,7 @@ import Image from "next/image";
 import moment from "moment";
 import TaskDescription from "./TaskDescription";
 import { usePathname } from "next/navigation";
-import Portal from "../Portal/Portal";
+import socket from "@/utils/socket";
 moment.locale("fr");
 
 export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
@@ -97,7 +97,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   };
 
   return (
-    <Portal>
+    <>
       <div
         ref={resizerRef}
         className="w-1 h-screen fixed top-0 left-0 cursor-col-resize bg-transparent z-[2002] hover:bg-accent-color active:bg-accent-color"
@@ -134,6 +134,6 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
         </div>
       </div>
       {open && <div onClick={handleClose} className="task-modal-layout"></div>}
-    </Portal>
+    </>
   );
 }

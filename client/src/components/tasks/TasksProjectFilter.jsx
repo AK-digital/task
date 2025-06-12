@@ -1,4 +1,4 @@
-import { useProjects } from "../../../hooks/useProjects";
+import { useProjects } from "@/app/hooks/useProjects";
 import { isNotEmpty } from "@/utils/utils";
 import { ChevronDown, FolderOpenDot, Undo } from "lucide-react";
 import Image from "next/image";
@@ -55,8 +55,8 @@ export default function TasksProjectFilter({ queries, setQueries }) {
         <span className="max-w-[140px] flex-1 whitespace-nowrap text-ellipsis overflow-hidden block">
           {theProject?.name || "Choisir un projet"}
         </span>
-        <ChevronDown
-          size={16}
+        <ChevronDown 
+          size={16} 
           className={`transition-all duration-[120ms] ease-in-out ${
             isOpen ? "rotate-180" : ""
           }`}
@@ -66,8 +66,8 @@ export default function TasksProjectFilter({ queries, setQueries }) {
         <div className="absolute top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full z-[9991]">
           {isNotEmpty(projects) ? (
             <ul>
-              <li
-                className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+              <li 
+                className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm" 
                 onClick={() => handleSelectProject()}
               >
                 <Undo size={16} />

@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { MoreMenu } from "../Dropdown/MoreMenu";
 import {
   addBoardToArchive,
@@ -26,7 +26,6 @@ import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useTaskContext } from "@/context/TaskContext";
-import Portal from "../Portal/Portal";
 
 export default function BoardHeader({
   board,
@@ -78,22 +77,32 @@ export default function BoardHeader({
   };
 
   async function handleAddBoardTemplate(e) {
-    e.preventDefault();
+    e?.preventDefault();
 
     setIsMoreOpen(false);
     setAddBoardTemplate((prev) => !prev);
   }
 
   async function handleAddArchive(e) {
-    e.preventDefault();
+    e?.preventDefault();
     await addBoardToArchive(board?._id, project?._id);
 
-    await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+    mutate(`/boards?projectId=${project?._id}&archived=false`);
+    socket.emit("archive board", {
+      projectId: project?._id,
+      action: "archive",
+    });
   }
 
   async function handleRestoreArchive(e) {
-    e.preventDefault();
+    e?.preventDefault();
     await removeBoardFromArchive(board?._id, project?._id);
+
+    mutate(`/task?projectId=${project?._id}&archived=true`);
+    socket.emit("archive board", {
+      projectId: project?._id,
+      action: "restore",
+    });
   }
 
   async function handleDeleteBoard(e) {
@@ -101,7 +110,7 @@ export default function BoardHeader({
 
     if (!response?.success) return;
 
-    await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+    socket.emit("update board", board?.projectId);
   }
 
   const options = [
@@ -235,8 +244,9 @@ export default function BoardHeader({
 
   return (
     <div
-      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${openedTask ? "z-1000" : "z-2000"
-        }`}
+      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
+        openedTask ? "z-1000" : "z-2000"
+      }`}
       // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
@@ -361,13 +371,11 @@ export default function BoardHeader({
         </>
       )}
       {addBoardTemplate && (
-        <Portal>
-          <AddBoardTemplate
-            project={project}
-            board={board}
-            setAddTemplate={setAddBoardTemplate}
-          />
-        </Portal>
+        <AddBoardTemplate
+          project={project}
+          board={board}
+          setAddTemplate={setAddBoardTemplate}
+        />
       )}
     </div>
   );

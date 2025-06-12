@@ -10,13 +10,14 @@ import {
   Settings2,
   Trash2,
 } from "lucide-react";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
 import { useRouter } from "next/navigation";
 import { deleteProject } from "@/api/project";
 import AddTemplate from "../Templates/AddTemplate";
 import { MoreMenu } from "../Dropdown/MoreMenu";
 import { icons, isNotEmpty } from "@/utils/utils";
+import socket from "@/utils/socket";
 
 const initialState = {
   status: "pending",
@@ -43,6 +44,9 @@ export default function ProjectTitle({ project }) {
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
 
   async function handleDeleteProject() {
+    socket.emit("redirect-project", project?._id);
+    socket.emit("update-project", null, project?._id);
+
     const response = await deleteProject(project?._id);
 
     if (response?.success) {
@@ -107,6 +111,7 @@ export default function ProjectTitle({ project }) {
     if (state?.status === "success") {
       mutate(`/project/${project?._id}`);
       setIsEditing(false);
+      socket.emit("update-project", null, project?._id);
     }
     if (state?.status === "failure") {
       setProjectName(project?.name);

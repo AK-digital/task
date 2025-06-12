@@ -43,40 +43,10 @@ export async function saveBoardTemplate(boardId, projectId) {
   }
 }
 
-export async function getPublicTemplates() {
+export async function getTemplates() {
   try {
     const res = await useAuthFetch(
-      `template`,
-      "GET",
-      "application/json",
-      null,
-      "templates"
-    );
-
-    const data = await res.json();
-
-    if (res.status === 404) {
-      return {
-        success: false,
-        message: "Aucun modèle trouvé",
-        data: [],
-      };
-    }
-
-    if (!data?.success) {
-      throw new Error(data?.message || "Une erreur s'est produite");
-    }
-
-    return data;
-  } catch (err) {
-    console.log(err.message || "Une erreur s'est produite");
-  }
-}
-
-export async function getUserPrivateTemplates() {
-  try {
-    const res = await useAuthFetch(
-      `template/user-private`,
+      "template",
       "GET",
       "application/json",
       null,

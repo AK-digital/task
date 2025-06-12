@@ -17,10 +17,12 @@ import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
 import PopupMessage from "@/layouts/PopupMessage";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { mutate } from "swr";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
+import socket from "@/utils/socket";
+import { useFavorites } from "@/app/hooks/useFavorites";
 moment.locale("fr");
 
 const initialState = {
@@ -32,7 +34,7 @@ const initialState = {
 export default function ProjectOptions({ project }) {
   const router = useRouter();
   const [links, setLinks] = useState(project?.urls || []);
-
+  const { favoritesMutate } = useFavorites();
   const [projectName, setProjectName] = useState(project?.name || "");
   const [note, setNote] = useState(project?.note || "");
   const [moreIcons, setMoreIcons] = useState(null);
@@ -64,6 +66,8 @@ export default function ProjectOptions({ project }) {
         message: "Les modifications ont été enregistrées avec succès",
       });
 
+      socket.emit("update-project", null, project?._id);
+
       return;
     }
     if (state?.status === "failure") {
@@ -84,6 +88,18 @@ export default function ProjectOptions({ project }) {
       return () => clearTimeout(timeout);
     }
   }, [popup]);
+
+  useEffect(() => {
+    function handleRedirect() {
+      router.push("/projects");
+    }
+
+    socket.on("project-redirected", handleRedirect);
+
+    return () => {
+      socket.off("project-redirected", handleRedirect);
+    };
+  }, [router]);
 
   useEffect(() => {
     const nameChanged = projectName !== project?.name;
@@ -109,22 +125,51 @@ export default function ProjectOptions({ project }) {
     setIsDisabled(!hasChanges);
   }, [projectName, note, links]);
 
+  useEffect(() => {
+    setProjectName(project?.name || "");
+    setNote(project?.note || "");
+    setLinks(project?.urls || []);
+
+    initialLinks.current = project?.urls?.length
+      ? project.urls.map((link) => ({ ...link }))
+      : [{ url: "", icon: "Globe" }];
+  }, [project?.name, project?.note, project?.urls]);
+
+  useEffect(() => {
+    function handleProjectUpdate() {
+      favoritesMutate();
+    }
+
+    socket.on("project-updated", handleProjectUpdate);
+
+    return () => {
+      socket.off("project-updated", handleProjectUpdate);
+    };
+  }, [favoritesMutate]);
+
   async function handleUpdateLogo(e) {
-    e.preventDefault();
+    e?.preventDefault();
 
-    await updateProjectLogo(project?._id, e.target.files[0]);
+    const response = await updateProjectLogo(project?._id, e.target.files[0]);
 
-    mutate(`/project/${project?._id}`);
+    if (response?.status === "success") {
+      mutate(`/project/${project?._id}`);
+      favoritesMutate();
+      socket.emit("update-project", null, project?._id);
+    }
   }
 
   async function handleDeleteProject() {
+    socket.emit("redirect-project", project?._id);
+    socket.emit("update-project", null, project?._id);
+
     const response = await deleteProject(project?._id);
 
     if (response?.success) {
+      mutate("/favorite");
+      mutate(`/project/${project?._id}`);
       router.push("/projects");
     }
-
-    mutate(`/project/${project?._id}`);
   }
 
   function displayIcon(name) {
@@ -133,7 +178,7 @@ export default function ProjectOptions({ project }) {
   }
 
   function addLink(e) {
-    e.preventDefault();
+    e?.preventDefault();
     if (links.length >= 6) return;
 
     setLinks((prevLinks) => [
@@ -146,7 +191,7 @@ export default function ProjectOptions({ project }) {
   }
 
   function removeLink(e, link) {
-    e.preventDefault();
+    e?.preventDefault();
     const updatedLinks = links.filter((l) => l !== link);
     setLinks(updatedLinks);
   }

@@ -5,11 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { MessagesSquareIcon } from "lucide-react";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { useUserRole } from "../../../hooks/useUserRole";
-import { useMessages } from "../../../hooks/useMessages";
-import { useDrafts } from "../../../hooks/useDrafts";
+import { useUserRole } from "@/app/hooks/useUserRole";
+import { useMessages } from "@/app/hooks/useMessages";
+import { useDrafts } from "@/app/hooks/useDrafts";
 import MessagesSkeleton from "./MessagesSkeleton";
-import PendingMessage from "./PendingMessage";
 
 export default function Messages({ task, project, mutateTasks }) {
   const { draft, mutateDraft } = useDrafts(project?._id, task?._id, "message");
@@ -17,9 +16,9 @@ export default function Messages({ task, project, mutateTasks }) {
     project?._id,
     task?._id
   );
+
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [isPending, setIsPending] = useState(false);
 
   const isAuthorized = useUserRole(project, [
     "owner",
@@ -29,14 +28,16 @@ export default function Messages({ task, project, mutateTasks }) {
   ]);
 
   useEffect(() => {
-    socket.on("message updated", () => {
+    const handleMessageUpdate = () => {
       mutate();
-    });
+    };
+
+    socket.on("message updated", handleMessageUpdate);
 
     return () => {
-      socket.off("message updated");
+      socket.off("message updated", handleMessageUpdate);
     };
-  }, [socket]);
+  }, [mutate]);
 
   useEffect(() => {
     setIsOpen(false);
@@ -62,9 +63,9 @@ export default function Messages({ task, project, mutateTasks }) {
       <span className="flex items-center gap-2 text-large text-text-dark-color font-medium select-none [&_svg]:text-text-color-muted">
         <MessagesSquareIcon size={18} /> Conversation
       </span>
-      {/* Loading */}
+
       {messageLoading && <MessagesSkeleton />}
-      {/* Messages */}
+
       {!messageLoading &&
         isNotEmpty(messages) &&
         messages?.map((message) => (
@@ -77,15 +78,13 @@ export default function Messages({ task, project, mutateTasks }) {
             key={message?._id}
           />
         ))}
-      {isPending && <PendingMessage message={message} />}
+
       {isOpen && (
         <Tiptap
           project={project}
           task={task}
           type="message"
           message={message}
-          setMessage={setMessage}
-          setIsMessagePending={setIsPending}
           setConvOpen={setIsOpen}
           draft={draft}
           mutateDraft={mutateDraft}

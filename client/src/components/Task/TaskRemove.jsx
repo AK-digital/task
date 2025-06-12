@@ -3,7 +3,7 @@ import { Trash } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
 import socket from "@/utils/socket";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 
 export default function TaskRemove({ task, archive, mutate }) {
   const [showConfirm, setShowConfirm] = useState(false);

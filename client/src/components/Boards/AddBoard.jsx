@@ -2,11 +2,11 @@
 import { Plus } from "lucide-react";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import { useState } from "react";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
 import AddBoardIAModal from "../Modals/AddBoardIAModal";
-import { bricolageGrostesque } from "@/utils/font";
+import socket from "@/utils/socket";
 
 export default function AddBoard({ project }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +26,7 @@ export default function AddBoard({ project }) {
     if (!response.success) return;
 
     await mutate(`/boards?projectId=${projectId}&archived=false`);
+    socket.emit("update board", projectId);
 
     setIsLoading(false);
   }

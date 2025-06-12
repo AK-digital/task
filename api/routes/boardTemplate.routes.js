@@ -7,13 +7,7 @@ import * as boardTemplateControllers from "../controllers/boardTemplate.controll
 router.get(
   "/",
   authMiddlewares.auth,
-  boardTemplateControllers.getPublicBoardsTemplates
-);
-
-router.get(
-  "/user-private",
-  authMiddlewares.auth,
-  boardTemplateControllers.getUserPrivateBoardsTemplates
+  boardTemplateControllers.getBoardsTemplates
 );
 
 router.post(

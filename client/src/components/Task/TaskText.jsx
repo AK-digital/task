@@ -1,5 +1,5 @@
 import { updateTaskText } from "@/api/task";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/app/hooks/useUserRole";
 import socket from "@/utils/socket";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";

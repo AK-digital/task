@@ -1,13 +1,39 @@
 import BoardModel from "../models/Board.model.js";
 import BoardTemplateModel from "../models/BoardTemplate.model.js";
 import TaskModel from "../models/Task.model.js";
+import StatusModel from "../models/Status.model.js";
+import PriorityModel from "../models/Priority.model.js";
 
+export async function getBoardsTemplates(req, res, next) {
+  try {
+    const boardTemplates = await BoardTemplateModel.find();
 
+    if (boardTemplates.length <= 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucun modèle trouvé",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Modèles récupérés avec succès",
+      data: boardTemplates,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur s'est produite lors de la récupération des modèles",
+    });
+  }
+}
 
 export async function saveBoardTemplate(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { name, boardId, isPrivate } = req.body;
+    const { name, boardId } = req.body;
 
     // Check if the required fields are provided
     if (!boardId || !name) {
@@ -30,7 +56,6 @@ export async function saveBoardTemplate(req, res, next) {
       name: name,
       author: authUser?._id,
       boardId: boardId,
-      private: isPrivate,
     });
 
     const savedTemplate = await newTemplate.save();
@@ -46,65 +71,6 @@ export async function saveBoardTemplate(req, res, next) {
       message:
         err?.message ||
         "Une erreur s'est produite lors de l'enregistrement du modèle",
-    });
-  }
-}
-
-export async function getPublicBoardsTemplates(req, res, next) {
-  try {
-    const boardTemplates = await BoardTemplateModel.find({
-      private: false
-    });
-
-    if (boardTemplates.length <= 0) {
-      return res.status(404).send({
-        success: false,
-        message: "Aucun modèle trouvé",
-      });
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: "Modèles récupérés avec succès",
-      data: boardTemplates,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de la récupération des modèles",
-    });
-  }
-}
-
-export async function getUserPrivateBoardsTemplates(req, res, next) {
-  try {
-    const authUser = res.locals.user
-
-    const boardTemplates = await BoardTemplateModel.find({
-      author: authUser?._id,
-      private: true
-    });
-
-    if (boardTemplates.length <= 0) {
-      return res.status(404).send({
-        success: false,
-        message: "Aucun modèle trouvé",
-      });
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: "Modèles récupérés avec succès",
-      data: boardTemplates,
-    });
-  } catch (err) {
-    return res.status(500).send({
-      success: false,
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de la récupération des modèles",
     });
   }
 }
@@ -132,6 +98,16 @@ export async function useBoardTemplate(req, res, next) {
 
     const savedBoard = await newBoard.save();
 
+    const status = await StatusModel.findOne({
+      projectId: req.query.projectId,
+      status: "waiting",
+    });
+
+    const priority = await PriorityModel.findOne({
+      projectId: req.query.projectId,
+      priority: "medium",
+    });
+
     const tasks = await TaskModel.find({
       boardId: template?.boardId?._id,
     });
@@ -143,6 +119,8 @@ export async function useBoardTemplate(req, res, next) {
           boardId: savedBoard?._id,
           author: authUser?._id,
           text: task?.text,
+          status: status?._id,
+          priority: priority?._id,
         });
 
         await newTask.save();
@@ -166,27 +144,16 @@ export async function useBoardTemplate(req, res, next) {
 
 export async function deleteBoardTemplate(req, res, next) {
   try {
-    const authUser = res.locals.user;
+    const deletedTemplate = await BoardTemplateModel.findByIdAndDelete({
+      _id: req.params.id,
+    });
 
-    const template = await BoardTemplateModel.findOne({ _id: req.params.id });
-    console.log("template :", template)
-    if (!template) {
+    if (!deletedTemplate) {
       return res.status(404).send({
         success: false,
         message: "Modèle non trouvé",
       });
     }
-
-    if (template?.author?.toString() !== authUser?._id?.toString()) {
-      return res.status(403).send({
-        success: false,
-        message: "Vous n'avez pas les permissions pour supprimer ce modèle",
-      });
-    }
-
-    const deletedTemplate = await BoardTemplateModel.findByIdAndDelete({
-      _id: req.params.id,
-    });
 
     await TaskModel.deleteMany({ boardId: deletedTemplate._id });
 
