@@ -1,6 +1,8 @@
 import BoardModel from "../models/Board.model.js";
 import BoardTemplateModel from "../models/BoardTemplate.model.js";
 import TaskModel from "../models/Task.model.js";
+import StatusModel from "../models/Status.model.js";
+import PriorityModel from "../models/Priority.model.js";
 
 export async function getBoardsTemplates(req, res, next) {
   try {
@@ -96,6 +98,16 @@ export async function useBoardTemplate(req, res, next) {
 
     const savedBoard = await newBoard.save();
 
+    const status = await StatusModel.findOne({
+      projectId: req.query.projectId,
+      status: "waiting",
+    });
+
+    const priority = await PriorityModel.findOne({
+      projectId: req.query.projectId,
+      priority: "medium",
+    });
+
     const tasks = await TaskModel.find({
       boardId: template?.boardId?._id,
     });
@@ -107,6 +119,8 @@ export async function useBoardTemplate(req, res, next) {
           boardId: savedBoard?._id,
           author: authUser?._id,
           text: task?.text,
+          status: status?._id,
+          priority: priority?._id,
         });
 
         await newTask.save();
