@@ -22,7 +22,7 @@ import AddBoard from "@/components/Boards/AddBoard";
 import { mutate } from "swr";
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { SortableBoard } from "./SortableBoard"; // Nous allons créer ce composant
 import { updateBoardOrder } from "@/api/board"; // Vous devrez créer cette fonction API
 import Task from "../Task/Task";

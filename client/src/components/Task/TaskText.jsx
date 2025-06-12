@@ -1,5 +1,5 @@
 import { updateTaskText } from "@/api/task";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import socket from "@/utils/socket";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -46,8 +46,15 @@ export default function TaskText({ task }) {
   }, [task?.text]);
 
   return (
-    <div className="flex items-center h-full w-full min-w-[200px] max-w-[700px] cursor-text mx-2" onClick={handleEdit}>
-      {!isEdit && <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em]">{value}</span>}
+    <div
+      className="flex items-center h-full w-full min-w-[200px] max-w-[700px] cursor-text mx-2"
+      onClick={handleEdit}
+    >
+      {!isEdit && (
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em]">
+          {value}
+        </span>
+      )}
       {isEdit && (
         <input
           type="text"

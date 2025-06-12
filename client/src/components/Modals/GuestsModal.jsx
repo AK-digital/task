@@ -7,9 +7,9 @@ import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 import { AuthContext } from "@/context/auth";
 import { deleteProjectInvitation } from "@/actions/projectInvitation";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
-import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
+import { useProjectInvitation } from "../../../hooks/useProjectInvitation";
 import DisplayPicture from "../User/DisplayPicture";
 import { useTranslation } from "react-i18next";
 

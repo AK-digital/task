@@ -2,7 +2,7 @@
 import { Plus } from "lucide-react";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { useState } from "react";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
 import { useTranslation } from "react-i18next";

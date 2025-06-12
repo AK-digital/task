@@ -24,6 +24,10 @@ const templateSchema = new Schema(
       ref: "Board",
       required: false,
     },
+    private: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

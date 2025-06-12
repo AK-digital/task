@@ -3,8 +3,8 @@ import { Trash } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
 import socket from "@/utils/socket";
-import { useUserRole } from "@/app/hooks/useUserRole";
 import { useTranslation } from "react-i18next";
+import { useUserRole } from "../../../hooks/useUserRole";
 
 export default function TaskRemove({ task, archive, mutate }) {
   const { t } = useTranslation();

@@ -7,12 +7,17 @@ export async function saveBoardTemplate(t, prevState, formData) {
     const projectId = formData.get("project-id");
     const boardId = formData.get("board-id");
     const name = formData.get("template-name");
+    const isPrivate = formData.get("template-private");
 
     const res = await useAuthFetch(
       `board-template?projectId=${projectId}`,
       "POST",
       "application/json",
-      { boardId: boardId, name: name }
+      {
+        boardId: boardId,
+        name: name,
+        isPrivate: isPrivate !== "on",
+      }
     );
 
     const response = await res.json();
