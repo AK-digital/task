@@ -38,6 +38,7 @@ export default function ProjectHeader({ displayedFilters }) {
             <div
               className="flex justify-center items-center cursor-pointer rounded-lg py-1.5 px-[7px] transition-all duration-200 ease-in-out hover:text-accent-color hover:bg-white/3"
               onClick={(e) => setIsOpen(true)}
+              title="Gérer les membres"
             >
               <UserCog size={24} />
             </div>

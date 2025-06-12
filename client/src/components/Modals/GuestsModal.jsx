@@ -2,7 +2,13 @@
 import { removeGuest } from "@/actions/project";
 import { isNotEmpty, memberRole } from "@/utils/utils";
 import Image from "next/image";
-import { useActionState, useContext, useEffect, useState } from "react";
+import {
+  useActionState,
+  useContext,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 import { AuthContext } from "@/context/auth";
@@ -15,6 +21,8 @@ import DropdownManage from "../Dropdown/DropdownManage";
 import { leaveProject } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { mutate } from "swr";
+import ConfirmationKick from "../Popups/ConfirmationKick";
+import ConfirmationLeave from "../Popups/ConfirmationLeave";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const initialState = {
@@ -30,11 +38,16 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const { uid } = useContext(AuthContext);
   const router = useRouter();
   const [isPopup, setIsPopup] = useState(null);
+  const [isConfirmKickOpen, setIsConfirmKickOpen] = useState(false);
+  const [isConfirmLeaveOpen, setIsConfirmLeaveOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [selectedMemberToLeave, setSelectedMemberToLeave] = useState(null);
   const removeGuestWithId = removeGuest.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
     removeGuestWithId,
     initialState
   );
+  const [isPending, startTransition] = useTransition();
   const canInvite = useUserRole(project, ["owner", "manager"]);
   const canRemove = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
@@ -42,17 +55,42 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const handleLeaveProject = async (projectId) => {
     const response = await leaveProject(projectId);
 
-    if (!response.success) {
+    if (!response?.success) {
       setIsPopup({
         status: "failure",
         title: "Une erreur s'est produite",
         message: response?.message,
       });
+
+      return; // Arrêter l'exécution si l'opération a échoué
     }
 
+    // Continuer seulement si l'opération a réussi
     await mutateProject();
     mutate("/favorite");
     router.push("/projects");
+  };
+
+  const handleConfirmLeave = () => {
+    if (selectedMemberToLeave) {
+      startTransition(async () => {
+        await handleLeaveProject(project?._id);
+      });
+      setIsConfirmLeaveOpen(false);
+      setSelectedMemberToLeave(null);
+    }
+  };
+
+  const handleConfirmRemove = () => {
+    if (selectedMember) {
+      const formData = new FormData();
+      formData.append("guest-id", selectedMember.user._id);
+      startTransition(() => {
+        formAction(formData);
+      });
+      setIsConfirmKickOpen(false);
+      setSelectedMember(null);
+    }
   };
 
   const members = project?.members;
@@ -104,6 +142,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         {/* Guests list */}
         {isNotEmpty(members) && (
           <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+            <h2 className="font-medium text-large my-2">Membres du projet</h2>
             <ul className="flex flex-col gap-3.5 mt-6">
               {members.map((member) => {
                 return (
@@ -145,30 +184,28 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                       )}
                     </div>
                     {canRemove && member?.role !== "owner" && (
-                      <form action={formAction}>
-                        <input
-                          type="text"
-                          name="guest-id"
-                          id="guest-id"
-                          defaultValue={member?.user?._id}
-                          hidden
-                        />
-                        <button
-                          type="submit"
-                          data-disabled={pending}
-                          disabled={pending}
-                          className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red w-25"
-                        >
-                          Retirer
-                        </button>
-                      </form>
+                      <button
+                        type="button"
+                        data-disabled={pending || isPending}
+                        disabled={pending || isPending}
+                        onClick={() => {
+                          setIsConfirmKickOpen(true);
+                          setSelectedMember(member);
+                        }}
+                        className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red w-25"
+                      >
+                        Retirer
+                      </button>
                     )}
                     {member?.user?._id === uid && (
                       <button
-                        type="submit"
-                        data-disabled={pending}
-                        disabled={pending}
-                        onClick={() => handleLeaveProject(project?._id)}
+                        type="button"
+                        data-disabled={pending || isPending}
+                        disabled={pending || isPending}
+                        onClick={() => {
+                          setIsConfirmLeaveOpen(true);
+                          setSelectedMemberToLeave(member);
+                        }}
                         className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red w-25 "
                       >
                         Quitter
@@ -182,6 +219,9 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         )}
         {isNotEmpty(projectInvitations) && canEditRole && (
           <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2 ">
+            <h2 className="font-medium text-large my-2">
+              Invitations en cours
+            </h2>
             <ul className="flex flex-col gap-3.5">
               <ProjectInvitationsList
                 projectInvitations={projectInvitations}
@@ -202,11 +242,20 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
           message={isPopup?.message}
         />
       )}
-      {isOpen && (
-        <ConfirmationDelete
-          title={`projet ${project?.name}`}
-          onCancel={() => setIsOpen(false)}
-          onConfirm={handleDeleteProject}
+      {isConfirmKickOpen && (
+        <ConfirmationKick
+          title={project?.name}
+          member={selectedMember}
+          onCancel={() => setIsConfirmKickOpen(false)}
+          onConfirm={handleConfirmRemove}
+        />
+      )}
+      {isConfirmLeaveOpen && (
+        <ConfirmationLeave
+          title={project?.name}
+          member={selectedMemberToLeave}
+          onCancel={() => setIsConfirmLeaveOpen(false)}
+          onConfirm={handleConfirmLeave}
         />
       )}
     </>

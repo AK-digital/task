@@ -78,58 +78,62 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
         )}
         <ChevronDown
           size={16}
-          className={`transition-all duration-[120ms] ease-in-out ${
+          className={`transition-all duration-[200ms] ease-in-out ${
             isOpen ? "rotate-180" : ""
           }`}
         />
       </div>
-      {isOpen && (
-        <>
-          <div className="absolute z-[2001] top-[44px] rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full font-medium text-small">
-            <ul className="flex flex-col">
+      <>
+        <div
+          className={`absolute z-[2001] top-[44px] bg-white shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[200ms] ease-in-out ${
+            isOpen ? "max-h-96" : "max-h-0"
+          }`}
+        >
+          <ul className="flex flex-col p-2 border border-color-border-color rounded-sm">
+            <li
+              className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+              onClick={handleResetPriorities}
+            >
+              <Undo size={14} />
+              <span>Effacer</span>
+            </li>
+            {uniquePriorities?.map((priority) => (
               <li
-                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
-                onClick={handleResetPriorities}
+                key={priority?._id}
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
               >
-                <Undo size={14} />
-                <span>Effacer</span>
-              </li>
-              {uniquePriorities?.map((priority) => (
-                <li
-                  key={priority?._id}
-                  className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
+                <input
+                  type="checkbox"
+                  id={priority?._id}
+                  name={priority?.name}
+                  value={priority?._id}
+                  onChange={(e) => handlePrioritiesChange(e, priority)}
+                  checked={
+                    hasPriorities
+                      ? queriesPriorities?.some((prioritiesArray) =>
+                          prioritiesArray.includes(priority?._id)
+                        )
+                      : false
+                  }
+                  className="w-auto cursor-pointer"
+                />
+                <label
+                  htmlFor={priority?._id}
+                  className="flex items-center cursor-pointer flex-1"
                 >
-                  <input
-                    type="checkbox"
-                    id={priority?._id}
-                    name={priority?.name}
-                    value={priority?._id}
-                    onChange={(e) => handlePrioritiesChange(e, priority)}
-                    checked={
-                      hasPriorities
-                        ? queriesPriorities?.some((prioritiesArray) =>
-                            prioritiesArray.includes(priority?._id)
-                          )
-                        : false
-                    }
-                    className="w-auto cursor-pointer"
-                  />
-                  <label
-                    htmlFor={priority?._id}
-                    className="flex items-center cursor-pointer flex-1"
-                  >
-                    {priority?.name}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
+                  {priority?.name}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {isOpen && (
           <div
             className="modal-layout-opacity"
             onClick={() => setIsOpen(false)}
           ></div>
-        </>
-      )}
+        )}
+      </>
     </div>
   );
 }

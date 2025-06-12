@@ -156,6 +156,11 @@ export async function leaveProject(projectId) {
     console.log(
       err?.message || "Une erreur est survenue lors de la sortie du projet"
     );
+
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue lors de la sortie du projet"
+    };
   }
 }
 
@@ -175,8 +180,13 @@ export async function deleteProject(projectId) {
   } catch (err) {
     console.log(
       err?.message ||
-      "Une erreur est survenue lors de la récupération des tableaux"
+      "Une erreur est survenue lors de la suppression du projet"
     );
+
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue lors de la suppression du projet"
+    };
   }
 }
 

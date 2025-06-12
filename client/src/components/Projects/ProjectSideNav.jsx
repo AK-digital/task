@@ -27,6 +27,7 @@ export default function ProjectSideNav({ project, open, isActive }) {
             height={42}
             alt="project logo"
             data-active={isActive} // Ajout de data-active sur l'image aussi
+            title={project?.name}
             className="rounded-full min-w-[42px] min-h-[42px] w-full h-full object-fill border-2 group-hover:border-2 group-hover:bg-accent-color"
           />
         </div>

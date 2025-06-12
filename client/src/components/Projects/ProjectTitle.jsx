@@ -201,7 +201,10 @@ export default function ProjectTitle({ project }) {
         )}
       </div>
 
-      <div className="relative top-0.5 cursor-pointer transition-[background-color] duration-200 rounded-lg">
+      <div
+        title="Gérer le projet"
+        className="relative top-0.5 cursor-pointer transition-[background-color] duration-200 rounded-lg"
+      >
         <MoreVertical
           ref={moreButtonRef}
           size={20}

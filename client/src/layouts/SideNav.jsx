@@ -92,6 +92,7 @@ export default function SideNav() {
             className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             href={"/projects"}
             data-active={isProjectsPage}
+            title="Mes projets"
           >
             <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">
               <LayoutGrid
@@ -107,6 +108,7 @@ export default function SideNav() {
           </Link>
           <Link
             href={"/times"}
+            title="Suivi du temps"
             className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             data-active={isTimesPage}
           >
@@ -124,6 +126,7 @@ export default function SideNav() {
           </Link>
           <Link
             href={"/new-project"}
+            title="Ajouter un projet"
             className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
           >
             <div className="flex justify-center items-center w-[42px] min-w-[42px] h-[42px] min-h-[42px] rounded-full text-side bg-primary">

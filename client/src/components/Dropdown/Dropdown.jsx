@@ -65,8 +65,12 @@ export function DropDown({
             {memberRole(current)}
           </span>
         </div>
-        {isOpen && (
-          <ul className="absolute flex flex-col z-9999 top-10 left-0 gap-0 w-full bg-secondary text-small rounded-sm max-h-50 overflow-auto text-left shadow-medium">
+        <div
+          className={`absolute flex flex-col z-9999 top-10 left-0 gap-0 w-full bg-secondary text-small rounded-sm text-left shadow-medium overflow-hidden transition-all duration-[200ms] ease-in-out ${
+            isOpen ? "max-h-96" : "max-h-0"
+          } `}
+        >
+          <ul className="w-full border border-color-border-color">
             {options.map((option, idx) => {
               return (
                 <li
@@ -82,7 +86,7 @@ export function DropDown({
               );
             })}
           </ul>
-        )}
+        </div>
         {isOpen && (
           <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
         )}

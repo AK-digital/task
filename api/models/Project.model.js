@@ -172,7 +172,7 @@ projectSchema.pre("aggregate", function () {
 });
 
 // Middleware pour la suppression en cascade
-projectSchema.post(["deleteOne", "findOneAndDelete", "findByIdAndDelete"], async function () {
+projectSchema.post(["deleteOne", "findOneAndDelete"], async function () {
   const projectId = this.getQuery()._id;
 
   // Suppression en cascade des éléments liés au projet
