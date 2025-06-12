@@ -59,6 +59,11 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    language: {
+      type: String,
+      enum: ["fr", "en"],
+      default: "fr",
+    },
   },
   {
     timestamps: true,

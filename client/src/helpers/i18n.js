@@ -1,11 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import HttpBackend from "i18next-http-backend"; // <--- charge les fichiers JSON
+import HttpBackend from "i18next-http-backend";
 
 i18n
   .use(HttpBackend)
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     fallbackLng: "fr",
@@ -16,13 +14,16 @@ i18n
     interpolation: {
       escapeValue: false,
     },
-    detection: {
-      order: ["localStorage", "navigator"],
-      caches: ["localStorage"],
-    },
     react: {
       useSuspense: true,
     },
   });
+
+// Fonction pour initialiser la langue depuis les données utilisateur
+export function initializeLanguageFromUser(userLanguage) {
+  if (userLanguage && ["fr", "en"].includes(userLanguage)) {
+    i18n.changeLanguage(userLanguage);
+  }
+}
 
 export default i18n;

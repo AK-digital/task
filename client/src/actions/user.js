@@ -11,6 +11,7 @@ export async function updateUserProfile(t, prevState, formData) {
       firstName: formData.get("firstName"),
       company: formData.get("company"),
       position: formData.get("position"),
+      language: formData.get("language"),
     };
 
     // Validation Zod
@@ -46,6 +47,46 @@ export async function updateUserProfile(t, prevState, formData) {
     return {
       status: "failure",
       message: err.message || t("profile.update.error"),
+    };
+  }
+}
+
+export async function updateUserLanguage(userId, language) {
+  try {
+    if (!userId || !language) {
+      throw new Error("Paramètres manquants");
+    }
+
+    if (!["fr", "en"].includes(language)) {
+      throw new Error("Langue non supportée");
+    }
+
+    const res = await useAuthFetch(
+      `user/${userId}/language`,
+      "PATCH",
+      "application/json",
+      { language }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(
+        response?.message || "Erreur lors de la mise à jour de la langue"
+      );
+    }
+
+    return {
+      status: "success",
+      message: "Langue mise à jour avec succès",
+      data: response.data,
+    };
+  } catch (err) {
+    return {
+      status: "failure",
+      message:
+        err.message ||
+        "Une erreur est survenue lors de la mise à jour de la langue",
     };
   }
 }

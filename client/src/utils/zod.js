@@ -97,6 +97,7 @@ export const userUpdateValidation = z.object({
     .max(100, "Le poste ne peut pas dépasser 100 caractères")
     .optional()
     .nullable(),
+  language: z.enum(["fr", "en"], "La langue doit être 'fr' ou 'en'").optional(),
 });
 
 export const feedbackValidation = z.object({

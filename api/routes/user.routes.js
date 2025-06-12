@@ -31,6 +31,14 @@ router.patch(
   upload.single("picture"),
   userControllers.updatePicture
 );
+
+router.patch(
+  "/:id/language",
+  authMiddlewares.auth,
+  authMiddlewares.authorize,
+  userControllers.updateLanguage
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

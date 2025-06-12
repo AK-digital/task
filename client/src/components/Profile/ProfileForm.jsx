@@ -30,6 +30,7 @@ export default function ProfileForm() {
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [company, setCompany] = useState(user?.company || "");
   const [position, setPosition] = useState(user?.position || "");
+  const [language, setLanguage] = useState(user?.language || "fr");
 
   useEffect(() => {
     // Mutate the session data if the update was successful
@@ -63,6 +64,7 @@ export default function ProfileForm() {
       setFirstName(user.firstName || "");
       setCompany(user.company || "");
       setPosition(user.position || "");
+      setLanguage(user.language || "fr");
     }
   }, [user]);
 
@@ -150,6 +152,27 @@ export default function ProfileForm() {
           />
           {state?.errors?.position && (
             <span>{translateValidationErrors(state.errors.position, t)}</span>
+          )}
+        </div>
+        <div className="form-group">
+          <label htmlFor="language" data-active={true}>
+            {t("profile.language")}
+          </label>
+          <select
+            name="language"
+            id="language"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            disabled={pending}
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium bg-transparent"
+          >
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+          </select>
+          {translateValidationErrors(state?.errors?.language, t) && (
+            <span className="text-state-blocked-color text-small">
+              {translateValidationErrors(state?.errors?.language, t)}
+            </span>
           )}
         </div>
         <button

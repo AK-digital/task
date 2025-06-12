@@ -44,6 +44,7 @@ export default function Header() {
       <nav className="flex justify-end items-center h-full ml-30 mr-10">
         <ul className="relative flex items-center gap-6 overflow-visible">
           <li className="relative flex justify-center items-center h-full overflow-visible">
+            <LanguageSwitcher />
             <button
               onClick={(e) => setNotifOpen(true)}
               className="group relative px-0.5 h-full bg-transparent overflow-visible shadow-none"
