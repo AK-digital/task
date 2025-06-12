@@ -16,11 +16,11 @@ export default function Invitation() {
         const response = await acceptProjectInvitation(id, t);
 
         if (!response?.success) {
-          if (response?.message === "L'utilisateur n'est pas connecté") {
+          if (response?.message === t("auth.not_connected")) {
             router.push("/");
             return;
           }
-          if (response?.message === "L'utilisateur n'existe pas") {
+          if (response?.message === t("auth.user_not_exist")) {
             router.push("/sign-up");
             return;
           }

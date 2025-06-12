@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import { useTranslation } from "react-i18next";
 
 export default function Beta() {
+  const { t } = useTranslation();
   const { id } = useParams(); // id is the token
   const [text, setText] = useState("Vérification en cours...");
   const [success, setSuccess] = useState(false);
@@ -17,18 +19,18 @@ export default function Beta() {
   useEffect(() => {
     if (error) {
       setText(
-        "Une erreur s'est produite lors de la vérification de votre compte."
+        t("verification.error")
       );
       setSuccess(false);
       return;
     }
 
     if (data?.success) {
-      setText("Félicitations ! Vous avez été ajouté à la beta de Clynt !");
+      setText(t("verification.success"));
       setSuccess(true);
     } else {
       setText(
-        "Une erreur s'est produite lors de la vérification de votre compte."
+        t("verification.error")
       );
       setSuccess(false);
     }
@@ -37,15 +39,14 @@ export default function Beta() {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <h1>Vérification de votre adresse e-mail pour l'accès à la beta</h1>
+        <h1>{t("verification.title")}</h1>
         <p>{text}</p>
         {success && (
           <>
             <p>
-              Vous pouvez maintenant vous créer un compte en utilisant votre
-              adresse e-mail
+              {t("verification.redirecting")}
             </p>
-            <Link href="/sign-up">Créer mon compte</Link>
+            <Link href="/sign-up">{t("verification.create_account")}</Link>
           </>
         )}
       </div>

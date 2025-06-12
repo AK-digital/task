@@ -51,10 +51,7 @@ export default function SignIn() {
       setStatus("success");
     }
     if (state?.status === "failure" && state?.errors === null) {
-      setMessage(
-        state?.message ||
-        t("auth.signin.connection_error")
-      );
+      setMessage(state?.message || t("auth.signin.connection_error"));
       setStatus("failure");
     }
     if (state?.message.includes("vérifié")) {
@@ -78,10 +75,16 @@ export default function SignIn() {
       </div>
       {message && (
         <div className="text-center mb-6">
-          <span data-status={status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">
+          <span
+            data-status={status}
+            className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color"
+          >
             {message}
           </span>
-          <button className="bg-transparent text-accent-color text-small" onClick={handleResendEmail}>
+          <button
+            className="bg-transparent text-accent-color text-small"
+            onClick={handleResendEmail}
+          >
             {t("auth.signin.resend_email")}
           </button>
         </div>
@@ -93,7 +96,11 @@ export default function SignIn() {
       )}
       <form action={formAction} className="flex items-center flex-col gap-8">
         <div className="form-group">
-          <label htmlFor="email" data-active={email ? true : false} className="text-text-lighter-color">
+          <label
+            htmlFor="email"
+            data-active={email ? true : false}
+            className="text-text-lighter-color"
+          >
             {t("auth.signin.email_label")}
           </label>
           <input
@@ -104,13 +111,15 @@ export default function SignIn() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium" />
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
+          />
         </div>
         <div className="form-group">
           <label
             htmlFor="password"
             data-active={password ? true : false}
-            className="text-text-lighter-color">
+            className="text-text-lighter-color"
+          >
             {t("auth.signin.password_label")}
           </label>
           <input
@@ -121,29 +130,32 @@ export default function SignIn() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10" />
+            className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10"
+          />
           {hiddenPassword ? (
             <Eye
               onClick={(e) => setHiddenPassword(false)}
-              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+            />
           ) : (
             <EyeOff
               onClick={(e) => setHiddenPassword(true)}
-              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+            />
           )}
           <a
             onClick={handleForgotPassword}
-            className="float-right mt-3 text-small">
+            className="float-right mt-3 text-small"
+          >
             {t("auth.signin.forgot_password")}
           </a>
         </div>
 
         <div className="ml-auto">
-          <button
-            data-disabled={pending}
-            type="submit"
-            disabled={pending}>
-            {pending ? t("auth.signin.submit_button_loading") : t("auth.signin.submit_button")}
+          <button data-disabled={pending} type="submit" disabled={pending}>
+            {pending
+              ? t("auth.signin.submit_button_loading")
+              : t("auth.signin.submit_button")}
           </button>
           {/* <button onClick={handleGoogleAuth} className={`${instrumentSans.className} relative bg-[#3184FC] text-text-lighter-color hover:transition-all hover:duration-[120ms] hover:ease-linear`}>
             {" "}
@@ -158,7 +170,12 @@ export default function SignIn() {
       <div className="text-center text-text-color mt-15 font-light">
         <p>
           {t("auth.signin.no_account")}{" "}
-          <span onClick={handleSignUp} className="text-accent-color-light cursor-pointer ml-1 hover:underline">{t("auth.signin.signup_link")}</span>
+          <span
+            onClick={handleSignUp}
+            className="text-accent-color-light cursor-pointer ml-1 hover:underline"
+          >
+            {t("auth.signin.signup_link")}
+          </span>
         </p>
       </div>
     </div>

@@ -89,7 +89,7 @@ export default function NewProject() {
         if (res?.success && res?.data?._id) {
           projectId = res.data._id;
         } else {
-          throw new Error("Erreur lors de la création du projet depuis le modèle");
+          throw new Error(t("new_project.error_creating_project_from_template"));
         }
       } else {
         // Créer un projet standard (IA ou vide)
@@ -101,7 +101,7 @@ export default function NewProject() {
         
         const projectRes = await saveProject({}, formData);
         if (projectRes.status !== "success" || !projectRes.data?._id) {
-          throw new Error(projectRes.message || "Erreur création projet");
+          throw new Error(projectRes.message || t("new_project.error_creating_project"));
         }
         projectId = projectRes.data._id;
         
@@ -110,7 +110,7 @@ export default function NewProject() {
           for (const board of finalProjectData.boards) {
             const boardRes = await createBoard(projectId, board.name);
             if (!boardRes.success || !boardRes.data?._id) {
-              throw new Error(boardRes.message || "Erreur création board");
+              throw new Error(boardRes.message || t("new_project.error_creating_board"));
             }
             const boardId = boardRes.data._id;
             
@@ -185,22 +185,22 @@ export default function NewProject() {
 
   const getPageTitle = () => {
     if (currentStep === 1) {
-      return "Création d'un nouveau projet";
+      return t("new_project.create_new_project");
     }
     
     if (currentStep === 3) {
-      return "Options du projet";
+      return t("new_project.project_options");
     }
     
     switch (selectedType) {
       case "ia":
-        return "Création avec l'IA";
+        return t("new_project.create_with_ia");
       case "template":
-        return "Depuis un modèle enregistré";
+        return t("new_project.create_from_template");
       case "empty":
-        return "Création d'un projet vide";
+        return t("new_project.create_empty_project");
       default:
-        return "Création d'un nouveau projet";
+        return t("new_project.create_new_project");
     }
   };
 
@@ -243,7 +243,7 @@ export default function NewProject() {
                 type="button"
               >
                 <ArrowLeft size={20} />
-                Retour
+                {t("new_project.back")}
               </button>
               <h1 className="text-2xl font-semibold m-0 text-text-dark-color absolute left-1/2 transform -translate-x-1/2 text-center">{getPageTitle()}</h1>
               
@@ -259,7 +259,7 @@ export default function NewProject() {
                     }}
                     disabled={creating}
                   >
-                    {creating ? "Création en cours..." : "Créer le projet"}
+                    {creating ? t("new_project.creating") : t("new_project.create_project")}
                   </button>
                 )}
               </div>

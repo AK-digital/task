@@ -45,7 +45,12 @@
     "verification": {
       "verifying": "Vérification en cours...",
       "verification_error": "Une erreur s'est produite lors de la vérification de votre compte.",
-      "verification_success": "Votre adresse e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter."
+      "verification_success": "Votre adresse e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter.",
+      "title": "Vérification",
+      "error": "Une erreur s'est produite lors de la vérification",
+      "success": "Vérification terminée avec succès",
+      "redirecting": "Redirection vers la création de compte...",
+      "create_account": "Créer un compte"
     },
     "forgot_password": {
       "reset_button": "Réinitialiser mon mot de passe",
@@ -70,7 +75,8 @@
     },
     "reset_password": {
       "error": "Une erreur est survenue lors de la réinitialisation de votre mot de passe"
-    }
+    },
+    "clynt_slogan": "Gestion de projet sans <strong>effort</strong>"
   },
   "validation": {
     "lastname_min": "Le nom doit contenir au moins 2 caractères",
@@ -114,6 +120,19 @@
     "task_assigned_content": "{{senderName}} vous a assigné une tâche",
     "project_invitation_title": "Invitation à un projet",
     "project_invitation_content": "{{senderName}} vous a invité à rejoindre un projet"
+  },
+  "new_project": {
+    "back": "Retour",
+    "create_new_project": "Créer un nouveau projet",
+    "project_options": "Options du projet",
+    "create_with_ia": "Créer avec IA",
+    "create_from_template": "Créer à partir d'un modèle",
+    "create_empty_project": "Créer un projet vide",
+    "creating": "Création en cours...",
+    "create_project": "Créer le projet",
+    "error_creating_project_from_template": "Une erreur s'est produite lors de la création du projet à partir du modèle",
+    "error_creating_project": "Une erreur s'est produite lors de la création du projet",
+    "error_creating_board": "Une erreur s'est produite lors de la création du tableau"
   },
   "navigation": {
     "my_tasks": "Mes tâches",
@@ -351,9 +370,10 @@
   "profile": {
     "my_profile": "Mon profil",
     "first_name": "Prénom",
-    "last_name": "Nom",
+    "last_name": "Nom de famille",
     "company": "Entreprise",
     "position": "Poste",
+    "language": "Langue",
     "update_button": "Mettre à jour",
     "success_title": "Succès",
     "update_success": "Profil mis à jour avec succès",
@@ -365,13 +385,13 @@
     "profile_picture_alt": "Photo de profil de",
     "update": {
       "success": "Profil mis à jour avec succès",
-      "error": "Une erreur est survenue lors de la mise à jour"
+      "error": "Une erreur s'est produite lors de la mise à jour"
     },
     "picture": {
       "no_file_selected": "Aucun fichier sélectionné",
       "update": {
         "success": "Photo de profil mise à jour avec succès",
-        "error": "Une erreur est survenue lors de la mise à jour de la photo"
+        "error": "Une erreur s'est produite lors de la mise à jour de la photo"
       }
     }
   },

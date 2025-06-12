@@ -36,7 +36,9 @@ export default function SendResetCodeForm() {
 
   return (
     <div className="flex flex-col w-full p-10 max-w-115 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)]">
-      <div className="text-[1.9rem] font-bold mb-15">{t("auth.forgot_password.title")}</div>
+      <div className="text-[1.9rem] font-bold mb-15">
+        {t("auth.forgot_password.title")}
+      </div>
       {messageStatus && (
         <div className="text-center mb-6">
           <span data-status={state?.status}>{messageStatus}</span>
@@ -47,7 +49,8 @@ export default function SendResetCodeForm() {
           <label
             htmlFor="email"
             data-active={email.length > 0}
-            className="text-text-lighter-color">
+            className="text-text-lighter-color"
+          >
             {t("auth.forgot_password.email_label")}
           </label>
           <input
@@ -58,7 +61,7 @@ export default function SendResetCodeForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
-            />
+          />
 
           {state?.errors?.email && (
             <div className="mt-1 text-left ml-1">
@@ -83,7 +86,7 @@ export default function SendResetCodeForm() {
             onClick={(e) => {
               router.push("/");
             }}
-          className="text-accent-color-light cursor-pointer ml-1 hover:underline"
+            className="text-accent-color-light cursor-pointer ml-1 hover:underline"
           >
             {t("auth.forgot_password.back_to_login")}
           </span>

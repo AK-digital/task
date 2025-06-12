@@ -49,7 +49,12 @@ export default function ResetForgotPasswordForm({ resetCode }) {
       </div>
       {statusMessage && (
         <div className="text-center mb-6">
-          <span data-status={state?.status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">{statusMessage}</span>
+          <span
+            data-status={state?.status}
+            className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color"
+          >
+            {statusMessage}
+          </span>
         </div>
       )}
       {state?.status !== "success" && (
@@ -74,11 +79,13 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             {hiddenPassword ? (
               <Eye
                 onClick={(e) => setHiddenPassword(false)}
-                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+              />
             ) : (
               <EyeOff
                 onClick={(e) => setHiddenPassword(true)}
-                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+              />
             )}
             {state?.errors?.newPassword && (
               <i>{translateValidationErrors(state.errors.newPassword, t)}</i>
@@ -103,12 +110,14 @@ export default function ResetForgotPasswordForm({ resetCode }) {
             />
             {hiddenPassword ? (
               <Eye
-              onClick={(e) => setHiddenPassword(false)}
-              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+                onClick={(e) => setHiddenPassword(false)}
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+              />
             ) : (
               <EyeOff
-              onClick={(e) => setHiddenPassword(true)}
-              className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+                onClick={(e) => setHiddenPassword(true)}
+                className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+              />
             )}
             {state?.errors?.confirmPassword && (
               <i>
