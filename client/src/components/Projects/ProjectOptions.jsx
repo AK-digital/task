@@ -135,6 +135,18 @@ export default function ProjectOptions({ project }) {
       : [{ url: "", icon: "Globe" }];
   }, [project?.name, project?.note, project?.urls]);
 
+  useEffect(() => {
+    function handleProjectUpdate() {
+      favoritesMutate();
+    }
+
+    socket.on("project-updated", handleProjectUpdate);
+
+    return () => {
+      socket.off("project-updated", handleProjectUpdate);
+    };
+  }, [favoritesMutate]);
+
   async function handleUpdateLogo(e) {
     e?.preventDefault();
 

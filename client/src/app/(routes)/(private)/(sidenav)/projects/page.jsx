@@ -7,11 +7,12 @@ import { useProjects } from "@/app/hooks/useProjects";
 import { AuthContext } from "@/context/auth";
 import { useContext, useEffect } from "react";
 import socket from "@/utils/socket";
+import { useFavorites } from "@/app/hooks/useFavorites";
 
 export default function Projects() {
   const { uid } = useContext(AuthContext);
   const { projects, projectsLoading, mutateProjects } = useProjects();
-
+  const { favoritesMutate } = useFavorites();
   // Trier les projets par favoris (favoris en premier)
   const sortedProjects = projects?.sort((a, b) => {
     const aIsFavorite = a?.favorites?.some((fav) => fav?.user === uid) || false;
@@ -23,6 +24,7 @@ export default function Projects() {
   useEffect(() => {
     function handleProjectUpdate() {
       mutateProjects();
+      favoritesMutate();
     }
 
     socket.on("project-updated", handleProjectUpdate);
