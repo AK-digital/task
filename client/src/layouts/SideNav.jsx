@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useFavorites } from "@/app/hooks/useFavorites";
+import { useFavorites } from "../../hooks/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
 

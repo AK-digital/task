@@ -7,11 +7,10 @@ import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 import { AuthContext } from "@/context/auth";
 import { deleteProjectInvitation } from "@/actions/projectInvitation";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
-import { useProjectInvitation } from "@/app/hooks/useProjectInvitation";
+import { useProjectInvitation } from "../../../hooks/useProjectInvitation";
 import DisplayPicture from "../User/DisplayPicture";
-import socket from "@/utils/socket";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const initialState = {
@@ -55,8 +54,6 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         title: "Utilisateur révoqué avec succès",
         message: state?.message,
       });
-
-      socket.emit("update-project", state?.guestId, project?._id);
     }
 
     if (state?.status === "failure" && state?.errors === null) {
@@ -199,8 +196,6 @@ export function ProjectInvitationsList({
         title: "Invitation annulée avec succès",
         message: state?.message || "L'invitation a été annulée avec succès",
       });
-
-      socket.emit("update-project-invitation", project?._id);
     }
     if (state?.status === "failure") {
       setIsPopup({

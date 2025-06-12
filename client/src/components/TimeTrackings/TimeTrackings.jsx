@@ -3,9 +3,9 @@ import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
 import Filters from "./Filters";
 import { useEffect, useMemo, useState } from "react";
 import ExportPdfBtn from "./ExportPdfBtn";
-import { useTimeTrackings } from "@/app/hooks/useTimeTrackings";
+import { useTimeTrackings } from "../../../hooks/useTimeTrackings";
 import socket from "@/utils/socket";
-import { useProjects } from "@/app/hooks/useProjects";
+import { useProjects } from "../../../hooks/useProjects";
 import TimeTracking from "./TimeTracking";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import TimeTrackingHeader from "./TimeTrackingHeader";
@@ -43,7 +43,7 @@ export default function TimeTrackings({ searchParams }) {
       socket.off("task updated", handleTaskUpdated);
       socket.off("time tracking updated", handleTimeTrackingUpdated);
     };
-  }, [mutateTimeTrackings]);
+  }, [mutateTimeTrackings, searchParams]);
 
   const hasSelectedTrackers = selectedTrackers?.length > 0;
   const hasSelectedProjects = queries?.projects?.length > 0;

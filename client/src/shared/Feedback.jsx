@@ -107,7 +107,7 @@ export default function Feedback() {
   }, [state]);
 
   return (
-    <div className="fixed bottom-6 right-10 z-2000">
+    <div className="fixed bottom-6 right-10 z-[2000]">
       {!isOpen && (
         <div
           onClick={() => setIsOpen(true)}

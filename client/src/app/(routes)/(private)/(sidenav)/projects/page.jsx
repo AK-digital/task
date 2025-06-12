@@ -3,16 +3,14 @@ import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/Projects/ProjectCard";
 import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
-import { useProjects } from "@/app/hooks/useProjects";
+import { useProjects } from "../../../../../../hooks/useProjects";
 import { AuthContext } from "@/context/auth";
-import { useContext, useEffect } from "react";
-import socket from "@/utils/socket";
-import { useFavorites } from "@/app/hooks/useFavorites";
+import { useContext } from "react";
 
 export default function Projects() {
   const { uid } = useContext(AuthContext);
   const { projects, projectsLoading, mutateProjects } = useProjects();
-  const { favoritesMutate } = useFavorites();
+
   // Trier les projets par favoris (favoris en premier)
   const sortedProjects = projects?.sort((a, b) => {
     const aIsFavorite = a?.favorites?.some((fav) => fav?.user === uid) || false;
@@ -20,27 +18,6 @@ export default function Projects() {
 
     return bIsFavorite - aIsFavorite;
   });
-
-  useEffect(() => {
-    function handleProjectUpdate() {
-      mutateProjects();
-      favoritesMutate();
-    }
-
-    socket.on("project-updated", handleProjectUpdate);
-    socket.on("task updated", handleProjectUpdate);
-    socket.on("user picture updated", handleProjectUpdate);
-    socket.on("project-invitation-updated", handleProjectUpdate);
-    socket.on("board updated", handleProjectUpdate);
-
-    return () => {
-      socket.off("project-updated", handleProjectUpdate);
-      socket.off("task updated", handleProjectUpdate);
-      socket.off("user picture updated", handleProjectUpdate);
-      socket.off("project-invitation-updated", handleProjectUpdate);
-      socket.off("board updated", handleProjectUpdate);
-    };
-  }, [mutateProjects]);
 
   return (
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">

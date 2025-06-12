@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useActionState, useContext, useEffect, useRef, useState } from "react";
 import { mutate } from "swr";
-import socket from "@/utils/socket";
 
 const initialState = {
   status: "pending",
@@ -29,7 +28,6 @@ export default function PictureForm() {
   useEffect(() => {
     if (state?.status === "success") {
       mutate("/auth/session");
-      socket.emit("update user picture", user?._id);
       setPopup({
         status: state?.status,
         title: "Succès",

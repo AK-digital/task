@@ -1,40 +1,6 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
-import Document from "@tiptap/extension-document";
-import Dropcursor from "@tiptap/extension-dropcursor";
-import Placeholder from "@tiptap/extension-placeholder";
-import StarterKit from "@tiptap/starter-kit";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
-import Underline from "@tiptap/extension-underline";
-import Strike from "@tiptap/extension-strike";
-import Heading from "@tiptap/extension-heading";
-import BulletList from "@tiptap/extension-bullet-list";
-import OrderedList from "@tiptap/extension-ordered-list";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-import CodeBlock from "@tiptap/extension-code-block";
-import Code from "@tiptap/extension-code";
-import Blockquote from "@tiptap/extension-blockquote";
-import Mention from "@tiptap/extension-mention";
-import {
-  BoldIcon,
-  Code2,
-  Heading1,
-  Heading2,
-  Heading3,
-  ImageIcon,
-  ItalicIcon,
-  LinkIcon,
-  List,
-  ListOrderedIcon,
-  Quote,
-  Redo2,
-  StrikethroughIcon,
-  UnderlineIcon,
-  Undo2,
-} from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
 import socket from "@/utils/socket";
@@ -46,9 +12,10 @@ import { deleteDraft, saveDraft, updateDraft } from "@/api/draft";
 import { useDebouncedCallback } from "use-debounce";
 import Attachment from "../Attachment/Attachment";
 import Reactions from "../Reactions/Reactions";
-import { isNotEmpty } from "@/utils/utils";
+import { isMeaningfulContent, isNotEmpty } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
-import { useProjectContext } from "@/context/ProjectContext";
+import { tiptapOptions } from "@/utils/tiptapOptions";
+import Toolbar from "./Toolbar";
 
 export default function Tiptap({
   project,
@@ -65,8 +32,9 @@ export default function Tiptap({
   mutateDraft,
   handleDeleteMessage,
   handleRemoveDescription,
+  setIsMessagePending,
+  setMessage,
 }) {
-  const { mutateTasks } = useProjectContext();
   const [isSent, setIsSent] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
@@ -113,7 +81,16 @@ export default function Tiptap({
       setIsLoadingDraft(false);
       setIsDraftSaved(true);
     }
-  }, 2000); // Délai de 2 secondes
+  }, 3000); // Délai de 3 secondes
+
+  useEffect(() => {
+    async function deleteDraftIfSent() {
+      await deleteDraft(draft?.data?._id, project?._id);
+      await mutateDraft();
+    }
+
+    deleteDraftIfSent();
+  }, [isSent]);
 
   const containerRef = useRef(null);
   const { user, uid } = useContext(AuthContext);
@@ -145,113 +122,6 @@ export default function Tiptap({
       return () => clearTimeout(timer);
     }
   }, [isDraftSaved]);
-
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Document,
-      Bold,
-      Italic,
-      Underline,
-      Strike,
-      Heading.configure({ levels: [1, 2, 3] }),
-      BulletList,
-      OrderedList,
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        defaultProtocol: "https",
-        protocols: ["http", "https"],
-      }),
-      Image.configure({
-        allowBase64: true,
-      }),
-      Dropcursor,
-      CodeBlock,
-      Code,
-      Blockquote,
-      Placeholder.configure({
-        placeholder: `Entrez votre ${type} et mentionnez les autres avec @`,
-      }),
-      Mention.configure({
-        HTMLAttributes: {
-          class: "mention",
-        },
-      }),
-    ],
-    content: value,
-    immediatelyRender: false,
-    editorProps: {
-      handleKeyDown: (view, e) => {
-        // If the user is tagging someone, prevent the arrow keys from moving the cursor
-        if (isTaggedUsers) {
-          if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-            e.preventDefault();
-          }
-          if (e.key === "Enter") {
-            return true;
-          } else {
-            return false;
-          }
-        }
-      },
-      handlePaste: (view, event) => {
-        // Check if the pasted content contains images
-        const items = event.clipboardData.items;
-
-        for (let i = 0; i < items.length; i++) {
-          const item = items[i];
-
-          if (item.type.startsWith("image/")) {
-            // If it's an image, read it as a URL
-            const file = item.getAsFile();
-            const reader = new FileReader();
-
-            reader.onload = () => {
-              const url = reader.result;
-
-              // Insert the image into the editor
-              editor.chain().focus().setImage({ src: url }).run();
-            };
-
-            reader.readAsDataURL(file);
-            return true; // Prevent default paste behavior
-          }
-        }
-      },
-    },
-    onUpdate({ editor }) {
-      handleChange(editor);
-    },
-  });
-
-  useEffect(() => {
-    // Regex to match all span tags with data-id attribute
-    const regex = /<span[^>]*data-id="([^"]*)"[^>]*>.*?<\/span>/g;
-
-    if (plainText) {
-      const matchAll = plainText?.matchAll(regex); // Get all matches
-      const matches = Array?.from(matchAll); // Set all matches to an array
-
-      setTaggedUsers([]); // Reset taggedUsers
-
-      matches.forEach((match) => {
-        const dataId = match[1]; // match[1] is the data-id attribute
-
-        // Checks if the dataId is already in the taggedUsers array
-        setTaggedUsers((prev) => {
-          if (!prev.includes(dataId)) {
-            return [...prev, dataId]; // If not, we add it
-          }
-          return prev; // Else we return the previous state
-        });
-      });
-    }
-  }, [plainText]);
-
-  if (!editor) {
-    return null;
-  }
 
   const handleChange = async (editor) => {
     setPlainText(editor.getHTML());
@@ -301,10 +171,36 @@ export default function Tiptap({
     }
   };
 
-  function isMeaningfulContent(html) {
-    const temp = document.createElement("div");
-    temp.innerHTML = html;
-    return !!temp.textContent.trim(); // retourne true s'il y a du texte non vide
+  const editor = useEditor(
+    tiptapOptions(type, value, isTaggedUsers, handleChange)
+  );
+
+  useEffect(() => {
+    // Regex to match all span tags with data-id attribute
+    const regex = /<span[^>]*data-id="([^"]*)"[^>]*>.*?<\/span>/g;
+
+    if (plainText) {
+      const matchAll = plainText?.matchAll(regex); // Get all matches
+      const matches = Array?.from(matchAll); // Set all matches to an array
+
+      setTaggedUsers([]); // Reset taggedUsers
+
+      matches.forEach((match) => {
+        const dataId = match[1]; // match[1] is the data-id attribute
+
+        // Checks if the dataId is already in the taggedUsers array
+        setTaggedUsers((prev) => {
+          if (!prev.includes(dataId)) {
+            return [...prev, dataId]; // If not, we add it
+          }
+          return prev; // Else we return the previous state
+        });
+      });
+    }
+  }, [plainText]);
+
+  if (!editor) {
+    return null;
   }
 
   const handleSaveDescription = async () => {
@@ -312,7 +208,6 @@ export default function Tiptap({
     const isAuthor = currentAuthor?._id === uid;
 
     if (currentAuthor && !isAuthor && task?.description?.text) {
-      console.log("played");
       return;
     }
 
@@ -362,7 +257,7 @@ export default function Tiptap({
     }
 
     setIsSent(true);
-    await mutateTasks();
+    await mutate(`/task?projectId=${project?._id}&archived=false`);
 
     // Update description for every guests
     socket.emit("update task", task?.projectId?._id);
@@ -384,6 +279,7 @@ export default function Tiptap({
   };
 
   const handleMessage = async () => {
+    setIsMessagePending(true);
     setPending(true);
     setConvOpen(false);
 
@@ -394,6 +290,8 @@ export default function Tiptap({
 
     let response;
     let finalText = plainText?.trim();
+
+    setMessage(finalText);
 
     const isAutoGeneratedText =
       finalText === "Voir pièce jointe" || finalText === "Voir pièces jointes";
@@ -448,7 +346,9 @@ export default function Tiptap({
       await mutateMessage();
     }
 
-    await mutateTasks();
+    setIsMessagePending(false);
+
+    await mutate(`/task?projectId=${project?._id}&archived=false`);
 
     socket.emit("update message", task?.projectId?._id);
     socket.emit("update task", task?.projectId?._id);
@@ -466,6 +366,7 @@ export default function Tiptap({
 
     setPlainText("");
     setValue("");
+    setMessage("");
     setPending(false);
   };
 
@@ -498,45 +399,8 @@ export default function Tiptap({
     });
   };
 
-  const handleAddImage = () => {
-    const url = window.prompt("URL");
-
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  };
-
-  const handleSetLink = () => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
-
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
-      return;
-    }
-
-    // update link
-    try {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run();
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
   const checkIfDisabled = () => {
-    if (isLoadingDraft || pending) return true;
+    if (pending) return true;
 
     if (attachments && attachments.length > 0) {
       return false;
@@ -566,86 +430,7 @@ export default function Tiptap({
         ref={containerRef}
       >
         {/* Barre d'outils */}
-        <div className="toolbar_Tiptap flex items-center p-2 bg-white border-b border-[#ddd] rounded-t-lg rounded-b-none">
-          <button onClick={() => editor.chain().focus().undo().run()}>
-            <Undo2 size={16} />
-          </button>
-          <button onClick={() => editor.chain().focus().redo().run()}>
-            <Redo2 size={16} />
-          </button>
-
-          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
-
-          <button
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 1 }).run()
-            }
-          >
-            <Heading1 size={16} />
-          </button>
-          <button
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-          >
-            <Heading2 size={16} />
-          </button>
-          <button
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 3 }).run()
-            }
-          >
-            <Heading3 size={16} />
-          </button>
-
-          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
-
-          <button onClick={() => editor.chain().focus().toggleBold().run()}>
-            <BoldIcon size={16} />
-          </button>
-          <button onClick={() => editor.chain().focus().toggleItalic().run()}>
-            <ItalicIcon size={16} />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-          >
-            <UnderlineIcon size={16} />
-          </button>
-          <button onClick={() => editor.chain().focus().toggleStrike().run()}>
-            <StrikethroughIcon size={16} />
-          </button>
-          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
-          <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-          >
-            <List size={16} />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          >
-            <ListOrderedIcon size={16} />
-          </button>
-
-          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
-
-          <button onClick={handleSetLink}>
-            <LinkIcon size={16} />
-          </button>
-          <button onClick={handleAddImage}>
-            <ImageIcon size={16} />
-          </button>
-          <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>
-          <button
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          >
-            <Quote size={16} />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          >
-            <Code2 size={16} />
-          </button>
-        </div>
+        <Toolbar editor={editor} />
         {/* Contenu de l'éditeur */}
         <EditorContent
           editor={editor}

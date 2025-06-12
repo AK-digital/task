@@ -4,7 +4,8 @@ import { updateProjectRole } from "@/api/project";
 import { updateProjectInvitationRole } from "@/actions/projectInvitation";
 import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { mutate } from "swr";
 
 export function DropDown({
   defaultValue,
@@ -20,66 +21,44 @@ export function DropDown({
     setIsOpen((prev) => !prev);
   };
 
-  useEffect(() => {
-    const newRole = member?.role || invitation?.role || defaultValue;
-    setCurrent(newRole);
-  }, [member?.role, invitation?.role, defaultValue]);
-
   async function handleChangeRole(e) {
     const role = e?.currentTarget?.getAttribute("data-value");
-
-    if (role === current) {
-      return;
-    }
-
     setCurrent(role);
     setIsOpen(false);
 
-    try {
-      if (!member) {
-        const formData = new FormData();
-        formData.append("project-id", project?._id);
-        formData.append("project-invitation-id", invitation._id);
-        formData.append("role", role);
-        formData.append("email", invitation.guestEmail);
+    if (!member) {
+      const formData = new FormData();
+      formData.append("project-id", project?._id);
+      formData.append("project-invitation-id", invitation._id);
+      formData.append("role", role);
+      formData.append("email", invitation.guestEmail);
 
-        const res = await updateProjectInvitationRole(null, formData);
+      const res = await updateProjectInvitationRole(null, formData);
 
-        if (res.status === "failure") {
-          setCurrent(defaultValue);
-          return;
-        }
-
-        socket.emit("update-project-invitation-role", project?._id, {
-          invitationId: invitation._id,
-          newRole: role,
-        });
-      } else {
-        const memberId = member?.user?._id;
-        const res = await updateProjectRole(project?._id, memberId, role);
-
-        if (res.status === "failure") {
-          setCurrent(defaultValue);
-          return;
-        }
-
-        socket.emit("update-project", null, project?._id);
+      if (res.status === "failure") {
+        setCurrent(defaultValue);
       }
-    } catch (error) {
-      setCurrent(defaultValue);
+
+      mutate(`/project-invitations/${project?._id}`);
+    } else {
+      const memberId = member?.user?._id;
+
+      const res = await updateProjectRole(project?._id, memberId, role);
+
+      if (res.status === "failure") {
+        setCurrent(defaultValue);
+      }
+
+      mutate(`/project/${project?._id}`);
+      socket.emit("update-project-role", memberId);
     }
   }
 
   return (
     <>
       <div className="relative select-none">
-        <div
-          onClick={handleIsOpen}
-          className="p-2 bg-accent-color text-small rounded-sm cursor-pointer w-25 transition-all ease-in duration-[80ms] hover:bg-accent-color-hover"
-        >
-          <span className="flex items-center justify-center text-white text-center w-full">
-            {memberRole(current)}
-          </span>
+        <div onClick={handleIsOpen} className="p-2 bg-accent-color text-small rounded-sm cursor-pointer w-25 transition-all ease-in duration-[80ms] hover:bg-accent-color-hover">
+          <span className="flex items-center justify-center text-white text-center w-full">{memberRole(current)}</span>
         </div>
         {isOpen && (
           <ul className="absolute flex flex-col z-9999 top-10 left-0 gap-0 w-full bg-secondary text-small rounded-sm max-h-50 overflow-auto text-left shadow-medium">
@@ -91,17 +70,13 @@ export function DropDown({
                   onClick={handleChangeRole}
                   data-value={option}
                 >
-                  <span className="flex items-center justify-center">
-                    {memberRole(option)}
-                  </span>
+                  <span className="flex items-center justify-center">{memberRole(option)}</span>
                 </li>
               );
             })}
           </ul>
         )}
-        {isOpen && (
-          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
-        )}
+        {isOpen && <div className="modal-layout-opacity" onClick={handleIsOpen}></div>}
       </div>
     </>
   );
