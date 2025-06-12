@@ -1,7 +1,7 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
 
-export async function saveTemplate(t, prevState, formData) {
+export async function saveTemplate(prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const name = formData.get("template-name");
@@ -23,20 +23,23 @@ export async function saveTemplate(t, prevState, formData) {
     if (!data.success) {
       return {
         success: false,
-        message: data.message || t("common.error"),
+        message: data.message || "Une erreur est survenue",
+        messageKey: "common.error",
       };
     }
 
     return {
       success: true,
-      message: t("template.save.success"),
+      message: "Template sauvegardé avec succès",
+      messageKey: "template.save.success",
     };
   } catch (err) {
-    console.log(err?.message || t("common.error"));
+    console.log(err?.message || "Une erreur est survenue");
 
     return {
       success: false,
-      message: t("template.save.error"),
+      message: "Erreur lors de la sauvegarde du template",
+      messageKey: "template.save.error",
     };
   }
 }

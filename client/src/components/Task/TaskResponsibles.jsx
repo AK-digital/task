@@ -47,8 +47,11 @@ export default function TaskResponsibles({ task, uid, user }) {
 
   function generateNotification(member) {
     const message = {
-      title: t("tasks.task_assigned_title", { projectName: project?.name }),
-      content: t("tasks.task_assigned_content", { taskText: task?.text }),
+      type: "task_assigned",
+      params: {
+        projectName: project?.name,
+        taskText: task?.text,
+      },
     };
 
     const link = `/projects/${project?._id}/task/${task?._id}`;

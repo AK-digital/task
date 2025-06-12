@@ -33,6 +33,7 @@
       "account_created_title": "Votre compte a été créé avec succès !",
       "account_created_message": "Un email de vérification a été envoyé à votre adresse e-mail. Veuillez cliquer sur le lien dans l'email pour activer votre compte.",
       "back_to_signin": "Retourner à la page de connexion",
+      "account_creation_error": "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer.",
       "password_requirements": "Le mot de passe doit contenir :",
       "password_min_chars": "- Au moins 8 caractères",
       "password_uppercase": "- Une lettre majuscule (A-Z)",
@@ -85,7 +86,7 @@
     "firstname_max": "Le prénom ne peut pas dépasser 50 caractères",
     "email_invalid": "L'adresse e-mail saisie est invalide",
     "password_contains": "Le mot de passe doit contenir ",
-    "password_invalid": "Le mot de passe saisi est invalide",
+    "password_invalid": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre",
     "company_max": "Le nom de l'entreprise ne peut pas dépasser 100 caractères",
     "position_max": "Le poste ne peut pas dépasser 100 caractères",
     "email": {
@@ -102,6 +103,11 @@
       "requirements": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
       "no_match": "Les mots de passe ne correspondent pas",
       "must_be_different": "Le nouveau mot de passe doit être différent de l'ancien"
+    },
+    "project": {
+      "name_required": "Le nom du projet est obligatoire",
+      "url_invalid": "L'URL est invalide",
+      "url_empty": "L'URL ne peut pas être vide"
     }
   },
   "notifications": {
@@ -116,8 +122,8 @@
     "mentioned_content": "Vous avez été mentionné dans une conversation",
     "reacted_title": "{{senderName}} a réagi à votre message",
     "reacted_content": "{{senderName}} a réagi avec {{emoji}} à votre {{type}}",
-    "task_assigned_title": "Nouvelle tâche assignée",
-    "task_assigned_content": "{{senderName}} vous a assigné une tâche",
+    "task_assigned_title": "🎉 Une tâche vous a été assignée dans {{projectName}}",
+    "task_assigned_content": "{{senderName}} vous a nommé responsable de la tâche \"{{taskText}}\".",
     "project_invitation_title": "Invitation à un projet",
     "project_invitation_content": "{{senderName}} vous a invité à rejoindre un projet"
   },
@@ -253,7 +259,7 @@
     "apply": "Appliquer",
     "waiting_status": "En attente",
     "task_assigned_title": "🎉 Une tâche vous a été assignée dans {{projectName}}",
-    "task_assigned_content": "Vous venez d'être nommé responsable de la tâche \"{{taskText}}\".",
+    "task_assigned_content": "{{senderName}} vous a nommé responsable de la tâche \"{{taskText}}\".",
     "people_to_invite": "Personnes à inviter",
     "profile_picture_alt": "Photo de profil de",
     "time_separator": "à",
@@ -265,6 +271,7 @@
     "responsibles": "Responsables",
     "no_member_found": "Aucun membre n'a été trouvé",
     "no_project_found": "Aucun projet n'a été trouvé",
+    "no_board_found": "Aucun tableau n'a été trouvé",
     "clear": "Effacer",
     "search_task_placeholder": "Recherchez une tâche...",
     "photo_of": "Photo de",
@@ -302,7 +309,8 @@
     "total_label": "Total :",
     "save": {
       "success": "Le timer a été enregistré avec succès"
-    }
+    },
+    "update_error": "Erreur lors de la mise à jour :"
   },
   "templates": {
     "edit_board": "Modifier ce tableau",
@@ -323,7 +331,19 @@
     "save": {
       "success": "Le template a été enregistré avec succès",
       "error": "Une erreur s'est produite lors de l'enregistrement du template"
-    }
+    },
+    "available_templates": "Modèles Disponibles",
+    "community_templates": "La communauté",
+    "your_templates": "Les vôtres",
+    "no_templates_available": "Aucun modèle disponible",
+    "create_templates_info": "Créez d'abord des modèles depuis vos projets existants.",
+    "select_template_preview": "Sélectionnez un modèle pour voir l'aperçu",
+    "template_preview": "Aperçu du modèle",
+    "no_tasks_in_board": "Aucune tâche dans ce tableau",
+    "share_project_template": "Partager ce modèle de projet avec les autres utilisateurs",
+    "share_board_template": "Partager ce modèle de tableau avec les autres utilisateurs",
+    "you": "vous",
+    "use": "Utiliser"
   },
   "roles": {
     "owner": "Propriétaire",
@@ -338,6 +358,7 @@
     "guest_emoji": "🙋‍♂️ Invité"
   },
   "general": {
+    "continue": "Continuer",
     "description": "Description",
     "responsible": "Responsable",
     "time": "Temps",
@@ -360,12 +381,13 @@
     "no": "Non",
     "irreversible_action": "Cette action est irréversible",
     "profile_picture_alt": "Photo de profil de",
-    "change_language_to": "Changer la langue vers",
+    "change_language_to": "Changer la langue en",
     "project_lowercase": "projet",
     "board_lowercase": "tableau",
     "confirm_deletion": "Confirmation de suppression",
     "confirm_deletion_message": "Êtes-vous sûr de vouloir supprimer votre {{title}} ? Cette action est irréversible.",
-    "confirm_delete_button": "Confirmer la suppression"
+    "confirm_delete_button": "Confirmer la suppression",
+    "language_change_error": "Erreur lors du changement de langue :"
   },
   "profile": {
     "my_profile": "Mon profil",
@@ -374,6 +396,7 @@
     "company": "Entreprise",
     "position": "Poste",
     "language": "Langue",
+    "updating_language": "Mise à jour de la langue...",
     "update_button": "Mettre à jour",
     "success_title": "Succès",
     "update_success": "Profil mis à jour avec succès",
@@ -478,6 +501,14 @@
     "app_description": "Generated by create next app",
     "language": "fr"
   },
+  "feedback": {
+    "feedback": "Feedback",
+    "success_message": "Feedback envoyé avec succès",
+    "subtitle": "N'hésitez pas à nous faire part de vos suggestions !",
+    "share_experience": "Partagez votre expérience",
+    "placeholder": "Votre feedback...",
+    "send": "Envoyer"
+  },
   "messages": {
     "conversation": "Conversation",
     "add_comment": "Ajouter un commentaire",
@@ -490,9 +521,27 @@
   "boards": {
     "empty_board": "Tableau vide",
     "board_template": "Modèle de tableau",
+    "add_board_ia": "Ajout de tableau par IA",
+    "ai_modal_description": "Proposez des tableaux et tâches supplémentaires pertinents à partir du contexte du projet.",
+    "ai_generating": "Génération...",
+    "ai_generate_button": "Générer avec l'IA",
+    "ai_suggestions": "Suggestions IA",
+    "ai_toggle_all": "Tout cocher/décocher",
+    "ai_adding": "Ajout en cours...",
+    "ai_accept_selection": "Accepter la sélection",
+    "ai_uncheck_all": "Tout décocher",
+    "ai_check_all": "Tout cocher",
+    "ai_generation_error": "Erreur lors de la génération IA",
+    "ai_board_creation_error": "Erreur création tableau",
+    "ai_prompt_project_title": "Titre du projet :",
+    "ai_prompt_notes": "Notes :",
+    "ai_prompt_existing_tasks": "Tâches existantes :",
+    "ai_prompt_no_tasks": "Tâches existantes : aucune",
+    "ai_prompt_instruction": "Génère jusqu'à 5 nouveaux tableaux (groupes de tâches) et 50 tâches maximum, pertinents et non redondants, pour enrichir ce projet. Ne propose que des tâches et tableaux nouveaux, différents de ceux déjà listés. Réponds en JSON structuré : { \"boards\": [ { \"name\": \"...\", \"tasks\": [\"...\", ...] }, ... ] }",
     "add_task_placeholder": " Ajouter une tâche",
     "add_task_button": "Ajouter une tâche",
     "press_enter_info": "Appuyer sur entrée pour ajouter une tâche",
+    "press_enter_info_button": "Entrée",
     "save_as_template": "Enregistrer le tableau comme modèle",
     "delete_board": "Supprimer le tableau",
     "archive_board": "Archiver le tableau",
@@ -501,9 +550,23 @@
     "tasks_plural": "Tâches",
     "task_singular": "Tâche",
     "project_archives": "Archives du projet",
-    "no_archives_available": "Aucune archive disponible actuellement",
+    "no_archive_available": "Aucune archive disponible actuellement",
     "delete_board_confirm": "Supprimer ce tableau ?",
     "save_changes": "Enregistrer les modifications"
+  },
+  "createProject": {
+    "title": "Créer un projet grâce à l'IA",
+    "description": "Décrivez votre projet, l'IA vous proposera des tâches et des groupes de tâches (tableaux) pertinents.",
+    "placeholder": "Décrivez votre projet ici...",
+    "generating": "Génération...",
+    "generateButton": "Générer avec l'IA",
+    "creating": "Création en cours...",
+    "createButton": "Créer ce projet",
+    "suggestionsTitle": "Suggestions IA",
+    "projectName": "Nom du projet",
+    "generationError": "Erreur lors de la génération IA",
+    "projectCreationError": "Erreur création projet",
+    "boardCreationError": "Erreur création tableau"
   },
   "guests": {
     "invite_users": "Inviter d'autres utilisateurs",
@@ -532,11 +595,15 @@
     "cancel": "Annuler",
     "edit": "Modifier",
     "send": "Envoyer",
-    "message": "le message"
+    "message": "le message",
+    "enter_image_url": "Entrez l'URL de l'image",
+    "enter_link_url": "Entrez l'URL du lien",
+    "link_error": "Erreur lors de la création du lien"
   },
   "common": {
     "error": "Une erreur est survenue",
-    "missing_parameter": "Paramètre manquant"
+    "missing_parameter": "Paramètre manquant",
+    "cancel": "Annuler"
   },
   "task": {
     "missing_parameters": "Paramètres manquants",
@@ -582,11 +649,6 @@
     "update": {
       "success": "Le projet a été modifié avec succès",
       "error": "Une erreur est survenue lors de la modification du projet"
-    },
-    "validation": {
-      "name_required": "Le nom du projet est obligatoire",
-      "url_invalid": "L'URL est invalide",
-      "url_empty": "L'URL ne peut pas être vide"
     }
   },
   "board_template": {
@@ -598,5 +660,39 @@
     "update": {
       "error": "Une erreur est survenue lors de la mise à jour du tableau"
     }
+  },
+  "newProject": {
+    "type_ai_title": "Projet par IA",
+    "type_ai_description": "Créez votre projet grâce à l'intelligence artificielle",
+    "type_template_title": "Depuis un modèle enregistré",
+    "type_template_description": "Utilisez un modèle prédéfini pour démarrer rapidement",
+    "type_empty_title": "Projet vide",
+    "type_empty_description": "Commencez avec un projet complètement vide",
+    "invitation_email_required": "L'email est requis",
+    "invitation_email_invalid": "Format d'email invalide",
+    "invitation_email_duplicate": "Cet email est déjà dans la liste",
+    "invitation_email_placeholder": "Inviter par e-mail",
+    "invitation_add_button": "Ajouter à la liste",
+    "invitation_pending_list": "Invitations en attente ({{count}})",
+    "general_information": "Informations générales",
+    "project_logo_alt": "Logo du projet",
+    "project_name_placeholder": "Nom du projet",
+    "boards_count": "tableaux",
+    "tasks_count": "tâches",
+    "quick_links": "Liens rapides",
+    "link_placeholder": "https://www.exemple.com",
+    "add_link": "Ajouter un lien",
+    "team_management": "Gestion de l'équipe",
+    "invitation_info": "💡 Les invitations seront envoyées après la création du projet",
+    "project_notes": "Notes du projet",
+    "project_notes_placeholder": "Ajouter une note sur le projet...",
+    "template_new_task": "Nouvelle tâche",
+    "template_project_name_placeholder": "Nom du projet",
+    "template_board_title_placeholder": "Titre du tableau",
+    "template_task_description_placeholder": "Description de la tâche",
+    "template_delete_task_title": "Supprimer cette tâche",
+    "template_delete_template": "Supprimer le modèle",
+    "template_deleting": "Suppression...",
+    "template_deletion_error": "Erreur lors de la suppression du modèle"
   }
 }

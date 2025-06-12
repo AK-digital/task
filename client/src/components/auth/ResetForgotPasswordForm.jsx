@@ -1,7 +1,7 @@
 "use client";
 import { resetForgotPassword } from "@/actions/auth";
 import { Eye, EyeOff } from "lucide-react";
-import { translateValidationErrors } from "@/utils/zod";
+import { translateCustomErrors } from "@/utils/zod";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -88,7 +88,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               />
             )}
             {state?.errors?.newPassword && (
-              <i>{translateValidationErrors(state.errors.newPassword, t)}</i>
+              <i>{translateCustomErrors(state.errors.newPassword, t)}</i>
             )}
           </div>
           <div className="form-group">
@@ -120,9 +120,7 @@ export default function ResetForgotPasswordForm({ resetCode }) {
               />
             )}
             {state?.errors?.confirmPassword && (
-              <i>
-                {translateValidationErrors(state.errors.confirmPassword, t)}
-              </i>
+              <i>{translateCustomErrors(state.errors.confirmPassword, t)}</i>
             )}
           </div>
           <input

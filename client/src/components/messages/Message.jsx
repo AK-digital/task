@@ -26,17 +26,20 @@ export default function Message({
   mutateMessage,
   mutateTasks,
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
   const [showPeopleRead, setShowPeopleRead] = useState(false);
 
-  moment.locale("fr");
+  moment.locale(i18n.language || "fr");
   const author = message?.author;
   const date = moment(message?.createdAt);
-  const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
+  const formattedDate =
+    i18n.language === "en"
+      ? date.format("MM/DD/YYYY [at] HH:mm")
+      : date.format("DD/MM/YYYY [à] HH:mm");
 
   useEffect(() => {
     async function handleReadBy() {

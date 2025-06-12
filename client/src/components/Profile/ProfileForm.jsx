@@ -1,7 +1,13 @@
 "use client";
-import { useActionState, useContext, useEffect, useState } from "react";
-import { updateUserProfile } from "@/actions/user";
-import { translateValidationErrors } from "@/utils/zod";
+import {
+  useActionState,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import { updateUserProfile, updateUserLanguage } from "@/actions/user";
+import { translateCustomErrors } from "@/utils/zod";
 import { mutate } from "swr";
 import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";
@@ -14,8 +20,8 @@ const initialState = {
 };
 
 export default function ProfileForm() {
-  const { t } = useTranslation();
-  const { user } = useContext(AuthContext);
+  const { t, i18n } = useTranslation();
+  const { user, setUser } = useContext(AuthContext);
 
   const updateUserProfileWithT = (prevState, formData) =>
     updateUserProfile(t, prevState, formData);
@@ -24,6 +30,7 @@ export default function ProfileForm() {
     initialState
   );
   const [popUp, setPopup] = useState(null);
+  const [isUpdatingLanguage, setIsUpdatingLanguage] = useState(false);
 
   // Ajout des états pour gérer les champs actifs
   const [lastName, setLastName] = useState(user?.lastName || "");
@@ -32,10 +39,54 @@ export default function ProfileForm() {
   const [position, setPosition] = useState(user?.position || "");
   const [language, setLanguage] = useState(user?.language || "fr");
 
+  // Fonction pour gérer le changement de langue côté client uniquement
+  const handleLanguageChange = useCallback(
+    async (lng) => {
+      setIsUpdatingLanguage(true);
+
+      // Changer immédiatement la langue dans i18n pour l'UX
+      await i18n.changeLanguage(lng);
+
+      // Mettre à jour en base de données via l'action
+      const response = await updateUserLanguage(user._id, lng);
+
+      if (response?.status === "success") {
+        // Mettre à jour le contexte utilisateur
+        setUser((prevUser) => ({
+          ...prevUser,
+          language: lng,
+        }));
+
+        // Revalider la session pour s'assurer que tout est synchronisé
+        mutate("/auth/session");
+
+        // Afficher un message de succès
+        setPopup({
+          status: "success",
+          title: t("profile.success_title"),
+          message: t("profile.update_success"),
+        });
+      } else {
+        // En cas d'erreur, revenir à la langue précédente
+        await i18n.changeLanguage(user?.language || "fr");
+
+        setPopup({
+          status: "failure",
+          title: t("profile.error_title"),
+          message: response?.message || t("profile.update_error"),
+        });
+      }
+
+      setIsUpdatingLanguage(false);
+    },
+    [user, i18n, setUser, t]
+  );
+
   useEffect(() => {
     // Mutate the session data if the update was successful
     if (state?.status === "success") {
       mutate("/auth/session");
+
       setPopup({
         status: state?.status,
         title: t("profile.success_title"),
@@ -47,7 +98,7 @@ export default function ProfileForm() {
       setPopup({
         status: state?.status,
         title: t("profile.error_title"),
-        message: t("profile.update_error"),
+        message: state?.message || t("profile.update_error"),
       });
     }
 
@@ -55,7 +106,7 @@ export default function ProfileForm() {
     const timeout = setTimeout(() => setPopup(false), 4000);
 
     return () => clearTimeout(timeout);
-  }, [state]);
+  }, [state, t]);
 
   // Mettre à jour les états avec les valeurs de l'utilisateur lorsque les données sont chargées
   useEffect(() => {
@@ -67,6 +118,15 @@ export default function ProfileForm() {
       setLanguage(user.language || "fr");
     }
   }, [user]);
+
+  // Détecter les changements de langue et les traiter séparément
+  const handleLanguageSelectChange = (e) => {
+    const newLanguage = e.target.value;
+    setLanguage(newLanguage);
+
+    // Appeler directement handleLanguageChange, user.js se charge des vérifications
+    handleLanguageChange(newLanguage);
+  };
 
   return (
     <>
@@ -109,7 +169,7 @@ export default function ProfileForm() {
             className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.lastName && (
-            <span>{translateValidationErrors(state.errors.lastName, t)}</span>
+            <span>{translateCustomErrors(state.errors.lastName, t)}</span>
           )}
         </div>
 
@@ -130,7 +190,7 @@ export default function ProfileForm() {
             className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.company && (
-            <span>{translateValidationErrors(state.errors.company, t)}</span>
+            <span>{translateCustomErrors(state.errors.company, t)}</span>
           )}
         </div>
 
@@ -151,7 +211,7 @@ export default function ProfileForm() {
             className="font-bricolage text-medium focus:outline-none"
           />
           {state?.errors?.position && (
-            <span>{translateValidationErrors(state.errors.position, t)}</span>
+            <span>{translateCustomErrors(state.errors.position, t)}</span>
           )}
         </div>
         <div className="form-group">
@@ -162,16 +222,16 @@ export default function ProfileForm() {
             name="language"
             id="language"
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            disabled={pending}
+            onChange={handleLanguageSelectChange}
+            disabled={pending || isUpdatingLanguage}
             className="border-b border-b-text-lighter-color text-text-lighter-color text-medium bg-transparent"
           >
             <option value="fr">Français</option>
             <option value="en">English</option>
           </select>
-          {translateValidationErrors(state?.errors?.language, t) && (
-            <span className="text-state-blocked-color text-small">
-              {translateValidationErrors(state?.errors?.language, t)}
+          {isUpdatingLanguage && (
+            <span className="text-accent-color text-small">
+              {t("profile.updating_language")}
             </span>
           )}
         </div>

@@ -59,7 +59,7 @@ export default function AddBoard({ project }) {
         onClick={() => setShowIAModal(true)}
       >
         <Plus size={18} />
-        Ajout de tableau par IA
+        {t("boards.add_board_ia")}
       </button> */}
       {addBoardTemplate && (
         <BoardsTemplateList

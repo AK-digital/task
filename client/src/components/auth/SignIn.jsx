@@ -54,10 +54,10 @@ export default function SignIn() {
       setMessage(state?.message || t("auth.signin.connection_error"));
       setStatus("failure");
     }
-    if (state?.message.includes("vérifié")) {
+    if (state?.message === t("auth.account_not_verified")) {
       setStatus("failure");
     }
-  }, [state]);
+  }, [state, t]);
 
   async function handleResendEmail() {
     const res = await reSendVerificationEmail(state?.payload?.email);

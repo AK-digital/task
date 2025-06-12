@@ -174,7 +174,7 @@ export default function Tiptap({
   };
 
   const editor = useEditor(
-    tiptapOptions(t, value, isTaggedUsers, handleChange)
+    tiptapOptions(t, value, isTaggedUsers, handleChange, type)
   );
 
   useEffect(() => {

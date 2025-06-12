@@ -1,8 +1,10 @@
 import { AuthContext } from "@/context/auth";
 import Image from "next/image";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function PendingMessage({ message }) {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
 
   return (
@@ -15,7 +17,7 @@ export default function PendingMessage({ message }) {
               src={user?.picture || "/default-pfp.webp"}
               width={35}
               height={35}
-              alt={`Photo de profil de ${user?.firstName}`}
+              alt={`${t("general.profile_picture_alt")} ${user?.firstName}`}
               className="rounded-full w-[35px] h-[35px] max-w-[35px] max-h-[35px]"
             />
             <span className="text-normal font-medium">

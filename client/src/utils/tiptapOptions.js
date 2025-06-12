@@ -16,7 +16,7 @@ import Code from "@tiptap/extension-code";
 import Blockquote from "@tiptap/extension-blockquote";
 import Mention from "@tiptap/extension-mention";
 
-export function tiptapOptions(t, value, isTaggedUsers, handleChange) {
+export function tiptapOptions(t, value, isTaggedUsers, handleChange, type) {
   return {
     extensions: [
       StarterKit,
@@ -42,7 +42,7 @@ export function tiptapOptions(t, value, isTaggedUsers, handleChange) {
       Code,
       Blockquote,
       Placeholder.configure({
-        placeholder: t("rich_text_editor.placeholder"),
+        placeholder: t("editor.placeholder", { type }),
       }),
       Mention.configure({
         HTMLAttributes: {

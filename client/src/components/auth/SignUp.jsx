@@ -1,6 +1,6 @@
 import { signUp } from "@/actions/auth";
 import { Eye, EyeOff } from "lucide-react";
-import { translateValidationErrors } from "@/utils/zod";
+import { translateCustomErrors } from "@/utils/zod";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -92,7 +92,7 @@ export default function SignUp() {
                 className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.lastName && (
-                <i>{translateValidationErrors(state.errors.lastName, t)}</i>
+                <i>{translateCustomErrors(state.errors.lastName, t)}</i>
               )}
             </div>
             <div className="form-group">
@@ -114,7 +114,7 @@ export default function SignUp() {
                 className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.firstName && (
-                <i>{translateValidationErrors(state.errors.firstName, t)}</i>
+                <i>{translateCustomErrors(state.errors.firstName, t)}</i>
               )}
             </div>
             <div className="form-group">
@@ -136,7 +136,7 @@ export default function SignUp() {
                 className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
               {state?.errors?.email && (
-                <i>{translateValidationErrors(state.errors.email, t)}</i>
+                <i>{translateCustomErrors(state.errors.email, t)}</i>
               )}
             </div>
             <div className="form-group">

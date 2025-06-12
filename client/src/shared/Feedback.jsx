@@ -2,6 +2,7 @@
 import { sendFeedback } from "@/actions/feedback";
 import { CheckCircle, MessageCircle, Star } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   success: null,
@@ -10,6 +11,7 @@ const initialState = {
 };
 
 export default function Feedback() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [rating, setRating] = useState(null);
@@ -114,7 +116,9 @@ export default function Feedback() {
           className="bg-accent-color p-2 flex items-center justify-center gap-1 rounded-full shadow-md cursor-pointer hover:bg-accent-color/90 transition-all duration-300"
         >
           <MessageCircle size={24} color="white" className="scale-x-[-1]" />
-          <span className="text-white text-sm font-medium">Feedback</span>
+          <span className="text-white text-sm font-medium">
+            {t("feedback.feedback")}
+          </span>
         </div>
       )}
       {isOpen && (
@@ -127,14 +131,16 @@ export default function Feedback() {
             <div className="flex items-center gap-2 overflow-hidden">
               <CheckCircle size={24} className="text-green-700" />
               <span className="text-green-700 text-md font-medium">
-                Feedback envoyé avec succès
+                {t("feedback.success_message")}
               </span>
             </div>
           ) : (
             <>
-              <span className="block text-2xl font-bold mb-0.5">Feedback</span>
+              <span className="block text-2xl font-bold mb-0.5">
+                {t("feedback.feedback")}
+              </span>
               <p className="text-gray-400/80 text-sm font-medium mb-2">
-                Nhésitez pas à nous faire part de vos suggestions !
+                {t("feedback.subtitle")}
               </p>
               <div className="flex justify-between gap-2 bg-gray-100/80 rounded-lg p-4 mb-2">
                 <Star
@@ -181,7 +187,7 @@ export default function Feedback() {
               <form action={formAction} className="w-full gap-0">
                 <div className="relative w-full">
                   <span className="block text-gray-400/80 text-sm font-medium mb-1">
-                    Partagez votre expérience
+                    {t("feedback.share_experience")}
                   </span>
                   <textarea
                     className="w-full h-48 p-2 border-2 rounded-lg border-gray-300 resize-none focus:border-accent-color/50 transition-all duration-300 ease-in-out"
@@ -192,7 +198,7 @@ export default function Feedback() {
                     required
                     minLength={1}
                     maxLength={1200}
-                    placeholder="Votre feedback..."
+                    placeholder={t("feedback.placeholder")}
                   />
                   <span className="absolute bottom-2 right-2 text-gray-400/80 text-sm font-medium">
                     {message?.length}/1200
@@ -208,14 +214,14 @@ export default function Feedback() {
                     className="text-text-darker-color flex-1/2 w-full mt-2 rounded-lg  bg-transparent border-[2px] border-gray-300 shadow-none hover:bg-gray-100 transition-all duration-300 ease-in-out"
                     onClick={handleClose}
                   >
-                    Annuler
+                    {t("general.cancel")}
                   </button>
                   <button
                     className="w-full mt-2 rounded-lg"
                     data-disabled={message?.length === 0}
                     disabled={pending || message?.length === 0}
                   >
-                    Envoyer
+                    {t("feedback.send")}
                   </button>
                 </div>
               </form>

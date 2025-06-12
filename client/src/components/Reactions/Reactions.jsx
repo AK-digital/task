@@ -56,7 +56,7 @@ export default function Reactions({
       editor.view.focus();
     }
 
-    if (response?.message?.includes("ajoutée")) {
+    if (response?.success && response?.action === "added") {
       const messageBody = {
         type: "reaction",
         params: {

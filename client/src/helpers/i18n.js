@@ -1,6 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
+import { setupZodI18n } from "@/utils/zod";
 
 i18n
   .use(HttpBackend)
@@ -17,6 +18,10 @@ i18n
     react: {
       useSuspense: true,
     },
+  })
+  .then(() => {
+    // Initialiser Zod avec les traductions après que i18next soit prêt
+    setupZodI18n();
   });
 
 // Fonction pour initialiser la langue depuis les données utilisateur

@@ -1,24 +1,27 @@
 "use client";
 import { Bot, FileText, FolderPlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function ProjectTypeSelection({ onTypeSelect }) {
+  const { t } = useTranslation();
+
   const projectTypes = [
     {
       id: "ia",
-      title: "Projet par IA",
-      description: "Créez votre projet grâce à l'intelligence artificielle",
+      title: t("newProject.type_ai_title"),
+      description: t("newProject.type_ai_description"),
       icon: <Bot size={48} />,
     },
     {
       id: "template",
-      title: "Depuis un modèle enregistré",
-      description: "Utilisez un modèle prédéfini pour démarrer rapidement",
+      title: t("newProject.type_template_title"),
+      description: t("newProject.type_template_description"),
       icon: <FileText size={48} />,
     },
     {
       id: "empty",
-      title: "Projet vide",
-      description: "Commencez avec un projet complètement vide",
+      title: t("newProject.type_empty_title"),
+      description: t("newProject.type_empty_description"),
       icon: <FolderPlus size={48} />,
     },
   ];
@@ -33,14 +36,14 @@ export default function ProjectTypeSelection({ onTypeSelect }) {
             onClick={() => onTypeSelect(type.id)}
             type="button"
           >
-            <div className="mb-2 text-accent-color">
-              {type.icon}
-            </div>
+            <div className="mb-2 text-accent-color">{type.icon}</div>
             <h3 className="text-xl font-semibold mb-2 m-0">{type.title}</h3>
-            <p className="text-[0.95rem] text-text-muted m-0 leading-relaxed">{type.description}</p>
+            <p className="text-[0.95rem] text-text-muted m-0 leading-relaxed">
+              {type.description}
+            </p>
           </button>
         ))}
       </div>
     </div>
   );
-} 
+}

@@ -75,7 +75,7 @@ export default function TasksBoardFilter({ queries, setQueries }) {
               ))}
             </ul>
           ) : (
-            <span>{t("tasks.no_project_found")}</span>
+            <span>{t("tasks.no_board_found")}</span>
           )}
         </div>
       )}

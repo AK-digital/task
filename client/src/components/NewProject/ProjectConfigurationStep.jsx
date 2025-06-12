@@ -6,25 +6,29 @@ import Image from "next/image";
 import { bricolageGrostesque } from "@/utils/font";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ProjectInvitationForm from "./ProjectInvitationForm";
+import { useTranslation } from "react-i18next";
 
-export default function ProjectConfigurationStep({ 
-  projectData, 
+export default function ProjectConfigurationStep({
+  projectData,
   onProjectCreate,
-  creating = false 
+  creating = false,
 }) {
+  const { t } = useTranslation();
   // États pour les options du projet
-  const [projectName, setProjectName] = useState(projectData?.title || projectData?.name || "");
+  const [projectName, setProjectName] = useState(
+    projectData?.title || projectData?.name || ""
+  );
   const [projectNote, setProjectNote] = useState("");
   const [projectLogo, setProjectLogo] = useState(null);
   const [logoPreview, setLogoPreview] = useState("/default-project-logo.webp");
   const [links, setLinks] = useState([{ url: "", icon: "Globe" }]);
   const [moreIcons, setMoreIcons] = useState(null);
   const [invitations, setInvitations] = useState([]);
-  
+
   // États UI
   const [editImg, setEditImg] = useState(false);
   const [isValid, setIsValid] = useState(false);
-  
+
   const fileInputRef = useRef(null);
   const router = useRouter();
 
@@ -42,16 +46,27 @@ export default function ProjectConfigurationStep({
           name: projectName,
           note: projectNote,
           logo: projectLogo,
-          urls: links.filter(link => link.url.trim() !== ""),
-          invitations: invitations
+          urls: links.filter((link) => link.url.trim() !== ""),
+          invitations: invitations,
         };
         onProjectCreate(finalProjectData);
       }
     };
 
-    window.addEventListener('createProject', handleCreateProject);
-    return () => window.removeEventListener('createProject', handleCreateProject);
-  }, [isValid, creating, projectData, projectName, projectNote, projectLogo, links, invitations, onProjectCreate]);
+    window.addEventListener("createProject", handleCreateProject);
+    return () =>
+      window.removeEventListener("createProject", handleCreateProject);
+  }, [
+    isValid,
+    creating,
+    projectData,
+    projectName,
+    projectNote,
+    projectLogo,
+    links,
+    invitations,
+    onProjectCreate,
+  ]);
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -102,11 +117,13 @@ export default function ProjectConfigurationStep({
     setMoreIcons(null);
   };
 
-
-
   // Données simulées pour les compteurs
   const boardsCount = projectData?.boards?.length || 0;
-  const tasksCount = projectData?.boards?.reduce((total, board) => total + (board.tasks?.length || 0), 0) || 0;
+  const tasksCount =
+    projectData?.boards?.reduce(
+      (total, board) => total + (board.tasks?.length || 0),
+      0
+    ) || 0;
 
   return (
     <div className="relative bg-primary/90 rounded-tl-medium p-8 text-text-dark-color h-full overflow-auto">
@@ -119,9 +136,11 @@ export default function ProjectConfigurationStep({
             <div className="bg-secondary rounded-xl p-8">
               {/* Wrapper header */}
               <div className="flex justify-between">
-                <span className="text-large">Informations générales</span>
+                <span className="text-large">
+                  {t("newProject.general_information")}
+                </span>
               </div>
-              
+
               {/* Wrapper content */}
               <div className="flex flex-col gap-0 mt-5">
                 {/* Project Logo */}
@@ -132,7 +151,7 @@ export default function ProjectConfigurationStep({
                 >
                   <Image
                     src={logoPreview}
-                    alt="Logo du projet"
+                    alt={t("newProject.project_logo_alt")}
                     width={100}
                     height={100}
                     quality={100}
@@ -143,7 +162,10 @@ export default function ProjectConfigurationStep({
                     }}
                   />
                   {editImg && (
-                    <label htmlFor="logo" className="absolute inset-0 bg-black/50 flex justify-center items-center cursor-pointer min-w-[100px] h-[100px] rounded-full">
+                    <label
+                      htmlFor="logo"
+                      className="absolute inset-0 bg-black/50 flex justify-center items-center cursor-pointer min-w-[100px] h-[100px] rounded-full"
+                    >
                       <Pencil size={20} className="text-white" />
                     </label>
                   )}
@@ -166,7 +188,7 @@ export default function ProjectConfigurationStep({
                     className={`text-xl pl-1 border-b-2 border-text-dark-color text-text-color-dark ${bricolageGrostesque.className}`}
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
-                    placeholder="Nom du projet"
+                    placeholder={t("newProject.project_name_placeholder")}
                     required
                   />
                 </div>
@@ -174,18 +196,22 @@ export default function ProjectConfigurationStep({
                 {(boardsCount > 0 || tasksCount > 0) && (
                   <div className="mt-6 flex justify-between items-end">
                     <div className="flex flex-col gap-1">
-                      <span>{boardsCount} tableaux</span>
-                      <span>{tasksCount} tâches</span>
+                      <span>
+                        {boardsCount} {t("newProject.boards_count")}
+                      </span>
+                      <span>
+                        {tasksCount} {t("newProject.tasks_count")}
+                      </span>
                     </div>
                   </div>
                 )}
               </div>
             </div>
-            
+
             {/* Links */}
             <div className="bg-secondary rounded-xl rounded-medium p-8">
               <div className="text-large">
-                <span>Liens rapides</span>
+                <span>{t("newProject.quick_links")}</span>
               </div>
               <div className="flex flex-col gap-4 mt-5">
                 {isNotEmpty(links) &&
@@ -194,7 +220,9 @@ export default function ProjectConfigurationStep({
                       <div className="flex items-center" key={idx}>
                         <div
                           className="relative flex items-center justify-center border border-text-medium-color h-11 w-11 cursor-pointer"
-                          onClick={() => setMoreIcons(moreIcons === idx ? null : idx)}
+                          onClick={() =>
+                            setMoreIcons(moreIcons === idx ? null : idx)
+                          }
                         >
                           {displayIcon(link?.icon)}
                           {moreIcons === idx && (
@@ -209,7 +237,7 @@ export default function ProjectConfigurationStep({
                         </div>
                         <input
                           type="url"
-                          placeholder="https://www.exemple.com"
+                          placeholder={t("newProject.link_placeholder")}
                           value={link?.url}
                           onChange={(e) => updateLinkUrl(idx, e.target.value)}
                           className="relative top-0.5 pl-2"
@@ -224,47 +252,60 @@ export default function ProjectConfigurationStep({
                     );
                   })}
                 {links.length < 6 && (
-                  <button onClick={addLink} className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none hover:underline" type="button">
-                    Ajouter un lien
+                  <button
+                    onClick={addLink}
+                    className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none hover:underline"
+                    type="button"
+                  >
+                    {t("newProject.add_link")}
                   </button>
                 )}
               </div>
             </div>
-
-
           </div>
 
           {/* Right Column */}
           <div className="flex flex-col gap-10 relative top-0 items-start h-full w-1/5 min-w-[400px]">
             {/* Gestion des utilisateurs */}
-            <div className="bg-secondary rounded-xl p-8" style={{ height: 'fit-content' }}>
+            <div
+              className="bg-secondary rounded-xl p-8"
+              style={{ height: "fit-content" }}
+            >
               <div className="text-large">
-                <span>Gestion de l'équipe</span>
+                <span>{t("newProject.team_management")}</span>
               </div>
               <div className="flex flex-col gap-0 mt-5">
-                <ProjectInvitationForm 
+                <ProjectInvitationForm
                   invitations={invitations}
                   onInvitationsChange={setInvitations}
                 />
-                <div style={{ marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-color-muted)' }}>
-                  <p>💡 Les invitations seront envoyées après la création du projet</p>
+                <div
+                  style={{
+                    marginTop: "20px",
+                    fontSize: "0.9rem",
+                    color: "var(--text-color-muted)",
+                  }}
+                >
+                  <p>{t("newProject.invitation_info")}</p>
                 </div>
               </div>
             </div>
-            
+
             {/* Notes */}
             <div className="flex-1 flex flex-col w-full bg-secondary rounded-xl rounded-medium p-8">
               <div className="text-large">
-                <span>Notes du projet</span>
+                <span>{t("newProject.project_notes")}</span>
               </div>
               <div className="flex-1 flex flex-col mt-5">
                 <textarea
                   name="note"
                   id="note"
-                  className={`flex-1 w-full h-auto min-h-[150px] resize-y box-border overflow-y-hidden border-none text-normal ${projectNote.length > 300 ? 'overflow-y-auto' : ''} ${bricolageGrostesque.className}`}
+                  className={`flex-1 w-full h-auto min-h-[150px] resize-y box-border overflow-y-hidden border-none text-normal ${
+                    projectNote.length > 300 ? "overflow-y-auto" : ""
+                  } ${bricolageGrostesque.className}`}
                   value={projectNote}
                   onChange={(e) => setProjectNote(e.target.value)}
-                  placeholder="Ajouter une note sur le projet..."
+                  placeholder={t("newProject.project_notes_placeholder")}
                 />
               </div>
             </div>
@@ -303,4 +344,4 @@ function IconList({ setMoreIcons, updateLinkIcon, idx }) {
       />
     </>
   );
-} 
+}

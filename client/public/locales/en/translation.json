@@ -21,24 +21,25 @@
       "error": "An error occurred during sign in"
     },
     "signup": {
-      "title": "Registration",
-      "lastname_label": "Name",
+      "title": "Sign Up",
+      "lastname_label": "Last name",
       "firstname_label": "First name",
-      "email_label": "E-mail address",
+      "email_label": "Email address",
       "password_label": "Password",
       "submit_button": "Sign up",
-      "submit_button_loading": "Registration in progress...",
+      "submit_button_loading": "Signing up...",
       "have_account": "Already have an account?",
       "signin_link": "Sign in",
       "account_created_title": "Your account has been successfully created!",
       "account_created_message": "A verification email has been sent to your email address. Please click on the link in the email to activate your account.",
-      "back_to_signin": "Return to the login page",
-      "password_requirements": "The password must contain :",
+      "back_to_signin": "Return to sign in page",
+      "account_creation_error": "An error occurred while creating your account. Please try again.",
+      "password_requirements": "Password must contain:",
       "password_min_chars": "- At least 8 characters",
-      "password_uppercase": "- A capital letter (A-Z)",
-      "password_number": "- One digit (0-9)",
-      "password_special": "- A special character (!@#$%^&?)",
-      "creation_error": "An error has occurred while creating your account. Please try again.",
+      "password_uppercase": "- One uppercase letter (A-Z)",
+      "password_number": "- One number (0-9)",
+      "password_special": "- One special character (!@#$%^&?)",
+      "creation_error": "An error occurred while creating your account. Please try again.",
       "error": "An error occurred while creating a new user",
       "email_already_used": "This email address is already in use"
     },
@@ -69,23 +70,7 @@
     "not_connected": "User is not connected",
     "user_not_exist": "User does not exist",
     "account_not_verified": "Your account is not yet verified.",
-    "validation": {
-      "email": {
-        "invalid": "The entered email address is invalid",
-        "not_exist": "This email address does not exist",
-        "required": "Please enter your email address",
-        "not_found": "No user found with this email address"
-      },
-      "credentials": {
-        "invalid": "Your email address or password is invalid"
-      },
-      "password": {
-        "required": "Please enter a new password",
-        "requirements": "Password must contain at least 8 characters, an uppercase letter, a lowercase letter, a digit and a special character",
-        "no_match": "Passwords do not match",
-        "must_be_different": "New password must be different from the old one"
-      }
-    },
+
     "reset_code": {
       "sent": "A reset code has been sent to your email address",
       "error": "An error occurred while sending the reset code"
@@ -102,9 +87,29 @@
     "firstname_max": "The first name may not exceed 50 characters",
     "email_invalid": "The e-mail address entered is invalid",
     "password_contains": "The password must contain ",
-    "password_invalid": "The password entered is invalid",
+    "password_invalid": "Password must contain at least 8 characters, one uppercase, one lowercase and one number",
     "company_max": "The company name may not exceed 100 characters.",
-    "position_max": "The post cannot exceed 100 characters"
+    "position_max": "The post cannot exceed 100 characters",
+    "email": {
+      "invalid": "The entered email address is invalid",
+      "not_exist": "This email address does not exist",
+      "required": "Please enter your email address",
+      "not_found": "No user found with this email address"
+    },
+    "credentials": {
+      "invalid": "Your email address or password is invalid"
+    },
+    "password": {
+      "required": "Please enter a new password",
+      "requirements": "Password must contain at least 8 characters, an uppercase letter, a lowercase letter, a digit and a special character",
+      "no_match": "Passwords do not match",
+      "must_be_different": "New password must be different from the old one"
+    },
+    "project": {
+      "name_required": "Project name is required",
+      "url_invalid": "URL is invalid",
+      "url_empty": "URL cannot be empty"
+    }
   },
   "notifications": {
     "title": "Notifications",
@@ -118,8 +123,8 @@
     "mentioned_content": "You have been mentioned in a conversation",
     "reacted_title": "{{senderName}} reacted to your message",
     "reacted_content": "{{senderName}} reacted with {{emoji}} to your {{type}}",
-    "task_assigned_title": "New task assigned",
-    "task_assigned_content": "{{senderName}} assigned you a task",
+    "task_assigned_title": "🎉 A task has been assigned to you in {{projectName}}",
+    "task_assigned_content": "{{senderName}} appointed you responsible for the task \"{{taskText}}\".",
     "project_invitation_title": "Project invitation",
     "project_invitation_content": "{{senderName}} invited you to join a project"
   },
@@ -213,11 +218,6 @@
     "update": {
       "success": "Project updated successfully",
       "error": "An error occurred while updating the project"
-    },
-    "validation": {
-      "name_required": "Project name is required",
-      "url_invalid": "URL is invalid",
-      "url_empty": "URL cannot be empty"
     }
   },
   "tasks": {
@@ -281,7 +281,7 @@
     "apply": "Apply",
     "waiting_status": "Waiting",
     "task_assigned_title": "🎉 A task has been assigned to you in {{projectName}}",
-    "task_assigned_content": "You have just been appointed responsible for the task \"{{taskText}}\".",
+    "task_assigned_content": "{{senderName}} appointed you responsible for the task \"{{taskText}}\".",
     "people_to_invite": "People to invite",
     "profile_picture_alt": "Profile picture of",
     "time_separator": "at",
@@ -293,6 +293,7 @@
     "responsibles": "Responsibles",
     "no_member_found": "No member found",
     "no_project_found": "No project found",
+    "no_board_found": "No board found",
     "clear": "Clear",
     "search_task_placeholder": "Search for a task...",
     "photo_of": "Photo of",
@@ -343,7 +344,8 @@
     "total_label": "Total:",
     "save": {
       "success": "Timer saved successfully"
-    }
+    },
+    "update_error": "Update error:"
   },
   "templates": {
     "edit_board": "Edit this board",
@@ -367,7 +369,19 @@
     "save": {
       "success": "Template saved successfully",
       "error": "An error occurred while saving the template"
-    }
+    },
+    "available_templates": "Available Templates",
+    "community_templates": "Community",
+    "your_templates": "Yours",
+    "no_templates_available": "No templates available",
+    "create_templates_info": "Create templates first from your existing projects.",
+    "select_template_preview": "Select a template to see preview",
+    "template_preview": "Template preview",
+    "no_tasks_in_board": "No tasks in this board",
+    "share_project_template": "Share this project template with other users",
+    "share_board_template": "Share this board template with other users",
+    "you": "you",
+    "use": "Use"
   },
   "roles": {
     "owner": "Owner",
@@ -382,6 +396,7 @@
     "guest_emoji": "🙋‍♂️ Guest"
   },
   "general": {
+    "continue": "Continue",
     "description": "Description",
     "responsible": "Manager",
     "time": "Time",
@@ -409,7 +424,8 @@
     "board_lowercase": "board",
     "confirm_deletion": "Confirm deletion",
     "confirm_deletion_message": "Are you sure you want to delete your {{title}}? This action is irreversible.",
-    "confirm_delete_button": "Confirm deletion"
+    "confirm_delete_button": "Confirm deletion",
+    "language_change_error": "Error changing language:"
   },
   "profile": {
     "my_profile": "My profile",
@@ -418,6 +434,7 @@
     "company": "Company",
     "position": "Position",
     "language": "Language",
+    "updating_language": "Updating language...",
     "update_button": "Update",
     "success_title": "Success",
     "update_success": "Profile updated successfully",
@@ -522,6 +539,15 @@
     "app_description": "Generated by create next app",
     "language": "en"
   },
+  "feedback": {
+    "feedback": "Feedback",
+    "success_message": "Feedback sent successfully",
+    "subtitle": "Feel free to share your suggestions with us!",
+    "share_experience": "Share your experience",
+    "placeholder": "Your feedback...",
+    "send": "Send"
+  },
+
   "messages": {
     "conversation": "Conversation",
     "add_comment": "Add a comment",
@@ -534,9 +560,27 @@
   "boards": {
     "empty_board": "Empty board",
     "board_template": "Board template",
+    "add_board_ia": "Add board with AI",
+    "ai_modal_description": "Suggest additional relevant boards and tasks based on the project context.",
+    "ai_generating": "Generating...",
+    "ai_generate_button": "Generate with AI",
+    "ai_suggestions": "AI Suggestions",
+    "ai_toggle_all": "Check/Uncheck all",
+    "ai_adding": "Adding...",
+    "ai_accept_selection": "Accept selection",
+    "ai_uncheck_all": "Uncheck all",
+    "ai_check_all": "Check all",
+    "ai_generation_error": "Error during AI generation",
+    "ai_board_creation_error": "Board creation error",
+    "ai_prompt_project_title": "Project title:",
+    "ai_prompt_notes": "Notes:",
+    "ai_prompt_existing_tasks": "Existing tasks:",
+    "ai_prompt_no_tasks": "Existing tasks: none",
+    "ai_prompt_instruction": "Generate up to 5 new boards (task groups) and maximum 50 tasks, relevant and non-redundant, to enrich this project. Only suggest new tasks and boards, different from those already listed. Respond in structured JSON: { \"boards\": [ { \"name\": \"...\", \"tasks\": [\"...\", ...] }, ... ] }",
     "add_task_placeholder": " Add a task",
     "add_task_button": "Add a task",
     "press_enter_info": "Press enter to add a task",
+    "press_enter_info_button": "Enter",
     "save_as_template": "Save board as template",
     "delete_board": "Delete board",
     "archive_board": "Archive board",
@@ -545,9 +589,23 @@
     "tasks_plural": "Tasks",
     "task_singular": "Task",
     "project_archives": "Project archives",
-    "no_archives_available": "No archives currently available",
+    "no_archive_available": "No archives available at the moment",
     "delete_board_confirm": "Delete this board?",
     "save_changes": "Save changes"
+  },
+  "createProject": {
+    "title": "Create a project with AI",
+    "description": "Describe your project, AI will suggest relevant tasks and task groups (boards).",
+    "placeholder": "Describe your project here...",
+    "generating": "Generating...",
+    "generateButton": "Generate with AI",
+    "creating": "Creating...",
+    "createButton": "Create this project",
+    "suggestionsTitle": "AI Suggestions",
+    "projectName": "Project name",
+    "generationError": "AI generation error",
+    "projectCreationError": "Project creation error",
+    "boardCreationError": "Board creation error"
   },
   "guests": {
     "invite_users": "Invite other users",
@@ -576,11 +634,15 @@
     "cancel": "Cancel",
     "edit": "Edit",
     "send": "Send",
-    "message": "message"
+    "message": "message",
+    "enter_image_url": "Enter image URL",
+    "enter_link_url": "Enter link URL",
+    "link_error": "Error creating link"
   },
   "common": {
     "error": "An error occurred",
-    "missing_parameter": "Missing parameter"
+    "missing_parameter": "Missing parameter",
+    "cancel": "Cancel"
   },
   "project_invitation": {
     "role": {
@@ -607,5 +669,39 @@
     "update": {
       "error": "An error occurred while updating the board"
     }
+  },
+  "newProject": {
+    "type_ai_title": "AI Project",
+    "type_ai_description": "Create your project using artificial intelligence",
+    "type_template_title": "From saved template",
+    "type_template_description": "Use a predefined template to get started quickly",
+    "type_empty_title": "Empty project",
+    "type_empty_description": "Start with a completely empty project",
+    "invitation_email_required": "Email is required",
+    "invitation_email_invalid": "Invalid email format",
+    "invitation_email_duplicate": "This email is already in the list",
+    "invitation_email_placeholder": "Invite by email",
+    "invitation_add_button": "Add to list",
+    "invitation_pending_list": "Pending invitations ({{count}})",
+    "general_information": "General information",
+    "project_logo_alt": "Project logo",
+    "project_name_placeholder": "Project name",
+    "boards_count": "boards",
+    "tasks_count": "tasks",
+    "quick_links": "Quick links",
+    "link_placeholder": "https://www.example.com",
+    "add_link": "Add link",
+    "team_management": "Team management",
+    "invitation_info": "💡 Invitations will be sent after project creation",
+    "project_notes": "Project notes",
+    "project_notes_placeholder": "Add a note about the project...",
+    "template_new_task": "New task",
+    "template_project_name_placeholder": "Project name",
+    "template_board_title_placeholder": "Board title",
+    "template_task_description_placeholder": "Task description",
+    "template_delete_task_title": "Delete this task",
+    "template_delete_template": "Delete template",
+    "template_deleting": "Deleting...",
+    "template_deletion_error": "Error deleting template"
   }
 }

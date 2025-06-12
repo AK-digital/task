@@ -79,7 +79,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
                 className="w-4 h-4"
                 defaultChecked={false}
               />
-              <p>Partager ce modèle de tableau avec les autres utilisateurs</p>
+              <p>{t("templates.share_board_template")}</p>
             </div>
           </div>
           <button

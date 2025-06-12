@@ -88,7 +88,7 @@ export default function TimeTracking({
         throw new Error(response?.message || t("time_tracking.update_failed"));
       }
     } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error);
+      console.error(t("time_tracking.update_error"), error);
       setInputValue(tracker?.taskId?.text || tracker?.taskText || "");
       mutateTimeTrackings();
     }

@@ -15,10 +15,8 @@ export default function AddTemplate({ project, setAddTemplate }) {
   const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
 
-  const saveTemplateWithT = (prevState, formData) =>
-    saveTemplate(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
-    saveTemplateWithT,
+    saveTemplate,
     initialState
   );
 
@@ -28,10 +26,28 @@ export default function AddTemplate({ project, setAddTemplate }) {
     }
 
     if (state?.success === false) {
+      // Utiliser la clé de traduction côté client
+      const translatedMessage = state?.messageKey
+        ? t(state.messageKey)
+        : state?.message || t("templates.template_save_error");
+
       setPopup({
         status: "failure",
         title: t("general.error_occurred"),
-        message: state?.message || t("templates.template_save_error"),
+        message: translatedMessage,
+      });
+    }
+
+    if (state?.success === true) {
+      // Afficher un message de succès traduit
+      const successMessage = state?.messageKey
+        ? t(state.messageKey)
+        : state?.message || t("templates.template_save_success");
+
+      setPopup({
+        status: "success",
+        title: t("general.success"),
+        message: successMessage,
       });
     }
 
@@ -39,7 +55,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
     const timeout = setTimeout(() => setPopup(false), 4000);
 
     return () => clearTimeout(timeout);
-  }, [state]);
+  }, [state, t]);
 
   return (
     <Portal>
@@ -72,7 +88,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
                 className="w-4 h-4"
                 defaultChecked={false}
               />
-              <p>Partager ce modèle de projet avec les autres utilisateurs</p>
+              <p>{t("templates.share_project_template")}</p>
             </div>
           </div>
           <button
