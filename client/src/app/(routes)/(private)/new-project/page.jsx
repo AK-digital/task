@@ -6,13 +6,18 @@ import ProjectTypeSelection from "@/components/NewProject/ProjectTypeSelection";
 import IAProjectStep from "@/components/NewProject/IAProjectStep";
 import TemplateProjectStep from "@/components/NewProject/TemplateProjectStep";
 import ProjectConfigurationStep from "@/components/NewProject/ProjectConfigurationStep";
-import { saveProject, sendProjectInvitationFromWizard } from "@/actions/project";
+import {
+  saveProject,
+  sendProjectInvitationFromWizard,
+} from "@/actions/project";
 import { createBoard } from "@/actions/board";
 import { saveTask } from "@/actions/task";
 import { useCustomTemplate } from "@/api/template";
 import { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 export default function NewProject() {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedType, setSelectedType] = useState(null);
   const [projectData, setProjectData] = useState(null);
@@ -29,7 +34,7 @@ export default function NewProject() {
     } else if (currentStep === 3) {
       // Si on est à l'étape 3 et que c'est un projet vide, on retourne à l'étape 1
       // Sinon on retourne à l'étape 2
-      if (selectedType === 'empty') {
+      if (selectedType === "empty") {
         setCurrentStep(1);
         setSelectedType(null);
         setProjectData(null);
@@ -46,7 +51,7 @@ export default function NewProject() {
         setCurrentStep(1);
         setSelectedType(null);
         setProjectData(null);
-      } else if (targetStep === 2 && selectedType !== 'empty') {
+      } else if (targetStep === 2 && selectedType !== "empty") {
         setCurrentStep(2);
         setProjectData(null);
       }
@@ -55,13 +60,13 @@ export default function NewProject() {
 
   const handleTypeSelection = (type) => {
     setSelectedType(type);
-    
-    if (type === 'empty') {
+
+    if (type === "empty") {
       // Pour les projets vides, on va directement aux options (étape 3)
       setProjectData({
-        type: 'empty',
-        title: '',
-        boards: []
+        type: "empty",
+        title: "",
+        boards: [],
       });
       setCurrentStep(3);
     } else {
@@ -81,15 +86,20 @@ export default function NewProject() {
     setCreating(true);
     try {
       let projectId;
-      
+
       // Créer le projet selon le type
-      if (finalProjectData.type === 'template') {
+      if (finalProjectData.type === "template") {
         // Utiliser l'API template avec les données personnalisées
-        const res = await useCustomTemplate(finalProjectData.name, finalProjectData.boards);
+        const res = await useCustomTemplate(
+          finalProjectData.name,
+          finalProjectData.boards
+        );
         if (res?.success && res?.data?._id) {
           projectId = res.data._id;
         } else {
-          throw new Error(t("new_project.error_creating_project_from_template"));
+          throw new Error(
+            t("new_project.error_creating_project_from_template")
+          );
         }
       } else {
         // Créer un projet standard (IA ou vide)
@@ -98,22 +108,26 @@ export default function NewProject() {
         if (finalProjectData.skipDefaultBoard) {
           formData.set("skipDefaultBoard", "true");
         }
-        
+
         const projectRes = await saveProject({}, formData);
         if (projectRes.status !== "success" || !projectRes.data?._id) {
-          throw new Error(projectRes.message || t("new_project.error_creating_project"));
+          throw new Error(
+            projectRes.message || t("new_project.error_creating_project")
+          );
         }
         projectId = projectRes.data._id;
-        
+
         // Créer les boards et tâches pour les projets IA
-        if (finalProjectData.type === 'ia' && finalProjectData.boards) {
+        if (finalProjectData.type === "ia" && finalProjectData.boards) {
           for (const board of finalProjectData.boards) {
             const boardRes = await createBoard(projectId, board.name);
             if (!boardRes.success || !boardRes.data?._id) {
-              throw new Error(boardRes.message || t("new_project.error_creating_board"));
+              throw new Error(
+                boardRes.message || t("new_project.error_creating_board")
+              );
             }
             const boardId = boardRes.data._id;
-            
+
             // Créer les tâches
             for (const task of board.tasks) {
               const taskForm = new FormData();
@@ -124,48 +138,54 @@ export default function NewProject() {
           }
         }
       }
-      
+
       // Envoyer les invitations si il y en a
-      if (finalProjectData.invitations && finalProjectData.invitations.length > 0) {
+      if (
+        finalProjectData.invitations &&
+        finalProjectData.invitations.length > 0
+      ) {
         for (const invitation of finalProjectData.invitations) {
           try {
-            const result = await sendProjectInvitationFromWizard(projectId, invitation.email);
+            const result = await sendProjectInvitationFromWizard(
+              projectId,
+              invitation.email
+            );
             if (result.success) {
               // console.log(`Invitation envoyée avec succès à ${invitation.email}`);
             } else {
               // console.warn(`Erreur lors de l'envoi de l'invitation à ${invitation.email}:`, result.message);
             }
-                      } catch (inviteError) {
-              // console.warn(`Erreur lors de l'envoi de l'invitation à ${invitation.email}:`, inviteError.message);
-              // On continue même si une invitation échoue
-            }
+          } catch (inviteError) {
+            // console.warn(`Erreur lors de l'envoi de l'invitation à ${invitation.email}:`, inviteError.message);
+            // On continue même si une invitation échoue
+          }
         }
-        
+
         // Forcer la revalidation du cache des invitations pour ce projet
         mutate(`/project-invitation/${projectId}?projectId=${projectId}`);
-        
+
         // Revalider aussi les données du projet pour s'assurer que tout est à jour
         mutate(`/project/${projectId}`);
       }
-      
+
       // Mettre à jour le projet avec les options supplémentaires (logo, liens, notes)
       if (finalProjectData.note || finalProjectData.urls?.length > 0) {
         try {
           const updateFormData = new FormData();
           updateFormData.set("project-id", projectId);
           updateFormData.set("project-name", finalProjectData.name);
-          
+
           if (finalProjectData.note) {
             updateFormData.set("note", finalProjectData.note);
           }
-          
+
           if (finalProjectData.urls?.length > 0) {
-            finalProjectData.urls.forEach(link => {
+            finalProjectData.urls.forEach((link) => {
               updateFormData.append("url", link.url);
               updateFormData.append("icon", link.icon);
             });
           }
-          
+
           const { updateProject } = await import("@/actions/project");
           await updateProject({}, updateFormData);
         } catch (updateError) {
@@ -173,10 +193,9 @@ export default function NewProject() {
           // On continue même si la mise à jour échoue
         }
       }
-      
+
       // Rediriger vers le projet créé
       router.push(`/projects/${projectId}`);
-      
     } catch (error) {
       // console.error("Erreur lors de la création du projet:", error);
       setCreating(false);
@@ -187,11 +206,11 @@ export default function NewProject() {
     if (currentStep === 1) {
       return t("new_project.create_new_project");
     }
-    
+
     if (currentStep === 3) {
       return t("new_project.project_options");
     }
-    
+
     switch (selectedType) {
       case "ia":
         return t("new_project.create_with_ia");
@@ -211,7 +230,7 @@ export default function NewProject() {
 
     if (currentStep === 3) {
       return (
-        <ProjectConfigurationStep 
+        <ProjectConfigurationStep
           projectData={projectData}
           onProjectCreate={handleProjectCreate}
           creating={creating}
@@ -237,7 +256,7 @@ export default function NewProject() {
           {/* Header avec bouton retour et titre */}
           <div className="w-full px-[clamp(30px,5%,5%)] py-8 pb-4">
             <div className="flex items-center justify-between gap-4 relative">
-              <button 
+              <button
                 className="flex items-center gap-2 bg-transparent border-none text-accent-color text-base cursor-pointer p-2 rounded transition-colors duration-200 hover:bg-secondary"
                 onClick={handleGoBack}
                 type="button"
@@ -245,8 +264,10 @@ export default function NewProject() {
                 <ArrowLeft size={20} />
                 {t("new_project.back")}
               </button>
-              <h1 className="text-2xl font-semibold m-0 text-text-dark-color absolute left-1/2 transform -translate-x-1/2 text-center">{getPageTitle()}</h1>
-              
+              <h1 className="text-2xl font-semibold m-0 text-text-dark-color absolute left-1/2 transform -translate-x-1/2 text-center">
+                {getPageTitle()}
+              </h1>
+
               <div className="flex items-center gap-8">
                 {/* Bouton créer le projet (seulement à l'étape 3) */}
                 {currentStep === 3 && (
@@ -254,29 +275,51 @@ export default function NewProject() {
                     className="bg-accent-color text-white border-none rounded-large py-3 px-6 text-medium font-normal cursor-pointer transition-all duration-200 tracking-normal whitespace-nowrap hover:bg-accent-color-hover hover:shadow-[0_5px_20px_rgba(151,112,69,0.15)] hover:-translate-y-px disabled:bg-accent-color-hover disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none"
                     onClick={() => {
                       // Déclencher la création depuis le composant ProjectConfigurationStep
-                      const event = new CustomEvent('createProject');
+                      const event = new CustomEvent("createProject");
                       window.dispatchEvent(event);
                     }}
                     disabled={creating}
                   >
-                    {creating ? t("new_project.creating") : t("new_project.create_project")}
+                    {creating
+                      ? t("new_project.creating")
+                      : t("new_project.create_project")}
                   </button>
                 )}
               </div>
             </div>
-            
+
             {/* Indicateur d'étapes sous le titre */}
             <div className="flex items-center justify-center gap-2 mt-4">
-              <span 
-                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 1 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'} ${currentStep > 1 ? 'hover:-translate-y-px' : ''}`}
+              <span
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${
+                  currentStep >= 1
+                    ? "bg-accent-color text-white after:bg-accent-color"
+                    : "bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover"
+                } ${currentStep > 1 ? "hover:-translate-y-px" : ""}`}
                 onClick={() => currentStep > 1 && handleStepClick(1)}
               ></span>
-              <span 
-                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 2 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'} ${currentStep > 2 && selectedType !== 'empty' ? 'hover:-translate-y-px' : ''}`}
-                onClick={() => currentStep > 2 && selectedType !== 'empty' && handleStepClick(2)}
+              <span
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${
+                  currentStep >= 2
+                    ? "bg-accent-color text-white after:bg-accent-color"
+                    : "bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover"
+                } ${
+                  currentStep > 2 && selectedType !== "empty"
+                    ? "hover:-translate-y-px"
+                    : ""
+                }`}
+                onClick={() =>
+                  currentStep > 2 &&
+                  selectedType !== "empty" &&
+                  handleStepClick(2)
+                }
               ></span>
-              <span 
-                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${currentStep >= 3 ? 'bg-accent-color text-white after:bg-accent-color' : 'bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover'}`}
+              <span
+                className={`flex items-center justify-center w-[60px] h-2 rounded-md transition-all duration-200 ease-in-out relative cursor-pointer after:content-[''] after:absolute after:w-5 after:h-0.5 after:left-full after:top-1/2 after:-translate-y-1/2 after:-z-10 last:after:hidden ${
+                  currentStep >= 3
+                    ? "bg-accent-color text-white after:bg-accent-color"
+                    : "bg-secondary text-text-color-muted after:bg-border-color hover:bg-accent-color-hover"
+                }`}
               ></span>
             </div>
           </div>

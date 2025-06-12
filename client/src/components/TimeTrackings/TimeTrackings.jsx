@@ -75,7 +75,7 @@ export default function TimeTrackings({ searchParams }) {
     <div className="h-full">
       <div className="flex items-center gap-6">
         <h1 className="mb-[inherit] min-w-fit select-none">
-          {t("time_tracking.time_tracking")}
+          {t("navigation.time_tracking")}
         </h1>
         {/* Filters */}
         {!projectsLoading && (
