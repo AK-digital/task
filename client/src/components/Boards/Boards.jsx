@@ -22,7 +22,7 @@ import AddBoard from "@/components/Boards/AddBoard";
 import { mutate } from "swr";
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { SortableBoard } from "./SortableBoard"; // Nous allons créer ce composant
 import { updateBoardOrder } from "@/api/board"; // Vous devrez créer cette fonction API
 import Task from "../Task/Task";
@@ -49,9 +49,6 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   // Transformer les résultats en un objet avec les tâches par board
   const initialTasksData = useMemo(() => {
-    if (!tasksData || !Array.isArray(tasksData)) {
-      return {};
-    }
     return tasksData.reduce((acc, task) => {
       const boardId = task.boardId?._id.toString();
       if (!acc[boardId]) acc[boardId] = [];
@@ -66,7 +63,7 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   // Mettre à jour l'état local quand les données tasksData changent
   useEffect(() => {
-    if (tasksData && Array.isArray(tasksData) && tasksData.length > 0) {
+    if (tasksData?.length > 0) {
       // Mettre à jour l'état local avec les données provenant de SWR
       const updatedTasksByBoard = tasksData.reduce((acc, task) => {
         const boardId = task.boardId.toString();
@@ -88,27 +85,21 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   useEffect(() => {
     const handleTaskUpdate = async () => {
-      mutateTasks();
+      await mutateTasks();
     };
 
     const handleBoardUpdate = async () => {
       mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
     };
 
-    const handleTemplateUpdate = async () => {
-      mutate(`/board-template`);
-    };
-
     socket.on("task updated", handleTaskUpdate);
     socket.on("board updated", handleBoardUpdate);
-    socket.on("board templates updated", handleTemplateUpdate);
 
     return () => {
       socket.off("task updated", handleTaskUpdate);
       socket.off("board updated", handleBoardUpdate);
-      socket.off("board templates updated", handleTemplateUpdate);
     };
-  }, [mutateTasks, mutate, project?._id, archive]);
+  }, [socket, project, archive]);
 
   useEffect(() => {
     if (initialTasksData) {

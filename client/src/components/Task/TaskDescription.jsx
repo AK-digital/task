@@ -7,18 +7,16 @@ import { PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
 import useSWR, { mutate } from "swr";
 import { getDrafts } from "@/api/draft";
-import { useUserRole } from "@/app/hooks/useUserRole";
+import { useUserRole } from "../../../hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import NoPicture from "../User/NoPicture";
 
 import Reactions from "../Reactions/Reactions";
 import { isNotEmpty } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
-import { useProjectContext } from "@/context/ProjectContext";
 
 export default function TaskDescription({ project, task, uid }) {
   const { user } = useContext(AuthContext);
-  const { mutateTasks } = useProjectContext();
   const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
   const { data: draft, mutate: mutateDraft } = useSWR(
     `/draft?projectId=${project?._id}&taskId=${task?._id}&type=description`,
@@ -52,12 +50,6 @@ export default function TaskDescription({ project, task, uid }) {
       setIsEditing(false);
     }
   }, [draft]);
-
-  useEffect(() => {
-    if (!draft?.success && !isEditing) {
-      setDescription(task?.description?.text);
-    }
-  }, [task?.description?.text, draft?.success, isEditing]);
 
   const handleEditDescription = () => {
     if (!isAuthorized) return;
@@ -97,7 +89,7 @@ export default function TaskDescription({ project, task, uid }) {
 
     // Update description for every guests
     socket.emit("update task", project?._id);
-    await mutateTasks();
+    await mutate(`/task?projectId=${project?._id}&archived=false`);
   };
 
   return (

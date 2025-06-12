@@ -1,8 +1,8 @@
 import { saveBoardTemplate } from "@/actions/boardTemplate";
+import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";
-import { useActionState, useEffect, useState } from "react";
-import socket from "@/utils/socket";
-import { mutate } from "swr";
+import { useActionState, useContext, useEffect, useState } from "react";
+import Portal from "../Portal/Portal";
 
 const initialState = {
   success: null,
@@ -21,8 +21,6 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   useEffect(() => {
     if (state?.success) {
       setAddTemplate(false);
-      mutate(`/board-template`);
-      socket.emit("update board templates", project?._id);
     }
 
     if (state?.success === false) {
@@ -42,8 +40,8 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   }, [state]);
 
   return (
-    <>
-      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 w-[400px] bg-secondary p-6 rounded-lg shadow-medium">
+    <Portal>
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 bg-secondary p-6 rounded-lg shadow-medium">
         <div className="text-center text-large text-text-dark-color">
           <span>Enregistrer ce tableau comme modèle</span>
         </div>
@@ -62,13 +60,26 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
             defaultValue={board?._id}
             hidden
           />
-          <input
-            type="text"
-            id="template-name"
-            name="template-name"
-            placeholder="Nom du modèle"
-            className="border-none bg-third border border-third w-full p-2 text-text-color-muted font-medium text-center transition-all duration-150 ease-linear focus:outline-none focus:border-primary focus:shadow-small"
-          />
+          <div className="flex items-center justify-center flex-col gap-2">
+            <input
+              type="text"
+              id="template-name"
+              name="template-name"
+              placeholder="Nom du modèle"
+              required
+              className="border-none bg-third border border-third w-full p-2 text-text-color-muted font-medium text-center transition-all duration-150 ease-linear focus:outline-none focus:border-primary focus:shadow-small"
+            />
+            <div className="flex items-center justify-center gap-2">
+              <input
+                type="checkbox"
+                id="template-private"
+                name="template-private"
+                className="w-4 h-4"
+                defaultChecked={false}
+              />
+              <p>Partager ce modèle de tableau avec les autres utilisateurs</p>
+            </div>
+          </div>
           <button
             className="font-bricolage w-full p-2 rounded-sm text-medium"
             disabled={pending}
@@ -78,10 +89,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
           </button>
         </form>
       </div>
-      <div
-        className="modal-layout"
-        onClick={(e) => setAddTemplate(false)}
-      ></div>
+      <div className="modal-layout" onClick={(e) => setAddTemplate(false)}></div>
       {popup && (
         <PopupMessage
           status={popup.status}
@@ -89,6 +97,6 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
           message={popup.message}
         />
       )}
-    </>
+    </Portal>
   );
 }

@@ -28,30 +28,18 @@ export default function AuthProvider({ children }) {
   }, [data, router]);
 
   useEffect(() => {
-    const handleLoggedIn = (data) => {
+    socket.on("logged in", (data) => {
       setUser(data);
-    };
+    });
 
-    const handleProjectUpdated = () => {
+    socket.on("updated-project-role", () => {
       revalidatePage();
-    };
-
-    const handleMemberRevoked = (revokedUserId) => {
-      if (revokedUserId === uid) {
-        router.push("/projects");
-      }
-    };
-
-    socket.on("logged in", handleLoggedIn);
-    socket.on("project-updated", handleProjectUpdated);
-    socket.on("member-revoked", handleMemberRevoked);
+    });
 
     return () => {
-      socket.off("logged in", handleLoggedIn);
-      socket.off("project-updated", handleProjectUpdated);
-      socket.off("member-revoked", handleMemberRevoked);
+      socket.off("logged in");
     };
-  }, [uid, router]);
+  }, [socket]);
 
   // Returns to auth page
   if (error) {

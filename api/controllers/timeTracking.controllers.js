@@ -5,93 +5,57 @@ import TimeTrackingModel from "../models/TimeTracking.model.js";
 import moment from "moment";
 
 export async function saveTimeTracking(req, res, next) {
-  try {
-    const authUser = res.locals.user;
-    const { taskId, startTime, endTime } = req.body;
+  const authUser = res.locals.user;
+  const { taskId, startTime, endTime } = req.body;
 
-    if (!taskId || !startTime || !endTime) {
-      return res.status(400).send({
-        success: false,
-        message: "Paramètres manquants",
-      });
-    }
-
-    // Validation des dates
-    const startMoment = moment.utc(startTime);
-    const endMoment = moment.utc(endTime);
-
-    if (!startMoment.isValid()) {
-      return res.status(400).send({
-        success: false,
-        message: "Format de date de début invalide",
-      });
-    }
-
-    if (!endMoment.isValid()) {
-      return res.status(400).send({
-        success: false,
-        message: "Format de date de fin invalide",
-      });
-    }
-
-    if (endMoment.isBefore(startMoment)) {
-      return res.status(400).send({
-        success: false,
-        message: "La date de fin doit être postérieure à la date de début",
-      });
-    }
-
-    const task = await TaskModel.findById({ _id: taskId });
-
-    if (!task) {
-      return res.status(404).send({
-        success: false,
-        message: "Aucune tâche trouvée",
-      });
-    }
-
-    // Calcul correct de la durée
-    const duration = endMoment.diff(startMoment);
-
-    const newTimeTracking = new TimeTrackingModel({
-      userId: authUser._id,
-      projectId: req.query.projectId,
-      taskId: taskId,
-      taskText: task.text,
-      startTime: startMoment.subtract(2, "hours").toDate(),
-      endTime: endMoment.subtract(2, "hours").toDate(),
-      duration: duration,
-    });
-
-    await newTimeTracking.save();
-
-    await TaskModel.findByIdAndUpdate(
-      { _id: taskId },
-      {
-        $addToSet: { timeTrackings: newTimeTracking?._id },
-      },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
-
-    const populatedTimeTracking = await TimeTrackingModel.findById({
-      _id: newTimeTracking._id,
-    }).populate("userId", "_id firstName lastName picture");
-
-    return res.status(200).send({
-      success: true,
-      message: "Le temps de suivi a été enregistré",
-      data: populatedTimeTracking,
-    });
-  } catch (err) {
-    console.error("Erreur dans saveTimeTracking:", err);
-    return res.status(500).send({
+  if (!taskId || !startTime || !endTime) {
+    return res.status(400).send({
       success: false,
-      message: err.message || "Une erreur inattendue est survenue",
+      message: "Paramètres manquants",
     });
   }
+
+  const task = await TaskModel.findById({ _id: taskId });
+
+  if (!task) {
+    return res.status(404).send({
+      success: false,
+      message: "Aucune tâche trouvée",
+    });
+  }
+
+  const newTimeTracking = new TimeTrackingModel({
+    userId: authUser._id,
+    projectId: req.query.projectId,
+    taskId: taskId,
+    taskText: task.text,
+    startTime: moment.utc(startTime).subtract(2, "hours").format(),
+    endTime: moment.utc(endTime).subtract(2, "hours").format(),
+    duration: new Date(endTime) - new Date(startTime),
+  });
+
+  await newTimeTracking.save();
+
+  await TaskModel.findByIdAndUpdate(
+    { _id: taskId },
+    {
+      $addToSet: { timeTrackings: newTimeTracking?._id },
+    },
+    {
+      new: true,
+      setDefaultsOnInsert: true,
+    }
+  );
+
+  const populatedTimeTracking = await TimeTrackingModel.findById({
+    _id: newTimeTracking._id,
+  }).populate("userId", "_id firstName lastName picture");
+
+  return res.status(200).send({
+    success: true,
+    message: "Le temps de suivi a été enregistré",
+    data: populatedTimeTracking,
+  });
 }
 
 export async function getTimeTrackings(req, res, next) {

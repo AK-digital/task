@@ -80,6 +80,52 @@ export async function getPriorityByProject(req, res) {
   }
 }
 
+export async function getPrioritiesByProjects(req, res) {
+  try {
+    const authUser = res.locals.user;
+
+    const tasks = await TaskModel.find({
+      responsibles: authUser?._id,
+    });
+
+    if (!tasks) {
+      return res.status(404).send({
+        success: false,
+        message: "Tasks not found",
+        data: [],
+      });
+    }
+
+    const projectsIds = [
+      ...new Set(tasks?.map((task) => task?.projectId?._id)),
+    ];
+
+    const priorities = await PriorityModel.find({
+      projectId: { $in: projectsIds },
+    });
+
+    if (!priorities.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "Priorities not found",
+        data: [],
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Priorities retrieved successfully",
+      data: priorities,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Internal server error",
+    });
+  }
+}
+
 export async function updatePriority(req, res) {
   try {
     const { name, color } = req.body;

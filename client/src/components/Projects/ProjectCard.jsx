@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import { deleteFavorite, saveFavorite } from "@/api/favorite";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { mutate } from "swr";
 
@@ -20,15 +20,10 @@ export default function ProjectCard({
   const [isFavorite, setIsFavorite] = useState(hasFav);
   const isDefaultProject = isDefault || false;
 
-  const [statuses, setStatuses] = useState([]);
-  const [totalTasks, setTotalTasks] = useState(0);
-  const [totalBoards, setTotalBoards] = useState(0);
+  const statuses = project?.statuses || [];
 
-  useEffect(() => {
-    setStatuses(project?.statuses || []);
-    setTotalTasks(project?.tasksCount || 0);
-    setTotalBoards(project?.boardsCount || 0);
-  }, [project]);
+  const totalTasks = project?.tasksCount || 0;
+  const totalBoards = project?.boardsCount || 0;
 
   const members = project?.members || [];
 
@@ -75,11 +70,7 @@ export default function ProjectCard({
   }
 
   return (
-    <div
-      key={projectId}
-      data-default={isDefaultProject}
-      className="projectWrapper_ProjectCard relative flex flex-col max-w-[290px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl overflow-visible transition-all duration-200 ease-in-out cursor-pointer no-underline hover:-translate-y-0.5"
-    >
+    <div key={projectId} data-default={isDefaultProject} className="projectWrapper_ProjectCard relative flex flex-col max-w-[290px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl overflow-visible transition-all duration-200 ease-in-out cursor-pointer no-underline hover:-translate-y-0.5">
       <div className="starWrapper_ProjectCard relative top-px left-0 bg-secondary w-40 h-[30px] rounded-tl-2xl rounded-tr-0 rounded-bl-0 rounded-br-0 [clip-path:path('M_0_0_L_128_0_C_144_2_136_24,_160_34_L_0_34_Z')]">
         <Star
           size={18}
@@ -125,12 +116,7 @@ export default function ProjectCard({
               </div>
             )}
             <div className=" text-xl mt-1.5 text-text-darker-color">
-              <span
-                title={name}
-                className="whitespace-nowrap overflow-hidden text-ellipsis w-[200px] inline-block"
-              >
-                {name}
-              </span>
+              <span title={name} className="whitespace-nowrap overflow-hidden text-ellipsis w-[200px] inline-block">{name}</span>
             </div>
           </div>
 

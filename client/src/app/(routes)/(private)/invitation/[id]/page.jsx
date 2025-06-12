@@ -1,14 +1,12 @@
 "use client";
 import { acceptProjectInvitation } from "@/actions/project";
 import socket from "@/utils/socket";
-import { AuthContext } from "@/context/auth";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 
 export default function Invitation() {
   const { id } = useParams();
   const router = useRouter();
-  const { uid } = useContext(AuthContext);
 
   useEffect(() => {
     const acceptInvitation = async () => {
@@ -27,12 +25,7 @@ export default function Invitation() {
           router.push("/projects");
         } else {
           const project = response?.data;
-
-          if (uid) {
-            socket.emit("refresh-project-rooms", uid);
-          }
-
-          socket.emit("update-project-invitation", project?._id);
+          socket.emit("accept project invitation", project?._id);
           router.push(`/projects/${project?._id}`);
         }
       } catch (err) {
@@ -42,7 +35,7 @@ export default function Invitation() {
     };
 
     acceptInvitation();
-  }, [id, router, uid]);
+  }, [id, router]);
 
   return <main></main>;
 }
