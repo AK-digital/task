@@ -18,22 +18,15 @@ export async function createBoard(projectId, title, color = "#2d7ff9") {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(
-        response?.message ||
-          "Une erreur est survenue lors de la création du tableau"
-      );
+      throw new Error(response?.message || "board.create.error");
     }
 
     return response;
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la création du tableau"
-    );
+    console.log(err.message || "board.create.error");
     return {
       success: false,
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la création du tableau",
+      message: err.message || "board.create.error",
     };
   }
 }
@@ -55,22 +48,15 @@ export async function updateBoard(boardId, projectId, color, title) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(
-        response?.message ||
-          "Une erreur est survenue lors de la mise à jour du tableau"
-      );
+      throw new Error(response?.message || "board.update.error");
     }
 
     return response;
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la mise à jour du tableau"
-    );
+    console.log(err.message || "board.update.error");
     return {
       success: false,
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la mise à jour du tableau",
+      message: err.message || "board.update.error",
     };
   }
 }

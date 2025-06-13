@@ -5,10 +5,12 @@ import Image from "next/image";
 import moment from "moment";
 import TaskDescription from "./TaskDescription";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import Portal from "../Portal/Portal";
 moment.locale("fr");
 
 export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   const containerRef = useRef(null);
   const resizerRef = useRef(null);
@@ -111,18 +113,23 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
         <div className="flex flex-col gap-2 mb-6">
           <p className="text-large font-medium">{task?.text}</p>
           <span className="flex items-center gap-1 text-small text-text-color-muted select-none">
-            Par{" "}
+            {t("tasks.by")}{" "}
             <Image
               src={task?.author?.picture || "/default-pfp.webp"}
               width={20}
               height={20}
-              alt={`Photo de profil de ${task?.author?.firstName}`}
+              alt={`${t("general.profile_picture_alt")} ${
+                task?.author?.firstName
+              }`}
+              style={{
+                borderRadius: "50%",
+              }}
               className="rounded-full max-h-[20px]"
             />{" "}
             {task?.author
               ? task?.author?.firstName + " " + task?.author?.lastName
-              : "Ancien utilisateur"}{" "}
-            le {moment(task?.createdAt).format("DD/MM/YYYY")}
+              : t("tasks.former_user")}{" "}
+            {t("tasks.on")} {moment(task?.createdAt).format("DD/MM/YYYY")}
           </span>
         </div>
         <div className="flex flex-col gap-3">

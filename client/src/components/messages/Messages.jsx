@@ -9,9 +9,11 @@ import { useUserRole } from "../../../hooks/useUserRole";
 import { useMessages } from "../../../hooks/useMessages";
 import { useDrafts } from "../../../hooks/useDrafts";
 import MessagesSkeleton from "./MessagesSkeleton";
+import { useTranslation } from "react-i18next";
 import PendingMessage from "./PendingMessage";
 
 export default function Messages({ task, project, mutateTasks }) {
+  const { t } = useTranslation();
   const { draft, mutateDraft } = useDrafts(project?._id, task?._id, "message");
   const { messages, messageLoading, mutate } = useMessages(
     project?._id,
@@ -60,7 +62,7 @@ export default function Messages({ task, project, mutateTasks }) {
   return (
     <div className="flex flex-col gap-[15px]">
       <span className="flex items-center gap-2 text-large text-text-dark-color font-medium select-none [&_svg]:text-text-color-muted">
-        <MessagesSquareIcon size={18} /> Conversation
+        <MessagesSquareIcon size={18} /> {t("messages.conversation")}
       </span>
       {/* Loading */}
       {messageLoading && <MessagesSkeleton />}
@@ -98,9 +100,9 @@ export default function Messages({ task, project, mutateTasks }) {
           data-role={isAuthorized}
         >
           {isAuthorized ? (
-            <p>Rédiger une réponse et mentionner des utilisateurs avec @</p>
+            <p>{t("messages.write_response")}</p>
           ) : (
-            <p>Impossible de rédiger un message en tant qu'invité</p>
+            <p>{t("messages.guest_cannot_write")}</p>
           )}
         </div>
       )}

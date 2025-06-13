@@ -27,6 +27,7 @@ import { SortableBoard } from "./SortableBoard"; // Nous allons créer ce compos
 import { updateBoardOrder } from "@/api/board"; // Vous devrez créer cette fonction API
 import Task from "../Task/Task";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useTranslation } from "react-i18next";
 
 const displayedElts = {
   isCheckbox: true,
@@ -42,6 +43,7 @@ const displayedElts = {
 };
 
 export default function Boards({ boards: initialBoards, tasksData }) {
+  const { t } = useTranslation();
   const { project, mutateTasks, archive } = useProjectContext();
   const router = useRouter();
   const [selectedTasks, setSelectedTasks] = useState([]);
@@ -348,12 +350,12 @@ export default function Boards({ boards: initialBoards, tasksData }) {
             >
               <ArrowLeftCircle size={32} />
             </div>
-            <span>Archives du projet</span>
+            <span>{t("boards.project_archives")}</span>
           </div>
 
           {Object.values(tasks).flat()?.length === 0 && (
             <div className="select-none">
-              <p>Aucune archive disponible actuellement</p>
+              <p>{t("boards.no_archive_available")}</p>
             </div>
           )}
         </>

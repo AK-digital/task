@@ -1,8 +1,8 @@
 import { saveBoardTemplate } from "@/actions/boardTemplate";
-import { AuthContext } from "@/context/auth";
 import PopupMessage from "@/layouts/PopupMessage";
-import { useActionState, useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Portal from "../Portal/Portal";
+import { useActionState, useEffect, useState } from "react";
 
 const initialState = {
   success: null,
@@ -12,7 +12,9 @@ const initialState = {
 };
 
 export default function AddBoardTemplate({ project, board, setAddTemplate }) {
+  const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
+
   const [state, formAction, pending] = useActionState(
     saveBoardTemplate,
     initialState
@@ -20,16 +22,19 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
 
   useEffect(() => {
     if (state?.success) {
+      setPopup({
+        status: "success",
+        title: t("general.success"),
+        message: t("board_template.create.success"),
+      });
       setAddTemplate(false);
     }
 
     if (state?.success === false) {
       setPopup({
         status: "failure",
-        title: "Une erreur s'est produite",
-        message:
-          state?.message ||
-          "Une erreur s'est produite lors de l'enregistrement du template",
+        title: t("general.error_occurred"),
+        message: t(state?.message || "board_template.create.error"),
       });
     }
 
@@ -37,13 +42,13 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
     const timeout = setTimeout(() => setPopup(false), 4000);
 
     return () => clearTimeout(timeout);
-  }, [state]);
+  }, [state, t]);
 
   return (
     <Portal>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 bg-secondary p-6 rounded-lg shadow-medium">
         <div className="text-center text-large text-text-dark-color">
-          <span>Enregistrer ce tableau comme modèle</span>
+          <span>{t("templates.save_board_as_template")}</span>
         </div>
         <form action={formAction} className="flex flex-col gap-3">
           <input
@@ -65,7 +70,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
               type="text"
               id="template-name"
               name="template-name"
-              placeholder="Nom du modèle"
+              placeholder={t("templates.template_name")}
               required
               className="border-none bg-third border border-third w-full p-2 text-text-color-muted font-medium text-center transition-all duration-150 ease-linear focus:outline-none focus:border-primary focus:shadow-small"
             />
@@ -77,7 +82,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
                 className="w-4 h-4"
                 defaultChecked={false}
               />
-              <p>Partager ce modèle de tableau avec les autres utilisateurs</p>
+              <p>{t("templates.share_board_template")}</p>
             </div>
           </div>
           <button
@@ -85,11 +90,14 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
             disabled={pending}
             data-disabled={pending}
           >
-            Sauvegarder
+            {t("templates.save_button")}
           </button>
         </form>
       </div>
-      <div className="modal-layout" onClick={(e) => setAddTemplate(false)}></div>
+      <div
+        className="modal-layout"
+        onClick={(e) => setAddTemplate(false)}
+      ></div>
       {popup && (
         <PopupMessage
           status={popup.status}

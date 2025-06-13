@@ -9,6 +9,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { TaskPending } from "../Task/TaskPending";
 import Tasks from "../tasks/Tasks";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useTranslation } from "react-i18next";
 import { isNotEmpty } from "@/utils/utils";
 
 const initialState = {
@@ -27,6 +28,7 @@ export default function Board({
   setSelectedTasks,
   isOverlay = false, // Nouvelle prop pour indiquer si le board est dans un DragOverlay
 }) {
+  const { t } = useTranslation();
   const { project, mutateTasks, archive } = useProjectContext();
 
   const { setNodeRef } = useDroppable({
@@ -145,7 +147,7 @@ export default function Board({
                 type="text"
                 name="new-task"
                 id="new-task"
-                placeholder=" Ajouter une tâche"
+                placeholder={t("boards.add_task_placeholder")}
                 autoComplete="off"
                 minLength={2}
                 maxLength={255}
@@ -161,16 +163,17 @@ export default function Board({
                 className="font-bricolage border-none bg-inherit py-1.5 px-1 text-normal"
               />
               <button type="submit" hidden className="font-bricolage">
-                Ajouter une tâche
+                {t("boards.add_task_button")}
               </button>
             </form>
           </div>
           {isWritting && (
             <div className="absolute mt-1 ml-[25px] text-text-color-muted text-small">
               <p>
-                Appuyer sur{" "}
-                <span className="text-accent-color-light">entrée</span> pour
-                ajouter une tâche
+                {t("boards.press_enter_info")}
+                <span className="text-accent-color-light">
+                  {t("boards.press_enter_info_button")}
+                </span>
               </p>
             </div>
           )}

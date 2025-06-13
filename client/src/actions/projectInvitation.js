@@ -1,6 +1,7 @@
 "use server";
 
 import { useAuthFetch } from "@/utils/api";
+import { revalidateTag } from "next/cache";
 
 export async function updateProjectInvitationRole(prevState, formData) {
   try {
@@ -15,28 +16,23 @@ export async function updateProjectInvitationRole(prevState, formData) {
       "application/json",
       { role, email }
     );
+
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || "Une erreur s'est produite");
+      throw new Error(response?.message);
     }
+
+    revalidateTag("project");
 
     return {
       status: "success",
-      message:
-        response?.message || "Rôle de l'utilisateur mis à jour avec succès",
+      message: "project_invitation.role.update.success",
     };
   } catch (err) {
-    console.log(
-      err?.message ||
-        "Une erreur s'est produite lors de la mise à jour du rôle de l'utilisateur"
-    );
-
     return {
       status: "failure",
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de la mise à jour du rôle de l'utilisateur",
+      message: err.message || "project_invitation.role.update.error",
     };
   }
 }
@@ -51,28 +47,23 @@ export async function deleteProjectInvitation(prevState, formData) {
       "DELETE",
       "application/json"
     );
+
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || "Une erreur s'est produite");
+      throw new Error(response?.message);
     }
+
+    revalidateTag("project");
 
     return {
       status: "success",
-      message:
-        response?.message || "Invitation de projet supprimée avec succès",
+      message: "project_invitation.delete.success",
     };
   } catch (err) {
-    console.log(
-      err?.message ||
-        "Une erreur s'est produite lors de la suppression de l'invitation de projet"
-    );
-
     return {
       status: "failure",
-      message:
-        err?.message ||
-        "Une erreur s'est produite lors de la suppression de l'invitation de projet",
+      message: err.message || "project_invitation.delete.error",
     };
   }
 }

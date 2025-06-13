@@ -1,8 +1,9 @@
 "use client";
 import { saveProject } from "@/actions/project";
-import {  X } from "lucide-react";
+import { X } from "lucide-react";
 import { useActionState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -17,8 +18,11 @@ export default function CreateProject({
   isCreating,
   setIsCreating,
 }) {
+  const { t } = useTranslation();
+  const saveProjectAction = (prevState, formData) =>
+    saveProject(prevState, formData);
   const [state, formAction, pending] = useActionState(
-    saveProject,
+    saveProjectAction,
     initialState
   );
   const formRef = useRef(null);
@@ -31,8 +35,14 @@ export default function CreateProject({
       router.refresh();
       // Correction de l'URL de redirection
       router.push(`/projects/${state.data._id}/`);
+    } else if (state?.status === "failure" && state?.message) {
+      // Afficher le message d'erreur traduit
+      const errorMessage = state.message?.startsWith?.("project.")
+        ? t(state.message)
+        : state.message;
+      console.error("Project creation error:", errorMessage);
     }
-  }, [state, router]);
+  }, [state, router, t]);
 
   useEffect(() => {
     if (isCreating && inputRef.current) {
@@ -53,13 +63,19 @@ export default function CreateProject({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData(e.target);
 
     try {
-      const response = await saveProject(formData);
+      const response = await saveProject({}, formData);
 
-      if (response.success) {
+      if (response.status === "success") {
         // Appeler la fonction de callback avec le nouveau projet
         onProjectCreated(response.data);
+      } else if (response.message) {
+        const errorMessage = response.message?.startsWith?.("project.")
+          ? t(response.message)
+          : response.message;
+        console.error("Project creation error:", errorMessage);
       }
     } catch (error) {
       console.error("Erreur lors de la création du projet:", error);
@@ -75,24 +91,35 @@ export default function CreateProject({
         >
           <X size={32} />
         </span>
-        <form ref={formRef} action={formAction} className="flex justify-start items-center flex-col mt-[15%]">
+        <form
+          ref={formRef}
+          action={formAction}
+          className="flex justify-start items-center flex-col mt-[15%]"
+        >
           <input
             ref={inputRef}
             type="text"
             name="project-name"
             id="project-name"
-            placeholder="Nommer votre projet"
+            placeholder={t("projects.name_your_project")}
             required
             minLength={2}
             maxLength={250}
             className="w-fit mt-2.5 h-[150px] text-[2.5rem] bg-transparent border-none text-center"
           />
           <span className="text-[0.82rem] text-text-color-muted mb-3">
-            Appuyer sur Entrée pour créer le projet
+            {t("projects.press_enter_create")}
           </span>
-          <span className="text-[0.82rem] text-text-color-muted mb-3">OU</span>
-          <button type="submit" data-disabled={pending} disabled={pending} className="py-3.5 px-[22px]">
-            Cliquer pour créer le projet
+          <span className="text-[0.82rem] text-text-color-muted mb-3">
+            {t("projects.or")}
+          </span>
+          <button
+            type="submit"
+            data-disabled={pending}
+            disabled={pending}
+            className="py-3.5 px-[22px]"
+          >
+            {t("projects.click_create")}
           </button>
         </form>
       </div>

@@ -1,11 +1,13 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TimeTrackingHeader({
   trackers,
   setFilteredTrackers,
   setSelectedTrackers,
 }) {
+  const { t } = useTranslation();
   const [projectSort, setProjectSort] = useState("");
   const [userSort, setUserSort] = useState("");
   const [dateSort, setDateSort] = useState("");
@@ -157,12 +159,12 @@ export default function TimeTrackingHeader({
       </div>
       <div className="w-full min-w-[200px] max-w-[700px]">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
-          Description
+          {t("tasks.description")}
         </span>
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
-          Projet
+          {t("tasks.project")}
         </span>
         <div className="flex flex-col">
           <ChevronUp
@@ -183,7 +185,7 @@ export default function TimeTrackingHeader({
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
-          Utilisateur
+          {t("tasks.user")}
         </span>
         <div className="flex flex-col">
           <ChevronUp
@@ -204,7 +206,7 @@ export default function TimeTrackingHeader({
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
-          Date
+          {t("tasks.date")}
         </span>
         <div className="flex flex-col">
           <ChevronUp
@@ -226,7 +228,7 @@ export default function TimeTrackingHeader({
 
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
-          Temps
+          {t("tasks.time")}
         </span>
         <div className="flex flex-col">
           <ChevronUp
@@ -247,7 +249,7 @@ export default function TimeTrackingHeader({
       </div>
       <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[120px] min-w-[120px] border-r border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
-          Facturable
+          {t("tasks.billable")}
         </span>
         <div className="flex flex-col gap-0">
           <ChevronUp

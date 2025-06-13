@@ -10,8 +10,10 @@ import TimeTracking from "./TimeTracking";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import TimeTrackingHeader from "./TimeTrackingHeader";
 import TimeTrackingsSkeletons from "./TimeTrackingsSkeletons";
+import { useTranslation } from "react-i18next";
 
 export default function TimeTrackings({ searchParams }) {
+  const { t } = useTranslation();
   const [queries, setQueries] = useState(searchParams);
   const { projects, projectsLoading } = useProjects();
   const { timeTrackings, timeTrackingsLoading, mutateTimeTrackings } =
@@ -66,13 +68,15 @@ export default function TimeTrackings({ searchParams }) {
   }
 
   function handleExport() {
-    exportTimeTracking(giveProjectsToExport(), timeTrackings);
+    exportTimeTracking(giveProjectsToExport(), timeTrackings, t);
   }
 
   return (
     <div className="h-full">
       <div className="flex items-center gap-6">
-        <h1 className="mb-[inherit] min-w-fit select-none">Suivi du temps</h1>
+        <h1 className="mb-[inherit] min-w-fit select-none">
+          {t("navigation.time_tracking")}
+        </h1>
         {/* Filters */}
         {!projectsLoading && (
           <Filters
@@ -84,7 +88,7 @@ export default function TimeTrackings({ searchParams }) {
 
         {/* Total duration */}
         <span className="font-bold select-none">
-          Temps total :{" "}
+          {t("time_tracking.total_time")} :{" "}
           {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
         </span>
 
@@ -116,7 +120,7 @@ export default function TimeTrackings({ searchParams }) {
           </>
         ) : (
           <div className="flex items-center justify-center h-full text-2xl">
-            <h2>Aucun de vos projets ne contient un suivi de temps</h2>
+            <h2>{t("time_tracking.no_tracking_message")}</h2>
           </div>
         )}
         {/* Selected time tracking list */}

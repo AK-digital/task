@@ -1,3 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 export default function ExportPdfBtn({ handleExport }) {
-  return <button onClick={handleExport}>Exporter en PDF</button>;
+  const { t } = useTranslation();
+  return (
+    <button onClick={handleExport}>{t("time_tracking.export_pdf")}</button>
+  );
 }

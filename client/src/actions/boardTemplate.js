@@ -1,6 +1,7 @@
 "use server";
 
 import { useAuthFetch } from "@/utils/api";
+import { revalidateTag } from "next/cache";
 
 export async function saveBoardTemplate(prevState, formData) {
   try {
@@ -23,23 +24,21 @@ export async function saveBoardTemplate(prevState, formData) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(
-        response?.message ||
-        "Une erreur est survenue lors de la création du modèle de tableau"
-      );
+      throw new Error(response?.message);
     }
 
-    return response;
-  } catch (err) {
-    console.error(
-      err.message ||
-      "Une erreur est survenue lors de la création du modèle de tableau"
-    );
+    revalidateTag("templates");
+
     return {
-      success: false,
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la création du modèle de tableau",
+      status: "success",
+      message: "board_template.create.success",
+      data: response.data,
+    };
+  } catch (err) {
+    console.log(err.message || "board_template.create.error");
+    return {
+      status: "failure",
+      message: err.message || "board_template.create.error",
     };
   }
 }

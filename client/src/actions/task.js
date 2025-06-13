@@ -8,7 +8,7 @@ export async function saveTask(projectId, prevState, formData) {
     const text = formData.get("new-task");
 
     if (!projectId || !boardId || !text) {
-      throw new Error("Paramètres manquants");
+      throw new Error("task.missing_parameters");
     }
 
     const res = await useAuthFetch(
@@ -21,23 +21,16 @@ export async function saveTask(projectId, prevState, formData) {
     const response = await res.json();
 
     if (!response?.success) {
-      throw new Error(
-        response?.message ||
-          "Une erreur est survenue lors de la création de la tâche"
-      );
+      throw new Error(response?.message || "task.create.error");
     }
 
     return response;
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la création de la tâche"
-    );
+    console.log(err.message || "task.create.error");
 
     return {
       success: false,
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la création de la tâche",
+      message: err.message || "task.create.error",
     };
   }
 }
@@ -64,14 +57,11 @@ export async function updateTaskStatus(taskId, projectId, statusId) {
 
     return response;
   } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la mise à jour du statut de la tâche"
-    );
+    console.log(err.message || "task.status_update.update.error");
 
     return {
       success: false,
-      message: err?.message || "Une erreur est survenue",
+      message: err?.message || "common.error",
     };
   }
 }
@@ -100,10 +90,7 @@ export async function updateTaskPriority(taskId, projectId, priorityId) {
       status: "success",
     };
   } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la récupération des projets"
-    );
+    console.log(err.message || "task.priority_update.update.error");
 
     return {
       status: "failure",

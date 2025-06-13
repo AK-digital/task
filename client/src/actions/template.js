@@ -23,20 +23,23 @@ export async function saveTemplate(prevState, formData) {
     if (!data.success) {
       return {
         success: false,
-        message: data.message || "Une erreur s'est produite",
+        message: data.message || "common.error",
+        messageKey: "common.error",
       };
     }
 
     return {
       success: true,
-      message: "Le template a été enregistré avec succès",
+      message: "template.save.success",
+      messageKey: "template.save.success",
     };
   } catch (err) {
-    console.log(err?.message || "Une erreur s'est produite");
+    console.log(err?.message || "template.save.error");
 
     return {
       success: false,
-      message: "Une erreur s'est produite lors de l'enregistrement du template",
+      message: "template.save.error",
+      messageKey: "template.save.error",
     };
   }
 }

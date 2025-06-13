@@ -15,10 +15,12 @@ import {
   UnderlineIcon,
   Undo2,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Toolbar({ editor }) {
+  const { t } = useTranslation();
   const handleAddImage = () => {
-    const url = window.prompt("URL");
+    const url = window.prompt(t("editor.enter_image_url"));
 
     if (url) {
       editor.chain().focus().setImage({ src: url }).run();
@@ -27,7 +29,7 @@ export default function Toolbar({ editor }) {
 
   const handleSetLink = () => {
     const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
+    const url = window.prompt(t("editor.enter_link_url"), previousUrl);
 
     // cancelled
     if (url === null) {
@@ -50,7 +52,7 @@ export default function Toolbar({ editor }) {
         .setLink({ href: url })
         .run();
     } catch (e) {
-      alert(e.message);
+      alert(t("editor.link_error") + ": " + e.message);
     }
   };
 

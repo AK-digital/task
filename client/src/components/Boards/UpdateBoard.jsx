@@ -1,6 +1,7 @@
 "use client";
 import { updateBoard } from "@/actions/board";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -10,14 +11,15 @@ const initialState = {
 };
 
 export default function UpdateBoard({ board, projectId }) {
+  const { t } = useTranslation();
   const [isEdit, setIsEdit] = useState(false);
   const [openColor, setOpenColor] = useState(false);
-  const [color, setColor] = useState("");
 
   const updateBoardWithProjectId = updateBoard.bind(
     null,
     board?._id,
-    projectId
+    projectId,
+    null,
   );
   const [state, formAction, pending] = useActionState(
     updateBoardWithProjectId,
@@ -28,8 +30,13 @@ export default function UpdateBoard({ board, projectId }) {
     if (state?.status === "success") {
       setIsEdit(false);
       setOpenColor(false);
+    } else if (state?.status === "failure") {
+      const errorMessage = state.message?.startsWith?.("board.")
+        ? t(state.message)
+        : state.message;
+      console.error(errorMessage || t("boards.update.error"));
     }
-  }, [state]);
+  }, [state, t]);
 
   return (
     <div data-pending={pending} className="[&>input]:max-w-max">
@@ -47,7 +54,10 @@ export default function UpdateBoard({ board, projectId }) {
                 zIndex: "2001",
               }}
             />
-            <div onClick={(e) => setIsEdit(false)} className="absolute left-0 top-0 w-full h-full z-2001"></div>
+            <div
+              onClick={(e) => setIsEdit(false)}
+              className="absolute left-0 top-0 w-full h-full z-2001"
+            ></div>
           </div>
         ) : (
           <div className="flex items-center gap-2.5">
@@ -75,7 +85,7 @@ export default function UpdateBoard({ board, projectId }) {
           </div>
         )}
         <button type="Submit" hidden>
-          Enregistrer les modifications
+          {t("boards.save_changes")}
         </button>
       </form>
     </div>

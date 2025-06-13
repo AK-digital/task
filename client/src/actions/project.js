@@ -31,9 +31,7 @@ export async function saveProject(prevState, formData) {
       data: response.data,
     };
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la création du projet"
-    );
+    console.log(err.message || "project.create.error");
     return {
       status: "failure",
       message: err.message,
@@ -53,9 +51,9 @@ export async function sendProjectInvitationToGuest(
     if (!validation) {
       return {
         status: "failure",
-        message: "Une erreur est survenue",
+        message: "common.error",
         errors: {
-          email: ["L'adresse e-mail saisie est invalide"],
+          email: ["validation.email.invalid"],
         },
       };
     }
@@ -79,23 +77,24 @@ export async function sendProjectInvitationToGuest(
 
     return {
       status: "success",
-      message: `Invitation envoyé à ${email} avec succès`,
+      message: "project_invitation.send.success",
+      email: email,
       data: response?.data,
     };
   } catch (err) {
-    console.log(err?.message || "Une erreur est survenue");
+    console.log(err?.message || "common.error");
 
     if (err?.message.includes("E11000 duplicate")) {
       return {
         status: "failure",
-        message: "Une invitation a déjà été envoyé à cet utilisateur",
+        message: "project_invitation.send.already_sent",
         errors: null,
       };
     }
 
     return {
       status: "failure",
-      message: err?.message || "Une erreur est survenue",
+      message: err?.message || "common.error",
       errors: null,
     };
   }
@@ -105,7 +104,7 @@ export async function acceptProjectInvitation(invitationId) {
   const cookie = await cookies();
   try {
     if (!invitationId) {
-      throw new Error("Paramètre manquant");
+      throw new Error("common.missing_parameter");
     }
 
     const rawData = {
@@ -120,7 +119,7 @@ export async function acceptProjectInvitation(invitationId) {
     );
 
     if (res.status === 401) {
-      throw new Error("L'utilisateur n'est pas connecté");
+      throw new Error("auth.not_connected");
     }
 
     const response = await res.json();
@@ -141,11 +140,11 @@ export async function acceptProjectInvitation(invitationId) {
 
     return response;
   } catch (err) {
-    console.log(err.message || "Une erreur est survenue");
+    console.log(err.message || "common.error");
 
     if (
-      err?.message === "L'utilisateur n'est pas connecté" ||
-      err?.message === "L'utilisateur n'existe pas"
+      err?.message === "auth.not_connected" ||
+      err?.message === "auth.user_not_exist"
     ) {
       cookie.set("invitationId", invitationId, {
         secure: true,
@@ -157,7 +156,7 @@ export async function acceptProjectInvitation(invitationId) {
 
     return {
       success: false,
-      message: err.message || "Une erreur est survenue",
+      message: err.message || "common.error",
     };
   }
 }
@@ -191,15 +190,15 @@ export async function removeGuest(projectId, prevState, formData) {
 
     return {
       status: "success",
-      message: "Cet utilisateur a été révoqué avec succès",
+      message: "project.guest.remove.success",
       guestId: guestId,
     };
   } catch (err) {
-    console.log(err.message || "Une erreur est survenue");
+    console.log(err.message || "common.error");
 
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue",
+      message: err.message || "common.error",
     };
   }
 }
@@ -215,7 +214,7 @@ export async function updateProject(prevState, formData) {
     if (!name) {
       return {
         status: "failure",
-        message: "Le nom du projet est obligatoire",
+        message: "validation.project.name_required",
       };
     }
 
@@ -233,7 +232,7 @@ export async function updateProject(prevState, formData) {
       if (!isValidUrl(urls)) {
         return {
           status: "failure",
-          message: "L'URL est invalide",
+          message: "validation.project.url_invalid",
         };
       }
     }
@@ -242,7 +241,7 @@ export async function updateProject(prevState, formData) {
       if (urls[i] === "") {
         return {
           status: "failure",
-          message: "L'URL ne peut pas être vide",
+          message: "validation.project.url_empty",
         };
       }
     }
@@ -277,13 +276,11 @@ export async function updateProject(prevState, formData) {
 
     return {
       status: "success",
-      message: "Le projet a été modifié avec succès",
+      message: "project.update.success",
       data: response.data,
     };
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la modification du projet"
-    );
+    console.log(err.message || "project.update.error");
     return {
       status: "failure",
       message: err.message,
@@ -329,22 +326,22 @@ export async function sendProjectInvitationFromWizard(projectId, email) {
 
     return {
       success: true,
-      message: `Invitation envoyée à ${email} avec succès`,
+      message: "project_invitation.send.success",
       data: response?.data,
     };
   } catch (err) {
-    console.log(err?.message || "Une erreur est survenue");
+    console.log(err?.message || "common.error");
 
     if (err?.message.includes("E11000 duplicate")) {
       return {
         success: false,
-        message: "Une invitation a déjà été envoyée à cet utilisateur",
+        message: "project_invitation.send.already_sent",
       };
     }
 
     return {
       success: false,
-      message: err?.message || "Une erreur est survenue",
+      message: err?.message || "common.error",
     };
   }
 }

@@ -4,8 +4,10 @@ import PictureForm from "@/components/Profile/PictureForm";
 import ProfileForm from "@/components/Profile/ProfileForm";
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function ProfilePage() {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const handleBack = () => {
@@ -21,7 +23,7 @@ export default function ProfilePage() {
         <ArrowLeftCircle size={32} />
       </div>
       <div className="flex flex-col items-center justify-center gap-6 h-full w-full">
-        <h1 className="select-none">Mon profil</h1>
+        <h1 className="select-none">{t("profile.my_profile")}</h1>
         <div className="bg-secondary rounded-2xl w-full p-[44px] max-w-[540px]">
           <PictureForm />
           <ProfileForm />

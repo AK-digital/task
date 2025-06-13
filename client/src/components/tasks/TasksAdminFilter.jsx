@@ -3,8 +3,10 @@ import { ChevronDown, CircleUserRound, Undo } from "lucide-react";
 import { useState } from "react";
 import DisplayPicture from "@/components/User/DisplayPicture";
 import { isNotEmpty } from "@/utils/utils";
+import { useTranslation } from "react-i18next";
 
 export default function TasksAdminFilter({ queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   const { project } = useProjectContext();
@@ -52,7 +54,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
         onClick={() => setIsOpen(!isOpen)}
       >
         <CircleUserRound size={18} />
-        <span className="flex-1 text-[15px]">Responsables</span>
+        <span className="flex-1 text-[15px]">{t("tasks.responsibles")}</span>
         {hasMembers && (
           <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {selectedMembers?.length}
@@ -75,7 +77,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                   onClick={() => handleReset()}
                 >
                   <Undo size={16} />
-                  Supprimer les filtres
+                  {t("tasks.remove_filters")}
                 </li>
                 {members.map((member) => (
                   <li
@@ -114,7 +116,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                 ))}
               </ul>
             ) : (
-              <span>Aucun membre n'a été trouvé</span>
+              <span>{t("tasks.no_member_found")}</span>
             )}
           </div>
           <div id="modal-layout-opacity" onClick={() => setIsOpen(false)}></div>

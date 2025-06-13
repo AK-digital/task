@@ -3,6 +3,7 @@ import { sendProjectInvitationToGuest } from "@/actions/project";
 import socket from "@/utils/socket";
 import { useActionState, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/auth";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -16,17 +17,15 @@ export default function GuestFormInvitation({
   setIsPopup,
   mutateProjectInvitation,
 }) {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const [value, setValue] = useState("");
-  const sendProjectInvitationToGuestWithId = sendProjectInvitationToGuest.bind(
-    null,
-    project?._id
-  );
+
   const [state, formAction, pending] = useActionState(
-    sendProjectInvitationToGuestWithId,
+    (prevState, formData) =>
+      sendProjectInvitationToGuest(project?._id, prevState, formData),
     initialState
   );
-  const errors = state?.errors;
 
   useEffect(() => {
     if (state?.status === "success") {
@@ -34,32 +33,50 @@ export default function GuestFormInvitation({
       setValue("");
       setIsPopup({
         status: state?.status,
-        title: "Invitation envoyé avec succès",
-        message: state?.message,
+        title: t("projects.invitation_sent_success"),
+        message: t(state?.message, { email: state?.email }),
       });
 
-      const message = {
-        title: `🎉 Invitation à ${project?.name} !`,
-        content: `Bonne nouvelle ! Vous avez été invité pour rejoindre le projet "${project?.name}".`,
+      const notificationData = {
+        type: "project_invitation",
+        params: {
+          projectName: project?.name,
+        },
       };
 
-      const link = "/invitation/" + state?.data?._id;
+      const link = "/invitation/" + state?.data?.invitation?._id;
 
-      socket.emit("create notification", user, value, message, link);
+      if (user?._id && state?.data?.userId) {
+        socket.emit(
+          "create notification",
+          user,
+          state?.data?.userId,
+          notificationData,
+          link
+        );
+      }
     }
 
-    if (state?.status === "failure" && state?.errors === null) {
+    if (state?.status === "failure") {
       setIsPopup({
         status: state?.status,
-        title: "Une erreur s'est produite",
-        message: state?.message,
+        title: t("projects.error_occurred_simple"),
+        message: t(state?.message),
       });
     }
 
     return () => {
       socket.off("create notification");
     };
-  }, [state]);
+  }, [
+    state,
+    t,
+    project?.name,
+    value,
+    user,
+    mutateProjectInvitation,
+    setIsPopup,
+  ]);
 
   return (
     <>
@@ -69,14 +86,20 @@ export default function GuestFormInvitation({
             type="email"
             name="email"
             id="email"
-            placeholder="Inviter par e-mail"
+            placeholder={t("projects.invite_by_email")}
             value={value}
             onChange={(e) => setValue(e.target.value)}
             className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm"
           />
-          {errors && <i>{errors?.email}</i>}
-          <button type="submit" data-disabled={pending} className="w-full rounded-sm text-medium p-2">
-            Envoyer une invitation
+          {state?.errors?.email && (
+            <i className="text-red-500 text-sm">{t(state.errors.email[0])}</i>
+          )}
+          <button
+            type="submit"
+            data-disabled={pending}
+            className="w-full rounded-sm text-medium p-2"
+          >
+            {t("projects.send_invitation")}
           </button>
         </form>
       </div>

@@ -25,6 +25,7 @@ import { mutate } from "swr";
 import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useTranslation } from "react-i18next";
 import { useTaskContext } from "@/context/TaskContext";
 import Portal from "../Portal/Portal";
 
@@ -40,6 +41,7 @@ export default function BoardHeader({
   archive,
   project,
 }) {
+  const { t } = useTranslation();
   const { openedTask } = useTaskContext();
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -109,13 +111,13 @@ export default function BoardHeader({
       authorized: isOwnerOrManager,
       function: handleAddBoardTemplate,
       icon: <Save size={16} />,
-      name: "Enregistrer le tableau comme modèle",
+      name: t("boards.save_as_template"),
     },
     {
       authorized: canArchive,
       function: handleDeleteBoard,
       icon: <Trash2 size={16} />,
-      name: "Supprimer le tableau",
+      name: t("boards.delete_board"),
       remove: true,
       deletionName: board?.title,
     },
@@ -126,14 +128,14 @@ export default function BoardHeader({
       authorized: canArchive,
       function: handleAddArchive,
       icon: <Archive size={16} />,
-      name: "Archiver le tableau",
+      name: t("boards.archive_board"),
     });
   } else {
     options.splice(1, 0, {
       authorized: canArchive,
       function: handleRestoreArchive,
       icon: <ArchiveRestore size={16} />,
-      name: "Restaurer le tableau",
+      name: t("boards.restore_board"),
     });
   }
 
@@ -150,7 +152,12 @@ export default function BoardHeader({
       title
     );
 
-    if (!response?.success) setOptimisticColor(board?.color);
+    if (!response?.success) {
+      const errorMessage = response.message?.startsWith?.("board.")
+        ? t(response.message)
+        : response.message;
+      throw new Error(errorMessage || t("boards.update.error"));
+    }
 
     socket.emit("update board", board?.projectId);
   }
@@ -167,7 +174,12 @@ export default function BoardHeader({
       value
     );
 
-    if (!response?.success) setTitle(board?.title);
+    if (!response?.success) {
+      const errorMessage = response.message?.startsWith?.("board.")
+        ? t(response.message)
+        : response.message;
+      throw new Error(errorMessage || t("boards.update.error"));
+    }
 
     socket.emit("update board", board?.projectId);
   }
@@ -235,8 +247,9 @@ export default function BoardHeader({
 
   return (
     <div
-      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${openedTask ? "z-1000" : "z-2000"
-        }`}
+      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
+        openedTask ? "z-1000" : "z-2000"
+      }`}
       // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
@@ -248,7 +261,7 @@ export default function BoardHeader({
       <div className="relative flex items-center gap-1 [&>div]:flex [&>div]:justify-center [&>div]:items-center">
         {/* Display if tasks is not empty and if there is at least 2 task */}
         {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
-          <div title="Sélectionner toutes les tâches">
+          <div title={t("boards.select_all_tasks")}>
             <input type="checkbox" name="board" onClick={handleCheckBoard} />
           </div>
         )}
@@ -317,8 +330,8 @@ export default function BoardHeader({
           <div>
             <span className="text-text-color-muted text-small font-normal">
               {tasks?.length > 1
-                ? `${tasks?.length} Tâches`
-                : `${tasks?.length} Tâche`}
+                ? `${tasks?.length} ${t("boards.tasks_plural")}`
+                : `${tasks?.length} ${t("boards.task_singular")}`}
             </span>
           </div>
         )}

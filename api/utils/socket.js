@@ -30,7 +30,7 @@ export default function socketHandler(io) {
 
     socket.on(
       "create notification",
-      async (sender, receiver, message, link) => {
+      async (sender, receiver, notificationData, link) => {
         const senderUser = await UserModel.findById({ _id: sender?._id });
 
         if (senderUser) {
@@ -47,7 +47,8 @@ export default function socketHandler(io) {
           const newNotification = new NotificationModel({
             userId: receiverUser?._id,
             senderId: senderUser?._id,
-            message: message,
+            type: notificationData.type,
+            params: notificationData.params || {},
             link: link,
           });
 

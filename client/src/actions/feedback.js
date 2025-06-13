@@ -10,9 +10,9 @@ export async function sendFeedback(note, prevState, formData) {
     if (!note) {
       return {
         success: false,
-        message: "Veuillez sélectionner une note",
+        message: "feedback.note_required",
         errors: {
-          note: "Veuillez sélectionner une note",
+          note: "feedback.note_required",
         },
       };
     }
@@ -20,9 +20,9 @@ export async function sendFeedback(note, prevState, formData) {
     if (!message) {
       return {
         success: false,
-        message: "Veuillez entrer un message",
+        message: "feedback.message_required",
         errors: {
-          message: "Veuillez entrer un message",
+          message: "feedback.message_required",
         },
       };
     }
@@ -53,22 +53,22 @@ export async function sendFeedback(note, prevState, formData) {
       };
     }
 
-    return { success: true, message: "Feedback envoyé avec succès" };
+    return { success: true, message: "feedback.success_message" };
   } catch (err) {
     if (err.message === "Missing parameters") {
       return {
         success: false,
-        message: "Veuillez sélectionner une note et entrer un message",
+        message: "feedback.missing_parameters",
         errors: {
-          note: "Veuillez sélectionner une note",
-          message: "Veuillez entrer un message",
+          note: "feedback.note_required",
+          message: "feedback.message_required",
         },
       };
     }
 
     return {
       success: false,
-      message: err.message || "Une erreur inattendue est survenue",
+      message: err.message || "feedback.unexpected_error",
     };
   }
 }

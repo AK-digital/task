@@ -2,6 +2,7 @@
 import { decryptToken, refreshToken } from "@/api/auth";
 import { revalidatePage } from "@/api/project";
 import { AuthContext } from "@/context/auth";
+import { initializeLanguageFromUser } from "@/helpers/i18n";
 import socket from "@/utils/socket";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -23,6 +24,12 @@ export default function AuthProvider({ children }) {
 
       setUid(response?.data?._id);
       setUser(response?.data);
+
+      // Initialiser la langue de l'utilisateur depuis la BD
+      if (response?.data?.language) {
+        initializeLanguageFromUser(response.data.language);
+      }
+
       socket.emit("logged in", response?.data?._id);
     }
   }, [data, router]);
@@ -30,6 +37,10 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     socket.on("logged in", (data) => {
       setUser(data);
+      // Mettre à jour la langue si elle change via socket
+      if (data?.language) {
+        initializeLanguageFromUser(data.language);
+      }
     });
 
     socket.on("updated-project-role", () => {

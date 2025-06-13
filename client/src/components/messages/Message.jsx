@@ -17,6 +17,7 @@ import { Eye } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
 import Reactions from "../Reactions/Reactions";
+import { useTranslation } from "react-i18next";
 
 export default function Message({
   task,
@@ -25,16 +26,20 @@ export default function Message({
   mutateMessage,
   mutateTasks,
 }) {
+  const { t, i18n } = useTranslation();
   const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
   const [showPeopleRead, setShowPeopleRead] = useState(false);
 
-  moment.locale("fr");
+  moment.locale(i18n.language || "fr");
   const author = message?.author;
   const date = moment(message?.createdAt);
-  const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
+  const formattedDate =
+    i18n.language === "en"
+      ? date.format("MM/DD/YYYY [at] HH:mm")
+      : date.format("DD/MM/YYYY [à] HH:mm");
 
   useEffect(() => {
     async function handleReadBy() {
@@ -95,7 +100,10 @@ export default function Message({
                     src={author?.picture || "/default-pfp.webp"}
                     width={35}
                     height={35}
-                    alt={`Photo de profil de ${author?.firstName}`}
+                    alt={`${t("general.profile_picture_alt")} ${
+                      author?.firstName
+                    }`}
+                    style={{ borderRadius: "50%" }}
                     className="rounded-full w-[35px] h-[35px] max-w-[35px] max-h-[35px]"
                   />
                   <span className="text-normal font-medium">
@@ -122,13 +130,14 @@ export default function Message({
                           }}
                           className="flex items-center gap-2 p-2 text-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
                         >
-                          <FontAwesomeIcon icon={faPen} /> Modifier
+                          <FontAwesomeIcon icon={faPen} /> {t("messages.edit")}
                         </li>
                         <li
                           onClick={handleDeleteMessage}
                           className="flex items-center gap-2 p-2 text-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
                         >
-                          <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
+                          <FontAwesomeIcon icon={faTrashAlt} />{" "}
+                          {t("messages.delete")}
                         </li>
                       </ul>
                     </div>

@@ -11,8 +11,10 @@ import { useUserRole } from "../../../hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
 import { useProjectInvitation } from "../../../hooks/useProjectInvitation";
 import DisplayPicture from "../User/DisplayPicture";
+import { useTranslation } from "react-i18next";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
+  const { t } = useTranslation();
   const initialState = {
     status: "pending",
     message: "",
@@ -25,11 +27,12 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   );
   const { uid } = useContext(AuthContext);
   const [isPopup, setIsPopup] = useState(null);
-  const removeGuestWithId = removeGuest.bind(null, project?._id);
+
   const [state, formAction, pending] = useActionState(
-    removeGuestWithId,
+    (prevState, formData) => removeGuest(project?._id, prevState, formData),
     initialState
   );
+
   const canInvite = useUserRole(project, ["owner", "manager"]);
   const canRemove = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
@@ -51,19 +54,19 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
       mutateProject();
       setIsPopup({
         status: state?.status,
-        title: "Utilisateur révoqué avec succès",
-        message: state?.message,
+        title: t("guests.user_revoked_success"),
+        message: t(state?.message),
       });
     }
 
-    if (state?.status === "failure" && state?.errors === null) {
+    if (state?.status === "failure") {
       setIsPopup({
         status: state?.status,
-        title: "Une erreur s'est produite",
-        message: state?.message,
+        title: t("general.error_occurred"),
+        message: t(state?.message),
       });
     }
-  }, [state]);
+  }, [state, t, mutateProject]);
 
   const options = ["owner", "manager", "team", "customer", "guest"];
 
@@ -71,7 +74,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
     <>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)] select-none">
         <div className="text-[1.4rem] font-medium">
-          <span>Inviter d'autres utilisateurs</span>
+          <span>{t("guests.invite_users")}</span>
         </div>
         {canInvite && (
           <GuestFormInvitation
@@ -114,7 +117,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                       ) : (
                         <div className="w-full text-small">
                           <span className="text-center w-full text-text-color-muted">
-                            {memberRole(member?.role)}
+                            {memberRole(member?.role, t)}
                           </span>
                         </div>
                       )}
@@ -134,7 +137,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           disabled={pending}
                           className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
                         >
-                          Révoquer
+                          {t("guests.revoke")}
                         </button>
                       </form>
                     )}
@@ -175,13 +178,14 @@ export function ProjectInvitationsList({
   project,
   mutateProjectInvitation,
 }) {
+  const { t } = useTranslation();
   const initialState = {
     status: "pending",
     message: "",
   };
 
   const [state, formAction, pending] = useActionState(
-    deleteProjectInvitation,
+    (prevState, formData) => deleteProjectInvitation(prevState, formData),
     initialState
   );
 
@@ -193,20 +197,18 @@ export function ProjectInvitationsList({
       mutateProjectInvitation();
       setIsPopup({
         status: state?.status,
-        title: "Invitation annulée avec succès",
-        message: state?.message || "L'invitation a été annulée avec succès",
+        title: t("guests.invitation_cancelled_success"),
+        message: t(state?.message || "guests.invitation_cancelled_message"),
       });
     }
     if (state?.status === "failure") {
       setIsPopup({
         status: state?.status,
-        title: "Une erreur s'est produite",
-        message:
-          state?.message ||
-          "Une erreur s'est produite lors de l'annulation de l'invitation",
+        title: t("general.error_occurred"),
+        message: t(state?.message || "guests.invitation_cancel_error"),
       });
     }
-  }, [state]);
+  }, [state, t, mutateProjectInvitation, setIsPopup]);
 
   return (
     <>
@@ -220,7 +222,8 @@ export function ProjectInvitationsList({
               src={"/default-pfp.webp"}
               width={32}
               height={32}
-              alt={`Photo de profil de ${inv?.guestEmail}`}
+              alt={`${t("general.profile_picture_alt")} ${inv?.guestEmail}`}
+              style={{ borderRadius: "50%" }}
               className="rounded-full"
             />
             <span className="w-45 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -257,7 +260,7 @@ export function ProjectInvitationsList({
                 disabled={pending}
                 className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
               >
-                Annuler
+                {t("guests.cancel_invitation")}
               </button>
             </form>
           )}

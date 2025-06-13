@@ -17,6 +17,7 @@ import { deleteProject } from "@/api/project";
 import AddTemplate from "../Templates/AddTemplate";
 import { MoreMenu } from "../Dropdown/MoreMenu";
 import { icons, isNotEmpty } from "@/utils/utils";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -26,9 +27,13 @@ const initialState = {
 };
 
 export default function ProjectTitle({ project }) {
+  const { t } = useTranslation();
   const router = useRouter();
+
+  const updateProjectAction = (prevState, formData) =>
+    updateProject(prevState, formData);
   const [state, formAction, pending] = useActionState(
-    updateProject,
+    updateProjectAction,
     initialState
   );
 
@@ -49,6 +54,11 @@ export default function ProjectTitle({ project }) {
       mutate("/favorite");
       mutate(`/project/${project?._id}`);
       router.push("/projects");
+    } else if (response?.message) {
+      const errorMessage = response.message?.startsWith?.("project.")
+        ? t(response.message)
+        : response.message;
+      console.error("Delete project error:", errorMessage);
     }
   }
 
@@ -62,24 +72,24 @@ export default function ProjectTitle({ project }) {
       authorized: isOwnerOrManager,
       link: `/projects/${project?._id}/options`,
       icon: <Settings2 size={16} />,
-      name: "Options du projet",
+      name: t("projects.project_options_menu"),
     },
     {
       link: `/projects/${project?._id}/archive`,
       icon: <Archive size={16} />,
-      name: "Archives du projet",
+      name: t("projects.project_archives"),
     },
     {
       authorized: isOwnerOrManager,
       function: handleAddTemplate,
       icon: <Save size={16} />,
-      name: "Enregistrer le projet comme modèle",
+      name: t("projects.save_project"),
     },
     {
       authorized: isOwnerOrManager,
       function: handleDeleteProject,
       icon: <Trash2 size={16} />,
-      name: "Supprimer le projet",
+      name: t("projects.delete_project_menu"),
       remove: true,
       project: true,
       deletionName: project?.name,
@@ -110,8 +120,13 @@ export default function ProjectTitle({ project }) {
     }
     if (state?.status === "failure") {
       setProjectName(project?.name);
+      if (state?.message?.startsWith?.("project.")) {
+        console.error(t(state.message));
+      } else if (state?.message) {
+        console.error(state.message);
+      }
     }
-  }, [state]);
+  }, [state, project, t]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {

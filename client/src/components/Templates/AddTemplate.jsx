@@ -1,6 +1,7 @@
 import { saveTemplate } from "@/actions/template";
 import PopupMessage from "@/layouts/PopupMessage";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Portal from "../Portal/Portal";
 
 const initialState = {
@@ -11,7 +12,9 @@ const initialState = {
 };
 
 export default function AddTemplate({ project, setAddTemplate }) {
+  const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
+
   const [state, formAction, pending] = useActionState(
     saveTemplate,
     initialState
@@ -23,12 +26,28 @@ export default function AddTemplate({ project, setAddTemplate }) {
     }
 
     if (state?.success === false) {
+      // Utiliser la clé de traduction côté client
+      const translatedMessage = state?.messageKey
+        ? t(state.messageKey)
+        : state?.message || t("templates.template_save_error");
+
       setPopup({
         status: "failure",
-        title: "Une erreur s'est produite",
-        message:
-          state?.message ||
-          "Une erreur s'est produite lors de l'enregistrement du template",
+        title: t("general.error_occurred"),
+        message: translatedMessage,
+      });
+    }
+
+    if (state?.success === true) {
+      // Afficher un message de succès traduit
+      const successMessage = state?.messageKey
+        ? t(state.messageKey)
+        : state?.message || t("templates.template_save_success");
+
+      setPopup({
+        status: "success",
+        title: t("general.success"),
+        message: successMessage,
       });
     }
 
@@ -36,13 +55,13 @@ export default function AddTemplate({ project, setAddTemplate }) {
     const timeout = setTimeout(() => setPopup(false), 4000);
 
     return () => clearTimeout(timeout);
-  }, [state]);
+  }, [state, t]);
 
   return (
     <Portal>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 bg-secondary p-6 rounded-lg shadow-medium">
         <div className="text-center text-large text-text-dark-color">
-          <span>Enregistrer ce projet comme modèle</span>
+          <span>{t("templates.save_project_as_template")}</span>
         </div>
         <form action={formAction} className="flex flex-col gap-3">
           <input
@@ -57,7 +76,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
               type="text"
               id="template-name"
               name="template-name"
-              placeholder="Nom du modèle"
+              placeholder={t("templates.template_name")}
               autoFocus
               className="border-none bg-third border border-third w-full p-2 text-text-color-muted font-medium text-center transition-all duration-[150ms] ease-linear focus:outline-none focus:border-primary focus:shadow-small"
             />
@@ -69,7 +88,7 @@ export default function AddTemplate({ project, setAddTemplate }) {
                 className="w-4 h-4"
                 defaultChecked={false}
               />
-              <p>Partager ce modèle de projet avec les autres utilisateurs</p>
+              <p>{t("templates.share_project_template")}</p>
             </div>
           </div>
           <button
@@ -77,11 +96,14 @@ export default function AddTemplate({ project, setAddTemplate }) {
             disabled={pending}
             data-disabled={pending}
           >
-            Sauvegarder
+            {t("templates.save_button")}
           </button>
         </form>
       </div>
-      <div className="modal-layout" onClick={(e) => setAddTemplate(false)}></div>
+      <div
+        className="modal-layout"
+        onClick={(e) => setAddTemplate(false)}
+      ></div>
       {popup && (
         <PopupMessage
           status={popup.status}

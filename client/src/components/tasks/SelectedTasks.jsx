@@ -10,6 +10,7 @@ import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { Archive, ArchiveRestore, Trash, X } from "lucide-react";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function SelectedTasks({
   project,
@@ -18,6 +19,7 @@ export default function SelectedTasks({
   archive,
   mutate,
 }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
 
   function handleClose(e) {
@@ -36,9 +38,7 @@ export default function SelectedTasks({
   const handleAddToArchive = async (e) => {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir archiver cette tâche ?"
-    );
+    const confirmed = confirm(t("tasks.archive_confirm"));
 
     if (!confirmed) return;
 
@@ -55,9 +55,7 @@ export default function SelectedTasks({
   const handleRemoveFromArchive = async (e) => {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir restaurer cette tâche ?"
-    );
+    const confirmed = confirm(t("tasks.restore_confirm"));
 
     if (!confirmed) return;
 
@@ -74,9 +72,7 @@ export default function SelectedTasks({
   async function handleDelete(e) {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir supprimer cette tâche ?"
-    );
+    const confirmed = confirm(t("tasks.delete_confirm"));
 
     if (!confirmed) return;
 
@@ -102,8 +98,8 @@ export default function SelectedTasks({
         <div className="text-[1.4rem]">
           <span>
             {selectedTasks?.length > 1
-              ? "Tâches séléctionnées"
-              : "Tâche séléctionnée"}
+              ? t("tasks.selected_plural")
+              : t("tasks.selected_singular")}
           </span>
         </div>
         {/* actions */}
@@ -111,15 +107,21 @@ export default function SelectedTasks({
           {/* action */}
           {!archive &&
             checkRole(project, ["owner", "manager", "team"], uid) && (
-              <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleAddToArchive}>
+              <div
+                className="flex flex-col justify-center items-center cursor-pointer gap-0.5"
+                onClick={handleAddToArchive}
+              >
                 <Archive size={20} />
-                <span className="text-small">Archiver</span>
+                <span className="text-small">{t("tasks.archive")}</span>
               </div>
             )}
           {archive && checkRole(project, ["owner", "manager", "team"], uid) && (
-            <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleRemoveFromArchive}>
+            <div
+              className="flex flex-col justify-center items-center cursor-pointer gap-0.5"
+              onClick={handleRemoveFromArchive}
+            >
               <ArchiveRestore size={20} />
-              <span className="text-small">Restaurer</span>
+              <span className="text-small">{t("tasks.restore")}</span>
             </div>
           )}
           {checkRole(
@@ -127,12 +129,18 @@ export default function SelectedTasks({
             ["owner", "manager", "team", "customer"],
             uid
           ) && (
-            <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 text-blocked-color" onClick={handleDelete}>
+            <div
+              className="flex flex-col justify-center items-center cursor-pointer gap-0.5 text-blocked-color"
+              onClick={handleDelete}
+            >
               <Trash size={20} />
-              <span className="text-small">Supprimer</span>
+              <span className="text-small">{t("general.delete")}</span>
             </div>
           )}
-          <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 border-l border-[#007CFF] pl-3" onClick={handleClose}>
+          <div
+            className="flex flex-col justify-center items-center cursor-pointer gap-0.5 border-l border-[#007CFF] pl-3"
+            onClick={handleClose}
+          >
             <X size={22} />
           </div>
         </div>

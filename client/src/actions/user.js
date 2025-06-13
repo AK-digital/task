@@ -11,6 +11,7 @@ export async function updateUserProfile(prevState, formData) {
       firstName: formData.get("firstName"),
       company: formData.get("company"),
       position: formData.get("position"),
+      language: formData.get("language"),
     };
 
     // Validation Zod
@@ -39,13 +40,49 @@ export async function updateUserProfile(prevState, formData) {
 
     return {
       status: "success",
-      message: "Profil mis à jour avec succès",
+      message: "profile.update.success",
       data: response.data,
     };
   } catch (err) {
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue lors de la mise à jour",
+      message: err.message || "profile.update.error",
+    };
+  }
+}
+
+export async function updateUserLanguage(userId, language) {
+  try {
+    if (!userId || !language) {
+      throw new Error("profile.language.missing_parameters");
+    }
+
+    if (!["fr", "en"].includes(language)) {
+      throw new Error("profile.language.not_supported");
+    }
+
+    const res = await useAuthFetch(
+      `user/${userId}/language`,
+      "PATCH",
+      "application/json",
+      { language }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message || "profile.language.update.error");
+    }
+
+    return {
+      status: "success",
+      message: "profile.language.update.success",
+      data: response.data,
+    };
+  } catch (err) {
+    return {
+      status: "failure",
+      message: err.message || "profile.language.update.error",
     };
   }
 }
@@ -59,7 +96,7 @@ export async function updateUserPicture(prevState, formData) {
     if (!pictureFile || pictureFile.size === 0) {
       return {
         status: "failure",
-        message: "Aucun fichier sélectionné",
+        message: "profile.picture.no_file_selected",
       };
     }
 
@@ -82,16 +119,14 @@ export async function updateUserPicture(prevState, formData) {
 
     return {
       status: "success",
-      message: "Photo de profil mise à jour avec succès",
+      message: "profile.picture.update.success",
       data: response.data,
     };
   } catch (err) {
     console.log("err", err);
     return {
       status: "failure",
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la mise à jour de la photo",
+      message: err.message || "profile.picture.update.error",
     };
   }
 }

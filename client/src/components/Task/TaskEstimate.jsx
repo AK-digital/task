@@ -5,8 +5,10 @@ import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
 import { XCircle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TaskEstimate({ task, uid }) {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [number, setNumber] = useState(1);
   const [week, setWeek] = useState("minutes");
@@ -138,37 +140,37 @@ export default function TaskEstimate({ task, uid }) {
                 className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
-                15 minutes
+                {t("tasks.n_minutes", { n: 15 })}
               </span>
               <span
                 className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
-                30 minutes
+                {t("tasks.n_minutes", { n: 30 })}
               </span>
               <span
                 className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
-                45 minutes
+                {t("tasks.n_minutes", { n: 45 })}
               </span>
               <span
                 className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
-                1 heure
+                {t("tasks.1_hour")}
               </span>
               <span
                 className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
-                2 heures
+                {t("tasks.2_hours")}
               </span>
               <span
                 className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
                 onClick={handleUpdateTaskEstimate}
               >
-                1 jour
+                {t("tasks.1_day")}
               </span>
             </div>
             <div className="mt-2">
@@ -194,10 +196,10 @@ export default function TaskEstimate({ task, uid }) {
                     onChange={(e) => setWeek(e.target.value)}
                     className="font-bricolage text-small text-text-dark-color cursor-pointer font-semibold bg-third outline-none border-none rounded-2xl rounded-tl-[inherit] rounded-bl-[inherit] group-hover:bg-primary"
                   >
-                    <option value="minutes">Minutes</option>
-                    <option value="heures">Heures</option>
-                    <option value="jours">Jours</option>
-                    <option value="semaines">Semaines</option>
+                    <option value="minutes">{t("tasks.minutes")}</option>
+                    <option value="heures">{t("tasks.hours")}</option>
+                    <option value="jours">{t("tasks.days")}</option>
+                    <option value="semaines">{t("tasks.weeks")}</option>
                   </select>
                 </div>
                 {number >= 1 && (
@@ -206,7 +208,7 @@ export default function TaskEstimate({ task, uid }) {
                       className="font-bricolage text-small font-normal p-1.5 w-full text-white"
                       type="submit"
                     >
-                      Valider
+                      {t("tasks.validate")}
                     </button>
                   </div>
                 )}

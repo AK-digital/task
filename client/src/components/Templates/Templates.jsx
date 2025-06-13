@@ -2,8 +2,10 @@
 import { isNotEmpty } from "@/utils/utils";
 import Template from "./Template";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function Templates({ templates }) {
+  const { t } = useTranslation();
   const data = templates?.data;
   const router = useRouter();
 
@@ -25,14 +27,18 @@ export default function Templates({ templates }) {
         </div>
       ) : (
         <div>
-          <p>Aucun modèle trouvé</p>
+          <p>{t("templates.no_template_found")}</p>
         </div>
       )}
 
       {/* buttons */}
 
-      <button type="button" onClick={handleGoBack} className="bg-transparent shadow-none max-w-fit hover:bg-transparent hover:shadow-none hover:text-accent-color-light">
-        Retour
+      <button
+        type="button"
+        onClick={handleGoBack}
+        className="bg-transparent shadow-none max-w-fit hover:bg-transparent hover:shadow-none hover:text-accent-color-light"
+      >
+        {t("templates.back")}
       </button>
     </div>
   );

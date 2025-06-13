@@ -14,8 +14,10 @@ import Image from "next/image";
 import { useFavorites } from "../../hooks/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
+import { useTranslation } from "react-i18next";
 
 export default function SideNav() {
+  const { t } = useTranslation();
   const pathname = usePathname();
   const params = useParams();
   const { slug } = params;
@@ -41,7 +43,7 @@ export default function SideNav() {
               src={"/clynt-logo-dark.svg"}
               width={32}
               height={32}
-              alt="Logo de Clynt"
+              alt={t("navigation.logo_alt")}
               className="block ml-[5px] mr-auto"
             />
           </Link>
@@ -55,7 +57,7 @@ export default function SideNav() {
           <div className="flex justify-start items-center -mt-3 mb-[18px]">
             <Link
               href={"/tasks"}
-              title="Mes tâches"
+              title={t("navigation.my_tasks")}
               data-active={isTasksPage}
               className="group containerIcon_SideNav relative flex justify-start gap-3 w-full items-center transition-all ease-linear duration-150 cursor-pointer hover:text-accent-color-hover"
             >
@@ -67,7 +69,7 @@ export default function SideNav() {
               </div>
               {isMenuOpen && (
                 <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
-                  Mes tâches
+                  {t("navigation.my_tasks")}
                 </span>
               )}
             </Link>
@@ -101,7 +103,7 @@ export default function SideNav() {
             </div>
             {isMenuOpen && (
               <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
-                Mes projets
+                {t("navigation.my_projects")}
               </span>
             )}
           </Link>
@@ -118,7 +120,7 @@ export default function SideNav() {
             </div>
             {isMenuOpen && (
               <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
-                Suivi du temps
+                {t("navigation.time_tracking")}
               </span>
             )}
           </Link>
@@ -134,7 +136,7 @@ export default function SideNav() {
             </div>
             {isMenuOpen && (
               <span className="text-small whitespace-nowrap overflow-hidden overflow-ellipsis mr-5 font-normal text-text-lighter-color">
-                Ajouter un projet
+                {t("navigation.add_project")}
               </span>
             )}
           </Link>

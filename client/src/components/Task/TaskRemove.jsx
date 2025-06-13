@@ -3,9 +3,11 @@ import { Trash } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "../Modals/ConfirmDialog";
 import socket from "@/utils/socket";
+import { useTranslation } from "react-i18next";
 import { useUserRole } from "../../../hooks/useUserRole";
 
 export default function TaskRemove({ task, archive, mutate }) {
+  const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
   const project = task?.projectId;
   const canDelete = useUserRole(project, [
@@ -36,7 +38,7 @@ export default function TaskRemove({ task, archive, mutate }) {
             isOpen={showConfirm}
             onClose={() => setShowConfirm(false)}
             onConfirm={handleDeleteTask}
-            message="Supprimer cette tâche ?"
+            message={t("tasks.confirm_delete")}
           />
           <div
             className="modal-layout-opacity"

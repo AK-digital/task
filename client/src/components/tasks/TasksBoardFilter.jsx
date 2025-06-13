@@ -2,8 +2,10 @@ import { useState } from "react";
 import { ChevronDown, LayoutDashboard, Undo } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useTranslation } from "react-i18next";
 
 export default function TasksBoardFilter({ queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const { boards } = useProjectContext();
 
@@ -35,16 +37,26 @@ export default function TasksBoardFilter({ queries, setQueries }) {
         ) : (
           <LayoutDashboard size={16} />
         )}
-        <span className="max-w-[140px] flex-1 whitespace-nowrap text-ellipsis overflow-hidden block lowercase first-letter:uppercase">{theBoard?.title || "Choisir un tableau"} </span>
-        <ChevronDown size={16} className="chevron_TasksBoardFilter transition-all duration-[120ms] ease-in-out" />
+        <span className="max-w-[140px] flex-1 whitespace-nowrap text-ellipsis overflow-hidden block lowercase first-letter:uppercase">
+          {theBoard?.title || t("tasks.choose_board")}{" "}
+        </span>
+        <ChevronDown
+          size={16}
+          className="chevron_TasksBoardFilter transition-all duration-[120ms] ease-in-out"
+        />
       </div>
       {isOpen && (
         <div className="absolute top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full">
           {isNotEmpty(boards) ? (
             <ul>
-              <li className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm" onClick={() => handleSelect()}>
+              <li
+                className="flex items-center lowercase gap-1 py-2 px-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+                onClick={() => handleSelect()}
+              >
                 <Undo size={16} />
-                <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">Supprimer les filtres</span>
+                <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">
+                  {t("tasks.remove_filters")}
+                </span>
               </li>
               {boards.map((board) => (
                 <li
@@ -56,12 +68,14 @@ export default function TasksBoardFilter({ queries, setQueries }) {
                     style={{ backgroundColor: `${board?.color}` }}
                     className="min-w-3 h-3 rounded-full bg-accent-color"
                   ></div>
-                  <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">{board?.title}</span>
+                  <span className="whitespace-nowrap text-ellipsis overflow-hidden block first-letter:uppercase">
+                    {board?.title}
+                  </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <span>Aucun projet n'a été trouvé</span>
+            <span>{t("tasks.no_board_found")}</span>
           )}
         </div>
       )}

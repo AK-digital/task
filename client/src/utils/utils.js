@@ -27,21 +27,21 @@ export function checkRole(project, roles, uid) {
   return roles?.includes(member?.role);
 }
 
-export function memberRole(role) {
+export function memberRole(role, t) {
   if (role === "owner") {
-    return "👑 Créateur";
+    return t("roles.owner_emoji");
   }
   if (role === "manager") {
-    return "👨‍💼 Manager";
+    return t("roles.manager_emoji");
   }
   if (role === "team") {
-    return "🙏 Équipe";
+    return t("roles.team_emoji");
   }
   if (role === "customer") {
-    return "👤Client";
+    return t("roles.customer_emoji");
   }
   if (role === "guest") {
-    return "🙋‍♂️ Invité";
+    return t("roles.guest_emoji");
   }
 }
 
@@ -72,7 +72,7 @@ export const icons = [
   },
 ];
 
-export function exportTimeTracking(projects, trackers) {
+export function exportTimeTracking(projects, trackers, t) {
   for (const project of projects) {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -80,7 +80,7 @@ export function exportTimeTracking(projects, trackers) {
     // Titre
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
-    doc.text("Relevé de temps", pageWidth / 2, 20, {
+    doc.text(t("time_tracking.time_report"), pageWidth / 2, 20, {
       align: "center",
     });
 
@@ -156,9 +156,18 @@ export function exportTimeTracking(projects, trackers) {
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.text(`Du ${formattedStartingDate} au ${formattedEndingDate}`, 14, 80);
     doc.text(
-      `Durée totale ${formatTime(Math.floor(totalDuration / 1000))}`,
+      t("time_tracking.from_to_date", {
+        startDate: formattedStartingDate,
+        endDate: formattedEndingDate,
+      }),
+      14,
+      80
+    );
+    doc.text(
+      `${t("time_tracking.total_duration")} ${formatTime(
+        Math.floor(totalDuration / 1000)
+      )}`,
       pageWidth - 14,
       80,
       { align: "right" }
@@ -172,11 +181,13 @@ export function exportTimeTracking(projects, trackers) {
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
       doc.setTextColor(41, 128, 185);
-      doc.text("Tâches facturables", 14, currentY);
+      doc.text(t("time_tracking.billable_tasks_title"), 14, currentY);
       doc.setTextColor(0);
       doc.setFontSize(12);
       doc.text(
-        `Total : ${formatTime(Math.floor(billableDuration / 1000))}`,
+        `${t("time_tracking.total_label")} ${formatTime(
+          Math.floor(billableDuration / 1000)
+        )}`,
         pageWidth - 14,
         currentY,
         { align: "right" }
@@ -184,7 +195,14 @@ export function exportTimeTracking(projects, trackers) {
       currentY += 10;
 
       autoTable(doc, {
-        head: [["Description", "Responsable", "Temps", "Date"]],
+        head: [
+          [
+            t("time_tracking.description_column"),
+            t("time_tracking.responsible_column"),
+            t("time_tracking.time_column"),
+            t("time_tracking.date_column"),
+          ],
+        ],
         body: billableTrackers?.map((tracker) => {
           return [
             tracker?.taskText || tracker?.taskId?.text,
@@ -223,11 +241,13 @@ export function exportTimeTracking(projects, trackers) {
       doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
       doc.setTextColor(192, 57, 43);
-      doc.text("Tâches non facturables", 14, currentY);
+      doc.text(t("time_tracking.non_billable_tasks_title"), 14, currentY);
       doc.setTextColor(0);
       doc.setFontSize(12);
       doc.text(
-        `Total : ${formatTime(Math.floor(nonBillableDuration / 1000))}`,
+        `${t("time_tracking.total_label")} ${formatTime(
+          Math.floor(nonBillableDuration / 1000)
+        )}`,
         pageWidth - 14,
         currentY,
         { align: "right" }
@@ -235,7 +255,14 @@ export function exportTimeTracking(projects, trackers) {
       currentY += 10;
 
       autoTable(doc, {
-        head: [["Description", "Responsable", "Temps", "Date"]],
+        head: [
+          [
+            t("time_tracking.description_column"),
+            t("time_tracking.responsible_column"),
+            t("time_tracking.time_column"),
+            t("time_tracking.date_column"),
+          ],
+        ],
         body: nonBillableTrackers?.map((tracker) => {
           return [
             tracker?.taskText || tracker?.taskId?.text,
@@ -273,13 +300,13 @@ export function exportTimeTracking(projects, trackers) {
       doc.setFontSize(10);
       doc.setTextColor(150);
       doc.text(
-        `Page ${i} / ${pageCount}`,
+        t("time_tracking.page_info", { current: i, total: pageCount }),
         pageWidth - 20,
         doc.internal.pageSize.getHeight() - 10,
         { align: "right" }
       );
       doc.text(
-        "Document généré automatiquement",
+        t("time_tracking.document_generated"),
         14,
         doc.internal.pageSize.getHeight() - 10
       );
@@ -288,8 +315,8 @@ export function exportTimeTracking(projects, trackers) {
     // Sauvegarde du fichier avec nom du projet
     doc.save(
       `${formattedStartingDate}-${formattedEndingDate}-${
-        project?.name || "projet"
-      }-temps-clynt.pdf`
+        project?.name || t("time_tracking.default_project")
+      }-${t("time_tracking.time_column").toLowerCase()}-clynt.pdf`
     );
   }
 }

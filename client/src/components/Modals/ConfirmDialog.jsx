@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export default function ConfirmDialog({ isOpen, onClose, onConfirm, message }) {
+  const { t } = useTranslation();
   if (!isOpen) return null;
 
   return (
@@ -8,14 +11,14 @@ export default function ConfirmDialog({ isOpen, onClose, onConfirm, message }) {
         <div className="p-3">
           <p className="text-[0.85em] text-center select-none">{message}</p>
           <span className="text-[0.7rem] text-[#8688a4] text-center w-full block select-none">
-            Cette action est irréversible
+            {t("general.irreversible_action")}
           </span>
           <div className="flex justify-between gap-2 mt-2.5">
             <button
               onClick={onClose}
               className="bg-text-color-muted py-2 px-[22px] border-none rounded-lg cursor-pointer"
             >
-              Non
+              {t("general.no")}
             </button>
             <button
               onClick={() => {
@@ -24,7 +27,7 @@ export default function ConfirmDialog({ isOpen, onClose, onConfirm, message }) {
               }}
               className="bg-danger-color text-white py-2 px-[22px] border-none rounded-lg cursor-pointer"
             >
-              Oui
+              {t("general.yes")}
             </button>
           </div>
         </div>

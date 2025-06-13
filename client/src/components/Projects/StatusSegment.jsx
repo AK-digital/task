@@ -1,7 +1,9 @@
 import { useState } from "react";
 import TaskInfo from "../Popups/TaskInfo";
+import { useTranslation } from "react-i18next";
 
 export default function StatusSegment({ status, totalTasks }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -10,7 +12,10 @@ export default function StatusSegment({ status, totalTasks }) {
   const handlePopupMouseEnter = (e) => {
     const count = status?.count;
     const name = status?.name?.toLowerCase();
-    const taskWord = count === 1 ? "tâche" : "tâches";
+    const taskWord =
+      count === 1
+        ? t("projects.task_status_singular")
+        : t("projects.task_status_plural");
 
     setMessage(`${count} ${taskWord} ${name}`.toLowerCase());
     setIsOpen(true);

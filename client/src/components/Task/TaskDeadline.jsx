@@ -6,8 +6,10 @@ import socket from "@/utils/socket";
 import { updateTaskDeadline } from "@/api/task";
 import { CircleX } from "lucide-react";
 import { checkRole } from "@/utils/utils";
+import { useTranslation } from "react-i18next";
 
 export default function TaskDeadline({ task, uid }) {
+  const { t } = useTranslation();
   const inputRef = useRef(null);
   const [progress, setProgress] = useState("0%");
   const [deadline, setDeadline] = useState(task?.deadline?.split("T")[0] || "");
@@ -120,7 +122,10 @@ export default function TaskDeadline({ task, uid }) {
   }, [project, uid]);
 
   return (
-    <div className="flex justify-center items-center py-1 px-2 border-r border-text-light-color min-w-30 max-w-[150px] w-full h-full gap-0.5" onMouseLeave={() => setHover(false)}>
+    <div
+      className="flex justify-center items-center py-1 px-2 border-r border-text-light-color min-w-30 max-w-[150px] w-full h-full gap-0.5"
+      onMouseLeave={() => setHover(false)}
+    >
       <div
         className="wrapper_TaskDeadline relative w-full bg-primary rounded-3xl py-1 px-0.5 text-center cursor-pointer text-small overflow-hidden"
         onMouseEnter={handleHover}
@@ -144,14 +149,23 @@ export default function TaskDeadline({ task, uid }) {
             />
           )}
           {deadline ? (
-            <span className="relative z-1 text-white select-none">{displayDate()}</span>
+            <span className="relative z-1 text-white select-none">
+              {displayDate()}
+            </span>
           ) : (
-            <span className="relative z-1 select-none">{hover || isEditing ? "Définir une date" : "-"}</span>
+            <span className="relative z-1 select-none">
+              {hover || isEditing ? t("tasks.set_date") : "-"}
+            </span>
           )}
         </div>
       </div>
       {hover && deadline && (
-        <CircleX size={12} onClick={removeDeadline} cursor={"pointer"} className="w-4.5 h-4.5 text-text-color-muted hover:text-danger-color" />
+        <CircleX
+          size={12}
+          onClick={removeDeadline}
+          cursor={"pointer"}
+          className="w-4.5 h-4.5 text-text-color-muted hover:text-danger-color"
+        />
       )}
     </div>
   );

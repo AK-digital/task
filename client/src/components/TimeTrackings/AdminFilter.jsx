@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import DisplayPicture from "../User/DisplayPicture";
 import { ChevronDownIcon, ChevronUpIcon, Undo } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function AdminFilter({ projects, queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [currentMembers, setCurrentMembers] = useState([]);
   const [members, setMembers] = useState([]);
@@ -94,7 +96,7 @@ export default function AdminFilter({ projects, queries, setQueries }) {
           </>
         ) : (
           <span className="flex justify-center gap-1 text-[15px]">
-            Tous les membres
+            {t("time_tracking.all_members")}
           </span>
         )}
         {!isOpen && (
@@ -110,7 +112,7 @@ export default function AdminFilter({ projects, queries, setQueries }) {
               onClick={handleReset}
             >
               <Undo size={16} />
-              Supprimer les filtres
+              {t("tasks.remove_filters")}
             </li>
             {members?.map((member) => {
               return (

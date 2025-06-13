@@ -3,10 +3,12 @@ import { acceptProjectInvitation } from "@/actions/project";
 import socket from "@/utils/socket";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Invitation() {
   const { id } = useParams();
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const acceptInvitation = async () => {
@@ -14,11 +16,11 @@ export default function Invitation() {
         const response = await acceptProjectInvitation(id);
 
         if (!response?.success) {
-          if (response?.message === "L'utilisateur n'est pas connecté") {
+          if (response?.message === "auth.not_connected") {
             router.push("/");
             return;
           }
-          if (response?.message === "L'utilisateur n'existe pas") {
+          if (response?.message === "auth.user_not_exist") {
             router.push("/sign-up");
             return;
           }
@@ -29,13 +31,13 @@ export default function Invitation() {
           router.push(`/projects/${project?._id}`);
         }
       } catch (err) {
-        console.error("Erreur lors de l'acceptation de l'invitation :", err);
+        console.error(t("common.error"), err);
         router.push("/projects");
       }
     };
 
     acceptInvitation();
-  }, [id, router]);
+  }, [id, router, t]);
 
   return <main></main>;
 }

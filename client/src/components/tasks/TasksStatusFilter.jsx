@@ -1,8 +1,10 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TasksStatusFilter({ queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const QueriesStatus = queries?.status;
   const hasStatus = QueriesStatus?.length > 0;
@@ -72,7 +74,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
         onClick={() => setIsOpen(!isOpen)}
       >
         <ChartBar size={16} />
-        <span className="flex-1 text-[15px]">Statut</span>
+        <span className="flex-1 text-[15px]">{t("tasks.status")}</span>
         {hasStatus && (
           <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {QueriesStatus?.length}
@@ -94,7 +96,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 onClick={handleResetStatus}
               >
                 <Undo size={14} />
-                <span>Effacer</span>
+                <span>{t("tasks.clear")}</span>
               </li>
               {uniqueStatuses?.map((elt) => (
                 <li
@@ -120,7 +122,9 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                     htmlFor={elt?._id}
                     className="flex items-center cursor-pointer flex-1"
                   >
-                    {elt?.name}
+                    {elt?.default
+                      ? t(`tasks.statuses.${elt?.status}`)
+                      : elt?.name}
                   </label>
                 </li>
               ))}

@@ -21,6 +21,7 @@ import { useUserRole } from "../../../hooks/useUserRole";
 import { mutate } from "swr";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
+import { useTranslation } from "react-i18next";
 moment.locale("fr");
 
 const initialState = {
@@ -30,6 +31,7 @@ const initialState = {
 };
 
 export default function ProjectOptions({ project }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [links, setLinks] = useState(project?.urls || []);
 
@@ -38,8 +40,11 @@ export default function ProjectOptions({ project }) {
   const [moreIcons, setMoreIcons] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [popup, setPopup] = useState(null);
+
+  const updateProjectAction = (prevState, formData) =>
+    updateProject(prevState, formData);
   const [state, formAction, pending] = useActionState(
-    updateProject,
+    updateProjectAction,
     initialState
   );
   const [editImg, setEditImg] = useState(false);
@@ -60,20 +65,23 @@ export default function ProjectOptions({ project }) {
       setIsDisabled(true);
       mutate(`/project/${project?._id}`);
       setPopup({
-        title: "Modifications enregistrées",
-        message: "Les modifications ont été enregistrées avec succès",
+        title: t("projects.changes_saved"),
+        message: t("projects.changes_saved_success"),
       });
 
       return;
     }
     if (state?.status === "failure") {
+      const errorMessage = state?.message?.startsWith?.("project.")
+        ? t(state.message)
+        : state.message;
       setPopup({
-        title: "Une erreur est survenue",
-        message: state?.message,
+        title: t("projects.error_occurred"),
+        message: errorMessage,
       });
       return;
     }
-  }, [state]);
+  }, [state, t]);
 
   useEffect(() => {
     if (popup) {
@@ -122,6 +130,11 @@ export default function ProjectOptions({ project }) {
 
     if (response?.success) {
       router.push("/projects");
+    } else if (response?.message) {
+      const errorMessage = response.message?.startsWith?.("project.")
+        ? t(response.message)
+        : response.message;
+      console.error("Delete project error:", errorMessage);
     }
 
     mutate(`/project/${project?._id}`);
@@ -166,16 +179,24 @@ export default function ProjectOptions({ project }) {
         <div className="flex justify-center gap-10 w-full">
           {/* Left Column */}
           <div className="flex gap-10 flex-col w-[40%]">
-            <h1>Options de projet</h1>
+            <h1>{t("projects.project_options")}</h1>
             {/* Informations */}
             <div className="bg-white/50 rounded-2xl p-8">
               {/* Wrapper header */}
               <div className="flex justify-between">
-                <span className="text-large">Informations générales</span>
+                <span className="text-large">
+                  {t("projects.general_information")}
+                </span>
                 <div className="flex flex-col items-center gap-0.5 text-[0.8rem] text-text-color-muted">
-                  <span>Créée le {createdAt}</span>
                   <span>
-                    Par {author?.user?.firstName + " " + author?.user?.lastName}
+                    {t("projects.created_on")} {createdAt}
+                  </span>
+                  <span>
+                    {t("projects.created_on")} {createdAt}
+                  </span>
+                  <span>
+                    {t("projects.by")}{" "}
+                    {author?.user?.firstName + " " + author?.user?.lastName}
                   </span>
                 </div>
               </div>
@@ -189,7 +210,7 @@ export default function ProjectOptions({ project }) {
                 >
                   <Image
                     src={project?.logo || "/default-project-logo.webp"}
-                    alt="Logo du projet"
+                    alt={t("projects.project_logo_alt")}
                     width={100}
                     height={100}
                     quality={100}
@@ -230,8 +251,12 @@ export default function ProjectOptions({ project }) {
 
                 <div className="flex justify-between items-end mt-6">
                   <div className="flex flex-col gap-1">
-                    <span>{project?.boardsCount} Tableaux</span>
-                    <span>{project?.tasksCount} tâches</span>
+                    <span>
+                      {project?.boardsCount} {t("projects.boards_count")}
+                    </span>
+                    <span>
+                      {project?.tasksCount} {t("projects.tasks_count")}
+                    </span>
                   </div>
                   {/* Project archive */}
                   <div className="flex items-center gap-1">
@@ -240,7 +265,7 @@ export default function ProjectOptions({ project }) {
                       href={`/projects/${project?._id}/archive`}
                       className="underline text-text-dark-color text-small"
                     >
-                      Archive du projet
+                      {t("projects.project_archive")}
                     </Link>
                   </div>
                 </div>
@@ -249,7 +274,7 @@ export default function ProjectOptions({ project }) {
             {/*  Links  */}
             <div className="bg-white/50 rounded-2xl p-8">
               <div className="text-large">
-                <span>Liens rapides</span>
+                <span>{t("projects.quick_links")}</span>
               </div>
               <div className="flex flex-col gap-4 mt-5">
                 {isNotEmpty(links) &&
@@ -282,7 +307,7 @@ export default function ProjectOptions({ project }) {
                           type="url"
                           id="url"
                           name="url"
-                          placeholder="https://www.exemple.com"
+                          placeholder={t("projects.url_placeholder")}
                           value={link?.url}
                           onChange={(e) => {
                             links[idx].url = e.target.value;
@@ -304,7 +329,7 @@ export default function ProjectOptions({ project }) {
                     onClick={addLink}
                     className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none underline"
                   >
-                    Ajouter un lien
+                    {t("projects.add_link")}
                   </button>
                 )}
               </div>
@@ -317,7 +342,7 @@ export default function ProjectOptions({ project }) {
                 onClick={() => setIsOpen(true)}
                 className="font-bricolage p-0 w-fit bg-transparent bg-none text-text-color-red underline hover:bg-none hover:bg-transparent"
               >
-                Supprimer ce projet
+                {t("projects.delete_project")}
               </button>
               <button
                 type="submit"
@@ -325,7 +350,7 @@ export default function ProjectOptions({ project }) {
                 disabled={isDisabled}
                 className="font-bricolage rounded-sm"
               >
-                Enregistrer les modifications
+                {t("projects.save_changes")}
               </button>
             </div>
           </div>
@@ -334,7 +359,7 @@ export default function ProjectOptions({ project }) {
           <div className="relative top-[94px] w-[20%] min-w-[400px] flex gap-10 flex-col">
             <div className="bg-white/50 rounded-2xl p-8 h-[675px]">
               <div className="text-large">
-                <span>Notes</span>
+                <span>{t("projects.notes")}</span>
               </div>
               <div className="flex flex-col gap-0 mt-5 h-full">
                 <textarea
@@ -342,7 +367,7 @@ export default function ProjectOptions({ project }) {
                   id="note"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Ajouter une note..."
+                  placeholder={t("projects.add_note_placeholder")}
                   className="font-bricolage h-[90%] resize-none border-none text-normal"
                 ></textarea>
               </div>
@@ -359,7 +384,7 @@ export default function ProjectOptions({ project }) {
       )}
       {isOpen && (
         <ConfirmationDelete
-          title={`projet ${project?.name}`}
+          title={`${t("general.project_lowercase")} ${project?.name}`}
           onCancel={() => setIsOpen(false)}
           onConfirm={handleDeleteProject}
         />

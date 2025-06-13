@@ -10,12 +10,13 @@ import { getDrafts } from "@/api/draft";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { AuthContext } from "@/context/auth";
 import NoPicture from "../User/NoPicture";
-
 import Reactions from "../Reactions/Reactions";
 import { isNotEmpty } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
+import { useTranslation } from "react-i18next";
 
 export default function TaskDescription({ project, task, uid }) {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
   const { data: draft, mutate: mutateDraft } = useSWR(
@@ -37,7 +38,9 @@ export default function TaskDescription({ project, task, uid }) {
   ]);
 
   const date = moment(task?.description?.createdAt);
-  const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
+  const formattedDate = date.format(
+    `DD/MM/YYYY [${t("tasks.time_separator")}] HH:mm`
+  );
 
   useEffect(() => {
     if (draft?.success) {
@@ -95,7 +98,8 @@ export default function TaskDescription({ project, task, uid }) {
   return (
     <div className="flex flex-col gap-3">
       <span className="flex items-center gap-2 text-large text-text-dark-color font-medium select-none">
-        <PanelTop size={16} className="text-text-color-muted" /> Description
+        <PanelTop size={16} className="text-text-color-muted" />
+        {t("tasks.description")}
       </span>
       {/* If is editing */}
       {isEditing && (
@@ -124,7 +128,10 @@ export default function TaskDescription({ project, task, uid }) {
                   src={descriptionAuthor?.picture || "/default-pfp.webp"}
                   width={24}
                   height={24}
-                  alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
+                  alt={`${t("general.profile_picture_alt")} ${
+                    descriptionAuthor?.firstName
+                  }`}
+                  style={{ borderRadius: "50%" }}
                   className="rounded-full max-h-6 max-w-6"
                 />
               ) : (
@@ -172,7 +179,7 @@ export default function TaskDescription({ project, task, uid }) {
                   onClick={handleRemoveDescription}
                   className="bg-transparent text-accent-color p-0 text-small hover:text-accent-color-hover shadow-inherit"
                 >
-                  Effacer la description
+                  {t("tasks.clear_description")}
                 </button>
               </div>
             )}
@@ -187,9 +194,9 @@ export default function TaskDescription({ project, task, uid }) {
           className="border border-color-border-color py-3 px-6 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
         >
           {isAuthorized ? (
-            <p>Ajouter une description</p>
+            <p>{t("tasks.add_description")}</p>
           ) : (
-            <p>L'ajout de description est désactivé en tant qu'invité</p>
+            <p>{t("tasks.description_disabled_guest")}</p>
           )}
         </div>
       )}

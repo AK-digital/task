@@ -16,8 +16,10 @@ moment.locale("fr");
 import Image from "next/image";
 import { useEffect, useState, useActionState, useContext, useRef } from "react";
 import { useStopwatch } from "react-timer-hook";
+import { useTranslation } from "react-i18next";
 
 export default function TaskTimer({ task }) {
+  const { t } = useTranslation();
   const [totalTaskDuration, setTotalTaskDuration] = useState(
     task?.timeTrackings?.reduce((acc, curr) => acc + curr.duration, 0) || 0
   );
@@ -199,14 +201,14 @@ export default function TaskTimer({ task }) {
           >
             <div className="flex justify-between items-center text-[1.1rem] font-medium bg-third p-2 rounded-t">
               <span className="text-text-dark-color select-none">
-                Gestion du temps
+                {t("tasks.time_management")}
               </span>
               {addingSession && (
                 <span
                   className="text-accent-color text-normal cursor-pointer select-none"
                   onClick={(e) => setAddingSession(false)}
                 >
-                  Retour
+                  {t("time_tracking.back")}
                 </span>
               )}
             </div>
@@ -224,7 +226,7 @@ export default function TaskTimer({ task }) {
                       className="w-full p-2 rounded"
                       onClick={() => setAddingSession(true)}
                     >
-                      Ajouter une session
+                      {t("time_tracking.add_session")}
                     </button>
                   </div>
                 )}
@@ -250,6 +252,7 @@ export default function TaskTimer({ task }) {
 }
 
 export function TimeTrackingForm({ task, formatTime, setSessions }) {
+  const { t } = useTranslation();
   const [startTime, setStartTime] = useState(moment().format("HH:mm"));
   const [endTime, setEndTime] = useState("");
   const [timeExpected, setTimeExpected] = useState("00:00:00");
@@ -281,7 +284,16 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
 
       socket.emit("update task", task?.projectId?._id);
     }
-  }, [state]);
+
+    if (state?.status === "failure") {
+      // Afficher le message d'erreur si nécessaire
+      console.error(
+        state?.message?.startsWith?.("time_tracking.")
+          ? t(state.message)
+          : state?.message
+      );
+    }
+  }, [state, t]);
 
   const calculateTimeDifference = (startTime, endTime) => {
     if (!startTime || !endTime) return;
@@ -325,7 +337,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
       <form action={formAction} className="flex flex-col gap-3">
         <div className="mx-auto">
           <label className="relative text-text-color-muted text-normal text-left block select-none">
-            Date de début
+            {t("tasks.start_date")}
           </label>
           <input
             className="border-none input_TimeTrackingForm_TaskTimer"
@@ -338,7 +350,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
         <div className="flex justify-evenly w-full gap-2">
           <div className="flex flex-col gap-1 items-center">
             <label className="relative text-color-text-color-muted text-normal text-left block select-none">
-              Heure de début
+              {t("time_tracking.start_time")}
             </label>
             <input
               className="w-[65px] !important border-none p-0 !important input_TimeTrackingForm_TaskTimer"
@@ -351,7 +363,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
           </div>
           <div className="flex flex-col gap-1 items-center">
             <label className="relative text-color-text-color-muted text-normal text-left block select-none">
-              Heure de fin
+              {t("time_tracking.end_time")}
             </label>
             <input
               className="w-[65px] border-none p-0 input_TimeTrackingForm_TaskTimer"
@@ -370,7 +382,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
             disabled={pending}
             data-disabled={pending}
           >
-            Ajouter la session
+            {t("time_tracking.add_session")}
           </button>
         </div>
       </form>
@@ -384,6 +396,7 @@ export function TimeTrackingSessions({
   setSessions,
   formatTime,
 }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
   async function handleDeleteSession(sessionId) {
     setSessions((prev) => prev.filter((session) => session._id !== sessionId));
@@ -423,12 +436,14 @@ export function TimeTrackingSessions({
                   width={25}
                   height={25}
                   style={{ borderRadius: "50%" }}
-                  alt={`Photo de profil de ${user?.firstName}`}
+                  alt={`${t("tasks.profile_picture_alt", {
+                    firstName: user?.firstName,
+                  })}`}
                 />
                 <span>{endDate}</span>
               </div>
               <span className="flex-1 text-center select-none">
-                {hoursStart} à {hoursEnd}
+                {hoursStart} {t("tasks.time_separator")} {hoursEnd}
               </span>
               <span className="flex justify-end min-w-[70px] select-none">
                 {formatTime(Math.floor(session?.duration / 1000))}

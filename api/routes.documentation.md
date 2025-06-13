@@ -14,7 +14,6 @@
 | PATCH   | `/accept-invitation`           | `acceptProjectInvitation`          | *(aucun checkRole)*                       |
 | PATCH   | `/:id/update-role`             | `updateProjectRole`                | owner, manager                            |
 | PATCH   | `/:id/remove-guest`            | `removeGuest`                      | owner, manager                            |
-| PATCH   | `/reorder`                     | `updateProjectsOrder`              | *(aucun checkRole)*                       |
 
 ---
 

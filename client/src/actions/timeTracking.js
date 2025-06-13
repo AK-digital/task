@@ -31,20 +31,20 @@ export async function saveTimeTracking(taskId, projectId, prevState, formData) {
     const response = await res.json();
 
     if (!response?.success) {
-      throw new Error(response?.message || "Une erreur est survenue");
+      throw new Error(response?.message || "common.error");
     }
 
     revalidateTag("tasks");
 
     return {
       status: "success",
-      message: "Le timer a été enregistré avec succès",
+      message: "time_tracking.save.success",
       data: response?.data,
     };
   } catch (err) {
     return {
       status: "failure",
-      message: err.message || "Une erreur est survenue",
+      message: err.message || "common.error",
     };
   }
 }

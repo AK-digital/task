@@ -6,6 +6,7 @@ import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
 import { useState } from "react";
 import { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 export function DropDown({
   defaultValue,
@@ -14,6 +15,7 @@ export function DropDown({
   member = null,
   invitation = null,
 }) {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -57,8 +59,13 @@ export function DropDown({
   return (
     <>
       <div className="relative select-none">
-        <div onClick={handleIsOpen} className="p-2 bg-accent-color text-small rounded-sm cursor-pointer w-25 transition-all ease-in duration-[80ms] hover:bg-accent-color-hover">
-          <span className="flex items-center justify-center text-white text-center w-full">{memberRole(current)}</span>
+        <div
+          onClick={handleIsOpen}
+          className="p-2 bg-accent-color text-small rounded-sm cursor-pointer w-25 transition-all ease-in duration-[80ms] hover:bg-accent-color-hover"
+        >
+          <span className="flex items-center justify-center text-white text-center w-full">
+            {memberRole(current, t)}
+          </span>
         </div>
         {isOpen && (
           <ul className="absolute flex flex-col z-9999 top-10 left-0 gap-0 w-full bg-secondary text-small rounded-sm max-h-50 overflow-auto text-left shadow-medium">
@@ -70,13 +77,17 @@ export function DropDown({
                   onClick={handleChangeRole}
                   data-value={option}
                 >
-                  <span className="flex items-center justify-center">{memberRole(option)}</span>
+                  <span className="flex items-center justify-center">
+                    {memberRole(option, t)}
+                  </span>
                 </li>
               );
             })}
           </ul>
         )}
-        {isOpen && <div className="modal-layout-opacity" onClick={handleIsOpen}></div>}
+        {isOpen && (
+          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
+        )}
       </div>
     </>
   );

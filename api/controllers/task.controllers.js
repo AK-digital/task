@@ -117,11 +117,11 @@ export async function getTasks(req, res, next) {
       })
       .populate({
         path: "status",
-        select: "status name color projectId",
+        select: "status name color projectId default",
       })
       .populate({
         path: "priority",
-        select: "name color _id",
+        select: "name color _id priority default",
       })
       .populate({
         path: "responsibles",
@@ -553,13 +553,13 @@ export async function updateTaskDescription(req, res, next) {
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
 
-      const template = emailDescription(authUser, updatedTask, link);
+      const template = emailDescription(authUser, updatedTask, link, user);
 
       if (user) {
         await sendEmail(
           "notifications@clynt.io",
           user?.email,
-          template?.subjet,
+          template?.subject,
           template?.text
         );
       }
@@ -731,11 +731,16 @@ export async function addResponsible(req, res, next) {
     if (authUser?._id.toString() !== responsibleId) {
       const projectLink = `${process.env.CLIENT_URL}/projects/${updatedTask.projectId._id}`;
 
-      const template = emailTaskAssigned(updatedTask, authUser, projectLink);
+      const template = emailTaskAssigned(
+        updatedTask,
+        authUser,
+        projectLink,
+        responsible
+      );
       await sendEmail(
         "notifications@clynt.io",
         responsible?.email,
-        template.subjet,
+        template.subject,
         template.text
       );
     }

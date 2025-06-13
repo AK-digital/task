@@ -3,6 +3,7 @@ import { deleteTimeTracking } from "@/api/timeTracking";
 import { Trash } from "lucide-react";
 import socket from "@/utils/socket";
 import { extractId } from "@/utils/extractId";
+import { useTranslation } from "react-i18next";
 
 export default function SelectedTimeTrackings({
   selectedTrackers,
@@ -10,6 +11,8 @@ export default function SelectedTimeTrackings({
   mutateTimeTrackings,
   trackers,
 }) {
+  const { t } = useTranslation();
+
   const handleDeleteTrackers = async () => {
     const firstSelectedTracker = trackers.find((tracker) =>
       selectedTrackers.includes(tracker._id)
@@ -34,6 +37,11 @@ export default function SelectedTimeTrackings({
 
     const response = await deleteTimeTracking(selectedTrackers, projectId);
     if (!response.success) {
+      if (response?.message?.startsWith?.("time_tracking.")) {
+        console.error(t(response.message));
+      } else if (response?.message) {
+        console.error(response.message);
+      }
       mutateTimeTrackings(undefined, {
         revalidate: true,
         populateCache: false,
@@ -62,14 +70,17 @@ export default function SelectedTimeTrackings({
       <div>
         <span className="text-[1.4rem]">
           {selectedTrackers?.length > 1
-            ? "Suivi séléctionnés"
-            : "Suivi sélectionné"}
+            ? t("time_tracking.selected_plural")
+            : t("time_tracking.selected_singular")}
         </span>
       </div>
       <div className="w-px bg-text-light-color h-[50px] mx-3"></div>
       <div>
-        <span className="flex items-center text-text-color-red gap-1 cursor-pointer" onClick={handleDeleteTrackers}>
-          <Trash size={16} /> Supprimer
+        <span
+          className="flex items-center text-text-color-red gap-1 cursor-pointer"
+          onClick={handleDeleteTrackers}
+        >
+          <Trash size={16} /> {t("time_tracking.delete")}
         </span>
       </div>
     </div>

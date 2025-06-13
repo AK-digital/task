@@ -3,6 +3,7 @@ import { isNotEmpty } from "@/utils/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import NoPicture from "../User/NoPicture";
+import { useTranslation } from "react-i18next";
 
 export default function MentionsList({
   project,
@@ -10,6 +11,7 @@ export default function MentionsList({
   editor,
   setIsTaggedUsers,
 }) {
+  const { t } = useTranslation();
   const members = project?.members || [];
   const [selectedIdx, setSelectedIdx] = useState(null);
 
@@ -135,7 +137,10 @@ export default function MentionsList({
                       src={member?.user?.picture || "/default-pfp.webp"}
                       width={22}
                       height={22}
-                      alt={`Photo de profil de ${member?.user?.firstName}`}
+                      alt={`${t("general.profile_picture_alt")} ${
+                        member?.user?.firstName
+                      }`}
+                      style={{ borderRadius: "50%" }}
                       className="rounded-full max-h-[22px] max-w-[22px]"
                     />
                   ) : (

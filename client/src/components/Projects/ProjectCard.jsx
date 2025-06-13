@@ -7,6 +7,7 @@ import { deleteFavorite, saveFavorite } from "@/api/favorite";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth";
 import { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 export default function ProjectCard({
   project,
@@ -14,6 +15,7 @@ export default function ProjectCard({
   href,
   isDefault,
 }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
   const userFavIds = project?.favorites?.map((fav) => fav.user);
   const hasFav = userFavIds?.includes(uid);
@@ -29,7 +31,7 @@ export default function ProjectCard({
 
   const projectId = project?._id;
 
-  const name = project?.name || "Nouveau projet";
+  const name = project?.name || t("projects.new_project");
 
   async function handleFavorite(e) {
     e.stopPropagation();
@@ -70,7 +72,11 @@ export default function ProjectCard({
   }
 
   return (
-    <div key={projectId} data-default={isDefaultProject} className="projectWrapper_ProjectCard relative flex flex-col max-w-[290px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl overflow-visible transition-all duration-200 ease-in-out cursor-pointer no-underline hover:-translate-y-0.5">
+    <div
+      key={projectId}
+      data-default={isDefaultProject}
+      className="projectWrapper_ProjectCard relative flex flex-col max-w-[290px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl overflow-visible transition-all duration-200 ease-in-out cursor-pointer no-underline hover:-translate-y-0.5"
+    >
       <div className="starWrapper_ProjectCard relative top-px left-0 bg-secondary w-40 h-[30px] rounded-tl-2xl rounded-tr-0 rounded-bl-0 rounded-br-0 [clip-path:path('M_0_0_L_128_0_C_144_2_136_24,_160_34_L_0_34_Z')]">
         <Star
           size={18}
@@ -116,7 +122,12 @@ export default function ProjectCard({
               </div>
             )}
             <div className=" text-xl mt-1.5 text-text-darker-color">
-              <span title={name} className="whitespace-nowrap overflow-hidden text-ellipsis w-[200px] inline-block">{name}</span>
+              <span
+                title={name}
+                className="whitespace-nowrap overflow-hidden text-ellipsis w-[200px] inline-block"
+              >
+                {name}
+              </span>
             </div>
           </div>
 
@@ -132,10 +143,18 @@ export default function ProjectCard({
             project && (
               <div className="flex flex-col gap-2.5 text-small">
                 <span className="text-text-darker-color select-none">
-                  {`${totalBoards} tableau${totalBoards === 1 ? "" : "x"}`}
+                  {`${totalBoards} ${
+                    totalBoards === 1
+                      ? t("projects.board_singular")
+                      : t("projects.board_plural")
+                  }`}
                 </span>
                 <div className="flex justify-between items-center text-text-darker-color select-none">
-                  {`${totalTasks} tâche${totalTasks === 1 ? "" : "s"}`}
+                  {`${totalTasks} ${
+                    totalTasks === 1
+                      ? t("projects.task_singular")
+                      : t("projects.task_plural")
+                  }`}
                   <div className="flex h-3 w-full rounded-[5px] bg-[#e9ecef] flex-[0.5] statusBar_ProjectCard">
                     {statuses.map((status, idx) => {
                       return (

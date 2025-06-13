@@ -6,8 +6,10 @@ import { addResponsible, removeResponsible } from "@/api/task";
 import socket from "@/utils/socket";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import DisplayPicture from "@/components/User/DisplayPicture.jsx";
+import { useTranslation } from "react-i18next";
 
 export default function TaskResponsibles({ task, uid, user }) {
+  const { t } = useTranslation();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [responsibles, setResponsibles] = useState(task?.responsibles || []);
   const filteredMembers = task?.projectId?.members?.filter((member) =>
@@ -45,8 +47,11 @@ export default function TaskResponsibles({ task, uid, user }) {
 
   function generateNotification(member) {
     const message = {
-      title: `🎉 Une tâche vous a été assignée dans ${project?.name}`,
-      content: `Vous venez d'être nommé responsable de la tâche "${task?.text}".`,
+      type: "task_assigned",
+      params: {
+        projectName: project?.name,
+        taskText: task?.text,
+      },
     };
 
     const link = `/projects/${project?._id}/task/${task?._id}`;
@@ -158,7 +163,7 @@ export default function TaskResponsibles({ task, uid, user }) {
               </div>
             )}
             <span className="text-[14px] font-medium text-text-color-muted select-none">
-              Personnes à inviter
+              {t("tasks.people_to_invite")}
             </span>
             {/* Members */}
             <div className="scrollable_TaskResponsibles max-h-[200px] overflow-y-auto">

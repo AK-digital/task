@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Attachment from "../Attachment/Attachment";
 import { Download, Trash2 } from "lucide-react";
 import { BlobWriter, ZipWriter, BlobReader } from "@zip.js/zip.js";
+import { useTranslation } from "react-i18next";
 
 export default function AttachmentsInfo({
   attachments,
@@ -9,14 +10,18 @@ export default function AttachmentsInfo({
   disable = true,
   type = "affichage",
 }) {
+  const { t } = useTranslation();
   const [showAttachments, setShowAttachments] = useState(false);
 
   const attachmentsLength = [...attachments].length;
 
   const [checkedList, setCheckedList] = useState([]);
 
-  const label = `${attachmentsLength} ${attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"
-    }`;
+  const label = `${attachmentsLength} ${
+    attachmentsLength > 1
+      ? t("attachments.attachment_plural")
+      : t("attachments.attachment_singular")
+  }`;
 
   const isAffichage = type === "affichage";
 
@@ -124,7 +129,7 @@ export default function AttachmentsInfo({
 
     const a = document.createElement("a");
     a.href = zipUrl;
-    a.download = "pièces jointes.zip";
+    a.download = t("attachments.attachments_zip");
     a.click();
     URL.revokeObjectURL(zipUrl);
   };
@@ -223,7 +228,9 @@ export default function AttachmentsInfo({
           </div>
           <div className="actions_AttachmentsInfo">
             <span className="" onClick={toggleAll}>
-              {isAnyChecked ? "Tout décocher" : "Tout cocher"}
+              {isAnyChecked
+                ? t("attachments.uncheck_all")
+                : t("attachments.check_all")}
             </span>
 
             <div className="flex gap-1">

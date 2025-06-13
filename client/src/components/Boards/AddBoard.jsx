@@ -5,10 +5,11 @@ import { mutate } from "swr";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { useState } from "react";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
+import { useTranslation } from "react-i18next";
 import AddBoardIAModal from "../Modals/AddBoardIAModal";
-import { bricolageGrostesque } from "@/utils/font";
 
 export default function AddBoard({ project }) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
   const [showIAModal, setShowIAModal] = useState(false);
@@ -21,7 +22,7 @@ export default function AddBoard({ project }) {
 
   async function handleAddBoard(projectId) {
     setIsLoading(true);
-    const response = await saveBoard(projectId);
+    const response = await saveBoard(projectId, t("boards.new_board"));
 
     if (!response.success) return;
 
@@ -42,7 +43,7 @@ export default function AddBoard({ project }) {
         className="font-bricolage flex justify-center items-center gap-1.5"
       >
         <Plus size={18} />
-        Tableau vide
+        {t("boards.empty_board")}
       </button>
       <button
         type="button"
@@ -50,7 +51,7 @@ export default function AddBoard({ project }) {
         className="font-bricolage flex justify-center items-center gap-1.5"
       >
         <Plus size={18} />
-        Modèle de tableau
+        {t("boards.board_template")}
       </button>
       {/* <button
         type="button"
@@ -58,7 +59,7 @@ export default function AddBoard({ project }) {
         onClick={() => setShowIAModal(true)}
       >
         <Plus size={18} />
-        Ajout de tableau par IA
+        {t("boards.add_board_ia")}
       </button> */}
       {addBoardTemplate && (
         <BoardsTemplateList

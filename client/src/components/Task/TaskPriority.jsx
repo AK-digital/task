@@ -1,5 +1,5 @@
 import { updateTaskPriority } from "@/actions/task";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { Pen, Plus, Save } from "lucide-react";
@@ -8,9 +8,11 @@ import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
 import { getFloating, usePreventScroll } from "@/utils/floating";
+import { useTranslation } from "react-i18next";
 
 export default function TaskPriority({ task }) {
-  const { project, mutateTasks, priorities, mutatePriorities } =
+  const { t } = useTranslation();
+  const { project, mutateTasks, priorities, mutatePriorities, mutateProject } =
     useProjectContext();
   const [currentPriority, setCurrentPriority] = useState(task?.priority);
   const [isEdit, setIsEdit] = useState(false);
@@ -47,6 +49,11 @@ export default function TaskPriority({ task }) {
 
     if (response?.status === "failure") {
       setCurrentPriority(task?.priority);
+      if (response?.message?.startsWith?.("task.")) {
+        console.error(t(response.message));
+      } else {
+        console.error(response?.message);
+      }
       return;
     }
 
@@ -54,6 +61,7 @@ export default function TaskPriority({ task }) {
 
     mutateTasks();
     mutatePriorities();
+    mutateProject();
   }
 
   async function handleAddPriority() {
@@ -68,7 +76,7 @@ export default function TaskPriority({ task }) {
       availableColors[Math.floor(Math.random() * availableColors?.length)];
 
     const response = await savePriority(project?._id, {
-      name: "Nouvelle priorité",
+      name: t("tasks.new_priority"),
       color: randomColor,
     });
 
@@ -93,7 +101,7 @@ export default function TaskPriority({ task }) {
     setIsEdit((prev) => !prev);
   }
 
-  useMemo(() => {
+  useEffect(() => {
     setCurrentPriority(task?.priority);
   }, [task?.priority]);
 
@@ -120,7 +128,11 @@ export default function TaskPriority({ task }) {
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
-        <span>{currentPriority?.name || "Basse"}</span>
+        <span>
+          {currentPriority?.default
+            ? t(`tasks.priorities.${currentPriority?.priority}`)
+            : currentPriority?.name}
+        </span>
       </div>
       {isOpen && (
         <>
@@ -142,7 +154,9 @@ export default function TaskPriority({ task }) {
                       onClick={() => handleTaskUpdatePriority(priority)}
                       style={{ backgroundColor: priority?.color }}
                     >
-                      {priority?.name}
+                      {priority?.default
+                        ? t(`tasks.priorities.${priority?.priority}`)
+                        : priority?.name || t("tasks.priorities.low")}
                     </li>
                   );
                 } else {
@@ -162,7 +176,7 @@ export default function TaskPriority({ task }) {
                   onClick={handleAddPriority}
                 >
                   <Plus size={16} />
-                  Ajouter
+                  {t("tasks.add")}
                 </li>
               )}
             </ul>
@@ -172,14 +186,14 @@ export default function TaskPriority({ task }) {
                 onClick={handleEditPriority}
               >
                 <Save size={16} />
-                Appliquer
+                {t("tasks.apply")}
               </button>
             ) : (
               <button
                 className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
                 onClick={handleEditPriority}
               >
-                <Pen size={16} /> Modifier les priorités
+                <Pen size={16} /> {t("tasks.edit_priorities")}
               </button>
             )}
           </div>

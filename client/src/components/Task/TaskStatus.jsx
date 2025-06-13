@@ -1,6 +1,6 @@
 "use client";
 import { updateTaskStatus } from "@/actions/task";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { getFloating, usePreventScroll } from "@/utils/floating";
@@ -9,9 +9,11 @@ import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditStatus from "./TaskEditStatus";
 import { saveStatus } from "@/api/status";
 import { colors } from "@/utils/utils";
+import { useTranslation } from "react-i18next";
 
 export default function TaskStatus({ task, uid }) {
-  const { project, mutateTasks, statuses, mutateStatuses } =
+  const { t } = useTranslation();
+  const { project, mutateTasks, statuses, mutateStatuses, mutateProject } =
     useProjectContext();
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [isEdit, setIsEdit] = useState(false);
@@ -36,20 +38,31 @@ export default function TaskStatus({ task, uid }) {
 
   async function handleTaskUpdateStatus(status) {
     if (!canEdit) return;
-    setCurrentStatus(status);
     setIsOpen(false);
+    setCurrentStatus(status);
 
     const res = await updateTaskStatus(task?._id, project?._id, status?._id);
 
     if (!res?.success) {
       setCurrentStatus(task?.status);
+      if (res?.message?.startsWith?.("task.")) {
+        console.error(t(res.message));
+      } else {
+        console.error(res?.message);
+      }
       return;
     }
 
-    socket.emit("update task", project?._id);
     mutateTasks();
     mutateStatuses();
+    mutateProject();
+
+    socket.emit("update task", project?._id);
   }
+
+  useEffect(() => {
+    setCurrentStatus(task?.status);
+  }, [task?.status]);
 
   async function handleAddStatus() {
     if (!canEdit) return;
@@ -63,7 +76,7 @@ export default function TaskStatus({ task, uid }) {
       availableColors[Math.floor(Math.random() * availableColors?.length)];
 
     const response = await saveStatus(project?._id, {
-      name: "Nouveau statut",
+      name: t("tasks.new_status"),
       color: randomColor,
     });
 
@@ -88,10 +101,6 @@ export default function TaskStatus({ task, uid }) {
     setIsEdit((prev) => !prev);
   }
 
-  useMemo(() => {
-    setCurrentStatus(task?.status);
-  }, [task?.status]);
-
   const hasStatus = currentStatus?.name;
   const currentBackgroundColor = hasStatus ? currentStatus?.color : "#b3bcc0";
 
@@ -113,7 +122,11 @@ export default function TaskStatus({ task, uid }) {
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
-        <span>{currentStatus?.name || "En attente"}</span>
+        <span>
+          {currentStatus?.default
+            ? t(`tasks.statuses.${currentStatus?.status}`)
+            : currentStatus?.name}
+        </span>
       </div>
       {isOpen && (
         <>
@@ -134,7 +147,9 @@ export default function TaskStatus({ task, uid }) {
                       onClick={() => handleTaskUpdateStatus(status)}
                       style={{ backgroundColor: status?.color }}
                     >
-                      {status?.name}
+                      {status?.default
+                        ? t(`tasks.statuses.${status?.status}`)
+                        : status?.name || t("tasks.statuses.waiting")}
                     </li>
                   );
                 } else {
@@ -154,7 +169,7 @@ export default function TaskStatus({ task, uid }) {
                   onClick={handleAddStatus}
                 >
                   <Plus size={16} />
-                  Ajouter
+                  {t("tasks.add")}
                 </li>
               )}
             </ul>
@@ -164,14 +179,14 @@ export default function TaskStatus({ task, uid }) {
                 onClick={handleEditStatus}
               >
                 <Save size={16} />
-                Appliquer
+                {t("tasks.apply")}
               </button>
             ) : (
               <button
                 className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none"
                 onClick={handleEditStatus}
               >
-                <Pen size={16} /> Modifier les statuts
+                <Pen size={16} /> {t("tasks.edit_statuses")}
               </button>
             )}
           </div>

@@ -6,8 +6,11 @@ import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
 import { useProjects } from "../../../../../../hooks/useProjects";
 import { AuthContext } from "@/context/auth";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Projects() {
+  const { t } = useTranslation();
+  const router = useRouter();
   const { uid } = useContext(AuthContext);
   const { projects, projectsLoading, mutateProjects } = useProjects();
 
@@ -23,10 +26,12 @@ export default function Projects() {
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">
       <div className="relative flex items-center flex-col rounded-tl-2xl bg-primary-transparent h-full pl-6 pt-6">
         <div className="flex justify-between items-start w-full pr-6 mb-5">
-          <h1 className="ml-[175px] select-none">Vos projets</h1>
+          <h1 className="ml-[175px] select-none">{t("projects.your_projects")}</h1>
           <div className="text-text-color-muted text-[0.85rem] font-medium bg-secondary px-3 py-1.5 rounded-lg select-none">
             <span>
-              {projectsLoading ? "..." : `${projects?.length} projets`}
+              {projectsLoading
+                ? "..."
+                : `${projects?.length} ${t("projects.projects_count")}`}
             </span>
           </div>
         </div>

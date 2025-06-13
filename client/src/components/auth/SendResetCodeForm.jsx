@@ -1,6 +1,8 @@
 import { sendResetCode } from "@/actions/auth";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
 const initialState = {
   status: "pending",
   payload: null,
@@ -9,9 +11,11 @@ const initialState = {
 };
 
 export default function SendResetCodeForm() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [messageStatus, setMessageStatus] = useState("");
+
   const [state, formAction, pending] = useActionState(
     sendResetCode,
     initialState
@@ -20,17 +24,19 @@ export default function SendResetCodeForm() {
   useEffect(() => {
     setMessageStatus("");
     if (state?.status === "success") {
-      setMessageStatus("Un email de réinitialisation a été envoyé.");
+      setMessageStatus(t(state.message));
     }
 
     if (state?.status === "failure" && !state?.errors?.email) {
-      setMessageStatus("Une erreur inattendue s'est produite");
+      setMessageStatus(t(state.message));
     }
-  }, [state]);
+  }, [state, t]);
 
   return (
     <div className="flex flex-col w-full p-10 max-w-115 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)]">
-      <div className="text-[1.9rem] font-bold mb-15">Mot de passe oublié</div>
+      <div className="text-[1.9rem] font-bold mb-15">
+        {t("auth.forgot_password.title")}
+      </div>
       {messageStatus && (
         <div className="text-center mb-6">
           <span data-status={state?.status}>{messageStatus}</span>
@@ -41,8 +47,9 @@ export default function SendResetCodeForm() {
           <label
             htmlFor="email"
             data-active={email.length > 0}
-            className="text-text-lighter-color">
-            Adresse e-mail
+            className="text-text-lighter-color"
+          >
+            {t("auth.forgot_password.email_label")}
           </label>
           <input
             type="email"
@@ -52,11 +59,15 @@ export default function SendResetCodeForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             className="border-b border-b-text-lighter-color text-text-lighter-color text-medium"
-            />
+          />
 
           {state?.errors?.email && (
             <div className="mt-1 text-left ml-1">
-              <i data-error={true}>{state?.errors?.email}</i>
+              <i data-error={true}>
+                {state?.errors?.email?.startsWith?.("auth.")
+                  ? t(state.errors.email)
+                  : state?.errors?.email}
+              </i>
             </div>
           )}
         </div>
@@ -67,7 +78,7 @@ export default function SendResetCodeForm() {
             data-disabled={pending}
             disabled={pending}
           >
-            Réinitialiser le mot de passe
+            {t("auth.forgot_password.reset_password_button")}
           </button>
         </div>
       </form>
@@ -77,9 +88,9 @@ export default function SendResetCodeForm() {
             onClick={(e) => {
               router.push("/");
             }}
-          className="text-accent-color-light cursor-pointer ml-1 hover:underline"
+            className="text-accent-color-light cursor-pointer ml-1 hover:underline"
           >
-            Retourner sur l'écran de connexion
+            {t("auth.forgot_password.back_to_login")}
           </span>
         </p>
       </div>

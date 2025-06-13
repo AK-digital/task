@@ -1,0 +1,770 @@
+{
+  "auth": {
+    "signin": {
+      "title": "Connexion",
+      "email_label": "Adresse e-mail",
+      "password_label": "Mot de passe",
+      "forgot_password": "Mot de passe oublié ?",
+      "submit_button": "Se connecter",
+      "submit_button_loading": "Connexion en cours...",
+      "no_account": "Vous n'avez pas encore de compte ?",
+      "signup_link": "S'inscrire",
+      "resend_verification": "Renvoyer un email de vérification",
+      "invalid_credentials": "Identifiants incorrects, veuillez réessayer.",
+      "connection_error": "Une erreur s'est produite lors de la connexion. Veuillez réessayer.",
+      "verification_success": "Email de vérification renvoyé avec succès.",
+      "show_password": "Afficher le mot de passe",
+      "google_signin": "Se connecter avec Google",
+      "or": "ou",
+      "resend_email": "Renvoyer un email de vérification",
+      "incorrect_credentials": "Identifiants incorrects, veuillez réessayer.",
+      "error": "Une erreur est survenue lors de la connexion"
+    },
+    "signup": {
+      "title": "Inscription",
+      "lastname_label": "Nom",
+      "firstname_label": "Prénom",
+      "email_label": "Adresse e-mail",
+      "password_label": "Mot de passe",
+      "submit_button": "S'inscrire",
+      "submit_button_loading": "Inscription en cours...",
+      "have_account": "Vous avez déjà un compte ?",
+      "signin_link": "Se connecter",
+      "account_created_title": "Votre compte a été créé avec succès !",
+      "account_created_message": "Un email de vérification a été envoyé à votre adresse e-mail. Veuillez cliquer sur le lien dans l'email pour activer votre compte.",
+      "back_to_signin": "Retourner à la page de connexion",
+      "account_creation_error": "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer.",
+      "password_requirements": "Le mot de passe doit contenir :",
+      "password_min_chars": "- Au moins 8 caractères",
+      "password_uppercase": "- Une lettre majuscule (A-Z)",
+      "password_number": "- Un chiffre (0-9)",
+      "password_special": "- Un caractère spécial (!@#$%^&?)",
+      "creation_error": "Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer.",
+      "error": "Une erreur est survenue lors de la création d'un nouvel utilisateur",
+      "email_already_used": "Cette adresse e-mail est déjà utilisée"
+    },
+    "verification": {
+      "verifying": "Vérification en cours...",
+      "verification_error": "Une erreur s'est produite lors de la vérification de votre compte.",
+      "verification_success": "Votre adresse e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter.",
+      "title": "Vérification",
+      "error": "Une erreur s'est produite lors de la vérification",
+      "success": "Vérification terminée avec succès",
+      "redirecting": "Redirection vers la création de compte...",
+      "create_account": "Créer un compte"
+    },
+    "forgot_password": {
+      "reset_button": "Réinitialiser mon mot de passe",
+      "title": "Mot de passe oublié",
+      "email_label": "Adresse e-mail",
+      "reset_password_button": "Réinitialiser le mot de passe",
+      "back_to_login": "Retourner sur l'écran de connexion",
+      "reset_email_sent": "Un email de réinitialisation a été envoyé.",
+      "reset_title": "Réinitialisation de votre mot de passe ?",
+      "new_password": "Nouveau mot de passe",
+      "confirm_password": "Confirmez le mot de passe",
+      "password_reset_success": "Mot de passe réinitialisé avec succès",
+      "unexpected_error": "Une erreur inattendue s'est produite",
+      "login_button": "Se connecter"
+    },
+    "not_connected": "L'utilisateur n'est pas connecté",
+    "user_not_exist": "L'utilisateur n'existe pas",
+    "account_not_verified": "Votre compte n'est pas encore vérifié.",
+    "reset_code": {
+      "sent": "Un code de réinitialisation a été envoyé à votre adresse e-mail",
+      "error": "Une erreur est survenue lors de l'envoi du code de réinitialisation"
+    },
+    "reset_password": {
+      "error": "Une erreur est survenue lors de la réinitialisation de votre mot de passe"
+    },
+    "clynt_slogan": "Gestion de projet sans <strong>effort</strong>"
+  },
+  "validation": {
+    "lastname_min": "Le nom doit contenir au moins 2 caractères",
+    "lastname_max": "Le nom ne peut pas dépasser 50 caractères",
+    "firstname_min": "Le prénom doit contenir au moins 2 caractères",
+    "firstname_max": "Le prénom ne peut pas dépasser 50 caractères",
+    "email_invalid": "L'adresse e-mail saisie est invalide",
+    "password_contains": "Le mot de passe doit contenir ",
+    "password_invalid": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre",
+    "company_max": "Le nom de l'entreprise ne peut pas dépasser 100 caractères",
+    "position_max": "Le poste ne peut pas dépasser 100 caractères",
+    "email": {
+      "invalid": "L'adresse e-mail saisie est invalide",
+      "not_exist": "Cette adresse e-mail n'existe pas",
+      "required": "Veuillez renseigner votre adresse e-mail",
+      "not_found": "Aucun utilisateur trouvé avec cette adresse e-mail"
+    },
+    "credentials": {
+      "invalid": "Votre adresse e-mail ou votre mot de passe est invalide"
+    },
+    "password": {
+      "required": "Veuillez renseigner un nouveau mot de passe",
+      "requirements": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
+      "no_match": "Les mots de passe ne correspondent pas",
+      "must_be_different": "Le nouveau mot de passe doit être différent de l'ancien"
+    },
+    "project": {
+      "name_required": "Le nom du projet est obligatoire",
+      "url_invalid": "L'URL est invalide",
+      "url_empty": "L'URL ne peut pas être vide"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread_singular": "non lue",
+    "unread_plural": "non lues",
+    "mark_all_read": "Tout marquer comme lu",
+    "empty_message": "Vous n'avez aucune notification pour le moment",
+    "generic_title": "Nouvelle notification",
+    "generic_content": "Vous avez reçu une nouvelle notification",
+    "mentioned_title": "{{senderName}} vous a mentionné",
+    "mentioned_content": "Vous avez été mentionné dans une conversation",
+    "reacted_title": "{{senderName}} a réagi à votre message",
+    "reacted_content": "{{senderName}} a réagi avec {{emoji}} à votre {{type}}",
+    "task_assigned_title": "🎉 Une tâche vous a été assignée dans {{projectName}}",
+    "task_assigned_content": "{{senderName}} vous a nommé responsable de la tâche \"{{taskText}}\".",
+    "project_invitation_title": "Invitation à un projet",
+    "project_invitation_content": "{{senderName}} vous a invité à rejoindre un projet"
+  },
+  "new_project": {
+    "back": "Retour",
+    "create_new_project": "Créer un nouveau projet",
+    "project_options": "Options du projet",
+    "create_with_ia": "Créer avec IA",
+    "create_from_template": "Créer à partir d'un modèle",
+    "create_empty_project": "Créer un projet vide",
+    "creating": "Création en cours...",
+    "create_project": "Créer le projet",
+    "error_creating_project_from_template": "Une erreur s'est produite lors de la création du projet à partir du modèle",
+    "error_creating_project": "Une erreur s'est produite lors de la création du projet",
+    "error_creating_board": "Une erreur s'est produite lors de la création du tableau"
+  },
+  "navigation": {
+    "my_tasks": "Mes tâches",
+    "my_projects": "Mes projets",
+    "time_tracking": "Suivi du temps",
+    "add_project": "Ajouter un projet",
+    "logo_alt": "Logo de Clynt"
+  },
+  "projects": {
+    "project_name": "Nom du projet",
+    "choose_project": "Choisir un projet",
+    "no_projects_found": "Aucun projet trouvé",
+    "new_project": "Créer un projet",
+    "new_project_description": "Créer un nouveau projet n'a jamais été aussi simple. Donnez un nom à votre projet pour démarrer un nouveau projet ou profitez de nos templates prédéfinies pour gagner du temps.",
+    "create_new_project": "Créer un nouveau projet",
+    "your_projects": "Vos projets",
+    "projects_count": "projets",
+    "new_project_element": "Élément pour créer un nouveau projet",
+    "choose_template": "Choisir un template",
+    "back": "Retour",
+    "board_singular": "tableau",
+    "board_plural": "tableaux",
+    "task_singular": "tâche",
+    "task_plural": "tâches",
+    "name_your_project": "Nommer votre projet",
+    "press_enter_create": "Appuyer sur Entrée pour créer le projet",
+    "click_create": "Cliquer pour créer le projet",
+    "invite_by_email": "Inviter par e-mail",
+    "send_invitation": "Envoyer une invitation",
+    "project_options": "Options de projet",
+    "general_information": "Informations générales",
+    "created_on": "Créée le",
+    "by": "Par",
+    "project_logo_alt": "Logo du projet",
+    "boards_count": "Tableaux",
+    "tasks_count": "tâches",
+    "project_archive": "Archive du projet",
+    "quick_links": "Liens rapides",
+    "add_link": "Ajouter un lien",
+    "delete_project": "Supprimer ce projet",
+    "save_changes": "Enregistrer les modifications",
+    "notes": "Notes",
+    "add_note_placeholder": "Ajouter une note...",
+    "changes_saved": "Modifications enregistrées",
+    "changes_saved_success": "Les modifications ont été enregistrées avec succès",
+    "error_occurred": "Une erreur est survenue",
+    "project_options_menu": "Options du projet",
+    "project_archives": "Archives du projet",
+    "save_project": "Enregistrer ce projet comme modèle",
+    "delete_project_menu": "Supprimer le projet",
+    "search_placeholder": "Rechercher...",
+    "task_status_singular": "tâche",
+    "task_status_plural": "tâches",
+    "invitation_sent_success": "Invitation envoyé avec succès",
+    "invitation_emoji": "🎉 Invitation à",
+    "invitation_good_news": "Bonne nouvelle ! Vous avez été invité pour rejoindre le projet",
+    "error_occurred_simple": "Une erreur s'est produite",
+    "url_placeholder": "https://www.exemple.com"
+  },
+  "tasks": {
+    "choose_board": "Choisir un tableau",
+    "status_waiting": "En attente",
+    "priority_low": "Basse",
+    "set_deadline": "Définir une date",
+    "no_deadline": "-",
+    "billable_tasks": "Tâches facturables",
+    "non_billable_tasks": "Tâches non facturables",
+    "task": "Tâche",
+    "projects": "Projets",
+    "boards": "Tableaux",
+    "time": "Temps",
+    "description": "Description",
+    "project": "Projet",
+    "user": "Utilisateur",
+    "date": "Date",
+    "selected_plural": "Tâches séléctionnées",
+    "selected_singular": "Tâche séléctionnée",
+    "remove_filters": "Supprimer les filtres",
+    "new_status": "Nouveau statut",
+    "edit_statuses": "Modifier les statuts",
+    "edit_priorities": "Modifier les priorités",
+    "confirm_delete": "Supprimer cette tâche ?",
+    "start_date": "Date de début",
+    "billable": "Facturable",
+    "admin": "Admin",
+    "status": "Statut",
+    "priority": "Priorité",
+    "deadline": "Échéance",
+    "estimation": "Estimation",
+    "time_management": "Gestion du temps",
+    "remove_reaction": "Retirer votre réaction",
+    "reacted_to_your": "a réagi à votre",
+    "reacted_with": "a réagi à votre",
+    "with_emoji": "avec",
+    "add_description": "Ajouter une description",
+    "description_disabled_guest": "L'ajout de description est désactivé en tant qu'invité",
+    "clear_description": "Effacer la description",
+    "by": "Par",
+    "former_user": "Ancien utilisateur",
+    "on": "le",
+    "set_date": "Définir une date",
+    "minutes": "Minutes",
+    "hours": "Heures",
+    "days": "Jours",
+    "weeks": "Semaines",
+    "validate": "Valider",
+    "mentioned_in_description": "vous a mentionné(e) dans une description",
+    "mentioned_description_content": "Vous venez d'être mentionné(e) dans une description \"{{projectName}}\".",
+    "mentioned_in_conversation": "vous a mentionné(e) dans une conversation",
+    "mentioned_conversation_content": "Vous venez d'être mentionné(e) dans une conversation \"{{projectName}}\".",
+    "n_minutes": "{{n}} minutes",
+    "1_hour": "1 heure",
+    "2_hours": "2 heures",
+    "1_day": "1 jour",
+    "new_priority": "Nouvelle priorité",
+    "add": "Ajouter",
+    "apply": "Appliquer",
+    "waiting_status": "En attente",
+    "task_assigned_title": "🎉 Une tâche vous a été assignée dans {{projectName}}",
+    "task_assigned_content": "{{senderName}} vous a nommé responsable de la tâche \"{{taskText}}\".",
+    "people_to_invite": "Personnes à inviter",
+    "profile_picture_alt": "Photo de profil de",
+    "time_separator": "à",
+    "archive_confirm": "Êtes-vous sûr de vouloir archiver cette tâche ?",
+    "restore_confirm": "Êtes-vous sûr de vouloir restaurer cette tâche ?",
+    "delete_confirm": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
+    "archive": "Archiver",
+    "restore": "Restaurer",
+    "responsibles": "Responsables",
+    "no_member_found": "Aucun membre n'a été trouvé",
+    "no_project_found": "Aucun projet n'a été trouvé",
+    "no_board_found": "Aucun tableau n'a été trouvé",
+    "clear": "Effacer",
+    "search_task_placeholder": "Recherchez une tâche...",
+    "photo_of": "Photo de",
+    "no_task": "Aucune tâche disponible",
+    "priorities": {
+      "urgent": "Urgent",
+      "high": "Haute",
+      "medium": "Moyenne",
+      "low": "Basse"
+    },
+    "statuses": {
+      "waiting": "En attente",
+      "todo": "À faire",
+      "progress": "En cours",
+      "done": "Terminée"
+    }
+  },
+  "time_tracking": {
+    "time_report": "Relevé de temps - AK Digital",
+    "document_generated": "Document généré automatiquement",
+    "default_project": "projet",
+    "total_time": "Temps total :",
+    "edit_description": "Modifier la description",
+    "delete_tracking": "Supprimer ce suivi",
+    "selected_plural": "Suivi séléctionnés",
+    "selected_singular": "Suivi sélectionné",
+    "delete": "Supprimer",
+    "start_date": "Date de début",
+    "end_date": "Date de fin",
+    "all_members": "Tous les membres",
+    "update_failed": "Échec de la mise à jour",
+    "no_tracking_message": "Aucun de vos projets ne contient un suivi de temps",
+    "start_time": "Heure de début",
+    "end_time": "Heure de fin",
+    "add_session": "Ajouter une session",
+    "back": "Retour",
+    "export_pdf": "Exporter en PDF",
+    "billable_tasks_title": "Tâches facturables",
+    "non_billable_tasks_title": "Tâches non facturables",
+    "total_duration": "Durée totale",
+    "from_to_date": "Du {{startDate}} au {{endDate}}",
+    "page_info": "Page {{current}} / {{total}}",
+    "description_column": "Description",
+    "responsible_column": "Responsable",
+    "time_column": "Temps",
+    "date_column": "Date",
+    "total_label": "Total :",
+    "save": {
+      "success": "Le timer a été enregistré avec succès"
+    },
+    "update_error": "Erreur lors de la mise à jour :"
+  },
+  "templates": {
+    "edit_board": "Modifier ce tableau",
+    "add_board": "Ajouter un tableau",
+    "add_template": "Ajouter un template",
+    "remove": "Supprimer",
+    "template_name": "Nom du modèle",
+    "save_template": "Enregistrer en tant que modèle",
+    "saved_boards": "Tableaux sauvegardés",
+    "no_boards_saved": "Aucun tableau sauvegardé",
+    "use_template": "Utiliser un template",
+    "no_template_found": "Aucun modèle trouvé",
+    "back": "Retour",
+    "save_board_as_template": "Enregistrer ce tableau comme modèle",
+    "save_project_as_template": "Enregistrer ce projet comme modèle",
+    "template_save_error": "Une erreur s'est produite lors de l'enregistrement du template",
+    "save_button": "Sauvegarder",
+    "save": {
+      "success": "Le template a été enregistré avec succès",
+      "error": "Une erreur s'est produite lors de l'enregistrement du template"
+    },
+    "available_templates": "Modèles Disponibles",
+    "community_templates": "La communauté",
+    "your_templates": "Les vôtres",
+    "no_templates_available": "Aucun modèle disponible",
+    "create_templates_info": "Créez d'abord des modèles depuis vos projets existants.",
+    "select_template_preview": "Sélectionnez un modèle pour voir l'aperçu",
+    "template_preview": "Aperçu du modèle",
+    "no_tasks_in_board": "Aucune tâche dans ce tableau",
+    "share_project_template": "Partager ce modèle de projet avec les autres utilisateurs",
+    "share_board_template": "Partager ce modèle de tableau avec les autres utilisateurs",
+    "you": "vous",
+    "use": "Utiliser"
+  },
+  "roles": {
+    "owner": "Propriétaire",
+    "manager": "Manager",
+    "team": "Équipe",
+    "customer": "Client",
+    "guest": "Invité",
+    "owner_emoji": "👑 Créateur",
+    "manager_emoji": "👨‍💼 Manager",
+    "team_emoji": "🙏 Équipe",
+    "customer_emoji": "👤Client",
+    "guest_emoji": "🙋‍♂️ Invité"
+  },
+  "general": {
+    "continue": "Continuer",
+    "description": "Description",
+    "responsible": "Responsable",
+    "time": "Temps",
+    "date": "Date",
+    "error_occurred": "Une erreur s'est produite",
+    "success": "Succès",
+    "loading": "Chargement...",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "new": "Nouveau",
+    "user": "Utilisateur",
+    "team": "Équipe",
+    "project": "Projet",
+    "task": "Tâche",
+    "board": "Tableau",
+    "boards": "Tableaux",
+    "tasks": "Tâches",
+    "yes": "Oui",
+    "no": "Non",
+    "irreversible_action": "Cette action est irréversible",
+    "profile_picture_alt": "Photo de profil de",
+    "change_language_to": "Changer la langue en",
+    "project_lowercase": "projet",
+    "board_lowercase": "tableau",
+    "confirm_deletion": "Confirmation de suppression",
+    "confirm_deletion_message": "Êtes-vous sûr de vouloir supprimer votre {{title}} ? Cette action est irréversible.",
+    "confirm_delete_button": "Confirmer la suppression",
+    "language_change_error": "Erreur lors du changement de langue :"
+  },
+  "profile": {
+    "my_profile": "Mon profil",
+    "first_name": "Prénom",
+    "last_name": "Nom de famille",
+    "company": "Entreprise",
+    "position": "Poste",
+    "language_label": "Langue",
+    "update_button": "Mettre à jour",
+    "success_title": "Succès",
+    "error_title": "Erreur",
+    "language": {
+      "missing_parameters": "Paramètres manquants",
+      "not_supported": "Langue non supportée",
+      "update": {
+        "success": "Langue mise à jour avec succès",
+        "error": "Une erreur est survenue lors de la mise à jour de la langue"
+      }
+    },
+    "updating_language": "Mise à jour de la langue...",
+    "sign_out": "Se déconnecter",
+    "picture_update_success": "Photo de profil mise à jour avec succès",
+    "picture_update_error": "Une erreur s'est produite lors de la mise à jour de la photo",
+    "profile_picture_alt": "Photo de profil de",
+    "update": {
+      "success": "Profil mis à jour avec succès",
+      "error": "Une erreur s'est produite lors de la mise à jour"
+    },
+    "picture": {
+      "no_file_selected": "Aucun fichier sélectionné",
+      "update": {
+        "success": "Photo de profil mise à jour avec succès",
+        "error": "Une erreur s'est produite lors de la mise à jour de la photo"
+      }
+    }
+  },
+  "emails": {
+    "description_mention": {
+      "subject": "Vous avez été mentionné dans une description",
+      "title": "Vous avez été mentionné 👀",
+      "content": "vous a mentionné dans",
+      "highlight": "la description suivante",
+      "button": "Accéder à la description"
+    },
+    "message_mention": {
+      "subject": "Vous avez été mentionné dans une conversation",
+      "title": "Un message vous concerne 💬",
+      "content": "vous a mentionné dans une",
+      "highlight": "conversation",
+      "button": "Accéder à la conversation"
+    },
+    "project_invitation": {
+      "subject": "Vous avez reçu une invitation à rejoindre un projet",
+      "title": "Une nouvelle opportunité vous attend 🎯",
+      "content": "vous a invité à rejoindre le projet",
+      "button": "Rejoindre le projet"
+    },
+    "task_assigned": {
+      "subject": "Vous avez été assigné à une tâche dans le projet",
+      "title": "Une tâche vous a été assignée",
+      "content": "vous a assigné la tâche",
+      "content_project": "sur le projet",
+      "button": "Accéder au projet"
+    },
+    "reset_code": {
+      "subject": "Réinitialisation de votre mot de passe",
+      "title": "Réinitialisation du mot de passe",
+      "greeting": "Bonjour",
+      "content": "Vous avez demandé la réinitialisation de votre mot de passe.",
+      "instruction": "Cliquez sur le bouton ci-dessous pour continuer :",
+      "button": "Réinitialiser mon mot de passe"
+    },
+    "verification": {
+      "subject": "Vérification de votre adresse email",
+      "title": "Confirmez votre adresse email",
+      "greeting": "Bonjour",
+      "content": "Merci de confirmer votre adresse email en cliquant sur le bouton ci-dessous :",
+      "button": "Vérifier mon adresse email"
+    }
+  },
+  "api_messages": {
+    "missing_parameters": "Paramètres manquants",
+    "invalid_parameters": "Paramètres invalides",
+    "unexpected_error": "Une erreur inattendue est survenue",
+    "user_created_success": "Utilisateur créé avec succès",
+    "user_connected_success": "Utilisateur connecté avec succès",
+    "email_verified_success": "Adresse mail vérifiée avec succès",
+    "verification_email_resent": "Email de vérification renvoyé avec succès",
+    "password_reset_success": "Mot de passe réinitialisé avec succès",
+    "logout_success": "Déconnexion réussie",
+    "project_created_success": "Projet créé avec succès",
+    "project_modified_success": "Projet modifié avec succès",
+    "project_deleted_success": "Projet supprimé avec succès",
+    "logo_updated_success": "Logo mis à jour avec succès",
+    "task_created_success": "Tâche créée avec succès",
+    "task_modified_success": "Tâche modifié avec succès",
+    "description_modified_success": "Description modifié avec succès",
+    "deadline_modified_success": "Deadline modifié avec succès",
+    "estimation_modified_success": "Estimation modifié avec succès",
+    "message_created_success": "Message créée avec succès",
+    "message_modified_success": "Réponse modifiée avec succès",
+    "message_deleted_success": "Message supprimé avec succès",
+    "reaction_added_success": "Réaction ajoutée avec succès",
+    "reaction_removed_success": "Réaction supprimée avec succès",
+    "reaction_updated_success": "Réaction mise à jour avec succès",
+    "responsible_added_success": "Un nouveau responsable vient d'être ajouté",
+    "responsible_removed_success": "Responsable retiré",
+    "time_tracking_finished": "Le tracking du temps de la tâche est terminée",
+    "invitation_sent_success": "Invitation envoyé avec succès",
+    "user_joined_success": "Un nouvel utilisateur a rejoint le projet avec succès",
+    "role_updated_success": "Rôle de l'utilisateur mis à jour avec succès",
+    "guest_removed_success": "Invité supprimer du projet avec succès",
+    "projects_order_updated": "Ordre des projets mis à jour pour l'utilisateur"
+  },
+  "meta": {
+    "app_title": "Clynt | Simple as fäck",
+    "app_description": "Generated by create next app",
+    "language": "fr"
+  },
+  "feedback": {
+    "feedback": "Feedback",
+    "success_message": "Feedback envoyé avec succès",
+    "subtitle": "N'hésitez pas à nous faire part de vos suggestions !",
+    "share_experience": "Partagez votre expérience",
+    "placeholder": "Votre feedback...",
+    "send": "Envoyer",
+    "note_required": "Veuillez sélectionner une note",
+    "message_required": "Veuillez entrer un message",
+    "missing_parameters": "Veuillez sélectionner une note et entrer un message",
+    "unexpected_error": "Une erreur inattendue est survenue"
+  },
+  "messages": {
+    "conversation": "Conversation",
+    "add_comment": "Ajouter un commentaire",
+    "attach_file": "Joindre un fichier",
+    "write_response": "Rédiger une réponse et mentionnez des utilisateurs avec @",
+    "guest_cannot_write": "Impossible de rédiger un message en tant qu'invité",
+    "edit": "Modifier",
+    "delete": "Supprimer"
+  },
+  "boards": {
+    "empty_board": "Tableau vide",
+    "board_template": "Modèle de tableau",
+    "new_board": "Nouveau tableau",
+    "add_board_ia": "Ajout de tableau par IA",
+    "ai_modal_description": "Proposez des tableaux et tâches supplémentaires pertinents à partir du contexte du projet.",
+    "ai_generating": "Génération...",
+    "ai_generate_button": "Générer avec l'IA",
+    "ai_suggestions": "Suggestions IA",
+    "ai_toggle_all": "Tout cocher/décocher",
+    "ai_adding": "Ajout en cours...",
+    "ai_accept_selection": "Accepter la sélection",
+    "ai_uncheck_all": "Tout décocher",
+    "ai_check_all": "Tout cocher",
+    "ai_generation_error": "Erreur lors de la génération IA",
+    "ai_board_creation_error": "Erreur création tableau",
+    "ai_prompt_project_title": "Titre du projet :",
+    "ai_prompt_notes": "Notes :",
+    "ai_prompt_existing_tasks": "Tâches existantes :",
+    "ai_prompt_no_tasks": "Tâches existantes : aucune",
+    "ai_prompt_instruction": "Génère jusqu'à 5 nouveaux tableaux (groupes de tâches) et 50 tâches maximum, pertinents et non redondants, pour enrichir ce projet. Ne propose que des tâches et tableaux nouveaux, différents de ceux déjà listés. Réponds en JSON structuré : { \"boards\": [ { \"name\": \"...\", \"tasks\": [\"...\", ...] }, ... ] }",
+    "add_task_placeholder": " Ajouter une tâche",
+    "add_task_button": "Ajouter une tâche",
+    "press_enter_info": "Appuyer sur entrée pour ajouter une tâche",
+    "press_enter_info_button": "Entrée",
+    "save_as_template": "Enregistrer le tableau comme modèle",
+    "delete_board": "Supprimer le tableau",
+    "archive_board": "Archiver le tableau",
+    "restore_board": "Restaurer le tableau",
+    "select_all_tasks": "Sélectionner toutes les tâches",
+    "tasks_plural": "Tâches",
+    "task_singular": "Tâche",
+    "project_archives": "Archives du projet",
+    "no_archive_available": "Aucune archive disponible actuellement",
+    "delete_board_confirm": "Supprimer ce tableau ?",
+    "save_changes": "Enregistrer les modifications"
+  },
+  "createProject": {
+    "title": "Créer un projet grâce à l'IA",
+    "description": "Décrivez votre projet, l'IA vous proposera des tâches et des groupes de tâches (tableaux) pertinents.",
+    "placeholder": "Décrivez votre projet ici...",
+    "generating": "Génération...",
+    "generateButton": "Générer avec l'IA",
+    "creating": "Création en cours...",
+    "createButton": "Créer ce projet",
+    "suggestionsTitle": "Suggestions IA",
+    "projectName": "Nom du projet",
+    "generationError": "Erreur lors de la génération IA",
+    "projectCreationError": "Erreur création projet",
+    "boardCreationError": "Erreur création tableau",
+    "prompts": {
+      "communication": {
+        "title": "Création d'un plan de communication",
+        "prompt": "Je souhaite créer un plan de communication complet pour mon entreprise. J'ai besoin d'organiser mes actions de communication sur plusieurs canaux (réseaux sociaux, email marketing, relations presse, événements).\n\nPropose-moi une structure de projet complète et détaillée qui couvre TOUS les aspects d'un plan de communication professionnel. N'hésite pas à inclure des éléments auxquels je n'aurais pas pensé : stratégie, création, production, diffusion, mesure, optimisation, gestion d'équipe, budget, outils, formation, veille, etc.\n\nSois créatif et pense à toutes les bonnes pratiques et étapes essentielles pour un plan de communication réussi."
+      },
+      "mobile": {
+        "title": "Création d'une application mobile",
+        "prompt": "Je veux développer une application mobile native pour iOS et Android. Le projet nécessite une approche structurée depuis la conception jusqu'au déploiement.\n\nCrée-moi une structure de projet COMPLÈTE qui couvre absolument TOUS les aspects du développement d'une app mobile professionnelle. Pense à tout : recherche utilisateur, architecture technique, design system, développement, tests, sécurité, performance, déploiement, marketing, analytics, maintenance, évolutions, gestion d'équipe, documentation, formation, support utilisateur, etc.\n\nSois exhaustif et propose des tâches détaillées que même un développeur expérimenté pourrait oublier. Inclus les bonnes pratiques, les outils modernes, et tous les aspects business et techniques."
+      },
+      "woocommerce": {
+        "title": "Création d'un site WordPress WooCommerce",
+        "prompt": "Je veux créer un site e-commerce complet avec WordPress et WooCommerce. Le projet doit couvrir tous les aspects techniques et business d'une boutique en ligne professionnelle.\n\nPropose-moi une structure de projet EXHAUSTIVE qui couvre ABSOLUMENT TOUS les aspects d'un e-commerce professionnel. Pense à tout : stratégie business, UX/UI, développement, sécurité, paiements, logistique, SEO, marketing, analytics, juridique, RGPD, performance, maintenance, support client, formation, évolutions, etc.\n\nSois très détaillé et inclus des tâches auxquelles on ne pense pas toujours : tests utilisateurs, optimisation conversion, gestion des retours, emails automatiques, cross-selling, fidélisation, etc. Pense comme un expert e-commerce qui ne laisse rien au hasard."
+      },
+      "wordpress": {
+        "title": "Création d'un site WordPress vitrine",
+        "prompt": "Je souhaite créer un site vitrine professionnel avec WordPress pour présenter mon entreprise et ses services. Le site doit être moderne, optimisé et facile à maintenir.\n\nLe projet doit comprendre :\n- L'analyse des besoins et définition de l'arborescence\n- Le choix et personnalisation du thème WordPress\n- La création du contenu (textes, images, vidéos)\n- L'optimisation SEO on-page et technique\n- L'intégration des réseaux sociaux\n- La mise en place d'un formulaire de contact\n- La configuration des outils d'analytics\n- L'optimisation des performances (vitesse, mobile)\n- La sécurisation du site (SSL, sauvegardes, mises à jour)\n- Les tests multi-navigateurs et responsive\n- La formation à l'administration WordPress\n- La stratégie de référencement naturel\n- La mise en ligne et configuration de l'hébergement\n\nPeux-tu me créer une structure de projet avec des tableaux organisés par phases et des tâches spécifiques pour chaque étape de création ?"
+      },
+      "marketing": {
+        "title": "Plan marketing",
+        "prompt": "Je veux élaborer un plan marketing complet pour développer mon activité. J'ai besoin d'une stratégie structurée couvrant tous les aspects du marketing digital et traditionnel.\n\nLe plan doit inclure :\n- L'analyse de marché et étude de la concurrence\n- La définition des personas et segments cibles\n- La stratégie de positionnement et proposition de valeur\n- Le marketing digital (SEO, SEA, réseaux sociaux, email)\n- Les actions marketing traditionnelles (print, radio, événements)\n- La stratégie de contenu et storytelling\n- Le plan de communication et relations publiques\n- La gestion du budget marketing et ROI\n- Les partenariats et collaborations stratégiques\n- Le marketing d'influence et ambassadeurs\n- L'analyse des performances et KPIs\n- L'optimisation continue des campagnes\n- La planification des actions sur 12 mois\n\nPeux-tu me proposer une organisation en tableaux thématiques avec des tâches détaillées pour structurer efficacement ce plan marketing ?"
+      },
+      "landing": {
+        "title": "Création d'une landing page",
+        "prompt": "Je veux créer une landing page haute conversion pour promouvoir un produit ou service spécifique. La page doit être optimisée pour transformer les visiteurs en prospects ou clients.\n\nLe projet doit couvrir :\n- L'analyse de l'audience cible et leurs besoins\n- La définition de l'objectif de conversion (vente, lead, inscription)\n- La conception UX/UI orientée conversion\n- La rédaction de contenus persuasifs (headlines, CTA, témoignages)\n- L'intégration d'éléments de réassurance (garanties, certifications)\n- La mise en place du tracking et analytics\n- L'optimisation SEO et SEA pour le trafic payant\n- Les tests A/B sur les éléments clés\n- L'intégration avec les outils CRM et email marketing\n- L'optimisation mobile et vitesse de chargement\n- La mise en place de formulaires optimisés\n- L'analyse des performances et taux de conversion\n- L'optimisation continue basée sur les données\n\nPeux-tu me créer une structure de projet avec des tableaux organisés par phases (conception, développement, optimisation) et des tâches spécifiques pour maximiser les conversions ?"
+      },
+      "brand": {
+        "title": "Création d'une identité de marque",
+        "prompt": "Je souhaite créer une identité de marque complète et cohérente pour mon entreprise. Le projet doit couvrir tous les aspects visuels et conceptuels de la marque.\n\nLe projet doit inclure :\n- La définition de la stratégie de marque et positionnement\n- La création du logo et ses déclinaisons\n- La définition de la charte graphique (couleurs, typographies, styles)\n- La création des supports de communication (cartes de visite, papeterie)\n- Le développement de l'identité visuelle digitale (réseaux sociaux, site web)\n- La définition du ton et de la personnalité de marque\n- La création d'un guide de style et brand book\n- Les applications sur différents supports (packaging, signalétique)\n- La protection juridique de la marque (dépôt de marque, droits d'auteur)\n- La stratégie de déploiement de l'identité\n- Les tests et validations auprès des cibles\n- La formation des équipes à l'utilisation de l'identité\n- Le suivi et l'évolution de l'image de marque\n\nPeux-tu me proposer une structure de projet avec des tableaux organisés par phases créatives et des tâches détaillées pour développer une identité de marque forte et mémorable ?"
+      },
+      "product": {
+        "title": "Rétro-planning de lancement de produit",
+        "prompt": "Je veux créer un rétro-planning détaillé pour le lancement d'un nouveau produit. Le projet doit organiser toutes les étapes depuis la conception jusqu'au lancement commercial.\n\nLe projet doit couvrir :\n- La phase de développement produit et tests\n- L'étude de marché et analyse concurrentielle\n- La définition de la stratégie de prix et positionnement\n- La création des supports marketing et communication\n- La préparation des canaux de distribution\n- La formation des équipes commerciales\n- La mise en place des outils de suivi et analytics\n- La planification des campagnes publicitaires\n- L'organisation des événements de lancement\n- La gestion des relations presse et influenceurs\n- La préparation du service client et support\n- Les tests utilisateurs et ajustements finaux\n- Le suivi post-lancement et optimisations\n- La planification des mises à jour et évolutions\n\nPeux-tu me créer une structure de projet avec des tableaux chronologiques et des tâches avec des échéances pour orchestrer efficacement ce lancement de produit ?"
+      },
+      "social": {
+        "title": "Planning de publication sociale",
+        "prompt": "Je veux organiser un planning de publication pour les réseaux sociaux de mon entreprise. Le projet doit structurer la création et la diffusion de contenu sur plusieurs plateformes.\n\nLe projet doit inclure :\n- L'audit et analyse des réseaux sociaux existants\n- La définition de la stratégie de contenu par plateforme\n- La création d'un calendrier éditorial mensuel\n- La planification des types de contenus (posts, stories, vidéos, lives)\n- La gestion des visuels et créations graphiques\n- La rédaction des textes et captions\n- La programmation et planification des publications\n- L'engagement et gestion de la communauté\n- Le suivi des performances et analytics\n- La gestion des campagnes publicitaires sociales\n- La veille concurrentielle et tendances\n- La création de contenus saisonniers et événementiels\n- La gestion des collaborations et partenariats\n- L'optimisation continue basée sur les résultats\n\nPeux-tu me proposer une organisation en tableaux thématiques avec des tâches récurrentes pour maintenir une présence sociale active et engageante ?"
+      }
+    }
+  },
+  "guests": {
+    "invite_users": "Inviter d'autres utilisateurs",
+    "user_revoked_success": "Utilisateur révoqué avec succès",
+    "revoke": "Révoquer",
+    "invitation_cancelled_success": "Invitation annulée avec succès",
+    "invitation_cancelled_message": "L'invitation a été annulée avec succès",
+    "invitation_cancel_error": "Une erreur s'est produite lors de l'annulation de l'invitation",
+    "cancel_invitation": "Annuler"
+  },
+  "attachments": {
+    "attachment_singular": "pièce jointe",
+    "attachment_plural": "pièces jointes",
+    "uncheck_all": "Tout décocher",
+    "check_all": "Tout cocher",
+    "attachments_zip": "pièces jointes.zip"
+  },
+  "editor": {
+    "placeholder": "Entrez votre {{type}} et mentionnez les autres avec @",
+    "see_attachment": "Voir pièce jointe",
+    "see_attachments": "Voir pièces jointes",
+    "draft_saving": "Brouillon en cours d'enregistrement...",
+    "draft_saved": "Brouillon enregistré",
+    "add_attachment": "Ajouter une pièce jointe",
+    "save_description": "Enregistrer la description",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "send": "Envoyer",
+    "message": "le message",
+    "enter_image_url": "Entrez l'URL de l'image",
+    "enter_link_url": "Entrez l'URL du lien",
+    "link_error": "Erreur lors de la création du lien"
+  },
+  "common": {
+    "error": "Une erreur est survenue",
+    "missing_parameter": "Paramètre manquant",
+    "cancel": "Annuler"
+  },
+  "task": {
+    "missing_parameters": "Paramètres manquants",
+    "create": {
+      "error": "Une erreur est survenue lors de la création de la tâche"
+    },
+    "status_update": {
+      "update": {
+        "error": "Une erreur est survenue lors de la mise à jour du statut de la tâche"
+      }
+    },
+    "priority_update": {
+      "update": {
+        "error": "Une erreur est survenue lors de la mise à jour de la priorité de la tâche"
+      }
+    }
+  },
+  "project_invitation": {
+    "role": {
+      "update": {
+        "success": "Rôle de l'utilisateur mis à jour avec succès",
+        "error": "Une erreur s'est produite lors de la mise à jour du rôle de l'utilisateur"
+      }
+    },
+    "delete": {
+      "success": "Invitation de projet supprimée avec succès",
+      "error": "Une erreur s'est produite lors de la suppression de l'invitation de projet"
+    },
+    "send": {
+      "success": "Invitation envoyée à {{email}} avec succès",
+      "already_sent": "Une invitation a déjà été envoyée à cet utilisateur"
+    }
+  },
+  "project": {
+    "create": {
+      "error": "Une erreur est survenue lors de la création du projet"
+    },
+    "guest": {
+      "remove": {
+        "success": "Cet utilisateur a été révoqué avec succès"
+      }
+    },
+    "update": {
+      "success": "Le projet a été modifié avec succès",
+      "error": "Une erreur est survenue lors de la modification du projet"
+    }
+  },
+  "board_template": {
+    "create": {
+      "error": "Une erreur est survenue lors de la création du modèle de tableau",
+      "success": "Le modèle de tableau a été créé avec succès"
+    }
+  },
+  "board": {
+    "create": {
+      "error": "Une erreur est survenue lors de la création du tableau"
+    },
+    "update": {
+      "error": "Une erreur est survenue lors de la mise à jour du tableau"
+    }
+  },
+  "newProject": {
+    "type_ai_title": "Projet par IA",
+    "type_ai_description": "Créez votre projet grâce à l'intelligence artificielle",
+    "type_template_title": "Depuis un modèle enregistré",
+    "type_template_description": "Utilisez un modèle prédéfini pour démarrer rapidement",
+    "type_empty_title": "Projet vide",
+    "type_empty_description": "Commencez avec un projet complètement vide",
+    "invitation_email_required": "L'email est requis",
+    "invitation_email_invalid": "Format d'email invalide",
+    "invitation_email_duplicate": "Cet email est déjà dans la liste",
+    "invitation_email_placeholder": "Inviter par e-mail",
+    "invitation_add_button": "Ajouter à la liste",
+    "invitation_pending_list": "Invitations en attente ({{count}})",
+    "general_information": "Informations générales",
+    "project_logo_alt": "Logo du projet",
+    "project_name_placeholder": "Nom du projet",
+    "boards_count": "tableaux",
+    "tasks_count": "tâches",
+    "quick_links": "Liens rapides",
+    "link_placeholder": "https://www.exemple.com",
+    "add_link": "Ajouter un lien",
+    "team_management": "Gestion de l'équipe",
+    "invitation_info": "💡 Les invitations seront envoyées après la création du projet",
+    "project_notes": "Notes du projet",
+    "project_notes_placeholder": "Ajouter une note sur le projet...",
+    "template_new_task": "Nouvelle tâche",
+    "template_project_name_placeholder": "Nom du projet",
+    "template_board_title_placeholder": "Titre du tableau",
+    "template_task_description_placeholder": "Description de la tâche",
+    "template_delete_task_title": "Supprimer cette tâche",
+    "template_delete_template": "Supprimer le modèle",
+    "template_deleting": "Suppression...",
+    "template_deletion_error": "Erreur lors de la suppression du modèle"
+  },
+  "template": {
+    "save": {
+      "success": "Template sauvegardé avec succès",
+      "error": "Erreur lors de la sauvegarde du template"
+    }
+  }
+}

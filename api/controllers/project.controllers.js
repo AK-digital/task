@@ -323,6 +323,9 @@ export async function sendProjectInvitationToGuest(req, res, next) {
       });
     }
 
+    // Trouver l'utilisateur par son email
+    const invitedUser = await UserModel.findOne({ email });
+
     await ProjectInvitationModel.findOneAndDelete({
       guestEmail: email,
       projectId: project._id,
@@ -336,14 +339,22 @@ export async function sendProjectInvitationToGuest(req, res, next) {
     await newProjectInvitation.save();
 
     const link = `${process.env.CLIENT_URL}/invitation/${newProjectInvitation?._id}`;
-    const template = emailProjectInvitation(project, authUser, link);
+    const template = emailProjectInvitation(
+      project,
+      authUser,
+      link,
+      invitedUser
+    );
 
-    await sendEmail(authEmail, email, template.subjet, template.text);
+    await sendEmail(authEmail, email, template.subject, template.text);
 
     return res.status(200).send({
       success: true,
       message: "Invitation par e-mail envoyé avec succès",
-      data: newProjectInvitation,
+      data: {
+        invitation: newProjectInvitation,
+        userId: invitedUser?._id,
+      },
     });
   } catch (err) {
     return res.status(500).send({
@@ -533,37 +544,3 @@ export async function removeGuest(req, res, next) {
     });
   }
 }
-
-export const updateProjectsOrder = async (req, res) => {
-  try {
-    const authUser = res.locals.user;
-    const { projects } = req.body;
-
-    // Mise à jour de l'ordre spécifique à ce user dans chaque projet
-    const bulkOps = projects.map((project, index) => ({
-      updateOne: {
-        filter: {
-          _id: project._id,
-          "members.user": authUser._id,
-        },
-        update: {
-          $set: {
-            "members.$.order": index,
-          },
-        },
-      },
-    }));
-
-    await ProjectModel.bulkWrite(bulkOps);
-
-    return res.status(200).json({
-      success: true,
-      message: "Ordre des projets mis à jour pour l'utilisateur",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};

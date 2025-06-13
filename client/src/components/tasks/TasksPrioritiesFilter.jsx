@@ -1,8 +1,10 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { ChevronDown, Star, Undo } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TasksPrioritiesFilter({ queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const queriesPriorities = queries?.priorities;
   const hasPriorities = queriesPriorities?.length > 0;
@@ -70,7 +72,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
         data-open={isOpen}
       >
         <Star size={16} />
-        <span className="flex-1 text-[15px]">Priorité</span>
+        <span className="flex-1 text-[15px]">{t("tasks.priority")}</span>
         {hasPriorities && (
           <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
             {queriesPriorities?.length}
@@ -92,7 +94,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                 onClick={handleResetPriorities}
               >
                 <Undo size={14} />
-                <span>Effacer</span>
+                <span>{t("tasks.clear")}</span>
               </li>
               {uniquePriorities?.map((priority) => (
                 <li
@@ -118,7 +120,9 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                     htmlFor={priority?._id}
                     className="flex items-center cursor-pointer flex-1"
                   >
-                    {priority?.name}
+                    {priority?.default
+                      ? t(`tasks.priorities.${priority?.priority}`)
+                      : priority?.name}
                   </label>
                 </li>
               ))}

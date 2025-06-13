@@ -56,7 +56,7 @@ export async function getUser(req, res, next) {
 
 export async function updateUser(req, res, next) {
   try {
-    const { lastName, firstName, company, position } = req.body;
+    const { lastName, firstName, company, position, language } = req.body;
 
     if (!lastName || !firstName) {
       return res
@@ -69,6 +69,7 @@ export async function updateUser(req, res, next) {
       firstName,
       company,
       position,
+      language,
     });
 
     if (!validation.success) {
@@ -81,17 +82,24 @@ export async function updateUser(req, res, next) {
       });
     }
 
+    const updateData = {
+      lastName,
+      firstName,
+      company,
+      position,
+    };
+
+    // Ajouter language seulement s'il est fourni
+    if (language) {
+      updateData.language = language;
+    }
+
     const updatedUser = await UserModel.findByIdAndUpdate(
       {
         _id: req.params.id,
       },
       {
-        $set: {
-          lastName,
-          firstName,
-          company,
-          position,
-        },
+        $set: updateData,
       },
       {
         setDefaultsOnInsert: true,
@@ -197,6 +205,54 @@ export async function deleteUser(req, res, next) {
       success: true,
       message: "Utilisateur supprimé avec succès",
       data: user,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function updateLanguage(req, res, next) {
+  try {
+    const { language } = req.body;
+
+    if (!language) {
+      return res
+        .status(400)
+        .send({ success: false, message: "La langue est requise" });
+    }
+
+    if (!["fr", "en"].includes(language)) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Langue non supportée" });
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: { language },
+      },
+      {
+        new: true,
+      }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).send({
+        success: false,
+        message: "Impossible de modifier un utilisateur inexistant",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Langue mise à jour avec succès",
+      data: updatedUser,
     });
   } catch (err) {
     return res.status(500).send({

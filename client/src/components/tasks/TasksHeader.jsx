@@ -2,6 +2,7 @@ import { useUserRole } from "../../../hooks/useUserRole";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function TasksHeader({
   project,
@@ -10,6 +11,7 @@ export default function TasksHeader({
   setSortedTasks,
   displayedFilters,
 }) {
+  const { t } = useTranslation();
   const [projectSort, setProjectSort] = useState(null);
   const [boardSort, setBoardSort] = useState(null);
   const [statusSort, setStatusSort] = useState(null);
@@ -200,11 +202,11 @@ export default function TasksHeader({
         <div className="ml-1.5 min-w-4 max-w-4 flex justify-center items-center gap-1 w-full cursor-default"></div>
       )}
       <div className="w-full min-w-[240px] max-w-[740px] text-center ml-[9px] select-none">
-        <span>Tâche</span>
+        <span>{t("tasks.task")}</span>
       </div>
       {isProject && (
         <div className="w-20 flex justify-center items-center gap-1 cursor-default">
-          <span className="select-none">Projets</span>
+          <span className="select-none">{t("tasks.projects")}</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -225,7 +227,7 @@ export default function TasksHeader({
       )}
       {isBoard && (
         <div className="min-w-[150px] max-w-[170px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span className="select-none">Tableaux</span>
+          <span className="select-none">{t("tasks.boards")}</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -245,7 +247,7 @@ export default function TasksHeader({
         </div>
       )}
       <div className="min-w-[100px] max-w-[100px] flex justify-center items-center gap-1 w-full cursor-default">
-        <span className="select-none">Admin</span>
+        <span className="select-none">{t("tasks.admin")}</span>
         {isAdminFilter && (
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
@@ -261,7 +263,7 @@ export default function TasksHeader({
       </div>
       {isStatus && (
         <div className="w-full min-w-[135px] max-w-[150px] flex justify-center items-center gap-1 cursor-default">
-          <span className="select-none">Statut</span>
+          <span className="select-none">{t("tasks.status")}</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -282,7 +284,7 @@ export default function TasksHeader({
       )}
       {isPriority && (
         <div className="w-full min-w-[135px] max-w-[150px] flex justify-center items-center gap-1  cursor-default">
-          <span className="select-none">Priorité</span>
+          <span className="select-none">{t("tasks.priority")}</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -303,7 +305,7 @@ export default function TasksHeader({
       )}
       {isDeadline && (
         <div className="min-w-[120px] max-w-[150px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span className="select-none">Échéance</span>
+          <span className="select-none">{t("tasks.deadline")}</span>
           <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -324,7 +326,7 @@ export default function TasksHeader({
       )}
       {isEstimate && (
         <div className="min-w-[120px] max-w-[140px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span className="select-none">Estimation</span>
+          <span className="select-none">{t("tasks.estimation")}</span>
           {/* <div className="relative flex flex-col items-center top-1">
             <ChevronUp
               size={14}
@@ -341,7 +343,7 @@ export default function TasksHeader({
       )}
       {isTimer && (
         <div className="max-w-[120px] min-w-[120px] flex justify-center items-center gap-1 w-full cursor-default">
-          <span className="select-none">Temps</span>
+          <span className="select-none">{t("tasks.time")}</span>
           {/* <div className="relative flex flex-col items-center top-1">
             <ChevronUp size={14} className="cursor-pointer hover:text-text-color" />
             <ChevronDown size={14} className="cursor-pointer hover:text-text-color relative -top-1" />

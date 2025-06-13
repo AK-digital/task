@@ -1,8 +1,10 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon, Undo } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function ProjectFilter({ projects, queries, setQueries }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [currentProjects, setCurrentProjects] = useState([]);
   const hasProjects = currentProjects?.length > 0;
@@ -50,7 +52,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                     src={project?.logo || "/default-project-logo.svg"}
                     width={24}
                     height={24}
-                    alt={`Logo de ${project?.name}`}
+                    alt={`${t("projects.project_logo_alt")} ${project?.name}`}
                     key={project?._id}
                     className="rounded-full"
                   />
@@ -65,7 +67,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
           </>
         ) : (
           <span className="flex justify-center gap-1 text-[15px]">
-            Choisir un projet
+            {t("projects.choose_project")}
           </span>
         )}
         {!isOpen && (
@@ -81,7 +83,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
               onClick={handleReset}
             >
               <Undo size={16} />
-              Supprimer les filtres
+              {t("tasks.remove_filters")}
             </li>
             {projects?.map((project) => {
               return (
@@ -106,7 +108,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                       src={project?.logo || "/default-project-logo.svg"}
                       width={22}
                       height={22}
-                      alt={`Logo de ${project?.name}`}
+                      alt={`${t("projects.project_logo_alt")} ${project?.name}`}
                       className="rounded-full"
                     />
                     <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">

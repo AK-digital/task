@@ -10,8 +10,10 @@ import { AuthContext } from "@/context/auth";
 import { isNotEmpty } from "@/utils/utils";
 import { useContext, useState } from "react";
 import useSWR, { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
+  const { t } = useTranslation();
   const { uid } = useContext(AuthContext);
 
   const [showPrivateTemplate, setShowPrivateTemplate] = useState(false);
@@ -57,7 +59,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
     <>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 bg-secondary p-6 rounded-lg shadow-medium w-[500px]">
         <div className="text-center text-large border-b border-primary pb-6">
-          <span>Liste de modèle des tableaux</span>
+          <span>{t("templates.available_templates")}</span>
         </div>
         <div className="flex items-center justify-center rounded-lg border border-border-color">
           <button
@@ -68,7 +70,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
           >
             <div className="flex justify-center items-center">
               <p className="text-normal font-medium text-text-dark-color">
-                La communauté
+                {t("templates.community_templates")}
               </p>
             </div>
           </button>
@@ -80,7 +82,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
           >
             <div className="flex justify-center items-center">
               <p className="text-normal font-medium text-text-dark-color">
-                Les vôtres
+                {t("templates.your_templates")}
               </p>
             </div>
           </button>
@@ -119,7 +121,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                             )
                           }
                         >
-                          Utiliser
+                          {t("templates.use_template")}
                         </button>
                         <button
                           type="button"
@@ -128,7 +130,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                             handleDeleteBoardTemplate(e, template?._id)
                           }
                         >
-                          Supprimer
+                          {t("templates.remove")}
                         </button>
                       </div>
                     </li>
@@ -137,7 +139,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
               ) : (
                 <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
                   <p className="font-semibold text-text-dark-color mb-2">
-                    Aucun modèle disponible
+                    {t("templates.no_templates_available")}
                   </p>
                 </div>
               )
@@ -158,7 +160,9 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                     <div className="flex justify-center items-center gap-2 ">
                       <span>{template.name}</span>
                       {template?.author?.toString() === uid && (
-                        <span className="text-small">(vous)</span>
+                        <span className="text-small">
+                          ({t("templates.you")})
+                        </span>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
@@ -169,7 +173,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                           handleUseBoardTemplate(e, template?._id)
                         }
                       >
-                        Utiliser
+                        {t("templates.use_template")}
                       </button>
                       {template?.author?.toString() === uid && (
                         <button
@@ -183,7 +187,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                             )
                           }
                         >
-                          Supprimer
+                          {t("templates.remove")}
                         </button>
                       )}
                     </div>
@@ -193,7 +197,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
             ) : (
               <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
                 <p className="font-semibold text-text-dark-color mb-2">
-                  Aucun modèle disponible
+                  {t("templates.no_templates_available")}
                 </p>
               </div>
             )}

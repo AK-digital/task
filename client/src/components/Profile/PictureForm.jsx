@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useActionState, useContext, useEffect, useRef, useState } from "react";
 import { mutate } from "swr";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   status: "pending",
@@ -15,6 +16,7 @@ const initialState = {
 };
 
 export default function PictureForm() {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const formRef = useRef(null);
   const [editImg, setEditImg] = useState(false);
@@ -30,16 +32,16 @@ export default function PictureForm() {
       mutate("/auth/session");
       setPopup({
         status: state?.status,
-        title: "Succès",
-        message: "Photo de profil mise à jour avec succès",
+        title: t("profile.success_title"),
+        message: t(state.message),
       });
     }
 
     if (state?.status === "failure") {
       setPopup({
         status: state?.status,
-        title: "Erreur",
-        message: "Une erreur s'est produite lors de la mise à jour de la photo",
+        title: t("profile.error_title"),
+        message: t(state.message),
       });
     }
 
@@ -47,7 +49,7 @@ export default function PictureForm() {
     const timeout = setTimeout(() => setPopup(false), 4000);
 
     return () => clearTimeout(timeout);
-  }, [state]);
+  }, [state, t]);
 
   const handleUpdatePicture = () => {
     formRef?.current?.requestSubmit();
@@ -68,7 +70,7 @@ export default function PictureForm() {
         >
           <Image
             src={user?.picture || "/default-pfp.webp"}
-            alt={`Photo de profil de ${user?.firstName}`}
+            alt={`${t("general.profile_picture_alt")} ${user?.firstName}`}
             width={100}
             height={100}
             quality={100}

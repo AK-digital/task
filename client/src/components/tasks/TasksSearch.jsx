@@ -1,7 +1,10 @@
 import { Search } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
+import { useTranslation } from "react-i18next";
 
 export default function TasksSearch({ setQueries }) {
+  const { t } = useTranslation();
+
   function handleSearch(e) {
     const value = e.target.value;
     deboucedSearch(value);
@@ -21,7 +24,7 @@ export default function TasksSearch({ setQueries }) {
         type="search"
         name="search"
         id="search"
-        placeholder="Recherchez une tâche..."
+        placeholder={t("tasks.search_task_placeholder")}
         onChange={handleSearch}
         className="input_TasksSearch border-0 p-0 text-color-text-dark-color text-normal font-bricolage placeholder:text-color-text-color-muted"
       />

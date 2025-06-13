@@ -3,12 +3,14 @@ import { verification } from "@/api/auth";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 
 export default function Verification() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [success, setSuccess] = useState(false);
-  const [text, setText] = useState("Vérification en cours...");
+  const [text, setText] = useState(t("verification.verifying"));
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR(
@@ -18,36 +20,36 @@ export default function Verification() {
 
   useEffect(() => {
     if (isLoading) {
-      setText("Vérification en cours...");
+      setText(t("verification.verifying"));
       return;
     }
 
     if (error) {
-      setText(
-        "Une erreur s'est produite lors de la vérification de votre compte."
-      );
+      setText(t("verification.error"));
       setSuccess(false);
       return;
     }
 
     if (data?.success) {
       setSuccess(true);
-      setText(
-        "Votre adresse e-mail a été vérifié avec succès. Vous pouvez maintenant vous connecter."
-      );
+      setText(t("verification.success"));
+
+      const timeout = setTimeout(() => {
+        router.push("/");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
     } else {
-      setText(
-        "Une erreur s'est produite lors de la vérification de votre compte."
-      );
+      setText(t("verification.error"));
       setSuccess(false);
     }
-  }, [data, error, isLoading, router]);
+  }, [data, error, isLoading, router, t]);
 
   return (
     <main className="flex justify-center items-center mx-10 mb-10 h-[100svh]">
       <div className="text-center">
         <h1 className="text-[2.5rem] mb-5 font-bold">
-          Vérification de votre adresse e-mail
+          {t("verification.title")}
         </h1>
         <p className="mb-8">{text}</p>
         {success && (
@@ -55,7 +57,7 @@ export default function Verification() {
             href="/"
             className="p-4 bg-accent-color text-white rounded-4xl no-underline hover:bg-accent-color-hover transition-all duration-200 ease-in-out"
           >
-            Se connecter
+            {t("verification.redirecting")}
           </Link>
         )}
       </div>
