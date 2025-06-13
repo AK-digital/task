@@ -85,47 +85,49 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
       </div>
       <>
         <div
-          className={`absolute z-[2001] top-[44px] bg-white shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[200ms] ease-in-out ${
+          className={`absolute z-[2001] top-[44px] bg-white shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
             isOpen ? "max-h-96" : "max-h-0"
           }`}
         >
-          <ul className="flex flex-col p-2 border border-color-border-color rounded-sm">
-            <li
-              className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
-              onClick={handleResetPriorities}
-            >
-              <Undo size={14} />
-              <span>Effacer</span>
-            </li>
-            {uniquePriorities?.map((priority) => (
+          {isOpen && (
+            <ul className="flex flex-col p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
               <li
-                key={priority?._id}
-                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+                onClick={handleResetPriorities}
               >
-                <input
-                  type="checkbox"
-                  id={priority?._id}
-                  name={priority?.name}
-                  value={priority?._id}
-                  onChange={(e) => handlePrioritiesChange(e, priority)}
-                  checked={
-                    hasPriorities
-                      ? queriesPriorities?.some((prioritiesArray) =>
-                          prioritiesArray.includes(priority?._id)
-                        )
-                      : false
-                  }
-                  className="w-auto cursor-pointer"
-                />
-                <label
-                  htmlFor={priority?._id}
-                  className="flex items-center cursor-pointer flex-1"
-                >
-                  {priority?.name}
-                </label>
+                <Undo size={14} />
+                <span>Effacer</span>
               </li>
-            ))}
-          </ul>
+              {uniquePriorities?.map((priority) => (
+                <li
+                  key={priority?._id}
+                  className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
+                >
+                  <input
+                    type="checkbox"
+                    id={priority?._id}
+                    name={priority?.name}
+                    value={priority?._id}
+                    onChange={(e) => handlePrioritiesChange(e, priority)}
+                    checked={
+                      hasPriorities
+                        ? queriesPriorities?.some((prioritiesArray) =>
+                            prioritiesArray.includes(priority?._id)
+                          )
+                        : false
+                    }
+                    className="w-auto cursor-pointer"
+                  />
+                  <label
+                    htmlFor={priority?._id}
+                    className="flex items-center cursor-pointer flex-1"
+                  >
+                    {priority?.name}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         {isOpen && (
           <div

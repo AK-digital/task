@@ -70,7 +70,7 @@ export function DropDown({
             isOpen ? "max-h-96" : "max-h-0"
           } `}
         >
-          <ul className="w-full border border-color-border-color">
+          <ul className="w-full border border-color-border-color max-h-96 overflow-y-auto">
             {options.map((option, idx) => {
               return (
                 <li

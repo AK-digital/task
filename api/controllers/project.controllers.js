@@ -263,7 +263,7 @@ export async function leaveProject(req, res) {
   try {
     const authUser = res.locals.user;
 
-    const project = await ProjectModel.findOne({
+    const project = await ProjectModel.findById({
       _id: req.params.id,
     });
 
@@ -274,10 +274,10 @@ export async function leaveProject(req, res) {
       });
     }
 
-    const isManagerOrTeam = project.members.some(
+    const isManagerOrTeam = project?.members?.some(
       (member) =>
-        member.user.toString() !== authUser._id.toString() &&
-        (member.role === "manager" || member.role === "team")
+        member?.user.toString() !== authUser._id.toString() &&
+        (member?.role === "manager" || member?.role === "team")
     );
 
     if (project?.members?.length <= 1 && !isManagerOrTeam) {
@@ -298,16 +298,18 @@ export async function leaveProject(req, res) {
         }
       }
 
+
+      project.members = project?.members?.filter(
+        (member) => member?.user?.toString() !== authUser?._id.toString()
+      );
+
+      await project.save();
+
       await FavoriteModel.findOneAndDelete({
         user: authUser._id,
         project: req.params.id,
       });
     }
-
-    project.members = project.members.filter(
-      (member) => member.user.toString() !== authUser._id.toString()
-    );
-    await project.save();
 
     return res.status(200).send({
       success: true,

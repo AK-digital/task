@@ -102,52 +102,54 @@ export default function AdminFilter({ projects, queries, setQueries }) {
         )}
         {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
       </div>
-      {isOpen && (
-        <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg p-1.5 z-[2000] max-h-[300px] overflow-y-auto">
-          <ul className="[&>li]:hover:rounded-sm [&>li]:hover:shadow-small [&>li]:hover:bg-third">
-            <li
-              className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
-              onClick={handleReset}
-            >
-              <Undo size={16} />
-              Supprimer les filtres
-            </li>
-            {members?.map((member) => {
-              return (
-                <li
-                  key={member?.user?._id}
-                  className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
+      <div
+        className={`absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg z-[2000] overflow-hidden transition-all duration-[350ms] ease-in-out  ${
+          isOpen ? "max-h-96" : "max-h-0"
+        }`}
+      >
+        <ul className="max-h-96 overflow-y-auto p-1.5 [&>li]:hover:rounded-sm [&>li]:hover:shadow-small [&>li]:hover:bg-third">
+          <li
+            className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
+            onClick={handleReset}
+          >
+            <Undo size={16} />
+            Supprimer les filtres
+          </li>
+          {members?.map((member) => {
+            return (
+              <li
+                key={member?.user?._id}
+                className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id={`user-${member?.user?._id}`}
+                  name="user"
+                  onChange={(e) => handleMemberChange(e, member)}
+                  value={member?.user?._id}
+                  checked={Boolean(
+                    queries?.members?.includes(member?.user?._id)
+                  )}
+                  className="max-w-4 max-h-4 cursor-pointer"
+                />
+                <label
+                  htmlFor={`user-${member?.user?._id}`}
+                  className="flex items-center gap-1 cursor-pointer"
                 >
-                  <input
-                    type="checkbox"
-                    id={`user-${member?.user?._id}`}
-                    name="user"
-                    onChange={(e) => handleMemberChange(e, member)}
-                    value={member?.user?._id}
-                    checked={Boolean(
-                      queries?.members?.includes(member?.user?._id)
-                    )}
-                    className="max-w-4 max-h-4 cursor-pointer"
+                  <DisplayPicture
+                    user={member?.user}
+                    style={{ width: "22px", height: "22px" }}
+                    className="rounded-full"
                   />
-                  <label
-                    htmlFor={`user-${member?.user?._id}`}
-                    className="flex items-center gap-1 cursor-pointer"
-                  >
-                    <DisplayPicture
-                      user={member?.user}
-                      style={{ width: "22px", height: "22px" }}
-                      className="rounded-full"
-                    />
-                    <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">
-                      {member?.user?.firstName} {member?.user?.lastName}
-                    </span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
+                  <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">
+                    {member?.user?.firstName} {member?.user?.lastName}
+                  </span>
+                </label>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 }

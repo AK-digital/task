@@ -122,70 +122,70 @@ export default function TaskPriority({ task }) {
       >
         <span>{currentPriority?.name || "Basse"}</span>
       </div>
-      {isOpen && (
-        <>
-          <div
-            className={`absolute z-[2001] top-[45px] p-3 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg ${
-              listWidth() ? "w-[380px]" : "w-[220px]"
-            }`}
-            ref={refs.setFloating}
-            style={floatingStyles}
-          >
-            <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 px-3 pb-3 border-b border-color-border-color">
-              {priorities?.map((priority) => {
-                if (!isEdit) {
-                  return (
-                    <li
-                      key={priority?._id}
-                      className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-3xl text-center min-h-[34px]"
-                      data-value={priority?.name}
-                      onClick={() => handleTaskUpdatePriority(priority)}
-                      style={{ backgroundColor: priority?.color }}
-                    >
-                      {priority?.name}
-                    </li>
-                  );
-                } else {
-                  return (
-                    <TaskEditPriority
-                      key={priority?._id}
-                      priority={priority}
-                      currentPriority={currentPriority}
-                      setCurrentPriority={setCurrentPriority}
-                    />
-                  );
-                }
-              })}
-              {isEdit && !maxPriorities && (
-                <li
-                  className="flex items-center gap-1 border-none py-2 px-4 rounded-3xl bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer hover:bg-text-light-color"
-                  onClick={handleAddPriority}
-                >
-                  <Plus size={16} />
-                  Ajouter
-                </li>
-              )}
-            </ul>
-            {isEdit ? (
-              <button
-                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
-                onClick={handleEditPriority}
+      <>
+        <div
+          className={`absolute z-2001 top-[45px] bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg overflow-hidden transition-all duration-[200ms] ease-in-out ${
+            listWidth() ? "w-[380px]" : "w-[220px]"
+          } ${isOpen ? "max-h-96" : "max-h-0"}`}
+          ref={refs.setFloating}
+          style={floatingStyles}
+        >
+          <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 p-3 border-b border-color-border-color">
+            {priorities?.map((priority) => {
+              if (!isEdit) {
+                return (
+                  <li
+                    key={priority?._id}
+                    className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-3xl text-center min-h-[34px]"
+                    data-value={priority?.name}
+                    onClick={() => handleTaskUpdatePriority(priority)}
+                    style={{ backgroundColor: priority?.color }}
+                  >
+                    {priority?.name}
+                  </li>
+                );
+              } else {
+                return (
+                  <TaskEditPriority
+                    key={priority?._id}
+                    priority={priority}
+                    currentPriority={currentPriority}
+                    setCurrentPriority={setCurrentPriority}
+                  />
+                );
+              }
+            })}
+            {isEdit && !maxPriorities && (
+              <li
+                className="flex items-center gap-1 border-none py-2 px-4 rounded-3xl bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer hover:bg-text-light-color"
+                onClick={handleAddPriority}
               >
-                <Save size={16} />
-                Appliquer
-              </button>
-            ) : (
-              <button
-                className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
-                onClick={handleEditPriority}
-              >
-                <Pen size={16} /> Modifier les priorités
-              </button>
+                <Plus size={16} />
+                Ajouter
+              </li>
             )}
-          </div>
+          </ul>
+          {isEdit ? (
+            <button
+              className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
+              onClick={handleEditPriority}
+            >
+              <Save size={16} />
+              Appliquer
+            </button>
+          ) : (
+            <button
+              className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
+              onClick={handleEditPriority}
+            >
+              <Pen size={16} /> Modifier les priorités
+            </button>
+          )}
+        </div>
+        {isOpen && (
           <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
-        </>
-      )}
+        )}
+      </>
     </div>
   );
 }

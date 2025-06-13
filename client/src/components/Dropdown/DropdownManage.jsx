@@ -39,7 +39,7 @@ export default function DropdownManage({
             isOpen ? "max-h-[200px]" : "max-h-0"
           }`}
         >
-          <ul className="flex justify-center items-center flex-col gap-0 w-full border border-color-border-color rounded-sm">
+          <ul className="flex justify-center items-center flex-col gap-0 w-full border border-color-border-color rounded-sm max-h-[200px] overflow-y-auto">
             <li className="group flex justify-start items-center w-full h-full">
               {canDelete && (
                 <form action={formAction} className="w-full">

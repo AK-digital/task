@@ -149,8 +149,6 @@ export async function leaveProject(projectId) {
       throw new Error(response?.message);
     }
 
-    revalidateTag("projects");
-
     return response;
   } catch (err) {
     console.log(

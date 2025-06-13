@@ -67,12 +67,12 @@ export default function TasksAdminFilter({ queries, setQueries }) {
       </div>
       <>
         <div
-          className={`absolute z-[2001] top-11 bg-white shadow-small w-full overflow-hidden transition-all duration-[200ms] ease-in-out ${
+          className={`absolute z-[2001] top-11 bg-white shadow-small w-full overflow-hidden transition-all duration-[350ms] ease-in-out ${
             isOpen ? "max-h-96" : "max-h-0"
           }`}
         >
           {isNotEmpty(members) ? (
-            <ul className="p-2 border border-color-border-color rounded-sm">
+            <ul className="p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
               <li
                 className="flex items-center gap-1 p-1.5 cursor-pointer text-xs font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
                 onClick={() => handleReset()}

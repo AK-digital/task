@@ -117,7 +117,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
             isOpen ? "max-h-96" : "max-h-0"
           }`}
         >
-          <ul className="flex flex-col p-2 rounded-sm border border-color-border-color">
+          <ul className="flex flex-col p-2 rounded-sm border border-color-border-color max-h-96 overflow-y-auto">
             <li
               className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
               onClick={handleResetStatus}
@@ -141,7 +141,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 />
                 <label
                   htmlFor={elt?._id}
-                  className="flex items-center cursor-pointer flex-1"
+                  className="cursor-pointer flex-1 overflow-hidden text-ellipsis whitespace-nowrap min-w-0"
                 >
                   {elt?.name}
                 </label>
