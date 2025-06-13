@@ -377,6 +377,8 @@
     "project": "Projet",
     "task": "Tâche",
     "board": "Tableau",
+    "boards": "Tableaux",
+    "tasks": "Tâches",
     "yes": "Oui",
     "no": "Non",
     "irreversible_action": "Cette action est irréversible",
@@ -576,7 +578,45 @@
     "projectName": "Nom du projet",
     "generationError": "Erreur lors de la génération IA",
     "projectCreationError": "Erreur création projet",
-    "boardCreationError": "Erreur création tableau"
+    "boardCreationError": "Erreur création tableau",
+    "prompts": {
+      "communication": {
+        "title": "Création d'un plan de communication",
+        "prompt": "Je souhaite créer un plan de communication complet pour mon entreprise. J'ai besoin d'organiser mes actions de communication sur plusieurs canaux (réseaux sociaux, email marketing, relations presse, événements).\n\nPropose-moi une structure de projet complète et détaillée qui couvre TOUS les aspects d'un plan de communication professionnel. N'hésite pas à inclure des éléments auxquels je n'aurais pas pensé : stratégie, création, production, diffusion, mesure, optimisation, gestion d'équipe, budget, outils, formation, veille, etc.\n\nSois créatif et pense à toutes les bonnes pratiques et étapes essentielles pour un plan de communication réussi."
+      },
+      "mobile": {
+        "title": "Création d'une application mobile",
+        "prompt": "Je veux développer une application mobile native pour iOS et Android. Le projet nécessite une approche structurée depuis la conception jusqu'au déploiement.\n\nCrée-moi une structure de projet COMPLÈTE qui couvre absolument TOUS les aspects du développement d'une app mobile professionnelle. Pense à tout : recherche utilisateur, architecture technique, design system, développement, tests, sécurité, performance, déploiement, marketing, analytics, maintenance, évolutions, gestion d'équipe, documentation, formation, support utilisateur, etc.\n\nSois exhaustif et propose des tâches détaillées que même un développeur expérimenté pourrait oublier. Inclus les bonnes pratiques, les outils modernes, et tous les aspects business et techniques."
+      },
+      "woocommerce": {
+        "title": "Création d'un site WordPress WooCommerce",
+        "prompt": "Je veux créer un site e-commerce complet avec WordPress et WooCommerce. Le projet doit couvrir tous les aspects techniques et business d'une boutique en ligne professionnelle.\n\nPropose-moi une structure de projet EXHAUSTIVE qui couvre ABSOLUMENT TOUS les aspects d'un e-commerce professionnel. Pense à tout : stratégie business, UX/UI, développement, sécurité, paiements, logistique, SEO, marketing, analytics, juridique, RGPD, performance, maintenance, support client, formation, évolutions, etc.\n\nSois très détaillé et inclus des tâches auxquelles on ne pense pas toujours : tests utilisateurs, optimisation conversion, gestion des retours, emails automatiques, cross-selling, fidélisation, etc. Pense comme un expert e-commerce qui ne laisse rien au hasard."
+      },
+      "wordpress": {
+        "title": "Création d'un site WordPress vitrine",
+        "prompt": "Je souhaite créer un site vitrine professionnel avec WordPress pour présenter mon entreprise et ses services. Le site doit être moderne, optimisé et facile à maintenir.\n\nLe projet doit comprendre :\n- L'analyse des besoins et définition de l'arborescence\n- Le choix et personnalisation du thème WordPress\n- La création du contenu (textes, images, vidéos)\n- L'optimisation SEO on-page et technique\n- L'intégration des réseaux sociaux\n- La mise en place d'un formulaire de contact\n- La configuration des outils d'analytics\n- L'optimisation des performances (vitesse, mobile)\n- La sécurisation du site (SSL, sauvegardes, mises à jour)\n- Les tests multi-navigateurs et responsive\n- La formation à l'administration WordPress\n- La stratégie de référencement naturel\n- La mise en ligne et configuration de l'hébergement\n\nPeux-tu me créer une structure de projet avec des tableaux organisés par phases et des tâches spécifiques pour chaque étape de création ?"
+      },
+      "marketing": {
+        "title": "Plan marketing",
+        "prompt": "Je veux élaborer un plan marketing complet pour développer mon activité. J'ai besoin d'une stratégie structurée couvrant tous les aspects du marketing digital et traditionnel.\n\nLe plan doit inclure :\n- L'analyse de marché et étude de la concurrence\n- La définition des personas et segments cibles\n- La stratégie de positionnement et proposition de valeur\n- Le marketing digital (SEO, SEA, réseaux sociaux, email)\n- Les actions marketing traditionnelles (print, radio, événements)\n- La stratégie de contenu et storytelling\n- Le plan de communication et relations publiques\n- La gestion du budget marketing et ROI\n- Les partenariats et collaborations stratégiques\n- Le marketing d'influence et ambassadeurs\n- L'analyse des performances et KPIs\n- L'optimisation continue des campagnes\n- La planification des actions sur 12 mois\n\nPeux-tu me proposer une organisation en tableaux thématiques avec des tâches détaillées pour structurer efficacement ce plan marketing ?"
+      },
+      "landing": {
+        "title": "Création d'une landing page",
+        "prompt": "Je veux créer une landing page haute conversion pour promouvoir un produit ou service spécifique. La page doit être optimisée pour transformer les visiteurs en prospects ou clients.\n\nLe projet doit couvrir :\n- L'analyse de l'audience cible et leurs besoins\n- La définition de l'objectif de conversion (vente, lead, inscription)\n- La conception UX/UI orientée conversion\n- La rédaction de contenus persuasifs (headlines, CTA, témoignages)\n- L'intégration d'éléments de réassurance (garanties, certifications)\n- La mise en place du tracking et analytics\n- L'optimisation SEO et SEA pour le trafic payant\n- Les tests A/B sur les éléments clés\n- L'intégration avec les outils CRM et email marketing\n- L'optimisation mobile et vitesse de chargement\n- La mise en place de formulaires optimisés\n- L'analyse des performances et taux de conversion\n- L'optimisation continue basée sur les données\n\nPeux-tu me créer une structure de projet avec des tableaux organisés par phases (conception, développement, optimisation) et des tâches spécifiques pour maximiser les conversions ?"
+      },
+      "brand": {
+        "title": "Création d'une identité de marque",
+        "prompt": "Je souhaite créer une identité de marque complète et cohérente pour mon entreprise. Le projet doit couvrir tous les aspects visuels et conceptuels de la marque.\n\nLe projet doit inclure :\n- La définition de la stratégie de marque et positionnement\n- La création du logo et ses déclinaisons\n- La définition de la charte graphique (couleurs, typographies, styles)\n- La création des supports de communication (cartes de visite, papeterie)\n- Le développement de l'identité visuelle digitale (réseaux sociaux, site web)\n- La définition du ton et de la personnalité de marque\n- La création d'un guide de style et brand book\n- Les applications sur différents supports (packaging, signalétique)\n- La protection juridique de la marque (dépôt de marque, droits d'auteur)\n- La stratégie de déploiement de l'identité\n- Les tests et validations auprès des cibles\n- La formation des équipes à l'utilisation de l'identité\n- Le suivi et l'évolution de l'image de marque\n\nPeux-tu me proposer une structure de projet avec des tableaux organisés par phases créatives et des tâches détaillées pour développer une identité de marque forte et mémorable ?"
+      },
+      "product": {
+        "title": "Rétro-planning de lancement de produit",
+        "prompt": "Je veux créer un rétro-planning détaillé pour le lancement d'un nouveau produit. Le projet doit organiser toutes les étapes depuis la conception jusqu'au lancement commercial.\n\nLe projet doit couvrir :\n- La phase de développement produit et tests\n- L'étude de marché et analyse concurrentielle\n- La définition de la stratégie de prix et positionnement\n- La création des supports marketing et communication\n- La préparation des canaux de distribution\n- La formation des équipes commerciales\n- La mise en place des outils de suivi et analytics\n- La planification des campagnes publicitaires\n- L'organisation des événements de lancement\n- La gestion des relations presse et influenceurs\n- La préparation du service client et support\n- Les tests utilisateurs et ajustements finaux\n- Le suivi post-lancement et optimisations\n- La planification des mises à jour et évolutions\n\nPeux-tu me créer une structure de projet avec des tableaux chronologiques et des tâches avec des échéances pour orchestrer efficacement ce lancement de produit ?"
+      },
+      "social": {
+        "title": "Planning de publication sociale",
+        "prompt": "Je veux organiser un planning de publication pour les réseaux sociaux de mon entreprise. Le projet doit structurer la création et la diffusion de contenu sur plusieurs plateformes.\n\nLe projet doit inclure :\n- L'audit et analyse des réseaux sociaux existants\n- La définition de la stratégie de contenu par plateforme\n- La création d'un calendrier éditorial mensuel\n- La planification des types de contenus (posts, stories, vidéos, lives)\n- La gestion des visuels et créations graphiques\n- La rédaction des textes et captions\n- La programmation et planification des publications\n- L'engagement et gestion de la communauté\n- Le suivi des performances et analytics\n- La gestion des campagnes publicitaires sociales\n- La veille concurrentielle et tendances\n- La création de contenus saisonniers et événementiels\n- La gestion des collaborations et partenariats\n- L'optimisation continue basée sur les résultats\n\nPeux-tu me proposer une organisation en tableaux thématiques avec des tâches récurrentes pour maintenir une présence sociale active et engageante ?"
+      }
+    }
   },
   "guests": {
     "invite_users": "Inviter d'autres utilisateurs",

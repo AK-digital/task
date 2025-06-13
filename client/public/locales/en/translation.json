@@ -278,6 +278,7 @@
     "low_priority": "Low",
     "new_priority": "New priority",
     "add": "Add",
+    "add_task": "Add task",
     "apply": "Apply",
     "waiting_status": "Waiting",
     "task_assigned_title": "🎉 A task has been assigned to you in {{projectName}}",
@@ -415,6 +416,8 @@
     "project": "Project",
     "task": "Task",
     "board": "Board",
+    "boards": "Boards",
+    "tasks": "Tasks",
     "yes": "Yes",
     "no": "No",
     "irreversible_action": "This action is irreversible",
@@ -616,7 +619,45 @@
     "projectName": "Project name",
     "generationError": "AI generation error",
     "projectCreationError": "Project creation error",
-    "boardCreationError": "Board creation error"
+    "boardCreationError": "Board creation error",
+    "prompts": {
+      "communication": {
+        "title": "Create a communication plan",
+        "prompt": "I want to create a complete communication plan for my company. I need to organize my communication actions across multiple channels (social media, email marketing, press relations, events).\n\nPropose a complete and detailed project structure that covers ALL aspects of a professional communication plan. Don't hesitate to include elements I might not have thought of: strategy, creation, production, distribution, measurement, optimization, team management, budget, tools, training, monitoring, etc.\n\nBe creative and think about all the best practices and essential steps for a successful communication plan."
+      },
+      "mobile": {
+        "title": "Create a mobile application",
+        "prompt": "I want to develop a native mobile application for iOS and Android. The project requires a structured approach from conception to deployment.\n\nCreate a COMPLETE project structure that covers absolutely ALL aspects of professional mobile app development. Think of everything: user research, technical architecture, design system, development, testing, security, performance, deployment, marketing, analytics, maintenance, evolution, team management, documentation, training, user support, etc.\n\nBe exhaustive and propose detailed tasks that even an experienced developer might forget. Include best practices, modern tools, and all business and technical aspects."
+      },
+      "woocommerce": {
+        "title": "Create a WordPress WooCommerce site",
+        "prompt": "I want to create a complete e-commerce site with WordPress and WooCommerce. The project must cover all technical and business aspects of a professional online store.\n\nPropose an EXHAUSTIVE project structure that covers ABSOLUTELY ALL aspects of a professional e-commerce. Think of everything: business strategy, UX/UI, development, security, payments, logistics, SEO, marketing, analytics, legal, GDPR, performance, maintenance, customer support, training, evolution, etc.\n\nBe very detailed and include tasks that are often overlooked: user testing, conversion optimization, returns management, automated emails, cross-selling, loyalty, etc. Think like an e-commerce expert who leaves nothing to chance."
+      },
+      "wordpress": {
+        "title": "Create a WordPress showcase site",
+        "prompt": "I want to create a professional showcase website with WordPress to present my company and its services. The site must be modern, optimized and easy to maintain.\n\nThe project must include:\n- Needs analysis and site structure definition\n- WordPress theme selection and customization\n- Content creation (texts, images, videos)\n- On-page and technical SEO optimization\n- Social media integration\n- Contact form setup\n- Analytics tools configuration\n- Performance optimization (speed, mobile)\n- Site security (SSL, backups, updates)\n- Cross-browser and responsive testing\n- WordPress administration training\n- Natural search engine optimization strategy\n- Website launch and hosting configuration\n\nCan you create a project structure with boards organized by phases and specific tasks for each creation step?"
+      },
+      "marketing": {
+        "title": "Marketing plan",
+        "prompt": "I want to develop a complete marketing plan to grow my business. I need a structured strategy covering all aspects of digital and traditional marketing.\n\nThe plan must include:\n- Market analysis and competitor study\n- Persona definition and target segments\n- Positioning strategy and value proposition\n- Digital marketing (SEO, SEA, social media, email)\n- Traditional marketing actions (print, radio, events)\n- Content strategy and storytelling\n- Communication plan and public relations\n- Marketing budget management and ROI\n- Strategic partnerships and collaborations\n- Influencer marketing and ambassadors\n- Performance analysis and KPIs\n- Continuous campaign optimization\n- 12-month action planning\n\nCan you propose an organization in thematic boards with detailed tasks to effectively structure this marketing plan?"
+      },
+      "landing": {
+        "title": "Create a landing page",
+        "prompt": "I want to create a high-conversion landing page to promote a specific product or service. The page must be optimized to convert visitors into prospects or customers.\n\nThe project must cover:\n- Target audience analysis and their needs\n- Conversion objective definition (sale, lead, registration)\n- Conversion-oriented UX/UI design\n- Persuasive content writing (headlines, CTAs, testimonials)\n- Reassurance elements integration (guarantees, certifications)\n- Tracking and analytics setup\n- SEO and SEA optimization for paid traffic\n- A/B testing on key elements\n- CRM and email marketing tools integration\n- Mobile optimization and loading speed\n- Optimized form setup\n- Performance and conversion rate analysis\n- Continuous optimization based on data\n\nCan you create a project structure with boards organized by phases (design, development, optimization) and specific tasks to maximize conversions?"
+      },
+      "brand": {
+        "title": "Create a brand identity",
+        "prompt": "I want to create a complete and consistent brand identity for my company. The project must cover all visual and conceptual aspects of the brand.\n\nThe project must include:\n- Brand strategy and positioning definition\n- Logo creation and variations\n- Brand guidelines definition (colors, typography, styles)\n- Communication materials creation (business cards, stationery)\n- Digital brand identity development (social media, website)\n- Brand tone and personality definition\n- Style guide and brand book creation\n- Applications on different media (packaging, signage)\n- Brand legal protection (trademark registration, copyright)\n- Identity deployment strategy\n- Target testing and validation\n- Team training on identity usage\n- Brand image monitoring and evolution\n\nCan you propose a project structure with boards organized by creative phases and detailed tasks to develop a strong and memorable brand identity?"
+      },
+      "product": {
+        "title": "Product launch retro-planning",
+        "prompt": "I want to create a detailed retro-planning for launching a new product. The project must organize all steps from conception to commercial launch.\n\nThe project must cover:\n- Product development phase and testing\n- Market research and competitive analysis\n- Pricing strategy and positioning definition\n- Marketing and communication materials creation\n- Distribution channels preparation\n- Sales team training\n- Tracking and analytics tools setup\n- Advertising campaign planning\n- Launch event organization\n- Press relations and influencer management\n- Customer service and support preparation\n- User testing and final adjustments\n- Post-launch monitoring and optimization\n- Updates and evolution planning\n\nCan you create a project structure with chronological boards and tasks with deadlines to effectively orchestrate this product launch?"
+      },
+      "social": {
+        "title": "Social media publishing schedule",
+        "prompt": "I want to organize a publishing schedule for my company's social media. The project must structure content creation and distribution across multiple platforms.\n\nThe project must include:\n- Existing social media audit and analysis\n- Content strategy definition by platform\n- Monthly editorial calendar creation\n- Content type planning (posts, stories, videos, lives)\n- Visual and graphic creation management\n- Text and caption writing\n- Publication programming and scheduling\n- Community engagement and management\n- Performance monitoring and analytics\n- Social advertising campaign management\n- Competitive monitoring and trends\n- Seasonal and event content creation\n- Collaboration and partnership management\n- Continuous optimization based on results\n\nCan you propose an organization in thematic boards with recurring tasks to maintain an active and engaging social presence?"
+      }
+    }
   },
   "guests": {
     "invite_users": "Invite other users",
@@ -692,6 +733,7 @@
     "type_template_description": "Use a predefined template to get started quickly",
     "type_empty_title": "Empty project",
     "type_empty_description": "Start with a completely empty project",
+    "project_name": "Project name",
     "invitation_email_required": "Email is required",
     "invitation_email_invalid": "Invalid email format",
     "invitation_email_duplicate": "This email is already in the list",

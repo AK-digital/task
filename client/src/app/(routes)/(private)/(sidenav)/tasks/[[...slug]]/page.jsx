@@ -4,6 +4,7 @@ import { useContext, useMemo, useState } from "react";
 import Tasks from "@/components/tasks/Tasks";
 import TasksFilters from "@/components/tasks/TasksFilters";
 import { ProjectProvider, useProjectContext } from "@/context/ProjectContext";
+import { useTranslation } from "react-i18next";
 
 // This is where you define the task elements you want to display
 const displayedElts = {
@@ -57,6 +58,7 @@ export default function TasksPage() {
 
 function TasksContent() {
   const [selectedTasks, setSelectedTasks] = useState([]);
+  const { t } = useTranslation();
 
   // Utilisez le contexte du projet pour récupérer les tâches
   const { tasks, tasksLoading, mutateTasks } = useProjectContext();
@@ -66,7 +68,9 @@ function TasksContent() {
       <div className="p-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto ">
         {/* Header */}
         <div className="flex items-center mb-6 gap-4 p-4">
-          <span className="text-2xl min-w-max select-none">Mes tâches</span>
+          <span className="text-2xl min-w-max select-none">
+            {t("navigation.my_tasks")}
+          </span>
           {/* Filters */}
           <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
         </div>

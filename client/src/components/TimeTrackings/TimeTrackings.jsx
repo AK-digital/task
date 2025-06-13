@@ -68,7 +68,7 @@ export default function TimeTrackings({ searchParams }) {
   }
 
   function handleExport() {
-    exportTimeTracking(giveProjectsToExport(), timeTrackings);
+    exportTimeTracking(giveProjectsToExport(), timeTrackings, t);
   }
 
   return (

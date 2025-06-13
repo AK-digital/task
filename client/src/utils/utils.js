@@ -316,7 +316,7 @@ export function exportTimeTracking(projects, trackers, t) {
     doc.save(
       `${formattedStartingDate}-${formattedEndingDate}-${
         project?.name || t("time_tracking.default_project")
-      }-temps-clynt.pdf`
+      }-${t("time_tracking.time_column").toLowerCase()}-clynt.pdf`
     );
   }
 }
