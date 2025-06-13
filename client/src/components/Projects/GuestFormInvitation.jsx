@@ -34,7 +34,7 @@ export default function GuestFormInvitation({
       setIsPopup({
         status: state?.status,
         title: t("projects.invitation_sent_success"),
-        message: t(state?.message),
+        message: t(state?.message, { email: state?.email }),
       });
 
       const notificationData = {
