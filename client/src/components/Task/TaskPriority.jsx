@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 
 export default function TaskPriority({ task }) {
   const { t } = useTranslation();
-  const { project, mutateTasks, priorities, mutatePriorities } =
+  const { project, mutateTasks, priorities, mutatePriorities, mutateProject } =
     useProjectContext();
   const [currentPriority, setCurrentPriority] = useState(task?.priority);
   const [isEdit, setIsEdit] = useState(false);
@@ -61,6 +61,7 @@ export default function TaskPriority({ task }) {
 
     mutateTasks();
     mutatePriorities();
+    mutateProject();
   }
 
   async function handleAddPriority() {
@@ -100,9 +101,9 @@ export default function TaskPriority({ task }) {
     setIsEdit((prev) => !prev);
   }
 
-  useMemo(() => {
+  /*useMemo(() => {
     setCurrentPriority(task?.priority);
-  }, [task?.priority]);
+  }, [task?.priority]);*/
 
   const hasPriority = currentPriority?.name;
   const currentBackgroundColor = hasPriority
@@ -127,7 +128,11 @@ export default function TaskPriority({ task }) {
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
-        <span>{currentPriority?.name || t("tasks.low_priority")}</span>
+        <span>
+          {currentPriority?.default
+            ? t(`tasks.priorities.${currentPriority?.priority}`)
+            : currentPriority?.name}
+        </span>
       </div>
       {isOpen && (
         <>
@@ -149,7 +154,9 @@ export default function TaskPriority({ task }) {
                       onClick={() => handleTaskUpdatePriority(priority)}
                       style={{ backgroundColor: priority?.color }}
                     >
-                      {priority?.name}
+                      {priority?.default
+                        ? t(`tasks.priorities.${priority?.priority}`)
+                        : priority?.name || t("tasks.priorities.low")}
                     </li>
                   );
                 } else {

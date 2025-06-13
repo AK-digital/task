@@ -253,7 +253,6 @@
     "1_hour": "1 heure",
     "2_hours": "2 heures",
     "1_day": "1 jour",
-    "low_priority": "Basse",
     "new_priority": "Nouvelle priorité",
     "add": "Ajouter",
     "apply": "Appliquer",
@@ -275,7 +274,19 @@
     "clear": "Effacer",
     "search_task_placeholder": "Recherchez une tâche...",
     "photo_of": "Photo de",
-    "no_task": "Aucune tâche disponible"
+    "no_task": "Aucune tâche disponible",
+    "priorities": {
+      "urgent": "Urgent",
+      "high": "Haute",
+      "medium": "Moyenne",
+      "low": "Basse"
+    },
+    "statuses": {
+      "waiting": "En attente",
+      "todo": "À faire",
+      "progress": "En cours",
+      "done": "Terminée"
+    }
   },
   "time_tracking": {
     "time_report": "Relevé de temps - AK Digital",

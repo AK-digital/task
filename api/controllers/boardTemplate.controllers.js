@@ -1,8 +1,8 @@
 import BoardModel from "../models/Board.model.js";
 import BoardTemplateModel from "../models/BoardTemplate.model.js";
 import TaskModel from "../models/Task.model.js";
-
-
+import StatusModel from "../models/Status.model.js";
+import PriorityModel from "../models/Priority.model.js";
 
 export async function saveBoardTemplate(req, res, next) {
   try {
@@ -53,7 +53,7 @@ export async function saveBoardTemplate(req, res, next) {
 export async function getPublicBoardsTemplates(req, res, next) {
   try {
     const boardTemplates = await BoardTemplateModel.find({
-      private: false
+      private: false,
     });
 
     if (boardTemplates.length <= 0) {
@@ -80,11 +80,11 @@ export async function getPublicBoardsTemplates(req, res, next) {
 
 export async function getUserPrivateBoardsTemplates(req, res, next) {
   try {
-    const authUser = res.locals.user
+    const authUser = res.locals.user;
 
     const boardTemplates = await BoardTemplateModel.find({
       author: authUser?._id,
-      private: true
+      private: true,
     });
 
     if (boardTemplates.length <= 0) {
@@ -132,6 +132,16 @@ export async function useBoardTemplate(req, res, next) {
 
     const savedBoard = await newBoard.save();
 
+    const status = await StatusModel.findOne({
+      projectId: req.query.projectId,
+      status: "waiting",
+    });
+
+    const priority = await PriorityModel.findOne({
+      projectId: req.query.projectId,
+      priority: "medium",
+    });
+
     const tasks = await TaskModel.find({
       boardId: template?.boardId?._id,
     });
@@ -143,6 +153,8 @@ export async function useBoardTemplate(req, res, next) {
           boardId: savedBoard?._id,
           author: authUser?._id,
           text: task?.text,
+          status: status?._id,
+          priority: priority?._id,
         });
 
         await newTask.save();
@@ -169,7 +181,7 @@ export async function deleteBoardTemplate(req, res, next) {
     const authUser = res.locals.user;
 
     const template = await BoardTemplateModel.findOne({ _id: req.params.id });
-    console.log("template :", template)
+    console.log("template :", template);
     if (!template) {
       return res.status(404).send({
         success: false,

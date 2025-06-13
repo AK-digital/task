@@ -117,11 +117,11 @@ export async function getTasks(req, res, next) {
       })
       .populate({
         path: "status",
-        select: "status name color projectId",
+        select: "status name color projectId default",
       })
       .populate({
         path: "priority",
-        select: "name color _id",
+        select: "name color _id priority default",
       })
       .populate({
         path: "responsibles",

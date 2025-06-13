@@ -120,7 +120,9 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                     htmlFor={priority?._id}
                     className="flex items-center cursor-pointer flex-1"
                   >
-                    {priority?.name}
+                    {priority?.default
+                      ? t(`tasks.priorities.${priority?.priority}`)
+                      : priority?.name}
                   </label>
                 </li>
               ))}

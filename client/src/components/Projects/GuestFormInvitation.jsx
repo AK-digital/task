@@ -37,14 +37,24 @@ export default function GuestFormInvitation({
         message: t(state?.message),
       });
 
-      const message = {
-        title: `${t("projects.invitation_emoji")} ${project?.name} !`,
-        content: `${t("projects.invitation_good_news")} "${project?.name}".`,
+      const notificationData = {
+        type: "project_invitation",
+        params: {
+          projectName: project?.name,
+        },
       };
 
-      const link = "/invitation/" + state?.data?._id;
+      const link = "/invitation/" + state?.data?.invitation?._id;
 
-      socket.emit("create notification", user, value, message, link);
+      if (user?._id && state?.data?.userId) {
+        socket.emit(
+          "create notification",
+          user,
+          state?.data?.userId,
+          notificationData,
+          link
+        );
+      }
     }
 
     if (state?.status === "failure") {

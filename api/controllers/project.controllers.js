@@ -323,6 +323,9 @@ export async function sendProjectInvitationToGuest(req, res, next) {
       });
     }
 
+    // Trouver l'utilisateur par son email
+    const invitedUser = await UserModel.findOne({ email });
+
     await ProjectInvitationModel.findOneAndDelete({
       guestEmail: email,
       projectId: project._id,
@@ -343,7 +346,10 @@ export async function sendProjectInvitationToGuest(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Invitation par e-mail envoyé avec succès",
-      data: newProjectInvitation,
+      data: {
+        invitation: newProjectInvitation,
+        userId: invitedUser?._id,
+      },
     });
   } catch (err) {
     return res.status(500).send({

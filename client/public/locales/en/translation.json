@@ -275,7 +275,6 @@
     "1_hour": "1 hour",
     "2_hours": "2 hours",
     "1_day": "1 day",
-    "low_priority": "Low",
     "new_priority": "New priority",
     "add": "Add",
     "add_task": "Add task",
@@ -311,6 +310,18 @@
       "update": {
         "error": "An error occurred while updating the task priority"
       }
+    },
+    "priorities": {
+      "urgent": "Urgent",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "statuses": {
+      "waiting": "On hold",
+      "todo": "To do",
+      "progress": "In progress",
+      "done": "Done"
     }
   },
   "time_tracking": {

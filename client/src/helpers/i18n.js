@@ -11,6 +11,9 @@ i18n
     debug: process.env.NODE_ENV === "development",
     backend: {
       loadPath: "/locales/{{lng}}/translation.json",
+      requestOptions: {
+        cache: "no-store",
+      },
     },
     interpolation: {
       escapeValue: false,

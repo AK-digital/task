@@ -1,6 +1,6 @@
 "use client";
 import { updateTaskStatus } from "@/actions/task";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { getFloating, usePreventScroll } from "@/utils/floating";
@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 export default function TaskStatus({ task, uid }) {
   const { t } = useTranslation();
-  const { project, mutateTasks, statuses, mutateStatuses } =
+  const { project, mutateTasks, statuses, mutateStatuses, mutateProject } =
     useProjectContext();
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [isEdit, setIsEdit] = useState(false);
@@ -38,8 +38,8 @@ export default function TaskStatus({ task, uid }) {
 
   async function handleTaskUpdateStatus(status) {
     if (!canEdit) return;
-    setCurrentStatus(status);
     setIsOpen(false);
+    setCurrentStatus(status);
 
     const res = await updateTaskStatus(task?._id, project?._id, status?._id);
 
@@ -53,9 +53,11 @@ export default function TaskStatus({ task, uid }) {
       return;
     }
 
-    socket.emit("update task", project?._id);
     mutateTasks();
     mutateStatuses();
+    mutateProject();
+
+    socket.emit("update task", project?._id);
   }
 
   async function handleAddStatus() {
@@ -95,10 +97,6 @@ export default function TaskStatus({ task, uid }) {
     setIsEdit((prev) => !prev);
   }
 
-  useMemo(() => {
-    setCurrentStatus(task?.status);
-  }, [task?.status]);
-
   const hasStatus = currentStatus?.name;
   const currentBackgroundColor = hasStatus ? currentStatus?.color : "#b3bcc0";
 
@@ -120,7 +118,11 @@ export default function TaskStatus({ task, uid }) {
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
-        <span>{currentStatus?.name || t("tasks.waiting_status")}</span>
+        <span>
+          {currentStatus?.default
+            ? t(`tasks.statuses.${currentStatus?.status}`)
+            : currentStatus?.name}
+        </span>
       </div>
       {isOpen && (
         <>
@@ -141,7 +143,9 @@ export default function TaskStatus({ task, uid }) {
                       onClick={() => handleTaskUpdateStatus(status)}
                       style={{ backgroundColor: status?.color }}
                     >
-                      {status?.name}
+                      {status?.default
+                        ? t(`tasks.statuses.${status?.status}`)
+                        : status?.name || t("tasks.statuses.waiting")}
                     </li>
                   );
                 } else {

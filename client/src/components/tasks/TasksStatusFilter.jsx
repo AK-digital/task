@@ -122,7 +122,9 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                     htmlFor={elt?._id}
                     className="flex items-center cursor-pointer flex-1"
                   >
-                    {elt?.name}
+                    {elt?.default
+                      ? t(`tasks.statuses.${elt?.status}`)
+                      : elt?.name}
                   </label>
                 </li>
               ))}
