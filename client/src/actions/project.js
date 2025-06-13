@@ -5,7 +5,7 @@ import { regex } from "@/utils/regex";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export async function saveProject(t, prevState, formData) {
+export async function saveProject(prevState, formData) {
   try {
     const rawFormData = {
       name: formData.get("project-name"),
@@ -31,7 +31,7 @@ export async function saveProject(t, prevState, formData) {
       data: response.data,
     };
   } catch (err) {
-    console.log(err.message || t("project.create.error"));
+    console.log(err.message || "project.create.error");
     return {
       status: "failure",
       message: err.message,
@@ -41,7 +41,6 @@ export async function saveProject(t, prevState, formData) {
 
 export async function sendProjectInvitationToGuest(
   projectId,
-  t,
   prevState,
   formData
 ) {
@@ -52,9 +51,9 @@ export async function sendProjectInvitationToGuest(
     if (!validation) {
       return {
         status: "failure",
-        message: t("common.error"),
+        message: "common.error",
         errors: {
-          email: [t("auth.validation.email.invalid")],
+          email: ["validation.email.invalid"],
         },
       };
     }
@@ -78,33 +77,34 @@ export async function sendProjectInvitationToGuest(
 
     return {
       status: "success",
-      message: t("project_invitation.send.success", { email }),
+      message: "project_invitation.send.success",
+      email: email,
       data: response?.data,
     };
   } catch (err) {
-    console.log(err?.message || t("common.error"));
+    console.log(err?.message || "common.error");
 
     if (err?.message.includes("E11000 duplicate")) {
       return {
         status: "failure",
-        message: t("project_invitation.send.already_sent"),
+        message: "project_invitation.send.already_sent",
         errors: null,
       };
     }
 
     return {
       status: "failure",
-      message: err?.message || t("common.error"),
+      message: err?.message || "common.error",
       errors: null,
     };
   }
 }
 
-export async function acceptProjectInvitation(invitationId, t) {
+export async function acceptProjectInvitation(invitationId) {
   const cookie = await cookies();
   try {
     if (!invitationId) {
-      throw new Error(t("common.missing_parameter"));
+      throw new Error("common.missing_parameter");
     }
 
     const rawData = {
@@ -119,7 +119,7 @@ export async function acceptProjectInvitation(invitationId, t) {
     );
 
     if (res.status === 401) {
-      throw new Error(t("auth.not_connected"));
+      throw new Error("auth.not_connected");
     }
 
     const response = await res.json();
@@ -140,11 +140,11 @@ export async function acceptProjectInvitation(invitationId, t) {
 
     return response;
   } catch (err) {
-    console.log(err.message || t("common.error"));
+    console.log(err.message || "common.error");
 
     if (
-      err?.message === t("auth.not_connected") ||
-      err?.message === t("auth.user_not_exist")
+      err?.message === "auth.not_connected" ||
+      err?.message === "auth.user_not_exist"
     ) {
       cookie.set("invitationId", invitationId, {
         secure: true,
@@ -156,12 +156,12 @@ export async function acceptProjectInvitation(invitationId, t) {
 
     return {
       success: false,
-      message: err.message || t("common.error"),
+      message: err.message || "common.error",
     };
   }
 }
 
-export async function removeGuest(projectId, t, prevState, formData) {
+export async function removeGuest(projectId, prevState, formData) {
   try {
     const guestId = formData.get("guest-id");
 
@@ -190,20 +190,20 @@ export async function removeGuest(projectId, t, prevState, formData) {
 
     return {
       status: "success",
-      message: t("project.guest.remove.success"),
+      message: "project.guest.remove.success",
       guestId: guestId,
     };
   } catch (err) {
-    console.log(err.message || t("common.error"));
+    console.log(err.message || "common.error");
 
     return {
       status: "failure",
-      message: err.message || t("common.error"),
+      message: err.message || "common.error",
     };
   }
 }
 
-export async function updateProject(t, prevState, formData) {
+export async function updateProject(prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const name = formData.get("project-name");
@@ -214,7 +214,7 @@ export async function updateProject(t, prevState, formData) {
     if (!name) {
       return {
         status: "failure",
-        message: t("project.validation.name_required"),
+        message: "validation.project.name_required",
       };
     }
 
@@ -232,7 +232,7 @@ export async function updateProject(t, prevState, formData) {
       if (!isValidUrl(urls)) {
         return {
           status: "failure",
-          message: t("project.validation.url_invalid"),
+          message: "validation.project.url_invalid",
         };
       }
     }
@@ -241,7 +241,7 @@ export async function updateProject(t, prevState, formData) {
       if (urls[i] === "") {
         return {
           status: "failure",
-          message: t("project.validation.url_empty"),
+          message: "validation.project.url_empty",
         };
       }
     }
@@ -276,11 +276,11 @@ export async function updateProject(t, prevState, formData) {
 
     return {
       status: "success",
-      message: t("project.update.success"),
+      message: "project.update.success",
       data: response.data,
     };
   } catch (err) {
-    console.log(err.message || t("project.update.error"));
+    console.log(err.message || "project.update.error");
     return {
       status: "failure",
       message: err.message,
@@ -288,7 +288,7 @@ export async function updateProject(t, prevState, formData) {
   }
 }
 
-export async function updateProjectsOrder(projects, t) {
+export async function updateProjectsOrder(projects) {
   try {
     const res = await useAuthFetch(
       `project/reorder`,
@@ -305,7 +305,7 @@ export async function updateProjectsOrder(projects, t) {
   }
 }
 
-export async function sendProjectInvitationFromWizard(projectId, email, t) {
+export async function sendProjectInvitationFromWizard(projectId, email) {
   try {
     const rawData = {
       email: email,
@@ -326,22 +326,22 @@ export async function sendProjectInvitationFromWizard(projectId, email, t) {
 
     return {
       success: true,
-      message: `Invitation envoyée à ${email} avec succès`,
+      message: "project_invitation.send.success",
       data: response?.data,
     };
   } catch (err) {
-    console.log(err?.message || "Une erreur est survenue");
+    console.log(err?.message || "common.error");
 
     if (err?.message.includes("E11000 duplicate")) {
       return {
         success: false,
-        message: "Une invitation a déjà été envoyée à cet utilisateur",
+        message: "project_invitation.send.already_sent",
       };
     }
 
     return {
       success: false,
-      message: err?.message || "Une erreur est survenue",
+      message: err?.message || "common.error",
     };
   }
 }

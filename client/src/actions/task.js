@@ -2,13 +2,13 @@
 import { useAuthFetch } from "@/utils/api";
 import { allowedStatus } from "@/utils/utils";
 
-export async function saveTask(projectId, t, prevState, formData) {
+export async function saveTask(projectId, prevState, formData) {
   try {
     const boardId = formData.get("board-id");
     const text = formData.get("new-task");
 
     if (!projectId || !boardId || !text) {
-      throw new Error(t("task.missing_parameters"));
+      throw new Error("task.missing_parameters");
     }
 
     const res = await useAuthFetch(
@@ -21,22 +21,22 @@ export async function saveTask(projectId, t, prevState, formData) {
     const response = await res.json();
 
     if (!response?.success) {
-      throw new Error(response?.message || t("task.create.error"));
+      throw new Error(response?.message || "task.create.error");
     }
 
     return response;
   } catch (err) {
-    console.log(err.message || t("task.create.error"));
+    console.log(err.message || "task.create.error");
 
     return {
       success: false,
-      message: err.message || t("task.create.error"),
+      message: err.message || "task.create.error",
     };
   }
 }
 
 // Update the status of a given task
-export async function updateTaskStatus(taskId, projectId, statusId, t) {
+export async function updateTaskStatus(taskId, projectId, statusId) {
   try {
     const rawData = {
       statusId: statusId,
@@ -57,17 +57,17 @@ export async function updateTaskStatus(taskId, projectId, statusId, t) {
 
     return response;
   } catch (err) {
-    console.log(err.message || t("task.status.update.error"));
+    console.log(err.message || "task.status_update.update.error");
 
     return {
       success: false,
-      message: err?.message || t("common.error"),
+      message: err?.message || "common.error",
     };
   }
 }
 
 // Update the priority of a given task
-export async function updateTaskPriority(taskId, projectId, priorityId, t) {
+export async function updateTaskPriority(taskId, projectId, priorityId) {
   try {
     const rawData = {
       priorityId: priorityId,
@@ -90,7 +90,7 @@ export async function updateTaskPriority(taskId, projectId, priorityId, t) {
       status: "success",
     };
   } catch (err) {
-    console.log(err.message || t("task.priority.update.error"));
+    console.log(err.message || "task.priority_update.update.error");
 
     return {
       status: "failure",

@@ -428,12 +428,19 @@
     "language_change_error": "Error changing language:"
   },
   "profile": {
-    "my_profile": "My profile",
-    "first_name": "First name",
-    "last_name": "Last name",
+    "my_profile": "My Profile",
+    "first_name": "First Name",
+    "last_name": "Last Name",
     "company": "Company",
     "position": "Position",
-    "language": "Language",
+    "language": {
+      "missing_parameters": "Missing parameters",
+      "not_supported": "Language not supported",
+      "update": {
+        "success": "Language updated successfully",
+        "error": "An error occurred while updating the language"
+      }
+    },
     "updating_language": "Updating language...",
     "update_button": "Update",
     "success_title": "Success",
@@ -545,7 +552,11 @@
     "subtitle": "Feel free to share your suggestions with us!",
     "share_experience": "Share your experience",
     "placeholder": "Your feedback...",
-    "send": "Send"
+    "send": "Send",
+    "note_required": "Please select a rating",
+    "message_required": "Please enter a message",
+    "missing_parameters": "Please select a rating and enter a message",
+    "unexpected_error": "An unexpected error occurred"
   },
 
   "messages": {
@@ -662,10 +673,14 @@
   },
   "board_template": {
     "create": {
-      "error": "An error occurred while creating the board template"
+      "error": "An error occurred while creating the board template",
+      "success": "Board template created successfully"
     }
   },
   "board": {
+    "create": {
+      "error": "An error occurred while creating the board"
+    },
     "update": {
       "error": "An error occurred while updating the board"
     }
@@ -703,5 +718,11 @@
     "template_delete_template": "Delete template",
     "template_deleting": "Deleting...",
     "template_deletion_error": "Error deleting template"
+  },
+  "template": {
+    "save": {
+      "success": "Template saved successfully",
+      "error": "Error saving template"
+    }
   }
 }

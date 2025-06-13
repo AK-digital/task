@@ -35,7 +35,7 @@ export function DropDown({
       formData.append("role", role);
       formData.append("email", invitation.guestEmail);
 
-      const res = await updateProjectInvitationRole(null, formData, t);
+      const res = await updateProjectInvitationRole(null, formData);
 
       if (res.status === "failure") {
         setCurrent(defaultValue);

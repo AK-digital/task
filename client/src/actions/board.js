@@ -1,7 +1,7 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
 
-export async function createBoard(projectId, title, color = "#2d7ff9", t) {
+export async function createBoard(projectId, title, color = "#2d7ff9") {
   try {
     const rawFormData = {
       title: title,
@@ -18,27 +18,20 @@ export async function createBoard(projectId, title, color = "#2d7ff9", t) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(
-        response?.message ||
-          "Une erreur est survenue lors de la création du tableau"
-      );
+      throw new Error(response?.message || "board.create.error");
     }
 
     return response;
   } catch (err) {
-    console.log(
-      err.message || "Une erreur est survenue lors de la création du tableau"
-    );
+    console.log(err.message || "board.create.error");
     return {
       success: false,
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la création du tableau",
+      message: err.message || "board.create.error",
     };
   }
 }
 
-export async function updateBoard(boardId, projectId, color, title, t) {
+export async function updateBoard(boardId, projectId, color, title) {
   try {
     const rawFormData = {
       title: title,
@@ -55,15 +48,15 @@ export async function updateBoard(boardId, projectId, color, title, t) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || t("board.update.error"));
+      throw new Error(response?.message || "board.update.error");
     }
 
     return response;
   } catch (err) {
-    console.log(err.message || t("board.update.error"));
+    console.log(err.message || "board.update.error");
     return {
       success: false,
-      message: err.message || t("board.update.error"),
+      message: err.message || "board.update.error",
     };
   }
 }

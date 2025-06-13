@@ -23,10 +23,8 @@ export default function ProfileForm() {
   const { t, i18n } = useTranslation();
   const { user, setUser } = useContext(AuthContext);
 
-  const updateUserProfileWithT = (prevState, formData) =>
-    updateUserProfile(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
-    updateUserProfileWithT,
+    updateUserProfile,
     initialState
   );
   const [popUp, setPopup] = useState(null);
@@ -64,7 +62,7 @@ export default function ProfileForm() {
         setPopup({
           status: "success",
           title: t("profile.success_title"),
-          message: t("profile.update_success"),
+          message: t(response.message),
         });
       } else {
         // En cas d'erreur, revenir à la langue précédente
@@ -73,7 +71,7 @@ export default function ProfileForm() {
         setPopup({
           status: "failure",
           title: t("profile.error_title"),
-          message: response?.message || t("profile.update_error"),
+          message: t(response.message),
         });
       }
 
@@ -90,7 +88,7 @@ export default function ProfileForm() {
       setPopup({
         status: state?.status,
         title: t("profile.success_title"),
-        message: t("profile.update_success"),
+        message: t(state.message),
       });
     }
 
@@ -98,7 +96,7 @@ export default function ProfileForm() {
       setPopup({
         status: state?.status,
         title: t("profile.error_title"),
-        message: state?.message || t("profile.update_error"),
+        message: t(state.message),
       });
     }
 

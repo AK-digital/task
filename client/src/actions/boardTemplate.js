@@ -1,8 +1,9 @@
 "use server";
 
 import { useAuthFetch } from "@/utils/api";
+import { revalidateTag } from "next/cache";
 
-export async function saveBoardTemplate(t, prevState, formData) {
+export async function saveBoardTemplate(prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const boardId = formData.get("board-id");
@@ -23,15 +24,21 @@ export async function saveBoardTemplate(t, prevState, formData) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || t("board_template.create.error"));
+      throw new Error(response?.message);
     }
 
-    return response;
-  } catch (err) {
-    console.error(err.message || t("board_template.create.error"));
+    revalidateTag("templates");
+
     return {
-      success: false,
-      message: err.message || t("board_template.create.error"),
+      status: "success",
+      message: "board_template.create.success",
+      data: response.data,
+    };
+  } catch (err) {
+    console.log(err.message || "board_template.create.error");
+    return {
+      status: "failure",
+      message: err.message || "board_template.create.error",
     };
   }
 }

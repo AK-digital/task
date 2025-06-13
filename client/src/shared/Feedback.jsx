@@ -68,7 +68,7 @@ export default function Feedback() {
   }
 
   function getErrMsg(error) {
-    return state.errors?.[error];
+    return state.errors?.[error] ? t(state.errors[error]) : null;
   }
 
   function hoverStars(rating) {

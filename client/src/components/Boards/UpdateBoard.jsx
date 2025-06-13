@@ -20,8 +20,6 @@ export default function UpdateBoard({ board, projectId }) {
     board?._id,
     projectId,
     null,
-    null,
-    t
   );
   const [state, formAction, pending] = useActionState(
     updateBoardWithProjectId,
@@ -32,8 +30,13 @@ export default function UpdateBoard({ board, projectId }) {
     if (state?.status === "success") {
       setIsEdit(false);
       setOpenColor(false);
+    } else if (state?.status === "failure") {
+      const errorMessage = state.message?.startsWith?.("board.")
+        ? t(state.message)
+        : state.message;
+      console.error(errorMessage || t("boards.update.error"));
     }
-  }, [state]);
+  }, [state, t]);
 
   return (
     <div data-pending={pending} className="[&>input]:max-w-max">
@@ -51,7 +54,10 @@ export default function UpdateBoard({ board, projectId }) {
                 zIndex: "2001",
               }}
             />
-            <div onClick={(e) => setIsEdit(false)} className="absolute left-0 top-0 w-full h-full z-2001"></div>
+            <div
+              onClick={(e) => setIsEdit(false)}
+              className="absolute left-0 top-0 w-full h-full z-2001"
+            ></div>
           </div>
         ) : (
           <div className="flex items-center gap-2.5">

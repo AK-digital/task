@@ -19,6 +19,11 @@ export default function TimeTrackingMore({
     const response = await deleteTimeTracking([tracker._id], projectId);
 
     if (!response.success) {
+      if (response?.message?.startsWith?.("time_tracking.")) {
+        console.error(t(response.message));
+      } else if (response?.message) {
+        console.error(response.message);
+      }
       return;
     }
 

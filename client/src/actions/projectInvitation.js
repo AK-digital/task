@@ -1,8 +1,9 @@
 "use server";
 
 import { useAuthFetch } from "@/utils/api";
+import { revalidateTag } from "next/cache";
 
-export async function updateProjectInvitationRole(t, prevState, formData) {
+export async function updateProjectInvitationRole(prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");
@@ -15,27 +16,28 @@ export async function updateProjectInvitationRole(t, prevState, formData) {
       "application/json",
       { role, email }
     );
+
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || t("common.error"));
+      throw new Error(response?.message);
     }
+
+    revalidateTag("project");
 
     return {
       status: "success",
-      message: response?.message || t("project_invitation.role.update.success"),
+      message: "project_invitation.role.update.success",
     };
   } catch (err) {
-    console.log(err?.message || t("project_invitation.role.update.error"));
-
     return {
       status: "failure",
-      message: err?.message || t("project_invitation.role.update.error"),
+      message: err.message || "project_invitation.role.update.error",
     };
   }
 }
 
-export async function deleteProjectInvitation(t, prevState, formData) {
+export async function deleteProjectInvitation(prevState, formData) {
   try {
     const projectId = formData.get("project-id");
     const projectInvitationId = formData.get("project-invitation-id");
@@ -45,22 +47,23 @@ export async function deleteProjectInvitation(t, prevState, formData) {
       "DELETE",
       "application/json"
     );
+
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(response?.message || t("common.error"));
+      throw new Error(response?.message);
     }
+
+    revalidateTag("project");
 
     return {
       status: "success",
-      message: response?.message || t("project_invitation.delete.success"),
+      message: "project_invitation.delete.success",
     };
   } catch (err) {
-    console.log(err?.message || t("project_invitation.delete.error"));
-
     return {
       status: "failure",
-      message: err?.message || t("project_invitation.delete.error"),
+      message: err.message || "project_invitation.delete.error",
     };
   }
 }

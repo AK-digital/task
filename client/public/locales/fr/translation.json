@@ -395,13 +395,15 @@
     "last_name": "Nom de famille",
     "company": "Entreprise",
     "position": "Poste",
-    "language": "Langue",
+    "language": {
+      "missing_parameters": "Paramètres manquants",
+      "not_supported": "Langue non supportée",
+      "update": {
+        "success": "Langue mise à jour avec succès",
+        "error": "Une erreur est survenue lors de la mise à jour de la langue"
+      }
+    },
     "updating_language": "Mise à jour de la langue...",
-    "update_button": "Mettre à jour",
-    "success_title": "Succès",
-    "update_success": "Profil mis à jour avec succès",
-    "error_title": "Erreur",
-    "update_error": "Erreur lors de la mise à jour du profil",
     "sign_out": "Se déconnecter",
     "picture_update_success": "Photo de profil mise à jour avec succès",
     "picture_update_error": "Une erreur s'est produite lors de la mise à jour de la photo",
@@ -507,7 +509,11 @@
     "subtitle": "N'hésitez pas à nous faire part de vos suggestions !",
     "share_experience": "Partagez votre expérience",
     "placeholder": "Votre feedback...",
-    "send": "Envoyer"
+    "send": "Envoyer",
+    "note_required": "Veuillez sélectionner une note",
+    "message_required": "Veuillez entrer un message",
+    "missing_parameters": "Veuillez sélectionner une note et entrer un message",
+    "unexpected_error": "Une erreur inattendue est survenue"
   },
   "messages": {
     "conversation": "Conversation",
@@ -653,10 +659,14 @@
   },
   "board_template": {
     "create": {
-      "error": "Une erreur est survenue lors de la création du modèle de tableau"
+      "error": "Une erreur est survenue lors de la création du modèle de tableau",
+      "success": "Le modèle de tableau a été créé avec succès"
     }
   },
   "board": {
+    "create": {
+      "error": "Une erreur est survenue lors de la création du tableau"
+    },
     "update": {
       "error": "Une erreur est survenue lors de la mise à jour du tableau"
     }
@@ -694,5 +704,11 @@
     "template_delete_template": "Supprimer le modèle",
     "template_deleting": "Suppression...",
     "template_deletion_error": "Erreur lors de la suppression du modèle"
+  },
+  "template": {
+    "save": {
+      "success": "Template sauvegardé avec succès",
+      "error": "Erreur lors de la sauvegarde du template"
+    }
   }
 }

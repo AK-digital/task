@@ -35,11 +35,11 @@ export default function LanguageSwitcher() {
           mutate("/auth/session");
         } else {
           // En cas d'erreur retournée par l'action
-          console.error(t("general.language_change_error"), response?.message);
-          throw new Error(response?.message);
+          console.error(t(response.message));
+          throw new Error(response.message);
         }
       } catch (error) {
-        console.error(t("general.language_change_error"), error);
+        console.error(t("profile.language.update.error"), error);
         // En cas d'erreur, revenir à la langue précédente
         await i18n.changeLanguage(user?.language || "fr");
       }

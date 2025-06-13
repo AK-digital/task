@@ -2,7 +2,7 @@
 import { userUpdateValidation } from "@/utils/zod";
 import { useAuthFetch } from "@/utils/api";
 
-export async function updateUserProfile(t, prevState, formData) {
+export async function updateUserProfile(prevState, formData) {
   try {
     const userId = formData.get("userId");
 
@@ -40,13 +40,13 @@ export async function updateUserProfile(t, prevState, formData) {
 
     return {
       status: "success",
-      message: t("profile.update.success"),
+      message: "profile.update.success",
       data: response.data,
     };
   } catch (err) {
     return {
       status: "failure",
-      message: err.message || t("profile.update.error"),
+      message: err.message || "profile.update.error",
     };
   }
 }
@@ -54,11 +54,11 @@ export async function updateUserProfile(t, prevState, formData) {
 export async function updateUserLanguage(userId, language) {
   try {
     if (!userId || !language) {
-      throw new Error("Paramètres manquants");
+      throw new Error("profile.language.missing_parameters");
     }
 
     if (!["fr", "en"].includes(language)) {
-      throw new Error("Langue non supportée");
+      throw new Error("profile.language.not_supported");
     }
 
     const res = await useAuthFetch(
@@ -71,27 +71,23 @@ export async function updateUserLanguage(userId, language) {
     const response = await res.json();
 
     if (!response.success) {
-      throw new Error(
-        response?.message || "Erreur lors de la mise à jour de la langue"
-      );
+      throw new Error(response?.message || "profile.language.update.error");
     }
 
     return {
       status: "success",
-      message: "Langue mise à jour avec succès",
+      message: "profile.language.update.success",
       data: response.data,
     };
   } catch (err) {
     return {
       status: "failure",
-      message:
-        err.message ||
-        "Une erreur est survenue lors de la mise à jour de la langue",
+      message: err.message || "profile.language.update.error",
     };
   }
 }
 
-export async function updateUserPicture(t, prevState, formData) {
+export async function updateUserPicture(prevState, formData) {
   try {
     const userId = formData.get("userId");
     const pictureFile = formData.get("picture");
@@ -100,7 +96,7 @@ export async function updateUserPicture(t, prevState, formData) {
     if (!pictureFile || pictureFile.size === 0) {
       return {
         status: "failure",
-        message: t("profile.picture.no_file_selected"),
+        message: "profile.picture.no_file_selected",
       };
     }
 
@@ -123,14 +119,14 @@ export async function updateUserPicture(t, prevState, formData) {
 
     return {
       status: "success",
-      message: t("profile.picture.update.success"),
+      message: "profile.picture.update.success",
       data: response.data,
     };
   } catch (err) {
     console.log("err", err);
     return {
       status: "failure",
-      message: err.message || t("profile.picture.update.error"),
+      message: err.message || "profile.picture.update.error",
     };
   }
 }

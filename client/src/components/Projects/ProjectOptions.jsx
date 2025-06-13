@@ -41,10 +41,10 @@ export default function ProjectOptions({ project }) {
   const [isDisabled, setIsDisabled] = useState(true);
   const [popup, setPopup] = useState(null);
 
-  const updateProjectWithT = (prevState, formData) =>
-    updateProject(t, prevState, formData);
+  const updateProjectAction = (prevState, formData) =>
+    updateProject(prevState, formData);
   const [state, formAction, pending] = useActionState(
-    updateProjectWithT,
+    updateProjectAction,
     initialState
   );
   const [editImg, setEditImg] = useState(false);
@@ -72,9 +72,12 @@ export default function ProjectOptions({ project }) {
       return;
     }
     if (state?.status === "failure") {
+      const errorMessage = state?.message?.startsWith?.("project.")
+        ? t(state.message)
+        : state.message;
       setPopup({
         title: t("projects.error_occurred"),
-        message: state?.message,
+        message: errorMessage,
       });
       return;
     }
@@ -127,6 +130,11 @@ export default function ProjectOptions({ project }) {
 
     if (response?.success) {
       router.push("/projects");
+    } else if (response?.message) {
+      const errorMessage = response.message?.startsWith?.("project.")
+        ? t(response.message)
+        : response.message;
+      console.error("Delete project error:", errorMessage);
     }
 
     mutate(`/project/${project?._id}`);

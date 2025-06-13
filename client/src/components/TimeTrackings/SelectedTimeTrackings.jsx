@@ -37,6 +37,11 @@ export default function SelectedTimeTrackings({
 
     const response = await deleteTimeTracking(selectedTrackers, projectId);
     if (!response.success) {
+      if (response?.message?.startsWith?.("time_tracking.")) {
+        console.error(t(response.message));
+      } else if (response?.message) {
+        console.error(response.message);
+      }
       mutateTimeTrackings(undefined, {
         revalidate: true,
         populateCache: false,

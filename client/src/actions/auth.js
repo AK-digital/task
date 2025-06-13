@@ -4,7 +4,7 @@ import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
 import { cookies } from "next/headers";
 
-export async function signUp(t, prevState, formData) {
+export async function signUp(prevState, formData) {
   try {
     const rawFormData = {
       lastName: formData.get("last-name"),
@@ -48,11 +48,11 @@ export async function signUp(t, prevState, formData) {
       message: response?.message,
     };
   } catch (err) {
-    console.log(err.message || t("auth.signup.error"));
+    console.log(err.message || "auth.signup.error");
     if (err.message.includes("E11000")) {
       return {
         status: "failure",
-        message: t("auth.signup.email_already_used"),
+        message: "auth.signup.email_already_used",
         errors: null,
       };
     }
@@ -64,7 +64,7 @@ export async function signUp(t, prevState, formData) {
   }
 }
 
-export async function signIn(t, prevState, formData) {
+export async function signIn(prevState, formData) {
   try {
     const rawFormData = {
       email: formData.get("email"),
@@ -100,7 +100,7 @@ export async function signIn(t, prevState, formData) {
     if (res.status === 403) {
       return {
         status: "failure",
-        message: t("auth.account_not_verified"),
+        message: "auth.account_not_verified",
         payload: rawFormData,
         errors: null,
       };
@@ -138,13 +138,13 @@ export async function signIn(t, prevState, formData) {
       invitationId: invitationId ? invitationId?.value : null,
     };
   } catch (err) {
-    console.log(err.message || t("auth.signin.error"));
+    console.log(err.message || "auth.signin.error");
     if (err.message.includes("mail")) {
       return {
         status: "failure",
         message: err?.message,
         errors: {
-          email: t("auth.validation.email.not_exist"),
+          email: "validation.email.not_exist",
         },
       };
     }
@@ -153,7 +153,7 @@ export async function signIn(t, prevState, formData) {
         status: "failure",
         message: err?.message,
         errors: {
-          password: t("auth.validation.credentials.invalid"),
+          password: "validation.credentials.invalid",
         },
       };
     }
@@ -164,21 +164,21 @@ export async function signIn(t, prevState, formData) {
   }
 }
 
-export async function sendResetCode(t, prevState, formData) {
+export async function sendResetCode(prevState, formData) {
   try {
     const email = formData.get("email");
 
     if (!email) {
       return {
         status: "failure",
-        errors: { email: t("auth.validation.email.required") },
+        errors: { email: "validation.email.required" },
       };
     }
 
     if (!regex.email.test(email)) {
       return {
         status: "failure",
-        errors: { email: t("auth.validation.email.invalid") },
+        errors: { email: "validation.email.invalid" },
       };
     }
 
@@ -198,7 +198,7 @@ export async function sendResetCode(t, prevState, formData) {
     if (res.status === 404) {
       return {
         status: "failure",
-        errors: { email: t("auth.validation.email.not_found") },
+        errors: { email: "validation.email.not_found" },
       };
     }
 
@@ -208,17 +208,17 @@ export async function sendResetCode(t, prevState, formData) {
 
     return {
       status: "success",
-      message: t("auth.reset_code.sent"),
+      message: "auth.reset_code.sent",
     };
   } catch (err) {
     return {
       status: "failure",
-      message: err.message || t("auth.reset_code.error"),
+      message: err.message || "auth.reset_code.error",
     };
   }
 }
 
-export async function resetForgotPassword(t, prevState, formData) {
+export async function resetForgotPassword(prevState, formData) {
   try {
     const resetCode = formData.get("reset-code");
     const newPassword = formData.get("newPassword");
@@ -227,7 +227,7 @@ export async function resetForgotPassword(t, prevState, formData) {
     if (!newPassword || !confirmPassword) {
       return {
         status: "failure",
-        errors: { newPassword: t("auth.validation.password.required") },
+        errors: { newPassword: "validation.password.required" },
       };
     }
 
@@ -235,7 +235,7 @@ export async function resetForgotPassword(t, prevState, formData) {
       return {
         status: "failure",
         errors: {
-          newPassword: t("auth.validation.password.requirements"),
+          newPassword: "validation.password.requirements",
         },
       };
     }
@@ -243,7 +243,7 @@ export async function resetForgotPassword(t, prevState, formData) {
     if (newPassword !== confirmPassword) {
       return {
         status: "failure",
-        errors: { confirmPassword: t("auth.validation.password.no_match") },
+        errors: { confirmPassword: "validation.password.no_match" },
       };
     }
 
@@ -268,7 +268,7 @@ export async function resetForgotPassword(t, prevState, formData) {
       return {
         status: "failure",
         errors: {
-          newPassword: t("auth.validation.password.must_be_different"),
+          newPassword: "validation.password.must_be_different",
         },
       };
     }
@@ -285,7 +285,7 @@ export async function resetForgotPassword(t, prevState, formData) {
     console.log(err);
     return {
       status: "failure",
-      message: err.message || t("auth.reset_password.error"),
+      message: err.message || "auth.reset_password.error",
     };
   }
 }

@@ -110,9 +110,10 @@ export default function AddBoardIAModal({ project, onClose }) {
         const board = result.boards[i];
         const boardRes = await createBoard(project._id, board.name);
         if (!boardRes.success || !boardRes.data?._id) {
-          throw new Error(
-            boardRes.message || t("boards.ai_board_creation_error")
-          );
+          const errorMessage = boardRes.message?.startsWith?.("board.")
+            ? t(boardRes.message)
+            : boardRes.message;
+          throw new Error(errorMessage || t("boards.ai_board_creation_error"));
         }
         const boardId = boardRes.data._id;
         for (let j = 0; j < board.tasks.length; j++) {
@@ -120,7 +121,13 @@ export default function AddBoardIAModal({ project, onClose }) {
           const taskForm = new FormData();
           taskForm.set("board-id", boardId);
           taskForm.set("new-task", board.tasks[j]);
-          await saveTask(project._id, {}, taskForm);
+          const taskRes = await saveTask(project._id, {}, taskForm);
+          if (!taskRes.success) {
+            const errorMessage = taskRes.message?.startsWith?.("task.")
+              ? t(taskRes.message)
+              : taskRes.message;
+            console.warn("Failed to create task:", errorMessage);
+          }
         }
       }
       onClose();

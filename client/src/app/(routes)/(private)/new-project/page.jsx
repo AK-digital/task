@@ -122,8 +122,11 @@ export default function NewProject() {
           for (const board of finalProjectData.boards) {
             const boardRes = await createBoard(projectId, board.name);
             if (!boardRes.success || !boardRes.data?._id) {
+              const errorMessage = boardRes.message?.startsWith?.("board.")
+                ? t(boardRes.message)
+                : boardRes.message;
               throw new Error(
-                boardRes.message || t("new_project.error_creating_board")
+                errorMessage || t("new_project.error_creating_board")
               );
             }
             const boardId = boardRes.data._id;
@@ -133,7 +136,13 @@ export default function NewProject() {
               const taskForm = new FormData();
               taskForm.set("board-id", boardId);
               taskForm.set("new-task", task);
-              await saveTask(projectId, {}, taskForm);
+              const taskRes = await saveTask(projectId, {}, taskForm);
+              if (!taskRes.success) {
+                const errorMessage = taskRes.message?.startsWith?.("task.")
+                  ? t(taskRes.message)
+                  : taskRes.message;
+                console.warn("Failed to create task:", errorMessage);
+              }
             }
           }
         }
@@ -151,12 +160,12 @@ export default function NewProject() {
               invitation.email
             );
             if (result.success) {
-              // console.log(`Invitation envoyée avec succès à ${invitation.email}`);
+              console.log(t(result.message, { email: invitation.email }));
             } else {
-              // console.warn(`Erreur lors de l'envoi de l'invitation à ${invitation.email}:`, result.message);
+              console.warn(t(result.message, { email: invitation.email }));
             }
           } catch (inviteError) {
-            // console.warn(`Erreur lors de l'envoi de l'invitation à ${invitation.email}:`, inviteError.message);
+            console.warn(t("common.error"), inviteError.message);
             // On continue même si une invitation échoue
           }
         }

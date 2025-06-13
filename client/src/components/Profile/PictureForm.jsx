@@ -22,10 +22,8 @@ export default function PictureForm() {
   const [editImg, setEditImg] = useState(false);
   const [popUp, setPopup] = useState(null);
 
-  const updateUserPictureWithT = (prevState, formData) =>
-    updateUserPicture(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
-    updateUserPictureWithT,
+    updateUserPicture,
     initialState
   );
 
@@ -35,7 +33,7 @@ export default function PictureForm() {
       setPopup({
         status: state?.status,
         title: t("profile.success_title"),
-        message: t("profile.picture_update_success"),
+        message: t(state.message),
       });
     }
 
@@ -43,7 +41,7 @@ export default function PictureForm() {
       setPopup({
         status: state?.status,
         title: t("profile.error_title"),
-        message: t("profile.picture_update_error"),
+        message: t(state.message),
       });
     }
 

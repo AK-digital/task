@@ -22,13 +22,7 @@ export default function SignUp() {
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [message, setMessage] = useState(null);
 
-  // Fonction wrapper pour passer t à signUp
-  const signUpWithT = (prevState, formData) => signUp(t, prevState, formData);
-
-  const [state, formAction, pending] = useActionState(
-    signUpWithT,
-    initialState
-  );
+  const [state, formAction, pending] = useActionState(signUp, initialState);
 
   function handleSignIn(e) {
     e.preventDefault();
@@ -38,9 +32,9 @@ export default function SignUp() {
   useEffect(() => {
     setMessage("");
     if (state?.status === "failure" && state?.errors === null) {
-      setMessage(state?.message || t("auth.signup.account_creation_error"));
+      setMessage(t(state.message));
     }
-  }, [state]);
+  }, [state, t]);
 
   return (
     <div className="flex flex-col w-full p-10 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)] max-w-125">

@@ -15,15 +15,18 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
   const { t } = useTranslation();
   const [popup, setPopup] = useState(false);
 
-  const saveBoardTemplateWithT = (prevState, formData) =>
-    saveBoardTemplate(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
-    saveBoardTemplateWithT,
+    saveBoardTemplate,
     initialState
   );
 
   useEffect(() => {
     if (state?.success) {
+      setPopup({
+        status: "success",
+        title: t("general.success"),
+        message: t("board_template.create.success"),
+      });
       setAddTemplate(false);
     }
 
@@ -31,7 +34,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
       setPopup({
         status: "failure",
         title: t("general.error_occurred"),
-        message: state?.message || t("templates.template_save_error"),
+        message: t(state?.message || "board_template.create.error"),
       });
     }
 
@@ -39,7 +42,7 @@ export default function AddBoardTemplate({ project, board, setAddTemplate }) {
     const timeout = setTimeout(() => setPopup(false), 4000);
 
     return () => clearTimeout(timeout);
-  }, [state]);
+  }, [state, t]);
 
   return (
     <Portal>

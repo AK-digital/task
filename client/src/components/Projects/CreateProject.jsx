@@ -19,10 +19,10 @@ export default function CreateProject({
   setIsCreating,
 }) {
   const { t } = useTranslation();
-  const saveProjectWithT = (prevState, formData) =>
-    saveProject(t, prevState, formData);
+  const saveProjectAction = (prevState, formData) =>
+    saveProject(prevState, formData);
   const [state, formAction, pending] = useActionState(
-    saveProjectWithT,
+    saveProjectAction,
     initialState
   );
   const formRef = useRef(null);
@@ -35,8 +35,14 @@ export default function CreateProject({
       router.refresh();
       // Correction de l'URL de redirection
       router.push(`/projects/${state.data._id}/`);
+    } else if (state?.status === "failure" && state?.message) {
+      // Afficher le message d'erreur traduit
+      const errorMessage = state.message?.startsWith?.("project.")
+        ? t(state.message)
+        : state.message;
+      console.error("Project creation error:", errorMessage);
     }
-  }, [state, router]);
+  }, [state, router, t]);
 
   useEffect(() => {
     if (isCreating && inputRef.current) {
@@ -57,13 +63,19 @@ export default function CreateProject({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData(e.target);
 
     try {
-      const response = await saveProject(formData, t);
+      const response = await saveProject({}, formData);
 
-      if (response.success) {
+      if (response.status === "success") {
         // Appeler la fonction de callback avec le nouveau projet
         onProjectCreated(response.data);
+      } else if (response.message) {
+        const errorMessage = response.message?.startsWith?.("project.")
+          ? t(response.message)
+          : response.message;
+        console.error("Project creation error:", errorMessage);
       }
     } catch (error) {
       console.error("Erreur lors de la création du projet:", error);

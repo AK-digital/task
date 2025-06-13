@@ -27,11 +27,12 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   );
   const { uid } = useContext(AuthContext);
   const [isPopup, setIsPopup] = useState(null);
-  const removeGuestWithId = removeGuest.bind(null, project?._id, t);
+
   const [state, formAction, pending] = useActionState(
-    removeGuestWithId,
+    (prevState, formData) => removeGuest(project?._id, prevState, formData),
     initialState
   );
+
   const canInvite = useUserRole(project, ["owner", "manager"]);
   const canRemove = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
@@ -54,18 +55,18 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
       setIsPopup({
         status: state?.status,
         title: t("guests.user_revoked_success"),
-        message: state?.message,
+        message: t(state?.message),
       });
     }
 
-    if (state?.status === "failure" && state?.errors === null) {
+    if (state?.status === "failure") {
       setIsPopup({
         status: state?.status,
         title: t("general.error_occurred"),
-        message: state?.message,
+        message: t(state?.message),
       });
     }
-  }, [state, t]);
+  }, [state, t, mutateProject]);
 
   const options = ["owner", "manager", "team", "customer", "guest"];
 
@@ -183,10 +184,8 @@ export function ProjectInvitationsList({
     message: "",
   };
 
-  const deleteProjectInvitationWithT = (prevState, formData) =>
-    deleteProjectInvitation(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
-    deleteProjectInvitationWithT,
+    (prevState, formData) => deleteProjectInvitation(prevState, formData),
     initialState
   );
 
@@ -199,17 +198,17 @@ export function ProjectInvitationsList({
       setIsPopup({
         status: state?.status,
         title: t("guests.invitation_cancelled_success"),
-        message: state?.message || t("guests.invitation_cancelled_message"),
+        message: t(state?.message || "guests.invitation_cancelled_message"),
       });
     }
     if (state?.status === "failure") {
       setIsPopup({
         status: state?.status,
         title: t("general.error_occurred"),
-        message: state?.message || t("guests.invitation_cancel_error"),
+        message: t(state?.message || "guests.invitation_cancel_error"),
       });
     }
-  }, [state, t]);
+  }, [state, t, mutateProjectInvitation, setIsPopup]);
 
   return (
     <>

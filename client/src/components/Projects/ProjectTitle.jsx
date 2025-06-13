@@ -30,10 +30,10 @@ export default function ProjectTitle({ project }) {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const updateProjectWithT = (prevState, formData) =>
-    updateProject(t, prevState, formData);
+  const updateProjectAction = (prevState, formData) =>
+    updateProject(prevState, formData);
   const [state, formAction, pending] = useActionState(
-    updateProjectWithT,
+    updateProjectAction,
     initialState
   );
 
@@ -54,6 +54,11 @@ export default function ProjectTitle({ project }) {
       mutate("/favorite");
       mutate(`/project/${project?._id}`);
       router.push("/projects");
+    } else if (response?.message) {
+      const errorMessage = response.message?.startsWith?.("project.")
+        ? t(response.message)
+        : response.message;
+      console.error("Delete project error:", errorMessage);
     }
   }
 
@@ -115,8 +120,13 @@ export default function ProjectTitle({ project }) {
     }
     if (state?.status === "failure") {
       setProjectName(project?.name);
+      if (state?.message?.startsWith?.("project.")) {
+        console.error(t(state.message));
+      } else if (state?.message) {
+        console.error(state.message);
+      }
     }
-  }, [state]);
+  }, [state, project, t]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {

@@ -44,12 +44,16 @@ export default function TaskPriority({ task }) {
     const response = await updateTaskPriority(
       task?._id,
       project?._id,
-      priority?._id,
-      t
+      priority?._id
     );
 
     if (response?.status === "failure") {
       setCurrentPriority(task?.priority);
+      if (response?.message?.startsWith?.("task.")) {
+        console.error(t(response.message));
+      } else {
+        console.error(response?.message);
+      }
       return;
     }
 

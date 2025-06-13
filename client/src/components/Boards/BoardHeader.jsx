@@ -149,11 +149,15 @@ export default function BoardHeader({
       board?._id,
       board?.projectId,
       value,
-      title,
-      t
+      title
     );
 
-    if (!response?.success) setOptimisticColor(board?.color);
+    if (!response?.success) {
+      const errorMessage = response.message?.startsWith?.("board.")
+        ? t(response.message)
+        : response.message;
+      throw new Error(errorMessage || t("boards.update.error"));
+    }
 
     socket.emit("update board", board?.projectId);
   }
@@ -167,11 +171,15 @@ export default function BoardHeader({
       board?._id,
       board?.projectId,
       optimisticColor,
-      value,
-      t
+      value
     );
 
-    if (!response?.success) setTitle(board?.title);
+    if (!response?.success) {
+      const errorMessage = response.message?.startsWith?.("board.")
+        ? t(response.message)
+        : response.message;
+      throw new Error(errorMessage || t("boards.update.error"));
+    }
 
     socket.emit("update board", board?.projectId);
   }
@@ -239,8 +247,9 @@ export default function BoardHeader({
 
   return (
     <div
-      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${openedTask ? "z-1000" : "z-2000"
-        }`}
+      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
+        openedTask ? "z-1000" : "z-2000"
+      }`}
       // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}

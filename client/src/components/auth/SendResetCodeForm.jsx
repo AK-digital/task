@@ -16,21 +16,19 @@ export default function SendResetCodeForm() {
   const [email, setEmail] = useState("");
   const [messageStatus, setMessageStatus] = useState("");
 
-  const sendResetCodeWithT = (prevState, formData) =>
-    sendResetCode(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
-    sendResetCodeWithT,
+    sendResetCode,
     initialState
   );
 
   useEffect(() => {
     setMessageStatus("");
     if (state?.status === "success") {
-      setMessageStatus(t("auth.forgot_password.reset_email_sent"));
+      setMessageStatus(t(state.message));
     }
 
     if (state?.status === "failure" && !state?.errors?.email) {
-      setMessageStatus(t("auth.forgot_password.unexpected_error"));
+      setMessageStatus(t(state.message));
     }
   }, [state, t]);
 
@@ -65,7 +63,11 @@ export default function SendResetCodeForm() {
 
           {state?.errors?.email && (
             <div className="mt-1 text-left ml-1">
-              <i data-error={true}>{state?.errors?.email}</i>
+              <i data-error={true}>
+                {state?.errors?.email?.startsWith?.("auth.")
+                  ? t(state.errors.email)
+                  : state?.errors?.email}
+              </i>
             </div>
           )}
         </div>

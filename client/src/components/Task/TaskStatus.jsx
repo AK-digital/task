@@ -41,10 +41,15 @@ export default function TaskStatus({ task, uid }) {
     setCurrentStatus(status);
     setIsOpen(false);
 
-    const res = await updateTaskStatus(task?._id, project?._id, status?._id, t);
+    const res = await updateTaskStatus(task?._id, project?._id, status?._id);
 
     if (!res?.success) {
       setCurrentStatus(task?.status);
+      if (res?.message?.startsWith?.("task.")) {
+        console.error(t(res.message));
+      } else {
+        console.error(res?.message);
+      }
       return;
     }
 

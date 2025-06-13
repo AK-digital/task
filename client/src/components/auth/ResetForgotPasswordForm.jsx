@@ -21,24 +21,22 @@ export default function ResetForgotPasswordForm({ resetCode }) {
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const [statusMessage, setStatusMessage] = useState("");
 
-  const resetForgotPasswordWithT = (prevState, formData) =>
-    resetForgotPassword(t, prevState, formData);
   const [state, formAction, pending] = useActionState(
-    resetForgotPasswordWithT,
+    resetForgotPassword,
     initialState
   );
 
   useEffect(() => {
     setStatusMessage("");
     if (state?.status === "success") {
-      setStatusMessage(t("auth.forgot_password.password_reset_success"));
+      setStatusMessage(t(state.message));
     }
     if (
       state?.status === "failure" &&
       !state?.errors?.newPassword &&
       !state?.errors?.confirmPassword
     ) {
-      setStatusMessage(t("auth.forgot_password.unexpected_error"));
+      setStatusMessage(t(state.message));
     }
   }, [state, t]);
 

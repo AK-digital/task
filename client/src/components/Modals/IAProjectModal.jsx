@@ -45,8 +45,11 @@ export default function IAProjectModal({ onClose }) {
       formData.set("project-name", result.title);
       const projectRes = await saveProject({}, formData);
       if (projectRes.status !== "success" || !projectRes.data?._id) {
+        const errorMessage = projectRes.message?.startsWith?.("project.")
+          ? t(projectRes.message)
+          : projectRes.message;
         throw new Error(
-          projectRes.message || t("createProject.projectCreationError")
+          errorMessage || t("createProject.projectCreationError")
         );
       }
       const projectId = projectRes.data._id;
@@ -54,8 +57,11 @@ export default function IAProjectModal({ onClose }) {
       for (const board of result.boards) {
         const boardRes = await createBoard(projectId, board.name);
         if (!boardRes.success || !boardRes.data?._id) {
+          const errorMessage = boardRes.message?.startsWith?.("board.")
+            ? t(boardRes.message)
+            : boardRes.message;
           throw new Error(
-            boardRes.message || t("createProject.boardCreationError")
+            errorMessage || t("createProject.boardCreationError")
           );
         }
         const boardId = boardRes.data._id;
@@ -64,7 +70,13 @@ export default function IAProjectModal({ onClose }) {
           const taskForm = new FormData();
           taskForm.set("board-id", boardId);
           taskForm.set("new-task", task);
-          await saveTask(projectId, {}, taskForm);
+          const taskRes = await saveTask(projectId, {}, taskForm);
+          if (!taskRes.success) {
+            const errorMessage = taskRes.message?.startsWith?.("task.")
+              ? t(taskRes.message)
+              : taskRes.message;
+            console.warn("Failed to create task:", errorMessage);
+          }
         }
       }
       // Redirige vers le projet créé

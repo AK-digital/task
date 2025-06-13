@@ -267,8 +267,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
   const saveTimeTrackingWithIds = saveTimeTracking.bind(
     null,
     task._id,
-    task?.projectId?._id,
-    t
+    task?.projectId?._id
   );
   const [state, formAction, pending] = useActionState(
     saveTimeTrackingWithIds,
@@ -285,7 +284,16 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
 
       socket.emit("update task", task?.projectId?._id);
     }
-  }, [state]);
+
+    if (state?.status === "failure") {
+      // Afficher le message d'erreur si nécessaire
+      console.error(
+        state?.message?.startsWith?.("time_tracking.")
+          ? t(state.message)
+          : state?.message
+      );
+    }
+  }, [state, t]);
 
   const calculateTimeDifference = (startTime, endTime) => {
     if (!startTime || !endTime) return;

@@ -24,11 +24,7 @@ export default function SignIn() {
   const [status, setStatus] = useState(null);
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
-  const signInWithT = (prevState, formData) => signIn(t, prevState, formData);
-  const [state, formAction, pending] = useActionState(
-    signInWithT,
-    initialState
-  );
+  const [state, formAction, pending] = useActionState(signIn, initialState);
 
   function handleSignUp(e) {
     e.preventDefault();
@@ -51,10 +47,14 @@ export default function SignIn() {
       setStatus("success");
     }
     if (state?.status === "failure" && state?.errors === null) {
-      setMessage(state?.message || t("auth.signin.connection_error"));
+      setMessage(t(state.message));
       setStatus("failure");
     }
-    if (state?.message === t("auth.account_not_verified")) {
+    if (
+      state?.message === "auth.account_not_verified" ||
+      (state?.message?.startsWith?.("auth.") &&
+        state?.message.includes("verified"))
+    ) {
       setStatus("failure");
     }
   }, [state, t]);
