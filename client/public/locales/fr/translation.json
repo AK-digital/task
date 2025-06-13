@@ -395,6 +395,10 @@
     "last_name": "Nom de famille",
     "company": "Entreprise",
     "position": "Poste",
+    "language_label": "Langue",
+    "update_button": "Mettre à jour",
+    "success_title": "Succès",
+    "error_title": "Erreur",
     "language": {
       "missing_parameters": "Paramètres manquants",
       "not_supported": "Langue non supportée",
