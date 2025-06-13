@@ -3,13 +3,13 @@
 import { revalidateTag } from "next/cache";
 import { useAuthFetch } from "@/utils/api";
 
-export async function saveBoard(projectId) {
+export async function saveBoard(projectId, title) {
   try {
     const res = await useAuthFetch(
       `board?projectId=${projectId}`,
       "POST",
       "application/json",
-      { title: "Nouveau tableau" }
+      { title }
     );
 
     const response = await res.json();

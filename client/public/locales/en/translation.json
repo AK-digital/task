@@ -574,6 +574,7 @@
   "boards": {
     "empty_board": "Empty board",
     "board_template": "Board template",
+    "new_board": "New board",
     "add_board_ia": "Add board with AI",
     "ai_modal_description": "Suggest additional relevant boards and tasks based on the project context.",
     "ai_generating": "Generating...",

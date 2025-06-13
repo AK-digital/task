@@ -22,7 +22,7 @@ export default function AddBoard({ project }) {
 
   async function handleAddBoard(projectId) {
     setIsLoading(true);
-    const response = await saveBoard(projectId);
+    const response = await saveBoard(projectId, t("boards.new_board"));
 
     if (!response.success) return;
 

@@ -533,6 +533,7 @@
   "boards": {
     "empty_board": "Tableau vide",
     "board_template": "Modèle de tableau",
+    "new_board": "Nouveau tableau",
     "add_board_ia": "Ajout de tableau par IA",
     "ai_modal_description": "Proposez des tableaux et tâches supplémentaires pertinents à partir du contexte du projet.",
     "ai_generating": "Génération...",
