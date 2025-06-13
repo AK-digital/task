@@ -339,9 +339,14 @@ export async function sendProjectInvitationToGuest(req, res, next) {
     await newProjectInvitation.save();
 
     const link = `${process.env.CLIENT_URL}/invitation/${newProjectInvitation?._id}`;
-    const template = emailProjectInvitation(project, authUser, link);
+    const template = emailProjectInvitation(
+      project,
+      authUser,
+      link,
+      invitedUser
+    );
 
-    await sendEmail(authEmail, email, template.subjet, template.text);
+    await sendEmail(authEmail, email, template.subject, template.text);
 
     return res.status(200).send({
       success: true,

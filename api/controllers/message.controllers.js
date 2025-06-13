@@ -81,13 +81,13 @@ export async function saveMessage(req, res, next) {
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
 
-      const template = emailMessage(authUser, savedMessage, link);
+      const template = emailMessage(authUser, savedMessage, link, user);
 
       if (user) {
         await sendEmail(
           "notifications@clynt.io",
           user?.email,
-          template?.subjet,
+          template?.subject,
           template?.text
         );
       }
@@ -309,11 +309,11 @@ export async function updateMessage(req, res, next) {
     for (const taggedUser of uniqueTaggedUsers) {
       const user = await UserModel.findById({ _id: taggedUser });
       if (user) {
-        const template = emailMessage(user, updatedMessage);
+        const template = emailMessage(authUser, updatedMessage, link, user);
         await sendEmail(
           "notifications@clynt.io",
           user.email,
-          template.subjet,
+          template.subject,
           template.text
         );
       }

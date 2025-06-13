@@ -64,12 +64,12 @@ export async function signUp(req, res, next) {
     const savedVerification = await newVerification.save();
 
     const link = `${process.env.CLIENT_URL}/verification/${savedVerification?.token}`;
-    const template = emailVerification(user, link);
+    const template = emailVerification(user, link, user);
 
     await sendEmail(
       "notifications@clynt.io",
-      savedUser?.email,
-      template?.subjet,
+      user?.email,
+      template?.subject,
       template?.text
     );
 
@@ -181,12 +181,12 @@ export async function reSendVerification(req, res, next) {
     const savedVerification = await newVerification.save();
 
     const link = `${process.env.CLIENT_URL}/verification/${savedVerification?.token}`;
-    const template = emailVerification(user, link);
+    const template = emailVerification(user, link, user);
 
     await sendEmail(
       "notifications@clynt.io",
       user?.email,
-      template?.subjet,
+      template?.subject,
       template?.text
     );
 
@@ -471,12 +471,12 @@ export async function sendResetCode(req, res, next) {
     const savedPasswordResetCode = await newPasswordResetCode.save();
 
     const link = `${process.env.CLIENT_URL}/forgot-password/${savedPasswordResetCode?.resetCode}`;
-    const template = emailResetCode(user, link);
+    const template = emailResetCode(user, link, user);
 
     await sendEmail(
       "notifications@clynt.io",
       email,
-      template?.subjet,
+      template?.subject,
       template.text
     );
 

@@ -25,7 +25,9 @@ export async function saveFeedback(req, res, next) {
 
     await newFeedback.save();
 
-    const templateFeedback = emailFeedback(authUser, note, sanitizedMessage);
+    const templateFeedback = emailFeedback(authUser, note, sanitizedMessage, {
+      language: "fr",
+    });
 
     await sendEmail(
       "notifications@clynt.io",

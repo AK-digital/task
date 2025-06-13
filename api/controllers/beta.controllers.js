@@ -50,7 +50,7 @@ export async function sendBetaRequest(req, res) {
 
     const link = `${process.env.CLIENT_URL}/verification/beta/${token}`;
 
-    const templateRequest = emailBetaRequest(link);
+    const templateRequest = emailBetaRequest(link, { language: "fr" });
 
     await sendEmail(
       "notifications@clynt.io",
@@ -59,7 +59,9 @@ export async function sendBetaRequest(req, res) {
       templateRequest.text
     );
 
-    const templateConfirmation = emailBetaRequestAdmin(email);
+    const templateConfirmation = emailBetaRequestAdmin(email, {
+      language: "fr",
+    });
 
     await sendEmail(
       "notifications@clynt.io",
