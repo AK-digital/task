@@ -156,6 +156,9 @@
     max-height: 400px;
     object-fit: cover;
     margin: 10px 0 10px 0;
+    border-radius: 8px;
+    display: block;
+    height: auto;
   }
 
   .content_Tiptap span {
@@ -228,6 +231,9 @@
     max-height: 400px;
     object-fit: cover;
     margin: 10px 0;
+    border-radius: 8px;
+    display: block;
+    height: auto;
   }
 
   .text_Message span {
@@ -468,6 +474,9 @@
     max-height: 400px;
     object-fit: cover;
     margin: 10px 0 10px 0;
+    border-radius: 8px;
+    display: block;
+    height: auto;
   }
 
   .content_TaskDescription span {

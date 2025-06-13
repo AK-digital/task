@@ -82,7 +82,11 @@ export function tiptapOptions(type, value, isTaggedUsers, handleChange) {
               const url = reader.result;
 
               // Insert the image into the editor
-              editor.chain().focus().setImage({ src: url }).run();
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  view.state.schema.nodes.image.create({ src: url })
+                )
+              );
             };
 
             reader.readAsDataURL(file);

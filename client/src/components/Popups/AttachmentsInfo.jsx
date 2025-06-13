@@ -15,8 +15,9 @@ export default function AttachmentsInfo({
 
   const [checkedList, setCheckedList] = useState([]);
 
-  const label = `${attachmentsLength} ${attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"
-    }`;
+  const label = `${attachmentsLength} ${
+    attachmentsLength > 1 ? "pièces jointes" : "pièce jointe"
+  }`;
 
   const isAffichage = type === "affichage";
 
@@ -173,12 +174,15 @@ export default function AttachmentsInfo({
                 downloadUrl = getDownloadUrl(url);
               }
               return (
-                <div key={index} className="flex items-center justify-between gap-2 h-5 ">
+                <div
+                  key={index}
+                  className="flex items-center justify-between gap-2 h-5 "
+                >
                   <div className="flex gap-2">
                     <input
                       type="checkbox"
                       name="checkbox"
-                      checked={checkedList[index]}
+                      checked={checkedList[index] || false}
                       onChange={() => toggleCheckbox(index)}
                       className="w-3"
                     />

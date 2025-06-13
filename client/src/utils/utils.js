@@ -287,8 +287,7 @@ export function exportTimeTracking(projects, trackers) {
 
     // Sauvegarde du fichier avec nom du projet
     doc.save(
-      `${formattedStartingDate}-${formattedEndingDate}-${
-        project?.name || "projet"
+      `${formattedStartingDate}-${formattedEndingDate}-${project?.name || "projet"
       }-temps-clynt.pdf`
     );
   }
@@ -363,5 +362,13 @@ export const priorityColors = [
 export function isMeaningfulContent(html) {
   const temp = document.createElement("div");
   temp.innerHTML = html;
-  return !!temp.textContent.trim(); // retourne true s'il y a du texte non vide
+
+  // Vérifier s'il y a du texte non vide
+  const hasText = !!temp.textContent.trim();
+
+  // Vérifier s'il y a des images
+  const hasImages = temp.querySelectorAll('img').length > 0;
+
+  // Retourner true s'il y a du texte OU des images
+  return hasText || hasImages;
 }
