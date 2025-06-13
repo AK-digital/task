@@ -38,7 +38,9 @@ export default function TaskDescription({ project, task, uid }) {
   ]);
 
   const date = moment(task?.description?.createdAt);
-  const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
+  const formattedDate = date.format(
+    `DD/MM/YYYY [${t("tasks.time_separator")}] HH:mm`
+  );
 
   useEffect(() => {
     if (draft?.success) {
