@@ -60,6 +60,10 @@ export default function TaskStatus({ task, uid }) {
     socket.emit("update task", project?._id);
   }
 
+  useEffect(() => {
+    setCurrentStatus(task?.status);
+  }, [task?.status]);
+
   async function handleAddStatus() {
     if (!canEdit) return;
 

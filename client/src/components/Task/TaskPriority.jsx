@@ -1,5 +1,5 @@
 import { updateTaskPriority } from "@/actions/task";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { Pen, Plus, Save } from "lucide-react";
@@ -101,9 +101,9 @@ export default function TaskPriority({ task }) {
     setIsEdit((prev) => !prev);
   }
 
-  /*useMemo(() => {
+  useEffect(() => {
     setCurrentPriority(task?.priority);
-  }, [task?.priority]);*/
+  }, [task?.priority]);
 
   const hasPriority = currentPriority?.name;
   const currentBackgroundColor = hasPriority
