@@ -43,6 +43,7 @@ export default function Header() {
           <li className="relative flex justify-center items-center h-full overflow-visible">
             <button
               onClick={(e) => setNotifOpen(true)}
+              title="Vos notifications"
               className="group relative px-0.5 h-full bg-transparent overflow-visible shadow-none"
             >
               <Bell

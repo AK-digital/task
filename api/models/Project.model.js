@@ -67,6 +67,25 @@ const projectSchema = new Schema(
   }
 );
 
+// projectSchema.pre("findOneAndDelete", async function (next) {
+//   const query = this;
+//   const projectToDelete = await query.model.findOne(query.getQuery());
+
+//   if (!projectToDelete) return next();
+
+//   const projectId = projectToDelete._id;
+
+//   await BoardModel.deleteMany({ projectId: projectId });
+//   await TaskModel.deleteMany({ projectId: projectId });
+//   await MessageModel.deleteMany({ projectId: projectId });
+
+//   await ProjectInvitationModel.deleteMany({ projectId: projectId });
+//   await FavoriteModel.deleteMany({ project: projectId });
+//   await DraftModel.deleteMany({ projectId: projectId });
+
+//   next();
+// });
+
 projectSchema.pre("aggregate", function () {
   this.lookup({
     from: "users",

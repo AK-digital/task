@@ -67,16 +67,20 @@ export default function Messages({ task, project, mutateTasks }) {
       {/* Messages */}
       {!messageLoading &&
         isNotEmpty(messages) &&
-        messages?.map((message) => (
-          <Message
-            task={task}
-            message={message}
-            mutateMessage={mutate}
-            project={project}
-            mutateTasks={mutateTasks}
-            key={message?._id}
-          />
-        ))}
+        messages?.map((message) => {
+          return (
+            <Message
+              task={task}
+              message={message}
+              setMessage={setMessage}
+              mutateMessage={mutate}
+              project={project}
+              mutateTasks={mutateTasks}
+              key={message?._id}
+              mutateDraft={mutateDraft}
+            />
+          );
+        })}
       {isPending && <PendingMessage message={message} />}
       {isOpen && (
         <Tiptap

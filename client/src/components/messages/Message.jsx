@@ -16,6 +16,7 @@ import Tiptap from "../RichTextEditor/Tiptap";
 import { Eye } from "lucide-react";
 import { isNotEmpty } from "@/utils/utils";
 import UsersInfo from "../Popups/UsersInfo";
+import AttachmentsInfo from "../Popups/AttachmentsInfo";
 import Reactions from "../Reactions/Reactions";
 
 export default function Message({
@@ -24,6 +25,7 @@ export default function Message({
   project,
   mutateMessage,
   mutateTasks,
+  mutateDraft,
 }) {
   const { uid } = useContext(AuthContext);
   const [edit, setEdit] = useState(false);
@@ -68,6 +70,38 @@ export default function Message({
     setIsLoading(false);
   }
 
+  // Fonction pour nettoyer et gérer les images dans le HTML
+  const processMessageHTML = (htmlContent) => {
+    if (!htmlContent) return "";
+
+    // Créer un élément temporaire pour traiter le HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlContent;
+
+    // Gérer toutes les images
+    const images = tempDiv.querySelectorAll("img");
+    images.forEach((img) => {
+      // Ajouter des gestionnaires d'erreur et de chargement
+      img.onerror = function () {
+        this.style.display = "none";
+      };
+      img.onload = function () {
+        this.style.background = "transparent";
+      };
+
+      // Si l'image n'a pas de src valide, la cacher
+      if (
+        !img.src ||
+        img.src === "" ||
+        img.src.includes("data:image/svg+xml;base64,")
+      ) {
+        img.style.display = "none";
+      }
+    });
+
+    return tempDiv.innerHTML;
+  };
+
   return (
     <>
       {edit ? (
@@ -80,6 +114,7 @@ export default function Message({
           editMessage={true}
           message={message}
           handleDeleteMessage={handleDeleteMessage}
+          mutateDraft={mutateDraft}
         />
       ) : (
         <>
@@ -138,8 +173,36 @@ export default function Message({
 
               {/* Message */}
               <div className="text_Message">
-                <div dangerouslySetInnerHTML={{ __html: message?.message }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: processMessageHTML(message?.message),
+                  }}
+                />
+                {/* Files */}
+                {/* <div className="relative">
+                  {message?.files?.map((file, index) => {
+                    return (
+                      <Image
+                        key={index}
+                        src={file?.url}
+                        alt={file?.name}
+                  
+                      />
+                    );
+                  })}
+                </div> */}
               </div>
+
+              {/* Attachments */}
+              {isNotEmpty(message?.files) && (
+                <div className="mt-2">
+                  <AttachmentsInfo
+                    attachments={message?.files}
+                    disable={true}
+                    type="affichage"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex items-center ml-3 gap-2">

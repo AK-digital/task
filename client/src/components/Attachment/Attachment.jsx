@@ -4,6 +4,7 @@ export default function Attachment({
   attachments,
   setAttachments,
   label = <Paperclip size={16} />,
+  editor = null, // Ajouter l'éditeur pour pouvoir y insérer des images
 }) {
   const allowedMimetypes = [
     // Images déjà présentes
@@ -54,6 +55,8 @@ export default function Attachment({
 
   function handleAttachments(e) {
     const newFiles = Array.from(e.target.files);
+
+    // Ajouter tous les fichiers aux attachments (images ET autres fichiers)
     setAttachments((prev) => [...prev, ...newFiles]);
   }
 

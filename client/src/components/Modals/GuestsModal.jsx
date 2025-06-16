@@ -2,7 +2,13 @@
 import { removeGuest } from "@/actions/project";
 import { isNotEmpty, memberRole } from "@/utils/utils";
 import Image from "next/image";
-import { useActionState, useContext, useEffect, useState } from "react";
+import {
+  useActionState,
+  useContext,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import GuestFormInvitation from "../Projects/GuestFormInvitation";
 import PopupMessage from "@/layouts/PopupMessage";
 import { AuthContext } from "@/context/auth";
@@ -11,6 +17,12 @@ import { useUserRole } from "../../../hooks/useUserRole";
 import { DropDown } from "../Dropdown/Dropdown";
 import { useProjectInvitation } from "../../../hooks/useProjectInvitation";
 import DisplayPicture from "../User/DisplayPicture";
+import DropdownManage from "../Dropdown/DropdownManage";
+import { leaveProject } from "@/api/project";
+import { useRouter } from "next/navigation";
+import { mutate } from "swr";
+import ConfirmationKick from "../Popups/ConfirmationKick";
+import ConfirmationLeave from "../Popups/ConfirmationLeave";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const initialState = {
@@ -24,15 +36,62 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
     project?._id
   );
   const { uid } = useContext(AuthContext);
+  const router = useRouter();
   const [isPopup, setIsPopup] = useState(null);
+  const [isConfirmKickOpen, setIsConfirmKickOpen] = useState(false);
+  const [isConfirmLeaveOpen, setIsConfirmLeaveOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [selectedMemberToLeave, setSelectedMemberToLeave] = useState(null);
   const removeGuestWithId = removeGuest.bind(null, project?._id);
   const [state, formAction, pending] = useActionState(
     removeGuestWithId,
     initialState
   );
+  const [isPending, startTransition] = useTransition();
   const canInvite = useUserRole(project, ["owner", "manager"]);
   const canRemove = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
+
+  const handleLeaveProject = async (projectId) => {
+    const response = await leaveProject(projectId);
+
+    if (!response?.success) {
+      setIsPopup({
+        status: "failure",
+        title: "Une erreur s'est produite",
+        message: response?.message,
+      });
+
+      return; // Arrêter l'exécution si l'opération a échoué
+    }
+
+    // Continuer seulement si l'opération a réussi
+    await mutateProject();
+    mutate("/favorite");
+    router.push("/projects");
+  };
+
+  const handleConfirmLeave = () => {
+    if (selectedMemberToLeave) {
+      startTransition(async () => {
+        await handleLeaveProject(project?._id);
+      });
+      setIsConfirmLeaveOpen(false);
+      setSelectedMemberToLeave(null);
+    }
+  };
+
+  const handleConfirmRemove = () => {
+    if (selectedMember) {
+      const formData = new FormData();
+      formData.append("guest-id", selectedMember.user._id);
+      startTransition(() => {
+        formAction(formData);
+      });
+      setIsConfirmKickOpen(false);
+      setSelectedMember(null);
+    }
+  };
 
   const members = project?.members;
 
@@ -71,7 +130,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
     <>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)] select-none">
         <div className="text-[1.4rem] font-medium">
-          <span>Inviter d'autres utilisateurs</span>
+          <span>Gestion des utilisateurs</span>
         </div>
         {canInvite && (
           <GuestFormInvitation
@@ -83,6 +142,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         {/* Guests list */}
         {isNotEmpty(members) && (
           <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+            <h2 className="font-medium text-large my-2">Membres du projet</h2>
             <ul className="flex flex-col gap-3.5 mt-6">
               {members.map((member) => {
                 return (
@@ -97,7 +157,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         className="rounded-full"
                       />
                       <span
-                        className="w-55 overflow-hidden text-ellipsis select-all"
+                        className="w-45 overflow-hidden text-ellipsis select-all"
                         title={member?.user?.email}
                       >
                         {member?.user?.email}
@@ -112,31 +172,44 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                           member={member}
                         />
                       ) : (
-                        <div className="w-full text-small">
-                          <span className="text-center w-full text-text-color-muted">
+                        <div className="w-25 text-small">
+                          <span
+                            className={`w-full text-text-color-muted ${
+                              canEditRole ? "text-center" : "text-left"
+                            }`}
+                          >
                             {memberRole(member?.role)}
                           </span>
                         </div>
                       )}
                     </div>
                     {canRemove && member?.role !== "owner" && (
-                      <form action={formAction}>
-                        <input
-                          type="text"
-                          name="guest-id"
-                          id="guest-id"
-                          defaultValue={member?.user?._id}
-                          hidden
-                        />
-                        <button
-                          type="submit"
-                          data-disabled={pending}
-                          disabled={pending}
-                          className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
-                        >
-                          Révoquer
-                        </button>
-                      </form>
+                      <button
+                        type="button"
+                        data-disabled={pending || isPending}
+                        disabled={pending || isPending}
+                        onClick={() => {
+                          setIsConfirmKickOpen(true);
+                          setSelectedMember(member);
+                        }}
+                        className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red w-25"
+                      >
+                        Retirer
+                      </button>
+                    )}
+                    {member?.user?._id === uid && (
+                      <button
+                        type="button"
+                        data-disabled={pending || isPending}
+                        disabled={pending || isPending}
+                        onClick={() => {
+                          setIsConfirmLeaveOpen(true);
+                          setSelectedMemberToLeave(member);
+                        }}
+                        className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red w-25 "
+                      >
+                        Quitter
+                      </button>
                     )}
                   </li>
                 );
@@ -144,14 +217,18 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
             </ul>
           </div>
         )}
-        {isNotEmpty(projectInvitations) && (
+        {isNotEmpty(projectInvitations) && canEditRole && (
           <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2 ">
+            <h2 className="font-medium text-large my-2">
+              Invitations en cours
+            </h2>
             <ul className="flex flex-col gap-3.5">
               <ProjectInvitationsList
                 projectInvitations={projectInvitations}
                 setIsPopup={setIsPopup}
                 project={project}
                 mutateProjectInvitation={mutateProjectInvitation}
+                members={members}
               />
             </ul>
           </div>
@@ -165,6 +242,22 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
           message={isPopup?.message}
         />
       )}
+      {isConfirmKickOpen && (
+        <ConfirmationKick
+          title={project?.name}
+          member={selectedMember}
+          onCancel={() => setIsConfirmKickOpen(false)}
+          onConfirm={handleConfirmRemove}
+        />
+      )}
+      {isConfirmLeaveOpen && (
+        <ConfirmationLeave
+          title={project?.name}
+          member={selectedMemberToLeave}
+          onCancel={() => setIsConfirmLeaveOpen(false)}
+          onConfirm={handleConfirmLeave}
+        />
+      )}
     </>
   );
 }
@@ -174,6 +267,7 @@ export function ProjectInvitationsList({
   setIsPopup,
   project,
   mutateProjectInvitation,
+  members,
 }) {
   const initialState = {
     status: "pending",
@@ -184,10 +278,14 @@ export function ProjectInvitationsList({
     deleteProjectInvitation,
     initialState
   );
+  const { uid } = useContext(AuthContext);
 
   const canDelete = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
 
+  // Trouver le member correspondant à l'utilisateur actuel
+  const currentMember = members?.find((member) => member?.user?._id === uid);
+  console.log(currentMember);
   useEffect(() => {
     if (state?.status === "success") {
       mutateProjectInvitation();
@@ -216,51 +314,34 @@ export function ProjectInvitationsList({
           className="flex justify-between items-center gap-3 text-text-color-muted mt-3"
         >
           <div>
-            <Image
-              src={"/default-pfp.webp"}
-              width={32}
-              height={32}
-              alt={`Photo de profil de ${inv?.guestEmail}`}
-              className="rounded-full"
-            />
-            <span className="w-45 whitespace-nowrap overflow-hidden text-ellipsis">
-              {inv?.guestEmail}
-            </span>
-          </div>
-          {canEditRole && (
+            <div>
+              <Image
+                src={"/default-pfp.webp"}
+                width={32}
+                height={32}
+                alt={`Photo de profil de ${inv?.guestEmail}`}
+                className="rounded-full"
+              />
+              <span className="w-45 whitespace-nowrap overflow-hidden text-ellipsis">
+                {inv?.guestEmail}
+              </span>
+            </div>
             <DropDown
               defaultValue={inv?.role}
               options={["owner", "manager", "team", "customer", "guest"]}
               invitation={inv}
               project={project}
             />
-          )}
-          {canDelete && (
-            <form action={formAction}>
-              <input
-                type="text"
-                name="project-invitation-id"
-                id="project-invitation-id"
-                defaultValue={inv?._id}
-                hidden
-              />
-              <input
-                type="text"
-                name="project-id"
-                id="project-id"
-                defaultValue={inv?.projectId}
-                hidden
-              />
-              <button
-                type="submit"
-                data-disabled={pending}
-                disabled={pending}
-                className="rounded-sm p-2 text-small bg-danger-color h-8 hover:bg-text-color-red"
-              >
-                Annuler
-              </button>
-            </form>
-          )}
+          </div>
+          <DropdownManage
+            project={project}
+            setIsPopup={setIsPopup}
+            mutateProjectInvitation={mutateProjectInvitation}
+            formAction={formAction}
+            pending={pending}
+            inv={inv}
+            currentMember={currentMember}
+          />
         </li>
       ))}
     </>

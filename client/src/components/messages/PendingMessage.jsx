@@ -5,6 +5,38 @@ import { useContext } from "react";
 export default function PendingMessage({ message }) {
   const { user } = useContext(AuthContext);
 
+  // Fonction pour nettoyer et gérer les images dans le HTML
+  const processMessageHTML = (htmlContent) => {
+    if (!htmlContent) return "";
+
+    // Créer un élément temporaire pour traiter le HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlContent;
+
+    // Gérer toutes les images
+    const images = tempDiv.querySelectorAll("img");
+    images.forEach((img) => {
+      // Ajouter des gestionnaires d'erreur et de chargement
+      img.onerror = function () {
+        this.style.display = "none";
+      };
+      img.onload = function () {
+        this.style.background = "transparent";
+      };
+
+      // Si l'image n'a pas de src valide, la cacher
+      if (
+        !img.src ||
+        img.src === "" ||
+        img.src.includes("data:image/svg+xml;base64,")
+      ) {
+        img.style.display = "none";
+      }
+    });
+
+    return tempDiv.innerHTML;
+  };
+
   return (
     <div className="flex flex-col gap-2 opacity-75 transition-opacity duration-[50ms] ease-linear data-[loading=true]:opacity-[0.4] ">
       <div className="relative flex justify-between flex-col gap-3.5 py-4 px-6 bg-secondary rounded-lg transition-all duration-[50ms] ease-linear">
@@ -25,7 +57,9 @@ export default function PendingMessage({ message }) {
         </div>
         {/* Message */}
         <div className="text_Message">
-          <div dangerouslySetInnerHTML={{ __html: message }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: processMessageHTML(message) }}
+          />
         </div>
       </div>
     </div>

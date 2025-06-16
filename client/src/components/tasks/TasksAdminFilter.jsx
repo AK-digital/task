@@ -60,66 +60,75 @@ export default function TasksAdminFilter({ queries, setQueries }) {
         )}
         <ChevronDown
           size={16}
-          className={`transition-all duration-[120ms] ease-in-out ${
+          className={`transition-all duration-[200ms] ease-in-out ${
             isOpen ? "rotate-180" : ""
           }`}
         />
       </div>
-      {isOpen && (
-        <>
-          <div className="absolute z-[2001] top-11 rounded-sm bg-white shadow-small border border-color-border-color p-2 w-full">
-            {isNotEmpty(members) ? (
-              <ul>
+      <>
+        <div
+          className={`absolute z-[2001] top-11 bg-white shadow-small w-full overflow-hidden transition-all duration-[350ms] ease-in-out ${
+            isOpen ? "max-h-96" : "max-h-0"
+          }`}
+        >
+          {isNotEmpty(members) ? (
+            <ul className="p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
+              <li
+                className="flex items-center gap-1 p-1.5 cursor-pointer text-xs font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+                onClick={() => handleReset()}
+              >
+                <Undo size={16} />
+                Supprimer les filtres
+              </li>
+              {members.map((member) => (
                 <li
+                  key={member?.user?._id}
                   className="flex items-center gap-1 p-1.5 cursor-pointer text-xs font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
-                  onClick={() => handleReset()}
                 >
-                  <Undo size={16} />
-                  Supprimer les filtres
-                </li>
-                {members.map((member) => (
-                  <li
-                    key={member?.user?._id}
-                    className="flex items-center gap-1 p-1.5 cursor-pointer text-xs font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
-                  >
-                    <input
-                      type="checkbox"
-                      id={member?.user?._id}
-                      name={member?.user?._id}
-                      value={member?.user?._id}
-                      onChange={handleMemberChange}
-                      checked={
-                        hasMembers
-                          ? selectedMembers?.includes(member?.user?._id)
-                          : false
-                      }
-                      className="w-auto cursor-pointer mr-1"
-                    />
+                  <input
+                    type="checkbox"
+                    id={member?.user?._id}
+                    name={member?.user?._id}
+                    value={member?.user?._id}
+                    onChange={handleMemberChange}
+                    checked={
+                      hasMembers
+                        ? selectedMembers?.includes(member?.user?._id)
+                        : false
+                    }
+                    className="w-auto cursor-pointer mr-1"
+                  />
 
-                    <label
-                      htmlFor={member?.user?._id}
-                      className="flex items-center gap-1 cursor-pointer"
-                    >
-                      <DisplayPicture
-                        user={member?.user}
-                        isPopup={false}
-                        style={{ width: "22px", height: "22px" }}
-                        className="rounded-full"
-                      />
-                      <span className="whitespace-nowrap text-ellipsis overflow-hidden block max-w-[110px]">
-                        {member?.user?.firstName + " " + member?.user?.lastName}
-                      </span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <span>Aucun membre n'a été trouvé</span>
-            )}
-          </div>
-          <div id="modal-layout-opacity" onClick={() => setIsOpen(false)}></div>
-        </>
-      )}
+                  <label
+                    htmlFor={member?.user?._id}
+                    className="flex items-center gap-1 cursor-pointer"
+                  >
+                    <DisplayPicture
+                      user={member?.user}
+                      isPopup={false}
+                      style={{ width: "22px", height: "22px" }}
+                      className="rounded-full"
+                    />
+                    <span className="whitespace-nowrap text-ellipsis overflow-hidden block max-w-[110px]">
+                      {member?.user?.firstName + " " + member?.user?.lastName}
+                    </span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <span className="p-2 border border-color-border-color rounded-sm">
+              Aucun membre n'a été trouvé
+            </span>
+          )}
+        </div>
+        {isOpen && (
+          <div
+            className="modal-layout-opacity"
+            onClick={() => setIsOpen(false)}
+          ></div>
+        )}
+      </>
     </div>
   );
 }

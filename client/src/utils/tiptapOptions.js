@@ -16,7 +16,7 @@ import Code from "@tiptap/extension-code";
 import Blockquote from "@tiptap/extension-blockquote";
 import Mention from "@tiptap/extension-mention";
 
-export function tiptapOptions(type, value, isTaggedUsers, handleChange) {
+export function tiptapOptions(type, value, isTaggedUsers, handleChange, onImagePaste = null) {
   return {
     extensions: [
       StarterKit,
@@ -82,7 +82,21 @@ export function tiptapOptions(type, value, isTaggedUsers, handleChange) {
               const url = reader.result;
 
               // Insert the image into the editor
-              editor.chain().focus().setImage({ src: url }).run();
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  view.state.schema.nodes.image.create({ src: url })
+                )
+              );
+
+              // Si on a un callback pour gérer l'image collée, l'appeler
+              if (onImagePaste && typeof onImagePaste === 'function') {
+                // Créer un nom de fichier basé sur le timestamp et le type
+                const extension = item.type.split('/')[1] || 'png';
+                const fileName = `image-${Date.now()}.${extension}`;
+
+                // Appeler le callback avec le fichier et l'URL
+                onImagePaste(file, fileName, url);
+              }
             };
 
             reader.readAsDataURL(file);
