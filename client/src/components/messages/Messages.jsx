@@ -72,10 +72,12 @@ export default function Messages({ task, project, mutateTasks }) {
             <Message
               task={task}
               message={message}
+              setMessage={setMessage}
               mutateMessage={mutate}
               project={project}
               mutateTasks={mutateTasks}
               key={message?._id}
+              mutateDraft={mutateDraft}
             />
           );
         })}

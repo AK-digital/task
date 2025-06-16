@@ -234,6 +234,24 @@
     border-radius: 8px;
     display: block;
     height: auto;
+    background: transparent;
+    loading: lazy;
+  }
+
+  .text_Message img[src=""],
+  .text_Message img:not([src]),
+  .text_Message img[src*="data:image/svg+xml;base64,"] {
+    display: none;
+  }
+
+  .text_Message img:before {
+    content: "";
+    background: transparent;
+  }
+
+  .text_Message img:after {
+    content: "";
+    background: transparent;
   }
 
   .text_Message span {

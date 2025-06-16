@@ -58,18 +58,6 @@ export default function Attachment({
 
     // Ajouter tous les fichiers aux attachments (images ET autres fichiers)
     setAttachments((prev) => [...prev, ...newFiles]);
-
-    // Pour les images, les ajouter aussi visuellement dans l'éditeur si on en a un
-    newFiles.forEach((file) => {
-      if (file.type.startsWith("image/") && editor) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const url = reader.result;
-          editor.chain().focus().setImage({ src: url }).run();
-        };
-        reader.readAsDataURL(file);
-      }
-    });
   }
 
   return (
