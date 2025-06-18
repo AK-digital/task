@@ -11,14 +11,22 @@ import { useDrafts } from "../../../hooks/useDrafts";
 import MessagesSkeleton from "./MessagesSkeleton";
 import PendingMessage from "./PendingMessage";
 
-export default function Messages({ task, project, mutateTasks }) {
+export default function Messages({
+  task,
+  project,
+  mutateTasks,
+  showPreviewImageMessage,
+  setShowPreviewImageMessage,
+  edit,
+  setEdit,
+}) {
   const { draft, mutateDraft } = useDrafts(project?._id, task?._id, "message");
   const { messages, messageLoading, mutate } = useMessages(
     project?._id,
     task?._id
   );
   const [message, setMessage] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
   const isAuthorized = useUserRole(project, [
@@ -39,22 +47,22 @@ export default function Messages({ task, project, mutateTasks }) {
   }, [socket]);
 
   useEffect(() => {
-    setIsOpen(false);
+    setEdit("");
     if (draft?.success) {
-      setIsOpen(true);
+      setEdit(message?._id);
       setMessage(draft?.data?.content);
     }
 
     if (!draft?.success) {
       setMessage("");
-      setIsOpen(false);
+      setEdit("");
     }
   }, [draft]);
 
   const handleIsOpen = useCallback(() => {
     if (!isAuthorized) return;
 
-    setIsOpen(true);
+    setEdit(message?._id);
   }, [project]);
 
   return (
@@ -78,11 +86,15 @@ export default function Messages({ task, project, mutateTasks }) {
               mutateTasks={mutateTasks}
               key={message?._id}
               mutateDraft={mutateDraft}
+              showPreviewImageMessage={showPreviewImageMessage}
+              setShowPreviewImageMessage={setShowPreviewImageMessage}
+              edit={edit}
+              setEdit={setEdit}
             />
           );
         })}
       {isPending && <PendingMessage message={message} />}
-      {isOpen && (
+      {edit === message?._id && (
         <Tiptap
           project={project}
           task={task}
@@ -90,12 +102,14 @@ export default function Messages({ task, project, mutateTasks }) {
           message={message}
           setMessage={setMessage}
           setIsMessagePending={setIsPending}
-          setConvOpen={setIsOpen}
+          setConvOpen={setEdit}
           draft={draft}
           mutateDraft={mutateDraft}
+          showPreviewImageMessage={showPreviewImageMessage}
+          setShowPreviewImageMessage={setShowPreviewImageMessage}
         />
       )}
-      {!isOpen && !messageLoading && (
+      {edit !== message?._id && !messageLoading && (
         <div
           className="border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
           onClick={handleIsOpen}

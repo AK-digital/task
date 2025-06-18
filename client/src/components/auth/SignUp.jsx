@@ -39,7 +39,9 @@ export default function SignUp() {
     <div className="flex flex-col w-full p-10 shadow-[0_0_40px_0] shadow-[#121e1f34] rounded-2xl text-left bg-[image:var(--background-gradient-dark)] max-w-125">
       {state?.status === "success" ? (
         <div className="flex flex-col gap-2">
-          <span className="text-2xl font-bold">Votre compte a été créé avec succès !</span>
+          <span className="text-2xl font-bold">
+            Votre compte a été créé avec succès !
+          </span>
           <p>
             Un email de vérification a été envoyé à votre adresse e-mail.
             Veuillez cliquer sur le lien dans l'email pour activer votre compte.
@@ -55,17 +57,24 @@ export default function SignUp() {
           </div>
           {message && (
             <div className="text-center mb-6">
-              <span data-status={state?.status} className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color">
+              <span
+                data-status={state?.status}
+                className="data-[status=success]:text-accent-color data-[status=failure]:text-state-blocked-color"
+              >
                 {message}
               </span>
             </div>
           )}
-          <form action={formAction} className="flex items-center flex-col gap-8">
+          <form
+            action={formAction}
+            className="flex items-center flex-col gap-8"
+          >
             <div className="form-group">
               <label
                 htmlFor="last-name"
                 data-active={lastName.length > 0}
-                className="text-text-lighter-color">
+                className="text-text-lighter-color"
+              >
                 Nom
               </label>
               <input
@@ -78,7 +87,9 @@ export default function SignUp() {
                 required
                 className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
-              {state?.errors?.lastName && <i className="block mt-1">{state?.errors?.lastName}</i>}
+              {state?.errors?.lastName && (
+                <i className="block mt-1">{state?.errors?.lastName}</i>
+              )}
             </div>
             <div className="form-group">
               <label
@@ -98,7 +109,9 @@ export default function SignUp() {
                 required
                 className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
-              {state?.errors?.firstName && <i className="block mt-1">{state?.errors?.firstName}</i>}
+              {state?.errors?.firstName && (
+                <i className="block mt-1">{state?.errors?.firstName}</i>
+              )}
             </div>
             <div className="form-group">
               <label
@@ -118,7 +131,9 @@ export default function SignUp() {
                 required
                 className="border-b border-b-text-lighter-color text-text-lighter-color text-medium font-bricolage"
               />
-              {state?.errors?.email && <i className="block mt-1">{state?.errors?.email}</i>}
+              {state?.errors?.email && (
+                <i className="block mt-1">{state?.errors?.email}</i>
+              )}
             </div>
             <div className="form-group">
               <label
@@ -136,15 +151,18 @@ export default function SignUp() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10" />
+                className="border-b border-b-text-lighter-color text-text-lighter-color text-medium pr-10"
+              />
               {hiddenPassword ? (
                 <Eye
                   onClick={(e) => setHiddenPassword(false)}
-                  className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+                  className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+                />
               ) : (
                 <EyeOff
                   onClick={(e) => setHiddenPassword(true)}
-                  className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color" />
+                  className="absolute right-5 top-[11px] w-5 cursor-pointer text-text-lighter-color"
+                />
               )}
               {state?.errors?.password && (
                 <div className="text-left text-[#DC3545] italic text-sm">
@@ -171,7 +189,7 @@ export default function SignUp() {
               {/* <button onClick={handleGoogleAuth} className={`${instrumentSans.className} relative bg-[#3184FC] text-text-lighter-color hover:transition-all hover:duration-[120ms] hover:ease-linear`}>
             {" "}
             <span className="absolute flex justify-center items-center left-0.5 top-[1px] bg-text-lighter-color rounded-sm w-[34px] h-[34px] scale-90">
-              <Image src={"/google.svg"} width={25} height={25} alt="Google" />
+              <Image src={"/icons/google.svg"} width={25} height={25} alt="Google" />
             </span>{" "}
             Se connecter avec Google
           </button> */}
@@ -180,7 +198,12 @@ export default function SignUp() {
           <div className="text-center text-text-color mt-15 font-light">
             <p>
               Vous avez déjà un compte ?{" "}
-              <span onClick={handleSignIn} className="text-accent-color-light cursor-pointer ml-1 hover:underline">Se connecter</span>
+              <span
+                onClick={handleSignIn}
+                className="text-accent-color-light cursor-pointer ml-1 hover:underline"
+              >
+                Se connecter
+              </span>
             </p>
           </div>
         </>

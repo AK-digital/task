@@ -38,7 +38,7 @@ export default function SideNav() {
         <div>
           <Link href={"/projects"}>
             <Image
-              src={"/clynt-logo-dark.svg"}
+              src={"/clynt/clynt-logo-dark.svg"}
               width={32}
               height={32}
               alt="Logo de Clynt"

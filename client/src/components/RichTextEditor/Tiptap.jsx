@@ -34,6 +34,8 @@ export default function Tiptap({
   handleRemoveDescription,
   setIsMessagePending,
   setMessage,
+  showPreviewImageMessage,
+  setShowPreviewImageMessage,
 }) {
   const [isSent, setIsSent] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
@@ -421,7 +423,22 @@ export default function Tiptap({
   const handleCancel = (e) => {
     e.preventDefault();
 
-    setConvOpen(false);
+    if (type === "description") {
+      // Nettoyer le draft si nécessaire
+      if (draft?.success) {
+        deleteDraft(draft?.data?._id, project?._id).then(() => {
+          mutateDraft();
+        });
+      }
+
+      // Fermer l'édition de la description et nettoyer les champs
+      setEditDescription(false);
+      setPlainText("");
+      setValue("");
+    } else {
+      // Comportement par défaut pour les messages
+      setConvOpen(false);
+    }
   };
 
   const handleDrop = (e) => {
@@ -473,6 +490,16 @@ export default function Tiptap({
           editor={editor}
           className="content_Tiptap flex-1 min-h-[150px] p-[15px] text-[16px] outline-none rounded-t-none rounded-b-lg cursor-text"
         />
+        {isNotEmpty([...attachments]) && (
+          <Reactions
+            element={message}
+            project={project}
+            task={task}
+            mutateMessage={mutateMessage}
+            type={"editor"}
+            editor={editor}
+          />
+        )}
         {isTaggedUsers && (
           <MentionsList
             project={project}
@@ -491,49 +518,61 @@ export default function Tiptap({
             <span>Brouillon enregistré</span>
           </div>
         )}
-        <div className="relative flex items-center gap-2 ml-2 mb-2 mt-auto">
-          <Attachment
+        <div className="relative flex items-center gap-2 mx-2 mb-2 mt-auto">
+          {/* <Attachment
             attachments={attachments}
             setAttachments={setAttachments}
             editor={editor}
-          />
+          /> */}
           {isNotEmpty([...attachments]) && (
             <AttachmentsInfo
               attachments={attachments}
               setAttachments={setAttachments}
               disable={false}
               type="edition"
+              showPreviewImageMessage={showPreviewImageMessage}
+              setShowPreviewImageMessage={setShowPreviewImageMessage}
             />
           )}
           {!isNotEmpty([...attachments]) && (
-            <Attachment
-              attachments={attachments}
-              setAttachments={setAttachments}
-              editor={editor}
-              label="Ajouter une pièce jointe"
-              className="cursor-pointer"
-            />
+            <div className="flex items-center">
+              <Attachment
+                attachments={attachments}
+                setAttachments={setAttachments}
+                editor={editor}
+                label="Ajouter une pièce jointe"
+                className="group cursor-pointer"
+              />
+              <Reactions
+                element={message}
+                project={project}
+                task={task}
+                mutateMessage={mutateMessage}
+                type={"editor"}
+                editor={editor}
+              />
+            </div>
           )}
-          <Reactions
-            element={message}
-            project={project}
-            task={task}
-            mutateMessage={mutateMessage}
-            type={"editor"}
-            editor={editor}
-          />
         </div>
       </div>
       <div className="actions_Tiptap flex items-center gap-2 ml-auto">
         {type === "description" && (
-          <button
-            className="font-bricolage"
-            data-disabled={checkIfDisabled()}
-            disabled={checkIfDisabled()}
-            onClick={handleSaveDescription}
-          >
-            Enregistrer la description
-          </button>
+          <>
+            <button
+              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-normal mr-3 hover:text-accent-color-light hover:bg-transparent shadow-none"
+              onClick={handleCancel}
+            >
+              Annuler
+            </button>
+            <button
+              className="font-bricolage"
+              data-disabled={checkIfDisabled()}
+              disabled={checkIfDisabled()}
+              onClick={handleSaveDescription}
+            >
+              Enregistrer la description
+            </button>
+          </>
         )}
         {type === "message" && (
           <>
