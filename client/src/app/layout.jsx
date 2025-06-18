@@ -9,11 +9,11 @@ export const metadata = {
   icons: {
     icon: [
       {
-        url: "/clynt-logo-light.svg",
+        url: "/clynt/clynt-logo-light.svg",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/clynt-logo-dark.svg",
+        url: "/clynt/clynt-logo-dark.svg",
         media: "(prefers-color-scheme: dark)",
       },
     ],

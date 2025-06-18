@@ -9,7 +9,13 @@ export default function GoogleBtn() {
   return (
     <div>
       <button onClick={handleGoogleAuth}>
-        <Image src={"/google.svg"} alt="Logo Google" width={24} height={24} className="w-6 h-6 max-w-6 max-h-6" />
+        <Image
+          src={"/icons/google.svg"}
+          alt="Logo Google"
+          width={24}
+          height={24}
+          className="w-6 h-6 max-w-6 max-h-6"
+        />
         Google
       </button>
     </div>

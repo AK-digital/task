@@ -7,6 +7,7 @@
   /* COLORS */
   --color-accent-color: #a87e51;
   --color-accent-color-light: #d4a979;
+  --color-accent-color-dark: #785937;
   --color-accent-color-transparent: rgba(168, 126, 81, 0.3);
   --color-accent-color-hover: #977045;
   --color-foreground: #171717;
@@ -391,6 +392,11 @@
   }
 
   /* AttachmentsInfo */
+  .items_AttachmentsInfo::-webkit-scrollbar,
+  .items_AttachmentsInfo::-webkit-scrollbar-thumb {
+    height: 6px;
+  }
+
   .infos_AttachmentsInfo::-webkit-scrollbar,
   .actions_AttachmentsInfo::-webkit-scrollbar-thumb {
     background-color: var(--color-secondary);

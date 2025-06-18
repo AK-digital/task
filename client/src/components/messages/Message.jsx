@@ -26,9 +26,12 @@ export default function Message({
   mutateMessage,
   mutateTasks,
   mutateDraft,
+  showPreviewImageMessage,
+  setShowPreviewImageMessage,
+  edit,
+  setEdit,
 }) {
   const { uid } = useContext(AuthContext);
-  const [edit, setEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [more, setMore] = useState(false);
   const [showPeopleRead, setShowPeopleRead] = useState(false);
@@ -104,18 +107,22 @@ export default function Message({
 
   return (
     <>
-      {edit ? (
-        <Tiptap
-          project={project}
-          task={task}
-          type="message"
-          mutateMessage={mutateMessage}
-          setConvOpen={setEdit}
-          editMessage={true}
-          message={message}
-          handleDeleteMessage={handleDeleteMessage}
-          mutateDraft={mutateDraft}
-        />
+      {edit === message?._id ? (
+        <>
+          <Tiptap
+            project={project}
+            task={task}
+            type="message"
+            mutateMessage={mutateMessage}
+            setConvOpen={setEdit}
+            editMessage={true}
+            message={message}
+            handleDeleteMessage={handleDeleteMessage}
+            mutateDraft={mutateDraft}
+            showPreviewImageMessage={showPreviewImageMessage}
+            setShowPreviewImageMessage={setShowPreviewImageMessage}
+          />
+        </>
       ) : (
         <>
           <div
@@ -152,7 +159,7 @@ export default function Message({
                       <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-third [&_li:hover]:rounded-sm">
                         <li
                           onClick={() => {
-                            setEdit(true);
+                            setEdit(message?._id);
                             setMore(false);
                           }}
                           className="flex items-center gap-2 p-2 text-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
@@ -200,9 +207,18 @@ export default function Message({
                     attachments={message?.files}
                     disable={true}
                     type="affichage"
+                    showPreviewImageMessage={showPreviewImageMessage}
+                    setShowPreviewImageMessage={setShowPreviewImageMessage}
                   />
                 </div>
               )}
+              <Reactions
+                element={message}
+                project={project}
+                task={task}
+                mutateMessage={mutateMessage}
+                type={"message"}
+              />
             </div>
 
             <div className="flex items-center ml-3 gap-2">

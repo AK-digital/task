@@ -15,7 +15,15 @@ import Reactions from "../Reactions/Reactions";
 import { isNotEmpty } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
 
-export default function TaskDescription({ project, task, uid }) {
+export default function TaskDescription({
+  project,
+  task,
+  uid,
+  showPreviewImageMessage,
+  setShowPreviewImageMessage,
+  edit,
+  setEdit,
+}) {
   const { user } = useContext(AuthContext);
   const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
   const { data: draft, mutate: mutateDraft } = useSWR(
@@ -23,7 +31,6 @@ export default function TaskDescription({ project, task, uid }) {
     fetcher
   );
 
-  const [isEditing, setIsEditing] = useState(false);
   const [pending, setPending] = useState(false);
   const [description, setDescription] = useState(task?.description?.text);
 
@@ -41,13 +48,13 @@ export default function TaskDescription({ project, task, uid }) {
 
   useEffect(() => {
     if (draft?.success) {
-      setIsEditing(true);
+      setEdit("description");
       setDescription(draft?.data?.content);
     }
 
     if (!draft?.success) {
       setDescription(task?.description?.text);
-      setIsEditing(false);
+      setEdit("");
     }
   }, [draft]);
 
@@ -60,7 +67,7 @@ export default function TaskDescription({ project, task, uid }) {
       }
     }
 
-    setIsEditing(true);
+    setEdit("description");
   };
 
   const handleRemoveDescription = async () => {
@@ -83,7 +90,7 @@ export default function TaskDescription({ project, task, uid }) {
       return;
     }
 
-    setIsEditing(false);
+    setEdit("");
     setDescription(""); // Optimistic update
     setPending(false);
 
@@ -98,24 +105,26 @@ export default function TaskDescription({ project, task, uid }) {
         <PanelTop size={16} className="text-text-color-muted" /> Description
       </span>
       {/* If is editing */}
-      {isEditing && (
+      {edit === "description" && (
         <Tiptap
           project={project}
           task={task}
           type="description"
-          setEditDescription={setIsEditing}
+          setEditDescription={setEdit}
           description={description}
           setOptimisticDescription={setDescription}
           draft={draft}
           mutateDraft={mutateDraft}
           handleRemoveDescription={handleRemoveDescription}
+          showPreviewImageMessage={showPreviewImageMessage}
+          setShowPreviewImageMessage={setShowPreviewImageMessage}
         />
       )}
       {/* If not editing and description is not empty */}
-      {!isEditing && description && (
+      {edit !== "description" && description && (
         <div>
           <div
-            className="relative rounded-lg shadow-small p-4 text-normal cursor-pointer bg-secondary"
+            className="relative flex flex-col gap-3.5 rounded-lg shadow-small p-4 text-normal cursor-pointer bg-secondary"
             onClick={handleEditDescription}
           >
             <div className="flex items-center gap-2 select-none">
@@ -146,14 +155,18 @@ export default function TaskDescription({ project, task, uid }) {
               dangerouslySetInnerHTML={{ __html: description }}
               className="content_TaskDescription mt-3 font-light text-normal"
             ></div>
+            {isNotEmpty(task?.description?.files) && (
+              <AttachmentsInfo
+                attachments={task?.description?.files}
+                showPreviewImageMessage={showPreviewImageMessage}
+                setShowPreviewImageMessage={setShowPreviewImageMessage}
+              />
+            )}
           </div>
 
           {/* Zone de réactions et actions */}
           <div className="flex items-center justify-between gap-2 mt-2 py-0 px-2">
             {/* Attachments */}
-            {isNotEmpty(task?.description?.files) && (
-              <AttachmentsInfo attachments={task?.description?.files} />
-            )}
 
             {/* Réactions */}
             <Reactions
@@ -180,7 +193,7 @@ export default function TaskDescription({ project, task, uid }) {
         </div>
       )}
       {/* If not editing and description empty */}
-      {!isEditing && !description && (
+      {edit !== "description" && !description && (
         <div
           onClick={handleEditDescription}
           data-role={isAuthorized}

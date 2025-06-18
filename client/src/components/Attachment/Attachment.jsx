@@ -62,12 +62,11 @@ export default function Attachment({
 
   return (
     <div>
-      <label
-        className="text-small data-[label=false]:text-accent-color-light cursor-pointer select-none"
-        data-label={isPaperclip}
-        htmlFor="attachment"
-      >
-        {label}
+      <label className={``} data-label={isPaperclip} htmlFor="attachment">
+        <Paperclip
+          size={25}
+          className="cursor-pointer text-accent-color-dark hover:text-accent-color group-hover:text-accent-color"
+        />
       </label>
       <input
         type="file"

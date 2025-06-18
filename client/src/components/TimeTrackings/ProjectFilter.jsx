@@ -86,7 +86,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
             <span className="flex justify-center gap-1">
               {displayProjects?.visible?.map((project) => (
                 <Image
-                  src={project?.logo || "/default-project-logo.svg"}
+                  src={project?.logo || "/default/default-project-logo.svg"}
                   width={24}
                   height={24}
                   alt={`Logo de ${project?.name}`}
@@ -143,7 +143,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                 className="flex items-center gap-1 cursor-pointer"
               >
                 <Image
-                  src={project?.logo || "/default-project-logo.svg"}
+                  src={project?.logo || "/default/default-project-logo.svg"}
                   width={22}
                   height={22}
                   alt={`Logo de ${project?.name}`}

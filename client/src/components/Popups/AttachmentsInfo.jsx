@@ -1,16 +1,22 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Attachment from "../Attachment/Attachment";
-import { Download, LayoutList, ListChecks, Trash2 } from "lucide-react";
+import { Download, LayoutList, ListChecks, Trash2, X } from "lucide-react";
 import { BlobWriter, ZipWriter, BlobReader } from "@zip.js/zip.js";
+import Image from "next/image";
+import Reactions from "../Reactions/Reactions";
 
 export default function AttachmentsInfo({
   attachments,
   setAttachments = null,
   disable = true,
   type = "affichage",
+  showPreviewImageMessage,
+  setShowPreviewImageMessage,
 }) {
   const [showAttachments, setShowAttachments] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
+  const [fileSizes, setFileSizes] = useState({});
+  const [previewImage, setPreviewImage] = useState(null);
 
   const attachmentsLength = attachments?.length || 0;
 
@@ -70,6 +76,112 @@ export default function AttachmentsInfo({
     let parts = url.split("/");
     parts[6] = "fl_attachment";
     return parts.join("/");
+  }, []);
+
+  const getFileIcon = useCallback((file) => {
+    // Vérifier si c'est un objet File (fichier local) ou une string (URL)
+    const isLocalFile = file instanceof File;
+    const fileName = isLocalFile ? file.name : file.name || "";
+    const fileUrl = isLocalFile ? null : file.url;
+
+    const extension = fileName.split(".").pop()?.toLowerCase();
+
+    // Pour les images, traitement spécial
+    const imageExtensions = [
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "webp",
+      "svg",
+      "bmp",
+      "ico",
+      "heic",
+      "heif",
+      "avif",
+    ];
+
+    if (imageExtensions.includes(extension)) {
+      if (isLocalFile) {
+        // Pour les fichiers locaux, créer un object URL
+        return URL.createObjectURL(file);
+      } else {
+        // Pour les fichiers distants, utiliser l'URL
+        return fileUrl;
+      }
+    }
+
+    // Pour les autres types de fichiers
+    switch (extension) {
+      case "pdf":
+        return "/icons/icon-PDF.svg";
+      case "txt":
+        return "/icons/icon-TXT.svg";
+      case "doc":
+      case "docx":
+        return "/icons/icon-DOC.svg";
+      case "xls":
+      case "xlsx":
+        return "/icons/icon-XLS.svg";
+      case "ppt":
+      case "pptx":
+        return "/icons/icon-PPT.svg";
+      case "zip":
+      case "rar":
+      case "7z":
+        return "/icons/icon-ZIP.svg";
+      default:
+        return "/icons/file.svg"; // Icône générique
+    }
+  }, []);
+
+  const getFileSize = useCallback(
+    (file) => {
+      // Si c'est un objet File (fichier local), utiliser file.size directement
+      if (file instanceof File) {
+        return file.size;
+      }
+
+      // Sinon, c'est un fichier distant, utiliser fileSizes du state
+      return fileSizes[file.name] || null;
+    },
+    [fileSizes]
+  );
+
+  const formatFileSize = useCallback((bytes) => {
+    if (!bytes && bytes !== 0) return "Taille inconnue";
+
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+
+    if (i === 0) return `${bytes} ${sizes[i]}`;
+    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+  }, []);
+
+  const getFileSizeFromUrl = useCallback(async (url, fileName) => {
+    try {
+      const response = await fetch(url, { method: "HEAD" });
+      const contentLength = response.headers.get("content-length");
+
+      if (contentLength) {
+        const sizeInBytes = parseInt(contentLength, 10);
+        setFileSizes((prev) => ({
+          ...prev,
+          [fileName]: sizeInBytes,
+        }));
+        return sizeInBytes;
+      }
+    } catch (error) {
+      console.error(
+        `Erreur lors de la récupération de la taille de ${fileName}:`,
+        error
+      );
+      setFileSizes((prev) => ({
+        ...prev,
+        [fileName]: null,
+      }));
+    }
+    return null;
   }, []);
 
   const handleDelete = useCallback(
@@ -139,22 +251,26 @@ export default function AttachmentsInfo({
     try {
       const zipFileWriter = new BlobWriter();
       const zipWriter = new ZipWriter(zipFileWriter);
-      const filesToDownload = getAttachmentsChecks();
 
-      for (const file of filesToDownload) {
+      for (const file of attachments) {
         let response;
         let blob;
 
         try {
-          // Essayer d'abord avec l'URL de téléchargement
-          const downloadUrl = getDownloadUrl(file.url);
-          response = await fetch(downloadUrl);
+          if (file instanceof File) {
+            // Pour les fichiers locaux, utiliser directement le fichier
+            blob = file;
+          } else {
+            // Pour les fichiers distants, essayer de les télécharger
+            const downloadUrl = getDownloadUrl(file.url);
+            response = await fetch(downloadUrl);
 
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            blob = await response.blob();
           }
-
-          blob = await response.blob();
         } catch (error) {
           console.log(
             `Échec avec URL de téléchargement, essai avec URL originale pour ${file.name}`
@@ -182,7 +298,10 @@ export default function AttachmentsInfo({
           }
         }
 
-        await zipWriter.add(file.name, new BlobReader(blob));
+        await zipWriter.add(
+          file.name || `file-${Date.now()}`,
+          new BlobReader(blob)
+        );
       }
 
       await zipWriter.close();
@@ -198,7 +317,89 @@ export default function AttachmentsInfo({
       console.error("Erreur lors de la création du ZIP:", error);
       alert("Erreur lors de la création du fichier ZIP. Veuillez réessayer.");
     }
-  }, [getAttachmentsChecks, getDownloadUrl]);
+  }, [attachments, getDownloadUrl]);
+
+  const handleDeleteAll = useCallback(() => {
+    if (!setAttachments) return;
+    setAttachments([]);
+    setCheckedList([]);
+  }, [setAttachments]);
+
+  const handleDeleteSingle = useCallback(
+    (indexToRemove) => {
+      if (!setAttachments) return;
+
+      const newAttachments = attachments.filter(
+        (_, index) => index !== indexToRemove
+      );
+      const newCheckedList = checkedList.filter(
+        (_, index) => index !== indexToRemove
+      );
+
+      setAttachments(newAttachments);
+      setCheckedList(newCheckedList);
+    },
+    [attachments, checkedList, setAttachments]
+  );
+
+  const handleDownloadSingle = useCallback(
+    async (file, index) => {
+      try {
+        if (file instanceof File) {
+          // Pour les fichiers locaux, créer un object URL et télécharger
+          const url = URL.createObjectURL(file);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = file.name || `file-${Date.now()}`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } else {
+          // Pour les fichiers distants
+          const downloadUrl = getDownloadUrl(file.url);
+          await handleDownload(downloadUrl, file.name);
+        }
+      } catch (error) {
+        console.error(`Erreur lors du téléchargement de ${file.name}:`, error);
+        alert(
+          `Erreur lors du téléchargement de ${file.name}. Veuillez réessayer.`
+        );
+      }
+    },
+    [getDownloadUrl, handleDownload]
+  );
+
+  const openImagePreview = useCallback(
+    (file) => {
+      // Vérifier si c'est une image
+      const isLocalFile = file instanceof File;
+      const fileName = isLocalFile ? file.name : file.name || "";
+      const extension = fileName.split(".").pop()?.toLowerCase();
+      const imageExtensions = [
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+        "webp",
+        "bmp",
+        "ico",
+        "heic",
+        "heif",
+        "avif",
+      ];
+
+      if (imageExtensions.includes(extension)) {
+        const iconSrc = getFileIcon(file);
+        setPreviewImage(iconSrc);
+        setShowPreviewImageMessage(true);
+      }
+    },
+    [getFileIcon]
+  );
+
+  const closeImagePreview = useCallback(() => {
+    setShowPreviewImageMessage(false);
+    setPreviewImage(null);
+  }, []);
 
   useEffect(() => {
     // Synchroniser le tableau checkedList avec la taille de attachments
@@ -215,39 +416,152 @@ export default function AttachmentsInfo({
     });
   }, [attachments]);
 
+  useEffect(() => {
+    // Récupérer les tailles des fichiers distants
+    attachments.forEach((file) => {
+      if (file.url && file.name && !fileSizes[file.name]) {
+        getFileSizeFromUrl(file.url, file.name);
+      }
+    });
+  }, [attachments, fileSizes, getFileSizeFromUrl]);
+
+  // Cleanup des object URLs pour éviter les fuites mémoire
+  useEffect(() => {
+    return () => {
+      attachments.forEach((file) => {
+        if (file instanceof File) {
+          const objectUrl = getFileIcon(file);
+          if (objectUrl && objectUrl.startsWith("blob:")) {
+            URL.revokeObjectURL(objectUrl);
+          }
+        }
+      });
+    };
+  }, [attachments, getFileIcon]);
+
   return (
     <div
-      className="relative"
-      onMouseEnter={() => setShowAttachments(true)}
-      onMouseLeave={() => setShowAttachments(false)}
+      className="relative flex items-start gap-2 border-t border-color-border-color pb-2 w-full min-w-0"
+      // onMouseEnter={() => setShowAttachments(true)}
+      // onMouseLeave={() => setShowAttachments(false)}
     >
-      <span className="text-accent-color-light text-small">
-        {disable ? (
-          <span className="cursor-pointer text-accent-color hover:text-accent-color-hover">
-            {label}
-          </span>
+      <div className="flex items-start gap-2 flex-shrink-0">
+        {!disable ? (
+          <>
+            <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
+              <Attachment
+                attachments={attachments}
+                setAttachments={setAttachments}
+                label={label}
+              />
+            </span>
+            <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
+              <Trash2
+                size={25}
+                onClick={handleDeleteAll}
+                className="cursor-pointer text-accent-color-dark group-hover:text-danger-color"
+              />
+            </span>
+          </>
         ) : (
-          <Attachment
-            attachments={attachments}
-            setAttachments={setAttachments}
-            label={label}
-          />
+          <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
+            <Download
+              size={25}
+              className="cursor-pointer text-accent-color-dark group-hover:text-accent-color"
+              onClick={handleDownloadZip}
+            />
+          </span>
         )}
-      </span>
 
-      <div
+        {/* Bouton TOUT pour supprimer ou télécharger toutes les pièces jointes */}
+        {/* {attachments.length > 1 && (
+          <button
+            onClick={isAffichage ? handleDownloadZip : handleDeleteAll}
+            className={`flex justify-center items-center gap-1 px-2 py-1 rounded-sm text-xs font-medium transition-colors cursor-pointer ${
+              isAffichage
+                ? "bg-accent-color text-white hover:bg-accent-color-hover"
+                : "bg-danger-color text-white hover:bg-text-color-red"
+            }`}
+          >
+            {isAffichage ? <Download size={14} /> : <Trash2 size={14} />}
+            <span>TOUT</span>
+          </button>
+        )} */}
+      </div>
+      <div className="items_AttachmentsInfo flex items-center gap-2 overflow-x-auto flex-1 min-w-0 pt-4 pb-1">
+        {attachments.map((file, index) => {
+          const hasUrl = !!file?.url && isDisplayableFile(file?.url);
+          const iconSrc = getFileIcon(file);
+          const validIconSrc =
+            iconSrc && iconSrc.trim() !== "" ? iconSrc : "/icons/file.svg";
+
+          let downloadUrl;
+          if (hasUrl) {
+            downloadUrl = getDownloadUrl(file?.url);
+          }
+          return (
+            <div
+              key={index}
+              className={`relative flex justify-center items-center gap-2 cursor-pointer bg-primary/80 rounded-sm p-1 transition-all duration-200 h-11 hover:translate-y-[-2px] ${
+                !isAffichage ? "hover:bg-secondary" : "hover:bg-third"
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                openImagePreview(file);
+              }}
+            >
+              {validIconSrc && (
+                <Image
+                  src={validIconSrc}
+                  alt={file?.name || "File"}
+                  width={35}
+                  height={35}
+                  className="rounded-sm object-cover aspect-square select-none"
+                />
+              )}
+              <div className="flex flex-col justify-between items-start gap-1 w-25">
+                <span
+                  title={file?.name}
+                  className="w-25 truncate text-xs text-center"
+                >
+                  {file?.name}
+                </span>
+                <span className="text-text-color-muted text-[11px]">
+                  {formatFileSize(getFileSize(file))}
+                </span>
+              </div>
+              <div className="flex flex-col justify-start h-full">
+                {isAffichage ? (
+                  <Download
+                    size={16}
+                    className="text-accent-color-dark hover:text-accent-color cursor-pointer transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDownloadSingle(file, index);
+                    }}
+                  />
+                ) : (
+                  <Trash2
+                    size={16}
+                    className="text-accent-color-dark hover:text-danger-color cursor-pointer transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteSingle(index);
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {/* <div
         className={`absolute flex flex-col bottom-5.5 z-2001 shadow-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
           showAttachments ? "max-h-96" : "max-h-0"
         }`}
       >
         <div className="infos_AttachmentsInfo flex flex-col bg-secondary max-h-[calc(4*22.86px)] overflow-y-auto p-2 gap-2 grow border border-color-border-color border-b-0 rounded-t-sm">
           {attachments.map(({ name, url }, index) => {
-            const hasUrl = !!url && isDisplayableFile(url);
-
-            let downloadUrl;
-            if (hasUrl) {
-              downloadUrl = getDownloadUrl(url);
-            }
             return (
               <div
                 key={index}
@@ -263,47 +577,27 @@ export default function AttachmentsInfo({
                   />
 
                   <a
-                    className="text-[0.85rem] text-text-color-muted whitespace-nowrap data-[url=false]:no-underline data-[url=false]:cursor-default data-[url=false]:hover:text-text-color-muted"
                     data-url={hasUrl ? "true" : "false"}
                     target="_blank"
                     href={hasUrl ? url : undefined}
                     onClick={(e) => {
                       if (!hasUrl) {
                         e.preventDefault();
-                      }
+                        }
                     }}
+                    className="text-[0.85rem] text-text-color-muted whitespace-nowrap data-[url=false]:no-underline data-[url=false]:cursor-default data-[url=false]:hover:text-text-color-muted"
                   >
                     {name}
                   </a>
                 </div>
-
-                {!isAffichage && (
-                  <button
-                    className="delete_AttachmentsInfo flex justify-center items-center h-3 w-auto"
-                    data-has-background="false"
-                    onClick={() => handleDelete("deleteOne", index)}
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                )}
-
-                {isAffichage && (
-                  <button
-                    className="download_AttachmentsInfo flex justify-center items-center h-3 w-auto"
-                    data-has-background="false"
-                    onClick={() => handleDownload(downloadUrl, name)}
-                  >
-                    <Download size={16} />
-                  </button>
-                )}
               </div>
             );
           })}
         </div>
         <div className="actions_AttachmentsInfo flex items-center justify-start gap-2 p-2 bg-secondary border border-color-border-color border-t-0 rounded-b-sm">
           <button
-            className="cursor-pointer px-2 py-1 text-small flex justify-center items-center gap-[5px] bg-color-medium-color rounded-sm whitespace-nowrap hover:bg-color-medium-color/80"
             onClick={toggleAll}
+            className="cursor-pointer px-2 py-1 text-small flex justify-center items-center gap-[5px] bg-color-medium-color rounded-sm whitespace-nowrap hover:bg-color-medium-color/80"
           >
             {!isAnyChecked ? (
               <>
@@ -312,8 +606,8 @@ export default function AttachmentsInfo({
               </>
             ) : (
               <>
-                <LayoutList size={16} />
-                <span>Tout décocher</span>
+              <LayoutList size={16} />
+              <span>Tout décocher</span>
               </>
             )}
           </button>
@@ -340,8 +634,42 @@ export default function AttachmentsInfo({
               </button>
             )}
           </div>
+                 </div>
+       </div> */}
+
+      {/* Preview d'image en plein écran */}
+      {showPreviewImageMessage && previewImage && (
+        <div
+          className="absolute inset-0 w-screen h-screen bg-black bg-opacity-75 flex items-center justify-center"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 99999,
+          }}
+          onClick={closeImagePreview}
+        >
+          <div className="relative w-full h-full flex items-center justify-center">
+            <button
+              onClick={closeImagePreview}
+              className="absolute top-4 right-4 p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all"
+              style={{ zIndex: 100000 }}
+            >
+              <X size={24} className="text-white" />
+            </button>
+            <Image
+              src={previewImage}
+              alt="Preview"
+              width={1200}
+              height={800}
+              className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

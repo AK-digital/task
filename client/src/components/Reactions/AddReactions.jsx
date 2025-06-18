@@ -10,6 +10,7 @@ export default function AddReactions({
   onClickFunction,
   showEmojiPicker,
   setShowEmojiPicker,
+  type,
 }) {
   const canReact = useUserRole(project, [
     "owner",
@@ -18,13 +19,17 @@ export default function AddReactions({
     "customer",
   ]);
 
+  const shouldShowReactions =
+    type === "editor" || (uid !== author?._id && canReact);
+
   return (
     <div className="relative top-[0.5px] cursor-pointer">
-      {uid !== author?._id && canReact && (
+      {shouldShowReactions && (
         <div className="flex">
           <SmilePlus
-            size={16}
+            size={25}
             onClick={() => setShowEmojiPicker((prev) => !prev)}
+            className="text-accent-color-dark hover:text-accent-color"
           />
           {showEmojiPicker && (
             <div className="absolute z-2001 top-5 left-3">
