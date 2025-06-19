@@ -58,6 +58,9 @@ const taskSchema = new Schema(
           url: {
             type: String,
           },
+          size: {
+            type: Number,
+          },
         },
       ],
     },

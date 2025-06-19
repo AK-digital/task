@@ -22,7 +22,7 @@ export default function ProjectSideNav({ project, open, isActive }) {
       >
         <div className="max-w-[42px] max-h-[42px]">
           <Image
-            src={project?.logo || "/default-project-logo.webp"}
+            src={project?.logo || "/default/default-project-logo.webp"}
             width={42}
             height={42}
             alt="project logo"

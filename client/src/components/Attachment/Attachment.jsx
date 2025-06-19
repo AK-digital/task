@@ -5,6 +5,8 @@ export default function Attachment({
   setAttachments,
   label = <Paperclip size={16} />,
   editor = null, // Ajouter l'éditeur pour pouvoir y insérer des images
+  setTooMuchAttachments,
+  setTooHeavyAttachments,
 }) {
   const allowedMimetypes = [
     // Images déjà présentes
@@ -55,9 +57,33 @@ export default function Attachment({
 
   function handleAttachments(e) {
     const newFiles = Array.from(e.target.files);
+    console.log("newFiles", newFiles);
+    const authorizedFiles = [];
+    for (const file of newFiles) {
+      if (file.size > 5 * 1024 * 1024) {
+        setTooHeavyAttachments(true);
+        return;
+      } else {
+        authorizedFiles.push(file);
+      }
+    }
+    // Vérifier si l'ajout des nouveaux fichiers dépasserait la limite de 10
+    if (attachments.length + newFiles.length > 10) {
+      setTooMuchAttachments(true);
+      return;
+    }
+
+    // Réinitialiser l'état d'erreur si tout va bien
+    if (setTooMuchAttachments) {
+      setTooMuchAttachments(false);
+    }
+
+    if (setTooHeavyAttachments) {
+      setTooHeavyAttachments(false);
+    }
 
     // Ajouter tous les fichiers aux attachments (images ET autres fichiers)
-    setAttachments((prev) => [...prev, ...newFiles]);
+    setAttachments((prev) => [...prev, ...authorizedFiles]);
   }
 
   return (

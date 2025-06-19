@@ -109,7 +109,7 @@ export default function ProjectCard({
             ) : (
               <div className="flex justify-between w-full rounded-2xl select-none">
                 <Image
-                  src={project?.logo || "/default-project-logo.webp"}
+                  src={project?.logo || "/default/default-project-logo.webp"}
                   alt="project"
                   width={45}
                   height={45}

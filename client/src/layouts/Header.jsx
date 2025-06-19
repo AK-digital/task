@@ -71,7 +71,7 @@ export default function Header() {
           <li>
             <Link href={"/profile"}>
               <Image
-                src={user?.picture || "/default-pfp.webp"}
+                src={user?.picture || "/default/default-pfp.webp"}
                 alt={`Photo de profil de ${user?.firstName}`}
                 width={38}
                 height={38}

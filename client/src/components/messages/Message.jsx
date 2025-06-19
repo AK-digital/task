@@ -129,64 +129,65 @@ export default function Message({
             className="flex flex-col gap-2 transition-opacity duration-[50ms] ease-linear data-[loading=true]:opacity-[0.4] "
             data-loading={isLoading}
           >
-            <div className="relative flex justify-between flex-col gap-3.5 py-4 px-6 bg-secondary rounded-lg transition-all duration-[50ms] ease-linear">
+            <div className="relative py-4 px-6 bg-secondary rounded-lg transition-all duration-[50ms] ease-linear">
               {/* Header auteur */}
-              <div className="flex items-center justify-between [&_svg]:cursor-pointer ">
-                <div className="flex items-center gap-2 select-none">
-                  <Image
-                    src={author?.picture || "/default-pfp.webp"}
-                    width={35}
-                    height={35}
-                    alt={`Photo de profil de ${author?.firstName}`}
-                    className="rounded-full w-[35px] h-[35px] max-w-[35px] max-h-[35px]"
-                  />
-                  <span className="text-normal font-medium">
-                    {author?.firstName + " " + author?.lastName}
-                  </span>
-                  <span className="text-xs text-text-color-muted">
-                    {formattedDate}
-                  </span>
-                </div>
-                <div>
-                  {uid === author?._id && (
-                    <FontAwesomeIcon
-                      icon={faEllipsisH}
-                      onClick={() => setMore(true)}
+              <div className="flex justify-between flex-col gap-3.5">
+                <div className="flex items-center justify-between [&_svg]:cursor-pointer ">
+                  <div className="flex items-center gap-2 select-none">
+                    <Image
+                      src={author?.picture || "/default/default-pfp.webp"}
+                      width={35}
+                      height={35}
+                      alt={`Photo de profil de ${author?.firstName}`}
+                      className="rounded-full w-[35px] h-[35px] max-w-[35px] max-h-[35px]"
                     />
-                  )}
-                  {more && (
-                    <div className="absolute z-2001 right-6 w-fit p-2 bg-secondary rounded-sm shadow-medium select-none">
-                      <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-third [&_li:hover]:rounded-sm">
-                        <li
-                          onClick={() => {
-                            setEdit(message?._id);
-                            setMore(false);
-                          }}
-                          className="flex items-center gap-2 p-2 text-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
-                        >
-                          <FontAwesomeIcon icon={faPen} /> Modifier
-                        </li>
-                        <li
-                          onClick={handleDeleteMessage}
-                          className="flex items-center gap-2 p-2 text-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
-                        >
-                          <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
-                        </li>
-                      </ul>
-                    </div>
-                  )}
+                    <span className="text-normal font-medium">
+                      {author?.firstName + " " + author?.lastName}
+                    </span>
+                    <span className="text-xs text-text-color-muted">
+                      {formattedDate}
+                    </span>
+                  </div>
+                  <div>
+                    {uid === author?._id && (
+                      <FontAwesomeIcon
+                        icon={faEllipsisH}
+                        onClick={() => setMore(true)}
+                      />
+                    )}
+                    {more && (
+                      <div className="absolute z-2001 right-6 w-fit p-2 bg-secondary rounded-sm shadow-medium select-none">
+                        <ul className="m-0 p-0 list-none [&_svg]:max-w-[14px] [&_svg]:max-h-[14px] [&_li:hover]:bg-third [&_li:hover]:rounded-sm">
+                          <li
+                            onClick={() => {
+                              setEdit(message?._id);
+                              setMore(false);
+                            }}
+                            className="flex items-center gap-2 p-2 text-small cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
+                          >
+                            <FontAwesomeIcon icon={faPen} /> Modifier
+                          </li>
+                          <li
+                            onClick={handleDeleteMessage}
+                            className="flex items-center gap-2 p-2 text-small text-text-color-red  cursor-pointer transition-[background-color] duration-[120ms] ease-linear"
+                          >
+                            <FontAwesomeIcon icon={faTrashAlt} /> Supprimer
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {/* Message */}
-              <div className="text_Message">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: processMessageHTML(message?.message),
-                  }}
-                />
-                {/* Files */}
-                {/* <div className="relative">
+                {/* Message */}
+                <div className="text_Message">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: processMessageHTML(message?.message),
+                    }}
+                  />
+                  {/* Files */}
+                  {/* <div className="relative">
                   {message?.files?.map((file, index) => {
                     return (
                       <Image
@@ -198,27 +199,28 @@ export default function Message({
                     );
                   })}
                 </div> */}
-              </div>
-
-              {/* Attachments */}
-              {isNotEmpty(message?.files) && (
-                <div className="mt-2">
-                  <AttachmentsInfo
-                    attachments={message?.files}
-                    disable={true}
-                    type="affichage"
-                    showPreviewImageMessage={showPreviewImageMessage}
-                    setShowPreviewImageMessage={setShowPreviewImageMessage}
-                  />
                 </div>
+
+                {/* Attachments */}
+                {isNotEmpty(message?.files) && (
+                  <div className="mt-2">
+                    <AttachmentsInfo
+                      attachments={message?.files}
+                      disable={true}
+                      type="affichage"
+                      showPreviewImageMessage={showPreviewImageMessage}
+                      setShowPreviewImageMessage={setShowPreviewImageMessage}
+                    />
+                  </div>
+                )}
+              </div>
+              {message?.files.length > 0 && (
+                <p className="text-sm text-gray-600">
+                  {message?.files.length} fichier
+                  {message?.files.length > 1 ? "s" : ""} joint
+                  {message?.files.length > 1 ? "s" : ""}
+                </p>
               )}
-              <Reactions
-                element={message}
-                project={project}
-                task={task}
-                mutateMessage={mutateMessage}
-                type={"message"}
-              />
             </div>
 
             <div className="flex items-center ml-3 gap-2">
@@ -235,7 +237,6 @@ export default function Message({
                   <UsersInfo users={message?.readBy} />
                 )}
               </div>
-
               {/* Reactions */}
               <Reactions
                 element={message}

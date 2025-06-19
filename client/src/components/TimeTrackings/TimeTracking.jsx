@@ -187,7 +187,7 @@ export default function TimeTracking({
       </div>
       <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color px-1">
         <Image
-          src={project?.logo || "/default-project-logo.webp"}
+          src={project?.logo || "/default/default-project-logo.webp"}
           alt={project?.name}
           width={22}
           height={22}

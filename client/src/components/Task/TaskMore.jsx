@@ -119,7 +119,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
           <span className="flex items-center gap-1 text-small text-text-color-muted select-none">
             Par{" "}
             <Image
-              src={task?.author?.picture || "/default-pfp.webp"}
+              src={task?.author?.picture || "/default/default-pfp.webp"}
               width={20}
               height={20}
               alt={`Photo de profil de ${task?.author?.firstName}`}

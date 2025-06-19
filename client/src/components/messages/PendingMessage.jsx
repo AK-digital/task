@@ -44,7 +44,7 @@ export default function PendingMessage({ message }) {
         <div className="flex items-center justify-between [&_svg]:cursor-pointer ">
           <div className="flex items-center gap-2 select-none">
             <Image
-              src={user?.picture || "/default-pfp.webp"}
+              src={user?.picture || "/default/default-pfp.webp"}
               width={35}
               height={35}
               alt={`Photo de profil de ${user?.firstName}`}

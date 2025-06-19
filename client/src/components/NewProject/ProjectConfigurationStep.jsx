@@ -18,7 +18,9 @@ export default function ProjectConfigurationStep({
   );
   const [projectNote, setProjectNote] = useState("");
   const [projectLogo, setProjectLogo] = useState(null);
-  const [logoPreview, setLogoPreview] = useState("/default-project-logo.webp");
+  const [logoPreview, setLogoPreview] = useState(
+    "/default/default-project-logo.webp"
+  );
   const [links, setLinks] = useState([{ url: "", icon: "Globe" }]);
   const [moreIcons, setMoreIcons] = useState(null);
   const [invitations, setInvitations] = useState([]);

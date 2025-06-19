@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Figma, Github, Gitlab, Globe, Layout, Youtube } from "lucide-react";
 import socket from "./socket";
+import Image from "next/image";
 
 export function isNotEmpty(arr) {
   return Array.isArray(arr) && arr.length > 0;
@@ -69,6 +70,22 @@ export const icons = [
   {
     name: "Youtube",
     icon: <Youtube size={20} />,
+  },
+  {
+    name: "Google Drive",
+    icon: <Image src={"/icons/icon-google-drive.svg"} alt="Google Drive" width={20} height={20} />,
+  },
+  {
+    name: "Dropbox",
+    icon: <Image src={"/icons/icon-dropbox.svg"} alt="Dropbox" width={20} height={20} />,
+  },
+  {
+    name: "Excel Document",
+    icon: <Image src={"/icons/icon-excel-document.svg"} alt="Excel" width={20} height={20} />,
+  },
+  {
+    name: "Document",
+    icon: <Image src={"/icons/icon-document.svg"} alt="Document" width={15} height={15} />,
   },
 ];
 
@@ -138,7 +155,7 @@ export function exportTimeTracking(projects, trackers) {
     doc.setDrawColor(255);
     doc.setFillColor(255);
     doc.addImage(
-      project?.logo || "/default-project-logo.webp",
+      project?.logo || "/default/default-project-logo.webp",
       "PNG",
       centerX - 10,
       35,

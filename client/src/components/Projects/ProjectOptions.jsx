@@ -188,7 +188,7 @@ export default function ProjectOptions({ project }) {
                   onMouseLeave={() => setEditImg(false)}
                 >
                   <Image
-                    src={project?.logo || "/default-project-logo.webp"}
+                    src={project?.logo || "/default/default-project-logo.webp"}
                     alt="Logo du projet"
                     width={100}
                     height={100}
@@ -257,7 +257,7 @@ export default function ProjectOptions({ project }) {
                     return (
                       <div className="flex items-center" key={idx}>
                         <div
-                          className="relative flex items-center justify-center border border-text-medium-color w-[45px] h-[45px]"
+                          className="relative flex items-center justify-center cursor-pointer border border-text-medium-color rounded-sm w-[45px] h-[45px] mr-2"
                           onClick={() => setMoreIcons(idx)}
                         >
                           {displayIcon(link?.icon)}
@@ -377,7 +377,7 @@ export function IconList({ setMoreIcons, links, setLinks, idx }) {
 
   return (
     <>
-      <div className="absolute flex justify-center items-center flex-wrap bg-secondary rounded-lg shadow-small gap-3 z-2001 -top-[25px] right-[45px] h-fit p-3 w-[175px]">
+      <div className="absolute flex justify-start items-center flex-wrap bg-secondary rounded-lg shadow-small gap-3 z-2001 -top-[25px] right-[45px] h-fit p-3 w-[175px]">
         {icons.map((icon) => (
           <div
             key={icon?.name}

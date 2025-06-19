@@ -67,7 +67,7 @@ export default function PictureForm() {
           className="relative inline-block w-25 h-25 m-auto select-none"
         >
           <Image
-            src={user?.picture || "/default-pfp.webp"}
+            src={user?.picture || "/default/default-pfp.webp"}
             alt={`Photo de profil de ${user?.firstName}`}
             width={100}
             height={100}

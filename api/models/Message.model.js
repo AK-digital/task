@@ -30,6 +30,9 @@ const messageSchema = new Schema(
         url: {
           type: String,
         },
+        size: {
+          type: Number,
+        },
       },
     ],
     readBy: {

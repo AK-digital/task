@@ -12,11 +12,17 @@ export default function AttachmentsInfo({
   type = "affichage",
   showPreviewImageMessage,
   setShowPreviewImageMessage,
+  isUploading: externalIsUploading = false,
+  tooMuchAttachments = false,
+  setTooMuchAttachments = null,
+  tooHeavyAttachments = false,
+  setTooHeavyAttachments = null,
 }) {
   const [showAttachments, setShowAttachments] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const [fileSizes, setFileSizes] = useState({});
   const [previewImage, setPreviewImage] = useState(null);
+  const isUploading = externalIsUploading;
 
   const attachmentsLength = attachments?.length || 0;
 
@@ -119,13 +125,13 @@ export default function AttachmentsInfo({
         return "/icons/icon-TXT.svg";
       case "doc":
       case "docx":
-        return "/icons/icon-DOC.svg";
+        return "/icons/icon-word.svg";
       case "xls":
       case "xlsx":
-        return "/icons/icon-XLS.svg";
+        return "/icons/icon-excel.svg";
       case "ppt":
       case "pptx":
-        return "/icons/icon-PPT.svg";
+        return "/icons/icon-powerpoint.svg";
       case "zip":
       case "rar":
       case "7z":
@@ -251,8 +257,10 @@ export default function AttachmentsInfo({
     try {
       const zipFileWriter = new BlobWriter();
       const zipWriter = new ZipWriter(zipFileWriter);
+      const usedNames = new Set(); // Pour éviter les doublons de noms
 
-      for (const file of attachments) {
+      for (let index = 0; index < attachments.length; index++) {
+        const file = attachments[index];
         let response;
         let blob;
 
@@ -298,10 +306,25 @@ export default function AttachmentsInfo({
           }
         }
 
-        await zipWriter.add(
-          file.name || `file-${Date.now()}`,
-          new BlobReader(blob)
-        );
+        // Générer un nom unique pour éviter les conflits
+        let fileName = file.name || `file-${Date.now()}-${index}`;
+        let uniqueFileName = fileName;
+        let counter = 1;
+
+        // Si le nom existe déjà, ajouter un suffixe
+        while (usedNames.has(uniqueFileName)) {
+          const nameWithoutExt =
+            fileName.substring(0, fileName.lastIndexOf(".")) || fileName;
+          const extension = fileName.includes(".")
+            ? fileName.substring(fileName.lastIndexOf("."))
+            : "";
+          uniqueFileName = `${nameWithoutExt} (${counter})${extension}`;
+          counter++;
+        }
+
+        usedNames.add(uniqueFileName);
+
+        await zipWriter.add(uniqueFileName, new BlobReader(blob));
       }
 
       await zipWriter.close();
@@ -323,6 +346,9 @@ export default function AttachmentsInfo({
     if (!setAttachments) return;
     setAttachments([]);
     setCheckedList([]);
+    if (setTooMuchAttachments) {
+      setTooMuchAttachments(false); // Réinitialiser l'erreur
+    }
   }, [setAttachments]);
 
   const handleDeleteSingle = useCallback(
@@ -338,6 +364,11 @@ export default function AttachmentsInfo({
 
       setAttachments(newAttachments);
       setCheckedList(newCheckedList);
+
+      // Réinitialiser l'erreur si on a moins de 10 fichiers après suppression
+      if (newAttachments.length < 10 && setTooMuchAttachments) {
+        setTooMuchAttachments(false);
+      }
     },
     [attachments, checkedList, setAttachments]
   );
@@ -441,40 +472,43 @@ export default function AttachmentsInfo({
 
   return (
     <div
-      className="relative flex items-start gap-2 border-t border-color-border-color pb-2 w-full min-w-0"
+      className="relative flex justify-start flex-col gap-2 border-t border-color-border-color w-full min-w-0"
       // onMouseEnter={() => setShowAttachments(true)}
       // onMouseLeave={() => setShowAttachments(false)}
     >
       <div className="flex items-start gap-2 flex-shrink-0">
-        {!disable ? (
-          <>
+        <div className="flex items-start gap-2 ">
+          {!disable ? (
+            <>
+              <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
+                <Attachment
+                  attachments={attachments}
+                  setAttachments={setAttachments}
+                  label={label}
+                  setTooMuchAttachments={setTooMuchAttachments}
+                  setTooHeavyAttachments={setTooHeavyAttachments}
+                />
+              </span>
+              <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
+                <Trash2
+                  size={25}
+                  onClick={handleDeleteAll}
+                  className="cursor-pointer text-accent-color-dark group-hover:text-danger-color"
+                />
+              </span>
+            </>
+          ) : (
             <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
-              <Attachment
-                attachments={attachments}
-                setAttachments={setAttachments}
-                label={label}
-              />
-            </span>
-            <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
-              <Trash2
+              <Download
                 size={25}
-                onClick={handleDeleteAll}
-                className="cursor-pointer text-accent-color-dark group-hover:text-danger-color"
+                className="cursor-pointer text-accent-color-dark group-hover:text-accent-color"
+                onClick={handleDownloadZip}
               />
             </span>
-          </>
-        ) : (
-          <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
-            <Download
-              size={25}
-              className="cursor-pointer text-accent-color-dark group-hover:text-accent-color"
-              onClick={handleDownloadZip}
-            />
-          </span>
-        )}
+          )}
 
-        {/* Bouton TOUT pour supprimer ou télécharger toutes les pièces jointes */}
-        {/* {attachments.length > 1 && (
+          {/* Bouton TOUT pour supprimer ou télécharger toutes les pièces jointes */}
+          {/* {attachments.length > 1 && (
           <button
             onClick={isAffichage ? handleDownloadZip : handleDeleteAll}
             className={`flex justify-center items-center gap-1 px-2 py-1 rounded-sm text-xs font-medium transition-colors cursor-pointer ${
@@ -487,75 +521,86 @@ export default function AttachmentsInfo({
             <span>TOUT</span>
           </button>
         )} */}
-      </div>
-      <div className="items_AttachmentsInfo flex items-center gap-2 overflow-x-auto flex-1 min-w-0 pt-4 pb-1">
-        {attachments.map((file, index) => {
-          const hasUrl = !!file?.url && isDisplayableFile(file?.url);
-          const iconSrc = getFileIcon(file);
-          const validIconSrc =
-            iconSrc && iconSrc.trim() !== "" ? iconSrc : "/icons/file.svg";
+        </div>
+        <div className="items_AttachmentsInfo flex items-center gap-2 overflow-x-auto flex-1 min-w-0 pt-4 pb-1">
+          {attachments.map((file, index) => {
+            const hasUrl = !!file?.url && isDisplayableFile(file?.url);
+            const iconSrc = getFileIcon(file);
+            const validIconSrc =
+              iconSrc && iconSrc.trim() !== "" ? iconSrc : "/icons/file.svg";
 
-          let downloadUrl;
-          if (hasUrl) {
-            downloadUrl = getDownloadUrl(file?.url);
-          }
-          return (
-            <div
-              key={index}
-              className={`relative flex justify-center items-center gap-2 cursor-pointer bg-primary/80 rounded-sm p-1 transition-all duration-200 h-11 hover:translate-y-[-2px] ${
-                !isAffichage ? "hover:bg-secondary" : "hover:bg-third"
-              }`}
-              onClick={(e) => {
-                e.stopPropagation();
-                openImagePreview(file);
-              }}
-            >
-              {validIconSrc && (
-                <Image
-                  src={validIconSrc}
-                  alt={file?.name || "File"}
-                  width={35}
-                  height={35}
-                  className="rounded-sm object-cover aspect-square select-none"
-                />
-              )}
-              <div className="flex flex-col justify-between items-start gap-1 w-25">
-                <span
-                  title={file?.name}
-                  className="w-25 truncate text-xs text-center"
-                >
-                  {file?.name}
-                </span>
-                <span className="text-text-color-muted text-[11px]">
-                  {formatFileSize(getFileSize(file))}
-                </span>
-              </div>
-              <div className="flex flex-col justify-start h-full">
-                {isAffichage ? (
-                  <Download
-                    size={16}
-                    className="text-accent-color-dark hover:text-accent-color cursor-pointer transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDownloadSingle(file, index);
-                    }}
-                  />
-                ) : (
-                  <Trash2
-                    size={16}
-                    className="text-accent-color-dark hover:text-danger-color cursor-pointer transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteSingle(index);
-                    }}
+            let downloadUrl;
+            if (hasUrl) {
+              downloadUrl = getDownloadUrl(file?.url);
+            }
+            return (
+              <div
+                key={index}
+                className={`relative flex justify-center items-center gap-2 cursor-pointer bg-primary/80 rounded-sm p-1 transition-all duration-200 h-11 hover:translate-y-[-2px] ${
+                  !isAffichage ? "hover:bg-secondary" : "hover:bg-third"
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openImagePreview(file);
+                }}
+              >
+                {validIconSrc && (
+                  <Image
+                    src={validIconSrc}
+                    alt={file?.name || "File"}
+                    width={35}
+                    height={35}
+                    className="rounded-sm object-contain aspect-square select-none"
+                    unoptimized={validIconSrc.endsWith(".svg")}
                   />
                 )}
+                <div className="flex flex-col justify-between items-start gap-1 w-25">
+                  <span
+                    title={file?.name}
+                    className="w-25 truncate text-xs text-left"
+                  >
+                    {file?.name}
+                  </span>
+                  <span className="text-text-color-muted text-[11px]">
+                    {formatFileSize(getFileSize(file))}
+                  </span>
+                </div>
+                <div className="flex flex-col justify-start h-full">
+                  {isAffichage ? (
+                    <Download
+                      size={16}
+                      className="text-accent-color-dark hover:text-accent-color cursor-pointer transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDownloadSingle(file, index);
+                      }}
+                    />
+                  ) : (
+                    <Trash2
+                      size={16}
+                      className="text-accent-color-dark hover:text-danger-color cursor-pointer transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteSingle(index);
+                      }}
+                    />
+                  )}
+                </div>
               </div>
+            );
+          })}
+        </div>
+
+        {isUploading && (
+          <div className="flex items-center justify-center min-h-[44px] h-auto z-1000 p-2 mt-4 border-l-2 border-color-border-color">
+            <div className="flex items-center gap-2 text-xs text-text-color-muted">
+              <div className="w-3 h-3 border-2 border-accent-color border-t-transparent rounded-full animate-spin"></div>
+              <span>Envoi en cours...</span>
             </div>
-          );
-        })}
-      </div>
-      {/* <div
+          </div>
+        )}
+
+        {/* <div
         className={`absolute flex flex-col bottom-5.5 z-2001 shadow-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
           showAttachments ? "max-h-96" : "max-h-0"
         }`}
@@ -634,41 +679,53 @@ export default function AttachmentsInfo({
               </button>
             )}
           </div>
-                 </div>
+        </div>
        </div> */}
 
-      {/* Preview d'image en plein écran */}
-      {showPreviewImageMessage && previewImage && (
-        <div
-          className="absolute inset-0 w-screen h-screen bg-black bg-opacity-75 flex items-center justify-center"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 99999,
-          }}
-          onClick={closeImagePreview}
-        >
-          <div className="relative w-full h-full flex items-center justify-center">
-            <button
-              onClick={closeImagePreview}
-              className="absolute top-4 right-4 p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all"
-              style={{ zIndex: 100000 }}
-            >
-              <X size={24} className="text-white" />
-            </button>
-            <Image
-              src={previewImage}
-              alt="Preview"
-              width={1200}
-              height={800}
-              className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg"
-              onClick={(e) => e.stopPropagation()}
-            />
+        {/* Preview d'image en plein écran */}
+        {showPreviewImageMessage && previewImage && (
+          <div
+            className="absolute inset-0 w-screen h-screen bg-black bg-opacity-75 flex items-center justify-center"
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 99999,
+            }}
+            onClick={closeImagePreview}
+          >
+            <div className="relative w-full h-full flex items-center justify-center">
+              <button
+                onClick={closeImagePreview}
+                className="absolute top-4 right-4 p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all"
+                style={{ zIndex: 100000 }}
+              >
+                <X size={24} className="text-white" />
+              </button>
+              <Image
+                src={previewImage}
+                alt="Preview"
+                width={1200}
+                height={800}
+                className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
           </div>
-        </div>
+        )}
+      </div>
+      {tooMuchAttachments && (
+        <span className="text-xs text-danger-color">
+          Vous ne pouvez pas ajouter plus de 10 pièces jointes.
+        </span>
+      )}
+      {tooHeavyAttachments && (
+        <span className="text-xs text-danger-color">
+          Vous ne pouvez pas ajouter de pièces jointes trop lourdes au delà de
+          5MB.
+        </span>
       )}
     </div>
   );
