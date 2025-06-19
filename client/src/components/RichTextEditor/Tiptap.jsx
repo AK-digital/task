@@ -40,6 +40,8 @@ export default function Tiptap({
   const [isSent, setIsSent] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
+  const [tooMuchAttachments, setTooMuchAttachments] = useState(false);
+  const [tooHeavyAttachments, setTooHeavyAttachments] = useState(false);
   const isMessage = type === "message";
   const [attachments, setAttachments] = useState(
     isMessage ? message?.files || [] : task?.description?.files || []
@@ -316,7 +318,6 @@ export default function Tiptap({
       setIsMessagePending(true);
     }
     setPending(true);
-    setConvOpen(false);
 
     if (draft?.success) {
       await deleteDraft(draft?.data?._id, project?._id);
@@ -418,6 +419,7 @@ export default function Tiptap({
       setMessage("");
     }
     setPending(false);
+    setConvOpen(false);
   };
 
   const handleCancel = (e) => {
@@ -518,21 +520,35 @@ export default function Tiptap({
             <span>Brouillon enregistré</span>
           </div>
         )}
-        <div className="relative flex items-center gap-2 mx-2 mb-2 mt-auto">
+        <div className="relative flex items-center gap-2 p-2">
           {/* <Attachment
             attachments={attachments}
             setAttachments={setAttachments}
             editor={editor}
           /> */}
           {isNotEmpty([...attachments]) && (
-            <AttachmentsInfo
-              attachments={attachments}
-              setAttachments={setAttachments}
-              disable={false}
-              type="edition"
-              showPreviewImageMessage={showPreviewImageMessage}
-              setShowPreviewImageMessage={setShowPreviewImageMessage}
-            />
+            <div className="w-full min-w-0 h-full">
+              <AttachmentsInfo
+                attachments={attachments}
+                setAttachments={setAttachments}
+                disable={false}
+                type="edition"
+                showPreviewImageMessage={showPreviewImageMessage}
+                setShowPreviewImageMessage={setShowPreviewImageMessage}
+                isUploading={pending}
+                tooMuchAttachments={tooMuchAttachments}
+                setTooMuchAttachments={setTooMuchAttachments}
+                tooHeavyAttachments={tooHeavyAttachments}
+                setTooHeavyAttachments={setTooHeavyAttachments}
+              />
+              {attachments.length > 0 && (
+                <p className="text-sm text-gray-600">
+                  {attachments.length} fichier
+                  {attachments.length > 1 ? "s" : ""} ajouté
+                  {attachments.length > 1 ? "s" : ""}
+                </p>
+              )}
+            </div>
           )}
           {!isNotEmpty([...attachments]) && (
             <div className="flex items-center">
@@ -542,6 +558,8 @@ export default function Tiptap({
                 editor={editor}
                 label="Ajouter une pièce jointe"
                 className="group cursor-pointer"
+                setTooMuchAttachments={setTooMuchAttachments}
+                setTooHeavyAttachments={setTooHeavyAttachments}
               />
               <Reactions
                 element={message}

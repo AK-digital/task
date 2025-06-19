@@ -23,7 +23,7 @@ export default function AddReactions({
     type === "editor" || (uid !== author?._id && canReact);
 
   return (
-    <div className="relative top-[0.5px] cursor-pointer">
+    <div className="relative top-[0.5px] cursor-pointer pb-2">
       {shouldShowReactions && (
         <div className="flex">
           <SmilePlus

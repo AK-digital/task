@@ -132,7 +132,7 @@ export default function MentionsList({
                 >
                   {member?.user?.picture ? (
                     <Image
-                      src={member?.user?.picture || "/default-pfp.webp"}
+                      src={member?.user?.picture || "/default/default-pfp.webp"}
                       width={22}
                       height={22}
                       alt={`Photo de profil de ${member?.user?.firstName}`}

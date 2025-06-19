@@ -316,7 +316,7 @@ export function ProjectInvitationsList({
           <div>
             <div>
               <Image
-                src={"/default-pfp.webp"}
+                src={"/default/default-pfp.webp"}
                 width={32}
                 height={32}
                 alt={`Photo de profil de ${inv?.guestEmail}`}

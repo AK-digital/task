@@ -73,13 +73,13 @@ export default function Reactions({
   }
 
   return (
-    <div className="flex items-center gap-2 ml-4 mb-1">
+    <div className="flex items-center gap-2 ml-4">
       {isNotEmpty(element?.reactions) &&
         uniqueReactions.map((reaction, idx) => {
           const emoji = reaction?.emoji;
           const total = reaction?.total;
           const users = reaction?.users;
-
+          console.log("element ", emoji);
           return (
             <div
               key={idx}

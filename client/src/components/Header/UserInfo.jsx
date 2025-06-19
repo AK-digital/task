@@ -10,7 +10,7 @@ export default function UserInfo() {
   return (
     <Link href={"/profile"}>
       <Image
-        src={user?.picture || "/default-pfp.webp"}
+        src={user?.picture || "/default/default-pfp.webp"}
         alt={`Photo de profil de ${user?.firstName}`}
         width={40}
         height={40}

@@ -130,7 +130,9 @@ export default function TaskDescription({
             <div className="flex items-center gap-2 select-none">
               {descriptionAuthor?.picture ? (
                 <Image
-                  src={descriptionAuthor?.picture || "/default-pfp.webp"}
+                  src={
+                    descriptionAuthor?.picture || "/default/default-pfp.webp"
+                  }
                   width={24}
                   height={24}
                   alt={`Photo de profil de ${descriptionAuthor?.firstName}`}
@@ -161,6 +163,13 @@ export default function TaskDescription({
                 showPreviewImageMessage={showPreviewImageMessage}
                 setShowPreviewImageMessage={setShowPreviewImageMessage}
               />
+            )}
+            {task?.description?.files.length > 0 && (
+              <p className="text-sm text-gray-600">
+                {task?.description?.files.length} fichier
+                {task?.description?.files.length > 1 ? "s" : ""} joint
+                {task?.description?.files.length > 1 ? "s" : ""}
+              </p>
             )}
           </div>
 

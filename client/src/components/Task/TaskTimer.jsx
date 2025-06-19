@@ -419,7 +419,7 @@ export function TimeTrackingSessions({
             >
               <div className="flex items-center gap-2 select-none">
                 <Image
-                  src={user?.picture || "/default-pfp.webp"}
+                  src={user?.picture || "/default/default-pfp.webp"}
                   width={25}
                   height={25}
                   style={{ borderRadius: "50%" }}

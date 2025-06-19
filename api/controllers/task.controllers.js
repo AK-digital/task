@@ -474,9 +474,17 @@ export async function updateTaskDescription(req, res, next) {
           attachment.buffer,
           attachment.originalname
         );
+        const isTooHeavy = bufferResponse.bytes;
+        if (isTooHeavy > 5 * 1024 * 1024) {
+          return res.status(400).send({
+            success: false,
+            message: "Fichier trop lourd",
+          });
+        }
         const object = {
           name: attachment.originalname,
           url: bufferResponse?.secure_url,
+          size: isTooHeavy,
         };
         newFiles.push(object);
       }
