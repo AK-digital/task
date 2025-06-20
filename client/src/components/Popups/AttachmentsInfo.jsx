@@ -17,6 +17,7 @@ export default function AttachmentsInfo({
   setTooMuchAttachments = null,
   tooHeavyAttachments = false,
   setTooHeavyAttachments = null,
+  attachmentSize,
 }) {
   const [showAttachments, setShowAttachments] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
@@ -487,6 +488,7 @@ export default function AttachmentsInfo({
                   label={label}
                   setTooMuchAttachments={setTooMuchAttachments}
                   setTooHeavyAttachments={setTooHeavyAttachments}
+                  size={attachmentSize}
                 />
               </span>
               <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
@@ -599,88 +601,6 @@ export default function AttachmentsInfo({
             </div>
           </div>
         )}
-
-        {/* <div
-        className={`absolute flex flex-col bottom-5.5 z-2001 shadow-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
-          showAttachments ? "max-h-96" : "max-h-0"
-        }`}
-      >
-        <div className="infos_AttachmentsInfo flex flex-col bg-secondary max-h-[calc(4*22.86px)] overflow-y-auto p-2 gap-2 grow border border-color-border-color border-b-0 rounded-t-sm">
-          {attachments.map(({ name, url }, index) => {
-            return (
-              <div
-                key={index}
-                className="flex items-center justify-between gap-2 h-5 "
-              >
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    name="checkbox"
-                    checked={checkedList[index] || false}
-                    onChange={() => toggleCheckbox(index)}
-                    className="cursor-pointer w-3 hover:border-inherit"
-                  />
-
-                  <a
-                    data-url={hasUrl ? "true" : "false"}
-                    target="_blank"
-                    href={hasUrl ? url : undefined}
-                    onClick={(e) => {
-                      if (!hasUrl) {
-                        e.preventDefault();
-                        }
-                    }}
-                    className="text-[0.85rem] text-text-color-muted whitespace-nowrap data-[url=false]:no-underline data-[url=false]:cursor-default data-[url=false]:hover:text-text-color-muted"
-                  >
-                    {name}
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="actions_AttachmentsInfo flex items-center justify-start gap-2 p-2 bg-secondary border border-color-border-color border-t-0 rounded-b-sm">
-          <button
-            onClick={toggleAll}
-            className="cursor-pointer px-2 py-1 text-small flex justify-center items-center gap-[5px] bg-color-medium-color rounded-sm whitespace-nowrap hover:bg-color-medium-color/80"
-          >
-            {!isAnyChecked ? (
-              <>
-                <ListChecks size={16} />
-                <span>Tout cocher</span>
-              </>
-            ) : (
-              <>
-              <LayoutList size={16} />
-              <span>Tout décocher</span>
-              </>
-            )}
-          </button>
-
-          <div className="flex gap-1">
-            {!isAffichage && isAnyChecked && (
-              <button
-                data-has-background="true"
-                onClick={() => handleDelete("delete")}
-                className="delete_AttachmentsInfo cursor-pointer px-2 py-1 text-small flex justify-center items-center gap-[5px] bg-danger-color whitespace-nowrap rounded-sm hover:bg-text-color-red"
-              >
-                <Trash2 size={16} />
-                <span>Tout supprimer</span>
-              </button>
-            )}
-            {isAffichage && isAnyChecked && (
-              <button
-                data-has-background="true"
-                onClick={handleDownloadZip}
-                className="download_AttachmentsInfo cursor-pointer px-2 py-1 text-small flex justify-center items-center gap-[5px] bg-color-medium-color whitespace-nowrap rounded-sm hover:bg-color-medium-color/80"
-              >
-                <Download size={16} />
-                <span>Télécharge le dossier Zip</span>
-              </button>
-            )}
-          </div>
-        </div>
-       </div> */}
 
         {/* Preview d'image en plein écran */}
         {showPreviewImageMessage && previewImage && (
