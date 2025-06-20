@@ -389,3 +389,11 @@ export function isMeaningfulContent(html) {
   // Retourner true s'il y a du texte OU des images
   return hasText || hasImages;
 }
+
+
+export function isStringPlural(str, elt = []) {
+  if (elt?.length > 1) {
+    return str + "s";
+  }
+  return str;
+}

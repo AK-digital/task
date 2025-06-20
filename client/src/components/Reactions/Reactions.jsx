@@ -73,7 +73,7 @@ export default function Reactions({
   }
 
   return (
-    <div className="flex items-center gap-2 ml-4">
+    <div className="flex items-center gap-2 ">
       {isNotEmpty(element?.reactions) &&
         uniqueReactions.map((reaction, idx) => {
           const emoji = reaction?.emoji;

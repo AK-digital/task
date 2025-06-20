@@ -140,12 +140,18 @@ export async function getDraft(req, res) {
 
 export async function updateDraft(req, res) {
   try {
-    if (!req.params.id && !req.body.content) {
+    if (!req.params.id || !req.body.content) {
       return res.status(400).send({
         success: false,
         message: "Missing required parameters",
       });
     }
+
+    console.log("🔄 UPDATING DRAFT:", {
+      draftId: req.params.id,
+      content: req.body.content?.substring(0, 100) + "...",
+      projectId: req.query.projectId
+    });
 
     const updatedDraft = await DraftModel.findByIdAndUpdate(
       { _id: req.params.id },
@@ -158,12 +164,19 @@ export async function updateDraft(req, res) {
     );
 
     if (!updatedDraft) {
+      console.log("❌ DRAFT NOT FOUND FOR UPDATE:", {
+        draftId: req.params.id,
+        projectId: req.query.projectId
+      });
+
       return res.status(404).send({
         success: false,
         message: "Draft not found",
-        data: updatedDraft,
+        data: null,
       });
     }
+
+    console.log("✅ DRAFT UPDATED SUCCESSFULLY:", updatedDraft._id);
 
     return res.status(200).send({
       success: true,
@@ -171,6 +184,7 @@ export async function updateDraft(req, res) {
       data: updatedDraft,
     });
   } catch (err) {
+    console.log("❌ UPDATE DRAFT ERROR:", err.message);
     return res.status(500).send({
       success: false,
       message: err?.message || "Internal server error",

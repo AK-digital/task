@@ -3,7 +3,7 @@ import moment from "moment";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { PanelTop } from "lucide-react";
+import { ClipboardCheck, PanelTop } from "lucide-react";
 import socket from "@/utils/socket";
 import useSWR, { mutate } from "swr";
 import { getDrafts } from "@/api/draft";
@@ -47,16 +47,14 @@ export default function TaskDescription({
   const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
 
   useEffect(() => {
-    if (draft?.success) {
-      setEdit("description");
-      setDescription(draft?.data?.content);
-    }
+    // Toujours afficher la vraie description sauvegardée, pas le contenu du draft
+    setDescription(task?.description?.text);
 
+    // Ne pas ouvrir l'éditeur automatiquement même s'il y a un draft
     if (!draft?.success) {
-      setDescription(task?.description?.text);
       setEdit("");
     }
-  }, [draft]);
+  }, [draft, task?.description?.text]);
 
   const handleEditDescription = () => {
     if (!isAuthorized) return;
@@ -206,12 +204,20 @@ export default function TaskDescription({
         <div
           onClick={handleEditDescription}
           data-role={isAuthorized}
-          className="border border-color-border-color py-3 px-6 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
+          className="flex justify-between items-center border border-color-border-color py-3 px-6 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
         >
           {isAuthorized ? (
             <p>Ajouter une description</p>
           ) : (
             <p>L'ajout de description est désactivé en tant qu'invité</p>
+          )}
+          {draft?.success && (
+            <div className="flex items-center gap-2">
+              <ClipboardCheck size={16} className="text-text-color-muted" />
+              <p className="text-xs text-text-color-muted">
+                Brouillon sauvegardé
+              </p>
+            </div>
           )}
         </div>
       )}

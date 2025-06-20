@@ -12,7 +12,7 @@ import { deleteDraft, saveDraft, updateDraft } from "@/api/draft";
 import { useDebouncedCallback } from "use-debounce";
 import Attachment from "../Attachment/Attachment";
 import Reactions from "../Reactions/Reactions";
-import { isMeaningfulContent, isNotEmpty } from "@/utils/utils";
+import { isMeaningfulContent, isNotEmpty, isStringPlural } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
 import { tiptapOptions } from "@/utils/tiptapOptions";
 import Toolbar from "./Toolbar";
@@ -40,6 +40,7 @@ export default function Tiptap({
   const [isSent, setIsSent] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
+  const [isLoadingDraftInEditor, setIsLoadingDraftInEditor] = useState(false);
   const [tooMuchAttachments, setTooMuchAttachments] = useState(false);
   const [tooHeavyAttachments, setTooHeavyAttachments] = useState(false);
   const isMessage = type === "message";
@@ -48,8 +49,6 @@ export default function Tiptap({
   );
 
   const imgRegex = /<img[^>]*>/i;
-
-  console.log(attachments);
 
   // Utilisation de useDebouncedCallback pour sauvegarder le draft avec un délai
   const debouncedHandleDraft = useDebouncedCallback(async (htmlContent) => {
@@ -72,7 +71,25 @@ export default function Tiptap({
             await deleteDraft(response?.data?._id, project?._id);
             await mutateDraft();
           } else {
-            await updateDraft(response?.data?._id, project?._id, htmlContent);
+            const updateResponse = await updateDraft(
+              response?.data?._id,
+              project?._id,
+              htmlContent
+            );
+
+            // Si la mise à jour échoue car le draft n'existe plus, essayer de le recréer
+            if (
+              !updateResponse?.success &&
+              updateResponse?.message === "Draft not found"
+            ) {
+              const recreateResponse = await saveDraft(
+                project?._id,
+                task?._id,
+                type,
+                htmlContent
+              );
+            }
+
             await mutateDraft();
           }
         } else {
@@ -91,8 +108,10 @@ export default function Tiptap({
 
   useEffect(() => {
     async function deleteDraftIfSent() {
-      await deleteDraft(draft?.data?._id, project?._id);
-      await mutateDraft();
+      if (isSent && draft?.data?._id) {
+        await deleteDraft(draft?.data?._id, project?._id);
+        await mutateDraft();
+      }
     }
 
     deleteDraftIfSent();
@@ -135,22 +154,16 @@ export default function Tiptap({
   }, [isDraftSaved]);
 
   const handleChange = async (editor) => {
-    console.log("🔄 handleChange called:", {
-      editorHTML: editor.getHTML(),
-      editorText: editor.getText(),
-      hasContent: !!editor.getText(),
-      currentIsTaggedUsers: isTaggedUsers,
-    });
-
     setPlainText(editor.getHTML());
     setValue(editor.getText());
     setIsSent(false);
 
     const hasImg = imgRegex.test(editor.getHTML());
     if (draft) {
-      if (!hasImg && !editor.getText()) {
+      if (!hasImg && !editor.getText() && !isLoadingDraftInEditor) {
         await deleteDraft(draft?.data?._id, project?._id);
         setIsSent(true);
+      } else if (isLoadingDraftInEditor) {
       } else {
         debouncedHandleDraft(editor.getHTML());
       }
@@ -200,6 +213,37 @@ export default function Tiptap({
   const editor = useEditor(
     tiptapOptions(type, value, isTaggedUsers, handleChange)
   );
+
+  // Effet pour charger le draft dans l'éditeur une fois qu'il est prêt
+  useEffect(() => {
+    if (
+      editor &&
+      !editor.isDestroyed &&
+      draft?.success &&
+      draft?.data?.content &&
+      !isSent
+    ) {
+      setIsLoadingDraftInEditor(true);
+      editor.commands.setContent(draft.data.content);
+
+      // SYNCHRONISER LES STATES avec le contenu de l'éditeur SEULEMENT si différent
+      const newHTML = editor.getHTML();
+      const newText = editor.getText();
+
+      if (plainText !== newHTML) {
+        setPlainText(newHTML);
+      }
+
+      if (value !== newText) {
+        setValue(newText);
+      }
+
+      // Empêcher la suppression automatique pendant 1 seconde
+      setTimeout(() => {
+        setIsLoadingDraftInEditor(false);
+      }, 1000);
+    }
+  }, [editor, draft?.success, draft?.data?.content, isSent]);
 
   useEffect(() => {
     // Regex to match all span tags with data-id attribute
@@ -379,7 +423,7 @@ export default function Tiptap({
       setPlainText("");
       setValue("");
       setPending(false);
-      setConvOpen(false);
+      setConvOpen("");
       return;
     }
 
@@ -419,27 +463,24 @@ export default function Tiptap({
       setMessage("");
     }
     setPending(false);
-    setConvOpen(false);
+    setConvOpen("");
   };
 
   const handleCancel = (e) => {
     e.preventDefault();
 
     if (type === "description") {
-      // Nettoyer le draft si nécessaire
-      if (draft?.success) {
-        deleteDraft(draft?.data?._id, project?._id).then(() => {
-          mutateDraft();
-        });
-      }
-
       // Fermer l'édition de la description et nettoyer les champs
-      setEditDescription(false);
+      setEditDescription("");
       setPlainText("");
       setValue("");
+
+      if (setOptimisticDescription) {
+        setOptimisticDescription(task?.description?.text || "");
+      }
     } else {
       // Comportement par défaut pour les messages
-      setConvOpen(false);
+      setConvOpen("");
     }
   };
 
@@ -521,11 +562,6 @@ export default function Tiptap({
           </div>
         )}
         <div className="relative flex items-center gap-2 p-2">
-          {/* <Attachment
-            attachments={attachments}
-            setAttachments={setAttachments}
-            editor={editor}
-          /> */}
           {isNotEmpty([...attachments]) && (
             <div className="w-full min-w-0 h-full">
               <AttachmentsInfo
@@ -540,18 +576,16 @@ export default function Tiptap({
                 setTooMuchAttachments={setTooMuchAttachments}
                 tooHeavyAttachments={tooHeavyAttachments}
                 setTooHeavyAttachments={setTooHeavyAttachments}
+                attachmentSize={25}
               />
-              {attachments.length > 0 && (
-                <p className="text-sm text-gray-600">
-                  {attachments.length} fichier
-                  {attachments.length > 1 ? "s" : ""} ajouté
-                  {attachments.length > 1 ? "s" : ""}
-                </p>
-              )}
+              <p className="text-sm text-gray-600">
+                {attachments.length} {isStringPlural("fichier", attachments)}{" "}
+                {isStringPlural("ajouté", attachments)}
+              </p>
             </div>
           )}
           {!isNotEmpty([...attachments]) && (
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <Attachment
                 attachments={attachments}
                 setAttachments={setAttachments}
@@ -560,6 +594,7 @@ export default function Tiptap({
                 className="group cursor-pointer"
                 setTooMuchAttachments={setTooMuchAttachments}
                 setTooHeavyAttachments={setTooHeavyAttachments}
+                size={18}
               />
               <Reactions
                 element={message}

@@ -1,33 +1,19 @@
-import Document from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
-import Strike from "@tiptap/extension-strike";
-import Heading from "@tiptap/extension-heading";
-import BulletList from "@tiptap/extension-bullet-list";
-import OrderedList from "@tiptap/extension-ordered-list";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
-import CodeBlock from "@tiptap/extension-code-block";
-import Code from "@tiptap/extension-code";
-import Blockquote from "@tiptap/extension-blockquote";
 import Mention from "@tiptap/extension-mention";
 
 export function tiptapOptions(type, value, isTaggedUsers, handleChange, onImagePaste = null) {
   return {
     extensions: [
-      StarterKit,
-      Document,
-      Bold,
-      Italic,
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+      }),
+      // Extensions NOT included in StarterKit
       Underline,
-      Strike,
-      Heading.configure({ levels: [1, 2, 3] }),
-      BulletList,
-      OrderedList,
       Link.configure({
         openOnClick: false,
         autolink: true,
@@ -38,9 +24,6 @@ export function tiptapOptions(type, value, isTaggedUsers, handleChange, onImageP
         allowBase64: true,
       }),
       Dropcursor,
-      CodeBlock,
-      Code,
-      Blockquote,
       Placeholder.configure({
         placeholder: `Entrez votre ${type} et mentionnez les autres avec @`,
       }),

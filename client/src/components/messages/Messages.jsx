@@ -3,7 +3,7 @@ import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
 import { useCallback, useEffect, useState } from "react";
 import socket from "@/utils/socket";
-import { MessagesSquareIcon } from "lucide-react";
+import { ClipboardCheck, MessagesSquareIcon } from "lucide-react";
 import Tiptap from "../RichTextEditor/Tiptap";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { useMessages } from "../../../hooks/useMessages";
@@ -47,9 +47,7 @@ export default function Messages({
   }, [socket]);
 
   useEffect(() => {
-    setEdit("");
     if (draft?.success) {
-      setEdit(message?._id);
       setMessage(draft?.data?.content);
     }
 
@@ -63,7 +61,7 @@ export default function Messages({
     if (!isAuthorized) return;
 
     setEdit(message?._id);
-  }, [project]);
+  }, [project, message, edit]);
 
   return (
     <div className="flex flex-col gap-[15px]">
@@ -111,7 +109,7 @@ export default function Messages({
       )}
       {edit !== message?._id && !messageLoading && (
         <div
-          className="border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
+          className="flex justify-between items-center border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
           onClick={handleIsOpen}
           data-role={isAuthorized}
         >
@@ -119,6 +117,14 @@ export default function Messages({
             <p>Rédiger une réponse et mentionner des utilisateurs avec @</p>
           ) : (
             <p>Impossible de rédiger un message en tant qu'invité</p>
+          )}
+          {draft?.success && (
+            <div className="flex items-center gap-2">
+              <ClipboardCheck size={16} className="text-text-color-muted" />
+              <p className="text-xs text-text-color-muted">
+                Brouillon sauvegardé
+              </p>
+            </div>
           )}
         </div>
       )}

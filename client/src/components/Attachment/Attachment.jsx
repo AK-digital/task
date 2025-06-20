@@ -7,6 +7,7 @@ export default function Attachment({
   editor = null, // Ajouter l'éditeur pour pouvoir y insérer des images
   setTooMuchAttachments,
   setTooHeavyAttachments,
+  size = 18,
 }) {
   const allowedMimetypes = [
     // Images déjà présentes
@@ -90,7 +91,7 @@ export default function Attachment({
     <div>
       <label className={``} data-label={isPaperclip} htmlFor="attachment">
         <Paperclip
-          size={25}
+          size={size}
           className="cursor-pointer text-accent-color-dark hover:text-accent-color group-hover:text-accent-color"
         />
       </label>
