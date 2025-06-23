@@ -27,6 +27,7 @@ router.post(
 );
 
 router.put("/:id", authMiddlewares.auth, templateControllers.updateTemplate);
+router.patch("/private/:id", authMiddlewares.auth, templateControllers.updateTemplateVisibility);
 
 router.delete("/:id", authMiddlewares.auth, templateControllers.deleteTemplate);
 

@@ -104,7 +104,7 @@ export default function Tiptap({
       setIsLoadingDraft(false);
       setIsDraftSaved(true);
     }
-  }, 3000); // Délai de 3 secondes
+  }, 500); // Délai de 0.5 secondes
 
   useEffect(() => {
     async function deleteDraftIfSent() {

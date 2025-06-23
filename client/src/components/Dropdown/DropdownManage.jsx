@@ -41,6 +41,16 @@ export default function DropdownManage({
         >
           <ul className="flex justify-center items-center flex-col gap-0 w-full border border-color-border-color rounded-sm max-h-[200px] overflow-y-auto">
             <li className="group flex justify-start items-center w-full h-full">
+              {canInvite && (
+                <GuestFormResend
+                  project={project}
+                  setIsPopup={setIsPopup}
+                  mutateProjectInvitation={mutateProjectInvitation}
+                  currentEmail={inv?.guestEmail}
+                />
+              )}
+            </li>
+            <li className="group flex justify-start items-center w-full h-full">
               {canDelete && (
                 <form action={formAction} className="w-full">
                   <input
@@ -65,21 +75,13 @@ export default function DropdownManage({
                   >
                     <X
                       size={16}
-                      className="transition-all duration-200 text-text-color-muted group-hover:text-text-dark-color"
+                      className="transition-all duration-200 text-text-color-red/80 group-hover:text-text-color-red"
                     />
-                    <span className="text-small">Retirer</span>
+                    <span className="text-small text-text-color-red/80  group-hover:text-text-color-red">
+                      Retirer
+                    </span>
                   </button>
                 </form>
-              )}
-            </li>
-            <li className="group flex justify-start items-center w-full h-full">
-              {canInvite && (
-                <GuestFormResend
-                  project={project}
-                  setIsPopup={setIsPopup}
-                  mutateProjectInvitation={mutateProjectInvitation}
-                  currentEmail={inv?.guestEmail}
-                />
               )}
             </li>
           </ul>

@@ -30,6 +30,8 @@ router.post(
   boardTemplateControllers.useBoardTemplate
 );
 
+router.patch("/private/:id", authMiddlewares.auth, boardTemplateControllers.updateBoardTemplateVisibility);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,
