@@ -170,3 +170,25 @@ export async function deleteTemplate(templateId) {
     console.log(err.message || "Une erreur s'est produite");
   }
 }
+
+export async function updateTemplateVisibility(templateId) {
+  try {
+    const res = await useAuthFetch(
+      `template/private/${templateId}`,
+      "PATCH",
+      "application/json"
+    );
+
+    const data = await res.json();
+
+    if (!data?.success) {
+      throw new Error(data?.message || "Une erreur s'est produite");
+    }
+
+    revalidateTag("templates");
+
+    return data;
+  } catch (err) {
+    console.log(err.message || "Une erreur s'est produite");
+  }
+}

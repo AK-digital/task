@@ -7,6 +7,7 @@ import {
   useCustomTemplate,
   deleteTemplate,
   getPublicTemplates,
+  updateTemplateVisibility,
 } from "@/api/template";
 import { List, ListTodo, X, Plus } from "lucide-react";
 import { usePrivateTemplate } from "@/app/hooks/usePrivateTemplate";
@@ -49,6 +50,20 @@ export default function TemplateProjectStep({ onComplete }) {
       setTimeout(() => handleTemplateSelect(publicTemplates[0]), 0);
     }
   }
+  const handleUpdateTemplateVisibility = async (templateId) => {
+    try {
+      const result = await updateTemplateVisibility(templateId);
+      if (result?.success) {
+        mutatePrivateTemplates();
+        mutatePublicTemplates();
+      }
+    } catch (err) {
+      alert(
+        err.message ||
+          "Une erreur s'est produite lors de la mise à jour de la visibilité du modèle"
+      );
+    }
+  };
 
   const handleTemplateSelect = (template) => {
     setSelectedTemplate(template);
@@ -481,30 +496,55 @@ export default function TemplateProjectStep({ onComplete }) {
                   </div>
                 ))}
               </div>
+              <div className="flex justify-start items-center gap-2 ml-8 mb-4">
+                {selectedTemplate?.author?.toString() === uid && (
+                  <>
+                    <button
+                      className="text-text-color-red cursor-pointer underline text-small bg-transparent rounded-none p-0 hover:bg-transparent hover:shadow-none hover:no-underline"
+                      onClick={() =>
+                        handleDeleteTemplate(
+                          selectedTemplate._id,
+                          selectedTemplate.name
+                        )
+                      }
+                      style={{
+                        opacity:
+                          deletingTemplate === selectedTemplate._id ? 0.6 : 1,
+                        pointerEvents:
+                          deletingTemplate === selectedTemplate._id
+                            ? "none"
+                            : "auto",
+                      }}
+                    >
+                      {deletingTemplate === selectedTemplate._id
+                        ? "Suppression..."
+                        : "Supprimer le modèle"}
+                    </button>
 
-              {selectedTemplate?.author?.toString() === uid && (
-                <a
-                  className="text-text-color-red cursor-pointer underline text-small self-start ml-8 mb-4 hover:no-underline"
-                  onClick={() =>
-                    handleDeleteTemplate(
-                      selectedTemplate._id,
-                      selectedTemplate.name
-                    )
-                  }
-                  style={{
-                    opacity:
-                      deletingTemplate === selectedTemplate._id ? 0.6 : 1,
-                    pointerEvents:
-                      deletingTemplate === selectedTemplate._id
-                        ? "none"
-                        : "auto",
-                  }}
-                >
-                  {deletingTemplate === selectedTemplate._id
-                    ? "Suppression..."
-                    : "Supprimer le modèle"}
-                </a>
-              )}
+                    <div className="flex justify-end items-center gap-2">
+                      {selectedTemplate.private ? (
+                        <button
+                          onClick={() =>
+                            handleUpdateTemplateVisibility(selectedTemplate._id)
+                          }
+                          className="text-text-dark-color cursor-pointer underline text-small bg-transparent rounded-none p-0 hover:bg-transparent hover:shadow-none hover:no-underline"
+                        >
+                          Rendre le modèle privé
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() =>
+                            handleUpdateTemplateVisibility(selectedTemplate._id)
+                          }
+                          className="text-text-dark-color cursor-pointer underline text-small bg-transparent rounded-none p-0 hover:bg-transparent hover:shadow-none hover:no-underline"
+                        >
+                          Rendre le modèle public
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           )
         )}

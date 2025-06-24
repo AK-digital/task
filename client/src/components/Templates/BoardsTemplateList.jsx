@@ -10,6 +10,7 @@ import { AuthContext } from "@/context/auth";
 import { isNotEmpty } from "@/utils/utils";
 import { useContext, useState } from "react";
 import useSWR, { mutate } from "swr";
+import DropdownManageTemplate from "../Dropdown/DropdownManageTemplate";
 
 export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
   const { uid } = useContext(AuthContext);
@@ -104,13 +105,13 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                       key={template._id}
                       className="flex items-center justify-between"
                     >
-                      <div>
-                        <span>{template.name}</span>
-                      </div>
+                      <span className="truncate max-w-50 min-w-0">
+                        {template.name}
+                      </span>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          className="p-2 rounded-sm"
+                          className="flex justify-center items-center gap-[5px] h-8 rounded-sm text-small w-20"
                           onClick={(e) =>
                             handleUseBoardTemplate(
                               e,
@@ -121,15 +122,16 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                         >
                           Utiliser
                         </button>
-                        <button
-                          type="button"
-                          className="p-2 rounded-sm bg-danger-color"
-                          onClick={(e) =>
-                            handleDeleteBoardTemplate(e, template?._id)
+                        <DropdownManageTemplate
+                          handleDeleteBoardTemplate={handleDeleteBoardTemplate}
+                          mutatePrivateBoardTemplates={
+                            mutatePrivateBoardTemplates
                           }
-                        >
-                          Supprimer
-                        </button>
+                          mutatePublicBoardTemplates={
+                            mutatePublicBoardTemplates
+                          }
+                          template={template}
+                        />
                       </div>
                     </li>
                   ))}
@@ -156,7 +158,9 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                     className="flex items-center justify-between"
                   >
                     <div className="flex justify-center items-center gap-2 ">
-                      <span>{template.name}</span>
+                      <span className="truncate max-w-50 min-w-0">
+                        {template.name}
+                      </span>
                       {template?.author?.toString() === uid && (
                         <span className="text-small">(vous)</span>
                       )}
@@ -164,7 +168,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        className="p-2 rounded-sm"
+                        className="flex justify-center items-center gap-[5px] h-8 rounded-sm text-small w-20"
                         onClick={(e) =>
                           handleUseBoardTemplate(e, template?._id)
                         }
@@ -172,19 +176,16 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
                         Utiliser
                       </button>
                       {template?.author?.toString() === uid && (
-                        <button
-                          type="button"
-                          className="p-2 rounded-sm bg-danger-color"
-                          onClick={(e) =>
-                            handleDeleteBoardTemplate(
-                              e,
-                              template?._id,
-                              template?.private
-                            )
+                        <DropdownManageTemplate
+                          handleDeleteBoardTemplate={handleDeleteBoardTemplate}
+                          mutatePrivateBoardTemplates={
+                            mutatePrivateBoardTemplates
                           }
-                        >
-                          Supprimer
-                        </button>
+                          mutatePublicBoardTemplates={
+                            mutatePublicBoardTemplates
+                          }
+                          template={template}
+                        />
                       )}
                     </div>
                   </li>

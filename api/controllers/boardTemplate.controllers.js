@@ -164,6 +164,50 @@ export async function useBoardTemplate(req, res, next) {
   }
 }
 
+export async function updateBoardTemplateVisibility(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const template = await BoardTemplateModel.findById({
+      _id: req.params.id,
+    });
+
+    if (!template) {
+      return res.status(404).send({
+        success: false,
+        message: "Modèle non trouvé",
+        data: [],
+      });
+    }
+
+    if (template?.author.toString() !== authUser?._id.toString()) {
+      return res.status(403).send({
+        success: false,
+        message: "Vous n'avez pas les permissions pour mettre à jour la visibilité de ce modèle",
+      });
+    }
+
+    const updatedTemplate = await BoardTemplateModel.findByIdAndUpdate(
+      { _id: req.params.id },
+      { private: !template.private },
+      { new: true }
+    );
+
+    return res.status(200).send({
+      success: true,
+      message: "Visibilité du modèle mise à jour avec succès",
+      data: updatedTemplate,
+    });
+
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur s'est produite lors de la mise à jour de la visibilité du modèle",
+    });
+  }
+}
+
 export async function deleteBoardTemplate(req, res, next) {
   try {
     const authUser = res.locals.user;

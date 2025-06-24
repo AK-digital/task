@@ -118,3 +118,29 @@ export async function deleteBoardTemplate(templateId) {
     };
   }
 }
+
+export async function updateBoardTemplateVisibility(templateId) {
+  try {
+    const res = await useAuthFetch(
+      `board-template/private/${templateId}`,
+      "PATCH",
+      "application/json"
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
+  } catch (err) {
+    console.log(err);
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur s'est produite lors de la mise à jour de la visibilité du modèle",
+    };
+  }
+}
