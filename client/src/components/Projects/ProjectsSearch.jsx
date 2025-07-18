@@ -15,7 +15,7 @@ export default function ProjectsSearch({ setQueries }) {
   }, 600);
 
   return (
-    <div className="container_ProjectsSearch flex items-center gap-2 p-2 w-full max-w-[42vw] transition-all duration-150 ease-in-out border-b border-color-border-color">
+    <div className="container_ProjectsSearch flex items-center gap-2 p-2 w-full transition-all duration-150 ease-in-out border-b border-color-border-color">
       <Search size={24} />
       <input
         type="search"
