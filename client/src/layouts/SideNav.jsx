@@ -72,7 +72,7 @@ export default function SideNav() {
               )}
             </Link>
           </div>
-          <nav className="relative flex flex-col gap-2 flex-1 max-h-[60svh] overflow-y-auto scroll-smooth">
+          <nav className="relative flex flex-col gap-2 flex-1 max-h-[50svh] overflow-y-auto scroll-smooth no-scrollbar">
             {favoritesLoading ? (
               <ProjectSideNavSkeleton />
             ) : (

@@ -90,7 +90,8 @@ export default function Tiptap({
               );
             }
 
-            await mutateDraft();
+            // Ne pas recharger les données après une mise à jour réussie pour éviter le reset
+            // await mutateDraft();
           }
         } else {
           setPlainText("");
@@ -99,8 +100,8 @@ export default function Tiptap({
         }
       }
 
-      // If the draft is created successfully, we mutate it
-      await mutateDraft();
+      // Ne pas recharger les données après une création réussie pour éviter le reset
+      // await mutateDraft();
       setIsLoadingDraft(false);
       setIsDraftSaved(true);
     }
@@ -223,25 +224,32 @@ export default function Tiptap({
       draft?.data?.content &&
       !isSent
     ) {
-      setIsLoadingDraftInEditor(true);
-      editor.commands.setContent(draft.data.content);
+      // Vérifier si le contenu du draft est différent de celui de l'éditeur
+      const currentEditorContent = editor.getHTML();
+      const draftContent = draft.data.content;
 
-      // SYNCHRONISER LES STATES avec le contenu de l'éditeur SEULEMENT si différent
-      const newHTML = editor.getHTML();
-      const newText = editor.getText();
+      // Ne recharger que si le contenu est vraiment différent
+      if (currentEditorContent !== draftContent) {
+        setIsLoadingDraftInEditor(true);
+        editor.commands.setContent(draftContent);
 
-      if (plainText !== newHTML) {
-        setPlainText(newHTML);
+        // SYNCHRONISER LES STATES avec le contenu de l'éditeur SEULEMENT si différent
+        const newHTML = editor.getHTML();
+        const newText = editor.getText();
+
+        if (plainText !== newHTML) {
+          setPlainText(newHTML);
+        }
+
+        if (value !== newText) {
+          setValue(newText);
+        }
+
+        // Empêcher la suppression automatique pendant 1 seconde
+        setTimeout(() => {
+          setIsLoadingDraftInEditor(false);
+        }, 1000);
       }
-
-      if (value !== newText) {
-        setValue(newText);
-      }
-
-      // Empêcher la suppression automatique pendant 1 seconde
-      setTimeout(() => {
-        setIsLoadingDraftInEditor(false);
-      }, 1000);
     }
   }, [editor, draft?.success, draft?.data?.content, isSent]);
 
