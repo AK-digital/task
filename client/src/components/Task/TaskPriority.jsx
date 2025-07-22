@@ -45,7 +45,7 @@ export default function TaskPriority({ task }) {
 
     const response = await updateTaskPriority(
       task?._id,
-      project?._id,
+      project?._id || task?.projectId?._id,
       priority?._id
     );
 
@@ -72,7 +72,7 @@ export default function TaskPriority({ task }) {
     const randomColor =
       availableColors[Math.floor(Math.random() * availableColors?.length)];
 
-    const response = await savePriority(project?._id, {
+    const response = await savePriority(project?._id || task?.projectId?._id, {
       name: "Nouvelle priorité",
       color: randomColor,
     });
