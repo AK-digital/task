@@ -6,7 +6,13 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Mention from "@tiptap/extension-mention";
 
-export function tiptapOptions(type, value, isTaggedUsers, handleChange, onImagePaste = null) {
+export function tiptapOptions(
+  type,
+  value,
+  isTaggedUsers,
+  handleChange,
+  onImagePaste = null
+) {
   return {
     extensions: [
       StarterKit.configure({
@@ -65,16 +71,27 @@ export function tiptapOptions(type, value, isTaggedUsers, handleChange, onImageP
               const url = reader.result;
 
               // Insert the image into the editor
-              view.dispatch(
-                view.state.tr.replaceSelectionWith(
-                  view.state.schema.nodes.image.create({ src: url })
-                )
-              );
+              const { state } = view;
+              const { tr } = state;
+              const imageNode = state.schema.nodes.image.create({ src: url });
+              const paragraphNode = state.schema.nodes.paragraph.create();
+
+              // Insérer l'image puis un paragraphe vide et positionner le curseur
+              const transaction = tr
+                .replaceSelectionWith(imageNode)
+                .insert(tr.selection.to, paragraphNode)
+                .setSelection(
+                  state.selection.constructor.near(
+                    tr.doc.resolve(tr.selection.to)
+                  )
+                );
+
+              view.dispatch(transaction);
 
               // Si on a un callback pour gérer l'image collée, l'appeler
-              if (onImagePaste && typeof onImagePaste === 'function') {
+              if (onImagePaste && typeof onImagePaste === "function") {
                 // Créer un nom de fichier basé sur le timestamp et le type
-                const extension = item.type.split('/')[1] || 'png';
+                const extension = item.type.split("/")[1] || "png";
                 const fileName = `image-${Date.now()}.${extension}`;
 
                 // Appeler le callback avec le fichier et l'URL

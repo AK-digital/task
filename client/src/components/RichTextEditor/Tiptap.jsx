@@ -507,7 +507,13 @@ export default function Tiptap({
 
         reader.onload = () => {
           const url = reader.result;
-          editor.chain().focus().setImage({ src: url }).run();
+          // Insérer l'image et positionner le curseur après
+          editor
+            .chain()
+            .focus()
+            .setImage({ src: url })
+            .insertContent("<p></p>")
+            .run();
         };
 
         reader.readAsDataURL(file);
