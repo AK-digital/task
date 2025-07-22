@@ -9,10 +9,14 @@ import { useProjectContext } from "@/context/ProjectContext";
 import TaskEditStatus from "./TaskEditStatus";
 import { saveStatus } from "@/api/status";
 import { colors } from "@/utils/utils";
+import FloatingMenu from "@/shared/components/FloatingMenu";
+import { useStatuses } from "../../../hooks/useStatus";
 
 export default function TaskStatus({ task, uid }) {
   const { project, mutateTasks, statuses, mutateStatuses } =
     useProjectContext();
+  const { statuses: statusesData, mutateStatuses: mutateStatusesData } =
+    useStatuses(project?._id || task?.projectId?._id);
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +31,7 @@ export default function TaskStatus({ task, uid }) {
     mode: "element",
   });
 
-  const canEdit = useUserRole(project, [
+  const canEdit = useUserRole(project || task?.projectId, [
     "owner",
     "manager",
     "team",
@@ -39,16 +43,21 @@ export default function TaskStatus({ task, uid }) {
     setCurrentStatus(status);
     setIsOpen(false);
 
-    const res = await updateTaskStatus(task?._id, project?._id, status?._id);
+    const res = await updateTaskStatus(
+      task?._id,
+      project?._id || task?.projectId?._id,
+      status?._id
+    );
 
     if (!res?.success) {
       setCurrentStatus(task?.status);
       return;
     }
 
-    socket.emit("update task", project?._id);
+    socket.emit("update task", project?._id || task?.projectId?._id);
     mutateTasks();
     mutateStatuses();
+    mutateStatusesData();
   }
 
   async function handleAddStatus() {
@@ -62,7 +71,7 @@ export default function TaskStatus({ task, uid }) {
     const randomColor =
       availableColors[Math.floor(Math.random() * availableColors?.length)];
 
-    const response = await saveStatus(project?._id, {
+    const response = await saveStatus(project?._id || task?.projectId?._id, {
       name: "Nouveau statut",
       color: randomColor,
     });
@@ -96,9 +105,9 @@ export default function TaskStatus({ task, uid }) {
   const currentBackgroundColor = hasStatus ? currentStatus?.color : "#b3bcc0";
 
   function listWidth() {
-    if (isEdit && statuses?.length > 5) {
+    if (isEdit && statusesData?.length > 5) {
       return true;
-    } else if (!isEdit && statuses?.length > 6) {
+    } else if (!isEdit && statusesData?.length > 6) {
       return true;
     }
 
@@ -106,25 +115,25 @@ export default function TaskStatus({ task, uid }) {
   }
 
   return (
-    <div className="relative flex items-center select-none border-r border-text-light-color text-normal text-foreground min-w-[135px] max-w-[150px] w-full h-full">
+    <div className="flex items-center select-none border-r border-text-light-color text-xs lg:text-normal text-foreground min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
       <div
-        className="relative w-full min-w-[110px] text-center cursor-pointer py-2 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-4 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
         <span>{currentStatus?.name || "En attente"}</span>
       </div>
-      <>
-        <div
-          ref={refs.setFloating}
-          style={floatingStyles}
-          className={`absolute z-2001 top-[45px] bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg overflow-hidden transition-all duration-[200ms] ease-in-out ${
-            listWidth() ? "w-[380px]" : "w-[220px]"
-          } ${isOpen ? "max-h-96" : "max-h-0"}`}
+
+      {isOpen && (
+        <FloatingMenu
+          setIsOpen={setIsOpen}
+          className={listWidth() ? "w-[380px]" : "w-[220px]"}
+          refs={refs}
+          floatingStyles={floatingStyles}
         >
           <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 p-3 border-b border-color-border-color">
-            {statuses?.map((status) => {
+            {statusesData?.map((status) => {
               if (!isEdit) {
                 return (
                   <li
@@ -173,11 +182,8 @@ export default function TaskStatus({ task, uid }) {
               <Pen size={16} /> Modifier les statuts
             </button>
           )}
-        </div>
-        {isOpen && (
-          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
-        )}
-      </>
+        </FloatingMenu>
+      )}
     </div>
   );
 }

@@ -120,9 +120,12 @@ export default function TaskDeadline({ task, uid }) {
   }, [project, uid]);
 
   return (
-    <div className="flex justify-center items-center py-1 px-2 border-r border-text-light-color min-w-30 max-w-[150px] w-full h-full gap-0.5" onMouseLeave={() => setHover(false)}>
+    <div
+      className="hidden md:flex justify-center items-center py-1 px-1 lg:px-2 border-r border-text-light-color min-w-[80px] lg:min-w-[100px] max-w-[120px] w-full h-full gap-0.5 flex-shrink-0"
+      onMouseLeave={() => setHover(false)}
+    >
       <div
-        className="wrapper_TaskDeadline relative w-full bg-primary rounded-3xl py-1 px-0.5 text-center cursor-pointer text-small overflow-hidden"
+        className="wrapper_TaskDeadline relative w-full bg-primary rounded-3xl py-1 px-0.5 text-center cursor-pointer text-xs lg:text-small overflow-hidden"
         onMouseEnter={handleHover}
         onClick={handleIsEditing}
         style={{ "--progress": `${deadline ? progress : "0%"}` }}
@@ -144,14 +147,23 @@ export default function TaskDeadline({ task, uid }) {
             />
           )}
           {deadline ? (
-            <span className="relative z-1 text-white select-none">{displayDate()}</span>
+            <span className="relative z-1 text-white select-none">
+              {displayDate()}
+            </span>
           ) : (
-            <span className="relative z-1 select-none">{hover || isEditing ? "Définir une date" : "-"}</span>
+            <span className="relative z-1 select-none">
+              {hover || isEditing ? "Définir" : "-"}
+            </span>
           )}
         </div>
       </div>
       {hover && deadline && (
-        <CircleX size={12} onClick={removeDeadline} cursor={"pointer"} className="w-4.5 h-4.5 text-text-color-muted hover:text-danger-color" />
+        <CircleX
+          size={12}
+          onClick={removeDeadline}
+          cursor={"pointer"}
+          className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-text-color-muted hover:text-danger-color"
+        />
       )}
     </div>
   );

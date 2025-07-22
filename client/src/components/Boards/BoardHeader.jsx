@@ -155,7 +155,7 @@ export default function BoardHeader({
     socket.emit("update board", board?.projectId);
   }
 
-  const debouncedUpdateTask = useDebouncedCallback(async (value) => {
+  const debouncedUpdateTitle = useDebouncedCallback(async (value) => {
     await handleSaveTitle(value);
   }, 600);
 
@@ -180,7 +180,7 @@ export default function BoardHeader({
       setEdit(false);
     }
 
-    debouncedUpdateTask(value);
+    debouncedUpdateTitle(value);
   };
 
   function handleTitleEnterKey(e) {
@@ -238,7 +238,6 @@ export default function BoardHeader({
       className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
         openedTask ? "z-1000" : "z-2000"
       }`}
-      // className="-translate-x-px" Gérer la petite bordure à gauche manquante sur pc portable ?
       data-open={open}
       data-archive={archive}
       style={{

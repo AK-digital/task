@@ -63,16 +63,18 @@ function TasksContent() {
 
   return (
     <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
-      <div className="p-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto ">
+      <div className="p-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto">
         {/* Header */}
-        <div className="flex items-center mb-6 gap-4 p-4">
+        <div className="flex items-center mb-6 gap-4 p-4 flex-wrap">
           <span className="text-2xl min-w-max select-none">Mes tâches</span>
           {/* Filters */}
-          <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
+          <div className="flex-1 min-w-0">
+            <TasksFilters displayedFilters={displayedFilters} tasks={tasks} />
+          </div>
         </div>
         {/* Tasks */}
-        <div className="boards_Boards overflow-auto h-[90%] pr-5 rounded-2xl">
-          <div className="relative bg-secondary shadow-small rounded-2xl min-w-max">
+        <div className="boards_Boards overflow-y-auto h-[90%] pr-5 rounded-2xl">
+          <div className="relative shadow-small rounded-2xl w-full overflow-x-auto">
             <Tasks
               tasks={tasks}
               tasksLoading={tasksLoading}

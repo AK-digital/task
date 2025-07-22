@@ -16,6 +16,7 @@ moment.locale("fr");
 import Image from "next/image";
 import { useEffect, useState, useActionState, useContext, useRef } from "react";
 import { useStopwatch } from "react-timer-hook";
+import FloatingMenu from "@/shared/components/FloatingMenu";
 
 export default function TaskTimer({ task }) {
   const [totalTaskDuration, setTotalTaskDuration] = useState(
@@ -158,24 +159,24 @@ export default function TaskTimer({ task }) {
 
   return (
     <div
-      className="relative flex items-center justify-start max-w-[120px] h-full w-full px-1.5 border-r border-text-light-color data-[running=true]:text-inherit"
+      className="hidden lg:flex relative items-center justify-start max-w-[100px] xl:max-w-[120px] h-full w-full px-1 xl:px-1.5 border-r border-text-light-color data-[running=true]:text-inherit flex-shrink-0"
       data-running={isRunning}
     >
       <span
-        className="flex items-center justify-center gap-2 text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center"
+        className="flex items-center justify-center gap-1 xl:gap-2 text-xs xl:text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center"
         data-center={!canAdd}
       >
         {canAdd && (
           <>
             {isRunning ? (
               <CirclePause
-                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
+                className="w-4 h-4 xl:w-5 xl:h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
                 data-running={isRunning}
                 onClick={handlePauseTimer}
               />
             ) : (
               <CirclePlay
-                className="w-5 h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
+                className="w-4 h-4 xl:w-5 xl:h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
                 data-running={isRunning}
                 onClick={handlePlayTimer}
               />
@@ -183,7 +184,7 @@ export default function TaskTimer({ task }) {
           </>
         )}
         <span
-          className="select-none"
+          className="select-none text-xs xl:text-sm"
           onClick={() => setMore(true)}
           ref={refs.setReference}
         >
@@ -191,59 +192,56 @@ export default function TaskTimer({ task }) {
         </span>
       </span>
       {more && (
-        <>
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            className="absolute flex flex-col z-2001 bg-secondary gap-2 top-[44px] right-1 p-0 w-[400px] rounded-lg max-h-[300px] overflow-hidden shadow-small"
-          >
-            <div className="flex justify-between items-center text-[1.1rem] font-medium bg-third p-2 rounded-t">
-              <span className="text-text-dark-color select-none">
-                Gestion du temps
+        <FloatingMenu
+          setIsOpen={setMore}
+          refs={refs}
+          floatingStyles={floatingStyles}
+          className={`w-[400px] ${
+            addingSession ? "max-h-[300px]" : "max-h-[200px]"
+          }`}
+        >
+          <div className="flex justify-between items-center text-[1.1rem] font-medium bg-third p-2 rounded-t">
+            <span className="text-text-dark-color select-none">
+              Gestion du temps
+            </span>
+            {addingSession && (
+              <span
+                className="text-accent-color text-normal cursor-pointer select-none"
+                onClick={(e) => setAddingSession(false)}
+              >
+                Retour
               </span>
-              {addingSession && (
-                <span
-                  className="text-accent-color text-normal cursor-pointer select-none"
-                  onClick={(e) => setAddingSession(false)}
-                >
-                  Retour
-                </span>
-              )}
-            </div>
-            {addingSession ? (
-              <TimeTrackingForm
-                task={task}
-                formatTime={formatTime}
-                setSessions={handleLocalSessionUpdate}
-              />
-            ) : (
-              <div className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4">
-                {canAdd && (
-                  <div className="flex items-center gap-2">
-                    <button
-                      className="w-full p-2 rounded"
-                      onClick={() => setAddingSession(true)}
-                    >
-                      Ajouter une session
-                    </button>
-                  </div>
-                )}
-                {isNotEmpty(sessions) && (
-                  <TimeTrackingSessions
-                    task={task}
-                    sessions={sessions}
-                    setSessions={handleLocalSessionUpdate}
-                    formatTime={formatTime}
-                  />
-                )}
-              </div>
             )}
           </div>
-          <div
-            className="modal-layout-opacity"
-            onClick={(e) => setMore(false)}
-          ></div>
-        </>
+          {addingSession ? (
+            <TimeTrackingForm
+              task={task}
+              formatTime={formatTime}
+              setSessions={handleLocalSessionUpdate}
+            />
+          ) : (
+            <div className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4">
+              {canAdd && (
+                <div className="flex items-center gap-2">
+                  <button
+                    className="w-full p-2 rounded"
+                    onClick={() => setAddingSession(true)}
+                  >
+                    Ajouter une session
+                  </button>
+                </div>
+              )}
+              {isNotEmpty(sessions) && (
+                <TimeTrackingSessions
+                  task={task}
+                  sessions={sessions}
+                  setSessions={handleLocalSessionUpdate}
+                  formatTime={formatTime}
+                />
+              )}
+            </div>
+          )}
+        </FloatingMenu>
       )}
     </div>
   );
@@ -402,7 +400,7 @@ export function TimeTrackingSessions({
       className="overflow-x-auto max-h-[200px] text-[0.85em] text-text-dark-color data-[overflow=true]:pr-5"
       data-overflow={sessions?.length > 6}
     >
-      <ul className="gap-3">
+      <ul className="flex flex-col gap-3">
         {sessions.map((session, index) => {
           const user = session?.userId;
           const endDate = moment(session?.endTime).format("D MMM");
@@ -415,14 +413,14 @@ export function TimeTrackingSessions({
           return (
             <li
               key={`session-${session?._id}-${index}`}
-              className="flex justify-between items-center"
+              className="flex justify-between items-center gap-2"
             >
               <div className="flex items-center gap-2 select-none">
                 <Image
                   src={user?.picture || "/default/default-pfp.webp"}
                   width={25}
                   height={25}
-                  style={{ borderRadius: "50%" }}
+                  className="w-6 h-6 object-cover rounded-full"
                   alt={`Photo de profil de ${user?.firstName}`}
                 />
                 <span>{endDate}</span>

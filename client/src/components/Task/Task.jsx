@@ -81,7 +81,7 @@ export default function Task({
       {/* Drag */}
       {isDrag && (
         <div
-          className="data-[drag=false]:cursor-[inherit]! data-[drag=false]:invisible"
+          className="data-[drag=false]:cursor-[inherit]! data-[drag=false]:invisible flex-shrink-0"
           data-drag={canDrag}
         >
           <TaskDrag attributes={attributes} listeners={listeners} />
@@ -111,7 +111,7 @@ export default function Task({
       {canRemove ? (
         <TaskRemove task={task} archive={false} mutate={mutate} />
       ) : (
-        <div className="relative px-1.5 min-w-8"></div>
+        <div className="relative px-1.5 min-w-8 flex-shrink-0"></div>
       )}
 
       {openedTask === task?._id && (

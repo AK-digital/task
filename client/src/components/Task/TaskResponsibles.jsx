@@ -91,7 +91,7 @@ export default function TaskResponsibles({ task, uid, user }) {
   }, [task?.responsibles]);
 
   return (
-    <div className="relative flex items-center justify-center px-3 min-w-[100px] max-w-[100px] w-full h-full border-r border-l border-text-color">
+    <div className="hidden sm:flex relative items-center justify-center px-2 lg:px-3 min-w-[60px] lg:min-w-[80px] max-w-[100px] w-full h-full border-r border-l border-text-color flex-shrink-0">
       <div
         className="flex items-center h-full"
         onClick={handleIsMoreOpen}
@@ -113,10 +113,10 @@ export default function TaskResponsibles({ task, uid, user }) {
             );
           })
         ) : (
-          <PlusCircle size={24} />
+          <PlusCircle size={20} />
         )}
         {responsibles?.length > 3 && (
-          <span className="absolute flex justify-center items-center bg-primary rounded-full min-w-[26px] w-[26px] min-h-[26px] h-[26px] p-1 right-[3px] bottom-2 border-[3px] border-secondary">
+          <span className="absolute flex justify-center items-center bg-primary rounded-full min-w-[20px] w-[20px] min-h-[20px] h-[20px] p-1 right-[3px] bottom-2 border-[2px] border-secondary text-xs">
             +{responsibles?.length - 3}
           </span>
         )}

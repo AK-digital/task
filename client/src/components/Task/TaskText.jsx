@@ -47,7 +47,7 @@ export default function TaskText({ task }) {
 
   return (
     <div
-      className="flex items-center h-full w-full min-w-[200px] max-w-[700px] cursor-text mx-2"
+      className="flex items-center h-full w-full min-w-[150px] sm:min-w-[200px] lg:min-w-[240px] max-w-[700px] cursor-text mx-2 flex-grow"
       onClick={handleEdit}
     >
       {!isEdit && (
@@ -64,7 +64,7 @@ export default function TaskText({ task }) {
           onChange={handleChange}
           onBlur={() => setIsEdit(false)}
           autoFocus
-          className="relative text-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-sm font-bricolage"
+          className="relative text-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-sm font-bricolage w-full"
         />
       )}
     </div>

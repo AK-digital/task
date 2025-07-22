@@ -8,17 +8,21 @@ import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
 import { getFloating, usePreventScroll } from "@/utils/floating";
+import FloatingMenu from "@/shared/components/FloatingMenu";
+import { usePriorities } from "../../../hooks/usePriorities";
 
 export default function TaskPriority({ task }) {
   const { project, mutateTasks, priorities, mutatePriorities } =
     useProjectContext();
+  const { priorities: prioritiesData, mutatePriorities: mutatePrioritiesData } =
+    usePriorities(project?._id || task?.projectId?._id);
   const [currentPriority, setCurrentPriority] = useState(task?.priority);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const maxPriorities = priorities?.length === 12;
 
-  const canEdit = useUserRole(project, [
+  const canEdit = useUserRole(project || task?.projectId, [
     "owner",
     "manager",
     "team",
@@ -54,6 +58,7 @@ export default function TaskPriority({ task }) {
 
     mutateTasks();
     mutatePriorities();
+    mutatePrioritiesData();
   }
 
   async function handleAddPriority() {
@@ -78,6 +83,7 @@ export default function TaskPriority({ task }) {
     }
 
     mutatePriorities();
+    mutatePrioritiesData();
   }
 
   const handleIsOpen = useCallback(() => {
@@ -103,9 +109,9 @@ export default function TaskPriority({ task }) {
     : "#afbde9";
 
   function listWidth() {
-    if (isEdit && priorities?.length > 5) {
+    if (isEdit && prioritiesData?.length > 5) {
       return true;
-    } else if (!isEdit && priorities?.length > 6) {
+    } else if (!isEdit && prioritiesData?.length > 6) {
       return true;
     }
 
@@ -113,25 +119,24 @@ export default function TaskPriority({ task }) {
   }
 
   return (
-    <div className="relative flex items-center select-none border-r border-text-light-color text-normal text-text-color min-w-[135px] max-w-[150px] w-full h-full">
+    <div className="relative flex items-center select-none border-r border-text-light-color text-xs lg:text-normal text-text-color min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
       <div
-        className="relative w-full min-w-[110px] text-center cursor-pointer py-2 px-4 rounded-3xl mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-4 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
       >
         <span>{currentPriority?.name || "Basse"}</span>
       </div>
-      <>
-        <div
-          className={`absolute z-2001 top-[45px] bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg overflow-hidden transition-all duration-[200ms] ease-in-out ${
-            listWidth() ? "w-[380px]" : "w-[220px]"
-          } ${isOpen ? "max-h-96" : "max-h-0"}`}
-          ref={refs.setFloating}
-          style={floatingStyles}
+      {isOpen && (
+        <FloatingMenu
+          setIsOpen={setIsOpen}
+          className={listWidth() ? "w-[380px]" : "w-[220px]"}
+          refs={refs}
+          floatingStyles={floatingStyles}
         >
           <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 p-3 border-b border-color-border-color">
-            {priorities?.map((priority) => {
+            {prioritiesData?.map((priority) => {
               if (!isEdit) {
                 return (
                   <li
@@ -181,11 +186,8 @@ export default function TaskPriority({ task }) {
               <Pen size={16} /> Modifier les priorités
             </button>
           )}
-        </div>
-        {isOpen && (
-          <div className="modal-layout-opacity" onClick={handleIsOpen}></div>
-        )}
-      </>
+        </FloatingMenu>
+      )}
     </div>
   );
 }

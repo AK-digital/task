@@ -1,12 +1,14 @@
 "use client";
-import { flip, offset, useFloating } from "@floating-ui/react";
+import { flip, offset, useFloating, shift } from "@floating-ui/react";
 import { useEffect } from "react";
 
 export function getFloating(isOpen, setIsOpen) {
   const { refs, floatingStyles } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    middleware: [offset(10), flip()],
+    strategy: "absolute",
+    placement: "bottom-center",
+    middleware: [offset(10), flip(), shift({ padding: 8 })],
   });
 
   return { refs, floatingStyles };

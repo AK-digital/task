@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
-import { useContext, useEffect, useRef, useState, useCallback } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
 import socket from "@/utils/socket";
 import { saveMessage, updateMessage } from "@/api/message";
@@ -12,7 +12,7 @@ import { deleteDraft, saveDraft, updateDraft } from "@/api/draft";
 import { useDebouncedCallback } from "use-debounce";
 import Attachment from "../Attachment/Attachment";
 import Reactions from "../Reactions/Reactions";
-import { isMeaningfulContent, isNotEmpty, isStringPlural } from "@/utils/utils";
+import { isNotEmpty, isStringPlural } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
 import { tiptapOptions } from "@/utils/tiptapOptions";
 import Toolbar from "./Toolbar";
