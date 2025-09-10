@@ -64,25 +64,25 @@ export default function GuestFormInvitation({
   return (
     <>
       <div>
-        <form action={formAction} className="gap-3">
+        <form action={formAction} className="flex flex-row gap-3">
           <input
             type="email"
             name="email"
             id="email"
-            placeholder="Inviter par e-mail"
+            placeholder="E-mail de l'invité"
             value={valueEmail}
             onChange={(e) => setValueEmail(e.target.value)}
-            className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm"
+            className="input_GuestFormInvitation font-bricolage border-none bg-third p-3 rounded-sm w-2/3"
           />
-          {errors && <i>{errors?.email}</i>}
           <button
             type="submit"
             data-disabled={pending}
-            className="w-full rounded-sm text-medium p-2"
+            className="w-1/3 rounded-sm text-medium p-3"
           >
-            Envoyer une invitation
+            Inviter
           </button>
         </form>
+        {errors && <i>{errors?.email}</i>}
       </div>
     </>
   );

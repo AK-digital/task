@@ -6,6 +6,7 @@ import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
 import { useState } from "react";
 import { mutate } from "swr";
+import { ChevronDown } from "lucide-react";
 
 export function DropDown({
   defaultValue,
@@ -59,10 +60,14 @@ export function DropDown({
       <div className="relative select-none">
         <div
           onClick={handleIsOpen}
-          className="bg-accent-color cursor-pointer duration-[80ms] ease-in hover:bg-accent-color-hover p-2 rounded-sm text-small transition-all w-25 h-8"
+          className="bg-accent-color cursor-pointer duration-[80ms] ease-in hover:bg-accent-color-hover p-2 rounded-sm text-small transition-all w-29 h-8"
         >
-          <span className="flex items-center justify-center text-white text-center w-full">
+          <span className="flex items-center justify-center text-white text-center w-full gap-1">
             {memberRole(current)}
+            <ChevronDown 
+              size={14} 
+              className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            />
           </span>
         </div>
         <div

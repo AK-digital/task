@@ -128,10 +128,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-125 p-6 shadow-[2px_2px_4px_var(--color-foreground)] select-none">
-        <div className="text-[1.4rem] font-medium">
-          <span>Gestion des utilisateurs</span>
-        </div>
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-135 p-6 shadow-[2px_2px_4px_var(--color-foreground)] select-none">
+        <h2 className="font-medium text-large">Inviter de nouveaux membres</h2>
         {canInvite && (
           <GuestFormInvitation
             project={project}
@@ -141,14 +139,16 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         )}
         {/* Guests list */}
         {isNotEmpty(members) && (
-          <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
-            <h2 className="font-medium text-large my-2">Membres du projet</h2>
-            <ul className="flex flex-col gap-3.5 mt-6">
-              {members.map((member) => {
+          <div className="border-t border-color-border-color mb-4 [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+            <h2 className="font-medium text-large my-5">Gestion de l'équipe projet</h2>
+            <ul className="flex flex-col mt-6">
+              {members.map((member, index) => {
                 return (
                   <li
                     key={member?.user?._id}
-                    className="flex justify-between items-center gap-3"
+                    className={`flex justify-between items-center gap-2 py-2.5 ${
+                      index < members.length - 1 ? 'border-b border-color-border-color/30' : ''
+                    }`}
                   >
                     <div className="[&_div]:justify-center">
                       <DisplayPicture
@@ -156,12 +156,15 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         style={{ width: "32px", height: "32px" }}
                         className="rounded-full"
                       />
+                      <div className="w-52 flex flex-col justify-start">
+                        <span className="text-[14px] font-medium w-full leading-none">{member?.user?.firstName} {member?.user?.lastName}</span>
                       <span
-                        className="w-45 overflow-hidden text-ellipsis select-all"
+                          className="overflow-hidden text-ellipsis select-all text-small leading-none w-full"
                         title={member?.user?.email}
                       >
                         {member?.user?.email}
                       </span>
+                      </div>
                       {canEditRole &&
                       member?.user?._id !== uid &&
                       member?.role !== "owner" ? (
@@ -183,7 +186,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                         </div>
                       )}
                     </div>
-                    {canRemove && member?.role !== "owner" && (
+                    {canRemove && member?.role !== "owner" && member?.user?._id !== uid && (
                       <button
                         type="button"
                         data-disabled={pending || isPending}
@@ -222,7 +225,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
             <h2 className="font-medium text-large my-2">
               Invitations en cours
             </h2>
-            <ul className="flex flex-col gap-3.5">
+            <ul className="flex flex-col">
               <ProjectInvitationsList
                 projectInvitations={projectInvitations}
                 setIsPopup={setIsPopup}
@@ -308,10 +311,12 @@ export function ProjectInvitationsList({
 
   return (
     <>
-      {projectInvitations.map((inv) => (
+      {projectInvitations.map((inv, index) => (
         <li
           key={inv?._id}
-          className="flex justify-between items-center gap-3 text-text-color-muted mt-3"
+          className={`flex justify-between items-center gap-2 text-text-color-muted py-3.5 ${
+            index < projectInvitations.length - 1 ? 'border-b border-color-border-color/30' : ''
+          } ${index === 0 ? 'mt-3' : ''}`}
         >
           <div>
             <div>

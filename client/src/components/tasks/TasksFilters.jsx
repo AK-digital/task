@@ -12,7 +12,7 @@ export default function TasksFilters({ displayedFilters }) {
     displayedFilters;
 
   return (
-    <div className="relative flex items-center flex-wrap gap-4 select-none w-full">
+    <div className="relative flex items-center gap-4 select-none w-full">
       {isSearch && <TasksSearch setQueries={setQueries} />}
       {isProject && (
         <TasksProjectFilter queries={queries} setQueries={setQueries} />
@@ -20,14 +20,14 @@ export default function TasksFilters({ displayedFilters }) {
       {isBoard && (
         <TasksBoardFilter queries={queries} setQueries={setQueries} />
       )}
-      {isAdmin && (
-        <TasksAdminFilter queries={queries} setQueries={setQueries} />
-      )}
       {isStatus && (
         <TasksStatusFilter queries={queries} setQueries={setQueries} />
       )}
       {isPriorities && (
         <TasksPrioritiesFilter queries={queries} setQueries={setQueries} />
+      )}
+      {isAdmin && (
+        <TasksAdminFilter queries={queries} setQueries={setQueries} />
       )}
     </div>
   );
