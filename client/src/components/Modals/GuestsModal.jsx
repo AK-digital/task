@@ -128,7 +128,7 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-135 p-6 shadow-[2px_2px_4px_var(--color-foreground)] select-none">
+      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-135 p-6 shadow-[0px_0px_20px_#00000030] select-none">
         <h2 className="font-medium text-large">Inviter de nouveaux membres</h2>
         {canInvite && (
           <GuestFormInvitation
@@ -139,9 +139,9 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
         )}
         {/* Guests list */}
         {isNotEmpty(members) && (
-          <div className="border-t border-color-border-color mb-4 [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
-            <h2 className="font-medium text-large my-5">Gestion de l'équipe projet</h2>
-            <ul className="flex flex-col mt-6">
+          <div className="border-t border-color-border-color mb-2 [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+            <h2 className="font-medium text-large mt-5">Gestion de l'équipe projet</h2>
+            <ul className="flex flex-col mt-4">
               {members.map((member, index) => {
                 return (
                   <li
