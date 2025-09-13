@@ -9,6 +9,7 @@ import {
   GripVertical,
   Save,
   Trash2,
+  CopyPlus,
 } from "lucide-react";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -20,6 +21,7 @@ import {
   addBoardToArchive,
   deleteBoard,
   removeBoardFromArchive,
+  duplicateBoard,
 } from "@/api/board";
 import { mutate } from "swr";
 import AddBoardTemplate from "../Templates/AddBoardTemplate";
@@ -105,7 +107,24 @@ export default function BoardHeader({
     await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
   }
 
+  async function handleDuplicateBoard(e) {
+    e?.preventDefault();
+    const response = await duplicateBoard(board?._id, project?._id);
+
+    if (!response?.success) return;
+
+    await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+    await mutate(`/task?projectId=${project?._id}&archived=${archive}`);
+    setIsMoreOpen(false);
+  }
+
   const options = [
+    {
+      authorized: canArchive,
+      function: handleDuplicateBoard,
+      icon: <CopyPlus size={16} />,
+      name: "Dupliquer le tableau",
+    },
     {
       authorized: isOwnerOrManager,
       function: handleAddBoardTemplate,
@@ -123,14 +142,14 @@ export default function BoardHeader({
   ];
 
   if (!archive) {
-    options.splice(1, 0, {
+    options.splice(2, 0, {
       authorized: canArchive,
       function: handleAddArchive,
       icon: <Archive size={16} />,
       name: "Archiver le tableau",
     });
   } else {
-    options.splice(1, 0, {
+    options.splice(2, 0, {
       authorized: canArchive,
       function: handleRestoreArchive,
       icon: <ArchiveRestore size={16} />,

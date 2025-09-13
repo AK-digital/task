@@ -46,6 +46,13 @@ router.patch(
   boardControllers.updateBoardOrder
 );
 
+router.post(
+  "/:id/duplicate",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team"]), // projectId query is required
+  boardControllers.duplicateBoard
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

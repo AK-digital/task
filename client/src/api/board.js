@@ -149,6 +149,41 @@ export async function updateBoardOrder(boards, projectId) {
   }
 }
 
+export async function duplicateBoard(boardId, projectId) {
+  try {
+    const res = await useAuthFetch(
+      `board/${boardId}/duplicate?projectId=${projectId}`,
+      "POST",
+      "application/json"
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(
+        response?.message ||
+          "Une erreur est survenue lors de la duplication du tableau"
+      );
+    }
+
+    revalidateTag("boards");
+    revalidateTag("tasks");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de la duplication du tableau"
+    );
+
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de la duplication du tableau",
+    };
+  }
+}
+
 export async function deleteBoard(boardId, projectId) {
   try {
     if (!boardId) throw new Error("Paramètres manquants");

@@ -66,7 +66,7 @@ export function MoreMenu({ isOpen, setIsOpen, options, triggerRef }) {
       {isOpen && (
         <Portal>
           <div
-            className="fixed z-20001 bg-secondary rounded-lg w-max text-small py-2 px-4 shadow-small text-text-dark-color no-underline [&_a]:text-text-dark-color [&_a]:no-underline select-none"
+            className="fixed z-20001 bg-secondary rounded-lg w-max text-small py-2 px-4 shadow-xl text-text-dark-color no-underline border border-[#e0e0e0] [&_a]:text-text-dark-color [&_a]:no-underline select-none"
             style={{
               top: `${position.top}px`,
               left: `${position.left}px`,

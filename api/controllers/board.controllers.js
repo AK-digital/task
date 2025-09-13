@@ -264,6 +264,76 @@ export async function updateBoardOrder(req, res, next) {
   }
 }
 
+export async function duplicateBoard(req, res, next) {
+  try {
+    const boardId = req.params.id;
+    const projectId = req.query.projectId;
+
+    if (!boardId || !projectId) {
+      return res.status(400).send({
+        success: false,
+        message: "Paramètres manquants",
+      });
+    }
+
+    // Récupérer le tableau original avec ses tâches
+    const originalBoard = await BoardModel.findById(boardId);
+    if (!originalBoard) {
+      return res.status(404).send({
+        success: false,
+        message: "Tableau non trouvé",
+      });
+    }
+
+    // Récupérer toutes les tâches du tableau original
+    const originalTasks = await TaskModel.find({ boardId: boardId });
+
+    // Créer le nouveau tableau
+    const boards = await BoardModel.find({ projectId: projectId });
+    const newBoard = new BoardModel({
+      projectId: projectId,
+      title: `${originalBoard.title} (copie)`,
+      order: boards.length + 1,
+      color: originalBoard.color,
+    });
+
+    const savedBoard = await newBoard.save();
+
+    // Dupliquer toutes les tâches
+    const taskPromises = originalTasks.map(async (originalTask) => {
+      const newTask = new TaskModel({
+        text: originalTask.text,
+        description: originalTask.description,
+        boardId: savedBoard._id,
+        projectId: projectId,
+        order: originalTask.order,
+        // Ne pas copier les assignés, deadlines, etc. pour éviter la confusion
+        // priority: originalTask.priority,
+        // status: originalTask.status,
+        // responsibles: originalTask.responsibles,
+        // deadline: originalTask.deadline,
+      });
+      return await newTask.save();
+    });
+
+    const savedTasks = await Promise.all(taskPromises);
+
+    // Récupérer le tableau dupliqué (pas besoin de populate car tasks n'est pas dans le schéma)
+    const duplicatedBoard = await BoardModel.findById(savedBoard._id);
+
+    return res.status(201).send({
+      success: true,
+      message: "Tableau dupliqué avec succès",
+      data: duplicatedBoard,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err?.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function deleteBoard(req, res, next) {
   try {
     const deletedBoard = await BoardModel.findByIdAndDelete({

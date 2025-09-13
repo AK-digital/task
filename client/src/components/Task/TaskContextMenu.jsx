@@ -157,7 +157,7 @@ export default function TaskContextMenu({
     <>
       <Portal>
         <div
-          className="task-context-menu fixed z-20001 bg-secondary rounded-lg w-max text-small py-2 px-4 shadow-xl text-text-dark-color select-none border border-secondary"
+          className="task-context-menu fixed z-20001 bg-secondary rounded-lg w-max text-small py-2 px-4 shadow-xl text-text-dark-color select-none border border-[#e0e0e0]"
           style={{
             top: `${position.y}px`,
             left: `${position.x}px`,

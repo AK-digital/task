@@ -292,7 +292,7 @@ export default function TasksHeader({
       {/* Priority */}
       {isPriority && (
         <div className="flex items-center justify-center gap-1 min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full cursor-default flex-shrink-0">
-          <div className="select-none leading-[34px] text-xs lg:text-sm">Priorité</div>
+          <div className="select-none text-xs lg:text-sm">Priorité</div>
           <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
@@ -314,7 +314,7 @@ export default function TasksHeader({
       {/* Deadline */}
       {isDeadline && (
         <div className="hidden md:flex items-center justify-center gap-1 py-1 px-1 lg:px-2 min-w-[80px] lg:min-w-[100px] max-w-[120px] w-full cursor-default flex-shrink-0">
-          <span className="select-none leading-[34px] text-xs lg:text-sm">Échéance</span>
+          <span className="select-none text-xs lg:text-sm">Échéance</span>
           <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
