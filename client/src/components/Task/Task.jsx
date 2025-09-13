@@ -9,7 +9,6 @@ import TaskPriority from "./TaskPriority";
 import TaskDeadline from "./TaskDeadline";
 import TaskEstimate from "./TaskEstimate";
 import TaskTimer from "./TaskTimer";
-import TaskRemove from "./TaskRemove";
 import TaskConversation from "./TaskConversation";
 import TaskCheckbox from "./TaskCheckbox";
 import TaskDrag from "./TaskDrag";
@@ -44,12 +43,6 @@ export default function Task({
   const project = task?.projectId;
 
   const canDrag = useUserRole(project, ["owner", "manager", "team"]);
-  const canRemove = useUserRole(project, [
-    "owner",
-    "manager",
-    "team",
-    "customer",
-  ]);
   const canContextMenu = useUserRole(project, [
     "owner",
     "manager",
@@ -133,12 +126,6 @@ export default function Task({
       {isEstimate && <TaskEstimate task={task} uid={uid} />}
       {/* Timer */}
       {isTimer && <TaskTimer task={task} />}
-      {/* Remove */}
-      {canRemove ? (
-        <TaskRemove task={task} archive={false} mutate={mutate} />
-      ) : (
-        <div className="relative px-1.5 min-w-8 flex-shrink-0"></div>
-      )}
 
         {openedTask === task?._id && (
           <TaskMore task={task} archive={false} uid={uid} mutateTasks={mutate} />
