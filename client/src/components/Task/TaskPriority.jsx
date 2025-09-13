@@ -175,7 +175,7 @@ export default function TaskPriority({ task }) {
           </ul>
           <div className="flex items-center p-2 justify-center gap-2">
           <span
-            className="secondary-button"
+              className="secondary-button text-[14px]"
             onClick={handleEditPriority}
           >
             <Pen size={16} /> Modifier les priorités

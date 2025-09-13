@@ -128,6 +128,7 @@ export default function TaskResponsibles({ task, uid, user }) {
             ref={refs.setFloating}
             style={floatingStyles}
             className="absolute w-[300px] bg-secondary shadow-medium rounded-lg top-[50px] z-[2001] p-2"
+            data-task-responsibles-menu
           >
             {/* Responsibles */}
             {isNotEmpty(responsibles) && (
@@ -179,7 +180,11 @@ export default function TaskResponsibles({ task, uid, user }) {
                           }}
                           className="rounded-full"
                         />
-                        <span>{member?.user?.email}</span>
+                        <span className="text-[14px]">
+                          {(member?.user?.firstName || member?.user?.lastName)
+                            ? `${member?.user?.firstName || ""} ${member?.user?.lastName || ""}`.trim()
+                            : member?.user?.email}
+                        </span>
                       </li>
                     );
                   })}

@@ -130,7 +130,7 @@ export default function Board({
       {isLoading && <TaskPending text={inputValue} />}
       {canPost && !archive && (
         <div>
-          <div className="flex items-center gap-0.5 h-[45px] px-3 bg-[#F6F4E9] shadow-[inset_0_3px_3px_0_rgba(0,0,0,0.063)] rounded-bl-[15px] rounded-br-[15px]">
+          <div className="flex items-center gap-0.5 px-3 bg-[#F6F4E9] shadow-[inset_0_3px_3px_0_rgba(0,0,0,0.063)] rounded-bl-[15px] rounded-br-[15px]">
             <Plus size={18} className="text-text-color-muted" />
             <form action={formAction} className="w-full">
               <input
@@ -139,7 +139,7 @@ export default function Board({
                 id="board-id"
                 defaultValue={board?._id}
                 hidden
-                className="border-none bg-inherit py-1.5 px-1 text-normal"
+                className="border-none bg-inherit py-1.5 px-1 text-normal "
               />
               <input
                 type="text"
@@ -158,7 +158,7 @@ export default function Board({
                     setIsWritting(false);
                   }
                 }}
-                className="font-bricolage border-none bg-inherit py-1.5 px-1 text-normal"
+                className="font-bricolage border-none bg-inherit py-3 px-1 text-normal"
               />
               <button type="submit" hidden className="font-bricolage">
                 Ajouter une tâche

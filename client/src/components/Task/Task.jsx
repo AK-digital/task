@@ -74,6 +74,21 @@ export default function Task({
       return;
     }
     
+    // Ne pas ouvrir le menu contextuel si le clic provient d'un FloatingMenu
+    if (e.target.closest('[data-floating-menu]')) {
+      return;
+    }
+    
+    // Ne pas ouvrir le menu contextuel si le clic provient d'un DatePicker
+    if (e.target.closest('[data-datepicker]') || e.target.closest('.datepicker-container')) {
+      return;
+    }
+    
+    // Ne pas ouvrir le menu contextuel si le clic provient du menu des responsables
+    if (e.target.closest('[data-task-responsibles-menu]')) {
+      return;
+    }
+    
     e.preventDefault();
     e.stopPropagation();
     

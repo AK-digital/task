@@ -171,13 +171,13 @@ export default function TaskTimer({ task }) {
           <>
             {isRunning ? (
               <CirclePause
-                className="w-4 h-4 xl:w-5 xl:h-5 stroke-[1.5px] cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
+                className="w-4 h-4 xl:w-5 xl:h-5 stroke-[1.5px] cursor-pointer hover:text-accent-color"
                 data-running={isRunning}
                 onClick={handlePauseTimer}
               />
             ) : (
               <CirclePlay
-                className="w-4 h-4 xl:w-5 xl:h-5 stroke-[1.5px] cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
+                className="w-4 h-4 xl:w-5 xl:h-5 stroke-[1.5px] cursor-pointer hover:text-accent-color"
                 data-running={isRunning}
                 onClick={handlePlayTimer}
               />

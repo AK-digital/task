@@ -113,6 +113,7 @@ export default function DatePicker({ value, onChange, onClose, isOpen }) {
           ? 'bottom-full mb-1' 
           : 'top-full mt-1'
       }`}
+      data-datepicker
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">

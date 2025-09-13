@@ -138,6 +138,11 @@ export default function TaskContextMenu({
             return; // Laisser le comportement par défaut du navigateur
           }
           
+          // Ne pas ouvrir le menu contextuel si le clic est sur un FloatingMenu
+          if (e.target.closest('[data-floating-menu]')) {
+            return; // Laisser le comportement par défaut du navigateur
+          }
+          
           // Empêcher le menu contextuel du navigateur si le clic est sur une autre tâche
           if (e.target.closest('[data-task-id]')) {
             e.preventDefault();
