@@ -122,7 +122,7 @@ export default function TaskPriority({ task }) {
   }
 
   return (
-    <div className="relative flex items-center select-none border-r border-text-light-color text-xs lg:text-normal  min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
+    <div className="task-col-priority task-content-col  relative select-none text-xs lg:text-normal">
       <div
         className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}

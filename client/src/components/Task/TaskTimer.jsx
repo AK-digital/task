@@ -160,7 +160,7 @@ export default function TaskTimer({ task }) {
 
   return (
     <div
-      className="hidden lg:flex relative items-center justify-start max-w-[100px] xl:max-w-[120px] h-full w-full px-1 xl:px-1.5 border-r border-text-light-color data-[running=true]:text-inherit flex-shrink-0"
+      className="task-col-timer task-content-col  relative justify-start data-[running=true]:text-inherit"
       data-running={isRunning}
     >
       <span

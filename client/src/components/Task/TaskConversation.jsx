@@ -40,7 +40,7 @@ export default function TaskConversation({ task, archive = false, uid }) {
 
   return (
     <div
-      className="relative flex items-center h-full pr-2"
+      className="task-col-conversation task-content-col  relative cursor-pointer"
       onClick={handleOpenTask}
     >
       {!hasDescription() && (

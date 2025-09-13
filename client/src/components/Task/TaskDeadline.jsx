@@ -134,7 +134,7 @@ export default function TaskDeadline({ task, uid }) {
 
   return (
     <div
-      className="hidden md:flex justify-center items-center py-1 px-1 lg:px-2 border-r border-text-light-color min-w-[90px] lg:min-w-[110px] max-w-[130px] lg:max-w-[160px] w-full h-full gap-0.5 flex-shrink-0 relative"
+      className="task-col-deadline task-content-col  gap-0.5 relative"
       onMouseLeave={() => setHover(false)}
     >
       <div

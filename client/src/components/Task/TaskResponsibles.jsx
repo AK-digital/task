@@ -91,7 +91,7 @@ export default function TaskResponsibles({ task, uid, user }) {
   }, [task?.responsibles]);
 
   return (
-    <div className="hidden sm:flex relative items-center justify-center px-2 lg:px-3 min-w-[60px] lg:min-w-[80px] max-w-[100px] w-full h-full border-r border-l border-text-color flex-shrink-0">
+    <div className="task-col-admin task-content-col relative">
       <div
         className="flex items-center h-full"
         onClick={handleIsMoreOpen}

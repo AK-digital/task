@@ -118,7 +118,7 @@ export default function TaskStatus({ task, uid }) {
   }
 
   return (
-    <div className="flex items-center select-none border-r border-text-light-color text-xs lg:text-normal text-foreground min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
+    <div className="task-col-status task-content-col  select-none text-xs lg:text-normal text-foreground">
       <div
         className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}

@@ -22,7 +22,7 @@ export default function TaskCheckbox({ task, setSelectedTasks }) {
   }
 
   return (
-    <div className="flex items-center h-full">
+    <div className="task-col-checkbox task-content-col ">
       <Checkbox
         name="task"
         id={`task-${task?._id}`}

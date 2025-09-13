@@ -926,6 +926,338 @@
     scrollbar-width: none;
     /* Firefox */
   }
+
+  /* Classes communes pour l'alignement des colonnes de tâches */
+  
+  /* Colonnes de base */
+  .task-col-checkbox {
+    min-width: 13px;
+    width: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .task-col-drag {
+    margin-left: 0.375rem; /* ml-1.5 */
+    min-width: 1rem; /* min-w-4 */
+    max-width: 1rem; /* max-w-4 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .task-col-text {
+    width: 100%;
+    min-width: 150px;
+    margin-left: 0.5rem; /* mx-2 */
+    margin-right: 0.5rem;
+    flex-grow: 1;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+  }
+
+  @media (min-width: 640px) {
+    .task-col-text {
+      min-width: 200px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-text {
+      min-width: 240px;
+    }
+  }
+
+  .task-col-conversation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    width: 2.5rem; /* w-10 - largeur fixe pour l'alignement */
+    min-width: 2.5rem; /* min-w-10 */
+  }
+
+  .task-col-project {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0.5rem; /* px-2 */
+    padding-right: 0.5rem;
+    width: 4rem; /* w-16 */
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .task-col-project {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-project {
+      padding-left: 1rem; /* lg:px-4 */
+      padding-right: 1rem;
+      width: 5rem; /* lg:w-20 */
+    }
+  }
+
+  .task-col-board {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* gap-2 */
+    padding-left: 0.5rem; /* px-2 */
+    padding-right: 0.5rem;
+    min-width: 100px;
+    max-width: 150px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-board {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .task-col-board {
+      padding-left: 1rem; /* xl:px-4 */
+      padding-right: 1rem;
+      min-width: 120px; /* xl:min-w-[120px] */
+    }
+  }
+
+  .task-col-admin {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0.5rem; /* px-2 */
+    padding-right: 0.5rem;
+    min-width: 60px;
+    max-width: 100px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 640px) {
+    .task-col-admin {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-admin {
+      padding-left: 0.75rem; /* lg:px-3 */
+      padding-right: 0.75rem;
+      min-width: 80px; /* lg:min-w-[80px] */
+    }
+  }
+
+  .task-col-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    max-width: 150px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 640px) {
+    .task-col-status {
+      min-width: 100px; /* sm:min-w-[100px] */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-status {
+      min-width: 120px; /* lg:min-w-[120px] */
+    }
+  }
+
+  .task-col-priority {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    max-width: 150px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 640px) {
+    .task-col-priority {
+      min-width: 100px; /* sm:min-w-[100px] */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-priority {
+      min-width: 120px; /* lg:min-w-[120px] */
+    }
+  }
+
+  .task-col-deadline {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+    padding-left: 0.25rem; /* px-1 */
+    padding-right: 0.25rem;
+    min-width: 90px;
+    max-width: 130px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .task-col-deadline {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-deadline {
+      padding-left: 0.5rem; /* lg:px-2 */
+      padding-right: 0.5rem;
+      min-width: 110px; /* lg:min-w-[110px] */
+      max-width: 160px; /* lg:max-w-[160px] */
+    }
+  }
+
+  .task-col-estimate {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+    padding-left: 0.25rem; /* px-1 */
+    padding-right: 0.25rem;
+    min-width: 90px;
+    max-width: 130px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-estimate {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .task-col-estimate {
+      padding-left: 0.5rem; /* xl:px-2 */
+      padding-right: 0.5rem;
+      min-width: 110px; /* xl:min-w-[110px] */
+    }
+  }
+
+  .task-col-timer {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0.25rem; /* px-1 */
+    padding-right: 0.25rem;
+    max-width: 100px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .task-col-timer {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .task-col-timer {
+      padding-left: 0.375rem; /* xl:px-1.5 */
+      padding-right: 0.375rem;
+      max-width: 120px; /* xl:max-w-[120px] */
+    }
+  }
+
+  .task-col-actions {
+    min-width: 2rem; /* min-w-8 */
+    width: 2.5rem; /* w-10 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* Classes pour les en-têtes */
+  .task-header-col {
+    user-select: none;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .task-header-sort {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .task-header-chevron {
+    cursor: pointer;
+  }
+
+  .task-header-chevron:hover {
+    color: var(--color-text-color);
+  }
+
+  .task-header-chevron-up {
+    cursor: pointer;
+  }
+
+  .task-header-chevron-up:hover {
+    color: var(--color-text-color);
+  }
+
+  .task-header-chevron-down {
+    cursor: pointer;
+    position: relative;
+    top: -0.25rem; /* -top-1 */
+  }
+
+  .task-header-chevron-down:hover {
+    color: var(--color-text-color);
+  }
+
+  /* Classes pour le contenu des tâches */
+  .task-content-col {
+    height: 100%;
+  }
+
+  .task-content-col:not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)) {
+    border-left: 1px solid var(--color-text-light-color);
+  }
+
+  /* Force l'alignement exact pour la colonne de texte */
+  .task-col-text.task-header-col,
+  .task-col-text.task-content-col {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 150px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    flex-grow: 1;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+  }
 }
 
 @layer base {

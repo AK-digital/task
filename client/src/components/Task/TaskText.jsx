@@ -47,7 +47,7 @@ export default function TaskText({ task }) {
 
   return (
     <div
-      className="flex items-center h-full w-full min-w-[150px] sm:min-w-[200px] lg:min-w-[240px] max-w-[700px] cursor-text mx-2 flex-grow"
+      className="task-col-text task-content-col cursor-text"
       onClick={handleEdit}
     >
       {!isEdit && (
