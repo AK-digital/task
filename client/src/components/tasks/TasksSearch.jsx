@@ -15,15 +15,15 @@ export default function TasksSearch({ setQueries }) {
   }, 600);
 
   return (
-    <div className="container_TasksSearch flex items-center gap-2 p-2 w-full max-w-[250px] transition-all duration-150 ease-in-out border-b border-color-border-color">
+    <div className="container_TasksSearch flex items-center gap-2 py-1 w-full max-w-[210px] transition-all duration-150 ease-in-out border-b border-color-border-color">
       <Search size={24} />
       <input
         type="search"
         name="search"
         id="search"
-        placeholder="Recherchez une tâche..."
+        placeholder="Recherchez une tâche"
         onChange={handleSearch}
-        className="input_TasksSearch border-0 p-0 text-color-text-dark-color text-normal font-bricolage placeholder:text-color-text-color-muted"
+        className="input_TasksSearch border-0 p-0 text-color-text-dark-color text-[15px] font-bricolage placeholder:text-color-text-color-muted"
       />
     </div>
   );

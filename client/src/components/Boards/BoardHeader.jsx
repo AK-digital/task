@@ -27,6 +27,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useTaskContext } from "@/context/TaskContext";
 import Portal from "../Portal/Portal";
+import Checkbox from "../UI/Checkbox";
 
 export default function BoardHeader({
   board,
@@ -249,7 +250,10 @@ export default function BoardHeader({
         {/* Display if tasks is not empty and if there is at least 2 task */}
         {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
           <div title="Sélectionner toutes les tâches">
-            <input type="checkbox" name="board" onClick={handleCheckBoard} />
+            <Checkbox 
+              name="board" 
+              onClick={handleCheckBoard}
+            />
           </div>
         )}
         {canArchive && (

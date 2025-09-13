@@ -152,7 +152,7 @@ export default function TimeTrackingHeader({
           id="trackers"
           name="trackers"
           onClick={handleSelectAllTrackers}
-          className="w-4 cursor-pointer"
+          className="w-4 h-4 p-0 cursor-pointer"
         />
       </div>
       <div className="w-full min-w-[200px] max-w-[700px]">

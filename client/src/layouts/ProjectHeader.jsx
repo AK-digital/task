@@ -14,15 +14,11 @@ export default function ProjectHeader({ displayedFilters }) {
   return (
     <>
       <header className="w-full pr-6">
-        <nav className="flex items-center gap-4 pb-4 ">
+        <nav className="flex items-center gap-5 pb-4 ">
           <ProjectTitle project={project} />
           <TasksFilters displayedFilters={displayedFilters} />
             <div
-              className={`flex items-center cursor-pointer rounded-md py-2 px-3 gap-2 border transition-all duration-200 ease-in-out ${
-                isOpen 
-                  ? 'bg-accent-color/10 border-accent-color/30 text-accent-color' 
-                  : 'border-color-border-color hover:border-accent-color/50 hover:bg-accent-color/5 hover:text-accent-color'
-              }`}
+              className='secondary-button'
               onClick={(e) => setIsOpen(true)}
               title={`Gérer les ${members.length} membre${members.length > 1 ? 's' : ''} de l'équipe`}
           >

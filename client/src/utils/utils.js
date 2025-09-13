@@ -1,6 +1,23 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { Figma, Github, Gitlab, Globe, Layout, Youtube } from "lucide-react";
+import { 
+  Figma, 
+  Github, 
+  Gitlab, 
+  Globe, 
+  Layout, 
+  Youtube,
+  Slack,
+  Trello,
+  Database,
+  Cloud,
+  Mail,
+  MessageSquare,
+  Calendar,
+  FileText,
+  Link2,
+  Settings
+} from "lucide-react";
 import socket from "./socket";
 import Image from "next/image";
 
@@ -72,8 +89,48 @@ export const icons = [
     icon: <Youtube size={20} />,
   },
   {
+    name: "Slack",
+    icon: <Slack size={20} />,
+  },
+  {
+    name: "Trello",
+    icon: <Trello size={20} />,
+  },
+  {
+    name: "Database",
+    icon: <Database size={20} />,
+  },
+  {
+    name: "Cloud",
+    icon: <Cloud size={20} />,
+  },
+  {
+    name: "Mail",
+    icon: <Mail size={20} />,
+  },
+  {
+    name: "MessageSquare",
+    icon: <MessageSquare size={20} />,
+  },
+  {
+    name: "Calendar",
+    icon: <Calendar size={20} />,
+  },
+  {
+    name: "FileText",
+    icon: <FileText size={20} />,
+  },
+  {
+    name: "Link2",
+    icon: <Link2 size={20} />,
+  },
+  {
+    name: "Settings",
+    icon: <Settings size={20} />,
+  },
+  {
     name: "Google Drive",
-    icon: <Image src={"/icons/icon-google-drive.svg"} alt="Google Drive" width={20} height={20} />,
+    icon: <Image src={"/icons/icon-Google-Drive.svg"} alt="Google Drive" width={20} height={20} />,
   },
   {
     name: "Dropbox",
@@ -85,7 +142,23 @@ export const icons = [
   },
   {
     name: "Document",
-    icon: <Image src={"/icons/icon-document.svg"} alt="Document" width={15} height={15} />,
+    icon: <Image src={"/icons/icon-document.svg"} alt="Document" width={20} height={20} />,
+  },
+  {
+    name: "PDF Document",
+    icon: <Image src={"/icons/icon-PDF.svg"} alt="PDF" width={20} height={20} />,
+  },
+  {
+    name: "Word Document",
+    icon: <Image src={"/icons/icon-word.svg"} alt="Word" width={20} height={20} />,
+  },
+  {
+    name: "PowerPoint",
+    icon: <Image src={"/icons/icon-powerpoint.svg"} alt="PowerPoint" width={20} height={20} />,
+  },
+  {
+    name: "ZIP Archive",
+    icon: <Image src={"/icons/icon-ZIP.svg"} alt="ZIP" width={20} height={20} />,
   },
 ];
 

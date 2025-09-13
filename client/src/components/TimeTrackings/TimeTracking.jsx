@@ -160,7 +160,7 @@ export default function TimeTracking({
           id={`tracker-${tracker?._id}`}
           defaultValue={tracker?._id}
           onClick={handleSelectTracker}
-          className="w-3.5 cursor-pointer"
+          className="w-4 h-4 p-0 cursor-pointer"
         />
       </div>
       {/* Task text */}

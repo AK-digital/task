@@ -63,9 +63,9 @@ function TasksContent() {
 
   return (
     <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
-      <div className="p-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto">
+      <div className="py-4 pr-4 pl-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto">
         {/* Header */}
-        <div className="flex items-center mb-6 gap-4 p-4 flex-wrap">
+        <div className="flex items-center gap-4 pr-4 pb-4 flex-wrap">
           <span className="text-2xl min-w-max select-none">Mes tâches</span>
           {/* Filters */}
           <div className="flex-1 min-w-0">

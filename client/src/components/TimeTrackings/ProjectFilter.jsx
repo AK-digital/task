@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { ChevronDownIcon, ChevronUpIcon, Undo } from "lucide-react";
+import { ChevronDown, FolderOpen, Undo } from "lucide-react";
+import Checkbox from "../UI/Checkbox";
 
 export default function ProjectFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,83 +80,70 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
     <div className="relative select-none">
       <div
         onClick={toggleDropdown}
-        className="relative flex items-center justify-center gap-1 p-2.5 rounded border border-color-border-color bg-secondary cursor-pointer text-medium w-[180px] max-h-10"
+        className="secondary-button"
+        data-open={isOpen}
       >
-        {hasProjects ? (
-          <>
-            <span className="flex justify-center gap-1">
-              {displayProjects?.visible?.map((project) => (
-                <Image
-                  src={project?.logo || "/default/default-project-logo.svg"}
-                  width={24}
-                  height={24}
-                  alt={`Logo de ${project?.name}`}
-                  key={project?._id}
-                  className="rounded-full"
-                />
-              ))}
-              {displayProjects?.remaining > 0 && (
-                <span className="text-xs font-bold text-text-dark-color bg-primary rounded-full w-6 h-6 flex items-center justify-center">
-                  +{displayProjects.remaining}
-                </span>
-              )}
-            </span>
-          </>
-        ) : (
-          <span className="flex justify-center gap-1 text-[15px]">
-            Choisir un projet
+        <FolderOpen size={16} />
+        <span className="flex-1 text-[14px]">
+          {hasProjects ? "Projets sélectionnés" : "Projets"}
+        </span>
+        {hasProjects && (
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-accent-color text-small">
+            {currentProjects?.length}
           </span>
         )}
-        {!isOpen && (
-          <ChevronDownIcon size={16} className="absolute right-1.5" />
-        )}
-        {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
+        <ChevronDown
+          size={16}
+          className={`transition-all duration-[200ms] ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </div>
       <div
-        className={`absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg z-[2000] overflow-hidden transition-all duration-[350ms] ease-in-out  ${
+        className={`absolute z-[2001] top-[44px] bg-white shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
           isOpen ? "max-h-96" : "max-h-0"
         }`}
       >
-        <ul className="p-1.5 max-h-96 overflow-y-auto  [&>li]:hover:rounded-sm [&>li]:hover:shadow-small [&>li]:hover:bg-third">
-          <li
-            className="flex items-center gap-1 cursor-pointer p-1.5 text-xs"
-            onClick={handleReset}
-          >
-            <Undo size={16} />
-            Supprimer les filtres
-          </li>
-          {projects?.map((project) => (
+        {isOpen && (
+          <ul className="flex flex-col p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
             <li
-              className="flex items-center gap-1 cursor-pointer p-1.5 text-xs"
-              key={project?._id}
+              className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+              onClick={handleReset}
             >
-              <input
-                type="checkbox"
-                id={`project-${project?._id}`}
-                name="project"
-                value={project?._id}
-                onChange={(e) => handleProjectChange(e, project)}
-                checked={isProjectSelected(project?._id)}
-                className="max-w-4 max-h-4 cursor-pointer"
-              />
-              <label
-                htmlFor={`project-${project?._id}`}
-                className="flex items-center gap-1 cursor-pointer"
-              >
-                <Image
-                  src={project?.logo || "/default/default-project-logo.svg"}
-                  width={22}
-                  height={22}
-                  alt={`Logo de ${project?.name}`}
-                  className="rounded-full"
-                />
-                <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">
-                  {project?.name}
-                </span>
-              </label>
+              <Undo size={14} />
+              <span>Effacer</span>
             </li>
-          ))}
-        </ul>
+            {projects?.map((project) => (
+              <li
+                key={project?._id}
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
+              >
+                <Checkbox
+                  id={`project-${project?._id}`}
+                  name="project"
+                  value={project?._id}
+                  onChange={(e) => handleProjectChange(e, project)}
+                  checked={isProjectSelected(project?._id)}
+                />
+                <label
+                  htmlFor={`project-${project?._id}`}
+                  className="flex items-center gap-1 cursor-pointer flex-1"
+                >
+                  <Image
+                    src={project?.logo || "/default/default-project-logo.svg"}
+                    width={22}
+                    height={22}
+                    alt={`Logo de ${project?.name}`}
+                    className="rounded-full"
+                  />
+                  <span className="block text-ellipsis overflow-hidden whitespace-nowrap">
+                    {project?.name}
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

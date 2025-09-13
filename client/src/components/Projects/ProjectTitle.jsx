@@ -17,6 +17,7 @@ import { deleteProject } from "@/api/project";
 import AddTemplate from "../Templates/AddTemplate";
 import { MoreMenu } from "../Dropdown/MoreMenu";
 import { icons, isNotEmpty } from "@/utils/utils";
+import LinkInfo from "../Popups/LinkInfo";
 
 const initialState = {
   status: "pending",
@@ -36,6 +37,7 @@ export default function ProjectTitle({ project }) {
   const [projectName, setProjectName] = useState(project?.name);
   const [addTemplate, setAddTemplate] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState(null);
   const formRef = useRef(null);
   const inputRef = useRef(null);
   const moreButtonRef = useRef(null);
@@ -188,6 +190,13 @@ export default function ProjectTitle({ project }) {
                   defaultValue={url?.icon}
                   hidden
                 />
+                <input
+                  type="text"
+                  name="label"
+                  id={`label-${url?._id}`}
+                  defaultValue={url?.label || ""}
+                  hidden
+                />
               </div>
             ))}
           </form>
@@ -219,22 +228,34 @@ export default function ProjectTitle({ project }) {
       </div>
 
       {isNotEmpty(project?.urls) && (
-        <div className="flex items-center gap-3 [&_svg]:w-[22px] [&_svg]:h-[22px]">
-          {project?.urls?.map((url, idx) => {
-            return (
-              <div key={idx}>
-                <a
-                  href={url?.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center bg-secondary p-2 rounded-lg"
-                  title={url?.label || url?.url}
+        <div className="flex items-center gap-3 [&_svg]:w-[20px] [&_svg]:h-[20px]">
+          {project?.urls
+            ?.filter((url) => url?.url && url?.url.trim() !== "") // Filtrer les URLs vides
+            ?.map((url, idx) => {
+              return (
+                <div 
+                  key={idx} 
+                  className="relative"
+                  onMouseEnter={() => setHoveredLink(idx)}
+                  onMouseLeave={() => setHoveredLink(null)}
                 >
-                  {displayIcon(url?.icon)}
-                </a>
-              </div>
-            );
-          })}
+                  <a
+                    href={url?.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center bg-secondary p-2 rounded-lg hover:bg-third transition-colors duration-200"
+                  >
+                    {displayIcon(url?.icon)}
+                  </a>
+                  {hoveredLink === idx && url?.label && (
+                    <LinkInfo 
+                      label={url?.label}
+                      style={{ top: "-45px" }}
+                    />
+                  )}
+                </div>
+              );
+            })}
         </div>
       )}
       {addTemplate && (

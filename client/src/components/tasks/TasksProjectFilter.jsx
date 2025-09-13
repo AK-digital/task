@@ -65,9 +65,7 @@ export default function TasksProjectFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div
-        className={`flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[195px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${
-          isOpen ? "bg-[#f9f7efb3] shadow-small" : ""
-        }`}
+        className="secondary-button"
         onClick={toggleDropdown}
         data-open={isOpen}
       >
@@ -85,7 +83,7 @@ export default function TasksProjectFilter({ queries, setQueries }) {
         ) : (
           <FolderOpenDot size={16} />
         )}
-        <span className="max-w-[140px] flex-1 whitespace-nowrap text-ellipsis overflow-hidden block">
+        <span className="flex-1 whitespace-nowrap text-ellipsis overflow-hidden text-[14px] block">
           {theProject?.name || "Choisir un projet"}
         </span>
         <ChevronDown

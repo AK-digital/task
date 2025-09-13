@@ -23,8 +23,12 @@ import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 import ConfirmationKick from "../Popups/ConfirmationKick";
 import ConfirmationLeave from "../Popups/ConfirmationLeave";
+import { X } from "lucide-react";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
+  const [isClosing, setIsClosing] = useState(false);
+  const [isOpening, setIsOpening] = useState(true);
+  
   const initialState = {
     status: "pending",
     message: "",
@@ -51,6 +55,22 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const canInvite = useUserRole(project, ["owner", "manager"]);
   const canRemove = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
+
+  // Animation d'ouverture
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsOpening(false);
+    }, 50); // Petit délai pour déclencher l'animation
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsOpen(false);
+    }, 300); // Durée de l'animation de fermeture
+  };
 
   const handleLeaveProject = async (projectId) => {
     const response = await leaveProject(projectId);
@@ -128,19 +148,39 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 flex flex-col rounded-lg bg-secondary gap-5 w-full max-w-135 p-6 shadow-[0px_0px_20px_#00000030] select-none">
-        <h2 className="font-medium text-large">Inviter de nouveaux membres</h2>
-        {canInvite && (
-          <GuestFormInvitation
-            project={project}
-            setIsPopup={setIsPopup}
-            mutateProjectInvitation={mutateProjectInvitation}
-          />
-        )}
-        {/* Guests list */}
-        {isNotEmpty(members) && (
-          <div className="border-t border-color-border-color mb-2 [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
-            <h2 className="font-medium text-large mt-5">Gestion de l'équipe projet</h2>
+      {/* Sidebar */}
+      <div className={`fixed top-0 right-0 h-full w-[500px] bg-secondary shadow-[0px_0px_20px_#00000030] z-2001 transform transition-transform duration-300 ease-in-out ${
+        isClosing ? 'translate-x-full' : isOpening ? 'translate-x-full' : 'translate-x-0'
+      }`}>
+        {/* Header avec bouton de fermeture */}
+        <div className="flex items-center justify-between p-6">
+          <h2 className="font-medium text-large">Gestion de l'équipe</h2>
+          <span
+            onClick={handleClose}
+            className="text-text-color-muted hover:text-accent-color transition-colors duration-200"
+            title="Fermer"
+          >
+            <X size={24} />
+          </span>
+        </div>
+        
+        {/* Contenu scrollable */}
+        <div className="flex flex-col gap-5 p-6 h-full overflow-y-auto pb-20">
+          <div>
+            <h3 className="font-medium text-large mb-4">Inviter de nouveaux membres</h3>
+            {canInvite && (
+              <GuestFormInvitation
+                project={project}
+                setIsPopup={setIsPopup}
+                mutateProjectInvitation={mutateProjectInvitation}
+              />
+            )}
+          </div>
+          
+          {/* Membres existants */}
+          {isNotEmpty(members) && (
+            <div className="border-t border-color-border-color pt-5 [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+              <h3 className="font-medium text-large mb-4">Membres du projet</h3>
             <ul className="flex flex-col mt-4">
               {members.map((member, index) => {
                 return (
@@ -217,27 +257,37 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
                   </li>
                 );
               })}
-            </ul>
-          </div>
-        )}
-        {isNotEmpty(projectInvitations) && canEditRole && (
-          <div className="border-t border-color-border-color [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2 ">
-            <h2 className="font-medium text-large my-2">
-              Invitations en cours
-            </h2>
-            <ul className="flex flex-col">
-              <ProjectInvitationsList
-                projectInvitations={projectInvitations}
-                setIsPopup={setIsPopup}
-                project={project}
-                mutateProjectInvitation={mutateProjectInvitation}
-                members={members}
-              />
-            </ul>
-          </div>
-        )}
+              </ul>
+            </div>
+          )}
+          
+          {/* Invitations en cours */}
+          {isNotEmpty(projectInvitations) && canEditRole && (
+            <div className="border-t border-color-border-color pt-5 [&_div]:flex [&_div]:justify-between [&_div]:items-center [&_div]:gap-2">
+              <h3 className="font-medium text-large mb-4">
+                Invitations en cours
+              </h3>
+              <ul className="flex flex-col">
+                <ProjectInvitationsList
+                  projectInvitations={projectInvitations}
+                  setIsPopup={setIsPopup}
+                  project={project}
+                  mutateProjectInvitation={mutateProjectInvitation}
+                  members={members}
+                />
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="modal-layout" onClick={(e) => setIsOpen(false)}></div>
+      
+      {/* Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-2000 transition-opacity duration-300 ${
+          isClosing ? 'opacity-0' : isOpening ? 'opacity-0' : 'opacity-100'
+        }`}
+        onClick={handleClose}
+      ></div>
       {isPopup && (
         <PopupMessage
           status={isPopup?.status}

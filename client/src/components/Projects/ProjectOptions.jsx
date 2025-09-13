@@ -31,7 +31,11 @@ const initialState = {
 
 export default function ProjectOptions({ project }) {
   const router = useRouter();
-  const [links, setLinks] = useState(project?.urls || []);
+  const [links, setLinks] = useState(
+    project?.urls?.length
+      ? [...project.urls]
+      : [{ url: "", icon: "Globe", label: "" }]
+  );
 
   const [projectName, setProjectName] = useState(project?.name || "");
   const [note, setNote] = useState(project?.note || "");
@@ -48,7 +52,7 @@ export default function ProjectOptions({ project }) {
 
   const initialLinks = useRef(
     project?.urls?.length
-      ? project.urls.map((link) => ({ ...link }))
+      ? [...project.urls.map((link) => ({ ...link }))]
       : [{ url: "", icon: "Globe", label: "" }]
   );
 
@@ -147,10 +151,22 @@ export default function ProjectOptions({ project }) {
     ]);
   }
 
-  function removeLink(e, link) {
+  function removeLink(e, link, index) {
     e.preventDefault();
+    
+    // Empêcher la suppression du dernier lien vide
+    if (links.length === 1 && !link?.url?.trim()) {
+      return;
+    }
+    
     const updatedLinks = links.filter((l) => l !== link);
-    setLinks(updatedLinks);
+    
+    // S'assurer qu'il reste au moins un lien vide si tous les liens sont supprimés
+    if (updatedLinks.length === 0) {
+      setLinks([{ url: "", icon: "Globe", label: "" }]);
+    } else {
+      setLinks(updatedLinks);
+    }
   }
 
   return (
@@ -260,7 +276,7 @@ export default function ProjectOptions({ project }) {
                       <div className="flex flex-col gap-2" key={idx}>
                         <div className="flex items-center">
                           <div
-                            className="relative flex items-center justify-center cursor-pointer border border-text-medium-color rounded-sm w-[45px] h-[45px] mr-2"
+                            className="relative flex items-center justify-center cursor-pointer border border-text-medium-color rounded-sm w-[40px] h-[40px] mr-2"
                             onClick={() => setMoreIcons(idx)}
                           >
                             {displayIcon(link?.icon)}
@@ -281,12 +297,12 @@ export default function ProjectOptions({ project }) {
                               />
                             )}
                           </div>
-                          <div className="flex flex-col gap-1 flex-1">
+                          <div className="flex flex-row gap-3 flex-1">
                             <input
                               type="text"
                               id="label"
                               name="label"
-                              placeholder="Label du lien (optionnel)"
+                              placeholder="Label du lien"
                               value={link?.label || ""}
                               onChange={(e) => {
                                 links[idx].label = e.target.value;
@@ -299,6 +315,7 @@ export default function ProjectOptions({ project }) {
                               type="url"
                               id="url"
                               name="url"
+                              className="text-sm text-gray-600"
                               placeholder="https://www.exemple.com"
                               value={link?.url}
                               onChange={(e) => {
@@ -309,8 +326,11 @@ export default function ProjectOptions({ project }) {
                             />
                           </div>
                           <div
-                            className="text-text-color-red pl-5 cursor-pointer"
-                            onClick={(e) => removeLink(e, link)}
+                            className={`pl-5 cursor-pointer ${
+                              (links.length === 1 && !link?.url?.trim()) ? 'text-gray-300 cursor-not-allowed' : 'text-text-color-red'
+                            }`}
+                            onClick={(e) => removeLink(e, link, idx)}
+                            title={(links.length === 1 && !link?.url?.trim()) ? 'Cette ligne ne peut pas être supprimée' : 'Supprimer ce lien'}
                           >
                             <Delete size={20} />
                           </div>
@@ -319,12 +339,13 @@ export default function ProjectOptions({ project }) {
                     );
                   })}
                 {links.length < 6 && (
-                  <button
-                    onClick={addLink}
+                  <Link href="#"
+                    onClick={addLink} 
                     className="bg-transparent text-accent-color w-fit p-0 mt-1.5 hover:bg-transparent hover:shadow-none underline"
                   >
                     Ajouter un lien
-                  </button>
+                  </Link>
+                            
                 )}
               </div>
             </div>

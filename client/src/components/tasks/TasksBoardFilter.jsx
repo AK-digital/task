@@ -23,9 +23,7 @@ export default function TasksBoardFilter({ queries, setQueries }) {
       <div
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
-        className={`current_TasksBoardFilter flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer w-[210px] transition-all duration-[120ms] ease-in-out hover:bg-[#f9f7efb3] hover:shadow-small ${
-          isOpen ? "bg-[#f9f7efb3] shadow-small" : ""
-        }`}
+        className="secondary-button"
       >
         {theBoard?.color ? (
           <div
@@ -35,7 +33,7 @@ export default function TasksBoardFilter({ queries, setQueries }) {
         ) : (
           <LayoutDashboard size={16} />
         )}
-        <span className="max-w-[140px] flex-1 whitespace-nowrap text-ellipsis overflow-hidden block lowercase first-letter:uppercase">{theBoard?.title || "Choisir un tableau"} </span>
+        <span className="flex-1 whitespace-nowrap text-ellipsis overflow-hidden block lowercase first-letter:uppercase">{theBoard?.title || "Choisir un tableau"} </span>
         <ChevronDown size={16} className="chevron_TasksBoardFilter transition-all duration-[120ms] ease-in-out" />
       </div>
       {isOpen && (

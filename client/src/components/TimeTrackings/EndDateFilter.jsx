@@ -25,12 +25,12 @@ export default function EndDateFilter({ queries, setQueries }) {
   }
 
   return (
-    <div className="flex items-center justify-center gap-1 p-2.5 rounded-sm bg-secondary cursor-pointer text-medium w-[180px] max-h-10 border border-color-border-color">
+    <div className="secondary-button">
       <input
         type="date"
         value={endDate}
         onChange={handleEndDateChange}
-        className="border-b-0 cursor-pointer text-[15px]"
+        className="p-0 border-0 bg-transparent cursor-pointer text-[14px] outline-none"
       />
     </div>
   );

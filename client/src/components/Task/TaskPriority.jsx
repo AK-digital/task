@@ -121,7 +121,7 @@ export default function TaskPriority({ task }) {
   return (
     <div className="relative flex items-center select-none border-r border-text-light-color text-xs lg:text-normal text-text-color min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
       <div
-        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-4 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-4 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -141,7 +141,7 @@ export default function TaskPriority({ task }) {
                 return (
                   <li
                     key={priority?._id}
-                    className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-3xl text-center min-h-[34px]"
+                    className="secondary-button"
                     data-value={priority?.name}
                     onClick={() => handleTaskUpdatePriority(priority)}
                     style={{ backgroundColor: priority?.color }}
@@ -172,7 +172,7 @@ export default function TaskPriority({ task }) {
           </ul>
           {isEdit ? (
             <button
-              className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
+              className="bg-transparent w-full outline-none border-none  text-[14px]  text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 rounded-sm hover:bg-text-lighter-color hover:shadow-none"
               onClick={handleEditPriority}
             >
               <Save size={16} />
@@ -180,7 +180,7 @@ export default function TaskPriority({ task }) {
             </button>
           ) : (
             <button
-              className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-sm hover:bg-text-lighter-color hover:shadow-none"
+                className="bg-transparent w-full outline-none border-none text-[14px]  text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 rounded-sm hover:bg-text-lighter-color hover:shadow-none"
               onClick={handleEditPriority}
             >
               <Pen size={16} /> Modifier les priorités

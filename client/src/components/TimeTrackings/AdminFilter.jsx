@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DisplayPicture from "../User/DisplayPicture";
 import { ChevronDownIcon, ChevronUpIcon, Undo } from "lucide-react";
+import Checkbox from "../UI/Checkbox";
 
 export default function AdminFilter({ projects, queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +70,8 @@ export default function AdminFilter({ projects, queries, setQueries }) {
     <div className="relative select-none">
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="relative flex items-center justify-center gap-1 p-2.5 rounded-sm bg-secondary cursor-pointer text-medium w-[180px] max-h-10 border border-color-border-color"
+        className="secondary-button"
+        data-open={isOpen}
       >
         {hasMembers ? (
           <>
@@ -81,6 +83,7 @@ export default function AdminFilter({ projects, queries, setQueries }) {
                       user={m?.user}
                       style={{ width: "24px", height: "24px" }}
                       className="rounded-full"
+                      isPopup={false}
                     />
                   </React.Fragment>
                 );
@@ -93,63 +96,79 @@ export default function AdminFilter({ projects, queries, setQueries }) {
             </span>
           </>
         ) : (
-          <span className="flex justify-center gap-1 text-[15px]">
+          <span className="flex justify-center gap-1 text-[14px]">
             Tous les membres
           </span>
         )}
-        {!isOpen && (
-          <ChevronDownIcon size={16} className="absolute right-1.5" />
+        {hasMembers && (
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-accent-color text-small">
+            {currentMembers?.length}
+          </span>
         )}
-        {isOpen && <ChevronUpIcon size={16} className="absolute right-1.5" />}
+        <ChevronDownIcon
+          size={16}
+          className={`transition-all duration-[200ms] ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </div>
-      <div
-        className={`absolute top-[calc(100%+4px)] left-0 w-full bg-secondary shadow-medium rounded-lg z-[2000] overflow-hidden transition-all duration-[350ms] ease-in-out  ${
-          isOpen ? "max-h-96" : "max-h-0"
-        }`}
-      >
-        <ul className="max-h-96 overflow-y-auto p-1.5 [&>li]:hover:rounded-sm [&>li]:hover:shadow-small [&>li]:hover:bg-third">
-          <li
-            className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
-            onClick={handleReset}
-          >
-            <Undo size={16} />
-            Supprimer les filtres
-          </li>
-          {members?.map((member) => {
-            return (
+      <>
+        <div
+          className={`absolute z-[2001] top-[44px] bg-white shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
+            isOpen ? "max-h-96" : "max-h-0"
+          }`}
+        >
+          {isOpen && (
+            <ul className="flex flex-col p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
               <li
-                key={member?.user?._id}
-                className="flex items-center p-1.5 text-xs gap-1 cursor-pointer"
+                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+                onClick={handleReset}
               >
-                <input
-                  type="checkbox"
-                  id={`user-${member?.user?._id}`}
-                  name="user"
-                  onChange={(e) => handleMemberChange(e, member)}
-                  value={member?.user?._id}
-                  checked={Boolean(
-                    queries?.members?.includes(member?.user?._id)
-                  )}
-                  className="max-w-4 max-h-4 cursor-pointer"
-                />
-                <label
-                  htmlFor={`user-${member?.user?._id}`}
-                  className="flex items-center gap-1 cursor-pointer"
-                >
-                  <DisplayPicture
-                    user={member?.user}
-                    style={{ width: "22px", height: "22px" }}
-                    className="rounded-full"
-                  />
-                  <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">
-                    {member?.user?.firstName} {member?.user?.lastName}
-                  </span>
-                </label>
+                <Undo size={14} />
+                <span>Effacer</span>
               </li>
-            );
-          })}
-        </ul>
-      </div>
+              {members?.map((member) => {
+                return (
+                  <li
+                    key={member?.user?._id}
+                    className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
+                  >
+                    <Checkbox
+                      id={`user-${member?.user?._id}`}
+                      name="user"
+                      onChange={(e) => handleMemberChange(e, member)}
+                      value={member?.user?._id}
+                      checked={Boolean(
+                        queries?.members?.includes(member?.user?._id)
+                      )}
+                    />
+                    <label
+                      htmlFor={`user-${member?.user?._id}`}
+                      className="flex items-center gap-1 cursor-pointer"
+                    >
+                      <DisplayPicture
+                        user={member?.user}
+                        style={{ width: "22px", height: "22px" }}
+                        className="rounded-full"
+                        isPopup={false}
+                      />
+                      <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-25">
+                        {member?.user?.firstName} {member?.user?.lastName}
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+        {isOpen && (
+          <div
+            className="modal-layout-opacity"
+            onClick={() => setIsOpen(false)}
+          ></div>
+        )}
+      </>
     </div>
   );
 }

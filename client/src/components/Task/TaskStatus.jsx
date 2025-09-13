@@ -117,7 +117,7 @@ export default function TaskStatus({ task, uid }) {
   return (
     <div className="flex items-center select-none border-r border-text-light-color text-xs lg:text-normal text-foreground min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
       <div
-        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-4 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-2 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -138,7 +138,7 @@ export default function TaskStatus({ task, uid }) {
                 return (
                   <li
                     key={status?._id}
-                    className="py-2 px-4 min-w-[135px] cursor-pointer text-white rounded-3xl text-center min-h-[34px] transition-all duration-[60ms] linear hover:opacity-80"
+                    className="filter_button"
                     onClick={() => handleTaskUpdateStatus(status)}
                     style={{ backgroundColor: status?.color }}
                   >

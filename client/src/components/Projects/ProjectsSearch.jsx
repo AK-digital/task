@@ -15,13 +15,13 @@ export default function ProjectsSearch({ setQueries }) {
   }, 600);
 
   return (
-    <div className="container_ProjectsSearch flex items-center gap-2 p-2 w-full transition-all duration-150 ease-in-out border-b border-color-border-color">
+    <div className="container_ProjectsSearch flex items-center gap-2 p-1 w-full transition-all duration-150 ease-in-out border-b border-color-border-color">
       <Search size={24} />
       <input
         type="search"
         name="search"
         id="search"
-        placeholder="Recherchez un projet..."
+        placeholder="Recherchez un projet"
         onChange={handleSearch}
         className="input_ProjectsSearch border-0 p-0 text-color-text-dark-color text-normal font-bricolage placeholder:text-color-text-color-muted"
       />

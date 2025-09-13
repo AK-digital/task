@@ -58,6 +58,10 @@ const projectSchema = new Schema(
             type: String,
             required: true,
           },
+          label: {
+            type: String,
+            required: false,
+          },
         },
       ],
     },

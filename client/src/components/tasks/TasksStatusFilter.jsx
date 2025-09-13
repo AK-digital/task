@@ -1,6 +1,7 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { ChartBar, ChevronDown, Undo } from "lucide-react";
 import { useState, useMemo, useCallback } from "react";
+import Checkbox from "../UI/Checkbox";
 
 export default function TasksStatusFilter({ queries, setQueries }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -92,15 +93,14 @@ export default function TasksStatusFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div
-        className={`relative flex items-center gap-2 bg-secondary p-2.5 rounded-sm border border-color-border-color cursor-pointer hover:bg-[#f9f7efb3] hover:shadow-small ${
-          isOpen ? "bg-[#f9f7efb3] shadow-small" : ""
-        }`}
+        className="secondary-button"
         onClick={toggleDropdown}
+        data-open={isOpen}
       >
         <ChartBar size={16} />
-        <span className="flex-1 text-[15px]">Statut</span>
+        <span className="flex-1 text-[14px]">Statut</span>
         {hasStatus && (
-          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-[#CC9348] text-small">
+          <span className="absolute -right-1 -top-1 flex items-center justify-center text-white w-[18px] h-[18px] rounded-full bg-accent-color text-small">
             {QueriesStatus?.length}
           </span>
         )}
@@ -130,14 +130,12 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 key={elt?._id}
                 className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
               >
-                <input
-                  type="checkbox"
+                <Checkbox
                   id={elt?._id}
                   name={elt?.name}
                   value={elt?._id}
                   onChange={(e) => handleStatusChange(e, elt)}
                   checked={isStatusChecked(elt?._id)}
-                  className="w-auto cursor-pointer"
                 />
                 <label
                   htmlFor={elt?._id}

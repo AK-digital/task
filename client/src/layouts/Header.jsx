@@ -44,18 +44,18 @@ export default function Header() {
             <button
               onClick={(e) => setNotifOpen(true)}
               title="Vos notifications"
-              className="group relative px-0.5 h-full bg-transparent overflow-visible shadow-none"
+              className="group relative px-0.5 h-full bg-transparent overflow-visible shadow-none select-none"
             >
               <Bell
                 size={22}
                 data-open={notifOpen}
-                className="group-hover:fill-text-darker-color  data-[open=true]:fill-text-darker-color text-text-darker-color"
+                className="group-hover:fill-text-darker-color  data-[open=true]:fill-text-darker-color text-text-darker-color select-none"
               />
               {/* {unreadCount > 0 && (
                 <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-red-500 animate-ping"></div>
               )} */}
               {unreadCount > 0 && (
-                <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-text-color-red"></div>
+                <div className="absolute w-[11px] h-[11px] top-3 right-0 rounded-full bg-text-color-red select-none"></div>
               )}
             </button>
             {notifOpen && (

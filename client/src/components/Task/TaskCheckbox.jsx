@@ -1,4 +1,5 @@
 import { useUserRole } from "../../../hooks/useUserRole";
+import Checkbox from "../UI/Checkbox";
 
 export default function TaskCheckbox({ task, setSelectedTasks }) {
   const project = task?.projectId;
@@ -22,8 +23,7 @@ export default function TaskCheckbox({ task, setSelectedTasks }) {
 
   return (
     <div className="flex items-center h-full">
-      <input
-        type="checkbox"
+      <Checkbox
         name="task"
         id={`task-${task?._id}`}
         value={task?._id}

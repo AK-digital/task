@@ -17,8 +17,8 @@ export default function DisplayPicture({ user, style, isPopup = true }) {
     if (imageRef.current) {
       const rect = imageRef.current.getBoundingClientRect();
       setStylePopup({
-        top: `${rect.bottom + window.scrollY + 5}px`,
-        left: `${rect.left + window.scrollX}px`,
+        top: `${rect.top + window.scrollY - 45}px`,
+        left: `${rect.left + window.scrollX + rect.width / 2}px`,
       });
     }
     setIsOpen(true);

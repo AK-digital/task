@@ -211,6 +211,7 @@ export async function updateProject(prevState, formData) {
     const note = formData.get("note");
     const urls = formData.getAll("url");
     const icons = formData.getAll("icon");
+    const labels = formData.getAll("label");
 
     if (!name) {
       return {
@@ -219,18 +220,30 @@ export async function updateProject(prevState, formData) {
       };
     }
 
-    if (urls.length >= 1) {
+    // Filtrer les URLs vides avant validation
+    const validUrls = [];
+    const validIcons = [];
+    const validLabels = [];
+    
+    for (let i = 0; i < urls.length; i++) {
+      if (urls[i] && urls[i].trim() !== "") {
+        validUrls.push(urls[i]);
+        validIcons.push(icons[i] || "Globe");
+        validLabels.push(labels[i] || "");
+      }
+    }
+
+    if (validUrls.length >= 1) {
       function isValidUrl(urls) {
         for (const url of urls) {
           if (!regex.url.test(url)) {
             return false;
           }
-
-          return true;
         }
+        return true;
       }
 
-      if (!isValidUrl(urls)) {
+      if (!isValidUrl(validUrls)) {
         return {
           status: "failure",
           message: "L'URL est invalide",
@@ -238,18 +251,10 @@ export async function updateProject(prevState, formData) {
       }
     }
 
-    for (var i = 0; i < urls.length; i++) {
-      if (urls[i] === "") {
-        return {
-          status: "failure",
-          message: "L'URL ne peut pas être vide",
-        };
-      }
-    }
-
-    const urlsArray = urls.map((url, index) => ({
-      icon: icons[index] || "Globe", // Utilise l'icône correspondante ou "Globe" par défaut
+    const urlsArray = validUrls.map((url, index) => ({
+      icon: validIcons[index] || "Globe",
       url: url,
+      label: validLabels[index] || "",
     }));
 
     const rawFormData = {

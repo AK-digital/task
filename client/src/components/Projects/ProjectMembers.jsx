@@ -25,8 +25,8 @@ export default function ProjectMembers({ members }) {
     if (moreRef.current) {
       const rect = moreRef.current.getBoundingClientRect();
       setStyle({
-        top: rect.top + rect.height + window.scrollY - 16,
-        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY - 45,
+        left: rect.left + window.scrollX + rect.width / 2,
       });
       setUsers(defaultUsers);
 
