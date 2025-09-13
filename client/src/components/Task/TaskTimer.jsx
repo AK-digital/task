@@ -1,4 +1,4 @@
-import { saveTimeTracking } from "@/actions/timeTracking";
+import { saveTimeTracking, updateTimeTracking } from "@/actions/timeTracking";
 import {
   deleteTimeTracking,
   timeTrackingStart,
@@ -9,12 +9,11 @@ import { AuthContext } from "@/context/auth";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
 import { formatTime, isNotEmpty } from "@/utils/utils";
-import { CirclePause, CirclePlay } from "lucide-react";
-import { MinusCircle } from "lucide-react";
+import { CirclePause, CirclePlay, Timer, Trash, Edit } from "lucide-react";
 import moment from "moment";
 moment.locale("fr");
 import Image from "next/image";
-import { useEffect, useState, useActionState, useContext, useRef } from "react";
+import { useEffect, useState, useActionState, useContext, useRef, startTransition } from "react";
 import { useStopwatch } from "react-timer-hook";
 import FloatingMenu from "@/shared/components/FloatingMenu";
 
@@ -30,6 +29,7 @@ export default function TaskTimer({ task }) {
   const [sessions, setSessions] = useState(task?.timeTrackings || []);
   const [more, setMore] = useState(false);
   const [addingSession, setAddingSession] = useState(false);
+  const [editingSession, setEditingSession] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
 
   // NOUVEAU: Flag pour différencier les mises à jour locales des externes
@@ -38,7 +38,8 @@ export default function TaskTimer({ task }) {
   const stopwatchRef = useRef(null);
   const project = task?.projectId;
 
-  const canAdd = useUserRole(project, ["owner", "manager", "team"]);
+  const canAdd = useUserRole(project, ["owner", "manager", "team", "customer"]);
+  const canEditAll = useUserRole(project, ["owner", "manager"]);
 
   const { refs, floatingStyles } = getFloating(more, setMore);
 
@@ -163,20 +164,20 @@ export default function TaskTimer({ task }) {
       data-running={isRunning}
     >
       <span
-        className="flex items-center justify-center gap-1 xl:gap-2 text-xs xl:text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center"
+        className="flex items-center justify-center gap-1 xl:gap-2  xl:text-normal cursor-pointer data-[center=true]:w-full data-[center=true]:justify-center"
         data-center={!canAdd}
       >
         {canAdd && (
           <>
             {isRunning ? (
               <CirclePause
-                className="w-4 h-4 xl:w-5 xl:h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
+                className="w-4 h-4 xl:w-5 xl:h-5 stroke-[1.5px] cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
                 data-running={isRunning}
                 onClick={handlePauseTimer}
               />
             ) : (
               <CirclePlay
-                className="w-4 h-4 xl:w-5 xl:h-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
+                className="w-4 h-4 xl:w-5 xl:h-5 stroke-[1.5px] cursor-pointer transition-colors duration-150 ease-in-out hover:text-accent-color"
                 data-running={isRunning}
                 onClick={handlePlayTimer}
               />
@@ -196,60 +197,77 @@ export default function TaskTimer({ task }) {
           setIsOpen={setMore}
           refs={refs}
           floatingStyles={floatingStyles}
-          className={`w-[400px] ${
-            addingSession ? "max-h-[300px]" : "max-h-[200px]"
-          }`}
+          className="w-[360px] p-0"
         >
-          <div className="flex justify-between items-center text-[1.1rem] font-medium bg-third p-2 rounded-t">
-            <span className="text-text-dark-color select-none">
-              Gestion du temps
-            </span>
-            {addingSession && (
-              <span
-                className="text-accent-color text-normal cursor-pointer select-none"
-                onClick={(e) => setAddingSession(false)}
-              >
-                Retour
-              </span>
-            )}
-          </div>
-          {addingSession ? (
-            <TimeTrackingForm
-              task={task}
-              formatTime={formatTime}
-              setSessions={handleLocalSessionUpdate}
-            />
-          ) : (
-            <div className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4">
-              {canAdd && (
-                <div className="flex items-center gap-2">
-                  <button
-                    className="w-full p-2 rounded"
-                    onClick={() => setAddingSession(true)}
-                  >
-                    Ajouter une session
-                  </button>
-                </div>
-              )}
-              {isNotEmpty(sessions) && (
-                <TimeTrackingSessions
-                  task={task}
-                  sessions={sessions}
-                  setSessions={handleLocalSessionUpdate}
-                  formatTime={formatTime}
-                />
+          <div className="rounded-lg overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-3 border-b border-gray-300">
+              <h3 className="font-medium text-sm text-black">Gestion du temps</h3>
+              {(addingSession || editingSession) && (
+                <span
+                  className="text-sm px-2 py-1 border border-accent-color text-accent-color hover:bg-accent-color hover:text-white rounded transition-colors cursor-pointer select-none"
+                  onClick={() => {
+                    setAddingSession(false);
+                    setEditingSession(null);
+                  }}
+                >
+                  Retour
+                </span>
               )}
             </div>
-          )}
+            
+            {addingSession ? (
+              <TimeTrackingForm
+                task={task}
+                formatTime={formatTime}
+                setSessions={handleLocalSessionUpdate}
+              />
+            ) : editingSession ? (
+              <TimeTrackingForm
+                task={task}
+                formatTime={formatTime}
+                setSessions={handleLocalSessionUpdate}
+                editingSession={editingSession}
+                setEditingSession={setEditingSession}
+              />
+            ) : (
+              <div className="p-3">
+                {canAdd && (
+                  <div className="mb-4">
+                    <span
+                      className="w-full text-[15px] px-3 py-2 border border-accent-color text-white bg-accent-color hover:bg-accent-color-hover rounded transition-colors cursor-pointer block text-center"
+                      onClick={() => setAddingSession(true)}
+                    >
+                      Ajouter une session
+                    </span>
+                  </div>
+                )}
+                {isNotEmpty(sessions) && (
+                  <TimeTrackingSessions
+                    task={task}
+                    sessions={sessions}
+                    setSessions={handleLocalSessionUpdate}
+                    formatTime={formatTime}
+                    canEditAll={canEditAll}
+                    setEditingSession={setEditingSession}
+                  />
+                )}
+              </div>
+            )}
+          </div>
         </FloatingMenu>
       )}
     </div>
   );
 }
 
-export function TimeTrackingForm({ task, formatTime, setSessions }) {
-  const [startTime, setStartTime] = useState(moment().format("HH:mm"));
-  const [endTime, setEndTime] = useState("");
+export function TimeTrackingForm({ task, formatTime, setSessions, editingSession, setEditingSession }) {
+  const [startTime, setStartTime] = useState(
+    editingSession ? moment(editingSession.startTime).format("HH:mm") : moment().format("HH:mm")
+  );
+  const [endTime, setEndTime] = useState(
+    editingSession ? moment(editingSession.endTime).format("HH:mm") : ""
+  );
   const [timeExpected, setTimeExpected] = useState("00:00:00");
 
   const initialState = {
@@ -259,118 +277,181 @@ export function TimeTrackingForm({ task, formatTime, setSessions }) {
     errors: null,
   };
 
-  const saveTimeTrackingWithIds = saveTimeTracking.bind(
-    null,
-    task._id,
-    task?.projectId?._id
-  );
+  const actionWithIds = editingSession 
+    ? updateTimeTracking.bind(null, editingSession._id, task?.projectId?._id)
+    : saveTimeTracking.bind(null, task._id, task?.projectId?._id);
+    
   const [state, formAction, pending] = useActionState(
-    saveTimeTrackingWithIds,
+    actionWithIds,
     initialState
   );
 
   useEffect(() => {
+    if (editingSession && startTime && endTime) {
+      const newTimeExpected = calculateTimeDifference(startTime, endTime);
+      setTimeExpected(newTimeExpected);
+    }
+  }, [editingSession, startTime, endTime]);
+
+  useEffect(() => {
     if (state?.status === "success") {
-      setStartTime(moment().format("HH:mm"));
-      setEndTime("");
-      setTimeExpected("00:00:00");
-      const newSession = state?.data;
-      setSessions((prev) => [...prev, newSession]);
+      if (editingSession) {
+        // Mode édition : mettre à jour la session existante
+        const updatedSession = state?.data;
+        setSessions((prev) => 
+          prev.map(session => 
+            session._id === editingSession._id ? updatedSession : session
+          )
+        );
+        setEditingSession(null);
+      } else {
+        // Mode création : ajouter une nouvelle session
+        setStartTime(moment().format("HH:mm"));
+        setEndTime("");
+        setTimeExpected("00:00:00");
+        const newSession = state?.data;
+        setSessions((prev) => [...prev, newSession]);
+      }
 
       socket.emit("update task", task?.projectId?._id);
     }
-  }, [state]);
+  }, [state, editingSession, setEditingSession, setSessions, task?.projectId?._id]);
 
   const calculateTimeDifference = (startTime, endTime) => {
-    if (!startTime || !endTime) return;
+    if (!startTime || !endTime) return "00:00:00";
 
-    const [startHours, startMinutes] = startTime.split(":");
-    const [endHours, endMinutes] = endTime.split(":");
+    try {
+      const [startHours, startMinutes] = startTime.split(":");
+      const [endHours, endMinutes] = endTime.split(":");
 
-    const startDate = new Date();
-    startDate.setHours(parseInt(startHours), parseInt(startMinutes), 0);
+      // Validation des valeurs
+      if (isNaN(startHours) || isNaN(startMinutes) || isNaN(endHours) || isNaN(endMinutes)) {
+        return "00:00:00";
+      }
 
-    const endDate = new Date();
-    endDate.setHours(parseInt(endHours), parseInt(endMinutes), 0);
+      const startDate = new Date();
+      startDate.setHours(parseInt(startHours, 10), parseInt(startMinutes, 10), 0, 0);
 
-    if (endDate < startDate) {
-      endDate.setDate(endDate.getDate() + 1);
+      const endDate = new Date();
+      endDate.setHours(parseInt(endHours, 10), parseInt(endMinutes, 10), 0, 0);
+
+      if (endDate < startDate) {
+        endDate.setDate(endDate.getDate() + 1);
+      }
+
+      const diffInSeconds = Math.floor((endDate - startDate) / 1000);
+      
+      // S'assurer que la différence est positive
+      if (diffInSeconds < 0) {
+        return "00:00:00";
+      }
+
+      return formatTime(diffInSeconds);
+    } catch (error) {
+      console.error("Error calculating time difference:", error);
+      return "00:00:00";
     }
-
-    const diffInSeconds = Math.floor((endDate - startDate) / 1000);
-    return formatTime(diffInSeconds);
   };
 
   const handleStartTimeChange = (e) => {
-    setStartTime(e.target.value);
-    if (endTime) {
-      setTimeExpected(calculateTimeDifference(e.target.value, endTime));
+    const newStartTime = e.target.value;
+    setStartTime(newStartTime);
+    if (endTime && newStartTime) {
+      const newTimeExpected = calculateTimeDifference(newStartTime, endTime);
+      setTimeExpected(newTimeExpected);
+    } else {
+      setTimeExpected("00:00:00");
     }
   };
 
   const handleEndTimeChange = (e) => {
-    setEndTime(e.target.value);
-    if (startTime) {
-      setTimeExpected(calculateTimeDifference(startTime, e.target.value));
+    const newEndTime = e.target.value;
+    setEndTime(newEndTime);
+    if (startTime && newEndTime) {
+      const newTimeExpected = calculateTimeDifference(startTime, newEndTime);
+      setTimeExpected(newTimeExpected);
+    } else {
+      setTimeExpected("00:00:00");
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Validation avant envoi
+    if (!startTime || !endTime) {
+      console.error("Start time and end time are required");
+      return;
+    }
+    
+    if (timeExpected === "00:00:00") {
+      console.error("Invalid time range");
+      return;
+    }
+    
+    const formData = new FormData(e.target);
+    formAction(formData);
+  };
+
   return (
-    <div
-      className="flex flex-col gap-4 pt-1.5 pr-4 pb-3 pl-4
-"
-    >
-      <form action={formAction} className="flex flex-col gap-3">
-        <div className="mx-auto">
-          <label className="relative text-text-color-muted text-normal text-left block select-none">
-            Date de début
-          </label>
-          <input
-            className="border-none input_TimeTrackingForm_TaskTimer"
-            type="date"
-            name="date"
-            id="date"
-            defaultValue={moment().format("YYYY-MM-DD")}
-          />
-        </div>
-        <div className="flex justify-evenly w-full gap-2">
-          <div className="flex flex-col gap-1 items-center">
-            <label className="relative text-color-text-color-muted text-normal text-left block select-none">
-              Heure de début
-            </label>
+    <div className="p-3">
+      <form onSubmit={handleSubmit} className="gap-2 pt-2">
+        <div className="flex flex-row gap-2 w-full">
             <input
-              className="w-[65px] !important border-none p-0 !important input_TimeTrackingForm_TaskTimer"
+              className="w-full px-2 py-1 text-sm  border border-gray-300 rounded focus:border-accent-color focus:outline-none relative z-10"
+              type="date"
+              name="date"
+              id="date"
+              defaultValue={
+                editingSession 
+                  ? moment(editingSession.startTime).format("YYYY-MM-DD")
+                  : moment().format("YYYY-MM-DD")
+              }
+            />
+    
+            <input
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:border-accent-color focus:outline-none relative z-10"
               type="time"
               name="start-time"
               id="start-time"
               onChange={handleStartTimeChange}
-              defaultValue={moment().format("HH:mm")}
+              value={startTime}
             />
-          </div>
-          <div className="flex flex-col gap-1 items-center">
-            <label className="relative text-color-text-color-muted text-normal text-left block select-none">
-              Heure de fin
-            </label>
+     
             <input
-              className="w-[65px] border-none p-0 input_TimeTrackingForm_TaskTimer"
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:border-accent-color focus:outline-none relative z-10"
               type="time"
               name="end-time"
               id="end-time"
               onChange={handleEndTimeChange}
+              value={endTime}
             />
+        </div>
+      
+          <div className="pt-3 flex items-center justify-between w-full">
+            <span className="text-sm font-medium text-gray-700">
+              Durée: {timeExpected}
+            </span>
+            <span
+              className="text-sm  px-3 py-1 border border-accent-color text-white bg-accent-color hover:bg-accent-color-hover rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              onClick={pending || !startTime || !endTime || timeExpected === "00:00:00" ? undefined : (e) => {
+                e.preventDefault();
+                const form = e.target.closest('form');
+                if (form) {
+                  const formData = new FormData(form);
+                  startTransition(() => {
+                    formAction(formData);
+                  });
+                }
+              }}
+              style={{
+                opacity: pending || !startTime || !endTime || timeExpected === "00:00:00" ? 0.5 : 1,
+                cursor: pending || !startTime || !endTime || timeExpected === "00:00:00" ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {editingSession ? "Modifier la session" : "Ajouter la session"}
+            </span>
           </div>
-        </div>
-        <div className="flex justify-evenly items-center mb-1 mt-3 w-full">
-          <span className="select-none">{timeExpected}</span>
-          <button
-            className="p-2 rounded"
-            type="submit"
-            disabled={pending}
-            data-disabled={pending}
-          >
-            Ajouter la session
-          </button>
-        </div>
       </form>
     </div>
   );
@@ -381,6 +462,8 @@ export function TimeTrackingSessions({
   sessions,
   setSessions,
   formatTime,
+  canEditAll,
+  setEditingSession,
 }) {
   const { uid } = useContext(AuthContext);
   async function handleDeleteSession(sessionId) {
@@ -396,53 +479,65 @@ export function TimeTrackingSessions({
   }
 
   return (
-    <div
-      className="overflow-x-auto max-h-[200px] text-[0.85em] text-text-dark-color data-[overflow=true]:pr-5"
-      data-overflow={sessions?.length > 6}
-    >
-      <ul className="flex flex-col gap-3">
-        {sessions.map((session, index) => {
-          const user = session?.userId;
-          const endDate = moment(session?.endTime).format("D MMM");
-          const hoursStart = moment(session?.startTime).format("HH:mm");
-          const hoursEnd = moment(session?.endTime).format("HH:mm");
+    <div className="border-t border-gray-300 pt-3">
+      <h4 className="text-xs font-medium text-gray-700 mb-2">Sessions enregistrées</h4>
+      <div className="max-h-[150px] overflow-y-auto">
+        <div className="space-y-2">
+          {sessions.map((session, index) => {
+            const user = session?.userId;
+            const endDate = moment(session?.endTime).format("D MMM");
+            const hoursStart = moment(session?.startTime).format("HH:mm");
+            const hoursEnd = moment(session?.endTime).format("HH:mm");
 
-          //  Not showing the session if it's running
-          if (session?.isRunning === true) return null;
+            //  Not showing the session if it's running
+            if (session?.isRunning === true) return null;
 
-          return (
-            <li
-              key={`session-${session?._id}-${index}`}
-              className="flex justify-between items-center gap-2"
-            >
-              <div className="flex items-center gap-2 select-none">
-                <Image
-                  src={user?.picture || "/default/default-pfp.webp"}
-                  width={25}
-                  height={25}
-                  className="w-6 h-6 object-cover rounded-full"
-                  alt={`Photo de profil de ${user?.firstName}`}
-                />
-                <span>{endDate}</span>
-              </div>
-              <span className="flex-1 text-center select-none">
-                {hoursStart} à {hoursEnd}
-              </span>
-              <span className="flex justify-end min-w-[70px] select-none">
-                {formatTime(Math.floor(session?.duration / 1000))}
-              </span>
-              {uid === user?._id && (
-                <span
-                  className="ml-2.5 flex cursor-pointer"
-                  onClick={() => handleDeleteSession(session?._id)}
-                >
-                  <MinusCircle className="text-color-text-color-red hover:text-color-blocked-color" />
+            return (
+              <div
+                key={`session-${session?._id}-${index}`}
+                className="flex items-center justify-between py-1.5 px-2 bg-white rounded border border-gray-300 transition-colors"
+              >
+                <div className="flex items-center gap-2 select-none">
+                  <Image
+                    src={user?.picture || "/default/default-pfp.webp"}
+                    width={20}
+                    height={20}
+                    className="w-5 h-5 object-cover rounded-full"
+                    alt={`Photo de profil de ${user?.firstName}`}
+                  />
+                  <span className="text-sm text-gray-600">{endDate}</span>
+                </div>
+                <span className="text-sm text-gray-600 select-none">
+                  {hoursStart} - {hoursEnd}
                 </span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                <span className="text-sm font-medium text-gray-800 select-none">
+                  {formatTime(Math.floor(session?.duration / 1000))}
+                </span>
+                <div className="flex items-center gap-1">
+                  {(uid === user?._id || canEditAll) && (
+                    <span
+                      className="text-gray-400 hover:text-accent-color transition-colors p-1 cursor-pointer"
+                      onClick={() => setEditingSession(session)}
+                      title="Modifier cette session"
+                    >
+                      <Edit size={14} />
+                    </span>
+                  )}
+                  {uid === user?._id && (
+                    <span
+                      className="text-gray-400 hover:text-red-500 transition-colors p-1 cursor-pointer"
+                      onClick={() => handleDeleteSession(session?._id)}
+                      title="Supprimer cette session"
+                    >
+                      <Trash size={14} />
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

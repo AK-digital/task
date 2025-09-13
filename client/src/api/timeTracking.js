@@ -167,6 +167,43 @@ export async function deleteTimeTracking(trackersIds, projectId) {
   }
 }
 
+export async function updateTimeTracking(trackingId, projectId, startTime, endTime) {
+  try {
+    if (!trackingId || !projectId || !startTime || !endTime) {
+      throw new Error("Paramètres manquants");
+    }
+
+    const res = await useAuthFetch(
+      `time-tracking/${trackingId}/time?projectId=${projectId}`,
+      "PUT",
+      "application/json",
+      { startTime, endTime }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("tasks");
+    revalidateTag("trackers");
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de la mise à jour du timer"
+    );
+
+    return {
+      success: false,
+      message:
+        err?.message ||
+        "Une erreur est survenue lors de la mise à jour du timer",
+    };
+  }
+}
+
 export async function updateTimeTrackingBillable(
   trackingId,
   projectId,

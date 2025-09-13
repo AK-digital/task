@@ -3,7 +3,7 @@ import { updateTaskEstimate } from "@/api/task";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
-import { XCircle } from "lucide-react";
+import { CircleX, Clock } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import FloatingMenu from "@/shared/components/FloatingMenu";
 
@@ -107,7 +107,7 @@ export default function TaskEstimate({ task, uid }) {
 
   return (
     <div
-      className="hidden lg:flex relative justify-center items-center py-1 px-1 xl:px-2 border-r border-text-light-color min-w-[80px] xl:min-w-[100px] max-w-[120px] w-full h-full gap-0.5 flex-shrink-0"
+      className="hidden lg:flex justify-center items-center py-1 px-1 xl:px-2 border-r border-text-light-color min-w-[90px] xl:min-w-[110px] max-w-[130px] w-full h-full gap-0.5 flex-shrink-0 relative"
       onMouseEnter={handleHover}
       onMouseLeave={() => setHover(false)}
     >
@@ -115,103 +115,129 @@ export default function TaskEstimate({ task, uid }) {
         data-estimation={hasEstimation}
         onClick={handleIsEditing}
         ref={refs.setReference}
-        className="bg-primary py-1 px-0.5 rounded-2xl text-xs xl:text-small w-full text-center cursor-pointer font-semibold data-[estimation=false]:text-text-dark-color"
+        className="relative w-full bg-primary rounded-3xl py-1 px-1 text-center cursor-pointer text-xs xl:text-small overflow-visible flex items-center justify-center gap-1"
       >
-        <span className="select-none">{estimation}</span>
+        {hasEstimation ? (
+          <span className="relative z-10 select-none font-medium whitespace-nowrap">
+            {estimation}
+          </span>
+        ) : (
+          <>
+            {hover ? (
+              <>
+                <Clock size={12} className="relative z-10 text-gray-600" />
+                <span className="relative z-10 select-none text-gray-600 text-xs">
+                  Estimer
+                </span>
+              </>
+            ) : (
+              <span className="relative z-10 select-none text-gray-500">-</span>
+            )}
+          </>
+        )}
       </div>
+      
       {hover && hasEstimation && (
-        <div
-          className="relative top-0.5 cursor-pointer"
+        <CircleX
+          size={12}
           onClick={handleDeleteEstimation}
-        >
-          <XCircle size={14} className="hover:text-danger-color" />
-        </div>
+          className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-text-color-muted hover:text-danger-color"
+        />
       )}
       {isEditing && (
         <FloatingMenu
           setIsOpen={setIsEditing}
-          className="w-[305px] p-2"
+          className="w-[320px] p-0"
           refs={refs}
           floatingStyles={floatingStyles}
         >
-          <div className="flex justify-center flex-wrap gap-2">
-            <span
-              className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
-              onClick={handleUpdateTaskEstimate}
-            >
-              15 minutes
-            </span>
-            <span
-              className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
-              onClick={handleUpdateTaskEstimate}
-            >
-              30 minutes
-            </span>
-            <span
-              className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
-              onClick={handleUpdateTaskEstimate}
-            >
-              45 minutes
-            </span>
-            <span
-              className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
-              onClick={handleUpdateTaskEstimate}
-            >
-              1 heure
-            </span>
-            <span
-              className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
-              onClick={handleUpdateTaskEstimate}
-            >
-              2 heures
-            </span>
-            <span
-              className="p-1.5 rounded-2xl text-small w-full text-center cursor-pointer font-semibold flex justify-center items-center gap-1 transition-colors duration-200 bg-third min-w-[90px] max-w-[90px] hover:bg-primary select-none"
-              onClick={handleUpdateTaskEstimate}
-            >
-              1 jour
-            </span>
-          </div>
-          <div className="mt-2">
-            <form
-              className="flex items-center justify-between flex-row border-t border-text-light-color mt-3 pt-3"
-              onSubmit={handleCustomeEstimation}
-            >
-              <div className="group flex flex-row gap-0">
-                <input
-                  type="number"
-                  id="number"
-                  name="number"
-                  value={number}
-                  onChange={(e) => setNumber(e.target.value)}
-                  step={0.1}
-                  min={1}
-                  max={99}
-                  className="input_TaskEstimate font-bricolage cursor-pointer text-small text-text-dark-color font-semibold p-1.5 w-10 bg-third rounded-2xl rounded-tr-[inherit] rounded-br-[inherit] border-none text-center group-hover:bg-primary"
-                />
-                <select
-                  name=""
-                  id=""
-                  onChange={(e) => setWeek(e.target.value)}
-                  className="font-bricolage text-small text-text-dark-color cursor-pointer font-semibold bg-third outline-none border-none rounded-2xl rounded-tl-[inherit] rounded-bl-[inherit] group-hover:bg-primary"
+          <div className="rounded-lg overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-3 border-b border-gray-300">
+              <h3 className="font-medium text-sm text-black">Estimation du temps</h3>
+            </div>
+            
+            {/* Quick options */}
+            <div className="p-3">
+              <div className="grid grid-cols-3 gap-2 mb-4">
+                <span
+                  className="text-xs p-2 select-none rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer font-medium"
+                  onClick={handleUpdateTaskEstimate}
                 >
-                  <option value="minutes">Minutes</option>
-                  <option value="heures">Heures</option>
-                  <option value="jours">Jours</option>
-                  <option value="semaines">Semaines</option>
-                </select>
+                  15 minutes
+                </span>
+                <span
+                  className="text-xs p-2 select-none rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer font-medium"
+                  onClick={handleUpdateTaskEstimate}
+                >
+                  30 minutes
+                </span>
+                <span
+                  className="text-xs p-2 select-none rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer font-medium"
+                  onClick={handleUpdateTaskEstimate}
+                >
+                  45 minutes
+                </span>
+                <span
+                  className="text-xs p-2 select-none rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer font-medium"
+                  onClick={handleUpdateTaskEstimate}
+                >
+                  1 heure
+                </span>
+                <span
+                  className="text-xs p-2 select-none rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer font-medium"
+                  onClick={handleUpdateTaskEstimate}
+                >
+                  2 heures
+                </span>
+                <span
+                  className="text-xs p-2 select-none rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer font-medium"
+                  onClick={handleUpdateTaskEstimate}
+                >
+                  1 jour
+                </span>
               </div>
-              {number >= 1 && (
-                <div className="w-full">
-                  <button
-                    className="font-bricolage text-small font-normal p-1.5 w-full text-white"
-                    type="submit"
-                  >
-                    Valider
-                  </button>
-                </div>
-              )}
-            </form>
+              
+              {/* Custom estimation form */}
+              <div className="border-t border-gray-300 pt-3">
+                <form
+                  className="flex items-center flex-row gap-2 "
+                  onSubmit={handleCustomeEstimation}
+                >
+                  <div className="flex items-center gap-1 flex-1">
+                    <input
+                      type="number"
+                      id="number"
+                      name="number"
+                      value={number}
+                      onChange={(e) => setNumber(e.target.value)}
+                      step={0.1}
+                      min={1}
+                      max={99}
+                      className="w-16 px-2 py-1 text-sm  border border-gray-300 rounded text-center focus:border-accent-color focus:outline-none"
+                      placeholder="1"
+                    />
+                    <select
+                      onChange={(e) => setWeek(e.target.value)}
+                      className="flex-1 px-2 py-1 text-sm  border border-gray-300 rounded focus:border-accent-color focus:outline-none"
+                    >
+                      <option value="minutes">Minutes</option>
+                      <option value="heures">Heures</option>
+                      <option value="jours">Jours</option>
+                      <option value="semaines">Semaines</option>
+                    </select>
+                  </div>
+                  {number >= 1 && (
+                    <button
+                      className="text-sm px-3 py-1 border  text-white hover:bg-accent-color hover:text-white rounded transition-colors"
+                      type="submit"
+                    >
+                      Valider
+                    </button>
+                  )}
+                </form>
+              </div>
+            </div>
           </div>
         </FloatingMenu>
       )}

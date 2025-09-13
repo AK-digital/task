@@ -111,7 +111,7 @@ export default function TaskEditStatus({
 
   return (
     <li
-      className="relative flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+      className="relative flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-300 hover:border-gray-300 transition-colors"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
@@ -141,7 +141,7 @@ export default function TaskEditStatus({
           setName(e.target.value);
           handleUpdateStatusNameDebouced();
         }}
-        className="flex-1 border border-gray-200 py-2 px-3 rounded-md bg-white text-[15px] font-bricolage focus:border-accent-color focus:outline-none"
+        className="flex-1 border border-gray-300 py-2 px-3 rounded-md bg-white text-[15px] font-bricolage focus:border-accent-color focus:outline-none"
         placeholder="Nom du statut"
       />
       

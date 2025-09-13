@@ -309,6 +309,72 @@ export async function deleteTimeTracking(req, res, next) {
   }
 }
 
+export async function updateTimeTracking(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { startTime, endTime } = req.body;
+    const timeTrackingId = req.params.id;
+
+    if (!startTime || !endTime) {
+      return res.status(400).send({
+        success: false,
+        message: "Les heures de début et de fin sont requises",
+      });
+    }
+
+    // Vérifier que l'entrée de temps existe
+    const existingTimeTracking = await TimeTrackingModel.findById(timeTrackingId);
+    
+    if (!existingTimeTracking) {
+      return res.status(404).send({
+        success: false,
+        message: "Temps de suivi non trouvé",
+      });
+    }
+
+    // Vérifier les permissions
+    const project = await ProjectModel.findById(existingTimeTracking.projectId);
+    const userMember = project.members.find(member => 
+      member.user.toString() === authUser._id.toString()
+    );
+
+    // Le créateur peut toujours modifier sa propre entrée
+    // Les managers/owners peuvent modifier toutes les entrées
+    const isOwner = existingTimeTracking.userId.toString() === authUser._id.toString();
+    const isManagerOrOwner = userMember && ['owner', 'manager'].includes(userMember.role);
+    
+    const canEdit = isOwner || isManagerOrOwner;
+
+    if (!canEdit) {
+      return res.status(403).send({
+        success: false,
+        message: "Vous n'avez pas les permissions pour modifier cette entrée",
+      });
+    }
+
+    const updatedTimeTracking = await TimeTrackingModel.findByIdAndUpdate(
+      timeTrackingId,
+      {
+        startTime: moment.utc(startTime).subtract(2, "hours").format(),
+        endTime: moment.utc(endTime).subtract(2, "hours").format(),
+        duration: new Date(endTime) - new Date(startTime),
+      },
+      { new: true }
+    ).populate("userId", "_id firstName lastName picture");
+
+    return res.status(200).send({
+      success: true,
+      message: "Temps de suivi mis à jour avec succès",
+      data: updatedTimeTracking,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
 export async function updateTimeTrackingBillable(req, res, next) {
   try {
     const { billable } = req.body;

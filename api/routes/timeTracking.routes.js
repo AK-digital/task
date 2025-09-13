@@ -20,24 +20,31 @@ router.put(
   timeTrackingControllers.updateTimeTrackingText
 );
 
+router.put(
+  "/:id/time",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team", "customer"]),
+  timeTrackingControllers.updateTimeTracking
+);
+
 router.post(
   "/start",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team"]),
+  checkRole(["owner", "manager", "team", "customer"]),
   timeTrackingControllers.startTimer
 );
 
 router.patch(
   "/stop/:id",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team"]),
+  checkRole(["owner", "manager", "team", "customer"]),
   timeTrackingControllers.stopTimer
 );
 
 router.delete(
   "/",
   authMiddlewares.auth,
-  checkRole(["owner", "manager", "team"]),
+  checkRole(["owner", "manager", "team", "customer"]),
   timeTrackingControllers.deleteTimeTracking
 );
 

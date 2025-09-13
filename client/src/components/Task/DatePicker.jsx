@@ -108,7 +108,7 @@ export default function DatePicker({ value, onChange, onClose, isOpen }) {
   return (
     <div 
       ref={pickerRef}
-      className={`datepicker-container absolute left-0 bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] p-3 min-w-[280px] max-w-[320px] sm:min-w-[300px] ${
+      className={`datepicker-container absolute left-0 bg-secondary border border-gray-200 rounded-lg shadow-lg z-[9999] p-3 min-w-[280px] max-w-[320px] sm:min-w-[300px] ${
         showAbove 
           ? 'bottom-full mb-1' 
           : 'top-full mt-1'

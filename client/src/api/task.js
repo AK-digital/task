@@ -180,6 +180,33 @@ export async function removeTaskFromArchive(tasksIds, projectId) {
   }
 }
 
+export async function createTask(taskData, projectId) {
+  try {
+    const res = await useAuthFetch(
+      `task?projectId=${projectId}`,
+      "POST",
+      "application/json",
+      taskData
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err.message || "Une erreur est survenue lors de la création de la tâche"
+    );
+    return {
+      success: false,
+      message: err.message || "Une erreur est survenue lors de la création de la tâche",
+    };
+  }
+}
+
 export async function deleteTask(tasksIds, projectId) {
   try {
     if (tasksIds.length <= 0) {

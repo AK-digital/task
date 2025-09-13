@@ -11,7 +11,7 @@ export default function FloatingMenu({
   return (
     <Portal>
       <div
-        className={`z-2001 bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg overflow-hidden ${className}`}
+        className={`z-[9999] bg-secondary shadow-[2px_2px_4px_rgba(0,0,0,0.25),-2px_2px_4px_rgba(0,0,0,0.25)] rounded-lg overflow-hidden ${className}`}
         ref={refs.setFloating}
         style={floatingStyles}
       >

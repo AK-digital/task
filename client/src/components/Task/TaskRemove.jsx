@@ -28,7 +28,7 @@ export default function TaskRemove({ task, archive, mutate }) {
   if (!canDelete) return null;
 
   return (
-    <div className="flex items-center h-full cursor-pointer text-[#41435f] transition-colors duration-150 ease-in-out relative px-[6px] hover:text-danger-color">
+    <div className="flex items-center h-full cursor-pointer text-gray-600 transition-colors duration-150 ease-in-out relative px-[6px] hover:text-danger-color">
       <Trash size={20} onClick={() => setShowConfirm(true)} />
       {showConfirm && (
         <>

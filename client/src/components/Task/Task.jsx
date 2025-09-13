@@ -1,7 +1,7 @@
 import TaskBoard from "@/components/Task/TaskBoard";
 import TaskProject from "@/components/Task/TaskProject";
 import TaskText from "@/components/Task/TaskText";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import TaskResponsibles from "./TaskResponsibles";
 import TaskStatus from "./TaskStatus";
 import { AuthContext } from "@/context/auth";
@@ -16,6 +16,7 @@ import TaskDrag from "./TaskDrag";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskMore from "./TaskMore";
+import TaskContextMenu from "./TaskContextMenu";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -49,6 +50,15 @@ export default function Task({
     "team",
     "customer",
   ]);
+  const canContextMenu = useUserRole(project, [
+    "owner",
+    "manager",
+    "team",
+    "customer",
+  ]);
+
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
   let { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task?._id });
@@ -63,17 +73,33 @@ export default function Task({
     transition,
   };
 
+  const handleContextMenu = (e) => {
+    if (!canContextMenu) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setContextMenuPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+    setContextMenuOpen(true);
+  };
+
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`container_Task flex items-center border-t border-text-color h-[44px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] hover:shadow-[0_4px_2px_-2px_rgba(0,0,0,0.1)] ${
-        isDragging ? "opacity-0" : ""
-      }`}
-      suppressHydrationWarning
-      data-openned={openedTask === task?._id}
-      data-done={task?.status === "Terminée"}
-    >
+    <>
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={`container_Task flex items-center border-t border-text-color h-[44px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] hover:shadow-[0_4px_2px_-2px_rgba(0,0,0,0.1)] ${
+          isDragging ? "opacity-0" : ""
+        }`}
+        suppressHydrationWarning
+        data-openned={openedTask === task?._id}
+        data-done={task?.status === "Terminée"}
+        data-task-id={task?._id}
+        onContextMenu={handleContextMenu}
+      >
       {/* Checkbox */}
       {isCheckbox && (
         <TaskCheckbox task={task} setSelectedTasks={setSelectedTasks} />
@@ -114,9 +140,21 @@ export default function Task({
         <div className="relative px-1.5 min-w-8 flex-shrink-0"></div>
       )}
 
-      {openedTask === task?._id && (
-        <TaskMore task={task} archive={false} uid={uid} mutateTasks={mutate} />
+        {openedTask === task?._id && (
+          <TaskMore task={task} archive={false} uid={uid} mutateTasks={mutate} />
+        )}
+      </div>
+
+      {/* Context Menu */}
+      {canContextMenu && (
+        <TaskContextMenu
+          isOpen={contextMenuOpen}
+          setIsOpen={setContextMenuOpen}
+          position={contextMenuPosition}
+          task={task}
+          mutate={mutate}
+        />
       )}
-    </div>
+    </>
   );
 }

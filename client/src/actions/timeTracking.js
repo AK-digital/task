@@ -48,3 +48,43 @@ export async function saveTimeTracking(taskId, projectId, prevState, formData) {
     };
   }
 }
+
+export async function updateTimeTracking(trackingId, projectId, prevState, formData) {
+  try {
+    const date = formData.get("date");
+    const startTime = formData.get("start-time");
+    const endTime = formData.get("end-time");
+
+    const startDateTime = moment.utc(`${date}T${startTime}`).format();
+    const endDateTime = moment.utc(`${date}T${endTime}`).format();
+
+    const res = await useAuthFetch(
+      `time-tracking/${trackingId}/time?projectId=${projectId}`,
+      "PUT",
+      "application/json",
+      {
+        startTime: startDateTime,
+        endTime: endDateTime,
+      }
+    );
+
+    const response = await res.json();
+
+    if (!response?.success) {
+      throw new Error(response?.message || "Une erreur est survenue");
+    }
+
+    revalidateTag("tasks");
+
+    return {
+      status: "success",
+      message: "Le timer a été mis à jour avec succès",
+      data: response?.data,
+    };
+  } catch (err) {
+    return {
+      status: "failure",
+      message: err.message || "Une erreur est survenue",
+    };
+  }
+}
