@@ -195,3 +195,30 @@ export function emailVerification(user, verificationLink) {
 
   return templates;
 }
+
+export function emailChangeValidation(user, newEmail, validationLink) {
+  const templates = {
+    subjet: "Validation du changement d'adresse email",
+    text: `
+      <div style="${emailStyles.container}">
+        <h1 style="${emailStyles.title}">Changement d'adresse email</h1>
+        <p style="${emailStyles.paragraph}">Bonjour ${user?.firstName},</p>
+        <p style="${emailStyles.content}">Vous avez demandé à changer votre adresse email vers :</p>
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #a87e51;">
+          <p style="margin: 0; font-size: 18px; font-weight: 500;">
+            📧 Nouvelle adresse : <span style="${emailStyles.highlight}">${newEmail}</span>
+          </p>
+        </div>
+        <p style="${emailStyles.content}">Pour confirmer ce changement, cliquez sur le bouton ci-dessous :</p>
+        <div>
+          <a href="${validationLink}" style="${emailStyles.button}">
+            Confirmer le changement
+          </a>
+        </div>
+        <p style="${emailStyles.content}">Si vous n'avez pas demandé ce changement, ignorez cet email.</p>
+      </div>
+    `,
+  };
+
+  return templates;
+}

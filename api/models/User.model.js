@@ -44,6 +44,11 @@ const UserSchema = new Schema(
       type: String,
       maxLength: 100,
     },
+    language: {
+      type: String,
+      default: "fr",
+      enum: ["fr", "en", "es", "de", "it"],
+    },
     picture: {
       type: String,
       trim: true,

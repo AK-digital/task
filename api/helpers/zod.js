@@ -40,6 +40,12 @@ export const userUpdateValidation = z.object({
     .string()
     .min(2, "Le prénom doit contenir au moins 2 caractères")
     .max(50, "Le prénom ne peut pas dépasser 50 caractères"),
+  email: z
+    .string()
+    .min(1)
+    .max(50)
+    .regex(regex.email, "L'adresse e-mail saisie est invalide")
+    .optional(),
   company: z
     .string()
     .max(100, "Le nom de l'entreprise ne peut pas dépasser 100 caractères")
@@ -50,6 +56,9 @@ export const userUpdateValidation = z.object({
     .max(100, "Le poste ne peut pas dépasser 100 caractères")
     .optional()
     .nullable(),
+  language: z
+    .enum(["fr", "en", "es", "de", "it"], "Langue non supportée")
+    .optional(),
 });
 
 export const betaRequestValidation = z.object({

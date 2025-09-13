@@ -195,7 +195,7 @@ export default function TasksHeader({
     >
       {/* Checkbox */}
       {(canEdit || isCheckbox) && (
-        <div className="task-col-checkbox task-header-col h-5"></div>
+        <div className="task-col-checkbox task-header-col"></div>
       )}
       {/* Drag */}
       {(canDrag || isDrag) && (

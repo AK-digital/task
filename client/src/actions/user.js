@@ -9,8 +9,10 @@ export async function updateUserProfile(prevState, formData) {
     const rawData = {
       lastName: formData.get("lastName"),
       firstName: formData.get("firstName"),
+      email: formData.get("email"),
       company: formData.get("company"),
       position: formData.get("position"),
+      language: formData.get("language"),
     };
 
     // Validation Zod

@@ -24,6 +24,11 @@ router.put(
   userControllers.updateUser
 );
 
+router.get(
+  "/email-change/:token",
+  userControllers.validateEmailChange
+);
+
 router.patch(
   "/:id/picture",
   authMiddlewares.auth,
