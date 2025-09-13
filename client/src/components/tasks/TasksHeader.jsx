@@ -189,7 +189,7 @@ export default function TasksHeader({
 
   return (
     <div
-      className={`sticky z-1002 left-0 bg-secondary flex items-center w-full text-small text-text-color-muted pb-3 ${
+      className={`sticky z-1002 left-0 bg-secondary flex items-center w-full text-small text-text-color-muted ${
         !isTaskPage ? "top-[47px] pt-0" : "top-0 pt-5"
       }`}
     >
@@ -209,20 +209,20 @@ export default function TasksHeader({
       <div className="pr-2 flex justify-center items-center cursor-default flex-shrink-0"></div>
       {/* Project */}
       {isProject && (
-        <div className="hidden md:flex items-center flex-col justify-center px-2 lg:px-4 w-16 lg:w-20 gap-1 cursor-default flex-shrink-0">
+        <div className="hidden md:flex items-center justify-center px-2 lg:px-4 w-16 lg:w-20 gap-1 cursor-default flex-shrink-0">
           <span className="select-none text-xs lg:text-sm">Projets</span>
-          <div className="relative flex flex-col items-center top-1">
+          <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
               className={`cursor-pointer hover:text-text-color ${
-                projectSort === "asc" ? "text-[#CC9348]" : ""
+                projectSort === "asc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByProject("asc")}
             />
             <ChevronDown
               size={14}
               className={`cursor-pointer hover:text-text-color relative -top-1 ${
-                projectSort === "desc" ? "text-[#CC9348]" : ""
+                projectSort === "desc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByProject("desc")}
             />
@@ -231,20 +231,20 @@ export default function TasksHeader({
       )}
       {/* Board */}
       {isBoard && (
-        <div className="hidden lg:flex justify-center items-center gap-1 px-2 xl:px-4 min-w-[100px] xl:min-w-[120px] max-w-[150px] w-full cursor-default flex-shrink-0">
+        <div className="hidden lg:flex items-center justify-center gap-1 px-2 xl:px-4 min-w-[100px] xl:min-w-[120px] max-w-[150px] w-full cursor-default flex-shrink-0">
           <span className="select-none text-xs xl:text-sm">Tableaux</span>
-          <div className="relative flex flex-col items-center top-1">
+          <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
               className={`cursor-pointer hover:text-text-color ${
-                boardSort === "asc" ? "text-[#CC9348]" : ""
+                boardSort === "asc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByBoard("asc")}
             />
             <ChevronDown
               size={14}
               className={`cursor-pointer hover:text-text-color relative -top-1 ${
-                boardSort === "desc" ? "text-[#CC9348]" : ""
+                boardSort === "desc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByBoard("desc")}
             />
@@ -269,20 +269,20 @@ export default function TasksHeader({
       </div>
       {/* Status */}
       {isStatus && (
-        <div className="flex justify-center items-center gap-1 min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full cursor-default flex-shrink-0">
-          <span className="select-none text-xs lg:text-sm">Statut</span>
-          <div className="relative flex flex-col items-center top-1">
+        <div className="flex items-center justify-center gap-1 min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full cursor-default flex-shrink-0">
+          <span className="select-none  leading-[34px]  text-xs lg:text-sm">Statut</span>
+          <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
               className={`cursor-pointer hover:text-text-color ${
-                statusSort === "asc" ? "text-[#CC9348]" : ""
+                statusSort === "asc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByStatus("asc")}
             />
             <ChevronDown
               size={14}
               className={`cursor-pointer hover:text-text-color relative -top-1 ${
-                statusSort === "desc" ? "text-[#CC9348]" : ""
+                statusSort === "desc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByStatus("desc")}
             />
@@ -291,20 +291,20 @@ export default function TasksHeader({
       )}
       {/* Priority */}
       {isPriority && (
-        <div className="flex justify-center items-center gap-1 min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full cursor-default flex-shrink-0">
-          <span className="select-none text-xs lg:text-sm">Priorité</span>
-          <div className="relative flex flex-col items-center top-1">
+        <div className="flex items-center justify-center gap-1 min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full cursor-default flex-shrink-0">
+          <div className="select-none leading-[34px] text-xs lg:text-sm">Priorité</div>
+          <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
               className={`cursor-pointer hover:text-text-color ${
-                prioritySort === "asc" ? "text-[#CC9348]" : ""
+                prioritySort === "asc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByPriority("asc")}
             />
             <ChevronDown
               size={14}
               className={`cursor-pointer hover:text-text-color relative -top-1 ${
-                prioritySort === "desc" ? "text-[#CC9348]" : ""
+                prioritySort === "desc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByPriority("desc")}
             />
@@ -313,20 +313,20 @@ export default function TasksHeader({
       )}
       {/* Deadline */}
       {isDeadline && (
-        <div className="hidden md:flex justify-center items-center gap-1 py-1 px-1 lg:px-2 min-w-[80px] lg:min-w-[100px] max-w-[120px] w-full cursor-default flex-shrink-0">
-          <span className="select-none text-xs lg:text-sm">Échéance</span>
-          <div className="relative flex flex-col items-center top-1">
+        <div className="hidden md:flex items-center justify-center gap-1 py-1 px-1 lg:px-2 min-w-[80px] lg:min-w-[100px] max-w-[120px] w-full cursor-default flex-shrink-0">
+          <span className="select-none leading-[34px] text-xs lg:text-sm">Échéance</span>
+          <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
               className={`cursor-pointer hover:text-text-color ${
-                deadlineSort === "asc" ? "text-[#CC9348]" : ""
+                deadlineSort === "asc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByDeadline("asc")}
             />
             <ChevronDown
               size={14}
               className={`cursor-pointer hover:text-text-color relative -top-1 ${
-                deadlineSort === "desc" ? "text-[#CC9348]" : ""
+                deadlineSort === "desc" ? "text-accent-color" : ""
               }`}
               onClick={() => sortByDeadline("desc")}
             />
@@ -335,17 +335,17 @@ export default function TasksHeader({
       )}
       {/* Estimate */}
       {isEstimate && (
-        <div className="hidden lg:flex justify-center items-center gap-1 py-1 px-1 xl:px-2 min-w-[80px] xl:min-w-[100px] max-w-[120px] w-full cursor-default flex-shrink-0">
+        <div className="hidden lg:flex items-center justify-center gap-1 py-1 px-1 xl:px-2 min-w-[80px] xl:min-w-[100px] max-w-[120px] w-full cursor-default flex-shrink-0">
           <span className="select-none text-xs xl:text-sm">Estimation</span>
-          {/* <div className="relative flex flex-col items-center top-1">
+          {/* <div className="flex flex-col items-center">
             <ChevronUp
               size={14}
-              className={`cursor-pointer hover:text-text-color ${estimateSort === "asc" ? "text-[#CC9348]" : ""}`}
+              className={`cursor-pointer hover:text-text-color ${estimateSort === "asc" ? "text-accent-color" : ""}`}
               onClick={() => sortByEstimate("asc")}
             />
             <ChevronDown
               size={14}
-              className={`cursor-pointer hover:text-text-color relative -top-1 ${estimateSort === "desc" ? "text-[#CC9348]" : ""}`}
+              className={`cursor-pointer hover:text-text-color relative -top-1 ${estimateSort === "desc" ? "text-accent-color" : ""}`}
               onClick={() => sortByEstimate("desc")}
             />
           </div> */}
@@ -353,9 +353,9 @@ export default function TasksHeader({
       )}
       {/* Timer */}
       {isTimer && (
-        <div className="hidden lg:flex justify-center items-center gap-1 px-1 xl:px-1.5 max-w-[100px] xl:max-w-[120px] w-full cursor-default flex-shrink-0">
+        <div className="hidden lg:flex items-center justify-center gap-1 px-1 xl:px-1.5 max-w-[100px] xl:max-w-[120px] w-full cursor-default flex-shrink-0">
           <span className="select-none text-xs xl:text-sm">Temps</span>
-          {/* <div className="relative flex flex-col items-center top-1">
+          {/* <div className="flex flex-col items-center">
             <ChevronUp size={14} className="cursor-pointer hover:text-text-color" />
             <ChevronDown size={14} className="cursor-pointer hover:text-text-color relative -top-1" />
           </div> */}
