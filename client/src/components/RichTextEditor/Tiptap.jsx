@@ -507,13 +507,39 @@ export default function Tiptap({
 
         reader.onload = () => {
           const url = reader.result;
-          // Insérer l'image et positionner le curseur après
-          editor
-            .chain()
-            .focus()
-            .setImage({ src: url })
-            .insertContent("<p></p>")
-            .run();
+          
+          // Créer une image temporaire pour obtenir les dimensions originales
+          const img = new window.Image();
+          img.onload = () => {
+            // Calculer les dimensions pour s'adapter à l'éditeur tout en conservant le ratio
+            const maxWidth = 600; // Largeur maximale dans l'éditeur
+            const { width: originalWidth, height: originalHeight } = img;
+            
+            let finalWidth = originalWidth;
+            let finalHeight = originalHeight;
+            
+            // Si l'image est plus large que la largeur maximale, la redimensionner
+            if (originalWidth > maxWidth) {
+              const ratio = maxWidth / originalWidth;
+              finalWidth = maxWidth;
+              finalHeight = originalHeight * ratio;
+            }
+            
+            // Insérer l'image avec les bonnes dimensions et positionner le curseur après
+            editor
+              .chain()
+              .focus()
+              .setImage({ 
+                src: url,
+                width: finalWidth,
+                height: finalHeight,
+                style: `width: ${finalWidth}px; height: ${finalHeight}px; max-width: 100%; height: auto; object-fit: contain;`
+              })
+              .insertContent("<p></p>")
+              .run();
+          };
+          
+          img.src = url;
         };
 
         reader.readAsDataURL(file);
