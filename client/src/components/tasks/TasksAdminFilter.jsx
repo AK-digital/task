@@ -44,8 +44,8 @@ export default function TasksAdminFilter({ queries, setQueries }) {
             return (
               <div
                 key={member?.user?._id}
-                className={`-ml-2 rounded-full transition-all duration-200 hover:-translate-y-0.5 cursor-pointer relative ${
-                  isSelected ? 'ring-2 ring-[#CC9348] ring-offset-2' : ''
+                className={`-ml-[4px] rounded-full transition-all duration-200 cursor-pointer relative ${
+                  isSelected ? 'ring-2 ring-white' : ''
                 }`}
                 onClick={() => handleMemberClick(member?.user?._id)}
                 title={`${member?.user?.firstName} ${member?.user?.lastName}${isSelected ? ' (sélectionné)' : ''}`}
@@ -55,9 +55,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
                   style={{ width: "32px", height: "32px" }}
                   className="mt-[5px] rounded-full object-cover max-w-[32px] max-h-[32px]"
                 />
-                {isSelected && (
-                  <div className="absolute -top-1 -left-1 w-3 h-3 bg-[#CC9348] rounded-full border-2 border-white"></div>
-                )}
+
               </div>
             );
           })}
@@ -66,11 +64,10 @@ export default function TasksAdminFilter({ queries, setQueries }) {
       {hasMembers && (
         <button
           onClick={handleReset}
-          className="flex items-center gap-1 px-2 py-1 text-[13px] text-gray-600 hover:text-[#CC9348] transition-colors duration-200 ml-2"
+          className="flex items-center gap-1 p-1 bg-transparent text-accent-color border border-accent-color hover:bg-accent-color/10 transition-colors duration-200"
           title="Réinitialiser le filtre"
         >
-          <Undo size={14} />
-          Réinitialiser
+          <Undo size={16} color="currentColor" />
         </button>
       )}
     </div>

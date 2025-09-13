@@ -49,7 +49,7 @@ export default function ProjectOptions({ project }) {
   const initialLinks = useRef(
     project?.urls?.length
       ? project.urls.map((link) => ({ ...link }))
-      : [{ url: "", icon: "Globe" }]
+      : [{ url: "", icon: "Globe", label: "" }]
   );
 
   const author = project?.members.find((member) => member?.role === "owner");
@@ -95,7 +95,8 @@ export default function ProjectOptions({ project }) {
       for (let i = 0; i < links.length; i++) {
         if (
           links[i].url !== initialLinks.current[i]?.url ||
-          links[i].icon !== initialLinks.current[i]?.icon
+          links[i].icon !== initialLinks.current[i]?.icon ||
+          links[i].label !== initialLinks.current[i]?.label
         ) {
           return true;
         }
@@ -141,6 +142,7 @@ export default function ProjectOptions({ project }) {
       {
         url: "",
         icon: "Globe",
+        label: "",
       },
     ]);
   }
@@ -255,46 +257,63 @@ export default function ProjectOptions({ project }) {
                 {isNotEmpty(links) &&
                   links?.map((link, idx) => {
                     return (
-                      <div className="flex items-center" key={idx}>
-                        <div
-                          className="relative flex items-center justify-center cursor-pointer border border-text-medium-color rounded-sm w-[45px] h-[45px] mr-2"
-                          onClick={() => setMoreIcons(idx)}
-                        >
-                          {displayIcon(link?.icon)}
-                          <input
-                            type="text"
-                            id="icon"
-                            name="icon"
-                            value={link?.icon}
-                            hidden
-                            readOnly
-                          />
-                          {moreIcons === idx && (
-                            <IconList
-                              setMoreIcons={setMoreIcons}
-                              links={links}
-                              setLinks={setLinks}
-                              idx={idx}
+                      <div className="flex flex-col gap-2" key={idx}>
+                        <div className="flex items-center">
+                          <div
+                            className="relative flex items-center justify-center cursor-pointer border border-text-medium-color rounded-sm w-[45px] h-[45px] mr-2"
+                            onClick={() => setMoreIcons(idx)}
+                          >
+                            {displayIcon(link?.icon)}
+                            <input
+                              type="text"
+                              id="icon"
+                              name="icon"
+                              value={link?.icon}
+                              hidden
+                              readOnly
                             />
-                          )}
-                        </div>
-                        <input
-                          type="url"
-                          id="url"
-                          name="url"
-                          placeholder="https://www.exemple.com"
-                          value={link?.url}
-                          onChange={(e) => {
-                            links[idx].url = e.target.value;
-                            const updatedLinks = [...links];
-                            setLinks(updatedLinks);
-                          }}
-                        />
-                        <div
-                          className="text-text-color-red pl-5 cursor-pointer"
-                          onClick={(e) => removeLink(e, link)}
-                        >
-                          <Delete size={20} />
+                            {moreIcons === idx && (
+                              <IconList
+                                setMoreIcons={setMoreIcons}
+                                links={links}
+                                setLinks={setLinks}
+                                idx={idx}
+                              />
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-1 flex-1">
+                            <input
+                              type="text"
+                              id="label"
+                              name="label"
+                              placeholder="Label du lien (optionnel)"
+                              value={link?.label || ""}
+                              onChange={(e) => {
+                                links[idx].label = e.target.value;
+                                const updatedLinks = [...links];
+                                setLinks(updatedLinks);
+                              }}
+                              className="text-sm text-gray-600"
+                            />
+                            <input
+                              type="url"
+                              id="url"
+                              name="url"
+                              placeholder="https://www.exemple.com"
+                              value={link?.url}
+                              onChange={(e) => {
+                                links[idx].url = e.target.value;
+                                const updatedLinks = [...links];
+                                setLinks(updatedLinks);
+                              }}
+                            />
+                          </div>
+                          <div
+                            className="text-text-color-red pl-5 cursor-pointer"
+                            onClick={(e) => removeLink(e, link)}
+                          >
+                            <Delete size={20} />
+                          </div>
                         </div>
                       </div>
                     );

@@ -228,6 +228,7 @@ export default function ProjectTitle({ project }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center bg-secondary p-2 rounded-lg"
+                  title={url?.label || url?.url}
                 >
                   {displayIcon(url?.icon)}
                 </a>
