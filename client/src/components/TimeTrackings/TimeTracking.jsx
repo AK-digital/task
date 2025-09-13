@@ -6,8 +6,8 @@ import moment from "moment";
 import "moment/locale/fr";
 import socket from "@/utils/socket";
 import { useDebouncedCallback } from "use-debounce";
-import { MoreVerticalIcon, BadgeEuro } from "lucide-react";
-import TimeTrackingMore from "./TimeTrackingMore";
+import { BadgeEuro } from "lucide-react";
+import TimeTrackingContextMenu from "./TimeTrackingContextMenu";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { updateTaskText } from "@/api/task";
 import {
@@ -26,10 +26,10 @@ export default function TimeTracking({
     tracker?.taskId?.text || tracker?.taskText || ""
   );
   const [isEditing, setIsEditing] = useState(false);
-  const [isHover, setIsHover] = useState(false);
-  const [isMore, setIsMore] = useState(false);
   const [isBillable, setIsBillable] = useState(tracker?.billable ?? true);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
   const project = tracker?.projectId;
   const user = tracker?.userId;
@@ -146,14 +146,21 @@ export default function TimeTracking({
     }
   };
 
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    setContextMenuPosition({ x: e.clientX, y: e.clientY });
+    setContextMenuOpen(true);
+  };
+
   return (
+    <>
     <div
-      className="flex items-center bg-secondary border-b border-text-light-color text-normal h-[42px] last:border-b-0 last:rounded-bl-2xl"
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
+      className="flex items-center bg-secondary border-b border-text-light-color text-normal h-[42px] last:border-b-0 last:rounded-bl-2xl w-full"
+      data-tracker-id={tracker._id}
+      onContextMenu={handleContextMenu}
     >
       {/* Element selection */}
-      <div className="flex justify-center items-center min-w-10 max-w-10 gap-1 w-full h-full cursor-default">
+      <div className="flex justify-center items-center w-10 flex-shrink-0 gap-1 h-full cursor-default">
         <input
           type="checkbox"
           name="tracker"
@@ -164,7 +171,7 @@ export default function TimeTracking({
         />
       </div>
       {/* Task text */}
-      <div className="w-full min-w-[200px] max-w-[700px] cursor-text">
+      <div className="flex-1 min-w-0 cursor-text px-2">
         {isEditing ? (
           <input
             type="text"
@@ -174,7 +181,7 @@ export default function TimeTracking({
             onBlur={handleIsEditing}
             onChange={handleChange}
             autoFocus
-            className="relative -left-1.5 border-none p-1.5 bg-third rounded-sm text-[14.8px] text-text-medium-color animate-[backgroundAppear_150ms_linear]"
+            className="w-full border-none p-1.5 bg-third rounded-sm text-[14.8px] text-text-medium-color animate-[backgroundAppear_150ms_linear]"
           />
         ) : (
           <span
@@ -185,27 +192,28 @@ export default function TimeTracking({
           </span>
         )}
       </div>
-      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color px-1">
+      {/* Project */}
+      <div className="flex items-center gap-1 w-40 flex-shrink-0 h-full cursor-default border-l border-text-light-color px-2">
         <Image
           src={project?.logo || "/default/default-project-logo.webp"}
           alt={project?.name}
           width={22}
           height={22}
-          className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px] select-none"
+          className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px] select-none flex-shrink-0"
         />
         <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
           {project?.name}
         </span>
       </div>
-      {/* user */}
-      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color ">
+      {/* User */}
+      <div className="flex items-center gap-1 w-40 flex-shrink-0 h-full cursor-default border-l border-r border-text-light-color px-2">
         {user?.picture ? (
           <Image
             src={user?.picture}
             alt={user?.firstName}
             width={22}
             height={22}
-            className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px]"
+            className="rounded-full w-[22px] h-[22px] max-w-[22px] max-h-[22px] flex-shrink-0"
           />
         ) : (
           <NoPicture user={user} width={22} height={22} />
@@ -214,20 +222,21 @@ export default function TimeTracking({
           {user?.firstName + " " + user?.lastName}
         </span>
       </div>
-      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color select-none">
+      {/* Date */}
+      <div className="flex justify-center items-center gap-1 w-32 flex-shrink-0 h-full cursor-default border-r border-text-light-color select-none">
         <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
           {date}
         </span>
       </div>
       {/* Duration */}
-      <div className="flex justify-center items-center gap-1 w-full h-full cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color select-none">
+      <div className="flex justify-center items-center gap-1 w-24 flex-shrink-0 h-full cursor-default border-r border-text-light-color select-none">
         <span className="block overflow-hidden whitespace-nowrap text-ellipsis">
           {formatTime(Math.floor(tracker?.duration / 1000))}
         </span>
       </div>
       {/* Billable */}
       <div
-        className={`relative flex justify-center items-center gap-1 w-full h-full max-w-[120px] min-w-[120px] border-r border-text-light-color text-text-color-muted ${
+        className={`relative flex justify-center items-center gap-1 w-24 flex-shrink-0 h-full border-r border-text-light-color text-text-color-muted ${
           !canPut
             ? "cursor-default"
             : "cursor-pointer hover:text-text-dark-color"
@@ -249,25 +258,16 @@ export default function TimeTracking({
           <div className="absolute w-5 h-0.5 bg-current top-1/2 left-[42%] origin-center -translate-y-1/2 -rotate-45 pointer-events-none"></div>
         )}
       </div>
-      {isHover && (
-        <div className="relative flex items-center justify-center gap-1 w-full h-full cursor-default max-w-5 min-w-5 text-text-color-muted">
-          <MoreVerticalIcon
-            size={18}
-            cursor={"pointer"}
-            onClick={() => setIsMore(true)}
-            className="hover:text-text-dark-color"
-          />
-          {isMore && (
-            <TimeTrackingMore
-              tracker={tracker}
-              setIsEditing={setIsEditing}
-              setIsMore={setIsMore}
-              setIsHover={setIsHover}
-              mutateTimeTrackings={mutateTimeTrackings}
-            />
-          )}
-        </div>
-      )}
     </div>
+
+    <TimeTrackingContextMenu
+      isOpen={contextMenuOpen}
+      setIsOpen={setContextMenuOpen}
+      position={contextMenuPosition}
+      tracker={tracker}
+      setIsEditing={setIsEditing}
+      mutateTimeTrackings={mutateTimeTrackings}
+    />
+    </>
   );
 }

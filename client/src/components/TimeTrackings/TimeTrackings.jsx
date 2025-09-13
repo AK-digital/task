@@ -71,8 +71,8 @@ export default function TimeTrackings({ searchParams }) {
 
   return (
     <div className="h-full">
-      <div className="flex items-center gap-6">
-        <h1 className="mb-[inherit] min-w-fit select-none">Suivi du temps</h1>
+      <div className="flex items-center gap-6 pr-8">
+        <h1 className="mb-[inherit] min-w-fit select-none text-2xl">Suivi du temps</h1>
         {/* Filters */}
         {!projectsLoading && (
           <Filters
@@ -81,17 +81,17 @@ export default function TimeTrackings({ searchParams }) {
             setQueries={setQueries}
           />
         )}
+        <div className="flex items-center gap-4 ml-auto">
+          {/* Total duration */}
+          <span className="font-bold select-none">
+            Temps total :{" "}
+            {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
+          </span>
 
-        {/* Total duration */}
-        <span className="font-bold select-none">
-          Temps total :{" "}
-          {totalDuration ? formatTime(Math.floor(totalDuration / 1000)) : 0}
-        </span>
-
-        {/* Export PDF Button */}
-        <ExportPdfBtn handleExport={handleExport} />
+          {/* Export PDF Button */}
+          <ExportPdfBtn handleExport={handleExport} />
+        </div>
       </div>
-
       {/* Time tracking list */}
       <div className="boards_Boards mt-3 overflow-auto h-full pr-3 mr-3 pb-10 rounded-lg">
         {timeTrackingsLoading ? (

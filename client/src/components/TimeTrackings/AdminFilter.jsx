@@ -114,14 +114,14 @@ export default function AdminFilter({ projects, queries, setQueries }) {
       </div>
       <>
         <div
-          className={`absolute z-[2001] top-[44px] bg-white shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
+          className={`absolute z-[2001] top-[44px] bg-secondary shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
             isOpen ? "max-h-96" : "max-h-0"
           }`}
         >
           {isOpen && (
             <ul className="flex flex-col p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
               <li
-                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+                className="flex items-center gap-2 h-[30px] pl-1 py-0.5 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
                 onClick={handleReset}
               >
                 <Undo size={14} />
@@ -131,7 +131,7 @@ export default function AdminFilter({ projects, queries, setQueries }) {
                 return (
                   <li
                     key={member?.user?._id}
-                    className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
+                    className="flex items-center gap-2 h-[30px] pl-1 py-0.5 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
                   >
                     <Checkbox
                       id={`user-${member?.user?._id}`}

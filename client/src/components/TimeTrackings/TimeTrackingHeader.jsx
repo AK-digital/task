@@ -145,8 +145,9 @@ export default function TimeTrackingHeader({
   };
 
   return (
-    <div className="sticky flex items-center top-0 bg-secondary border-b border-text-light-color text-small h-[38px] text-text-color-muted font-medium rounded-t-lg z-10 last:border-b-0 select-none">
-      <div className="min-w-[40px] max-w-[40px] flex justify-center items-center w-full h-full gap-2 cursor-default">
+    <div className="sticky flex items-center top-0 bg-secondary border-b border-text-light-color text-small h-[38px] text-text-color-muted font-medium rounded-t-lg z-10 last:border-b-0 select-none w-full">
+      {/* Checkbox - w-10 flex-shrink-0 */}
+      <div className="w-10 flex-shrink-0 flex justify-center items-center h-full gap-2 cursor-default">
         <input
           type="checkbox"
           id="trackers"
@@ -155,12 +156,14 @@ export default function TimeTrackingHeader({
           className="w-4 h-4 p-0 cursor-pointer"
         />
       </div>
-      <div className="w-full min-w-[200px] max-w-[700px]">
+      {/* Task text - flex-1 min-w-0 */}
+      <div className="flex-1 min-w-0 px-2">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
           Description
         </span>
       </div>
-      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color">
+      {/* Project - w-40 flex-shrink-0 */}
+      <div className="flex justify-center items-center w-40 flex-shrink-0 h-full gap-2 cursor-default border-l border-text-light-color px-2">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
           Projet
         </span>
@@ -181,7 +184,8 @@ export default function TimeTrackingHeader({
           />
         </div>
       </div>
-      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color">
+      {/* User - w-40 flex-shrink-0 */}
+      <div className="flex justify-center items-center w-40 flex-shrink-0 h-full gap-2 cursor-default border-l border-r border-text-light-color px-2">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
           Utilisateur
         </span>
@@ -202,7 +206,8 @@ export default function TimeTrackingHeader({
           />
         </div>
       </div>
-      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default min-w-[120px] max-w-[120px] border-r border-text-light-color">
+      {/* Date - w-32 flex-shrink-0 */}
+      <div className="flex justify-center items-center w-32 flex-shrink-0 h-full gap-2 cursor-default border-r border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
           Date
         </span>
@@ -223,8 +228,8 @@ export default function TimeTrackingHeader({
           />
         </div>
       </div>
-
-      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[100px] min-w-[100px] border-r border-text-light-color">
+      {/* Duration - w-24 flex-shrink-0 */}
+      <div className="flex justify-center items-center w-24 flex-shrink-0 h-full gap-2 cursor-default border-r border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
           Temps
         </span>
@@ -245,7 +250,8 @@ export default function TimeTrackingHeader({
           />
         </div>
       </div>
-      <div className="flex justify-center items-center w-full h-full gap-2 cursor-default max-w-[120px] min-w-[120px] border-r border-text-light-color">
+      {/* Billable - w-24 flex-shrink-0 */}
+      <div className="flex justify-center items-center w-24 flex-shrink-0 h-full gap-2 cursor-default border-r border-text-light-color">
         <span className="flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap text-ellipsis">
           Facturable
         </span>

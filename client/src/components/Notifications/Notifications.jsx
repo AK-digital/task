@@ -102,7 +102,7 @@ export default function Notifications({
                       <div className="text-normal font-medium text-text-darker-color">
                         <span>{notif?.message?.title}</span>
                       </div>
-                      <div className="text-small text-text-color-muted">
+                      <div className="text-small text-text-color-muted break-words">
                         {notif?.message?.content}
                       </div>
                     </div>

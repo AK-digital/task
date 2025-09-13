@@ -94,14 +94,14 @@ export default function TasksProjectFilter({ queries, setQueries }) {
         />
       </div>
       <div
-        className={`absolute top-11 rounded-sm bg-white shadow-small w-full z-[9991] overflow-hidden transition-all duration-[200ms] ease-in-out ${
+        className={`absolute top-11 rounded-sm bg-secondary shadow-small w-full z-[9991] overflow-hidden transition-all duration-[200ms] ease-in-out ${
           isOpen ? "max-h-96" : "max-h-0"
         }`}
       >
         {isNotEmpty(projects) ? (
           <ul className="p-2 max-h-96 overflow-y-auto border border-color-border-color">
             <li
-              className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out hover:bg-third hover:shadow-small hover:rounded-sm"
+              className="flex items-center gap-1 p-1.5 cursor-pointer text-small font-medium transition-all duration-[120ms] ease-in-out max-w-[12ch] hover:bg-third hover:shadow-small hover:rounded-sm"
               onClick={handleResetProject}
             >
               <Undo size={16} />

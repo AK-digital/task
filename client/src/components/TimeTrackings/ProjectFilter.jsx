@@ -80,7 +80,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
     <div className="relative select-none">
       <div
         onClick={toggleDropdown}
-        className="secondary-button"
+        className="secondary-button min-w-[180px]"
         data-open={isOpen}
       >
         <FolderOpen size={16} />
@@ -100,14 +100,14 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
         />
       </div>
       <div
-        className={`absolute z-[2001] top-[44px] bg-white shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
+        className={`absolute z-[2001] top-[44px] bg-secondary shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out min-w-[180px] ${
           isOpen ? "max-h-96" : "max-h-0"
         }`}
       >
         {isOpen && (
           <ul className="flex flex-col p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
             <li
-              className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
+              className="flex items-center gap-2 h-[30px] pl-1 py-0.5 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
               onClick={handleReset}
             >
               <Undo size={14} />
@@ -116,7 +116,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
             {projects?.map((project) => (
               <li
                 key={project?._id}
-                className="flex items-center gap-2 h-[30px] pl-2 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
+                className="flex items-center gap-2 h-[30px] pl-1 py-0.5 cursor-pointer hover:bg-third text-xs hover:shadow-small hover:rounded-sm"
               >
                 <Checkbox
                   id={`project-${project?._id}`}
@@ -136,7 +136,7 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
                     alt={`Logo de ${project?.name}`}
                     className="rounded-full"
                   />
-                  <span className="block text-ellipsis overflow-hidden whitespace-nowrap">
+                  <span className="block text-ellipsis overflow-hidden whitespace-nowrap max-w-[12ch]">
                     {project?.name}
                   </span>
                 </label>

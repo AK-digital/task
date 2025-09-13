@@ -50,10 +50,10 @@ export default function Projects() {
   return (
     <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">
       <div className="relative flex items-center flex-col rounded-tl-2xl bg-primary-transparent h-full pl-6 pt-6">
-        <div className="flex justify-between items-center w-full gap-8 pr-6 max-w-[1400px]">
+        <div className="flex justify-between items-center w-full gap-8 pr-6 max-w-full">
                      <div className="relative">
-             <h1 className="select-none mb-0 text-xl whitespace-nowrap pr-12">Vos projets</h1>
-             <span className="absolute -top-1 right-6 text-text-color-muted text-[0.7rem] bg-secondary p-[3px] rounded-md select-none">
+             <h1 className="select-none mb-0 text-2xl whitespace-nowrap pr-8">Vos projets</h1>
+             <span className="absolute -top-1 right-2 text-text-color-muted text-[0.7rem] bg-secondary p-[3px] rounded-md select-none">
                {projectsLoading ? "..." : `${filteredProjects?.length || 0}`}
              </span>
            </div>
