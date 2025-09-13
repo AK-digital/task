@@ -1,5 +1,5 @@
 import { deleteStatus, updateStatus } from "@/api/status";
-import { Palette, X } from "lucide-react";
+import { Palette, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import ColorsPopup from "../Popups/ColorsPopup";
@@ -111,15 +111,16 @@ export default function TaskEditStatus({
 
   return (
     <li
-      className="relative flex items-center gap-0.5 min-w-[135px] max-w-[150px]"
+      className="relative flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
       <div
-        className="absolute flex justify-center items-center text-text-light-color h-5.5 w-5.5 left-1 rounded-3xl"
+        className="flex justify-center items-center text-white h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
         style={{ backgroundColor: color }}
+        onClick={() => setMoreColor(true)}
       >
-        <Palette size={14} onClick={(e) => setMoreColor(true)} />{" "}
+        <Palette size={16} />
         {moreColor && (
           <ColorsPopup
             colors={availableColors}
@@ -129,6 +130,7 @@ export default function TaskEditStatus({
           />
         )}
       </div>
+      
       <input
         type="text"
         id="status-name"
@@ -139,15 +141,20 @@ export default function TaskEditStatus({
           setName(e.target.value);
           handleUpdateStatusNameDebouced();
         }}
-        className="border-none py-2 pr-4 !pl-7.5 rounded-3xl bg-text-lighter-color text-[15px] whitespace-nowrap text-ellipsis font-bricolage"
+        className="flex-1 border border-gray-200 py-2 px-3 rounded-md bg-white text-[15px] font-bricolage focus:border-accent-color focus:outline-none"
+        placeholder="Nom du statut"
       />
+      
       {!status?.default && (
-        <X
-          className="opacity-0 absolute text-text-dark-color -right-4.5 data-[show=true]:opacity-100"
-          data-show={isHover}
-          size={18}
+        <span
+          className={`text-gray-400 hover:text-danger-color transition-colors p-1 rounded ${
+            isHover ? 'opacity-100' : 'opacity-0'
+          }`}
           onClick={handleDeleteStatus}
-        />
+          title="Supprimer ce statut"
+        >
+          <Trash size={18} />
+        </span>
       )}
     </li>
   );

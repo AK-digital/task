@@ -11,6 +11,7 @@ import { saveStatus } from "@/api/status";
 import { colors } from "@/utils/utils";
 import FloatingMenu from "@/shared/components/FloatingMenu";
 import { useStatuses } from "../../../hooks/useStatus";
+import Sidebar from "../Sidebar/Sidebar";
 
 export default function TaskStatus({ task, uid }) {
   const { project, mutateTasks, statuses, mutateStatuses } =
@@ -20,6 +21,7 @@ export default function TaskStatus({ task, uid }) {
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const maxStatuses = statuses?.length === 12;
 
@@ -94,7 +96,8 @@ export default function TaskStatus({ task, uid }) {
   function handleEditStatus() {
     if (!canEdit) return;
 
-    setIsEdit((prev) => !prev);
+    setIsOpen(false);
+    setIsSidebarOpen(true);
   }
 
   useMemo(() => {
@@ -117,7 +120,7 @@ export default function TaskStatus({ task, uid }) {
   return (
     <div className="flex items-center select-none border-r border-text-light-color text-xs lg:text-normal text-foreground min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
       <div
-        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-2 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -138,7 +141,7 @@ export default function TaskStatus({ task, uid }) {
                 return (
                   <li
                     key={status?._id}
-                    className="filter_button"
+                    className="p-1.5 cursor-pointer text-white text-[14px] rounded-3xl flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
                     onClick={() => handleTaskUpdateStatus(status)}
                     style={{ backgroundColor: status?.color }}
                   >
@@ -166,24 +169,50 @@ export default function TaskStatus({ task, uid }) {
               </li>
             )}
           </ul>
-          {isEdit ? (
-            <button
-              className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none"
-              onClick={handleEditStatus}
-            >
-              <Save size={16} />
-              Appliquer
-            </button>
-          ) : (
-            <button
-              className="bg-transparent w-full outline-none border-none text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 text-[0.9rem] rounded-[4px] hover:bg-text-lighter-color hover:shadow-none"
+          <div className="flex items-center p-2 justify-center gap-2">
+            <span
+              className="secondary-button"
               onClick={handleEditStatus}
             >
               <Pen size={16} /> Modifier les statuts
-            </button>
-          )}
+            </span>
+          </div>
         </FloatingMenu>
       )}
+      
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        title="Modifier les statuts"
+        width="500px"
+      >
+        <div className="space-y-4">
+          <p className="text-text-color-muted text-sm">
+            Gérez les statuts de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouveaux statuts.
+          </p>
+          
+          <ul className="space-y-3">
+            {statusesData?.map((status) => (
+              <TaskEditStatus
+                key={status?._id}
+                status={status}
+                currentStatus={currentStatus}
+                setCurrentStatus={setCurrentStatus}
+              />
+            ))}
+            
+            {!maxStatuses && (
+              <li
+                className="secondary-button w-fit"
+                onClick={handleAddStatus}
+              >
+                <Plus size={16} />
+                Ajouter un nouveau statut
+              </li>
+            )}
+          </ul>
+        </div>
+      </Sidebar>
     </div>
   );
 }

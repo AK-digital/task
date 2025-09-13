@@ -23,11 +23,9 @@ import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 import ConfirmationKick from "../Popups/ConfirmationKick";
 import ConfirmationLeave from "../Popups/ConfirmationLeave";
-import { X } from "lucide-react";
+import Sidebar from "../Sidebar/Sidebar";
 
 export default function GuestsModal({ project, setIsOpen, mutateProject }) {
-  const [isClosing, setIsClosing] = useState(false);
-  const [isOpening, setIsOpening] = useState(true);
   
   const initialState = {
     status: "pending",
@@ -55,22 +53,6 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
   const canInvite = useUserRole(project, ["owner", "manager"]);
   const canRemove = useUserRole(project, ["owner", "manager"]);
   const canEditRole = useUserRole(project, ["owner", "manager"]);
-
-  // Animation d'ouverture
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsOpening(false);
-    }, 50); // Petit délai pour déclencher l'animation
-    
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsOpen(false);
-    }, 300); // Durée de l'animation de fermeture
-  };
 
   const handleLeaveProject = async (projectId) => {
     const response = await leaveProject(projectId);
@@ -148,24 +130,12 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
 
   return (
     <>
-      {/* Sidebar */}
-      <div className={`fixed top-0 right-0 h-full w-[500px] bg-secondary shadow-[0px_0px_20px_#00000030] z-2001 transform transition-transform duration-300 ease-in-out ${
-        isClosing ? 'translate-x-full' : isOpening ? 'translate-x-full' : 'translate-x-0'
-      }`}>
-        {/* Header avec bouton de fermeture */}
-        <div className="flex items-center justify-between p-6">
-          <h2 className="font-medium text-large">Gestion de l'équipe</h2>
-          <span
-            onClick={handleClose}
-            className="text-text-color-muted hover:text-accent-color transition-colors duration-200"
-            title="Fermer"
-          >
-            <X size={24} />
-          </span>
-        </div>
-        
-        {/* Contenu scrollable */}
-        <div className="flex flex-col gap-5 p-6 h-full overflow-y-auto pb-20">
+      <Sidebar
+        isOpen={true}
+        onClose={() => setIsOpen(false)}
+        title="Gestion de l'équipe"
+        width="500px"
+      >
           <div>
             <h3 className="font-medium text-large mb-4">Inviter de nouveaux membres</h3>
             {canInvite && (
@@ -278,16 +248,8 @@ export default function GuestsModal({ project, setIsOpen, mutateProject }) {
               </ul>
             </div>
           )}
-        </div>
-      </div>
+      </Sidebar>
       
-      {/* Overlay */}
-      <div 
-        className={`fixed inset-0 bg-black/50 z-2000 transition-opacity duration-300 ${
-          isClosing ? 'opacity-0' : isOpening ? 'opacity-0' : 'opacity-100'
-        }`}
-        onClick={handleClose}
-      ></div>
       {isPopup && (
         <PopupMessage
           status={isPopup?.status}

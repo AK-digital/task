@@ -4,8 +4,9 @@ import moment from "moment";
 import "moment/locale/fr";
 import socket from "@/utils/socket";
 import { updateTaskDeadline } from "@/api/task";
-import { CircleX } from "lucide-react";
+import { CircleX, Calendar } from "lucide-react";
 import { checkRole } from "@/utils/utils";
+import DatePicker from "./DatePicker";
 
 export default function TaskDeadline({ task, uid }) {
   const inputRef = useRef(null);
@@ -13,6 +14,7 @@ export default function TaskDeadline({ task, uid }) {
   const [deadline, setDeadline] = useState(task?.deadline?.split("T")[0] || "");
   const [hover, setHover] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const project = task?.projectId;
 
   useEffect(() => {
@@ -53,9 +55,7 @@ export default function TaskDeadline({ task, uid }) {
     setProgress(calculateProgress());
   }, [deadline]);
 
-  async function handleUpdateDate(e) {
-    const date = e.target.value;
-
+  async function handleUpdateDate(date) {
     const response = await updateTaskDeadline(task?._id, project?._id, date);
 
     if (response?.success) {
@@ -75,13 +75,20 @@ export default function TaskDeadline({ task, uid }) {
 
   useEffect(() => {
     if (isEditing) {
-      inputRef.current.showPicker(); // show date picker
+      setShowDatePicker(true);
     }
   }, [isEditing]);
 
   const displayDate = () => {
     const actualDate = moment().format("DD MMM");
-    const formattedDeadline = moment(deadline).format("DD MMM");
+    const deadlineDate = moment(deadline);
+    const currentYear = moment().year();
+    const deadlineYear = deadlineDate.year();
+    
+    // Si la deadline est dans une autre année, inclure l'année
+    const formattedDeadline = deadlineYear !== currentYear 
+      ? deadlineDate.format("DD MMM YYYY")
+      : deadlineDate.format("DD MMM");
 
     if (formattedDeadline) {
       return actualDate + " - " + formattedDeadline;
@@ -116,47 +123,55 @@ export default function TaskDeadline({ task, uid }) {
 
     if (!isAuthorized) return;
 
-    setIsEditing((prev) => !prev);
+    setShowDatePicker(true);
+    setIsEditing(true);
   }, [project, uid]);
+
+  const handleCloseDatePicker = useCallback(() => {
+    setShowDatePicker(false);
+    setIsEditing(false);
+  }, []);
 
   return (
     <div
-      className="hidden md:flex justify-center items-center py-1 px-1 lg:px-2 border-r border-text-light-color min-w-[80px] lg:min-w-[100px] max-w-[120px] w-full h-full gap-0.5 flex-shrink-0"
+      className="hidden md:flex justify-center items-center py-1 px-1 lg:px-2 border-r border-text-light-color min-w-[90px] lg:min-w-[110px] max-w-[130px] lg:max-w-[160px] w-full h-full gap-0.5 flex-shrink-0 relative"
       onMouseLeave={() => setHover(false)}
     >
       <div
-        className="wrapper_TaskDeadline relative w-full bg-primary rounded-3xl py-1 px-0.5 text-center cursor-pointer text-xs lg:text-small overflow-hidden"
+        className="wrapper_TaskDeadline relative w-full bg-primary rounded-3xl py-1 px-1 text-center cursor-pointer text-xs lg:text-small overflow-visible flex items-center justify-center gap-1"
         onMouseEnter={handleHover}
         onClick={handleIsEditing}
         style={{ "--progress": `${deadline ? progress : "0%"}` }}
         data-past-deadline={pastDeadline}
         data-past-today={isToday}
       >
-        <div>
-          {isEditing && (
-            <input
-              type="date"
-              name="deadline"
-              id="deadline"
-              onBlur={() => setIsEditing(false)}
-              autoFocus
-              value={deadline}
-              onChange={handleUpdateDate}
-              ref={inputRef}
-              className="absolute opacity-0 w-0 h-0"
-            />
-          )}
-          {deadline ? (
-            <span className="relative z-1 text-white select-none">
-              {displayDate()}
-            </span>
-          ) : (
-            <span className="relative z-1 select-none">
-              {hover || isEditing ? "Définir" : "-"}
-            </span>
-          )}
-        </div>
+        {deadline ? (
+          <span className="relative z-10 text-white select-none font-medium whitespace-nowrap">
+            {displayDate()}
+          </span>
+        ) : (
+          <>
+            {hover || isEditing ? (
+              <>
+                <Calendar size={12} className="relative z-10 text-gray-600" />
+                <span className="relative z-10 select-none text-gray-600 text-xs">
+                  Définir
+                </span>
+              </>
+            ) : (
+              <span className="relative z-10 select-none text-gray-500">-</span>
+            )}
+          </>
+        )}
       </div>
+      
+      <DatePicker
+        value={deadline}
+        onChange={handleUpdateDate}
+        onClose={handleCloseDatePicker}
+        isOpen={showDatePicker}
+      />
+      
       {hover && deadline && (
         <CircleX
           size={12}

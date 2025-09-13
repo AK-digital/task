@@ -10,6 +10,7 @@ import { priorityColors } from "@/utils/utils";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import FloatingMenu from "@/shared/components/FloatingMenu";
 import { usePriorities } from "../../../hooks/usePriorities";
+import Sidebar from "../Sidebar/Sidebar";
 
 export default function TaskPriority({ task }) {
   const { project, mutateTasks, priorities, mutatePriorities } =
@@ -19,6 +20,7 @@ export default function TaskPriority({ task }) {
   const [currentPriority, setCurrentPriority] = useState(task?.priority);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const maxPriorities = priorities?.length === 12;
 
@@ -96,7 +98,8 @@ export default function TaskPriority({ task }) {
   function handleEditPriority() {
     if (!canEdit) return;
 
-    setIsEdit((prev) => !prev);
+    setIsOpen(false);
+    setIsSidebarOpen(true);
   }
 
   useMemo(() => {
@@ -119,9 +122,9 @@ export default function TaskPriority({ task }) {
   }
 
   return (
-    <div className="relative flex items-center select-none border-r border-text-light-color text-xs lg:text-normal text-text-color min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
+    <div className="relative flex items-center select-none border-r border-text-light-color text-xs lg:text-normal  min-w-[80px] sm:min-w-[100px] lg:min-w-[120px] max-w-[150px] w-full h-full flex-shrink-0">
       <div
-        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer py-1.5 lg:py-2 px-2 lg:px-4 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -131,7 +134,7 @@ export default function TaskPriority({ task }) {
       {isOpen && (
         <FloatingMenu
           setIsOpen={setIsOpen}
-          className={listWidth() ? "w-[380px]" : "w-[220px]"}
+          className={listWidth() ? "w-[380px]" : "w-[240px]"}
           refs={refs}
           floatingStyles={floatingStyles}
         >
@@ -141,7 +144,7 @@ export default function TaskPriority({ task }) {
                 return (
                   <li
                     key={priority?._id}
-                    className="secondary-button"
+                    className="p-1.5 min-w-[110px] cursor-pointer text-white text-[14px] rounded-3xl flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
                     data-value={priority?.name}
                     onClick={() => handleTaskUpdatePriority(priority)}
                     style={{ backgroundColor: priority?.color }}
@@ -170,24 +173,50 @@ export default function TaskPriority({ task }) {
               </li>
             )}
           </ul>
-          {isEdit ? (
-            <button
-              className="bg-transparent w-full outline-none border-none  text-[14px]  text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 rounded-sm hover:bg-text-lighter-color hover:shadow-none"
-              onClick={handleEditPriority}
-            >
-              <Save size={16} />
-              Appliquer
-            </button>
-          ) : (
-            <button
-                className="bg-transparent w-full outline-none border-none text-[14px]  text-text-dark-color p-1 mt-2 text-center flex items-center justify-center gap-2 rounded-sm hover:bg-text-lighter-color hover:shadow-none"
-              onClick={handleEditPriority}
-            >
-              <Pen size={16} /> Modifier les priorités
-            </button>
-          )}
+          <div className="flex items-center p-2 justify-center gap-2">
+          <span
+            className="secondary-button"
+            onClick={handleEditPriority}
+          >
+            <Pen size={16} /> Modifier les priorités
+          </span>
+          </div>
         </FloatingMenu>
       )}
+      
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        title="Modifier les priorités"
+        width="500px"
+      >
+        <div className="space-y-4">
+          <p className="text-text-color-muted text-sm">
+            Gérez les priorités de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouvelles priorités.
+          </p>
+          
+          <ul className="space-y-3">
+            {prioritiesData?.map((priority) => (
+              <TaskEditPriority
+                key={priority?._id}
+                priority={priority}
+                currentPriority={currentPriority}
+                setCurrentPriority={setCurrentPriority}
+              />
+            ))}
+            
+            {!maxPriorities && (
+              <li
+                className="secondary-button w-fit"
+                onClick={handleAddPriority}
+              >
+                <Plus size={16} />
+                Ajouter une nouvelle priorité
+              </li>
+            )}
+          </ul>
+        </div>
+      </Sidebar>
     </div>
   );
 }
