@@ -133,6 +133,11 @@ export default function TaskContextMenu({
       const handleContextMenu = (e) => {
         // Fermer ce menu si un clic droit se produit ailleurs
         if (!e.target.closest(`[data-task-id="${task._id}"]`)) {
+          // Ne pas ouvrir le menu contextuel si le clic est sur container_TaskMore
+          if (e.target.closest('.container_TaskMore')) {
+            return; // Laisser le comportement par défaut du navigateur
+          }
+          
           // Empêcher le menu contextuel du navigateur si le clic est sur une autre tâche
           if (e.target.closest('[data-task-id]')) {
             e.preventDefault();

@@ -1,5 +1,6 @@
 import {
   BoldIcon,
+  CircleCheckBig,
   Code2,
   Heading1,
   Heading2,
@@ -101,6 +102,9 @@ export default function Toolbar({ editor }) {
       </button>
       <button onClick={() => editor.chain().focus().toggleOrderedList().run()}>
         <ListOrderedIcon size={16} />
+      </button>
+      <button onClick={() => editor.chain().focus().toggleTaskList().run()}>
+        <CircleCheckBig size={16} />
       </button>
 
       <div className="w-[1px] h-6 bg-third my-0 mx-2"></div>

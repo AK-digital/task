@@ -3,8 +3,13 @@ import { useAuthFetch } from "@/utils/api";
 
 export async function getStatusByProject(projectId) {
   try {
+    // Nettoyer l'ID en supprimant les virgules et espaces
+    let cleanProjectId = String(projectId);
+    cleanProjectId = cleanProjectId.replace(/,/g, ''); // Supprimer les virgules
+    cleanProjectId = cleanProjectId.replace(/[^a-zA-Z0-9]/g, ''); // Garder seulement alphanumériques
+    
     const res = await useAuthFetch(
-      `status/project/${projectId}`,
+      `status/project/${cleanProjectId}`,
       "GET",
       "application/json"
     );
@@ -62,8 +67,11 @@ export async function getStatusesByProjects() {
 
 export async function saveStatus(projectId, statusData) {
   try {
+    // Nettoyer l'ID en supprimant les virgules et espaces
+    const cleanProjectId = String(projectId).replace(/[^a-zA-Z0-9]/g, '');
+    
     const res = await useAuthFetch(
-      `status?projectId=${projectId}`,
+      `status?projectId=${cleanProjectId}`,
       "POST",
       "application/json",
       statusData
@@ -89,8 +97,12 @@ export async function saveStatus(projectId, statusData) {
 
 export async function updateStatus(statusId, projectId, statusData) {
   try {
+    // Nettoyer les IDs
+    const cleanStatusId = String(statusId).replace(/[^a-zA-Z0-9]/g, '');
+    const cleanProjectId = String(projectId).replace(/[^a-zA-Z0-9]/g, '');
+    
     const res = await useAuthFetch(
-      `status/${statusId}?projectId=${projectId}`,
+      `status/${cleanStatusId}?projectId=${cleanProjectId}`,
       "PUT",
       "application/json",
       statusData
@@ -116,8 +128,12 @@ export async function updateStatus(statusId, projectId, statusData) {
 
 export async function deleteStatus(statusId, projectId) {
   try {
+    // Nettoyer les IDs
+    const cleanStatusId = String(statusId).replace(/[^a-zA-Z0-9]/g, '');
+    const cleanProjectId = String(projectId).replace(/[^a-zA-Z0-9]/g, '');
+    
     const res = await useAuthFetch(
-      `status/${statusId}?projectId=${projectId}`,
+      `status/${cleanStatusId}?projectId=${cleanProjectId}`,
       "DELETE",
       "application/json",
       null

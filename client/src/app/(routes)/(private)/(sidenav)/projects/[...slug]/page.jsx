@@ -18,18 +18,32 @@ export default async function ProjectPage({ params }) {
   const options = slug?.length > 1 && slug[1] === "options";
   const timeTracking = slug?.length > 1 && slug[1] === "time-tracking";
 
-  const projectData = getProject(id);
-  const boardsData = getBoards(id, archive);
-  const tasksData = getTasks({ projectId: id, archived: archive });
-  const statusesData = getStatusByProject(id);
-  const prioritiesData = getPriorityByProject(id);
+  // Nettoyer l'ID en supprimant les virgules, espaces et caractères non-alphanumériques
+  let cleanId = String(id);
+  
+  // Supprimer spécifiquement les virgules qui peuvent venir du formatage des nombres
+  cleanId = cleanId.replace(/,/g, '');
+  
+  // Supprimer tous les caractères non-alphanumériques sauf les chiffres et lettres
+  cleanId = cleanId.replace(/[^a-zA-Z0-9]/g, '');
+  
+  // Validation supplémentaire : s'assurer que l'ID est valide (MongoDB ObjectId = 24 caractères hex, mais on accepte 7+ pour être flexible)
+  if (!cleanId || cleanId.length < 7) {
+    return notFound();
+  }
 
-  const [initialProject, initialBoards, initialTasks] = await Promise.all([
+  const projectData = getProject(cleanId);
+  const boardsData = getBoards(cleanId, archive);
+  const tasksData = getTasks({ projectId: cleanId, archived: archive });
+  const statusesPromise = getStatusByProject(cleanId);
+  const prioritiesPromise = getPriorityByProject(cleanId);
+
+  const [initialProject, initialBoards, initialTasks, statusesData, prioritiesData] = await Promise.all([
     projectData,
     boardsData,
     tasksData,
-    statusesData,
-    prioritiesData,
+    statusesPromise,
+    prioritiesPromise,
   ]);
 
   if (!initialProject) return notFound(); // 404
@@ -52,7 +66,7 @@ export default async function ProjectPage({ params }) {
       <main className="w-full ml-6 min-w-0 max-h-[calc(100svh-64px)]">
         {!options && !timeTracking && <Project />}
         {options && <ProjectOptions project={initialProject} />}
-        {timeTracking && <ProjectTimeTracking project={initialProject} />}
+        {timeTracking && <div>Time Tracking - À implémenter</div>}
       </main>
     </ProjectProvider>
   );

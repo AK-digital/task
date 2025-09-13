@@ -3,8 +3,13 @@ import { useAuthFetch } from "@/utils/api";
 
 export async function getPriorityByProject(projectId) {
   try {
+    // Nettoyer l'ID en supprimant les virgules et espaces
+    let cleanProjectId = String(projectId);
+    cleanProjectId = cleanProjectId.replace(/,/g, ''); // Supprimer les virgules
+    cleanProjectId = cleanProjectId.replace(/[^a-zA-Z0-9]/g, ''); // Garder seulement alphanumériques
+    
     const res = await useAuthFetch(
-      `priority/project/${projectId}`,
+      `priority/project/${cleanProjectId}`,
       "GET",
       "application/json",
       null
@@ -69,8 +74,11 @@ export async function getPrioritiesByProjects() {
 
 export async function savePriority(projectId, priorityData) {
   try {
+    // Nettoyer l'ID en supprimant les virgules et espaces
+    const cleanProjectId = String(projectId).replace(/[^a-zA-Z0-9]/g, '');
+    
     const res = await useAuthFetch(
-      `priority?projectId=${projectId}`,
+      `priority?projectId=${cleanProjectId}`,
       "POST",
       "application/json",
       priorityData
@@ -96,8 +104,12 @@ export async function savePriority(projectId, priorityData) {
 
 export async function updatePriority(priorityId, projectId, priorityData) {
   try {
+    // Nettoyer les IDs
+    const cleanPriorityId = String(priorityId).replace(/[^a-zA-Z0-9]/g, '');
+    const cleanProjectId = String(projectId).replace(/[^a-zA-Z0-9]/g, '');
+    
     const res = await useAuthFetch(
-      `priority/${priorityId}?projectId=${projectId}`,
+      `priority/${cleanPriorityId}?projectId=${cleanProjectId}`,
       "PUT",
       "application/json",
       priorityData
@@ -123,8 +135,12 @@ export async function updatePriority(priorityId, projectId, priorityData) {
 
 export async function deletePriority(priorityId, projectId) {
   try {
+    // Nettoyer les IDs
+    const cleanPriorityId = String(priorityId).replace(/[^a-zA-Z0-9]/g, '');
+    const cleanProjectId = String(projectId).replace(/[^a-zA-Z0-9]/g, '');
+    
     const res = await useAuthFetch(
-      `priority/${priorityId}?projectId=${projectId}`,
+      `priority/${cleanPriorityId}?projectId=${cleanProjectId}`,
       "DELETE",
       "application/json",
       null

@@ -359,7 +359,8 @@ export default function Tiptap({
       socket.emit("create notification", user, taggedUser, message, link);
     }
 
-    // Reset editor
+    // Reset editor complètement
+    editor.commands.clearContent();
     setPlainText("");
     setEditDescription(false);
     setPending(false);
@@ -465,6 +466,8 @@ export default function Tiptap({
       socket.emit("create notification", user, taggedUser, messageNotif, link);
     }
 
+    // Vider complètement l'éditeur
+    editor.commands.clearContent();
     setPlainText("");
     setValue("");
     if (editMessage === false) {
@@ -479,6 +482,7 @@ export default function Tiptap({
 
     if (type === "description") {
       // Fermer l'édition de la description et nettoyer les champs
+      editor.commands.clearContent();
       setEditDescription("");
       setPlainText("");
       setValue("");
@@ -488,6 +492,9 @@ export default function Tiptap({
       }
     } else {
       // Comportement par défaut pour les messages
+      editor.commands.clearContent();
+      setPlainText("");
+      setValue("");
       setConvOpen("");
     }
   };

@@ -5,6 +5,8 @@ import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Mention from "@tiptap/extension-mention";
+import ListItem from "@tiptap/extension-list-item";
+import { TaskList, TaskItem } from "../components/RichTextEditor/extensions/TaskList";
 
 export function tiptapOptions(
   type,
@@ -17,6 +19,7 @@ export function tiptapOptions(
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
+        listItem: false, // Désactiver pour éviter les conflits avec TaskItem
       }),
       // Extensions NOT included in StarterKit
       Underline,
@@ -41,6 +44,11 @@ export function tiptapOptions(
           class: "mention",
         },
       }),
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
+      ListItem, // Pour les listes normales
     ],
     content: value,
     immediatelyRender: false,

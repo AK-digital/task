@@ -69,6 +69,11 @@ export default function Task({
   const handleContextMenu = (e) => {
     if (!canContextMenu) return;
     
+    // Ne pas ouvrir le menu contextuel si le clic provient du container_TaskMore
+    if (e.target.closest('.container_TaskMore')) {
+      return;
+    }
+    
     e.preventDefault();
     e.stopPropagation();
     
