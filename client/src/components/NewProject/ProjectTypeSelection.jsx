@@ -1,5 +1,5 @@
 "use client";
-import { Bot, FileText, FolderPlus } from "lucide-react";
+import { Bot, FileText, FolderPlus, Import } from "lucide-react";
 
 export default function ProjectTypeSelection({ onTypeSelect }) {
   const projectTypes = [
@@ -24,8 +24,8 @@ export default function ProjectTypeSelection({ onTypeSelect }) {
   ];
 
   return (
-    <div className="flex justify-center items-center h-full w-full">
-      <div className="grid grid-cols-3 gap-8 max-w-4xl w-full lg:grid-cols-3 md:grid-cols-1 md:gap-6">
+    <div className="flex flex-col justify-center items-center h-full w-full">
+      <div className="grid grid-cols-3 gap-8 max-w-4xl w-full mb-6 lg:grid-cols-3 md:grid-cols-1 md:gap-6">
         {projectTypes.map((type) => (
           <button
             key={type.id}
@@ -41,6 +41,10 @@ export default function ProjectTypeSelection({ onTypeSelect }) {
           </button>
         ))}
       </div>
+      <div className="flex flex-col justify-center items-center w-full gap-4">
+        <span className="text text-text-color-muted text-lg">ou</span>
+        <span className="secondary-button"><Import size={20} /> Importer un projet</span>
+        </div>
     </div>
   );
 } 

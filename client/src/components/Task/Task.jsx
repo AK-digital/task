@@ -104,7 +104,7 @@ export default function Task({
       <div
         ref={setNodeRef}
         style={style}
-        className={`container_Task flex items-center border-t border-text-color h-[44px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] ${
+        className={`container_Task flex items-center border-t border-text-color h-[40px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] ${
           isDragging ? "opacity-0" : ""
         }`}
         suppressHydrationWarning

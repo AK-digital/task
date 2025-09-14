@@ -10,6 +10,7 @@ import {
   Save,
   Trash2,
   CopyPlus,
+  Plus,
 } from "lucide-react";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -42,6 +43,7 @@ export default function BoardHeader({
   setSelectedTasks,
   archive,
   project,
+  onAddTask,
 }) {
   const { openedTask } = useTaskContext();
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
@@ -255,7 +257,7 @@ export default function BoardHeader({
 
   return (
     <div
-      className={`container_BoardHeader sticky top-0 flex items-center justify-between font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
+      className={`container_BoardHeader sticky top-0 flex items-center gap-6 font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
         openedTask ? "z-1000" : "z-2000"
       }`}
       data-open={open}
@@ -265,7 +267,7 @@ export default function BoardHeader({
         "--board-color": board?.color || "var(--color-color-border-color)",
       }}
     >
-      <div className="relative flex items-center gap-1 [&>div]:flex [&>div]:justify-center [&>div]:items-center">
+      <div className="relative flex items-center gap-2 [&>div]:flex [&>div]:justify-center [&>div]:items-center">
         {/* Display if tasks is not empty and if there is at least 2 task */}
         {isNotEmpty(tasks) && tasks?.length > 1 && canEdit && (
           <div title="Sélectionner toutes les tâches">
@@ -365,6 +367,19 @@ export default function BoardHeader({
           </div>
         )}
       </div>
+      
+      {/* Bouton Ajouter une tâche */}
+      {!archive && canEdit && open && (
+  
+          <span
+            onClick={() => onAddTask?.(board._id)}
+            className="secondary-button flex items-center gap-2 cursor-pointer text-[13px] text-text-color-muted hover:text-text-dark-color"
+          >
+            <Plus size={14} />
+            Ajouter une tâche
+          </span>
+   
+      )}
       {openColors && (
         <>
           <div className="absolute z-2001 rounded-lg left-3 top-10 max-w-[234px] p-4 bg-secondary shadow-medium">

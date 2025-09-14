@@ -51,7 +51,7 @@ export default function TaskText({ task }) {
       onClick={handleEdit}
     >
       {!isEdit && (
-        <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em]">
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em] border border-transparent px-2 py-1 rounded-sm transition-all duration-200 hover:bg-third hover:border-gray-300">
           {value}
         </span>
       )}
@@ -64,7 +64,7 @@ export default function TaskText({ task }) {
           onChange={handleChange}
           onBlur={() => setIsEdit(false)}
           autoFocus
-          className="relative text-normal tracking-[0.01em] border-none focus:text-text-darker-color focus:rounded-sm font-bricolage w-full"
+          className="relative text-normal tracking-[0.01em] border border-accent-color focus:text-text-darker-color focus:rounded-sm font-bricolage w-full px-2 py-1 rounded-sm bg-third"
         />
       )}
     </div>
