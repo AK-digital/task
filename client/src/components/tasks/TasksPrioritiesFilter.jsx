@@ -66,7 +66,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div
-        className="secondary-button"
+        className="secondary-button w-[150px]"
         onClick={() => setIsOpen(!isOpen)}
         data-open={isOpen}
       >
@@ -121,7 +121,12 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                     htmlFor={priority?._id}
                     className="flex items-center cursor-pointer flex-1"
                   >
-                    {priority?.name}
+                    <span
+                      className="px-2 py-1 rounded-sm text-white text-xs font-medium truncate flex-1"
+                      style={{ backgroundColor: priority?.color }}
+                    >
+                      {priority?.name}
+                    </span>
                   </label>
                 </li>
               ))}

@@ -138,7 +138,7 @@ export default function TaskDeadline({ task, uid }) {
       onMouseLeave={() => setHover(false)}
     >
       <div
-        className="wrapper_TaskDeadline relative w-full bg-primary rounded-3xl py-1 px-1 text-center cursor-pointer text-xs lg:text-small overflow-visible flex items-center justify-center gap-1"
+        className="wrapper_TaskDeadline relative w-full bg-primary rounded-[5px] py-1 px-1 text-center cursor-pointer text-xs lg:text-small overflow-visible flex items-center justify-center gap-1"
         onMouseEnter={handleHover}
         onClick={handleIsEditing}
         style={{ "--progress": `${deadline ? progress : "0%"}` }}

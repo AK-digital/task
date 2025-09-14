@@ -120,7 +120,7 @@ export default function TaskStatus({ task, uid }) {
   return (
     <div className="task-col-status task-content-col  select-none text-xs lg:text-normal text-foreground">
       <div
-        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-[5px] mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -141,7 +141,7 @@ export default function TaskStatus({ task, uid }) {
                 return (
                   <li
                     key={status?._id}
-                    className="p-1.5 cursor-pointer text-white text-[14px] rounded-3xl flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
+                    className="p-1.5 cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
                     onClick={() => handleTaskUpdateStatus(status)}
                     style={{ backgroundColor: status?.color }}
                   >

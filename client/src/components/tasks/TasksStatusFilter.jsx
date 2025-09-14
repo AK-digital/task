@@ -93,7 +93,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div
-        className="secondary-button"
+        className="secondary-button w-[150px]"
         onClick={toggleDropdown}
         data-open={isOpen}
       >
@@ -139,9 +139,14 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                 />
                 <label
                   htmlFor={elt?._id}
-                  className="cursor-pointer flex-1 overflow-hidden text-ellipsis whitespace-nowrap min-w-0"
+                  className="cursor-pointer flex-1 overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex items-center"
                 >
-                  {elt?.name}
+                  <span
+                    className="px-2 py-1 rounded-sm text-white text-xs font-medium truncate flex-1"
+                    style={{ backgroundColor: elt?.color }}
+                  >
+                    {elt?.name}
+                  </span>
                 </label>
               </li>
             ))}

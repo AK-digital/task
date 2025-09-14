@@ -124,7 +124,7 @@ export default function TaskPriority({ task }) {
   return (
     <div className="task-col-priority task-content-col  relative select-none text-xs lg:text-normal">
       <div
-        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-3xl mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
+        className="relative w-full min-w-[70px] lg:min-w-[110px] text-center cursor-pointer p-1.5 rounded-[5px] mx-2 lg:mx-3 text-white whitespace-nowrap text-ellipsis overflow-hidden text-[14px]"
         style={{ backgroundColor: currentBackgroundColor }}
         onClick={handleIsOpen}
         ref={refs.setReference}
@@ -144,7 +144,7 @@ export default function TaskPriority({ task }) {
                 return (
                   <li
                     key={priority?._id}
-                    className="p-1.5 min-w-[110px] cursor-pointer text-white text-[14px] rounded-3xl flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
+                    className="p-1.5 min-w-[110px] cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
                     data-value={priority?.name}
                     onClick={() => handleTaskUpdatePriority(priority)}
                     style={{ backgroundColor: priority?.color }}

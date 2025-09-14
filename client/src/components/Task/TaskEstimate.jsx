@@ -115,7 +115,7 @@ export default function TaskEstimate({ task, uid }) {
         data-estimation={hasEstimation}
         onClick={handleIsEditing}
         ref={refs.setReference}
-        className="relative w-full bg-primary rounded-3xl py-1 px-1 text-center cursor-pointer text-xs xl:text-small overflow-visible flex items-center justify-center gap-1"
+        className="relative w-full bg-primary rounded-[5px] py-1 px-1 text-center cursor-pointer text-xs xl:text-small overflow-visible flex items-center justify-center gap-1"
       >
         {hasEstimation ? (
           <span className="relative z-10 select-none font-medium whitespace-nowrap">

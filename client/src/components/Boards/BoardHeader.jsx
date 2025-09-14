@@ -257,7 +257,7 @@ export default function BoardHeader({
 
   return (
     <div
-      className={`container_BoardHeader sticky top-0 flex items-center gap-6 font-medium select-none rounded-2xl bg-secondary w-full flex-wrap p-3 ${
+      className={`container_BoardHeader sticky top-0 flex items-center gap-6 font-medium select-none rounded-  bg-secondary w-full flex-wrap p-3 ${
         openedTask ? "z-1000" : "z-2000"
       }`}
       data-open={open}
