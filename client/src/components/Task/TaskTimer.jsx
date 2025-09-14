@@ -32,8 +32,6 @@ export default function TaskTimer({ task }) {
   const [editingSession, setEditingSession] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
 
-  // NOUVEAU: Flag pour différencier les mises à jour locales des externes
-  const [isLocalUpdate, setIsLocalUpdate] = useState(false);
 
   const stopwatchRef = useRef(null);
   const project = task?.projectId;
@@ -76,7 +74,7 @@ export default function TaskTimer({ task }) {
     }
   }, [task._id]);
 
-  // MODIFIÉ: Seulement émettre si c'est une mise à jour locale
+  // Mise à jour du temps total et de l'offset du chronomètre
   useEffect(() => {
     const newTotalDuration = sessions.reduce(
       (acc, curr) => acc + curr.duration,
@@ -91,23 +89,18 @@ export default function TaskTimer({ task }) {
     if (stopwatchRef.current && !isRunning) {
       stopwatchRef.current.reset(newOffset, false);
     }
-    // SEULEMENT émettre si c'est une mise à jour locale
-    if (isLocalUpdate) {
-      socket.emit("update task", project?._id);
-      setIsLocalUpdate(false); // Reset le flag
-    }
-  }, [sessions, isRunning, project?._id, isLocalUpdate]);
+  }, [sessions, isRunning]);
 
-  // MODIFIÉ: Ne pas émettre de socket ici, juste mettre à jour l'état
+  // Synchronisation avec les données externes (sans émettre de socket)
   useEffect(() => {
     // Éviter les boucles en comparant les données
     const currentSessions = JSON.stringify(sessions);
     const newSessions = JSON.stringify(task?.timeTrackings || []);
 
-    if (currentSessions !== newSessions) {
+    if (currentSessions !== newSessions && !isRunning) {
       setSessions(task?.timeTrackings || []);
     }
-  }, [task?.timeTrackings]);
+  }, [task?.timeTrackings, isRunning]);
 
   const { hours, minutes, seconds, start, pause, reset } = useStopwatch({
     autoStart: false,
@@ -131,9 +124,10 @@ export default function TaskTimer({ task }) {
 
     if (res?.success && res?.data) {
       const newSession = res.data;
-      setIsLocalUpdate(true); // Marquer comme mise à jour locale
       setSessions((prev) => [...prev, newSession]);
       localStorage.removeItem(`taskTimer_${task._id}`);
+      // Émettre une seule fois après la mise à jour
+      socket.emit("update task", project?._id);
     } else {
       setSessions(task?.timeTrackings || []);
     }
@@ -154,8 +148,8 @@ export default function TaskTimer({ task }) {
   };
 
   const handleLocalSessionUpdate = (newSessions) => {
-    setIsLocalUpdate(true);
     setSessions(newSessions);
+    // Note: socket.emit est géré par les composants enfants
   };
 
   return (
@@ -203,7 +197,7 @@ export default function TaskTimer({ task }) {
             {/* Header */}
             <div className="flex items-center justify-between p-3 border-b border-gray-300">
               <h3 className="font-medium text-sm text-black">Gestion du temps</h3>
-              {(addingSession || editingSession) && (
+              {(addingSession || editingSession) ? (
                 <span
                   className="text-sm px-2 py-1 border border-accent-color text-accent-color hover:bg-accent-color hover:text-white rounded transition-colors cursor-pointer select-none"
                   onClick={() => {
@@ -213,6 +207,13 @@ export default function TaskTimer({ task }) {
                 >
                   Retour
                 </span>
+              ) : canAdd && (
+                <span
+                  className="text-sm px-2 py-1 border border-accent-color text-accent-color hover:bg-accent-color hover:text-white rounded transition-colors cursor-pointer select-none"
+                  onClick={() => setAddingSession(true)}
+                >
+                  Ajouter une session
+                </span>
               )}
             </div>
             
@@ -221,6 +222,7 @@ export default function TaskTimer({ task }) {
                 task={task}
                 formatTime={formatTime}
                 setSessions={handleLocalSessionUpdate}
+                setAddingSession={setAddingSession}
               />
             ) : editingSession ? (
               <TimeTrackingForm
@@ -232,16 +234,6 @@ export default function TaskTimer({ task }) {
               />
             ) : (
               <div className="p-3">
-                {canAdd && (
-                  <div className="mb-4">
-                    <span
-                      className="w-full text-[15px] px-3 py-2 border border-accent-color text-white bg-accent-color hover:bg-accent-color-hover rounded transition-colors cursor-pointer block text-center"
-                      onClick={() => setAddingSession(true)}
-                    >
-                      Ajouter une session
-                    </span>
-                  </div>
-                )}
                 {isNotEmpty(sessions) && (
                   <TimeTrackingSessions
                     task={task}
@@ -261,7 +253,7 @@ export default function TaskTimer({ task }) {
   );
 }
 
-export function TimeTrackingForm({ task, formatTime, setSessions, editingSession, setEditingSession }) {
+export function TimeTrackingForm({ task, formatTime, setSessions, editingSession, setEditingSession, setAddingSession }) {
   const [startTime, setStartTime] = useState(
     editingSession ? moment(editingSession.startTime).format("HH:mm") : moment().format("HH:mm")
   );
@@ -303,7 +295,9 @@ export function TimeTrackingForm({ task, formatTime, setSessions, editingSession
             session._id === editingSession._id ? updatedSession : session
           )
         );
-        setEditingSession(null);
+        if (setEditingSession) {
+          setEditingSession(null);
+        }
       } else {
         // Mode création : ajouter une nouvelle session
         setStartTime(moment().format("HH:mm"));
@@ -311,11 +305,15 @@ export function TimeTrackingForm({ task, formatTime, setSessions, editingSession
         setTimeExpected("00:00:00");
         const newSession = state?.data;
         setSessions((prev) => [...prev, newSession]);
+        // Fermer le mode d'ajout après succès
+        if (setAddingSession) {
+          setAddingSession(false);
+        }
       }
-
+      // Émettre socket après mise à jour
       socket.emit("update task", task?.projectId?._id);
     }
-  }, [state, editingSession, setEditingSession, setSessions, task?.projectId?._id]);
+  }, [state?.status, state?.data, editingSession, task?.projectId?._id]);
 
   const calculateTimeDifference = (startTime, endTime) => {
     if (!startTime || !endTime) return "00:00:00";
@@ -467,15 +465,19 @@ export function TimeTrackingSessions({
 }) {
   const { uid } = useContext(AuthContext);
   async function handleDeleteSession(sessionId) {
+    // Optimistic update
+    const originalSessions = sessions;
     setSessions((prev) => prev.filter((session) => session._id !== sessionId));
 
     const res = await deleteTimeTracking(sessionId, task.projectId?._id);
 
     if (!res.success) {
-      setSessions(task?.timeTrackings || []);
+      // Rollback en cas d'erreur
+      setSessions(originalSessions);
+    } else {
+      // Émettre seulement si la suppression a réussi
+      socket.emit("update task", task.projectId?._id);
     }
-
-    socket.emit("update task", task.projectId?._id);
   }
 
   return (
