@@ -81,4 +81,17 @@ router.patch(
   projectControllers.updateProjectsOrder
 );
 
+router.get(
+  "/:id/export",
+  authMiddlewares.auth,
+  checkRole(["owner", "manager", "team"]),
+  projectControllers.exportProject
+);
+
+router.post(
+  "/import",
+  authMiddlewares.auth,
+  projectControllers.importProject
+);
+
 export default router;

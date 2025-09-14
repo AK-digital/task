@@ -4,6 +4,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { updateProject } from "@/actions/project";
 import {
   Archive,
+  Download,
   Globe,
   MoreVertical,
   Save,
@@ -13,7 +14,7 @@ import {
 import { useUserRole } from "../../../hooks/useUserRole";
 import { mutate } from "swr";
 import { useRouter } from "next/navigation";
-import { deleteProject } from "@/api/project";
+import { deleteProject, exportProject } from "@/api/project";
 import AddTemplate from "../Templates/AddTemplate";
 import { MoreMenu } from "../Dropdown/MoreMenu";
 import { icons, isNotEmpty } from "@/utils/utils";
@@ -43,6 +44,7 @@ export default function ProjectTitle({ project }) {
   const moreButtonRef = useRef(null);
 
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
+  const isTeamOrAbove = useUserRole(project, ["owner", "manager", "team"]);
 
   async function handleDeleteProject() {
     const response = await deleteProject(project?._id);
@@ -57,6 +59,41 @@ export default function ProjectTitle({ project }) {
   function handleAddTemplate() {
     setAddTemplate((prev) => !prev);
     setIsMoreOpen(false);
+  }
+
+  async function handleExportProject() {
+    try {
+      const response = await exportProject(project?._id);
+      
+      if (!response.success) {
+        throw new Error(response.message || 'Erreur lors de l\'export du projet');
+      }
+      
+      // Créer le fichier JSON et le télécharger
+      const dataStr = JSON.stringify(response.data, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      
+      // Créer le nom de fichier avec date et heure
+      const now = new Date();
+      const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
+      const time = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+      const projectName = project?.name?.replace(/[^a-zA-Z0-9\-_]/g, '_') || 'projet';
+      const fileName = `${date}-${time}-export-project-${projectName}-clynt.json`;
+      
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      setIsMoreOpen(false);
+    } catch (error) {
+      console.error('Erreur lors de l\'export:', error);
+      alert('Erreur lors de l\'export du projet');
+    }
   }
 
   const options = [
@@ -76,6 +113,12 @@ export default function ProjectTitle({ project }) {
       function: handleAddTemplate,
       icon: <Save size={16} />,
       name: "Enregistrer le projet comme modèle",
+    },
+    {
+      authorized: isTeamOrAbove,
+      function: handleExportProject,
+      icon: <Download size={16} />,
+      name: "Exporter le projet en JSON",
     },
     {
       authorized: isOwnerOrManager,

@@ -633,3 +633,227 @@ export const updateProjectsOrder = async (req, res) => {
     });
   }
 };
+
+export const exportProject = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+
+    // Récupérer le projet avec toutes ses données
+    const project = await ProjectModel.findById(projectId);
+    
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Projet non trouvé",
+      });
+    }
+
+    // Récupérer tous les tableaux du projet
+    const boards = await BoardModel.find({ projectId }).lean();
+
+    // Récupérer toutes les tâches du projet
+    const TaskModel = (await import("../models/Task.model.js")).default;
+    const tasks = await TaskModel.find({ projectId }).lean();
+
+    // Récupérer les statuts du projet
+    const StatusModel = (await import("../models/Status.model.js")).default;
+    const statuses = await StatusModel.find({ projectId }).lean();
+
+    // Récupérer les priorités du projet
+    const PriorityModel = (await import("../models/Priority.model.js")).default;
+    const priorities = await PriorityModel.find({ projectId }).lean();
+
+    // Créer l'objet d'export avec toutes les données
+    const exportData = {
+      project: {
+        name: project.name,
+        note: project.note,
+        urls: project.urls,
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+      },
+      boards,
+      tasks,
+      statuses,
+      priorities,
+      exportedAt: new Date(),
+      exportVersion: "1.0",
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: "Projet exporté avec succès",
+      data: exportData,
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'export:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Erreur lors de l'export du projet",
+    });
+  }
+};
+
+export const importProject = async (req, res) => {
+  try {
+    const authUser = res.locals.user;
+    const { projectData } = req.body;
+
+    // Vérifier que les données sont valides
+    if (!projectData || !projectData.project || !projectData.exportVersion) {
+      return res.status(400).json({
+        success: false,
+        message: "Données d'import invalides",
+      });
+    }
+
+    // Créer le nouveau projet
+    const newProject = new ProjectModel({
+      name: `${projectData.project.name} (Importé)`,
+      note: projectData.project.note,
+      urls: projectData.project.urls || [],
+      members: [
+        {
+          user: authUser._id,
+          role: "owner",
+        },
+      ],
+    });
+
+    const savedProject = await newProject.save();
+
+    // Importer les statuts
+    const StatusModel = (await import("../models/Status.model.js")).default;
+    const statusMapping = {};
+    
+    if (projectData.statuses && projectData.statuses.length > 0) {
+      for (const status of projectData.statuses) {
+        const newStatus = new StatusModel({
+          name: status.name,
+          color: status.color,
+          projectId: savedProject._id,
+        });
+        const savedStatus = await newStatus.save();
+        statusMapping[status._id] = savedStatus._id;
+      }
+    } else {
+      // Créer les statuts par défaut
+      const defaultStatuses = getDefaultStatuses(savedProject._id);
+      await StatusModel.insertMany(defaultStatuses);
+    }
+
+    // Importer les priorités
+    const PriorityModel = (await import("../models/Priority.model.js")).default;
+    const priorityMapping = {};
+    
+    if (projectData.priorities && projectData.priorities.length > 0) {
+      for (const priority of projectData.priorities) {
+        const newPriority = new PriorityModel({
+          name: priority.name,
+          color: priority.color,
+          projectId: savedProject._id,
+        });
+        const savedPriority = await newPriority.save();
+        priorityMapping[priority._id] = savedPriority._id;
+      }
+    } else {
+      // Créer les priorités par défaut
+      const defaultPriorities = getDefaultPriorities(savedProject._id);
+      await PriorityModel.insertMany(defaultPriorities);
+    }
+
+    // Importer les tableaux
+    const boardMapping = {};
+    
+    if (projectData.boards && projectData.boards.length > 0) {
+      for (const board of projectData.boards) {
+        const newBoard = new BoardModel({
+          title: board.title,
+          color: board.color,
+          projectId: savedProject._id,
+        });
+        const savedBoard = await newBoard.save();
+        boardMapping[board._id] = savedBoard._id;
+      }
+    } else {
+      // Créer un tableau par défaut
+      const newBoard = new BoardModel({
+        projectId: savedProject._id,
+        title: "Tableau principal",
+      });
+      const savedBoard = await newBoard.save();
+      
+      // Assigner une couleur aléatoire
+      const randomIndex = Math.floor(Math.random() * savedBoard.colors.length);
+      const randomColor = savedBoard.colors[randomIndex];
+      
+      await BoardModel.findByIdAndUpdate(
+        savedBoard._id,
+        { $set: { color: randomColor } },
+        { new: true }
+      );
+    }
+
+    // Importer les tâches
+    if (projectData.tasks && projectData.tasks.length > 0) {
+      const TaskModel = (await import("../models/Task.model.js")).default;
+      
+      for (const task of projectData.tasks) {
+        // Préparer la description en respectant les limites
+        let taskDescription = null;
+        if (task.description) {
+          if (typeof task.description === 'string') {
+            // Si c'est une chaîne, la tronquer si nécessaire
+            taskDescription = {
+              text: task.description.length > 1250 ? task.description.substring(0, 1247) + '...' : task.description,
+              author: authUser._id,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            };
+          } else if (task.description.text) {
+            // Si c'est un objet avec text, tronquer le text si nécessaire
+            taskDescription = {
+              ...task.description,
+              text: task.description.text.length > 1250 ? task.description.text.substring(0, 1247) + '...' : task.description.text,
+              author: authUser._id,
+              createdAt: task.description.createdAt || new Date(),
+              updatedAt: new Date(),
+            };
+          }
+        }
+
+        const newTask = new TaskModel({
+          text: task.text || task.title || 'Tâche importée',
+          description: taskDescription,
+          projectId: savedProject._id,
+          boardId: boardMapping[task.boardId] || Object.values(boardMapping)[0],
+          status: statusMapping[task.status] || Object.values(statusMapping)[0],
+          priority: priorityMapping[task.priority] || Object.values(priorityMapping)[0],
+          archived: task.archived || false,
+          author: authUser._id,
+        });
+        
+        await newTask.save();
+      }
+    }
+
+    // Créer un favori pour l'utilisateur
+    const newFavorite = new FavoriteModel({
+      user: authUser._id,
+      project: savedProject._id,
+    });
+    await newFavorite.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Projet importé avec succès",
+      data: savedProject,
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'import:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Erreur lors de l'import du projet",
+    });
+  }
+};

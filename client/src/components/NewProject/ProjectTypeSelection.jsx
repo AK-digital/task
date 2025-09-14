@@ -1,7 +1,44 @@
 "use client";
 import { Bot, FileText, FolderPlus, Import } from "lucide-react";
+import { useRef } from "react";
 
 export default function ProjectTypeSelection({ onTypeSelect }) {
+  const fileInputRef = useRef(null);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.json')) {
+      alert('Veuillez sélectionner un fichier JSON valide');
+      return;
+    }
+
+    try {
+      const text = await file.text();
+      const projectData = JSON.parse(text);
+      
+      // Vérifier que le fichier contient les données nécessaires
+      if (!projectData.project || !projectData.exportVersion) {
+        alert('Le fichier JSON ne semble pas être un export de projet valide');
+        return;
+      }
+
+      // Appeler la fonction d'import avec les données
+      onTypeSelect('import', projectData);
+    } catch (error) {
+      console.error('Erreur lors de la lecture du fichier:', error);
+      alert('Erreur lors de la lecture du fichier JSON');
+    }
+
+    // Réinitialiser l'input
+    event.target.value = '';
+  };
+
   const projectTypes = [
     {
       id: "ia",
@@ -43,8 +80,21 @@ export default function ProjectTypeSelection({ onTypeSelect }) {
       </div>
       <div className="flex flex-col justify-center items-center w-full gap-4">
         <span className="text text-text-color-muted text-lg">ou</span>
-        <span className="secondary-button"><Import size={20} /> Importer un projet</span>
-        </div>
+        <button 
+          className="secondary-button flex items-center gap-2"
+          onClick={handleImportClick}
+          type="button"
+        >
+          <Import size={20} /> Importer un projet
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+      </div>
     </div>
   );
 } 

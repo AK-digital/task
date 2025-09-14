@@ -10,6 +10,7 @@ import { saveProject, sendProjectInvitationFromWizard } from "@/actions/project"
 import { createBoard } from "@/actions/board";
 import { saveTask } from "@/actions/task";
 import { useCustomTemplate } from "@/api/template";
+import { importProject } from "@/api/project";
 import { mutate } from "swr";
 
 export default function NewProject() {
@@ -53,7 +54,7 @@ export default function NewProject() {
     }
   };
 
-  const handleTypeSelection = (type) => {
+  const handleTypeSelection = async (type, importData = null) => {
     setSelectedType(type);
     
     if (type === 'empty') {
@@ -64,6 +65,23 @@ export default function NewProject() {
         boards: []
       });
       setCurrentStep(3);
+    } else if (type === 'import' && importData) {
+      // Pour l'import, on traite directement les données
+      setCreating(true);
+      try {
+        const response = await importProject(importData);
+        
+        if (response.success) {
+          // Rediriger vers le projet importé
+          router.push(`/projects/${response.data._id}`);
+        } else {
+          throw new Error(response.message || 'Erreur lors de l\'import du projet');
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'import:', error);
+        alert('Erreur lors de l\'import du projet: ' + error.message);
+        setCreating(false);
+      }
     } else {
       // Pour les autres types, on va à l'étape 2
       setCurrentStep(2);

@@ -188,6 +188,62 @@ export async function deleteProject(projectId) {
   }
 }
 
+export async function exportProject(projectId) {
+  try {
+    const res = await useAuthFetch(
+      `project/${projectId}/export`,
+      "GET",
+      "application/json",
+      null
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de l'export du projet"
+    );
+
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue lors de l'export du projet"
+    };
+  }
+}
+
+export async function importProject(projectData) {
+  try {
+    const res = await useAuthFetch(
+      "project/import",
+      "POST",
+      "application/json",
+      { projectData }
+    );
+
+    const response = await res.json();
+
+    if (!response.success) {
+      throw new Error(response?.message);
+    }
+
+    return response;
+  } catch (err) {
+    console.log(
+      err?.message || "Une erreur est survenue lors de l'import du projet"
+    );
+
+    return {
+      success: false,
+      message: err?.message || "Une erreur est survenue lors de l'import du projet"
+    };
+  }
+}
+
 export async function revalidatePage() {
   revalidatePath("/projects");
   revalidatePath("/time-trackings");
