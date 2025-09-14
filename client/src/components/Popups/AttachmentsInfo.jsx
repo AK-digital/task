@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Attachment from "../Attachment/Attachment";
-import { Download, LayoutList, ListChecks, Trash2, X } from "lucide-react";
+import { Download, LayoutList, ListChecks, Trash2, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw } from "lucide-react";
 import { BlobWriter, ZipWriter, BlobReader } from "@zip.js/zip.js";
 import Image from "next/image";
 import Reactions from "../Reactions/Reactions";
+import { createPortal } from "react-dom";
 
 export default function AttachmentsInfo({
   attachments,
   setAttachments = null,
   disable = true,
   type = "affichage",
-  showPreviewImageMessage,
-  setShowPreviewImageMessage,
   isUploading: externalIsUploading = false,
   tooMuchAttachments = false,
   setTooMuchAttachments = null,
@@ -22,7 +21,10 @@ export default function AttachmentsInfo({
   const [showAttachments, setShowAttachments] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const [fileSizes, setFileSizes] = useState({});
-  const [previewImage, setPreviewImage] = useState(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
   const isUploading = externalIsUploading;
 
   const attachmentsLength = attachments?.length || 0;
@@ -400,38 +402,97 @@ export default function AttachmentsInfo({
     [getDownloadUrl, handleDownload]
   );
 
-  const openImagePreview = useCallback(
-    (file) => {
-      // Vérifier si c'est une image
-      const isLocalFile = file instanceof File;
-      const fileName = isLocalFile ? file.name : file.name || "";
-      const extension = fileName.split(".").pop()?.toLowerCase();
-      const imageExtensions = [
-        "png",
-        "jpg",
-        "jpeg",
-        "gif",
-        "webp",
-        "bmp",
-        "ico",
-        "heic",
-        "heif",
-        "avif",
-      ];
+  const isViewableFile = useCallback((file) => {
+    const isLocalFile = file instanceof File;
+    const fileName = isLocalFile ? file.name : file.name || "";
+    const extension = fileName.split(".").pop()?.toLowerCase();
+    
+    const viewableExtensions = [
+      // Images
+      "png", "jpg", "jpeg", "gif", "webp", "bmp", "ico", "heic", "heif", "avif",
+      // PDFs
+      "pdf"
+    ];
 
-      if (imageExtensions.includes(extension)) {
-        const iconSrc = getFileIcon(file);
-        setPreviewImage(iconSrc);
-        setShowPreviewImageMessage(true);
-      }
-    },
-    [getFileIcon]
-  );
-
-  const closeImagePreview = useCallback(() => {
-    setShowPreviewImageMessage(false);
-    setPreviewImage(null);
+    return viewableExtensions.includes(extension);
   }, []);
+
+  const openLightbox = useCallback((fileIndex) => {
+    const file = attachments[fileIndex];
+    if (isViewableFile(file)) {
+      setCurrentFileIndex(fileIndex);
+      setLightboxOpen(true);
+      setZoom(1);
+      setRotation(0);
+    }
+  }, [attachments, isViewableFile]);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxOpen(false);
+    setCurrentFileIndex(0);
+    setZoom(1);
+    setRotation(0);
+  }, []);
+
+  const navigateLightbox = useCallback((direction) => {
+    const viewableFiles = attachments.map((file, index) => ({ file, index }))
+      .filter(({ file }) => isViewableFile(file));
+    
+    const currentViewableIndex = viewableFiles.findIndex(({ index }) => index === currentFileIndex);
+    
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = currentViewableIndex < viewableFiles.length - 1 ? currentViewableIndex + 1 : 0;
+    } else {
+      newIndex = currentViewableIndex > 0 ? currentViewableIndex - 1 : viewableFiles.length - 1;
+    }
+    
+    setCurrentFileIndex(viewableFiles[newIndex].index);
+    setZoom(1);
+    setRotation(0);
+  }, [attachments, currentFileIndex, isViewableFile]);
+
+  const handleZoom = useCallback((direction) => {
+    setZoom(prev => {
+      if (direction === 'in') {
+        return Math.min(prev * 1.2, 3);
+      } else {
+        return Math.max(prev / 1.2, 0.5);
+      }
+    });
+  }, []);
+
+  const handleRotate = useCallback(() => {
+    setRotation(prev => (prev + 90) % 360);
+  }, []);
+
+  const getCurrentFileUrl = useCallback(() => {
+    const file = attachments[currentFileIndex];
+    if (!file) return null;
+    
+    if (file instanceof File) {
+      return URL.createObjectURL(file);
+    } else {
+      return file.url;
+    }
+  }, [attachments, currentFileIndex]);
+
+  const getCurrentFileType = useCallback(() => {
+    const file = attachments[currentFileIndex];
+    if (!file) return null;
+    
+    const isLocalFile = file instanceof File;
+    const fileName = isLocalFile ? file.name : file.name || "";
+    const extension = fileName.split(".").pop()?.toLowerCase();
+    
+    if (["png", "jpg", "jpeg", "gif", "webp", "bmp", "ico", "heic", "heif", "avif"].includes(extension)) {
+      return 'image';
+    } else if (extension === 'pdf') {
+      return 'pdf';
+    }
+    
+    return null;
+  }, [attachments, currentFileIndex]);
 
   useEffect(() => {
     // Synchroniser le tableau checkedList avec la taille de attachments
@@ -456,6 +517,55 @@ export default function AttachmentsInfo({
       }
     });
   }, [attachments, fileSizes, getFileSizeFromUrl]);
+
+  // Gestion des touches clavier et du scroll pour la lightbox
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    // Empêcher le scroll du body
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case 'Escape':
+          closeLightbox();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          navigateLightbox('prev');
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          navigateLightbox('next');
+          break;
+        case '+':
+        case '=':
+          e.preventDefault();
+          handleZoom('in');
+          break;
+        case '-':
+          e.preventDefault();
+          handleZoom('out');
+          break;
+        case 'r':
+        case 'R':
+          e.preventDefault();
+          if (getCurrentFileType() === 'image') {
+            handleRotate();
+          }
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      // Restaurer le scroll du body
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [lightboxOpen, closeLightbox, navigateLightbox, handleZoom, handleRotate, getCurrentFileType]);
 
   // Cleanup des object URLs pour éviter les fuites mémoire
   useEffect(() => {
@@ -543,8 +653,11 @@ export default function AttachmentsInfo({
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  openImagePreview(file);
+                  if (isViewableFile(file)) {
+                    openLightbox(index);
+                  }
                 }}
+                title={isViewableFile(file) ? "Cliquer pour ouvrir dans la lightbox" : file?.name}
               >
                 {validIconSrc && (
                   <Image
@@ -602,38 +715,165 @@ export default function AttachmentsInfo({
           </div>
         )}
 
-        {/* Preview d'image en plein écran */}
-        {showPreviewImageMessage && previewImage && (
+        {/* Lightbox pour images et PDFs - Utilise un portail pour être au niveau du document */}
+        {lightboxOpen && typeof window !== 'undefined' && createPortal(
           <div
-            className="absolute inset-0 w-screen h-screen bg-black bg-opacity-75 flex items-center justify-center"
-            style={{
-              position: "fixed",
+            className="fixed inset-0 w-screen h-screen bg-black bg-opacity-95 flex items-center justify-center"
+            style={{ 
+              zIndex: 999999,
+              position: 'fixed',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              zIndex: 99999,
+              width: '100vw',
+              height: '100vh'
             }}
-            onClick={closeImagePreview}
+            onClick={closeLightbox}
           >
             <div className="relative w-full h-full flex items-center justify-center">
+              {/* Barre d'outils */}
+              <div 
+                className="absolute top-6 left-1/2 transform -translate-x-1/2 flex items-center gap-3 bg-black bg-opacity-70 backdrop-blur-sm rounded-xl p-3 shadow-2xl" 
+                style={{ zIndex: 1000001 }}
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleZoom('out');
+                  }}
+                  className="p-2 text-white hover:bg-white hover:bg-opacity-20 hover:text-accent-color rounded-lg transition-all"
+                  title="Zoom arrière"
+                >
+                  <ZoomOut size={18} />
+                </button>
+                <span className="text-white text-sm font-medium px-2 min-w-[50px] text-center">
+                  {Math.round(zoom * 100)}%
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleZoom('in');
+                  }}
+                  className="p-2 text-white hover:bg-white hover:bg-opacity-20 hover:text-accent-color rounded-lg transition-all"
+                  title="Zoom avant"
+                >
+                  <ZoomIn size={18} />
+                </button>
+                {getCurrentFileType() === 'image' && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRotate();
+                    }}
+                    className="p-2 text-white hover:bg-white hover:bg-opacity-20 hover:text-accent-color rounded-lg transition-all"
+                    title="Rotation"
+                  >
+                    <RotateCw size={18} />
+                  </button>
+                )}
+                <div className="w-px h-6 bg-white bg-opacity-30"></div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const file = attachments[currentFileIndex];
+                    handleDownloadSingle(file, currentFileIndex);
+                  }}
+                  className="p-2 text-white hover:bg-white hover:bg-opacity-20 hover:text-accent-color rounded-lg transition-all"
+                  title="Télécharger"
+                >
+                  <Download size={18} />
+                </button>
+              </div>
+
+              {/* Bouton fermer */}
               <button
-                onClick={closeImagePreview}
-                className="absolute top-4 right-4 p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all"
-                style={{ zIndex: 100000 }}
+                onClick={closeLightbox}
+                className="absolute top-6 right-6 p-3 bg-black bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl"
+                style={{ zIndex: 1000001 }}
               >
                 <X size={24} className="text-white" />
               </button>
-              <Image
-                src={previewImage}
-                alt="Preview"
-                width={1200}
-                height={800}
-                className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg"
+
+              {/* Navigation */}
+              {attachments.filter(file => isViewableFile(file)).length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigateLightbox('prev');
+                    }}
+                    className="absolute left-6 top-1/2 transform -translate-y-1/2 p-4 bg-black bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl"
+                    style={{ zIndex: 1000001 }}
+                    title="Image précédente"
+                  >
+                    <ChevronLeft size={28} className="text-white" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigateLightbox('next');
+                    }}
+                    className="absolute right-6 top-1/2 transform -translate-y-1/2 p-4 bg-black bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl"
+                    style={{ zIndex: 1000001 }}
+                    title="Image suivante"
+                  >
+                    <ChevronRight size={28} className="text-white" />
+                  </button>
+                </>
+              )}
+
+              {/* Contenu */}
+              <div 
+                className="flex items-center justify-center w-full h-full p-12"
                 onClick={(e) => e.stopPropagation()}
-              />
+              >
+                {getCurrentFileType() === 'image' && (
+                  <Image
+                    src={getCurrentFileUrl()}
+                    alt={attachments[currentFileIndex]?.name || "Image"}
+                    width={1920}
+                    height={1080}
+                    className="max-w-full max-h-full object-contain transition-transform duration-300 ease-out shadow-2xl"
+                    style={{
+                      transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                    }}
+                    unoptimized
+                    priority
+                  />
+                )}
+                {getCurrentFileType() === 'pdf' && (
+                  <iframe
+                    src={getCurrentFileUrl()}
+                    className="w-full h-full border-none rounded-lg shadow-2xl"
+                    style={{
+                      transform: `scale(${zoom})`,
+                      transformOrigin: 'center center',
+                      maxWidth: '90vw',
+                      maxHeight: '90vh',
+                    }}
+                    title={attachments[currentFileIndex]?.name || "PDF"}
+                  />
+                )}
+              </div>
+
+              {/* Informations du fichier */}
+              <div 
+                className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 backdrop-blur-sm rounded-xl p-4 text-white text-center shadow-2xl" 
+                style={{ zIndex: 1000001 }}
+              >
+                <div className="text-sm font-medium mb-1">
+                  {attachments[currentFileIndex]?.name}
+                </div>
+                <div className="text-xs text-gray-300">
+                  {attachments.filter(file => isViewableFile(file)).findIndex(file => 
+                    attachments.indexOf(file) === currentFileIndex
+                  ) + 1} / {attachments.filter(file => isViewableFile(file)).length}
+                </div>
+              </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </div>
       {tooMuchAttachments && (
