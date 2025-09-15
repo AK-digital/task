@@ -72,12 +72,12 @@ export default function GuestFormInvitation({
             placeholder="E-mail de l'invité"
             value={valueEmail}
             onChange={(e) => setValueEmail(e.target.value)}
-            className="input_GuestFormInvitation font-bricolage border-none bg-third p-3 rounded-sm w-2/3"
+            className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm w-2/3"
           />
           <button
             type="submit"
             data-disabled={pending}
-            className="w-1/3 rounded-sm text-medium p-3"
+            className="w-1/3 rounded-sm text-medium p-2"
           >
             Inviter
           </button>

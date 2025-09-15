@@ -12,7 +12,7 @@ import { useContext, useState } from "react";
 import useSWR, { mutate } from "swr";
 import DropdownManageTemplate from "../Dropdown/DropdownManageTemplate";
 
-export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
+export default function BoardsTemplateList({ project, setAddBoardTemplate, inSidebar = false }) {
   const { uid } = useContext(AuthContext);
 
   const [showPrivateTemplate, setShowPrivateTemplate] = useState(false);
@@ -54,6 +54,143 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate }) {
     console.log("publicBoardTemplates :", publicBoardTemplates);
   }
 
+  // Version sidebar
+  if (inSidebar) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-center rounded-lg border border-border-color">
+          <button
+            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tl-lg rounded-bl-lg rounded-none ${
+              showPrivateTemplate ? "bg-white" : "bg-primary"
+            }`}
+            onClick={() => setShowPrivateTemplate(false)}
+          >
+            <div className="flex justify-center items-center">
+              <p className="text-normal font-medium text-text-dark-color">
+                La communauté
+              </p>
+            </div>
+          </button>
+          <button
+            className={`flex items-center justify-center px-2 py-1 cursor-pointer shadow-none transition-all duration-200 w-full rounded-tr-lg rounded-br-lg rounded-none ${
+              showPrivateTemplate ? "bg-primary" : "bg-white"
+            }`}
+            onClick={() => setShowPrivateTemplate(true)}
+          >
+            <div className="flex justify-center items-center">
+              <p className="text-normal font-medium text-text-dark-color">
+                Les vôtres
+              </p>
+            </div>
+          </button>
+        </div>
+
+        {/* Boards templates pour sidebar */}
+        <div className="flex flex-col gap-3">
+          {showPrivateTemplate ? (
+            // Onglet "Les vôtres" - Templates privés
+            privateBoardTemplates?.length > 0 ? (
+              <ul className="flex flex-col gap-3 max-h-[400px] overflow-y-auto">
+                {privateBoardTemplates.map((template) => (
+                  <li
+                    key={template._id}
+                    className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+                  >
+                    <span className="truncate flex-1 min-w-0 mr-3">
+                      {template.name}
+                    </span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <button
+                        type="button"
+                        className="secondary-button text-xs px-3 py-1"
+                        onClick={(e) =>
+                          handleUseBoardTemplate(
+                            e,
+                            template?._id,
+                            template?.private
+                          )
+                        }
+                      >
+                        Utiliser
+                      </button>
+                      <DropdownManageTemplate
+                        handleDeleteBoardTemplate={handleDeleteBoardTemplate}
+                        mutatePrivateBoardTemplates={
+                          mutatePrivateBoardTemplates
+                        }
+                        mutatePublicBoardTemplates={
+                          mutatePublicBoardTemplates
+                        }
+                        template={template}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
+                <p className="font-semibold text-text-dark-color mb-2">
+                  Aucun modèle disponible
+                </p>
+              </div>
+            )
+          ) : (
+            // Onglet "La communauté" - Templates publics
+            publicBoardTemplates?.length > 0 ? (
+              <ul className="flex flex-col gap-3 max-h-[400px] overflow-y-auto">
+                {publicBoardTemplates.map((template) => (
+                  <li
+                    key={template._id}
+                    className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+                  >
+                    <div className="flex justify-center items-center gap-2 flex-1 min-w-0 mr-3">
+                      <span className="truncate">
+                        {template.name}
+                      </span>
+                      {template?.author?.toString() === uid && (
+                        <span className="text-small text-gray-500">(vous)</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <button
+                        type="button"
+                        className="secondary-button text-xs px-3 py-1"
+                        onClick={(e) =>
+                          handleUseBoardTemplate(e, template?._id)
+                        }
+                      >
+                        Utiliser
+                      </button>
+                      {template?.author?.toString() === uid && (
+                        <DropdownManageTemplate
+                          handleDeleteBoardTemplate={handleDeleteBoardTemplate}
+                          mutatePrivateBoardTemplates={
+                            mutatePrivateBoardTemplates
+                          }
+                          mutatePublicBoardTemplates={
+                            mutatePublicBoardTemplates
+                          }
+                          template={template}
+                        />
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex flex-col items-center justify-center p-8 text-center text-text-color-muted">
+                <p className="font-semibold text-text-dark-color mb-2">
+                  Aucun modèle disponible
+                </p>
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Version popup (existante)
   return (
     <>
       <div className="fixed z-2001 top-1/2 left-1/2 -translate-1/2 bg-secondary p-6 rounded-lg shadow-medium w-[500px]">

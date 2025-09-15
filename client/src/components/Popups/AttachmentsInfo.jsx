@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Attachment from "../Attachment/Attachment";
-import { Download, LayoutList, ListChecks, Trash2, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw } from "lucide-react";
+import { Download, LayoutList, ListChecks, Trash2, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw, Maximize, Minimize } from "lucide-react";
 import { BlobWriter, ZipWriter, BlobReader } from "@zip.js/zip.js";
 import Image from "next/image";
 import Reactions from "../Reactions/Reactions";
@@ -25,6 +25,7 @@ export default function AttachmentsInfo({
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const isUploading = externalIsUploading;
 
   const attachmentsLength = attachments?.length || 0;
@@ -432,6 +433,7 @@ export default function AttachmentsInfo({
     setCurrentFileIndex(0);
     setZoom(1);
     setRotation(0);
+    setIsFullscreen(false);
   }, []);
 
   const navigateLightbox = useCallback((direction) => {
@@ -464,6 +466,10 @@ export default function AttachmentsInfo({
 
   const handleRotate = useCallback(() => {
     setRotation(prev => (prev + 90) % 360);
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
   }, []);
 
   const getCurrentFileUrl = useCallback(() => {
@@ -718,7 +724,9 @@ export default function AttachmentsInfo({
         {/* Lightbox pour images et PDFs - Utilise un portail pour être au niveau du document */}
         {lightboxOpen && typeof window !== 'undefined' && createPortal(
           <div
-            className="fixed inset-0 w-screen h-screen bg-black bg-opacity-95 flex items-center justify-center"
+            className={`fixed inset-0 w-screen h-screen flex items-center justify-center ${
+              isFullscreen ? 'bg-black' : ''
+            }`}
             style={{ 
               zIndex: 999999,
               position: 'fixed',
@@ -729,12 +737,36 @@ export default function AttachmentsInfo({
               width: '100vw',
               height: '100vh'
             }}
-            onClick={closeLightbox}
+            onClick={isFullscreen ? undefined : closeLightbox}
           >
-            <div className="relative w-full h-full flex items-center justify-center">
+            <div 
+              className={`relative flex items-center justify-center transition-all duration-300 ${
+                isFullscreen 
+                  ? 'w-full h-full' 
+                  : 'w-[85vw] h-[85vh] bg-black bg-opacity-60 rounded-[10px] shadow-2xl'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Bouton plein écran / mode fenêtre */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFullscreen();
+                }}
+                className="absolute top-6 left-6 p-3 bg-black bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl"
+                style={{ zIndex: 1000001 }}
+                title={isFullscreen ? "Mode fenêtre" : "Plein écran"}
+              >
+                {isFullscreen ? (
+                  <Minimize size={20} className="text-white" />
+                ) : (
+                  <Maximize size={20} className="text-white" />
+                )}
+              </button>
+
               {/* Barre d'outils */}
               <div 
-                className="absolute top-6 left-1/2 transform -translate-x-1/2 flex items-center gap-3 bg-black bg-opacity-70 backdrop-blur-sm rounded-xl p-3 shadow-2xl" 
+                className="fixed top-6 left-1/2 transform -translate-x-1/2 flex items-center gap-3 bg-primary bg-opacity-70 backdrop-blur-sm rounded-[10px] p-3 shadow-2xl" 
                 style={{ zIndex: 1000001 }}
               >
                 <button
@@ -747,7 +779,7 @@ export default function AttachmentsInfo({
                 >
                   <ZoomOut size={18} />
                 </button>
-                <span className="text-white text-sm font-medium px-2 min-w-[50px] text-center">
+                <span className="text-sm font-medium px-2 min-w-[50px] text-center">
                   {Math.round(zoom * 100)}%
                 </span>
                 <button
@@ -788,7 +820,10 @@ export default function AttachmentsInfo({
 
               {/* Bouton fermer */}
               <button
-                onClick={closeLightbox}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  closeLightbox();
+                }}
                 className="absolute top-6 right-6 p-3 bg-black bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl"
                 style={{ zIndex: 1000001 }}
               >
@@ -803,29 +838,35 @@ export default function AttachmentsInfo({
                       e.stopPropagation();
                       navigateLightbox('prev');
                     }}
-                    className="absolute left-6 top-1/2 transform -translate-y-1/2 p-4 bg-black bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl"
+                    className={`absolute top-1/2 transform -translate-y-1/2 p-3 bg-primary  bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl ${
+                      isFullscreen ? 'left-6' : 'left-4'
+                    }`}
                     style={{ zIndex: 1000001 }}
                     title="Image précédente"
                   >
-                    <ChevronLeft size={28} className="text-white" />
+                    <ChevronLeft size={28} className="text-accent-color-dark" />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       navigateLightbox('next');
                     }}
-                    className="absolute right-6 top-1/2 transform -translate-y-1/2 p-4 bg-black bg-opacity-70 backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all shadow-2xl"
+                    className={`absolute top-1/2 transform -translate-y-1/2 p-3 bg-primary  backdrop-blur-sm rounded-full hover:bg-opacity-90 transition-all ${
+                      isFullscreen ? 'right-6' : 'right-4'
+                    }`}
                     style={{ zIndex: 1000001 }}
                     title="Image suivante"
                   >
-                    <ChevronRight size={28} className="text-white" />
+                    <ChevronRight size={28} className="text-accent-color-dark" />
                   </button>
                 </>
               )}
 
               {/* Contenu */}
               <div 
-                className="flex items-center justify-center w-full h-full p-12"
+                className={`flex items-center justify-center w-full h-full ${
+                  isFullscreen ? 'p-12' : 'p-8'
+                }`}
                 onClick={(e) => e.stopPropagation()}
               >
                 {getCurrentFileType() === 'image' && (
@@ -845,12 +886,14 @@ export default function AttachmentsInfo({
                 {getCurrentFileType() === 'pdf' && (
                   <iframe
                     src={getCurrentFileUrl()}
-                    className="w-full h-full border-none rounded-lg shadow-2xl"
+                    className={`w-full h-full border-none shadow-2xl ${
+                      isFullscreen ? 'rounded-none' : 'rounded-lg'
+                    }`}
                     style={{
                       transform: `scale(${zoom})`,
                       transformOrigin: 'center center',
-                      maxWidth: '90vw',
-                      maxHeight: '90vh',
+                      maxWidth: isFullscreen ? '100%' : '90%',
+                      maxHeight: isFullscreen ? '100%' : '90%',
                     }}
                     title={attachments[currentFileIndex]?.name || "PDF"}
                   />

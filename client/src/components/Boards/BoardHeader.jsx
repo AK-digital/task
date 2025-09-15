@@ -323,6 +323,7 @@ export default function BoardHeader({
             <span
               className="dataTitle border border-transparent rounded-sm text-large font-medium cursor-text"
               data-authorized={canEdit}
+              data-board-title
               style={{ color: `${optimisticColor}` }}
             >
               {title}

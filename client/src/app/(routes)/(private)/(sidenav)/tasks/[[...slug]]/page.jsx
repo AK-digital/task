@@ -69,33 +69,60 @@ function TasksContent() {
     todoStatuses: statuses?.filter(s => s.status === "todo" || s.todo === true)?.length
   });
 
-  // Filtrage automatique des tâches "Todo" au chargement
+  // Créer une dépendance qui change quand les propriétés todo des statuts changent
+  const todoStatusesSignature = useMemo(() => {
+    if (!statuses || statuses.length === 0) return '';
+    return statuses
+      .map(status => `${status._id}:${status.status === "todo" || status.todo === true}`)
+      .sort()
+      .join('|');
+  }, [statuses]);
+
+  // Filtrage automatique des tâches "Todo" au chargement et lors des changements
   useEffect(() => {
     if (!statuses || statuses.length === 0) return;
 
     // Trouver tous les statuts qui sont marqués comme "Todo" (status="todo" OU todo=true)
     const todoStatuses = statuses.filter(status => status.status === "todo" || status.todo === true);
     
-    // Seulement appliquer le filtre si :
-    // 1. Il y a des statuts Todo
-    // 2. Aucun filtre de statut n'est déjà appliqué (pour ne pas écraser les filtres utilisateur)
+    // Seulement appliquer le filtre si il y a des statuts Todo
     if (todoStatuses.length > 0) {
       setQueries(prevQueries => {
-        // Ne pas appliquer le filtre automatique si l'utilisateur a déjà des filtres de statut
-        if (prevQueries.status && prevQueries.status.length > 0) {
-          return prevQueries;
-        }
-        
         // Grouper les IDs des statuts "Todo" (comme dans les filtres)
         const todoStatusIds = todoStatuses.map(status => status._id);
         
-        return {
-          ...prevQueries,
-          status: [todoStatusIds] // Format attendu par les filtres
-        };
+        // Vérifier si les statuts Todo actuels sont différents des filtres existants
+        const currentStatusFilter = prevQueries.status?.[0] || [];
+        
+        // Comparer les deux ensembles pour voir s'ils sont différents
+        const areDifferent = todoStatusIds.length !== currentStatusFilter.length ||
+          !todoStatusIds.every(id => currentStatusFilter.includes(id));
+        
+        // Mettre à jour seulement si les statuts Todo ont changé
+        if (areDifferent) {
+          console.log("Mise à jour du filtrage Todo:", { todoStatusIds, currentStatusFilter });
+          return {
+            ...prevQueries,
+            status: [todoStatusIds] // Format attendu par les filtres
+          };
+        }
+        
+        return prevQueries;
+      });
+    } else {
+      // Si aucun statut Todo, vider le filtre de statut s'il était appliqué automatiquement
+      setQueries(prevQueries => {
+        if (prevQueries.status && prevQueries.status.length > 0) {
+          console.log("Suppression du filtrage Todo car aucun statut Todo");
+          return {
+            ...prevQueries,
+            status: []
+          };
+        }
+        return prevQueries;
       });
     }
-  }, [statuses, setQueries]);
+  }, [todoStatusesSignature, statuses, setQueries]);
 
   return (
     <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">

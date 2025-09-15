@@ -8,7 +8,7 @@ import BoardsTemplateList from "../Templates/BoardsTemplateList";
 import AddBoardIAModal from "../Modals/AddBoardIAModal";
 import { bricolageGrostesque } from "@/utils/font";
 
-export default function AddBoard({ project }) {
+export default function AddBoard({ project, onBoardCreated }) {
   const [isLoading, setIsLoading] = useState(false);
   const [addBoardTemplate, setAddBoardTemplate] = useState(false);
   const [showIAModal, setShowIAModal] = useState(false);
@@ -23,11 +23,19 @@ export default function AddBoard({ project }) {
     setIsLoading(true);
     const response = await saveBoard(projectId);
 
-    if (!response.success) return;
+    if (!response.success) {
+      setIsLoading(false);
+      return;
+    }
 
     await mutate(`/boards?projectId=${projectId}&archived=false`);
 
     setIsLoading(false);
+    
+    // Fermer le modal si la fonction est fournie
+    if (onBoardCreated) {
+      onBoardCreated();
+    }
   }
 
   if (!isAuthorized) return null;
