@@ -39,7 +39,7 @@ export default function AddBoard({ project }) {
         data-disabled={isLoading}
         disabled={isLoading}
         onClick={() => handleAddBoard(project?._id)}
-        className="font-bricolage flex justify-center items-center gap-1.5"
+        className="secondary-button"
       >
         <Plus size={18} />
         Tableau vide
@@ -47,7 +47,7 @@ export default function AddBoard({ project }) {
       <button
         type="button"
         onClick={() => setAddBoardTemplate(true)}
-        className="font-bricolage flex justify-center items-center gap-1.5"
+        className="secondary-button"
       >
         <Plus size={18} />
         Modèle de tableau

@@ -25,6 +25,10 @@ const statusSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    todo: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

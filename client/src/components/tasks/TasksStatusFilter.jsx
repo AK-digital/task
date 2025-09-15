@@ -142,7 +142,7 @@ export default function TasksStatusFilter({ queries, setQueries }) {
                   className="cursor-pointer flex-1 overflow-hidden text-ellipsis whitespace-nowrap min-w-0 flex items-center"
                 >
                   <span
-                    className="px-2 py-1 rounded-sm text-white text-xs font-medium truncate flex-1"
+                    className="px-2 py-1 rounded-sm text-white text-xs font-medium truncate flex-1  text-center"
                     style={{ backgroundColor: elt?.color }}
                   >
                     {elt?.name}

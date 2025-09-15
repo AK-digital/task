@@ -6,6 +6,7 @@ export function getDefaultStatuses(projectId) {
       color: "#559fc6", // Blue
       status: "todo",
       default: true,
+      todo: true,
     },
     {
       projectId: projectId,
@@ -13,6 +14,7 @@ export function getDefaultStatuses(projectId) {
       color: "#f3b158", // Yellow/Orange
       status: "progress",
       default: true,
+      todo: false,
     },
     {
       projectId: projectId,
@@ -20,6 +22,7 @@ export function getDefaultStatuses(projectId) {
       color: "#63a758", // Green
       status: "done",
       default: true,
+      todo: false,
     },
     {
       projectId: projectId,
@@ -27,6 +30,7 @@ export function getDefaultStatuses(projectId) {
       color: "#b3bcc0", // Grey
       status: "waiting",
       default: true,
+      todo: false,
     },
   ];
 

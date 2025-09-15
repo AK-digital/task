@@ -10,14 +10,11 @@ import TaskEditStatus from "./TaskEditStatus";
 import { saveStatus } from "@/api/status";
 import { colors } from "@/utils/utils";
 import FloatingMenu from "@/shared/components/FloatingMenu";
-import { useStatuses } from "../../../hooks/useStatus";
 import Sidebar from "../Sidebar/Sidebar";
 
 export default function TaskStatus({ task, uid }) {
   const { project, mutateTasks, statuses, mutateStatuses } =
     useProjectContext();
-  const { statuses: statusesData, mutateStatuses: mutateStatusesData } =
-    useStatuses(project?._id || task?.projectId?._id);
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +56,6 @@ export default function TaskStatus({ task, uid }) {
     socket.emit("update task", project?._id || task?.projectId?._id);
     mutateTasks();
     mutateStatuses();
-    mutateStatusesData();
   }
 
   async function handleAddStatus() {
@@ -108,9 +104,9 @@ export default function TaskStatus({ task, uid }) {
   const currentBackgroundColor = hasStatus ? currentStatus?.color : "#b3bcc0";
 
   function listWidth() {
-    if (isEdit && statusesData?.length > 5) {
+    if (isEdit && statuses?.length > 5) {
       return true;
-    } else if (!isEdit && statusesData?.length > 6) {
+    } else if (!isEdit && statuses?.length > 6) {
       return true;
     }
 
@@ -136,12 +132,12 @@ export default function TaskStatus({ task, uid }) {
           floatingStyles={floatingStyles}
         >
           <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 p-3 border-b border-color-border-color">
-            {statusesData?.map((status) => {
+            {statuses?.map((status) => {
               if (!isEdit) {
                 return (
                   <li
                     key={status?._id}
-                    className="p-1.5 cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
+                    className="p-2 cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
                     onClick={() => handleTaskUpdateStatus(status)}
                     style={{ backgroundColor: status?.color }}
                   >
@@ -191,8 +187,8 @@ export default function TaskStatus({ task, uid }) {
             Gérez les statuts de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouveaux statuts.
           </p>
           
-          <ul className="space-y-3">
-            {statusesData?.map((status) => (
+          <ul className="space-y-3 sidebar-edit-container">
+            {statuses?.map((status) => (
               <TaskEditStatus
                 key={status?._id}
                 status={status}

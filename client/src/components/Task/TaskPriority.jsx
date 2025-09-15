@@ -144,7 +144,7 @@ export default function TaskPriority({ task }) {
                 return (
                   <li
                     key={priority?._id}
-                    className="p-1.5 min-w-[110px] cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
+                    className="p-2 min-w-[110px] cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
                     data-value={priority?.name}
                     onClick={() => handleTaskUpdatePriority(priority)}
                     style={{ backgroundColor: priority?.color }}
@@ -195,7 +195,7 @@ export default function TaskPriority({ task }) {
             Gérez les priorités de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouvelles priorités.
           </p>
           
-          <ul className="space-y-3">
+          <ul className="space-y-3 sidebar-edit-container">
             {prioritiesData?.map((priority) => (
               <TaskEditPriority
                 key={priority?._id}

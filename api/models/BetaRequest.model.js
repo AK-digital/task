@@ -22,7 +22,6 @@ const betaRequestSchema = new mongoose.Schema(
     expiresAt: {
       type: Date,
       default: Date.now,
-      expires: 60 * 60 * 24 * 30, // 30 jours en secondes
     },
   },
   { timestamps: true }

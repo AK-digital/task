@@ -58,7 +58,10 @@ export default function Tasks({
               )}
             </>
           ) : (
-            <div className="text-center text-text-color-muted text-[1.4rem] pb-20"></div>
+            <div className="text-center text-text-color-muted text-[1.4rem] pb-20 pt-10">
+              <p>Aucune tâche trouvée</p>
+              <p className="text-sm mt-2">Essayez de modifier vos filtres ou créez une nouvelle tâche</p>
+            </div>
           )}
         </div>
       )}

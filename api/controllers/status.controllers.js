@@ -4,7 +4,7 @@ import TaskModel from "../models/Task.model.js";
 export async function saveStatus(req, res) {
   try {
     const { projectId } = req.query;
-    const { name, color } = req.body;
+    const { name, color, todo } = req.body;
 
     if (!color) {
       return res.status(400).send({
@@ -18,6 +18,7 @@ export async function saveStatus(req, res) {
       name: name,
       color: color,
       default: false,
+      todo: todo || false, // Accepter la valeur fournie ou false par défaut
     });
 
     const savedStatus = await newStatus.save();
@@ -126,7 +127,7 @@ export async function getStatusesByProjects(req, res) {
 
 export async function updateStatus(req, res) {
   try {
-    const { name, color } = req.body;
+    const { name, color, todo } = req.body;
 
     if (!name || !color) {
       return res.status(400).send({
@@ -135,11 +136,28 @@ export async function updateStatus(req, res) {
       });
     }
 
+    // Récupérer le statut existant pour connaître son type
+    const existingStatus = await StatusModel.findById(req.params.id);
+    if (!existingStatus) {
+      return res.status(404).send({
+        success: false,
+        message: "Status not found",
+      });
+    }
+
+    const updateData = { name: name, color: color };
+    
+    // Si c'est un statut de type "todo", la propriété todo est toujours true (immuable)
+    // Sinon, accepter la valeur fournie dans la requête
+    if (existingStatus.status === "todo") {
+      updateData.todo = true; // Immuable pour les statuts de type "todo"
+    } else {
+      updateData.todo = todo !== undefined ? todo : existingStatus.todo; // Garder la valeur existante si non fournie
+    }
+
     const updatedStatus = await StatusModel.findByIdAndUpdate(
       { _id: req.params.id },
-      {
-        $set: { name: name, color: color },
-      },
+      { $set: updateData },
       { new: true }
     );
 

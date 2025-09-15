@@ -18,6 +18,8 @@ export default function TaskEditStatus({
   const [name, setName] = useState(status?.name || "");
   const [moreColor, setMoreColor] = useState(false);
   const [color, setColor] = useState(status?.color || "");
+  // La propriété todo peut être modifiée manuellement sauf pour les statuts de type "todo"
+  const [isTodo, setIsTodo] = useState(status?.todo || status?.status === "todo");
   const statusesColors = statuses.map((s) => s.color);
   const availableColors = colors.filter(
     (color) => !statusesColors.includes(color)
@@ -29,6 +31,13 @@ export default function TaskEditStatus({
     "team",
     "customer",
   ]);
+
+  // Synchroniser l'état local avec les changements du prop status
+  useEffect(() => {
+    setName(status?.name || "");
+    setColor(status?.color || "");
+    setIsTodo(status?.todo || status?.status === "todo");
+  }, [status?.name, status?.color, status?.todo, status?.status]);
 
   async function handleUpdateStatusName() {
     if (!canEdit) return;
@@ -46,6 +55,7 @@ export default function TaskEditStatus({
     const res = await updateStatus(status?._id, status?.projectId, {
       name: name,
       color: status?.color,
+      todo: status?.status === "todo" ? true : isTodo, // Toujours true pour type "todo", sinon valeur manuelle
     });
 
     if (!res.success) {
@@ -74,6 +84,7 @@ export default function TaskEditStatus({
     const res = await updateStatus(status?._id, status?.projectId, {
       name: status?.name,
       color: newColor,
+      todo: status?.status === "todo" ? true : isTodo, // Toujours true pour type "todo", sinon valeur manuelle
     });
 
     if (!res.success) {
@@ -106,8 +117,30 @@ export default function TaskEditStatus({
   }
 
   const handleUpdateStatusNameDebouced = useDebouncedCallback(() => {
-    handleUpdateStatusName();
+    if (name !== status?.name) { // Seulement si le nom a vraiment changé
+      handleUpdateStatusName();
+    }
   }, 600);
+
+  async function handleUpdateTodo(newTodoValue) {
+    if (!canEdit) return;
+    if (status?.status === "todo") return; // Ne pas permettre la modification pour les statuts de type "todo"
+    if (status?.todo === newTodoValue) return; // Ne pas faire d'appel si la valeur n'a pas changé
+
+    const res = await updateStatus(status?._id, status?.projectId, {
+      name: status?.name,
+      color: status?.color,
+      todo: newTodoValue,
+    });
+
+    if (!res.success) {
+      console.error("Failed to update status todo:", res.message);
+      setIsTodo(!newTodoValue); // Revenir à l'état précédent en cas d'erreur
+      return;
+    }
+    mutateStatuses();
+    mutateTasks();
+  }
 
   return (
     <li
@@ -131,19 +164,47 @@ export default function TaskEditStatus({
         )}
       </div>
       
-      <input
-        type="text"
-        id="status-name"
-        name="status-name"
-        value={name}
-        onBlur={handleUpdateStatusName}
-        onChange={(e) => {
-          setName(e.target.value);
-          handleUpdateStatusNameDebouced();
-        }}
-        className="flex-1 border border-gray-300 py-2 px-3 rounded-md bg-white text-[15px] font-bricolage focus:border-accent-color focus:outline-none"
-        placeholder="Nom du statut"
-      />
+      <div className="flex-1 flex items-center gap-3">
+        <input
+          type="text"
+          id="status-name"
+          name="status-name"
+          value={name}
+          onBlur={handleUpdateStatusName}
+          onChange={(e) => {
+            setName(e.target.value);
+            handleUpdateStatusNameDebouced();
+          }}
+          className="flex-1 border border-gray-300 py-2 px-3 rounded-md bg-white text-[15px] font-bricolage focus:border-accent-color focus:outline-none"
+          placeholder="Nom du statut"
+        />
+        
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <label htmlFor={`todo-${status?._id}`} className="text-sm text-gray-700 cursor-pointer">
+            Todo ?
+          </label>
+          <input
+            type="checkbox"
+            id={`todo-${status?._id}`}
+            checked={isTodo}
+            disabled={status?.status === "todo"} // Désactivé seulement pour les statuts de type "todo"
+            onChange={(e) => {
+              const newValue = e.target.checked;
+              setIsTodo(newValue);
+              handleUpdateTodo(newValue);
+            }}
+            className={`p-0 w-4 h-4 bg-white border-2 border-gray-400 rounded-sm focus:ring-2 focus:ring-accent-color checked:bg-accent-color checked:border-accent-color checked:text-white appearance-none relative ${
+              status?.status === "todo" ? 'cursor-not-allowed opacity-75' : 'cursor-pointer'
+            }`}
+            style={{
+              backgroundImage: isTodo ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z'/%3e%3c/svg%3e")` : 'none',
+              backgroundSize: '12px 12px',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          />
+        </div>
+      </div>
       
       {!status?.default && (
         <span

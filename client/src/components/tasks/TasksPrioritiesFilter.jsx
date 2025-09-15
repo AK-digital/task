@@ -122,7 +122,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                     className="flex items-center cursor-pointer flex-1"
                   >
                     <span
-                      className="px-2 py-1 rounded-sm text-white text-xs font-medium truncate flex-1"
+                      className="px-2 py-1 rounded-sm text-white text-xs font-medium truncate flex-1 text-center"
                       style={{ backgroundColor: priority?.color }}
                     >
                       {priority?.name}

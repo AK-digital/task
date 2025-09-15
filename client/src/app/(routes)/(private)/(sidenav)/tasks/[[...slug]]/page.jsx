@@ -1,6 +1,6 @@
 "use client";
 import { AuthContext } from "@/context/auth";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import Tasks from "@/components/tasks/Tasks";
 import TasksFilters from "@/components/tasks/TasksFilters";
 import { ProjectProvider, useProjectContext } from "@/context/ProjectContext";
@@ -59,11 +59,47 @@ function TasksContent() {
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   // Utilisez le contexte du projet pour récupérer les tâches
-  const { tasks, tasksLoading, mutateTasks } = useProjectContext();
+  const { tasks, tasksLoading, mutateTasks, statuses, setQueries } = useProjectContext();
+
+  // Debug temporaire
+  console.log("Debug TasksPage:", {
+    tasksCount: tasks?.length,
+    tasksLoading,
+    statusesCount: statuses?.length,
+    todoStatuses: statuses?.filter(s => s.status === "todo" || s.todo === true)?.length
+  });
+
+  // Filtrage automatique des tâches "Todo" au chargement
+  useEffect(() => {
+    if (!statuses || statuses.length === 0) return;
+
+    // Trouver tous les statuts qui sont marqués comme "Todo" (status="todo" OU todo=true)
+    const todoStatuses = statuses.filter(status => status.status === "todo" || status.todo === true);
+    
+    // Seulement appliquer le filtre si :
+    // 1. Il y a des statuts Todo
+    // 2. Aucun filtre de statut n'est déjà appliqué (pour ne pas écraser les filtres utilisateur)
+    if (todoStatuses.length > 0) {
+      setQueries(prevQueries => {
+        // Ne pas appliquer le filtre automatique si l'utilisateur a déjà des filtres de statut
+        if (prevQueries.status && prevQueries.status.length > 0) {
+          return prevQueries;
+        }
+        
+        // Grouper les IDs des statuts "Todo" (comme dans les filtres)
+        const todoStatusIds = todoStatuses.map(status => status._id);
+        
+        return {
+          ...prevQueries,
+          status: [todoStatusIds] // Format attendu par les filtres
+        };
+      });
+    }
+  }, [statuses, setQueries]);
 
   return (
     <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
-      <div className="py-4 pr-4 pl-[38px] bg-[#dad6c799] h-full rounded-tl-2xl overflow-auto">
+      <div className="py-4 pr-4 pl-[38px] bg-[#dad6c799] h-full rounded-tl-[10px] overflow-auto">
         {/* Header */}
         <div className="flex items-center gap-4 pr-4 pb-4 flex-wrap">
           <h1 className="text-2xl min-w-max select-none mb-0">Mes tâches</h1>
@@ -73,8 +109,8 @@ function TasksContent() {
           </div>
         </div>
         {/* Tasks */}
-        <div className="boards_Boards overflow-y-auto h-[90%] pr-5 rounded-2xl">
-          <div className="relative shadow-small rounded-2xl w-full overflow-x-auto">
+        <div className="boards_Boards overflow-y-auto h-[90%] pr-5 rounded-[10px]">
+          <div className="relative shadow-small rounded-[10px] w-full overflow-x-auto">
             <Tasks
               tasks={tasks}
               tasksLoading={tasksLoading}

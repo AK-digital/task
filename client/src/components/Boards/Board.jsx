@@ -132,7 +132,7 @@ export default function Board({
       ref={setNodeRef}
       data-board-id={board?._id}
       style={{ borderColor: `${optimisticColor}` }}
-      className={` flex flex-col min-w-[1050px] rounded-2xl shadow-small border-secondary bg-secondary border-l-[3px] ${
+      className={` flex flex-col min-w-[1050px] rounded-[10px] shadow-small border-secondary bg-secondary border-l-[3px] ${
         isOverlay ? "relative translate-z-0 will-change-transform z-50000" : ""
       }`}
     >

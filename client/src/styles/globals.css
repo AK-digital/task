@@ -919,6 +919,8 @@
      transition-duration: 120ms;
      transition-timing-function: ease-in-out;
      font-size: 15px;
+     background-color: transparent;
+     color: var(--text-color);
    }
    
   .secondary-button[data-open="true"] {

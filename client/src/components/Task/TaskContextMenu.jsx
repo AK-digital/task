@@ -143,6 +143,16 @@ export default function TaskContextMenu({
             return; // Laisser le comportement par défaut du navigateur
           }
           
+          // Ne pas ouvrir le menu contextuel si le clic est sur la sidebar
+          if (e.target.closest('.fixed.top-0.right-0')) {
+            return; // Laisser le comportement par défaut du navigateur
+          }
+          
+          // Ne pas ouvrir le menu contextuel si le clic est sur les conteneurs d'édition
+          if (e.target.closest('.sidebar-edit-container')) {
+            return; // Laisser le comportement par défaut du navigateur
+          }
+          
           // Empêcher le menu contextuel du navigateur si le clic est sur une autre tâche
           if (e.target.closest('[data-task-id]')) {
             e.preventDefault();
