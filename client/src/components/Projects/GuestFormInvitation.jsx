@@ -62,9 +62,9 @@ export default function GuestFormInvitation({
   }, [state]);
 
   return (
-    <>
-      <div>
-        <form action={formAction} className="flex flex-row gap-3">
+    <div>
+      <form action={formAction} className="flex flex-col gap-3">
+        <div className="flex gap-3">
           <input
             type="email"
             name="email"
@@ -72,18 +72,23 @@ export default function GuestFormInvitation({
             placeholder="E-mail de l'invité"
             value={valueEmail}
             onChange={(e) => setValueEmail(e.target.value)}
-            className="input_GuestFormInvitation font-bricolage border-none bg-third p-2 rounded-sm w-2/3"
+            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg bg-white text-text-darker-color text-sm font-bricolage placeholder:text-text-color-muted focus:outline-none focus:ring-2 focus:ring-accent-color focus:border-accent-color transition-all duration-200"
           />
           <button
             type="submit"
             data-disabled={pending}
-            className="w-1/3 rounded-sm text-medium p-2"
+            disabled={pending}
+            className="secondary-button bg-accent-color hover:bg-accent-color/90 text-white border-accent-color disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Inviter
+            <span className="text-sm font-medium">
+              {pending ? "Envoi..." : "Inviter"}
+            </span>
           </button>
-        </form>
-        {errors && <i>{errors?.email}</i>}
-      </div>
-    </>
+        </div>
+        {errors && (
+          <p className="text-sm text-red-500 mt-1">{errors?.email}</p>
+        )}
+      </form>
+    </div>
   );
 }

@@ -63,23 +63,27 @@ export default function GuestFormResend({
 
   return (
     <div>
-      <form action={formAction} className="gap-3">
+      <form action={formAction} className="flex flex-col gap-3">
         <input
           type="email"
           name="email"
           id="email"
           defaultValue={currentEmail}
           hidden
-          className="input_GuestFormInvitation font-bricolage bg-third p-2 rounded-sm"
         />
-        {errors && <i>{errors?.email}</i>}
+        {errors && (
+          <p className="text-sm text-red-500">{errors?.email}</p>
+        )}
         <button
           type="submit"
           data-disabled={pending}
-          className="flex items-center justify-center gap-[10px] rounded-sm text-medium py-2 px-[5px] bg-secondary transition-all duration-200 text-text-color-muted group-hover:text-text-dark-color w-full hover:bg-third"
+          disabled={pending}
+          className="secondary-button w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <RotateCw size={16} />
-          <p className="text-small">Renvoyer</p>
+          <RotateCw size={16} className={pending ? "animate-spin" : ""} />
+          <span className="text-sm font-medium">
+            {pending ? "Envoi..." : "Renvoyer"}
+          </span>
         </button>
       </form>
     </div>

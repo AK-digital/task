@@ -48,47 +48,62 @@ export default function Projects() {
   });
 
   return (
-    <main className="relative ml-6 w-full max-h-[calc(100vh-62px)]">
-      <div className="relative flex items-center flex-col rounded-tl-2xl bg-primary-transparent h-full pl-6 pt-6">
-        <div className="flex justify-between items-center w-full gap-8 pr-6 max-w-full">
-                     <div className="relative">
-             <h1 className="select-none mb-0 text-2xl whitespace-nowrap pr-8">Vos projets</h1>
-             <span className="absolute -top-1 right-2 text-text-color-muted text-[0.7rem] bg-secondary p-[3px] rounded-md select-none">
-               {projectsLoading ? "..." : `${filteredProjects?.length || 0}`}
-             </span>
-           </div>
-          <div className="flex items-center gap-6 w-full">
-            <button
-              onClick={toggleViewMode}
-              className="p-2 flex items-center justify-center rounded-lg bg-secondary hover:bg-secondary/80 transition-colors text-text-color-muted"
-            >
+    <main className="ml-6 w-full min-w-0 max-h-[calc(100vh-64px)]">
+      <div className="py-4 pr-4 pl-[38px] bg-[#dad6c799] h-full rounded-tl-[10px] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-4 pr-4 pb-6 flex-shrink-0">
+          {/* Header Left - Titre + Bouton vue */}
+          <div className="flex items-center gap-8">
+            <div className="relative mr-6">
+              <h1 className="text-2xl min-w-max select-none mb-0">Vos projets</h1>
+              <span className="absolute -top-2 -right-8 text-text-color-muted text-xs bg-secondary px-2 py-1 rounded-full select-none min-w-[24px] text-center">
+                {projectsLoading ? "..." : `${filteredProjects?.length || 0}`}
+              </span>
+            </div>
+            
+            <div className="secondary-button" onClick={toggleViewMode} title={viewMode === "grid" ? "Vue liste" : "Vue grille"}>
               {viewMode === "grid" ? <List size={20} /> : <Grid3X3 size={20} />}
-            </button>
+              <span className="text-sm font-medium">
+                {viewMode === "grid" ? "Liste" : "Grille"}
+              </span>
+            </div>
             <ProjectsSearch setQueries={setQueries} />
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/new-project"
-              className="flex items-center gap-2 p-3 bg-accent-color hover:bg-accent-color/90 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
-            >
-              <span>Nouveau projet</span>
+
+          
+          {/* Header Right - Bouton nouveau projet */}
+          <div className="flex items-center">
+            <Link href="/new-project" className="secondary-button bg-accent-color hover:bg-accent-color/90 text-white border-accent-color">
               <Plus size={20} />
+              <span className="text-sm font-medium whitespace-nowrap">Nouveau projet</span>
             </Link>
           </div>
         </div>
-        {viewMode === "grid" ? (
+        
+        {/* Container scrollable pour les projets */}
+        <div className="flex-1 overflow-auto pr-5">
+          {viewMode === "grid" ? (
           <ProjectsGrid
             projectsLoading={projectsLoading}
             sortedProjects={sortedProjects}
             mutateProjects={mutateProjects}
           />
         ) : (
-          <div className="w-full overflow-auto">
-            <div className="flex flex-col gap-3 max-w-[1400px] mx-auto py-4 px-3 mt-6">
+          <div className="w-full">
+            <div className="flex flex-col gap-3 max-w-[1400px] mx-auto">
               {projectsLoading ? (
-                <div className="bg-secondary rounded-lg p-4 animate-pulse">
-                  <div className="h-12 bg-gray-300 rounded"></div>
-                </div>
+                Array.from({ length: 3 }).map((_, idx) => (
+                  <div key={idx} className="bg-secondary rounded-lg p-4 animate-pulse">
+                    <div className="flex items-center gap-4">
+                      <div className="w-4 h-4 bg-gray-300 rounded"></div>
+                      <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                      <div className="flex-1 h-4 bg-gray-300 rounded"></div>
+                      <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                      <div className="w-20 h-4 bg-gray-300 rounded"></div>
+                      <div className="w-32 h-4 bg-gray-300 rounded"></div>
+                    </div>
+                  </div>
+                ))
               ) : (
                 <>
                   {sortedProjects?.map((project) => {
@@ -107,6 +122,7 @@ export default function Projects() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </main>
   );

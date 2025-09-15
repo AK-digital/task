@@ -113,11 +113,11 @@ export default function TasksStatusFilter({ queries, setQueries }) {
       </div>
       <>
         <div
-          className={`absolute z-[2001] top-[44px] bg-secondary shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
+          className={`absolute z-[2001] top-[44px] shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out ${
             isOpen ? "max-h-96" : "max-h-0"
           }`}
         >
-          <ul className="flex flex-col p-2 rounded-sm border border-color-border-color max-h-96 overflow-y-auto">
+          <ul className="flex flex-col p-2 rounded-sm border border-[#e0e0e0] bg-secondary max-h-96 overflow-y-auto">
             <li
               className="flex items-center gap-2 h-[30px] pl-1 py-0.5  cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
               onClick={handleResetStatus}

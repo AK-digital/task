@@ -65,42 +65,45 @@ export default function ProjectListItem({
     return (
       <Link
         href={href}
-        className="no-underline w-full hover:bg-secondary/50 transition-colors rounded-lg"
+        className="no-underline w-full group"
       >
-        <div className="flex items-center gap-6 p-4 bg-secondary rounded-lg border-2 border-dashed border-[#d0cec7]">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="flex items-center gap-6 p-5 bg-white rounded-xl border-2 border-dashed border-gray-200 hover:border-accent-color hover:bg-accent-color/5 transition-all duration-200 group-hover:shadow-md">
+          <div className="flex items-center gap-4 min-w-0 flex-1">
             <div className="w-[18px] h-[18px]"></div>
             
-            <div className="flex items-center justify-center w-[40px] h-[40px] bg-[#d0cec7] rounded-full">
-              <Plus size={20} className="text-gray-600" />
+            <div className="flex items-center justify-center w-[50px] h-[50px] bg-accent-color/10 rounded-full group-hover:bg-accent-color/20 transition-colors">
+              <Plus size={24} className="text-accent-color" />
             </div>
             
             <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-medium text-text-darker-color">
+              <h3 className="text-lg font-semibold text-text-darker-color group-hover:text-accent-color transition-colors">
                 Créer un nouveau projet
               </h3>
+              <p className="text-sm text-text-color-muted">
+                Commencez votre prochain projet
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-6 text-sm text-text-darker-color">
-            <div className="text-center min-w-[80px] opacity-50">
+          <div className="flex items-center gap-8 text-sm text-text-color-muted opacity-60">
+            <div className="text-center min-w-[80px]">
               <span className="font-medium">-</span>
-              <div className="text-xs text-text-color-muted">tableaux</div>
+              <div className="text-xs">tableaux</div>
             </div>
             
-            <div className="text-center min-w-[80px] opacity-50">
+            <div className="text-center min-w-[80px]">
               <span className="font-medium">-</span>
-              <div className="text-xs text-text-color-muted">tâches</div>
+              <div className="text-xs">tâches</div>
             </div>
             
-            <div className="flex items-center gap-3 min-w-[200px] opacity-50">
-              <span className="text-xs text-text-color-muted whitespace-nowrap">Progression:</span>
-              <div className="flex h-2 w-full rounded-full bg-[#d0cec7]"></div>
+            <div className="flex items-center gap-3 min-w-[200px]">
+              <span className="text-xs whitespace-nowrap">Progression:</span>
+              <div className="flex h-2 w-full rounded-full bg-gray-200"></div>
             </div>
             
-            <div className="min-w-[120px] opacity-50">
+            <div className="min-w-[120px]">
               <div className="flex">
-                <div className="w-[30px] h-[30px] bg-[#d0cec7] rounded-full"></div>
+                <div className="w-[30px] h-[30px] bg-gray-200 rounded-full"></div>
               </div>
             </div>
           </div>
@@ -112,53 +115,56 @@ export default function ProjectListItem({
   return (
     <Link
       href={href}
-      className="no-underline w-full hover:bg-secondary/50 transition-colors rounded-lg"
+      className="no-underline w-full group"
     >
-      <div className="flex items-center gap-6 p-4 bg-secondary rounded-lg">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div className="flex items-center gap-6 py-3 px-5 bg-secondary rounded-xl border border-gray-100  hover:shadow-md transition-all duration-200">
+        <div className="flex items-center gap-4 min-w-0 flex-1">
           <Star
-            size={18}
+            size={20}
             onClick={handleFavorite}
-            className={`cursor-pointer ${
+            className={`cursor-pointer transition-all duration-200 hover:scale-110 ${
               isFavorite
                 ? "fill-accent-color text-accent-color"
-                : "fill-[#d0cec7] text-[#d0cec7]"
+                : "fill-gray-300 text-gray-300 hover:fill-accent-color hover:text-accent-color"
             }`}
           />
           
           <Image
             src={project?.logo || "/default/default-project-logo.webp"}
             alt="project"
-            width={40}
-            height={40}
-            className="rounded-full w-[40px] h-[40px] max-w-[40px] max-h-[40px] flex-shrink-0"
+            width={50}
+            height={50}
+            className="rounded-full w-[50px] h-[50px] max-w-[50px] max-h-[50px] flex-shrink-0 border-2 border-white shadow-sm"
           />
           
           <div className="min-w-0 flex-1">
-            <h3 className="text-lg font-medium text-text-darker-color truncate">
+            <h3 className="text-lg font-semibold text-text-darker-color truncate group-hover:text-accent-color transition-colors">
               {name}
             </h3>
+            <p className="text-sm text-text-color-muted">
+              Créé le {new Date(project?.createdAt).toLocaleDateString('fr-FR')}
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-6 text-sm text-text-darker-color">
+        <div className="flex items-center gap-8 text-sm text-text-darker-color">
           <div className="text-center min-w-[80px]">
-            <span className="font-medium">{totalBoards}</span>
+            <span className="font-semibold text-lg">{totalBoards}</span>
             <div className="text-xs text-text-color-muted">
               tableau{totalBoards === 1 ? "" : "x"}
             </div>
           </div>
           
           <div className="text-center min-w-[80px]">
-            <span className="font-medium">{totalTasks}</span>
+            <span className="font-semibold text-lg">{totalTasks}</span>
             <div className="text-xs text-text-color-muted">
               tâche{totalTasks === 1 ? "" : "s"}
             </div>
           </div>
           
           <div className="flex items-center gap-3 min-w-[200px]">
-            <span className="text-xs text-text-color-muted whitespace-nowrap">Progression:</span>
-            <div className="flex h-2 w-full rounded-full bg-[#e9ecef] overflow-hidden">
+            <span className="text-xs text-text-color-muted whitespace-nowrap font-medium">Progression:</span>
+            <div className="flex h-3 w-full rounded-full bg-gray-100 overflow-hidden shadow-inner">
               {statuses.map((status) => (
                 <StatusSegment
                   key={status?._id}

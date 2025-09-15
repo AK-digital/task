@@ -96,7 +96,7 @@ export default function ProjectHeader({ displayedFilters }) {
               
               {/* Menu déroulant */}
               {showBoardMenu && !isAddingBoard && (
-                <div className="absolute top-full left-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[250px]" style={{ zIndex: 9999 }}>
+                <div className="absolute top-full left-0 bg-secondary border border-gray-200 rounded-lg shadow-lg min-w-[250px]" style={{ zIndex: 9999 }}>
                   <div className="py-2 flex flex-col gap-2">
                     <div
                       onClick={handleAddBoard}

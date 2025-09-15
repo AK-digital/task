@@ -57,7 +57,7 @@
   --text-small: 0.8rem;
 
   /* SPACING */
-  --spacing-header-height: 62px;
+  --spacing-header-height: 54px;
   --spacing-aside-width: 66px;
 
   /* BOX SHADOW */
@@ -244,9 +244,9 @@
   .content_Tiptap .task-list-item-content p {
     margin: 0;
   }
-
+/* 
   .actions_Tiptap button {
-    border: 2px solid var(--color-accent-color);
+    border: 1px solid var(--color-accent-color);
     transition: all 80ms linear;
   }
 
@@ -257,9 +257,9 @@
   .actions_Tiptap button[data-disabled="true"] {
     pointer-events: none;
     background-color: transparent;
-    border: 2px solid var(--color-text-color-muted);
+    border: 1px solid var(--color-text-color-muted);
     color: var(--color-text-color-muted);
-  }
+  } */
 
   /* BoardHeader */
   .container_BoardHeader[data-archive="false"] .dataTitle_BoardHeader[data-authorized="true"]:hover {
@@ -1663,10 +1663,9 @@
   }
 
   button {
-    border-radius: 24px;
-    font-size: var(--text-medium);
+    border-radius: 10px;
     background-color: var(--color-accent-color);
-    padding: 12px 24px;
+    padding: 10px 20px;
     border: none;
     outline: none;
     color: white;

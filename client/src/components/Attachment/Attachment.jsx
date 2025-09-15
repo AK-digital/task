@@ -3,11 +3,12 @@ import { Paperclip } from "lucide-react";
 export default function Attachment({
   attachments,
   setAttachments,
-  label = <Paperclip size={16} />,
+  label = "Joindre un fichier",
   editor = null, // Ajouter l'éditeur pour pouvoir y insérer des images
   setTooMuchAttachments,
   setTooHeavyAttachments,
   size = 18,
+  className = "",
 }) {
   const allowedMimetypes = [
     // Images déjà présentes
@@ -89,11 +90,12 @@ export default function Attachment({
 
   return (
     <div>
-      <label className={``} data-label={isPaperclip} htmlFor="attachment">
+      <label className={className} data-label={isPaperclip} htmlFor="attachment">
         <Paperclip
           size={size}
-          className="cursor-pointer text-accent-color-dark hover:text-accent-color group-hover:text-accent-color"
+          className="cursor-pointer  hover:text-accent-color group-hover:text-accent-color"
         />
+        {label && typeof label === 'string' && <span className="ml-1">{label}</span>}
       </label>
       <input
         type="file"

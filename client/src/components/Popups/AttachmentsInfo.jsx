@@ -597,19 +597,10 @@ export default function AttachmentsInfo({
         <div className="flex items-start gap-2 ">
           {!disable ? (
             <>
-              <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
-                <Attachment
-                  attachments={attachments}
-                  setAttachments={setAttachments}
-                  label={label}
-                  setTooMuchAttachments={setTooMuchAttachments}
-                  setTooHeavyAttachments={setTooHeavyAttachments}
-                  size={attachmentSize}
-                />
-              </span>
+
               <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
                 <Trash2
-                  size={25}
+                  size={18}
                   onClick={handleDeleteAll}
                   className="cursor-pointer text-accent-color-dark group-hover:text-danger-color"
                 />
@@ -618,27 +609,14 @@ export default function AttachmentsInfo({
           ) : (
             <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
               <Download
-                size={25}
+                size={18}
                 className="cursor-pointer text-accent-color-dark group-hover:text-accent-color"
                 onClick={handleDownloadZip}
               />
             </span>
           )}
 
-          {/* Bouton TOUT pour supprimer ou télécharger toutes les pièces jointes */}
-          {/* {attachments.length > 1 && (
-          <button
-            onClick={isAffichage ? handleDownloadZip : handleDeleteAll}
-            className={`flex justify-center items-center gap-1 px-2 py-1 rounded-sm text-xs font-medium transition-colors cursor-pointer ${
-              isAffichage
-                ? "bg-accent-color text-white hover:bg-accent-color-hover"
-                : "bg-danger-color text-white hover:bg-text-color-red"
-            }`}
-          >
-            {isAffichage ? <Download size={14} /> : <Trash2 size={14} />}
-            <span>TOUT</span>
-          </button>
-        )} */}
+      
         </div>
         <div className="items_AttachmentsInfo flex items-center gap-2 overflow-x-auto flex-1 min-w-0 pt-4 pb-1">
           {attachments.map((file, index) => {
@@ -689,7 +667,7 @@ export default function AttachmentsInfo({
                 <div className="flex flex-col justify-start h-full">
                   {isAffichage ? (
                     <Download
-                      size={16}
+                      size={18}
                       className="text-accent-color-dark hover:text-accent-color cursor-pointer transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -698,7 +676,7 @@ export default function AttachmentsInfo({
                     />
                   ) : (
                     <Trash2
-                      size={16}
+                      size={18}
                       className="text-accent-color-dark hover:text-danger-color cursor-pointer transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();

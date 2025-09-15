@@ -68,38 +68,63 @@ export default function CreateProject({
 
   return (
     <div className="relative w-full">
-      <div className="fixed top-0 right-0 bottom-0 bg-primary gap-1.5 w-full z-9999">
-        <span
-          className="absolute top-16 right-16 bg-none bg-transparent border-none cursor-pointer"
+      <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-[9999] flex items-center justify-center">
+        <button
+          className="absolute top-8 right-8 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
           onClick={() => setIsCreating(false)}
         >
-          <X size={32} />
-        </span>
-        <form ref={formRef} action={formAction} className="flex justify-start items-center flex-col mt-[15%]">
-          <input
-            ref={inputRef}
-            type="text"
-            name="project-name"
-            id="project-name"
-            placeholder="Nommer votre projet"
-            required
-            minLength={2}
-            maxLength={250}
-            className="w-fit mt-2.5 h-[150px] text-[2.5rem] bg-transparent border-none text-center"
-          />
-          <span className="text-[0.82rem] text-text-color-muted mb-3">
-            Appuyer sur Entrée pour créer le projet
-          </span>
-          <span className="text-[0.82rem] text-text-color-muted mb-3">OU</span>
-          <button type="submit" data-disabled={pending} disabled={pending} className="py-3.5 px-[22px]">
-            Cliquer pour créer le projet
-          </button>
-        </form>
+          <X size={24} className="text-white" />
+        </button>
+        
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-text-darker-color mb-2">
+              Nouveau projet
+            </h2>
+            <p className="text-text-color-muted">
+              Donnez un nom à votre projet pour commencer
+            </p>
+          </div>
+          
+          <form ref={formRef} action={formAction} className="space-y-6">
+            <div>
+              <input
+                ref={inputRef}
+                type="text"
+                name="project-name"
+                id="project-name"
+                placeholder="Nom du projet"
+                required
+                minLength={2}
+                maxLength={250}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-text-darker-color text-lg font-medium placeholder:text-text-color-muted focus:outline-none focus:ring-2 focus:ring-accent-color focus:border-accent-color transition-all duration-200"
+              />
+            </div>
+            
+            <div className="text-center space-y-3">
+              <p className="text-sm text-text-color-muted">
+                Appuyez sur Entrée ou cliquez sur le bouton
+              </p>
+              
+              <button 
+                type="submit" 
+                data-disabled={pending} 
+                disabled={pending} 
+                className="secondary-button w-full bg-accent-color hover:bg-accent-color/90 text-white border-accent-color disabled:opacity-50 disabled:cursor-not-allowed justify-center"
+              >
+                <span className="text-sm font-medium">
+                  {pending ? "Création..." : "Créer le projet"}
+                </span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+      
       <div
-        className="modal-layout-opacity"
-        onClick={(e) => setIsCreating(false)}
-      ></div>
+        className="fixed inset-0 bg-black/20 z-[9998]"
+        onClick={() => setIsCreating(false)}
+      />
     </div>
   );
 }

@@ -96,10 +96,10 @@ export default function SelectedTasks({
     <div className="flex fixed z-2001 left-1/2 bottom-[8%] -translate-x-1/2 bg-secondary shadow-[0_0_15px_rgba(0,0,0,0.1)] rounded-lg text-black animate-[showAnim_0.2s_ease-out]">
       {/* Main content */}
       <div className="flex items-center gap-6 pr-6">
-        <div className="bg-[#007CFF] h-full text-text-color rounded-[8px_0_0_8px] font-bold text-large p-6">
+        <div className="bg-[#2a3730] h-full text-text-color rounded-[8px_0_0_8px] font-bold text-large p-6">
           <span> {selectedTasks.length}</span>
         </div>
-        <div className="text-[1.4rem]">
+        <div className="text-large">
           <span>
             {selectedTasks?.length > 1
               ? "Tâches séléctionnées"
@@ -107,34 +107,35 @@ export default function SelectedTasks({
           </span>
         </div>
         {/* actions */}
-        <div className="flex gap-6">
+        <div className="flex gap-3">
           {/* action */}
           {!archive &&
             checkRole(project, ["owner", "manager", "team"], uid) && (
-              <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleAddToArchive}>
+              <button className="secondary-button" onClick={handleAddToArchive}>
                 <Archive size={20} />
-                <span className="text-small">Archiver</span>
-              </div>
+                <span>Archiver</span>
+              </button>
             )}
           {archive && checkRole(project, ["owner", "manager", "team"], uid) && (
-            <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5" onClick={handleRemoveFromArchive}>
+            <button className="secondary-button" onClick={handleRemoveFromArchive}>
               <ArchiveRestore size={20} />
-              <span className="text-small">Restaurer</span>
-            </div>
+              <span>Restaurer</span>
+            </button>
           )}
           {checkRole(
             project,
             ["owner", "manager", "team", "customer"],
             uid
           ) && (
-            <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 text-blocked-color" onClick={handleDelete}>
+            <button className="secondary-button" onClick={handleDelete}>
               <Trash size={20} />
-              <span className="text-small">Supprimer</span>
-            </div>
+              <span>Supprimer</span>
+            </button>
           )}
-          <div className="flex flex-col justify-center items-center cursor-pointer gap-0.5 border-l border-[#007CFF] pl-3" onClick={handleClose}>
-            <X size={22} />
-          </div>
+          <button className="secondary-button border-accent-color text-accent-color hover:bg-accent-color hover:text-white" onClick={handleClose}>
+            <X size={20} />
+            <span>Annuler</span>
+          </button>
         </div>
       </div>
     </div>

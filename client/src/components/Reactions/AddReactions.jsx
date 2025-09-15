@@ -23,14 +23,24 @@ export default function AddReactions({
     type === "editor" || (uid !== author?._id && canReact);
 
   return (
-    <div className="relative top-[0.5px] cursor-pointer">
+    <div className="relative cursor-pointer">
       {shouldShowReactions && (
         <div className="flex">
-          <SmilePlus
-            size={18}
-            onClick={() => setShowEmojiPicker((prev) => !prev)}
-            className="text-accent-color-dark hover:text-accent-color"
-          />
+          {type === "editor" ? (
+            <span
+              className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color"
+              onClick={() => setShowEmojiPicker((prev) => !prev)}
+            >
+              <SmilePlus size={16} />
+              Emoji
+            </span>
+          ) : (
+            <SmilePlus
+              size={16}
+              onClick={() => setShowEmojiPicker((prev) => !prev)}
+              className="text-accent-color-dark hover:text-accent-color"
+            />
+          )}
           {showEmojiPicker && (
             <div className="absolute z-2001 top-5 left-3">
               <EmojiPicker

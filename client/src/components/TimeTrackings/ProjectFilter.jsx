@@ -100,12 +100,12 @@ export default function ProjectFilter({ projects, queries, setQueries }) {
         />
       </div>
       <div
-        className={`absolute z-[2001] top-[44px] bg-secondary shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out min-w-[180px] ${
+        className={`absolute z-[2001] top-[44px] shadow-small w-full font-medium text-small overflow-hidden transition-all duration-[350ms] ease-in-out min-w-[180px] ${
           isOpen ? "max-h-96" : "max-h-0"
         }`}
       >
         {isOpen && (
-          <ul className="flex flex-col p-2 border border-color-border-color rounded-sm max-h-96 overflow-y-auto">
+          <ul className="flex flex-col pl-2 pt-2 pr-4 pb-4 border border-[#e0e0e0] bg-secondary  rounded-sm max-h-96 overflow-y-auto">
             <li
               className="flex items-center gap-2 h-[30px] pl-1 py-0.5 cursor-pointer text-xs hover:bg-third hover:shadow-small hover:rounded-sm"
               onClick={handleReset}

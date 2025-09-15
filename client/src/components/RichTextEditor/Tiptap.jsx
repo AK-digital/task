@@ -16,6 +16,7 @@ import { isNotEmpty, isStringPlural } from "@/utils/utils";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
 import { tiptapOptions } from "@/utils/tiptapOptions";
 import Toolbar from "./Toolbar";
+import { AtSign } from "lucide-react";
 
 export default function Tiptap({
   project,
@@ -125,8 +126,8 @@ export default function Tiptap({
     message
       ? message?.message || message
       : type === "description"
-      ? description
-      : ""
+        ? description
+        : ""
   );
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
 
@@ -140,8 +141,8 @@ export default function Tiptap({
     message
       ? message?.message || message
       : type === "description"
-      ? description
-      : ""
+        ? description
+        : ""
   );
 
   useEffect(() => {
@@ -514,29 +515,29 @@ export default function Tiptap({
 
         reader.onload = () => {
           const url = reader.result;
-          
+
           // Créer une image temporaire pour obtenir les dimensions originales
           const img = new window.Image();
           img.onload = () => {
             // Calculer les dimensions pour s'adapter à l'éditeur tout en conservant le ratio
             const maxWidth = 600; // Largeur maximale dans l'éditeur
             const { width: originalWidth, height: originalHeight } = img;
-            
+
             let finalWidth = originalWidth;
             let finalHeight = originalHeight;
-            
+
             // Si l'image est plus large que la largeur maximale, la redimensionner
             if (originalWidth > maxWidth) {
               const ratio = maxWidth / originalWidth;
               finalWidth = maxWidth;
               finalHeight = originalHeight * ratio;
             }
-            
+
             // Insérer l'image avec les bonnes dimensions et positionner le curseur après
             editor
               .chain()
               .focus()
-              .setImage({ 
+              .setImage({
                 src: url,
                 width: finalWidth,
                 height: finalHeight,
@@ -545,7 +546,7 @@ export default function Tiptap({
               .insertContent("<p></p>")
               .run();
           };
-          
+
           img.src = url;
         };
 
@@ -608,9 +609,9 @@ export default function Tiptap({
             <span>Brouillon enregistré</span>
           </div>
         )}
-        <div className="relative flex items-center gap-2 p-2">
+        <div className="relative flex flex-col gap-2 p-2">
           {isNotEmpty([...attachments]) && (
-            <div className="w-full min-w-0 h-full">
+            <>
               <AttachmentsInfo
                 attachments={attachments}
                 setAttachments={setAttachments}
@@ -623,25 +624,60 @@ export default function Tiptap({
                 setTooMuchAttachments={setTooMuchAttachments}
                 tooHeavyAttachments={tooHeavyAttachments}
                 setTooHeavyAttachments={setTooHeavyAttachments}
-                attachmentSize={25}
+                attachmentsize={16}
               />
-              <p className="text-sm text-gray-600">
-                {attachments.length} {isStringPlural("fichier", attachments)}{" "}
-                {isStringPlural("ajouté", attachments)}
-              </p>
-            </div>
+              <div className="flex items-center gap-4 pt-2">
+                <span
+                  className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color"
+                  onClick={() => {
+                    editor.commands.focus();
+                    editor.commands.insertContent('@');
+                  }}
+                >
+                  <AtSign size={16} /> Mentionner
+                </span>
+                <Attachment
+                  attachments={attachments}
+                  setAttachments={setAttachments}
+                  editor={editor}
+                  setTooMuchAttachments={setTooMuchAttachments}
+                  setTooHeavyAttachments={setTooHeavyAttachments}
+                  label="Joindre un fichier"
+                  className="flex justify-center items-center text-small gap-1 group cursor-pointer hover:text-accent-color"
+                  size={16}
+                />
+                <Reactions
+                  element={message}
+                  project={project}
+                  task={task}
+                  mutateMessage={mutateMessage}
+                  type={"editor"}
+                  editor={editor}
+                />
+              </div>
+            </>
           )}
           {!isNotEmpty([...attachments]) && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <span
+                className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color"
+                onClick={() => {
+                  editor.commands.focus();
+                  editor.commands.insertContent('@');
+                }}
+              >
+               <AtSign size={16} />
+              Mentionner
+              </span>
               <Attachment
                 attachments={attachments}
                 setAttachments={setAttachments}
                 editor={editor}
-                label="Ajouter une pièce jointe"
-                className="group cursor-pointer"
                 setTooMuchAttachments={setTooMuchAttachments}
                 setTooHeavyAttachments={setTooHeavyAttachments}
-                size={18}
+                label="Joindre un fichier"
+                className="flex justify-center items-center text-small gap-1 group cursor-pointer hover:text-accent-color"
+                size={16}
               />
               <Reactions
                 element={message}
@@ -659,13 +695,13 @@ export default function Tiptap({
         {type === "description" && (
           <>
             <button
-              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-normal mr-3 hover:text-accent-color-light hover:bg-transparent shadow-none"
+              className="mr-3 hover:text-accent-color-light hover:bg-transparent shadow-none secondary-button"
               onClick={handleCancel}
             >
               Annuler
             </button>
             <button
-              className="font-bricolage"
+              className={`secondary-button ${!checkIfDisabled() ? 'bg-accent-color hover:bg-accent-color/90 text-white border-accent-color' : ''}`}
               data-disabled={checkIfDisabled()}
               disabled={checkIfDisabled()}
               onClick={handleSaveDescription}
@@ -677,13 +713,13 @@ export default function Tiptap({
         {type === "message" && (
           <>
             <button
-              className="font-bricolage p-0 bg-transparent border-none text-text-dark-color font-normal text-normal mr-3 hover:text-accent-color-light hover:bg-transparent shadow-none"
+              className="mr-3 hover:text-accent-color-light hover:bg-transparent shadow-none secondary-button"
               onClick={handleCancel}
             >
               Annuler
             </button>
             <button
-              className="font-bricolage"
+              className={`secondary-button ${!checkIfDisabled() ? 'bg-accent-color hover:bg-accent-color/90 text-white border-accent-color' : ''}`}
               data-disabled={checkIfDisabled()}
               disabled={checkIfDisabled()}
               onClick={handleMessage}
