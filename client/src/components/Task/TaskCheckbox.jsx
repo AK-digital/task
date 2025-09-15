@@ -22,7 +22,7 @@ export default function TaskCheckbox({ task, setSelectedTasks }) {
   }
 
   return (
-    <div className="task-col-checkbox task-content-col ">
+    <div className="task-col-checkbox task-content-col select-none">
       <Checkbox
         name="task"
         id={`task-${task?._id}`}

@@ -19,7 +19,7 @@ export default function ConfirmationLeave({
         </p>
         <div className="flex justify-between gap-3">
           <button
-            className="border-none bg-color-medium-color py-2 px-4 rounded-sm hover:bg-color-medium-color/80"
+            className="secondary-button"
             onClick={onCancel}
           >
             Annuler

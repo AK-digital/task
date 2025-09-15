@@ -98,7 +98,7 @@ export default function TaskDescription({
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 mb-4">
       <span className="flex items-center gap-2 text-large text-text-dark-color font-medium select-none">
         <PanelTop size={16} className="text-text-color-muted" /> Description
       </span>
@@ -204,7 +204,7 @@ export default function TaskDescription({
         <div
           onClick={handleEditDescription}
           data-role={isAuthorized}
-          className="flex justify-between items-center border border-color-border-color py-3 px-6 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
+          className="flex justify-between items-center border border-color-border-color py-3 px-4 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
         >
           {isAuthorized ? (
             <p>Ajouter une description</p>

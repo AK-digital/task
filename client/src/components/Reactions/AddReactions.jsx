@@ -28,7 +28,7 @@ export default function AddReactions({
         <div className="flex">
           {type === "editor" ? (
             <span
-              className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color"
+              className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color select-none"
               onClick={() => setShowEmojiPicker((prev) => !prev)}
             >
               <SmilePlus size={16} />

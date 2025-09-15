@@ -259,17 +259,17 @@ export default function TemplateProjectStep({ onComplete }) {
                       key={template._id}
                       onClick={() => handleTemplateSelect(template)}
                       type="button"
-                      className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${
+                      className={`rounded-[10px] p-3 cursor-pointer text-left w-full border  ${
                         selectedTemplate?._id === template._id
-                          ? "bg-primary shadow-[0_0_0_2px_var(--accent-color)]"
-                          : "bg-white hover:bg-primary hover:shadow-md"
+                        ? "bg-white border-2 border-accent-color"
+                        : " bg-secondary border-1 border-[#acaba5] hover:bg-primary"
                       }`}
                     >
                       <div className="w-full">
-                        <div className="flex justify-between items-center mb-2">
-                          <h4 className="text-base font-semibold text-text-dark-color">
+                        <div className="flex justify-between mb-2">
+                          <span className="text-sm font-semibold text-text-dark-color">
                             {template.name}
-                          </h4>
+                          </span>
                           {template.creator?.picture && (
                             <img
                               src={template.creator.picture}
@@ -279,13 +279,13 @@ export default function TemplateProjectStep({ onComplete }) {
                           )}
                         </div>
                         <div className="flex justify-between items-center">
-                          <div className="flex gap-4 text-sm text-text-color-muted">
+                          <div className="flex gap-4 text-xs text-text-color-muted">
                             <span className="flex items-center gap-1">
-                              <List size={16} />
+                              <List size={15} />
                               {template.boardsCount} tableaux
                             </span>
                             <span className="flex items-center gap-1">
-                              <ListTodo size={16} />
+                              <ListTodo size={15} />
                               {template.tasksCount} tâches
                             </span>
                           </div>
@@ -315,17 +315,17 @@ export default function TemplateProjectStep({ onComplete }) {
                       key={template._id}
                       onClick={() => handleTemplateSelect(template)}
                       type="button"
-                      className={`rounded-lg min-h-[100px] p-4 cursor-pointer transition-all duration-200 text-left w-full border border-accent-color ${
+                      className={`rounded-[10px] p-3 cursor-pointer text-left w-full border  ${
                         selectedTemplate?._id === template._id
-                          ? "bg-primary shadow-[0_0_0_2px_var(--accent-color)]"
-                          : "bg-white hover:bg-primary hover:shadow-md"
+                        ? "bg-white border-1 border-accent-color"
+                        : " bg-secondary border-1 border-[#acaba5] hover:bg-primary"
                       }`}
                     >
                       <div className="w-full">
-                        <div className="flex justify-between items-center mb-2">
-                          <h4 className="text-base font-semibold text-text-dark-color">
+                        <div className="flex justify-between mb-2">
+                          <span className="text-sm font-semibold text-text-dark-color">
                             {template.name}
-                          </h4>
+                          </span>
                           {template.creator?.picture && (
                             <img
                               src={template.creator.picture}
@@ -335,13 +335,13 @@ export default function TemplateProjectStep({ onComplete }) {
                           )}
                         </div>
                         <div className="flex justify-between items-center">
-                          <div className="flex gap-4 text-sm text-text-color-muted">
+                          <div className="flex gap-4 text-xs text-text-color-muted">
                             <span className="flex items-center gap-1">
-                              <List size={16} />
+                              <List size={15} />
                               {template.boardsCount} tableaux
                             </span>
                             <span className="flex items-center gap-1">
-                              <ListTodo size={16} />
+                              <ListTodo size={15} />
                               {template.tasksCount} tâches
                             </span>
                           </div>

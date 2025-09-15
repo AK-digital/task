@@ -579,18 +579,8 @@ export default function Tiptap({
         {/* Contenu de l'éditeur */}
         <EditorContent
           editor={editor}
-          className="content_Tiptap flex-1 min-h-[150px] p-[15px] text-[16px] outline-none rounded-t-none rounded-b-lg cursor-text"
+          className="content_Tiptap flex-1 min-h-[150px] p-4 text-[15px] outline-none rounded-t-none rounded-b-lg cursor-text"
         />
-        {isNotEmpty([...attachments]) && (
-          <Reactions
-            element={message}
-            project={project}
-            task={task}
-            mutateMessage={mutateMessage}
-            type={"editor"}
-            editor={editor}
-          />
-        )}
         {isTaggedUsers && (
           <MentionsList
             project={project}
@@ -610,84 +600,53 @@ export default function Tiptap({
           </div>
         )}
         <div className="relative flex flex-col gap-2 p-2">
+          {/* Actions toujours visibles */}
+          <div className="flex items-center gap-4">
+            <span
+              className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color select-none"
+              onClick={() => {
+                editor.commands.focus();
+                editor.commands.insertContent('@');
+              }}
+            >
+              <AtSign size={16} /> Mentionner
+            </span>
+            <Attachment
+              attachments={attachments}
+              setAttachments={setAttachments}
+              editor={editor}
+              setTooMuchAttachments={setTooMuchAttachments}
+              setTooHeavyAttachments={setTooHeavyAttachments}
+              label="Joindre un fichier"
+              className="flex justify-center items-center text-small gap-1 group cursor-pointer hover:text-accent-color select-none"
+              size={16}
+            />
+            <Reactions
+              element={message}
+              project={project}
+              task={task}
+              mutateMessage={mutateMessage}
+              type={"editor"}
+              editor={editor}
+            />
+          </div>
+          
+          {/* Pièces jointes si présentes */}
           {isNotEmpty([...attachments]) && (
-            <>
-              <AttachmentsInfo
-                attachments={attachments}
-                setAttachments={setAttachments}
-                disable={false}
-                type="edition"
-                showPreviewImageMessage={showPreviewImageMessage}
-                setShowPreviewImageMessage={setShowPreviewImageMessage}
-                isUploading={pending}
-                tooMuchAttachments={tooMuchAttachments}
-                setTooMuchAttachments={setTooMuchAttachments}
-                tooHeavyAttachments={tooHeavyAttachments}
-                setTooHeavyAttachments={setTooHeavyAttachments}
-                attachmentsize={16}
-              />
-              <div className="flex items-center gap-4 pt-2">
-                <span
-                  className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color"
-                  onClick={() => {
-                    editor.commands.focus();
-                    editor.commands.insertContent('@');
-                  }}
-                >
-                  <AtSign size={16} /> Mentionner
-                </span>
-                <Attachment
-                  attachments={attachments}
-                  setAttachments={setAttachments}
-                  editor={editor}
-                  setTooMuchAttachments={setTooMuchAttachments}
-                  setTooHeavyAttachments={setTooHeavyAttachments}
-                  label="Joindre un fichier"
-                  className="flex justify-center items-center text-small gap-1 group cursor-pointer hover:text-accent-color"
-                  size={16}
-                />
-                <Reactions
-                  element={message}
-                  project={project}
-                  task={task}
-                  mutateMessage={mutateMessage}
-                  type={"editor"}
-                  editor={editor}
-                />
-              </div>
-            </>
-          )}
-          {!isNotEmpty([...attachments]) && (
-            <div className="flex items-center gap-4">
-              <span
-                className="flex justify-center items-center text-small gap-1 cursor-pointer hover:text-accent-color"
-                onClick={() => {
-                  editor.commands.focus();
-                  editor.commands.insertContent('@');
-                }}
-              >
-               <AtSign size={16} />
-              Mentionner
-              </span>
-              <Attachment
-                attachments={attachments}
-                setAttachments={setAttachments}
-                editor={editor}
-                setTooMuchAttachments={setTooMuchAttachments}
-                setTooHeavyAttachments={setTooHeavyAttachments}
-                label="Joindre un fichier"
-                className="flex justify-center items-center text-small gap-1 group cursor-pointer hover:text-accent-color"
-                size={16}
-              />
-              <Reactions
-                element={message}
-                project={project}
-                task={task}
-                mutateMessage={mutateMessage}
-                type={"editor"}
-                editor={editor}
-              />
-            </div>
+            <AttachmentsInfo
+              attachments={attachments}
+              setAttachments={setAttachments}
+              disable={false}
+              type="edition"
+              showPreviewImageMessage={showPreviewImageMessage}
+              setShowPreviewImageMessage={setShowPreviewImageMessage}
+              isUploading={pending}
+              tooMuchAttachments={tooMuchAttachments}
+              setTooMuchAttachments={setTooMuchAttachments}
+              tooHeavyAttachments={tooHeavyAttachments}
+              setTooHeavyAttachments={setTooHeavyAttachments}
+              attachmentsize={16}
+            />
           )}
         </div>
       </div>

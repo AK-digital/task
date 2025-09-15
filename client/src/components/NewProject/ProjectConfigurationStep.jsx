@@ -21,7 +21,7 @@ export default function ProjectConfigurationStep({
   const [logoPreview, setLogoPreview] = useState(
     "/default/default-project-logo.webp"
   );
-  const [links, setLinks] = useState([{ url: "", icon: "Globe" }]);
+  const [links, setLinks] = useState([{ url: "", icon: "Globe", label: "" }]);
   const [moreIcons, setMoreIcons] = useState(null);
   const [invitations, setInvitations] = useState([]);
 
@@ -94,6 +94,7 @@ export default function ProjectConfigurationStep({
       {
         url: "",
         icon: "Globe",
+        label: "",
       },
     ]);
   };
@@ -107,6 +108,12 @@ export default function ProjectConfigurationStep({
   const updateLinkUrl = (index, url) => {
     const updatedLinks = [...links];
     updatedLinks[index].url = url;
+    setLinks(updatedLinks);
+  };
+
+  const updateLinkLabel = (index, label) => {
+    const updatedLinks = [...links];
+    updatedLinks[index].label = label;
     setLinks(updatedLinks);
   };
 
@@ -229,13 +236,22 @@ export default function ProjectConfigurationStep({
                             />
                           )}
                         </div>
-                        <input
-                          type="url"
-                          placeholder="https://www.exemple.com"
-                          value={link?.url}
-                          onChange={(e) => updateLinkUrl(idx, e.target.value)}
-                          className="relative top-0.5 pl-2"
-                        />
+                        <div className="flex flex-col gap-2 flex-1 pl-2">
+                          <input
+                            type="text"
+                            placeholder="Label du lien"
+                            value={link?.label || ""}
+                            onChange={(e) => updateLinkLabel(idx, e.target.value)}
+                            className="text-sm"
+                          />
+                          <input
+                            type="url"
+                            placeholder="https://www.exemple.com"
+                            value={link?.url}
+                            onChange={(e) => updateLinkUrl(idx, e.target.value)}
+                            className="text-sm"
+                          />
+                        </div>
                         <div
                           className="text-text-color-red pl-5 cursor-pointer"
                           onClick={(e) => removeLink(e, link)}

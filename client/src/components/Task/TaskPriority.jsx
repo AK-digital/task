@@ -134,11 +134,11 @@ export default function TaskPriority({ task }) {
       {isOpen && (
         <FloatingMenu
           setIsOpen={setIsOpen}
-          className={listWidth() ? "w-[380px]" : "w-[240px]"}
+          className={listWidth() ? "w-[380px]" : "w-[190px]"}
           refs={refs}
           floatingStyles={floatingStyles}
         >
-          <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 p-3 border-b border-color-border-color">
+          <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-1.5 pt-3 px-3 pb-1 border-b border-color-border-color">
             {prioritiesData?.map((priority) => {
               if (!isEdit) {
                 return (
@@ -173,12 +173,12 @@ export default function TaskPriority({ task }) {
               </li>
             )}
           </ul>
-          <div className="flex items-center p-2 justify-center gap-2">
+          <div className="flex items-center p-1.5 justify-center gap-1 my-1">
           <span
-              className="secondary-button text-[14px]"
+              className="secondary-button text-[12px]"
             onClick={handleEditPriority}
           >
-            <Pen size={16} /> Modifier les priorités
+            <Pen size={15} /> Modifier les priorités
           </span>
           </div>
         </FloatingMenu>

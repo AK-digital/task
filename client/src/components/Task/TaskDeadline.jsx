@@ -146,7 +146,7 @@ export default function TaskDeadline({ task, uid }) {
         data-past-today={isToday}
       >
         {deadline ? (
-          <span className="relative z-10 text-white select-none font-medium whitespace-nowrap">
+          <span className="relative z-10 text-xs select-none font-medium whitespace-nowrap">
             {displayDate()}
           </span>
         ) : (

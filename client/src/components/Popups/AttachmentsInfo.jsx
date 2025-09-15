@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Attachment from "../Attachment/Attachment";
-import { Download, LayoutList, ListChecks, Trash2, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw, Maximize, Minimize } from "lucide-react";
+import { Download, Trash, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw, Maximize, Minimize } from "lucide-react";
 import { BlobWriter, ZipWriter, BlobReader } from "@zip.js/zip.js";
 import Image from "next/image";
 import Reactions from "../Reactions/Reactions";
@@ -599,8 +599,8 @@ export default function AttachmentsInfo({
             <>
 
               <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
-                <Trash2
-                  size={18}
+                <Trash
+                  size={16}
                   onClick={handleDeleteAll}
                   className="cursor-pointer text-accent-color-dark group-hover:text-danger-color"
                 />
@@ -609,7 +609,7 @@ export default function AttachmentsInfo({
           ) : (
             <span className="group flex justify-center items-center rounded-sm w-11 h-11 mt-4 cursor-pointer bg-primary">
               <Download
-                size={18}
+                size={16}
                 className="cursor-pointer text-accent-color-dark group-hover:text-accent-color"
                 onClick={handleDownloadZip}
               />
@@ -667,7 +667,7 @@ export default function AttachmentsInfo({
                 <div className="flex flex-col justify-start h-full">
                   {isAffichage ? (
                     <Download
-                      size={18}
+                      size={16}
                       className="text-accent-color-dark hover:text-accent-color cursor-pointer transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -675,8 +675,8 @@ export default function AttachmentsInfo({
                       }}
                     />
                   ) : (
-                    <Trash2
-                      size={18}
+                    <Trash
+                      size={16}
                       className="text-accent-color-dark hover:text-danger-color cursor-pointer transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();

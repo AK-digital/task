@@ -166,7 +166,18 @@ export default function NewProject() {
         mutate(`/project/${projectId}`);
       }
       
-      // Mettre à jour le projet avec les options supplémentaires (logo, liens, notes)
+      // Mettre à jour le logo du projet si fourni
+      if (finalProjectData.logo) {
+        try {
+          const { updateProjectLogo } = await import("@/api/project");
+          await updateProjectLogo(projectId, finalProjectData.logo);
+        } catch (logoError) {
+          console.warn("Erreur lors de la mise à jour du logo:", logoError);
+          // On continue même si la mise à jour du logo échoue
+        }
+      }
+      
+      // Mettre à jour le projet avec les options supplémentaires (liens, notes)
       if (finalProjectData.note || finalProjectData.urls?.length > 0) {
         try {
           const updateFormData = new FormData();
@@ -181,13 +192,14 @@ export default function NewProject() {
             finalProjectData.urls.forEach(link => {
               updateFormData.append("url", link.url);
               updateFormData.append("icon", link.icon);
+              updateFormData.append("label", link.label || "");
             });
           }
           
           const { updateProject } = await import("@/actions/project");
           await updateProject({}, updateFormData);
         } catch (updateError) {
-          // console.warn("Erreur lors de la mise à jour des options du projet:", updateError);
+          console.warn("Erreur lors de la mise à jour des options du projet:", updateError);
           // On continue même si la mise à jour échoue
         }
       }
@@ -256,7 +268,7 @@ export default function NewProject() {
           <div className="w-full px-[clamp(30px,5%,5%)] py-8 pb-4">
             <div className="flex items-center justify-between gap-4 relative">
               <button 
-                className="flex items-center gap-2 bg-transparent border-none text-accent-color text-base cursor-pointer p-2 rounded transition-colors duration-200 hover:bg-secondary"
+                className="secondary-button"
                 onClick={handleGoBack}
                 type="button"
               >

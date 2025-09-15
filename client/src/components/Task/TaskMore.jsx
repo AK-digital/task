@@ -6,6 +6,9 @@ import moment from "moment";
 import TaskDescription from "./TaskDescription";
 import { usePathname } from "next/navigation";
 import Portal from "../Portal/Portal";
+import { updateTaskText } from "@/api/task";
+import socket from "@/utils/socket";
+import { Edit3 } from "lucide-react";
 moment.locale("fr");
 
 export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
@@ -19,6 +22,9 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   const project = task?.projectId;
   const [showPreviewImageMessage, setShowPreviewImageMessage] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleValue, setTitleValue] = useState(task?.text || "");
+  const titleInputRef = useRef(null);
 
   const startResizing = useCallback((e) => {
     setIsResizing(true);
@@ -69,6 +75,54 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
     return () => cancelAnimationFrame(updateResizerPosition);
   }, []);
 
+  useEffect(() => {
+    if (isEditingTitle && titleInputRef.current) {
+      titleInputRef.current.focus();
+      titleInputRef.current.select();
+    }
+  }, [isEditingTitle]);
+
+  const handleEditTitle = () => {
+    setIsEditingTitle(true);
+    setTitleValue(task?.text || "");
+  };
+
+  const handleSaveTitle = async () => {
+    if (titleValue.trim() === "" || titleValue === task?.text) {
+      setIsEditingTitle(false);
+      setTitleValue(task?.text || "");
+      return;
+    }
+
+    try {
+      const response = await updateTaskText(task?._id, project?._id, titleValue.trim());
+
+      if (response?.success) {
+        await mutateTasks();
+        socket.emit("update task", project?._id);
+        setIsEditingTitle(false);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du titre:", error);
+      setTitleValue(task?.text || "");
+      setIsEditingTitle(false);
+    }
+  };
+
+  const handleCancelTitle = () => {
+    setIsEditingTitle(false);
+    setTitleValue(task?.text || "");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSaveTitle();
+    } else if (e.key === "Escape") {
+      handleCancelTitle();
+    }
+  };
+
   const handleClose = () => {
     const container = containerRef.current;
 
@@ -106,16 +160,38 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
         onMouseDown={startResizing}
       ></div>
       <div
-        className={`container_TaskMore flex flex-col gap-3 fixed z-[8000] top-0 right-0 bottom-0 bg-[url('/backgrounds/background.jpg')] bg-no-repeat bg-[20%_50%] bg-cover h-screen shadow-[-4px_10px_10px_0px_rgba(0,0,0,0.15)] p-8 cursor-default overflow-y-auto min-w-[520px] resize-x ${
+        className={`container_TaskMore flex flex-col gap-3 fixed z-[8000] top-0 right-0 bottom-0 bg-[url('/backgrounds/background.jpg')] bg-no-repeat bg-[20%_50%] bg-cover h-screen shadow-[-4px_10px_10px_0px_rgba(0,0,0,0.15)] p-8 cursor-default overflow-y-auto min-w-[520px] max-w-[calc(100vw-80px)] ${
           showPreviewImageMessage
             ? "w-screen"
             : "w-[clamp(520px,45%,calc(100vw-80px))]"
         }`}
         ref={containerRef}
+        style={{ resize: 'horizontal' }}
       >
         {/* Description */}
         <div className="flex flex-col gap-2 mb-6">
-          <p className="text-large font-medium">{task?.text}</p>
+          {isEditingTitle ? (
+            <div className="flex items-center gap-2">
+              <input
+                ref={titleInputRef}
+                type="text"
+                value={titleValue}
+                onChange={(e) => setTitleValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onBlur={handleSaveTitle}
+                className="text-large font-medium bg-third border border-gray-300 rounded px-2 py-1 flex-1 focus:outline-none focus:border-accent-color"
+                placeholder="Titre de la tâche"
+              />
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 group cursor-pointer" onClick={handleEditTitle}>
+              <p className="text-large font-medium">{task?.text}</p>
+              <Edit3
+                size={16}
+                className="text-gray-400 group-hover:text-accent-color transition-colors flex-shrink-0"
+              />
+            </div>
+          )}
           <span className="flex items-center gap-1 text-small text-text-color-muted select-none">
             Par{" "}
             <Image

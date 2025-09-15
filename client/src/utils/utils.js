@@ -16,7 +16,11 @@ import {
   Calendar,
   FileText,
   Link2,
-  Settings
+  Settings,
+  FileImage,
+  FileArchive,
+  FileCode2,
+  FileSpreadsheet
 } from "lucide-react";
 import socket from "./socket";
 import Image from "next/image";
@@ -129,6 +133,22 @@ export const icons = [
     icon: <Settings size={20} />,
   },
   {
+    name: "FileImage",
+    icon: <FileImage size={20} />,
+  },
+  {
+    name: "FileArchive",
+    icon: <FileArchive size={20} />,
+  },
+  {
+    name: "FileCode2",
+    icon: <FileCode2 size={20} />,
+  },
+  {
+    name: "FileSpreadsheet",
+    icon: <FileSpreadsheet size={20} />,
+  },
+  {
     name: "Google Drive",
     icon: <Image src={"/icons/icon-Google-Drive.svg"} alt="Google Drive" width={20} height={20} />,
   },
@@ -142,7 +162,7 @@ export const icons = [
   },
   {
     name: "Document",
-    icon: <Image src={"/icons/icon-document.svg"} alt="Document" width={20} height={20} />,
+    icon: <FileText size={20} />,
   },
   {
     name: "PDF Document",

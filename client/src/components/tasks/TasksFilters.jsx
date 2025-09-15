@@ -12,7 +12,7 @@ export default function TasksFilters({ displayedFilters }) {
     displayedFilters;
 
   return (
-    <div className="relative flex items-center gap-4 select-none w-full">
+    <div className="relative flex items-center gap-5 select-none w-full">
       {isSearch && <TasksSearch setQueries={setQueries} />}
       {isProject && (
         <TasksProjectFilter queries={queries} setQueries={setQueries} />

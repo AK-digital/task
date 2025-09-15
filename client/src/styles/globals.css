@@ -921,6 +921,7 @@
      font-size: 15px;
      background-color: transparent;
      color: var(--text-color);
+     user-select: none;
    }
    
   .secondary-button[data-open="true"] {

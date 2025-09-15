@@ -109,7 +109,7 @@ export default function Messages({
       )}
       {edit !== message?._id && !messageLoading && (
         <div
-          className="flex justify-between items-center border-[1.5px] border-color-border-color py-2 px-4 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
+          className="flex justify-between items-center border-[1.5px] border-color-border-color py-3 px-4 rounded-lg text-small data-[role=true]:cursor-pointer select-none"
           onClick={handleIsOpen}
           data-role={isAuthorized}
         >

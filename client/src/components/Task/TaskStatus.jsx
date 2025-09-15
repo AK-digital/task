@@ -127,17 +127,18 @@ export default function TaskStatus({ task, uid }) {
       {isOpen && (
         <FloatingMenu
           setIsOpen={setIsOpen}
-          className={listWidth() ? "w-[380px]" : "w-[220px]"}
+          className={listWidth() ? "w-[380px]" : "w-[190px]"}
           refs={refs}
           floatingStyles={floatingStyles}
         >
-          <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-2 p-3 border-b border-color-border-color">
+          <ul className="grid grid-flow-col grid-rows-[repeat(6,auto)] gap-1.5 pt-3 px-3 pb-1 border-b border-color-border-color">
             {statuses?.map((status) => {
               if (!isEdit) {
                 return (
                   <li
                     key={status?._id}
-                    className="p-2 cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
+                    className="p-2 min-w-[110px] cursor-pointer text-white text-[14px] rounded-[5px] flex items-center justify-center transition-all duration-[60ms] linear hover:opacity-80"
+                    data-value={status?.name}
                     onClick={() => handleTaskUpdateStatus(status)}
                     style={{ backgroundColor: status?.color }}
                   >
@@ -157,7 +158,7 @@ export default function TaskStatus({ task, uid }) {
             })}
             {isEdit && !maxStatuses && (
               <li
-                className="flex items-center gap-1 border-none py-2 px-4 rounded-3xl bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer"
+                className="flex items-center gap-1 border-none py-2 px-4 rounded-3xl bg-text-lighter-color text-[15px] text-text-dark-color transition-all duration-[120ms] ease-in-out min-w-[135px] max-w-[150px] cursor-pointer hover:bg-text-light-color"
                 onClick={handleAddStatus}
               >
                 <Plus size={16} />
@@ -165,13 +166,13 @@ export default function TaskStatus({ task, uid }) {
               </li>
             )}
           </ul>
-          <div className="flex items-center p-2 justify-center gap-2">
-            <span
-              className="secondary-button text-[14px]"
-              onClick={handleEditStatus}
-            >
-              <Pen size={16} /> Modifier les statuts
-            </span>
+          <div className="flex items-center p-1.5 justify-center gap-1 my-1">
+          <span
+              className="secondary-button text-[12px]"
+            onClick={handleEditStatus}
+          >
+            <Pen size={15} /> Modifier les statuts
+          </span>
           </div>
         </FloatingMenu>
       )}

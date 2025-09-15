@@ -48,7 +48,7 @@ export default function Notifications({
 
   return (
     <>
-      <div className="absolute flex flex-col top-[54px] right-0 w-[560px] z-2001 p-0 pr-2 max-h-[400px] overflow-y-auto rounded-lg bg-secondary shadow-medium select-none">
+      <div className="absolute flex flex-col top-[54px] right-0 w-[560px] z-2001 p-0 pr-2 h-[400px] max-h-[80vh] overflow-y-auto overflow-x-hidden rounded-lg bg-secondary shadow-medium resize-y select-none">
         <div className="sticky flex justify-between items-center top-0 z-2 border-b border-text-medium-color font-bold text-normal p-[14px]">
           <span>Notifications</span>
           {unreadCount > 0 && (
@@ -72,7 +72,7 @@ export default function Notifications({
             <span>Vous n'avez aucune notification pour le moment</span>
           </div>
         ) : (
-          <ul className="h-full overflow-y-auto">
+          <ul className="h-full overflow-y-auto overflow-x-hidden">
             {notifications?.map((notif, idx) => {
               const dateFromNow = moment(notif?.createdAt).fromNow();
               return (
