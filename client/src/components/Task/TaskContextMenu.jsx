@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Archive, Trash2, ExternalLink, Link, Copy, CopyPlus } from "lucide-react";
+import { Archive, Trash2, ExternalLink, Link, Copy, CopyPlus, CheckSquare } from "lucide-react";
 import Portal from "../Portal/Portal";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
 import { addTaskToArchive, deleteTask, createTask } from "@/api/task";
+import { createSubtask } from "@/api/subtask";
 import { useTaskContext } from "@/context/TaskContext";
 
 export default function TaskContextMenu({ 
@@ -77,6 +78,24 @@ export default function TaskContextMenu({
       setIsOpen(false);
     } catch (error) {
       console.error("Erreur lors de la duplication:", error);
+    }
+  };
+
+  const handleCreateSubtask = async () => {
+    try {
+      const result = await createSubtask(task._id, "Nouvelle sous-tâche", task.projectId._id);
+      
+      if (result.success) {
+        showSuccessToast("Sous-tâche créée avec succès");
+        // Ouvrir la tâche pour voir la sous-tâche créée
+        setOpenedTask(task._id);
+      } else {
+        console.error("Erreur lors de la création de la sous-tâche:", result.message);
+      }
+      
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Erreur lors de la création de la sous-tâche:", error);
     }
   };
 
@@ -194,6 +213,13 @@ export default function TaskContextMenu({
             >
               <CopyPlus size={16} />
               <span>Dupliquer la tâche</span>
+            </li>
+            <li
+              className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light flex items-center gap-2"
+              onClick={() => handleMenuClick(handleCreateSubtask, 'create-subtask')}
+            >
+              <CheckSquare size={16} />
+              <span>Créer une sous-tâche</span>
             </li>
             <li
               className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light flex items-center gap-2"

@@ -218,6 +218,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
             setEdit={setEdit}
           />
         </div>
+        
         {/* Conversation */}
         <div className="flex flex-col gap-3">
           <Messages

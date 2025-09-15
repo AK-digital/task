@@ -1,4 +1,4 @@
-import Task from "../Task/Task";
+import TaskWithSubtasks from "../Task/TaskWithSubtasks";
 import { isNotEmpty } from "@/utils/utils";
 import TasksHeader from "./TasksHeader";
 import TaskSkeletons from "../Task/TaskSkeletons";
@@ -38,7 +38,7 @@ export default function Tasks({
                 setSortedTasks={setSortedTasks}
               />
               {sortedTasks?.map((task) => (
-                <Task
+                <TaskWithSubtasks
                   key={task?._id}
                   task={task}
                   displayedElts={displayedElts}

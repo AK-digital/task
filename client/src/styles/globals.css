@@ -1759,6 +1759,39 @@
   }
 }
 
+/* Styles pour les sous-tâches */
+.task-col-subtasks {
+  min-width: 60px;
+  max-width: 80px;
+}
+
+/* Styles pour l'affichage inline des sous-tâches */
+.subtask-row {
+  background: linear-gradient(90deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.01) 100%);
+  border-left: 3px solid var(--color-accent-color-light);
+  margin-left: 2rem;
+}
+
+.subtask-row:hover {
+  background: linear-gradient(90deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.02) 100%);
+}
+
+.subtask-toggle-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.subtask-toggle-button:hover {
+  background-color: var(--color-accent-color-light);
+  color: white;
+}
+
+.subtask-count-indicator {
+  background: linear-gradient(135deg, var(--color-accent-color) 0%, var(--color-accent-color-light) 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

@@ -135,6 +135,7 @@ export default function Task({
       <TaskText task={task} />
       {/* Conversation */}
       <TaskConversation task={task} uid={uid} />
+
       {/* Project */}
       {isProject && <TaskProject task={task} />}
       {/* Board */}
