@@ -134,11 +134,11 @@ export default function TaskDeadline({ task, uid }) {
 
   return (
     <div
-      className="task-col-deadline task-content-col  gap-0.5 relative"
+      className="task-col-deadline task-content-col gap-0.5 relative flex items-center"
       onMouseLeave={() => setHover(false)}
     >
       <div
-        className="wrapper_TaskDeadline relative w-full bg-primary rounded-[5px] py-1 px-1 text-center cursor-pointer text-xs lg:text-small overflow-visible flex items-center justify-center gap-1"
+        className="wrapper_TaskDeadline relative bg-primary rounded-[5px] py-1 px-1 text-center cursor-pointer text-xs lg:text-small overflow-visible flex items-center justify-center gap-1 flex-1 min-w-0"
         onMouseEnter={handleHover}
         onClick={handleIsEditing}
         style={{ "--progress": `${deadline ? progress : "0%"}` }}
@@ -146,7 +146,7 @@ export default function TaskDeadline({ task, uid }) {
         data-past-today={isToday}
       >
         {deadline ? (
-          <span className="relative z-10 text-xs select-none font-medium whitespace-nowrap">
+          <span className="relative z-10 text-white text-shadow-xs text-xs select-none font-medium whitespace-nowrap overflow-hidden text-ellipsis">
             {displayDate()}
           </span>
         ) : (
@@ -165,21 +165,21 @@ export default function TaskDeadline({ task, uid }) {
         )}
       </div>
       
+      {hover && deadline && (
+        <CircleX
+          size={12}
+          onClick={removeDeadline}
+          cursor={"pointer"}
+          className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-text-color-muted hover:text-danger-color flex-shrink-0 ml-1"
+        />
+      )}
+      
       <DatePicker
         value={deadline}
         onChange={handleUpdateDate}
         onClose={handleCloseDatePicker}
         isOpen={showDatePicker}
       />
-      
-      {hover && deadline && (
-        <CircleX
-          size={12}
-          onClick={removeDeadline}
-          cursor={"pointer"}
-          className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-text-color-muted hover:text-danger-color"
-        />
-      )}
     </div>
   );
 }

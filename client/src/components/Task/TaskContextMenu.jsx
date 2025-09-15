@@ -120,7 +120,7 @@ export default function TaskContextMenu({
     setIsOpen(false);
   };
 
-  // Fermer le menu si on clique ailleurs ou si un autre menu contextuel s'ouvre
+  // Fermer le menu si on clique ailleurs ou si on scroll
   useEffect(() => {
     if (isOpen) {
       const handleClick = (e) => {
@@ -131,45 +131,28 @@ export default function TaskContextMenu({
       };
 
       const handleContextMenu = (e) => {
-        // Fermer ce menu si un clic droit se produit ailleurs
-        if (!e.target.closest(`[data-task-id="${task._id}"]`)) {
-          // Ne pas ouvrir le menu contextuel si le clic est sur container_TaskMore
-          if (e.target.closest('.container_TaskMore')) {
-            return; // Laisser le comportement par défaut du navigateur
-          }
-          
-          // Ne pas ouvrir le menu contextuel si le clic est sur un FloatingMenu
-          if (e.target.closest('[data-floating-menu]')) {
-            return; // Laisser le comportement par défaut du navigateur
-          }
-          
-          // Ne pas ouvrir le menu contextuel si le clic est sur la sidebar
-          if (e.target.closest('.fixed.top-0.right-0')) {
-            return; // Laisser le comportement par défaut du navigateur
-          }
-          
-          // Ne pas ouvrir le menu contextuel si le clic est sur les conteneurs d'édition
-          if (e.target.closest('.sidebar-edit-container')) {
-            return; // Laisser le comportement par défaut du navigateur
-          }
-          
-          // Empêcher le menu contextuel du navigateur si le clic est sur une autre tâche
-          if (e.target.closest('[data-task-id]')) {
-            e.preventDefault();
-          }
+        // Toujours fermer ce menu quand un clic droit se produit ailleurs
+        // Cela permettra à un nouveau menu contextuel de s'ouvrir
+        if (!e.target.closest('.task-context-menu')) {
           handleClickOutside();
         }
+      };
+
+      const handleScroll = () => {
+        handleClickOutside();
       };
       
       document.addEventListener('click', handleClick);
       document.addEventListener('contextmenu', handleContextMenu);
+      document.addEventListener('scroll', handleScroll, true); // true pour capturer en phase de capture
       
       return () => {
         document.removeEventListener('click', handleClick);
         document.removeEventListener('contextmenu', handleContextMenu);
+        document.removeEventListener('scroll', handleScroll, true);
       };
     }
-  }, [isOpen, task._id]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -228,7 +211,6 @@ export default function TaskContextMenu({
             </li>
           </ul>
         </div>
-        <div className="modal-layout-opacity" onClick={handleClickOutside}></div>
       </Portal>
       
       {confirmOpen && (

@@ -74,6 +74,11 @@ export default function Task({
       return;
     }
     
+    // Ne pas ouvrir le menu contextuel si le clic provient du task-modal-layout
+    if (e.target.closest('.task-modal-layout')) {
+      return;
+    }
+    
     // Ne pas ouvrir le menu contextuel si le clic provient d'un FloatingMenu
     if (e.target.closest('[data-floating-menu]')) {
       return;
