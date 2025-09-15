@@ -1,5 +1,6 @@
 "use client";
 import { updateTaskEstimate } from "@/api/task";
+import { updateEstimate } from "@/actions/unified";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import socket from "@/utils/socket";
@@ -39,7 +40,12 @@ export default function TaskEstimate({ task, uid }) {
 
     setEstimation(value);
 
-    const response = await updateTaskEstimate(task?._id, project?._id, value);
+    const response = await updateEstimate(
+      task?._id, 
+      project?._id, 
+      value, 
+      task?.isSubtask ? 'subtask' : 'task'
+    );
 
     if (!response?.success) {
       setEstimation(task?.estimation || "-");
@@ -53,7 +59,12 @@ export default function TaskEstimate({ task, uid }) {
     e.preventDefault();
     setEstimation("-");
 
-    const response = await updateTaskEstimate(task?._id, project?._id, "");
+    const response = await updateEstimate(
+      task?._id, 
+      project?._id, 
+      "", 
+      task?.isSubtask ? 'subtask' : 'task'
+    );
 
     if (!response?.success) {
       setEstimation(task?.estimation || "-");
@@ -80,7 +91,12 @@ export default function TaskEstimate({ task, uid }) {
 
     setEstimation(value);
 
-    const response = await updateTaskEstimate(task?._id, project?._id, value);
+    const response = await updateEstimate(
+      task?._id, 
+      project?._id, 
+      value, 
+      task?.isSubtask ? 'subtask' : 'task'
+    );
 
     if (!response?.success) {
       setEstimation(task?.estimation || "-");

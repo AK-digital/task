@@ -1,10 +1,28 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDown, ChevronRight, Plus } from "lucide-react";
 import Task from "./Task";
 import SubtaskRow from "./SubtaskRow";
-import { createSubtask, getSubtasks, updateSubtask, deleteSubtask } from "@/api/subtask";
+import { createSubtask, getSubtasks, updateSubtask, deleteSubtask, reorderSubtasks } from "@/api/subtask";
 import socket from "@/utils/socket";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 
 export default function TaskWithSubtasks({ 
   task, 
@@ -18,6 +36,15 @@ export default function TaskWithSubtasks({
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
+  const taskRef = useRef(null);
+
+  // Drag & Drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
   
 
   // Charger les sous-tâches quand on expand
@@ -81,6 +108,37 @@ export default function TaskWithSubtasks({
     mutate();
   };
 
+  const handleSubtaskDelete = (subtaskId) => {
+    // Supprimer la sous-tâche de la liste locale
+    setSubtasks(subtasks.filter(sub => sub._id !== subtaskId));
+    // Notifier la mise à jour de la tâche parent
+    mutate();
+  };
+
+  // Gestion du drag & drop
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = subtasks.findIndex((item) => item._id === active.id);
+      const newIndex = subtasks.findIndex((item) => item._id === over.id);
+
+      const newSubtasks = arrayMove(subtasks, oldIndex, newIndex);
+      setSubtasks(newSubtasks);
+
+      // Mettre à jour l'ordre sur le serveur
+      try {
+        const subtaskIds = newSubtasks.map(sub => sub._id);
+        await reorderSubtasks(task._id, subtaskIds);
+        socket.emit("update task", task.projectId._id);
+      } catch (error) {
+        console.error("Erreur lors de la réorganisation des sous-tâches:", error);
+        // Revenir à l'ordre précédent en cas d'erreur
+        setSubtasks(subtasks);
+      }
+    }
+  };
+
   // Compter les sous-tâches pour l'indicateur
   const subtaskCount = subtasks.length;
   const completedCount = subtasks.filter(sub => sub.completed).length;
@@ -118,13 +176,15 @@ export default function TaskWithSubtasks({
         )}
         
         {/* Tâche principale */}
-        <Task
-          task={task}
-          displayedElts={displayedElts}
-          setSelectedTasks={setSelectedTasks}
-          isDragging={isDragging}
-          mutate={mutate}
-        />
+        <div ref={taskRef}>
+          <Task
+            task={task}
+            displayedElts={displayedElts}
+            setSelectedTasks={setSelectedTasks}
+            isDragging={isDragging}
+            mutate={mutate}
+          />
+        </div>
         
         {/* Indicateur de sous-tâches (à droite) */}
         {subtaskCount > 0 && (
@@ -143,14 +203,28 @@ export default function TaskWithSubtasks({
             </div>
           ) : (
             <>
-              {subtasks.map((subtask) => (
-                <SubtaskRow
-                  key={subtask._id}
-                  subtask={subtask}
-                  onUpdate={handleSubtaskUpdate}
-                  displayedElts={displayedElts}
-                />
-              ))}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+              >
+                <SortableContext
+                  items={subtasks.map(sub => sub._id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {subtasks.map((subtask) => (
+                    <SubtaskRow
+                      key={subtask._id}
+                      subtask={subtask}
+                      onUpdate={handleSubtaskUpdate}
+                      onDelete={handleSubtaskDelete}
+                      displayedElts={displayedElts}
+                      parentTask={task}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
               
               {/* Formulaire d'ajout de sous-tâche */}
               {showAddForm && (

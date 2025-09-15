@@ -8,17 +8,7 @@ export async function createSubtask(req, res, next) {
     const { taskId } = req.params;
     const { title } = req.body;
 
-    // Debug: Logger les paramètres reçus
-    console.log("DEBUG API createSubtask - Paramètres reçus:", {
-      taskId,
-      title,
-      body: req.body,
-      params: req.params,
-      authUser: authUser?._id
-    });
-
     if (!title || !title.trim()) {
-      console.log("DEBUG API createSubtask - Titre manquant:", { title });
       return res.status(400).send({
         success: false,
         message: "Le titre de la sous-tâche est requis",
@@ -192,6 +182,248 @@ export async function deleteSubtask(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Sous-tâche supprimée avec succès",
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Mettre à jour le statut d'une sous-tâche
+export async function updateSubtaskStatus(req, res, next) {
+  try {
+    const { subtaskId } = req.params;
+    const { statusId } = req.body;
+
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Sous-tâche non trouvée",
+      });
+    }
+
+    const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
+      subtaskId,
+      { status: statusId },
+      { new: true }
+    ).populate([
+      { path: "author", select: "firstName lastName picture" },
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" }
+    ]);
+
+    return res.status(200).send({
+      success: true,
+      message: "Statut de la sous-tâche mis à jour avec succès",
+      data: updatedSubtask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Mettre à jour la priorité d'une sous-tâche
+export async function updateSubtaskPriority(req, res, next) {
+  try {
+    const { subtaskId } = req.params;
+    const { priorityId } = req.body;
+
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Sous-tâche non trouvée",
+      });
+    }
+
+    const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
+      subtaskId,
+      { priority: priorityId },
+      { new: true }
+    ).populate([
+      { path: "author", select: "firstName lastName picture" },
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" }
+    ]);
+
+    return res.status(200).send({
+      success: true,
+      message: "Priorité de la sous-tâche mise à jour avec succès",
+      data: updatedSubtask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Mettre à jour la deadline d'une sous-tâche
+export async function updateSubtaskDeadline(req, res, next) {
+  try {
+    const { subtaskId } = req.params;
+    const { deadline } = req.body;
+
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Sous-tâche non trouvée",
+      });
+    }
+
+    const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
+      subtaskId,
+      { deadline: deadline },
+      { new: true }
+    ).populate([
+      { path: "author", select: "firstName lastName picture" },
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" }
+    ]);
+
+    return res.status(200).send({
+      success: true,
+      message: "Deadline de la sous-tâche mise à jour avec succès",
+      data: updatedSubtask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Mettre à jour l'estimation d'une sous-tâche
+export async function updateSubtaskEstimate(req, res, next) {
+  try {
+    const { subtaskId } = req.params;
+    const { estimation } = req.body;
+
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Sous-tâche non trouvée",
+      });
+    }
+
+    const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
+      subtaskId,
+      { estimation: estimation },
+      { new: true }
+    ).populate([
+      { path: "author", select: "firstName lastName picture" },
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" }
+    ]);
+
+    return res.status(200).send({
+      success: true,
+      message: "Estimation de la sous-tâche mise à jour avec succès",
+      data: updatedSubtask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Ajouter un responsable à une sous-tâche
+export async function addSubtaskResponsible(req, res, next) {
+  try {
+    const { subtaskId } = req.params;
+    const { responsibleId } = req.body;
+
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Sous-tâche non trouvée",
+      });
+    }
+
+    // Vérifier si le responsable n'est pas déjà ajouté
+    if (subtask.responsibles.includes(responsibleId)) {
+      return res.status(400).send({
+        success: false,
+        message: "Ce responsable est déjà assigné à cette sous-tâche",
+      });
+    }
+
+    const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
+      subtaskId,
+      { $push: { responsibles: responsibleId } },
+      { new: true }
+    ).populate([
+      { path: "author", select: "firstName lastName picture" },
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" }
+    ]);
+
+    return res.status(200).send({
+      success: true,
+      message: "Responsable ajouté à la sous-tâche avec succès",
+      data: updatedSubtask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Supprimer un responsable d'une sous-tâche
+export async function removeSubtaskResponsible(req, res, next) {
+  try {
+    const { subtaskId } = req.params;
+    const { responsibleId } = req.body;
+
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Sous-tâche non trouvée",
+      });
+    }
+
+    const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
+      subtaskId,
+      { $pull: { responsibles: responsibleId } },
+      { new: true }
+    ).populate([
+      { path: "author", select: "firstName lastName picture" },
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" }
+    ]);
+
+    return res.status(200).send({
+      success: true,
+      message: "Responsable supprimé de la sous-tâche avec succès",
+      data: updatedSubtask,
     });
   } catch (err) {
     return res.status(500).send({

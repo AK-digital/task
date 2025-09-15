@@ -4,53 +4,18 @@ import { useAuthFetch } from "@/utils/api";
 // Créer une sous-tâche
 export async function createSubtask(taskId, title, projectId) {
   try {
-    console.log("createSubtask called with:", { 
-      taskId, 
-      title, 
-      projectId,
-      typeof_taskId: typeof taskId,
-      typeof_title: typeof title,
-      typeof_projectId: typeof projectId,
-      taskId_stringified: JSON.stringify(taskId),
-      title_stringified: JSON.stringify(title)
-    });
     
     // Next.js server actions peuvent recevoir les paramètres différemment
     let actualTaskId = taskId;
     let actualTitle = title;
     let actualProjectId = projectId;
     
-    // Si le premier argument est un objet, extraire les paramètres
-    if (typeof taskId === 'object' && taskId !== null) {
-      console.log("taskId est un objet:", taskId);
-      actualTaskId = taskId.taskId || taskId[0];
-      actualTitle = taskId.title || title;
-      actualProjectId = taskId.projectId || projectId;
-    }
-    
-    // Si taskId est un array (comportement Next.js server actions)
-    if (Array.isArray(taskId)) {
-      console.log("taskId est un array:", taskId);
-      actualTaskId = taskId[0];
-      actualTitle = taskId[1] || title;
-      actualProjectId = taskId[2] || projectId;
-    }
-    
-    console.log("Paramètres après traitement:", { actualTaskId, actualTitle, actualProjectId });
-    
     if (!actualTaskId || !actualTitle || !actualProjectId) {
-      console.log("Paramètres manquants après traitement:", { actualTaskId, actualTitle, actualProjectId });
       return {
         success: false,
         message: "Paramètres manquants",
       };
     }
-
-    console.log("Appel useAuthFetch avec:", {
-      url: `subtask/task/${actualTaskId}?projectId=${actualProjectId}`,
-      method: "POST",
-      body: { title: actualTitle }
-    });
 
     const response = await useAuthFetch(
       `subtask/task/${actualTaskId}?projectId=${actualProjectId}`,
@@ -59,14 +24,7 @@ export async function createSubtask(taskId, title, projectId) {
       { title: actualTitle }
     );
 
-    console.log("Réponse useAuthFetch:", {
-      status: response.status,
-      statusText: response.statusText,
-      ok: response.ok
-    });
-
     const data = await response.json();
-    console.log("createSubtask response:", data);
     return data;
   } catch (error) {
     console.error("Erreur lors de la création de la sous-tâche:", error);

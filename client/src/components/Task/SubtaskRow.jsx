@@ -1,14 +1,72 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { Check, Edit3, Trash2, X } from "lucide-react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { Check, Edit3, Trash2, X, GripVertical } from "lucide-react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { updateSubtask, deleteSubtask } from "@/api/subtask";
 import moment from "moment";
+import { AuthContext } from "@/context/auth";
+import TaskProject from "./TaskProject";
+import TaskBoard from "./TaskBoard";
+import TaskResponsibles from "./TaskResponsibles";
+import TaskStatus from "./TaskStatus";
+import TaskPriority from "./TaskPriority";
+import TaskDeadline from "./TaskDeadline";
+import TaskEstimate from "./TaskEstimate";
+import TaskTimer from "./TaskTimer";
+import TaskConversation from "./TaskConversation";
 
-export default function SubtaskRow({ subtask, onUpdate, displayedElts }) {
+export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts, parentTask }) {
+  const { uid, user } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(subtask.title);
   const [isUpdating, setIsUpdating] = useState(false);
   const inputRef = useRef(null);
+
+  // Drag & Drop
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: subtask._id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  // Extraire les éléments à afficher depuis displayedElts
+  const {
+    isCheckbox,
+    isDrag,
+    isProject,
+    isBoard,
+    isAdmin,
+    isStatus,
+    isPriority,
+    isDeadline,
+    isEstimate,
+    isTimer,
+  } = displayedElts || {};
+
+  // Créer un objet task-like pour les composants existants
+  const taskLikeSubtask = {
+    ...subtask,
+    _id: subtask._id,
+    projectId: parentTask?.projectId,
+    boardId: parentTask?.boardId,
+    status: subtask.status,
+    priority: subtask.priority,
+    deadline: subtask.deadline,
+    estimation: subtask.estimation,
+    responsibles: subtask.responsibles || [],
+    messages: subtask.messages || [],
+    // Marquer comme sous-tâche pour les composants
+    isSubtask: true,
+  };
   
 
   useEffect(() => {
@@ -59,23 +117,6 @@ export default function SubtaskRow({ subtask, onUpdate, displayedElts }) {
     }
   };
 
-  const handleDelete = async () => {
-    if (isUpdating) return;
-    
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette sous-tâche ?")) {
-      setIsUpdating(true);
-      try {
-        const response = await deleteSubtask(subtask._id);
-        if (response.success) {
-          onUpdate();
-        }
-      } catch (error) {
-        console.error("Erreur lors de la suppression:", error);
-      } finally {
-        setIsUpdating(false);
-      }
-    }
-  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -86,32 +127,46 @@ export default function SubtaskRow({ subtask, onUpdate, displayedElts }) {
     }
   };
 
-  return (
-    <div className={`subtask-row flex items-center border-t border-gray-100 h-[40px] transition-colors group ${
-      subtask.completed ? 'opacity-75' : ''
-    }`}>
-      {/* Checkbox */}
-      <div className="task-col-checkbox flex items-center justify-center px-2">
-        <button
-          onClick={handleToggleComplete}
-          disabled={isUpdating}
-          className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
-            subtask.completed
-              ? "bg-accent-color border-accent-color text-white"
-              : "border-gray-300 hover:border-accent-color"
-          } ${isUpdating ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-        >
-          {subtask.completed && <Check size={10} />}
-        </button>
-      </div>
+  const handleDelete = async () => {
+    if (isUpdating) return;
+    
+    setIsUpdating(true);
+    try {
+      const response = await deleteSubtask(subtask._id);
+      if (response.success) {
+        onDelete?.(subtask._id);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression:", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
-      {/* Drag placeholder (pour l'alignement) */}
+  return (
+    <div 
+      ref={setNodeRef}
+      style={style}
+      className={`subtask-row flex items-center border-t border-gray-100 h-[40px] transition-colors group ${
+        subtask.completed ? 'opacity-75' : ''
+      } ${isDragging ? 'opacity-50 z-50' : ''}`}
+    >
+
+      {/* Drag Handle */}
       {displayedElts.isDrag && (
-        <div className="task-col-drag w-8"></div>
+        <div className="task-col-drag w-8 flex items-center justify-center">
+          <button
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing p-1 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <GripVertical size={14} />
+          </button>
+        </div>
       )}
 
       {/* Titre de la sous-tâche */}
-      <div className="task-col-text flex-1 px-3">
+      <div className="task-col-text px-3" style={{ width: 'var(--task-col-text-width, auto)' }}>
         {isEditing ? (
           <input
             ref={inputRef}
@@ -145,21 +200,18 @@ export default function SubtaskRow({ subtask, onUpdate, displayedElts }) {
         )}
       </div>
 
-      {/* Conversation placeholder */}
-      <div className="task-col-conversation w-12"></div>
+      {/* Conversation */}
+      <TaskConversation task={taskLikeSubtask} uid={uid} />
 
-      {/* Subtasks indicator placeholder */}
-      <div className="task-col-subtasks w-16"></div>
-
-      {/* Colonnes conditionnelles (pour l'alignement avec les tâches principales) */}
-      {displayedElts.isProject && <div className="task-col-project w-32"></div>}
-      {displayedElts.isBoard && <div className="task-col-board w-32"></div>}
-      {displayedElts.isAdmin && <div className="task-col-responsibles w-32"></div>}
-      {displayedElts.isStatus && <div className="task-col-status w-32"></div>}
-      {displayedElts.isPriority && <div className="task-col-priority w-32"></div>}
-      {displayedElts.isDeadline && <div className="task-col-deadline w-32"></div>}
-      {displayedElts.isEstimate && <div className="task-col-estimate w-32"></div>}
-      {displayedElts.isTimer && <div className="task-col-timer w-32"></div>}
+      {/* Colonnes conditionnelles avec les vrais composants */}
+      {displayedElts.isProject && <TaskProject task={taskLikeSubtask} />}
+      {displayedElts.isBoard && <TaskBoard task={taskLikeSubtask} />}
+      {displayedElts.isAdmin && <TaskResponsibles task={taskLikeSubtask} uid={uid} user={user} />}
+      {displayedElts.isStatus && <TaskStatus task={taskLikeSubtask} />}
+      {displayedElts.isPriority && <TaskPriority task={taskLikeSubtask} />}
+      {displayedElts.isDeadline && <TaskDeadline task={taskLikeSubtask} uid={uid} />}
+      {displayedElts.isEstimate && <TaskEstimate task={taskLikeSubtask} uid={uid} />}
+      {displayedElts.isTimer && <TaskTimer task={taskLikeSubtask} />}
 
       {/* Actions */}
       <div className="flex items-center gap-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">

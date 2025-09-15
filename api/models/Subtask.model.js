@@ -35,6 +35,24 @@ const subtaskSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    status: {
+      type: Schema.Types.ObjectId,
+      ref: "Status",
+    },
+    priority: {
+      type: Schema.Types.ObjectId,
+      ref: "Priority",
+    },
+    deadline: {
+      type: Date,
+    },
+    estimation: {
+      type: Number, // en heures
+    },
+    responsibles: [{
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    }],
   },
   {
     timestamps: true,

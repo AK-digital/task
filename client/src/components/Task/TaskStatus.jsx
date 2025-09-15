@@ -1,5 +1,6 @@
 "use client";
 import { updateTaskStatus } from "@/actions/task";
+import { updateStatus } from "@/actions/unified";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "../../../hooks/useUserRole";
@@ -42,10 +43,11 @@ export default function TaskStatus({ task, uid }) {
     setCurrentStatus(status);
     setIsOpen(false);
 
-    const res = await updateTaskStatus(
+    const res = await updateStatus(
       task?._id,
       project?._id || task?.projectId?._id,
-      status?._id
+      status?._id,
+      task?.isSubtask ? 'subtask' : 'task'
     );
 
     if (!res?.success) {
