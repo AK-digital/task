@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap");
 @import "tailwindcss";
-
 @theme {
   --font-bricolage: "Bricolage Grotesque", sans-serif;
 
@@ -1758,10 +1757,3 @@
     top: -15px;
   }
 }
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
