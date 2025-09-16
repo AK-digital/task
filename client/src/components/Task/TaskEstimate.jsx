@@ -135,7 +135,7 @@ export default function TaskEstimate({ task, uid }) {
       >
         {hasEstimation ? (
           <span className="relative z-10 select-none font-medium whitespace-nowrap">
-            {estimation}h
+            {estimation}
           </span>
         ) : (
           <>

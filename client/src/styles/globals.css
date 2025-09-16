@@ -1333,7 +1333,6 @@
     box-sizing: border-box;
     width: 100%;
     min-width: 150px;
-    margin-left: 0.5rem;
     margin-right: 0.5rem;
     flex-grow: 1;
     max-width: 700px;

@@ -354,18 +354,10 @@ export async function updateSubtaskEstimate(req, res, next) {
       });
     }
 
-    // Convertir l'estimation en nombre ou null si vide
-    let estimationValue = null;
-    if (estimation !== "" && estimation !== null && estimation !== undefined) {
-      estimationValue = parseFloat(estimation);
-      if (isNaN(estimationValue)) {
-        estimationValue = null;
-      }
-    }
-
+    // Stocker l'estimation comme une chaîne (même comportement que les tâches)
     const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
       subtaskId,
-      { estimation: estimationValue },
+      { estimation: estimation },
       { new: true }
     ).populate([
       { path: "author", select: "firstName lastName picture" },

@@ -143,7 +143,7 @@ export default function Task({
 
         {/* Boutons de sous-tâches (seulement si les fonctions sont disponibles) */}
         {handleToggleExpand && (
-          <div className="task-content-col flex justify-center items-center pl-1">
+          <div className="task-content-col flex justify-center items-center pl-2">
             {/* Bouton toggle pour les sous-tâches (à gauche) */}
             {subtaskCount > 0 ? (
                 <span

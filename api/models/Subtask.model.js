@@ -94,7 +94,7 @@ const subtaskSchema = new Schema(
       type: Date,
     },
     estimation: {
-      type: Number, // en heures
+      type: String, // même format que les tâches (ex: "2 heures", "30 minutes")
     },
     responsibles: [{
       type: Schema.Types.ObjectId,
