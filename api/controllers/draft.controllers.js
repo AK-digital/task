@@ -1,6 +1,7 @@
 import DraftModel from "../models/Draft.model.js";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
+import SubtaskModel from "../models/Subtask.model.js";
 
 export async function saveDraft(req, res) {
   try {
@@ -22,10 +23,9 @@ export async function saveDraft(req, res) {
       });
     }
 
-    const [project, task] = await Promise.all([
-      ProjectModel.exists({ _id: projectId }),
-      TaskModel.exists({ _id: taskId }),
-    ]);
+    // Vérifier l'existence avec plus de détails
+    const project = await ProjectModel.findById(projectId);
+    const task = await TaskModel.findById(taskId);
 
     if (!project) {
       return res.status(404).send({
@@ -35,10 +35,20 @@ export async function saveDraft(req, res) {
     }
 
     if (!task) {
-      return res.status(404).send({
-        success: false,
-        message: "Cannot create a draft for a task that does not exist",
-      });
+      // Vérifier si c'est peut-être une sous-tâche qui utilise l'ID de sa tâche parente
+      const subtaskWithParentTask = await SubtaskModel.findOne({ taskId: taskId }).populate('taskId');
+      
+      if (!subtaskWithParentTask) {
+        // Vérifier aussi si c'est un ID de sous-tâche qui essaie d'utiliser son propre taskId
+        const subtaskById = await SubtaskModel.findById(taskId);
+        
+        if (!subtaskById) {
+          return res.status(404).send({
+            success: false,
+            message: "Cannot create a draft for a task that does not exist",
+          });
+        }
+      }
     }
 
     // Check if the user already has a draft of the same type

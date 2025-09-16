@@ -1,10 +1,15 @@
 import { getMessages } from "@/api/message";
 import useSWR from "swr";
 
-export function useMessages(projectId, taskId) {
-  const fetcher = getMessages.bind(null, projectId, taskId);
+export function useMessages(projectId, taskId, subtaskId = null) {
+  const fetcher = getMessages.bind(null, projectId, taskId, subtaskId);
+  const queryParams = new URLSearchParams({
+    projectId: projectId,
+    ...(subtaskId ? { subtaskId } : { taskId })
+  });
+  
   const { data, isLoading, mutate } = useSWR(
-    `/message?projectId=${projectId}&taskId=${taskId}`,
+    `/message?${queryParams.toString()}`,
     fetcher,
     {
       revalidateOnFocus: false,

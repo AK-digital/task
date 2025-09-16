@@ -27,11 +27,27 @@ export async function createSubtask(req, res, next) {
     // Compter les sous-tâches existantes pour définir l'ordre
     const subtaskCount = await SubtaskModel.countDocuments({ taskId });
 
+    // Récupérer les statuts et priorités par défaut du projet
+    const StatusModel = (await import("../models/Status.model.js")).default;
+    const PriorityModel = (await import("../models/Priority.model.js")).default;
+    
+    const defaultStatus = await StatusModel.findOne({
+      projectId: task.projectId,
+      status: "waiting"
+    });
+    
+    const defaultPriority = await PriorityModel.findOne({
+      projectId: task.projectId,
+      priority: "medium"
+    });
+
     const newSubtask = new SubtaskModel({
       taskId,
       author: authUser._id,
       title: title.trim(),
       order: subtaskCount,
+      status: defaultStatus?._id,
+      priority: defaultPriority?._id,
     });
 
     const savedSubtask = await newSubtask.save();
@@ -39,7 +55,13 @@ export async function createSubtask(req, res, next) {
     // Populer l'auteur pour la réponse
     await savedSubtask.populate([
       { path: "author", select: "firstName lastName picture" },
-      { path: "completedBy", select: "firstName lastName picture" }
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" },
+      { path: "timeTrackings" },
+      { path: "messages" },
+      { path: "description.author", select: "firstName lastName picture" }
     ]);
 
     return res.status(201).send({
@@ -73,7 +95,13 @@ export async function getSubtasks(req, res, next) {
       .sort({ order: 1 })
       .populate([
         { path: "author", select: "firstName lastName picture" },
-        { path: "completedBy", select: "firstName lastName picture" }
+        { path: "completedBy", select: "firstName lastName picture" },
+        { path: "status" },
+        { path: "priority" },
+        { path: "responsibles", select: "firstName lastName picture" },
+        { path: "timeTrackings" },
+        { path: "messages" },
+        { path: "description.author", select: "firstName lastName picture" },
       ]);
 
     return res.status(200).send({
@@ -133,7 +161,11 @@ export async function updateSubtask(req, res, next) {
       { new: true }
     ).populate([
       { path: "author", select: "firstName lastName picture" },
-      { path: "completedBy", select: "firstName lastName picture" }
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" },
+      { path: "timeTrackings" }
     ]);
 
     return res.status(200).send({
@@ -322,9 +354,18 @@ export async function updateSubtaskEstimate(req, res, next) {
       });
     }
 
+    // Convertir l'estimation en nombre ou null si vide
+    let estimationValue = null;
+    if (estimation !== "" && estimation !== null && estimation !== undefined) {
+      estimationValue = parseFloat(estimation);
+      if (isNaN(estimationValue)) {
+        estimationValue = null;
+      }
+    }
+
     const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
       subtaskId,
-      { estimation: estimation },
+      { estimation: estimationValue },
       { new: true }
     ).populate([
       { path: "author", select: "firstName lastName picture" },
@@ -423,6 +464,57 @@ export async function removeSubtaskResponsible(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Responsable supprimé de la sous-tâche avec succès",
+      data: updatedSubtask,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Mettre à jour la description d'une sous-tâche
+export async function updateSubtaskDescription(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { subtaskId } = req.params;
+    const { description, taggedUsers = [], attachments = [] } = req.body;
+
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Sous-tâche non trouvée",
+      });
+    }
+
+    // Créer la structure de description similaire aux tâches
+    const descriptionData = {
+      author: authUser._id,
+      text: description || "",
+      createdAt: subtask.description?.createdAt || new Date(),
+      updatedAt: new Date(),
+      reactions: subtask.description?.reactions || [],
+      files: attachments || subtask.description?.files || [],
+    };
+
+    const updatedSubtask = await SubtaskModel.findByIdAndUpdate(
+      subtaskId,
+      { description: descriptionData },
+      { new: true }
+    ).populate([
+      { path: "author", select: "firstName lastName picture" },
+      { path: "completedBy", select: "firstName lastName picture" },
+      { path: "status" },
+      { path: "priority" },
+      { path: "responsibles", select: "firstName lastName picture" },
+      { path: "description.author", select: "firstName lastName picture" }
+    ]);
+
+    return res.status(200).send({
+      success: true,
+      message: "Description de la sous-tâche mise à jour avec succès",
       data: updatedSubtask,
     });
   } catch (err) {

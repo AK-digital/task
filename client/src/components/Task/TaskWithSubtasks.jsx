@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { ChevronDown, ChevronRight, Plus } from "lucide-react";
 import Task from "./Task";
 import SubtaskRow from "./SubtaskRow";
 import { createSubtask, getSubtasks, updateSubtask, deleteSubtask, reorderSubtasks } from "@/api/subtask";
@@ -23,6 +22,7 @@ import {
   restrictToVerticalAxis,
   restrictToParentElement,
 } from "@dnd-kit/modifiers";
+import { Plus } from "lucide-react";
 
 export default function TaskWithSubtasks({ 
   task, 
@@ -52,6 +52,26 @@ export default function TaskWithSubtasks({
     if (isExpanded && subtasks.length === 0) {
       loadSubtasks();
     }
+    // Toujours afficher le formulaire d'ajout quand on expand
+    if (isExpanded) {
+      setShowAddForm(true);
+    }
+  }, [isExpanded]);
+
+  // Écouter les mises à jour via Socket.IO
+  useEffect(() => {
+    const handleTaskUpdate = () => {
+      // Recharger les sous-tâches si elles sont affichées (même si la liste est vide)
+      if (isExpanded) {
+        loadSubtasks();
+      }
+    };
+
+    socket.on("update task", handleTaskUpdate);
+
+    return () => {
+      socket.off("update task", handleTaskUpdate);
+    };
   }, [isExpanded]);
 
   const loadSubtasks = async () => {
@@ -77,16 +97,20 @@ export default function TaskWithSubtasks({
 
     try {
       const response = await createSubtask(task._id, newSubtaskTitle.trim(), task.projectId._id);
-      if (response.success) {
+      
+      if (response && response.success) {
         setSubtasks([...subtasks, response.data]);
         setNewSubtaskTitle("");
-        setShowAddForm(false);
+        // Ne pas fermer le formulaire, le garder ouvert pour la prochaine sous-tâche
         
         // Émettre l'événement socket pour notifier les autres utilisateurs
         socket.emit("update task", task.projectId._id || task.projectId);
         
         // Rafraîchir la liste des tâches
         mutate();
+      } else {
+        console.error("Erreur lors de la création de la sous-tâche:", response?.message || "Réponse invalide");
+        // Optionnel : afficher un message d'erreur à l'utilisateur
       }
     } catch (error) {
       console.error("Erreur lors de la création de la sous-tâche:", error);
@@ -97,8 +121,8 @@ export default function TaskWithSubtasks({
     if (e.key === "Enter") {
       handleCreateSubtask();
     } else if (e.key === "Escape") {
-      setShowAddForm(false);
       setNewSubtaskTitle("");
+      // Ne pas fermer le formulaire, juste vider le champ
     }
   };
 
@@ -147,33 +171,6 @@ export default function TaskWithSubtasks({
     <>
       {/* Tâche principale avec boutons de contrôle des sous-tâches */}
       <div className="relative group">
-        {/* Bouton toggle pour les sous-tâches (à gauche) */}
-        {subtaskCount > 0 && (
-          <button
-            onClick={handleToggleExpand}
-            className="subtask-toggle-button absolute left-1 top-1/2 transform -translate-y-1/2 p-1 rounded z-10"
-          >
-            {isExpanded ? (
-              <ChevronDown size={14} className="text-gray-600" />
-            ) : (
-              <ChevronRight size={14} className="text-gray-600" />
-            )}
-          </button>
-        )}
-        
-        {/* Bouton d'ajout de sous-tâche (visible au survol, à gauche si pas de sous-tâches) */}
-        {subtaskCount === 0 && (
-          <button
-            onClick={() => {
-              setShowAddForm(true);
-              setIsExpanded(true);
-            }}
-            className="absolute left-1 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded transition-all text-gray-500 hover:text-accent-color z-10"
-            title="Ajouter une sous-tâche"
-          >
-            <Plus size={14} />
-          </button>
-        )}
         
         {/* Tâche principale */}
         <div ref={taskRef}>
@@ -183,20 +180,25 @@ export default function TaskWithSubtasks({
             setSelectedTasks={setSelectedTasks}
             isDragging={isDragging}
             mutate={mutate}
+            // Props pour les sous-tâches
+            subtaskCount={subtaskCount}
+            isExpanded={isExpanded}
+            setIsExpanded={setIsExpanded}
+            showAddForm={showAddForm}
+            setShowAddForm={setShowAddForm}
+            handleToggleExpand={() => {
+              if (subtaskCount === 0) {
+                setShowAddForm(true);
+              }
+              setIsExpanded(!isExpanded);
+            }}
           />
         </div>
-        
-        {/* Indicateur de sous-tâches (à droite) */}
-        {subtaskCount > 0 && (
-          <div className="subtask-count-indicator absolute right-2 top-1/2 transform -translate-y-1/2 text-xs px-2 py-1 rounded-full">
-            {completedCount}/{subtaskCount}
-          </div>
-        )}
       </div>
 
       {/* Sous-tâches expandables */}
       {isExpanded && (
-        <div className="ml-8 border-l-2 border-gray-200">
+        <div className="ml-3">
           {loading ? (
             <div className="py-2 px-4 text-sm text-gray-500">
               Chargement des sous-tâches...
@@ -221,6 +223,8 @@ export default function TaskWithSubtasks({
                       onDelete={handleSubtaskDelete}
                       displayedElts={displayedElts}
                       parentTask={task}
+                      mutate={mutate}
+                      setSelectedTasks={setSelectedTasks}
                     />
                   ))}
                 </SortableContext>
@@ -228,25 +232,24 @@ export default function TaskWithSubtasks({
               
               {/* Formulaire d'ajout de sous-tâche */}
               {showAddForm && (
-                <div className="flex items-center gap-2 py-2 px-4 bg-gray-50 border-b">
+                <div className="flex items-center gap-2 py-2 px-6">
+                  <Plus size={14} className="text-text-color-muted"/>
                   <input
                     type="text"
                     value={newSubtaskTitle}
                     onChange={(e) => setNewSubtaskTitle(e.target.value)}
                     onKeyDown={handleKeyDown}
                     onBlur={() => {
-                      if (!newSubtaskTitle.trim()) {
-                        setShowAddForm(false);
-                      }
+                      // Ne pas fermer le formulaire au blur, le garder toujours ouvert
                     }}
                     placeholder="Nouvelle sous-tâche..."
-                    className="flex-1 text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:border-accent-color"
+                    className="task-col-text text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:border-accent-color"
                     autoFocus
                   />
                   <button
                     onClick={handleCreateSubtask}
                     disabled={!newSubtaskTitle.trim()}
-                    className="text-sm text-accent-color hover:text-accent-color-dark disabled:text-gray-400"
+                    className="secondary-button text-xs py-1.5 hover:text-accent-color-dark disabled:text-gray-400"
                   >
                     Ajouter
                   </button>
@@ -262,6 +265,7 @@ export default function TaskWithSubtasks({
           )}
         </div>
       )}
+
     </>
   );
 }

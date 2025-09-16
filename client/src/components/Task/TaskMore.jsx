@@ -7,8 +7,10 @@ import TaskDescription from "./TaskDescription";
 import { usePathname } from "next/navigation";
 import Portal from "../Portal/Portal";
 import { updateTaskText } from "@/api/task";
+import { updateSubtask } from "@/api/subtask";
 import socket from "@/utils/socket";
 import { Edit3 } from "lucide-react";
+import { useTaskContext } from "@/context/TaskContext";
 moment.locale("fr");
 
 export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
@@ -19,11 +21,30 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
   const [startX, setStartX] = useState(null);
   const [startWidth, setStartWidth] = useState(null);
   const pathname = usePathname();
-  const project = task?.projectId;
+  const { setOpenedTask } = useTaskContext();
+  // Logique robuste pour définir project (gère les tâches et sous-tâches)
+  const project = (() => {
+    if (task?.projectId?._id) {
+      // Cas normal : projectId est un objet peuplé
+      return task.projectId;
+    } else if (task?.projectId && typeof task.projectId === 'string') {
+      // Cas où projectId est juste un string ID
+      return { _id: task.projectId };
+    } else if (task?.isSubtask && task?.parentTask?.projectId) {
+      // Cas sous-tâche : utiliser le projectId de la tâche parente
+      return task.parentTask.projectId._id ? task.parentTask.projectId : { _id: task.parentTask.projectId };
+    } else {
+      // Fallback : extraire depuis l'URL
+      const pathSegments = pathname?.split('/') || [];
+      const projectIdFromUrl = pathSegments[2]; // /projects/[id]/...
+      return projectIdFromUrl ? { _id: projectIdFromUrl } : { _id: null };
+    }
+  })();
+  
   const [showPreviewImageMessage, setShowPreviewImageMessage] = useState(false);
   const [edit, setEdit] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [titleValue, setTitleValue] = useState(task?.text || "");
+  const [titleValue, setTitleValue] = useState(task?.text || task?.title || "");
   const titleInputRef = useRef(null);
 
   const startResizing = useCallback((e) => {
@@ -84,34 +105,47 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
 
   const handleEditTitle = () => {
     setIsEditingTitle(true);
-    setTitleValue(task?.text || "");
+    setTitleValue(task?.text || task?.title || "");
   };
 
   const handleSaveTitle = async () => {
-    if (titleValue.trim() === "" || titleValue === task?.text) {
+    const currentTitle = task?.text || task?.title || "";
+    if (titleValue.trim() === "" || titleValue === currentTitle) {
       setIsEditingTitle(false);
-      setTitleValue(task?.text || "");
+      setTitleValue(currentTitle);
       return;
     }
 
     try {
-      const response = await updateTaskText(task?._id, project?._id, titleValue.trim());
+      // Pour les sous-tâches, utiliser l'API des sous-tâches
+      if (task?.isSubtask) {
+        const response = await updateSubtask(task?._id, { title: titleValue.trim() });
+        
+        if (response?.success) {
+          await mutateTasks();
+          socket.emit("update task", project?._id);
+          setIsEditingTitle(false);
+        }
+      } else {
+        // Pour les tâches normales
+        const response = await updateTaskText(task?._id, project?._id, titleValue.trim());
 
-      if (response?.success) {
-        await mutateTasks();
-        socket.emit("update task", project?._id);
-        setIsEditingTitle(false);
+        if (response?.success) {
+          await mutateTasks();
+          socket.emit("update task", project?._id);
+          setIsEditingTitle(false);
+        }
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour du titre:", error);
-      setTitleValue(task?.text || "");
+      setTitleValue(currentTitle);
       setIsEditingTitle(false);
     }
   };
 
   const handleCancelTitle = () => {
     setIsEditingTitle(false);
-    setTitleValue(task?.text || "");
+    setTitleValue(task?.text || task?.title || "");
   };
 
   const handleKeyDown = (e) => {
@@ -135,15 +169,31 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
       let path = "";
 
       if (pathname?.includes("/projects")) {
-        path = archive
-          ? `/projects/${project?._id}/archive`
-          : `/projects/${project?._id}`;
+        const projectId = project?._id;
+        if (projectId && projectId !== 'null' && projectId !== 'undefined') {
+          path = archive
+            ? `/projects/${projectId}/archive`
+            : `/projects/${projectId}`;
+        } else {
+          // Fallback : extraire l'ID depuis l'URL actuelle
+          const pathSegments = pathname?.split('/') || [];
+          const currentProjectId = pathSegments[2];
+          if (currentProjectId) {
+            path = archive
+              ? `/projects/${currentProjectId}/archive`
+              : `/projects/${currentProjectId}`;
+          } else {
+            console.error("Impossible de déterminer l'ID du projet pour la fermeture de TaskMore");
+            path = "/projects"; // Redirection vers la liste des projets
+          }
+        }
       }
 
       if (pathname?.includes("/tasks")) {
         path = `/tasks`;
       }
       window.history.pushState({}, "", path);
+      setOpenedTask(null); // Réinitialiser le contexte
       setOpen(false);
     };
 
@@ -185,7 +235,7 @@ export default function TaskMore({ task, archive = false, uid, mutateTasks }) {
             </div>
           ) : (
             <div className="flex items-center gap-2 group cursor-pointer" onClick={handleEditTitle}>
-              <p className="text-large font-medium">{task?.text}</p>
+              <p className="text-large font-medium">{task?.text || task?.title}</p>
               <Edit3
                 size={16}
                 className="text-gray-400 group-hover:text-accent-color transition-colors flex-shrink-0"

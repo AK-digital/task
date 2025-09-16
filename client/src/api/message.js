@@ -7,11 +7,16 @@ export async function saveMessage(
   taskId,
   message,
   taggedUsers,
-  attachments
+  attachments,
+  subtaskId = null
 ) {
   try {
     const data = new FormData();
-    data.append("taskId", taskId);
+    if (subtaskId) {
+      data.append("subtaskId", subtaskId);
+    } else {
+      data.append("taskId", taskId);
+    }
     data.append("message", message);
 
     data.append("taggedUsers", JSON.stringify(taggedUsers));
@@ -49,10 +54,15 @@ export async function saveMessage(
   }
 }
 
-export async function getMessages(projectId, taskId) {
+export async function getMessages(projectId, taskId, subtaskId = null) {
   try {
+    const queryParams = new URLSearchParams({
+      projectId: projectId,
+      ...(subtaskId ? { subtaskId } : { taskId })
+    });
+    
     const res = await useAuthFetch(
-      `message?projectId=${projectId}&taskId=${taskId}`,
+      `message?${queryParams.toString()}`,
       "GET",
       "application/json",
       null,

@@ -1,43 +1,71 @@
 import mongoose from "mongoose";
 import ProjectModel from "../models/Project.model.js";
 import TaskModel from "../models/Task.model.js";
+import SubtaskModel from "../models/Subtask.model.js";
 import TimeTrackingModel from "../models/TimeTracking.model.js";
 import moment from "moment";
 
 export async function saveTimeTracking(req, res, next) {
   const authUser = res.locals.user;
-  const { taskId, startTime, endTime } = req.body;
+  const { taskId, subtaskId, startTime, endTime } = req.body;
 
-  if (!taskId || !startTime || !endTime) {
+  if ((!taskId && !subtaskId) || !startTime || !endTime) {
     return res.status(400).send({
       success: false,
       message: "Paramètres manquants",
     });
   }
 
-  const task = await TaskModel.findById({ _id: taskId });
+  let taskText = "";
+  let targetModel = null;
+  let targetId = null;
 
-  if (!task) {
-    return res.status(404).send({
-      success: false,
-      message: "Aucune tâche trouvée",
-    });
+  if (subtaskId) {
+    // Gestion des sous-tâches
+    const subtask = await SubtaskModel.findById(subtaskId);
+    if (!subtask) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucune sous-tâche trouvée",
+      });
+    }
+    taskText = subtask.title;
+    targetModel = SubtaskModel;
+    targetId = subtaskId;
+  } else {
+    // Gestion des tâches normales
+    const task = await TaskModel.findById(taskId);
+    if (!task) {
+      return res.status(404).send({
+        success: false,
+        message: "Aucune tâche trouvée",
+      });
+    }
+    taskText = task.text;
+    targetModel = TaskModel;
+    targetId = taskId;
   }
 
-  const newTimeTracking = new TimeTrackingModel({
+  const timeTrackingData = {
     userId: authUser._id,
     projectId: req.query.projectId,
-    taskId: taskId,
-    taskText: task.text,
+    taskText: taskText,
     startTime: moment.utc(startTime).subtract(2, "hours").format(),
     endTime: moment.utc(endTime).subtract(2, "hours").format(),
     duration: new Date(endTime) - new Date(startTime),
-  });
+  };
 
+  if (subtaskId) {
+    timeTrackingData.subtaskId = subtaskId;
+  } else {
+    timeTrackingData.taskId = taskId;
+  }
+
+  const newTimeTracking = new TimeTrackingModel(timeTrackingData);
   await newTimeTracking.save();
 
-  await TaskModel.findByIdAndUpdate(
-    { _id: taskId },
+  await targetModel.findByIdAndUpdate(
+    { _id: targetId },
     {
       $addToSet: { timeTrackings: newTimeTracking?._id },
     },
@@ -103,6 +131,7 @@ export async function getTimeTrackings(req, res, next) {
       .populate("userId", "_id firstName lastName picture")
       .populate("projectId", "_id name logo members")
       .populate("taskId")
+      .populate("subtaskId")
       .exec();
 
     if (timeTrackings.length <= 0) {
@@ -176,37 +205,64 @@ export async function updateTimeTrackingText(req, res, next) {
 export async function startTimer(req, res, next) {
   try {
     const authUser = res.locals.user;
-    const { taskId } = req.body;
+    const { taskId, subtaskId } = req.body;
 
-    if (!taskId) {
+    if (!taskId && !subtaskId) {
       return res.status(400).send({
         success: false,
         message: "Paramètres manquants",
       });
     }
 
-    const task = await TaskModel.findById({ _id: taskId });
+    let taskText = "";
+    let targetModel = null;
+    let targetId = null;
 
-    if (!task) {
-      return res.status(404).send({
-        success: false,
-        message: "Aucune tâche trouvée",
-      });
+    if (subtaskId) {
+      // Gestion des sous-tâches
+      const subtask = await SubtaskModel.findById(subtaskId);
+      if (!subtask) {
+        return res.status(404).send({
+          success: false,
+          message: "Aucune sous-tâche trouvée",
+        });
+      }
+      taskText = subtask.title;
+      targetModel = SubtaskModel;
+      targetId = subtaskId;
+    } else {
+      // Gestion des tâches normales
+      const task = await TaskModel.findById(taskId);
+      if (!task) {
+        return res.status(404).send({
+          success: false,
+          message: "Aucune tâche trouvée",
+        });
+      }
+      taskText = task.text;
+      targetModel = TaskModel;
+      targetId = taskId;
     }
 
-    const newTimeTracking = new TimeTrackingModel({
+    const timeTrackingData = {
       userId: authUser._id,
       projectId: req.query.projectId,
-      taskId: taskId,
-      taskText: task.text,
+      taskText: taskText,
       startTime: new Date(),
       isRunning: true,
-    });
+    };
 
+    if (subtaskId) {
+      timeTrackingData.subtaskId = subtaskId;
+    } else {
+      timeTrackingData.taskId = taskId;
+    }
+
+    const newTimeTracking = new TimeTrackingModel(timeTrackingData);
     await newTimeTracking.save();
 
-    await TaskModel.findByIdAndUpdate(
-      { _id: taskId },
+    await targetModel.findByIdAndUpdate(
+      { _id: targetId },
       {
         $addToSet: { timeTrackings: newTimeTracking._id },
       },
@@ -231,11 +287,22 @@ export async function startTimer(req, res, next) {
 
 export async function stopTimer(req, res, next) {
   try {
-    const timeTracking = await TimeTrackingModel.findOne({
+    const { isSubtask } = req.query;
+    const targetId = req.params.id;
+    
+    // Construire la requête selon le type (tâche ou sous-tâche)
+    const searchQuery = {
       userId: res.locals.user._id,
-      taskId: req.params.id,
       isRunning: true, // Get only the running time tracking
-    });
+    };
+
+    if (isSubtask === 'true') {
+      searchQuery.subtaskId = targetId;
+    } else {
+      searchQuery.taskId = targetId;
+    }
+
+    const timeTracking = await TimeTrackingModel.findOne(searchQuery);
 
     if (!timeTracking) {
       return res.status(404).send({
@@ -253,11 +320,7 @@ export async function stopTimer(req, res, next) {
     }
 
     const updatedTimeTracking = await TimeTrackingModel.findOneAndUpdate(
-      {
-        userId: res.locals.user._id,
-        taskId: req.params.id,
-        isRunning: true,
-      },
+      searchQuery,
       {
         endTime: moment().format(),
         duration: new Date() - timeTracking.startTime, // Calculate the duration

@@ -4,15 +4,17 @@ import { Archive, Trash2, ExternalLink, Link, Copy, CopyPlus, CheckSquare } from
 import Portal from "../Portal/Portal";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";
 import { addTaskToArchive, deleteTask, createTask } from "@/api/task";
-import { createSubtask } from "@/api/subtask";
+import { createSubtask, deleteSubtask } from "@/api/subtask";
 import { useTaskContext } from "@/context/TaskContext";
+import socket from "@/utils/socket";
 
 export default function TaskContextMenu({ 
   isOpen, 
   setIsOpen, 
   position, 
   task, 
-  mutate 
+  mutate,
+  onDelete 
 }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
@@ -46,7 +48,8 @@ export default function TaskContextMenu({
 
   const handleCopyTitle = async () => {
     try {
-      await navigator.clipboard.writeText(task.text);
+      const titleToCopy = task.isSubtask ? task.title : task.text;
+      await navigator.clipboard.writeText(titleToCopy);
       showSuccessToast("Titre copié dans le presse-papiers");
       setIsOpen(false);
     } catch (error) {
@@ -56,23 +59,36 @@ export default function TaskContextMenu({
 
   const handleDuplicateTask = async () => {
     try {
-      // Créer une copie de la tâche avec un nouveau titre
-      const duplicatedTaskData = {
-        text: `${task.text} (copie)`,
-        boardId: task.boardId,
-        // Optionnel : copier d'autres propriétés si nécessaire
-        // description: task.description,
-        // priority: task.priority,
-        // status: task.status,
-      };
-
-      const result = await createTask(duplicatedTaskData, task.projectId._id);
-      
-      if (result.success) {
-        showSuccessToast("Tâche dupliquée avec succès");
-        mutate(); // Rafraîchir la liste des tâches
+      if (task.isSubtask) {
+        // Duplication d'une sous-tâche
+        const duplicatedTitle = `${task.title} (copie)`;
+        const result = await createSubtask(task.parentTask._id, duplicatedTitle, task.parentTask.projectId._id);
+        
+        if (result.success) {
+          showSuccessToast("Sous-tâche dupliquée avec succès");
+          mutate(); // Rafraîchir la liste des tâches
+        } else {
+          console.error("Erreur lors de la duplication de la sous-tâche:", result.message);
+        }
       } else {
-        console.error("Erreur lors de la duplication:", result.message);
+        // Duplication d'une tâche normale
+        const duplicatedTaskData = {
+          text: `${task.text} (copie)`,
+          boardId: task.boardId,
+          // Optionnel : copier d'autres propriétés si nécessaire
+          // description: task.description,
+          // priority: task.priority,
+          // status: task.status,
+        };
+
+        const result = await createTask(duplicatedTaskData, task.projectId._id);
+        
+        if (result.success) {
+          showSuccessToast("Tâche dupliquée avec succès");
+          mutate(); // Rafraîchir la liste des tâches
+        } else {
+          console.error("Erreur lors de la duplication:", result.message);
+        }
       }
       
       setIsOpen(false);
@@ -111,9 +127,32 @@ export default function TaskContextMenu({
 
   const handleDeleteTask = async () => {
     try {
-      await deleteTask([task._id], task.projectId._id);
-      mutate();
-      setIsOpen(false);
+      let response;
+      if (task.isSubtask) {
+        // Suppression d'une sous-tâche
+        response = await deleteSubtask(task._id);
+      } else {
+        // Suppression d'une tâche normale
+        response = await deleteTask([task._id], task.projectId._id);
+      }
+      
+      if (response && response.success) {
+        // Si c'est une sous-tâche, appeler le callback onDelete pour suppression immédiate
+        if (task.isSubtask && onDelete) {
+          onDelete(task._id);
+        }
+        
+        mutate();
+        setIsOpen(false);
+        
+        // Émettre l'événement socket pour notifier les autres utilisateurs
+        const projectId = task.isSubtask ? task.parentTask?.projectId?._id || task.parentTask?.projectId : task.projectId._id;
+        if (projectId) {
+          socket.emit("update task", projectId);
+        }
+      } else {
+        console.error("Erreur lors de la suppression:", response?.message || "Réponse invalide");
+      }
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
     }
@@ -214,26 +253,30 @@ export default function TaskContextMenu({
               <CopyPlus size={16} />
               <span>Dupliquer la tâche</span>
             </li>
-            <li
-              className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light flex items-center gap-2"
-              onClick={() => handleMenuClick(handleCreateSubtask, 'create-subtask')}
-            >
-              <CheckSquare size={16} />
-              <span>Créer une sous-tâche</span>
-            </li>
-            <li
-              className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light flex items-center gap-2"
-              onClick={() => handleMenuClick(handleArchiveTask, 'archive')}
-            >
-              <Archive size={16} />
-              <span>Archiver la tâche</span>
-            </li>
+            {!task.isSubtask && (
+              <li
+                className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light flex items-center gap-2"
+                onClick={() => handleMenuClick(handleCreateSubtask, 'create-subtask')}
+              >
+                <CheckSquare size={16} />
+                <span>Créer une sous-tâche</span>
+              </li>
+            )}
+            {!task.isSubtask && (
+              <li
+                className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light flex items-center gap-2"
+                onClick={() => handleMenuClick(handleArchiveTask, 'archive')}
+              >
+                <Archive size={16} />
+                <span>Archiver la tâche</span>
+              </li>
+            )}
             <li
               className="option cursor-pointer py-2 border-b border-primary hover:text-accent-color-light last:border-b-0 text-text-color-red flex items-center gap-2"
               onClick={() => handleMenuClick(handleDeleteTask, 'delete')}
             >
               <Trash2 size={16} />
-              <span>Supprimer la tâche</span>
+              <span>{task.isSubtask ? 'Supprimer la sous-tâche' : 'Supprimer la tâche'}</span>
             </li>
           </ul>
         </div>

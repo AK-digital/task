@@ -2,13 +2,21 @@ import { useTaskContext } from "@/context/TaskContext";
 import { MessageCircle, MessageCircleMore } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-export default function TaskConversation({ task, archive = false, uid }) {
+export default function TaskConversation({ task, archive = false, uid, onClick }) {
   const { openTask } = useTaskContext();
   const project = task?.projectId;
   const pathname = usePathname();
 
   function handleOpenTask(e) {
     e.preventDefault();
+    
+    // Si un onClick personnalisé est fourni, l'utiliser (pour les sous-tâches)
+    if (onClick) {
+      onClick();
+      return;
+    }
+
+    // Sinon, utiliser la logique normale
     let path = "";
     if (pathname?.includes("/projects")) {
       path = archive

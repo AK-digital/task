@@ -51,7 +51,7 @@ export default function TaskText({ task }) {
       onClick={handleEdit}
     >
       {!isEdit && (
-        <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em] border border-transparent px-2 py-1 rounded-sm transition-all duration-200 hover:bg-third hover:border-gray-300">
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em] border border-transparent p-1 rounded-sm transition-all duration-200 hover:bg-third hover:border-gray-300">
           {value}
         </span>
       )}

@@ -24,13 +24,20 @@ export async function createSubtask(taskId, title, projectId) {
       { title: actualTitle }
     );
 
+    if (!response.ok) {
+      return {
+        success: false,
+        message: `Erreur HTTP: ${response.status} ${response.statusText}`,
+      };
+    }
+
     const data = await response.json();
     return data;
   } catch (error) {
     console.error("Erreur lors de la création de la sous-tâche:", error);
     return {
       success: false,
-      message: "Erreur lors de la création de la sous-tâche",
+      message: error.message || "Erreur lors de la création de la sous-tâche",
     };
   }
 }
@@ -90,6 +97,31 @@ export async function updateSubtask(subtaskId, updates) {
   }
 }
 
+// Mettre à jour la description d'une sous-tâche
+export async function updateSubtaskDescription(subtaskId, description, taggedUsers = [], attachments = []) {
+  try {
+    const response = await useAuthFetch(
+      `subtask/${subtaskId}/description`,
+      "PATCH",
+      "application/json",
+      { description, taggedUsers, attachments }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Erreur lors de la mise à jour de la description");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur updateSubtaskDescription:", error);
+    return {
+      success: false,
+      message: error.message || "Une erreur est survenue"
+    };
+  }
+}
+
 // Supprimer une sous-tâche
 export async function deleteSubtask(subtaskId) {
   try {
@@ -106,13 +138,20 @@ export async function deleteSubtask(subtaskId) {
       "application/json"
     );
 
+    if (!response.ok) {
+      return {
+        success: false,
+        message: `Erreur HTTP: ${response.status} ${response.statusText}`,
+      };
+    }
+
     const data = await response.json();
     return data;
   } catch (error) {
     console.error("Erreur lors de la suppression de la sous-tâche:", error);
     return {
       success: false,
-      message: "Erreur lors de la suppression de la sous-tâche",
+      message: error.message || "Erreur lors de la suppression de la sous-tâche",
     };
   }
 }

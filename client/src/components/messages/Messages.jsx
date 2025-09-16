@@ -20,10 +20,15 @@ export default function Messages({
   edit,
   setEdit,
 }) {
-  const { draft, mutateDraft } = useDrafts(project?._id, task?._id, "message");
+  const { draft, mutateDraft } = useDrafts(
+    project?._id, 
+    task?.isSubtask ? (task?.taskId?._id || task?.taskId) : task?._id, 
+    "message"
+  );
   const { messages, messageLoading, mutate } = useMessages(
     project?._id,
-    task?._id
+    task?.isSubtask ? (task?.taskId?._id || task?.taskId) : task?._id,
+    task?.isSubtask ? task?._id : null
   );
   const [message, setMessage] = useState("");
   // const [isOpen, setIsOpen] = useState(false);

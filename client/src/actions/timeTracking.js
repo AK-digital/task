@@ -4,7 +4,7 @@ import { revalidateTag } from "next/cache";
 import "moment/locale/fr";
 import moment from "moment";
 
-export async function saveTimeTracking(taskId, projectId, prevState, formData) {
+export async function saveTimeTracking(taskId, projectId, isSubtask, prevState, formData) {
   try {
     const date = formData.get("date");
     const startTime = formData.get("start-time");
@@ -16,10 +16,15 @@ export async function saveTimeTracking(taskId, projectId, prevState, formData) {
     console.log("startDateTime", startDateTime);
 
     const rawData = {
-      taskId: taskId,
       startTime: startDateTime,
       endTime: endDateTime,
     };
+
+    if (isSubtask) {
+      rawData.subtaskId = taskId;
+    } else {
+      rawData.taskId = taskId;
+    }
 
     const res = await useAuthFetch(
       `time-tracking/?projectId=${projectId}`,

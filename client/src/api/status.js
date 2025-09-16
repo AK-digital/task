@@ -3,10 +3,22 @@ import { useAuthFetch } from "@/utils/api";
 
 export async function getStatusByProject(projectId) {
   try {
+    // Validation de l'ID d'entrée
+    if (!projectId || projectId === 'undefined' || projectId === 'null' || String(projectId).trim() === '') {
+      console.error("getStatusByProject: Invalid projectId:", { projectId, type: typeof projectId });
+      return []; // Retourner un tableau vide au lieu de lancer une erreur
+    }
+
     // Nettoyer l'ID en supprimant les virgules et espaces
     let cleanProjectId = String(projectId);
     cleanProjectId = cleanProjectId.replace(/,/g, ''); // Supprimer les virgules
     cleanProjectId = cleanProjectId.replace(/[^a-zA-Z0-9]/g, ''); // Garder seulement alphanumériques
+    
+    // Vérifier que l'ID nettoyé est valide
+    if (!cleanProjectId || cleanProjectId.length < 7) {
+      console.error("getStatusByProject: Invalid cleaned projectId:", { original: projectId, cleaned: cleanProjectId });
+      return []; // Retourner un tableau vide au lieu de lancer une erreur
+    }
     
     const res = await useAuthFetch(
       `status/project/${cleanProjectId}`,

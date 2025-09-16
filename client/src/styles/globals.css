@@ -1324,7 +1324,7 @@
     height: 100%;
   }
 
-  .task-content-col:not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)) {
+  .task-content-col:not(:nth-child(1)):not(.task-col-text) {
     border-left: 1px solid var(--color-text-light-color);
   }
 
@@ -1763,19 +1763,22 @@
 .task-col-subtasks {
   min-width: 60px;
   max-width: 80px;
+  border-top: 1px solid var(--color-text-light-color);
 }
 
 /* Styles pour l'affichage inline des sous-tâches */
 .subtask-row {
-  background: linear-gradient(90deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.01) 100%);
-  border-left: 3px solid var(--color-accent-color-light);
-  margin-left: 2rem;
+  padding-left: 14px;
   position: relative;
+  border-bottom: 1px solid var(--color-text-light-color);
+}
+
+.subtask-row:first-child {
+  border-top: 1px solid var(--color-text-light-color);
 }
 
 .subtask-row:hover {
-  background: linear-gradient(90deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.02) 100%);
-}
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.01) 100%);}
 
 .subtask-row.dragging {
   opacity: 0.5;
@@ -1787,15 +1790,6 @@
   transition: all 0.2s ease-in-out;
 }
 
-.subtask-toggle-button:hover {
-  background-color: var(--color-accent-color-light);
-  color: white;
-}
-
-.subtask-count-indicator {
-  background: linear-gradient(135deg, var(--color-accent-color) 0%, var(--color-accent-color-light) 100%);
-  color: white;
-}
 
 /* Styles pour le drag handle des sous-tâches */
 .subtask-row .task-col-drag button {

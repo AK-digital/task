@@ -16,7 +16,10 @@ const timeTrackingSchema = new Schema(
     taskId: {
       type: Schema.Types.ObjectId,
       ref: "Task",
-      required: true,
+    },
+    subtaskId: {
+      type: Schema.Types.ObjectId,
+      ref: "Subtask",
     },
     taskText: {
       type: String,
@@ -46,5 +49,14 @@ const timeTrackingSchema = new Schema(
     timestamps: true,
   }
 );
+
+// Validation pour s'assurer qu'au moins taskId ou subtaskId est présent
+timeTrackingSchema.pre('save', function(next) {
+  if (!this.taskId && !this.subtaskId) {
+    const error = new Error('Au moins taskId ou subtaskId doit être spécifié');
+    return next(error);
+  }
+  next();
+});
 
 export default mongoose.model("TimeTracking", timeTrackingSchema);

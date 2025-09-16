@@ -12,7 +12,15 @@ import { getPriorityByProject } from "@/api/priority";
 
 export default async function ProjectPage({ params }) {
   const { slug } = await params;
-  const id = slug[0];
+  
+  
+  const id = slug?.[0];
+  
+  // Validation précoce de l'ID
+  if (!id || id === 'undefined' || id === 'null' || String(id).trim() === '') {
+    console.error("ID de projet manquant:", { slug, id, slugLength: slug?.length });
+    return notFound();
+  }
 
   const archive = slug?.length > 1 && slug[1] === "archive";
   const options = slug?.length > 1 && slug[1] === "options";
@@ -29,14 +37,24 @@ export default async function ProjectPage({ params }) {
   
   // Validation supplémentaire : s'assurer que l'ID est valide (MongoDB ObjectId = 24 caractères hex, mais on accepte 7+ pour être flexible)
   if (!cleanId || cleanId.length < 7) {
+    console.error("ID de projet invalide:", { originalId: id, cleanId, length: cleanId?.length });
     return notFound();
   }
-
+  
   const projectData = getProject(cleanId);
   const boardsData = getBoards(cleanId, archive);
   const tasksData = getTasks({ projectId: cleanId, archived: archive });
-  const statusesPromise = getStatusByProject(cleanId);
-  const prioritiesPromise = getPriorityByProject(cleanId);
+  
+  // Gérer les statuts et priorités avec fallback en cas d'erreur
+  const statusesPromise = cleanId ? getStatusByProject(cleanId).catch(error => {
+    console.error("Erreur lors de la récupération des statuts:", error);
+    return []; // Fallback vers un tableau vide
+  }) : Promise.resolve([]);
+  
+  const prioritiesPromise = cleanId ? getPriorityByProject(cleanId).catch(error => {
+    console.error("Erreur lors de la récupération des priorités:", error);
+    return []; // Fallback vers un tableau vide
+  }) : Promise.resolve([]);
 
   const [initialProject, initialBoards, initialTasks, statusesData, prioritiesData] = await Promise.all([
     projectData,

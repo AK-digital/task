@@ -11,6 +11,10 @@ const messageSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Task",
     },
+    subtaskId: {
+      type: Schema.Types.ObjectId,
+      ref: "Subtask",
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -55,5 +59,14 @@ const messageSchema = new Schema(
     timestamps: true,
   }
 );
+
+// Validation pour s'assurer qu'au moins taskId ou subtaskId est présent
+messageSchema.pre('save', function(next) {
+  if (!this.taskId && !this.subtaskId) {
+    const error = new Error('Au moins taskId ou subtaskId doit être spécifié');
+    return next(error);
+  }
+  next();
+});
 
 export default mongoose.model("Message", messageSchema);

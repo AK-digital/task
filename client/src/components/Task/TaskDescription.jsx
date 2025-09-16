@@ -1,4 +1,5 @@
 import { updateTaskDescription } from "@/api/task";
+import { updateSubtaskDescription } from "@/api/subtask";
 import moment from "moment";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
@@ -25,9 +26,10 @@ export default function TaskDescription({
   setEdit,
 }) {
   const { user } = useContext(AuthContext);
-  const fetcher = getDrafts.bind(null, project?._id, task?._id, "description");
+  const draftTaskId = task?.isSubtask ? (task?.taskId?._id || task?.taskId) : task?._id;
+  const fetcher = getDrafts.bind(null, project?._id, draftTaskId, "description");
   const { data: draft, mutate: mutateDraft } = useSWR(
-    `/draft?projectId=${project?._id}&taskId=${task?._id}&type=description`,
+    `/draft?projectId=${project?._id}&taskId=${draftTaskId}&type=description`,
     fetcher
   );
 
@@ -73,13 +75,18 @@ export default function TaskDescription({
 
     if (!isAuthorized) return;
 
-    const response = await updateTaskDescription(
-      task?._id,
-      project?._id,
-      "",
-      [],
-      []
-    );
+    let response;
+    if (task?.isSubtask) {
+      response = await updateSubtaskDescription(task?._id, "");
+    } else {
+      response = await updateTaskDescription(
+        task?._id,
+        project?._id,
+        "",
+        [],
+        []
+      );
+    }
 
     // Handle error
     if (!response?.success) {
@@ -162,7 +169,7 @@ export default function TaskDescription({
                 setShowPreviewImageMessage={setShowPreviewImageMessage}
               />
             )}
-            {task?.description?.files.length > 0 && (
+            {task?.description?.files?.length > 0 && (
               <p className="text-sm text-gray-600">
                 {task?.description?.files.length} fichier
                 {task?.description?.files.length > 1 ? "s" : ""} joint

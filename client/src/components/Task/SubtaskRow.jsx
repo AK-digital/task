@@ -1,11 +1,12 @@
 "use client";
 import { useState, useRef, useEffect, useContext } from "react";
-import { Check, Edit3, Trash2, X, GripVertical } from "lucide-react";
+import { GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { updateSubtask, deleteSubtask } from "@/api/subtask";
-import moment from "moment";
 import { AuthContext } from "@/context/auth";
+import { useTaskContext } from "@/context/TaskContext";
+import TaskContextMenu from "./TaskContextMenu";
 import TaskProject from "./TaskProject";
 import TaskBoard from "./TaskBoard";
 import TaskResponsibles from "./TaskResponsibles";
@@ -15,13 +16,19 @@ import TaskDeadline from "./TaskDeadline";
 import TaskEstimate from "./TaskEstimate";
 import TaskTimer from "./TaskTimer";
 import TaskConversation from "./TaskConversation";
+import TaskCheckbox from "./TaskCheckbox";
+import TaskDrag from "./TaskDrag";
 
-export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts, parentTask }) {
+export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts, parentTask, mutate, setSelectedTasks }) {
   const { uid, user } = useContext(AuthContext);
+  const { setOpenedTask } = useTaskContext();
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(subtask.title);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
   const inputRef = useRef(null);
+  const clickTimeoutRef = useRef(null);
 
   // Drag & Drop
   const {
@@ -56,7 +63,8 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
   const taskLikeSubtask = {
     ...subtask,
     _id: subtask._id,
-    projectId: parentTask?.projectId,
+    taskId: subtask.taskId || parentTask?._id, // ID de la tâche parente pour les drafts/messages
+    projectId: parentTask?.projectId, // Garder la structure complète pour TaskMore
     boardId: parentTask?.boardId,
     status: subtask.status,
     priority: subtask.priority,
@@ -64,10 +72,20 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
     estimation: subtask.estimation,
     responsibles: subtask.responsibles || [],
     messages: subtask.messages || [],
+    // Description pour TaskMore (structure identique aux tâches)
+    description: subtask.description || {
+      text: "",
+      author: subtask.author,
+      createdAt: subtask.createdAt,
+      updatedAt: subtask.updatedAt,
+      reactions: [],
+      files: []
+    },
     // Marquer comme sous-tâche pour les composants
     isSubtask: true,
+    parentTask: parentTask, // Référence vers la tâche parent
   };
-  
+
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -76,23 +94,15 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
     }
   }, [isEditing]);
 
-  const handleToggleComplete = async () => {
-    if (isUpdating) return;
-    
-    setIsUpdating(true);
-    try {
-      const response = await updateSubtask(subtask._id, { 
-        completed: !subtask.completed 
-      });
-      if (response.success) {
-        onUpdate();
+  // Nettoyage du timeout au démontage
+  useEffect(() => {
+    return () => {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
       }
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error);
-    } finally {
-      setIsUpdating(false);
-    }
-  };
+    };
+  }, []);
+
 
   const handleSaveEdit = async () => {
     if (!editTitle.trim() || editTitle === subtask.title || isUpdating) {
@@ -103,8 +113,8 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
 
     setIsUpdating(true);
     try {
-      const response = await updateSubtask(subtask._id, { 
-        title: editTitle.trim() 
+      const response = await updateSubtask(subtask._id, {
+        title: editTitle.trim()
       });
       if (response.success) {
         setIsEditing(false);
@@ -129,7 +139,7 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
 
   const handleDelete = async () => {
     if (isUpdating) return;
-    
+
     setIsUpdating(true);
     try {
       const response = await deleteSubtask(subtask._id);
@@ -143,30 +153,77 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
     }
   };
 
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenuPosition({ x: e.clientX, y: e.clientY });
+    setContextMenuOpen(true);
+  };
+
+  const handleConversationClick = () => {
+    // Créer un objet tâche-like pour la sous-tâche
+    const subtaskAsTask = {
+      ...subtask,
+      isSubtask: true,
+      parentTask: parentTask
+    };
+    setOpenedTask(subtaskAsTask);
+  };
+
+  const handleTitleClick = () => {
+    // Annuler le timeout précédent s'il existe
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+
+    // Programmer l'édition avec un délai pour permettre le double-clic
+    clickTimeoutRef.current = setTimeout(() => {
+      setIsEditing(true);
+    }, 300);
+  };
+
+  const handleDoubleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Annuler le timeout de simple clic
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+
+    // Ouvrir la sous-tâche en double-cliquant
+    const subtaskAsTask = {
+      ...subtask,
+      isSubtask: true,
+      parentTask: parentTask
+    };
+    setOpenedTask(subtaskAsTask);
+  };
+
   return (
-    <div 
+    <div
       ref={setNodeRef}
       style={style}
-      className={`subtask-row flex items-center border-t border-gray-100 h-[40px] transition-colors group ${
-        subtask.completed ? 'opacity-75' : ''
-      } ${isDragging ? 'opacity-50 z-50' : ''}`}
+      className={`subtask-row flex items-center border-t border-gray-100 h-[40px] transition-colors group cursor-pointer ${subtask.completed ? 'opacity-75' : ''
+        } ${isDragging ? 'opacity-50 z-50' : ''}`}
+      onContextMenu={handleContextMenu}
+      onDoubleClick={handleDoubleClick}
     >
+
+      {/* Checkbox */}
+      {displayedElts.isCheckbox && (
+        <TaskCheckbox task={taskLikeSubtask} setSelectedTasks={setSelectedTasks} />
+      )}
 
       {/* Drag Handle */}
       {displayedElts.isDrag && (
-        <div className="task-col-drag w-8 flex items-center justify-center">
-          <button
-            {...attributes}
-            {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <GripVertical size={14} />
-          </button>
+        <div className="ml-1">
+          <TaskDrag attributes={attributes} listeners={listeners} />
         </div>
       )}
 
       {/* Titre de la sous-tâche */}
-      <div className="task-col-text px-3" style={{ width: 'var(--task-col-text-width, auto)' }}>
+      <div className="task-col-text task-content-col px-1 cursor-text" onClick={() => setIsEditing(true)}>
         {isEditing ? (
           <input
             ref={inputRef}
@@ -175,33 +232,26 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
             onChange={(e) => setEditTitle(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleSaveEdit}
-            className="w-full text-sm border-none outline-none bg-transparent"
+            className="relative text-normal tracking-[0.01em] border border-accent-color focus:text-text-darker-color focus:rounded-sm font-bricolage w-full px-2 py-1 rounded-sm bg-third"
             disabled={isUpdating}
+            autoFocus
           />
         ) : (
-          <div className="flex items-center gap-2 group/title">
-            <span
-              className={`text-sm cursor-pointer ${
-                subtask.completed
-                  ? "line-through text-gray-500"
-                  : "text-gray-700"
+          <span
+            className={`block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em] border border-transparent px-2 py-1 rounded-sm transition-all duration-200 hover:bg-third hover:border-gray-300 ${subtask.completed
+                ? "line-through text-gray-500"
+                : ""
               }`}
-              onClick={() => setIsEditing(true)}
-            >
-              {subtask.title}
-            </span>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="opacity-0 group-hover/title:opacity-100 transition-opacity p-1 hover:text-accent-color"
-            >
-              <Edit3 size={10} />
-            </button>
-          </div>
+            onClick={handleTitleClick}
+            onDoubleClick={handleDoubleClick}
+          >
+            {subtask.title}
+          </span>
         )}
       </div>
 
       {/* Conversation */}
-      <TaskConversation task={taskLikeSubtask} uid={uid} />
+      <TaskConversation task={taskLikeSubtask} uid={uid} onClick={handleConversationClick} />
 
       {/* Colonnes conditionnelles avec les vrais composants */}
       {displayedElts.isProject && <TaskProject task={taskLikeSubtask} />}
@@ -213,23 +263,15 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
       {displayedElts.isEstimate && <TaskEstimate task={taskLikeSubtask} uid={uid} />}
       {displayedElts.isTimer && <TaskTimer task={taskLikeSubtask} />}
 
-      {/* Actions */}
-      <div className="flex items-center gap-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={handleDelete}
-          disabled={isUpdating}
-          className="p-1 text-red-600 hover:text-red-700 disabled:text-gray-400 disabled:cursor-not-allowed"
-        >
-          <Trash2 size={12} />
-        </button>
-      </div>
-
-      {/* Info de completion */}
-      {subtask.completed && subtask.completedAt && (
-        <div className="text-xs text-gray-500 px-2">
-          {moment(subtask.completedAt).format("DD/MM")}
-        </div>
-      )}
+      {/* Menu contextuel */}
+      <TaskContextMenu
+        isOpen={contextMenuOpen}
+        setIsOpen={setContextMenuOpen}
+        position={contextMenuPosition}
+        task={taskLikeSubtask}
+        mutate={mutate}
+        onDelete={onDelete}
+      />
     </div>
   );
 }
