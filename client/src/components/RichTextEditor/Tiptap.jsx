@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { updateTaskDescription } from "@/api/task";
+import { updateSubtaskDescription } from "@/api/subtask";
 import socket from "@/utils/socket";
 import { saveMessage, updateMessage } from "@/api/message";
 import { mutate } from "swr";
@@ -57,7 +58,7 @@ export default function Tiptap({
       setIsLoadingDraft(true);
       const response = await saveDraft(
         project?._id,
-        task?._id,
+        task?.isSubtask ? (task?.taskId?._id || task?.taskId) : task?._id,
         type,
         htmlContent
       );
@@ -85,7 +86,7 @@ export default function Tiptap({
             ) {
               const recreateResponse = await saveDraft(
                 project?._id,
-                task?._id,
+                task?.isSubtask ? (task?.taskId?._id || task?.taskId) : task?._id,
                 type,
                 htmlContent
               );
@@ -320,6 +321,7 @@ export default function Tiptap({
 
     if (draft?.success) {
       await deleteDraft(draft?.data?._id, project?._id);
+      await mutateDraft();
     }
 
     // Déterminer le contenu à envoyer
@@ -328,13 +330,17 @@ export default function Tiptap({
 
     let response;
     if (!descriptionDeleted) {
-      response = await updateTaskDescription(
-        task?._id,
-        task?.projectId?._id,
-        contentToSend,
-        taggedUsers,
-        attachments
-      );
+      if (task?.isSubtask) {
+        response = await updateSubtaskDescription(task?._id, contentToSend, taggedUsers, attachments);
+      } else {
+        response = await updateTaskDescription(
+          task?._id,
+          project?._id,
+          contentToSend,
+          taggedUsers,
+          attachments
+        );
+      }
     }
 
     // Handle error
@@ -348,7 +354,7 @@ export default function Tiptap({
     await mutate(`/task?projectId=${project?._id}&archived=false`);
 
     // Update description for every guests
-    socket.emit("update task", task?.projectId?._id);
+    socket.emit("update task", project?._id);
 
     const message = {
       title: `${user?.firstName} vous a mentionné(e) dans une description`,
@@ -413,15 +419,16 @@ export default function Tiptap({
 
     if (!editMessage) {
       response = await saveMessage(
-        task?.projectId?._id,
-        task?._id,
+        project?._id,
+        task?.isSubtask ? (task?.taskId?._id || task?.taskId) : task?._id,
         contentToSend,
         taggedUsers,
-        attachments
+        attachments,
+        task?.isSubtask ? task?._id : null
       );
     } else if (!messageDeleted) {
       response = await updateMessage(
-        task?.projectId?._id,
+        project?._id,
         message?._id,
         contentToSend,
         taggedUsers,
@@ -440,9 +447,12 @@ export default function Tiptap({
     setIsSent(true);
 
     if (!editMessage) {
-      await mutate(
-        `/message?projectId=${task?.projectId?._id}&taskId=${task?._id}`
-      );
+      // Construire la clé SWR correcte pour les messages (même logique que useMessages)
+      const messageKey = task?.isSubtask 
+        ? `/message?projectId=${project?._id}&subtaskId=${task?._id}`
+        : `/message?projectId=${project?._id}&taskId=${task?._id}`;
+      
+      await mutate(messageKey);
     } else {
       await mutateMessage();
     }
@@ -453,15 +463,15 @@ export default function Tiptap({
 
     await mutate(`/task?projectId=${project?._id}&archived=false`);
 
-    socket.emit("update message", task?.projectId?._id);
-    socket.emit("update task", task?.projectId?._id);
+    socket.emit("update message", project?._id);
+    socket.emit("update task", project?._id);
 
     const messageNotif = {
       title: `${user?.firstName} vous a mentionné(e) dans une conversation`,
       content: `Vous venez d'être mentionné(e) dans une conversation "${project?.name}".`,
     };
 
-    const link = `/projects/${task?.projectId?._id}/task/${task?._id}`;
+    const link = `/projects/${project?._id}/task/${task?._id}`;
 
     for (const taggedUser of taggedUsers) {
       socket.emit("create notification", user, taggedUser, messageNotif, link);

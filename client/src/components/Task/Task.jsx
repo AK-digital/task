@@ -18,6 +18,7 @@ import TaskMore from "./TaskMore";
 import TaskContextMenu from "./TaskContextMenu";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Plus, ChevronDown, ChevronRight } from "lucide-react";
 
 export default function Task({
   task,
@@ -25,6 +26,13 @@ export default function Task({
   setSelectedTasks,
   isDragging,
   mutate,
+  // Props pour les sous-tâches (optionnelles)
+  subtaskCount = 0,
+  isExpanded = false,
+  setIsExpanded,
+  showAddForm = false,
+  setShowAddForm,
+  handleToggleExpand,
 }) {
   const { uid, user } = useContext(AuthContext);
   const { openedTask } = useTaskContext();
@@ -104,6 +112,7 @@ export default function Task({
     setContextMenuOpen(true);
   };
 
+
   return (
     <>
       <div
@@ -125,16 +134,52 @@ export default function Task({
       {/* Drag */}
       {isDrag && (
         <div
-          className="data-[drag=false]:cursor-[inherit]! data-[drag=false]:invisible flex-shrink-0"
+            className="data-[drag=false]:cursor-[inherit]! data-[drag=false]:invisible flex-shrink-0  mr-2"
           data-drag={canDrag}
         >
           <TaskDrag attributes={attributes} listeners={listeners} />
         </div>
       )}
+
+        {/* Boutons de sous-tâches (seulement si les fonctions sont disponibles) */}
+        {handleToggleExpand && (
+          <div className="task-content-col flex justify-center items-center pl-1">
+            {/* Bouton toggle pour les sous-tâches (à gauche) */}
+            {subtaskCount > 0 ? (
+                <span
+                onClick={handleToggleExpand}
+                className={`subtask-toggle-button z-10 ${
+                  isExpanded ? '' : 'text-gray-300'
+                }`}
+              >
+                {isExpanded ? (
+                  <ChevronDown size={20} className="text-gray-500 hover:text-accent-color" />
+                ) : (
+                  <ChevronRight size={20} className="text-gray-400 hover:text-accent-color" />
+                )}
+              </span>
+            ) : (
+              <span
+                onClick={handleToggleExpand}
+                className={`subtask-toggle-button transition-colors text-gray-500 hover:text-accent-color z-10 ${
+                  isExpanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                }`}
+                title={subtaskCount === 0 ? "Ajouter une sous-tâche" : (isExpanded ? "Réduire les sous-tâches" : "Développer les sous-tâches")}
+              >
+                {isExpanded ? (
+                    <ChevronDown size={20} />
+                ) : (
+                      <ChevronRight size={20} />
+                )}
+              </span>
+            )}
+          </div>
+        )}
       {/* Name */}
       <TaskText task={task} />
       {/* Conversation */}
       <TaskConversation task={task} uid={uid} />
+
       {/* Project */}
       {isProject && <TaskProject task={task} />}
       {/* Board */}
@@ -152,8 +197,13 @@ export default function Task({
       {/* Timer */}
       {isTimer && <TaskTimer task={task} />}
 
-        {openedTask === task?._id && (
-          <TaskMore task={task} archive={false} uid={uid} mutateTasks={mutate} />
+        {(openedTask === task?._id || (typeof openedTask === 'object' && openedTask?.isSubtask && openedTask?.parentTask?._id === task?._id)) && (
+          <TaskMore 
+            task={typeof openedTask === 'object' && openedTask?.isSubtask ? openedTask : task} 
+            archive={false} 
+            uid={uid} 
+            mutateTasks={mutate} 
+          />
         )}
       </div>
 

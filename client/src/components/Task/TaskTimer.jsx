@@ -120,7 +120,7 @@ export default function TaskTimer({ task }) {
     pause();
     setIsRunning(false);
 
-    const res = await timeTrackingStop(task?._id, project?._id);
+    const res = await timeTrackingStop(task?._id, project?._id, task?.isSubtask);
 
     if (res?.success && res?.data) {
       const newSession = res.data;
@@ -139,7 +139,7 @@ export default function TaskTimer({ task }) {
     start();
     setIsRunning(true);
 
-    await timeTrackingStart(task?._id, project?._id);
+    await timeTrackingStart(task?._id, project?._id, task?.isSubtask);
 
     localStorage.setItem(
       `taskTimer_${task._id}`,
@@ -271,7 +271,7 @@ export function TimeTrackingForm({ task, formatTime, setSessions, editingSession
 
   const actionWithIds = editingSession 
     ? updateTimeTracking.bind(null, editingSession._id, task?.projectId?._id)
-    : saveTimeTracking.bind(null, task._id, task?.projectId?._id);
+    : saveTimeTracking.bind(null, task._id, task?.projectId?._id, task?.isSubtask);
     
   const [state, formAction, pending] = useActionState(
     actionWithIds,

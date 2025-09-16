@@ -1,5 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Configuration pour le développement en réseau local
+  allowedDevOrigins: ['http://192.168.1.21:3000'],
+  // Permettre les connexions WebSocket depuis d'autres machines
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: /node_modules/,
+      };
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {

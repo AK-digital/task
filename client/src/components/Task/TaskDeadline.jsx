@@ -4,6 +4,7 @@ import moment from "moment";
 import "moment/locale/fr";
 import socket from "@/utils/socket";
 import { updateTaskDeadline } from "@/api/task";
+import { updateDeadline } from "@/actions/unified";
 import { CircleX, Calendar } from "lucide-react";
 import { checkRole } from "@/utils/utils";
 import DatePicker from "./DatePicker";
@@ -56,7 +57,12 @@ export default function TaskDeadline({ task, uid }) {
   }, [deadline]);
 
   async function handleUpdateDate(date) {
-    const response = await updateTaskDeadline(task?._id, project?._id, date);
+    const response = await updateDeadline(
+      task?._id, 
+      project?._id, 
+      date, 
+      task?.isSubtask ? 'subtask' : 'task'
+    );
 
     if (response?.success) {
       setDeadline(date);
@@ -65,7 +71,12 @@ export default function TaskDeadline({ task, uid }) {
   }
 
   const removeDeadline = async () => {
-    const response = await updateTaskDeadline(task?._id, project?._id, null);
+    const response = await updateDeadline(
+      task?._id, 
+      project?._id, 
+      null, 
+      task?.isSubtask ? 'subtask' : 'task'
+    );
 
     if (response?.success) {
       setDeadline("");

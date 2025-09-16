@@ -75,14 +75,19 @@ export async function updateTimeTrackingText(trackingId, projectId, text) {
   }
 }
 
-export async function timeTrackingStart(taskId, projectId) {
+export async function timeTrackingStart(taskId, projectId, isSubtask = false) {
   try {
     const startTime = moment.utc().locale("fr").format();
 
     const rawData = {
-      taskId: taskId,
       startTime: startTime,
     };
+
+    if (isSubtask) {
+      rawData.subtaskId = taskId;
+    } else {
+      rawData.taskId = taskId;
+    }
 
     const res = await useAuthFetch(
       `time-tracking/start?projectId=${projectId}`,
@@ -105,10 +110,15 @@ export async function timeTrackingStart(taskId, projectId) {
   }
 }
 
-export async function timeTrackingStop(taskId, projectId) {
+export async function timeTrackingStop(taskId, projectId, isSubtask = false) {
   try {
+    const queryParams = new URLSearchParams({
+      projectId: projectId,
+      isSubtask: isSubtask.toString()
+    });
+
     const res = await useAuthFetch(
-      `time-tracking/stop/${taskId}?projectId=${projectId}`,
+      `time-tracking/stop/${taskId}?${queryParams}`,
       "PATCH",
       "application/json"
     );

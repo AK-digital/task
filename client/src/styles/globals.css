@@ -1323,7 +1323,7 @@
     height: 100%;
   }
 
-  .task-content-col:not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)) {
+  .task-content-col:not(:nth-child(1)):not(.task-col-text) {
     border-left: 1px solid var(--color-text-light-color);
   }
 
@@ -1757,3 +1757,56 @@
     top: -15px;
   }
 }
+
+/* Styles pour les sous-tâches */
+.task-col-subtasks {
+  min-width: 60px;
+  max-width: 80px;
+  border-top: 1px solid var(--color-text-light-color);
+}
+
+/* Styles pour l'affichage inline des sous-tâches */
+.subtask-row {
+  padding-left: 14px;
+  position: relative;
+  border-bottom: 1px solid var(--color-text-light-color);
+}
+
+.subtask-row:first-child {
+  border-top: 1px solid var(--color-text-light-color);
+}
+
+.subtask-row:hover {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.01) 100%);}
+
+.subtask-row.dragging {
+  opacity: 0.5;
+  z-index: 50;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.subtask-toggle-button {
+  transition: all 0.2s ease-in-out;
+}
+
+
+/* Styles pour le drag handle des sous-tâches */
+.subtask-row .task-col-drag button {
+  transition: all 0.2s ease;
+}
+
+.subtask-row .task-col-drag button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.subtask-row .task-col-drag button:active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */

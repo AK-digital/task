@@ -6,6 +6,7 @@ import {
 import { sendEmail } from "../helpers/nodemailer.js";
 import MessageModel from "../models/Message.model.js";
 import TaskModel from "../models/Task.model.js";
+import SubtaskModel from "../models/Subtask.model.js";
 import UserModel from "../models/User.model.js";
 import { emailMessage } from "../templates/emails.js";
 import { getMatches } from "../utils/utils.js";
@@ -14,7 +15,7 @@ export async function saveMessage(req, res, next) {
   try {
     const projectId = req.query.projectId;
     const authUser = res.locals.user;
-    const { taskId, message, taggedUsers } = req.body;
+    const { taskId, subtaskId, message, taggedUsers } = req.body;
     const attachments = req.files || [];
 
     const tagged = JSON.parse(taggedUsers);
@@ -47,7 +48,7 @@ export async function saveMessage(req, res, next) {
     // Ensure that there is no duplicate value
     const uniqueTaggedUsers = Array.from(new Set(tagged));
 
-    if (!taskId || !message) {
+    if ((!taskId && !subtaskId) || !message) {
       return res
         .status(400)
         .send({ success: false, message: "Paramètres manquants" });
@@ -71,15 +72,23 @@ export async function saveMessage(req, res, next) {
       }
     }
 
-    const newMessage = new MessageModel({
+    const messageData = {
       projectId: projectId,
-      taskId: taskId,
       author: authUser?._id,
       message: messageWithImg ?? message,
       taggedUsers: uniqueTaggedUsers,
       readBy: [authUser?._id],
       files: files,
-    });
+    };
+
+    // Ajouter taskId ou subtaskId selon le cas
+    if (subtaskId) {
+      messageData.subtaskId = subtaskId;
+    } else {
+      messageData.taskId = taskId;
+    }
+
+    const newMessage = new MessageModel(messageData);
 
     const savedMessage = await newMessage.save();
 
@@ -101,16 +110,30 @@ export async function saveMessage(req, res, next) {
       }
     }
 
-    await TaskModel.findByIdAndUpdate(
-      { _id: taskId },
-      {
-        $addToSet: { messages: savedMessage._id },
-      },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
+    // Ajouter le message à la tâche ou sous-tâche appropriée
+    if (subtaskId) {
+      await SubtaskModel.findByIdAndUpdate(
+        { _id: subtaskId },
+        {
+          $addToSet: { messages: savedMessage._id },
+        },
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    } else {
+      await TaskModel.findByIdAndUpdate(
+        { _id: taskId },
+        {
+          $addToSet: { messages: savedMessage._id },
+        },
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    }
 
     return res.status(201).send({
       success: true,
@@ -127,18 +150,23 @@ export async function saveMessage(req, res, next) {
 
 export async function getMessages(req, res, next) {
   try {
-    const { taskId } = req.query;
+    const { taskId, subtaskId } = req.query;
 
-    if (!taskId) {
+    if (!taskId && !subtaskId) {
       return res.status(500).send({
         success: false,
         message: "Paramètres manquants",
       });
     }
 
-    const messages = await MessageModel.find({
-      taskId: taskId,
-    })
+    const query = {};
+    if (subtaskId) {
+      query.subtaskId = subtaskId;
+    } else {
+      query.taskId = taskId;
+    }
+
+    const messages = await MessageModel.find(query)
       .populate({
         path: "author",
         select: "lastName firstName picture",
@@ -499,16 +527,30 @@ export async function deleteMessage(req, res, next) {
       _id: req.params.id,
     });
 
-    await TaskModel.findByIdAndUpdate(
-      { _id: message?.taskId },
-      {
-        $pull: { messages: deletedMessage?._id },
-      },
-      {
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
+    // Supprimer le message de la tâche ou sous-tâche appropriée
+    if (message?.subtaskId) {
+      await SubtaskModel.findByIdAndUpdate(
+        { _id: message?.subtaskId },
+        {
+          $pull: { messages: deletedMessage?._id },
+        },
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    } else if (message?.taskId) {
+      await TaskModel.findByIdAndUpdate(
+        { _id: message?.taskId },
+        {
+          $pull: { messages: deletedMessage?._id },
+        },
+        {
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    }
 
     return res.status(200).send({
       success: true,

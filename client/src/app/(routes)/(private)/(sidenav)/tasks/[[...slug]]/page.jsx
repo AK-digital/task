@@ -61,14 +61,6 @@ function TasksContent() {
   // Utilisez le contexte du projet pour récupérer les tâches
   const { tasks, tasksLoading, mutateTasks, statuses, setQueries } = useProjectContext();
 
-  // Debug temporaire
-  console.log("Debug TasksPage:", {
-    tasksCount: tasks?.length,
-    tasksLoading,
-    statusesCount: statuses?.length,
-    todoStatuses: statuses?.filter(s => s.status === "todo" || s.todo === true)?.length
-  });
-
   // Créer une dépendance qui change quand les propriétés todo des statuts changent
   const todoStatusesSignature = useMemo(() => {
     if (!statuses || statuses.length === 0) return '';

@@ -3,7 +3,7 @@ import { GripVertical } from "lucide-react";
 export default function TaskDrag({ attributes, listeners }) {
   return (
     <div
-      className="task-col-drag task-content-col  text-color-border-color"
+      className="task-col-drag task-content-col text-gray-400 hover:text-gray-600 cursor-grab  active:cursor-grabbing "
       {...attributes}
       {...listeners}
       suppressHydrationWarning

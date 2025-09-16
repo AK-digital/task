@@ -1,4 +1,5 @@
 import { updateTaskPriority } from "@/actions/task";
+import { updatePriority } from "@/actions/unified";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
 import { useUserRole } from "../../../hooks/useUserRole";
@@ -45,10 +46,11 @@ export default function TaskPriority({ task }) {
     setCurrentPriority(priority);
     setIsOpen(false);
 
-    const response = await updateTaskPriority(
+    const response = await updatePriority(
       task?._id,
       project?._id || task?.projectId?._id,
-      priority?._id
+      priority?._id,
+      task?.isSubtask ? 'subtask' : 'task'
     );
 
     if (response?.status === "failure") {

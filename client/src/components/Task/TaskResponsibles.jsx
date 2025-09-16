@@ -3,6 +3,7 @@ import { PlusCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
+import { addResponsible as addResponsibleUnified, removeResponsible as removeResponsibleUnified } from "@/actions/unified";
 import socket from "@/utils/socket";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import DisplayPicture from "@/components/User/DisplayPicture.jsx";
@@ -30,7 +31,12 @@ export default function TaskResponsibles({ task, uid, user }) {
     const newMembers = members?.filter((m) => m?.user?._id !== member?._id);
     setMembers(newMembers);
 
-    const res = await addResponsible(task?._id, member?._id, project?._id);
+    const res = await addResponsibleUnified(
+      task?._id, 
+      project?._id, 
+      member?._id, 
+      task?.isSubtask ? 'subtask' : 'task'
+    );
 
     if (!res.success) {
       setResponsibles(task?.responsibles);
@@ -65,10 +71,11 @@ export default function TaskResponsibles({ task, uid, user }) {
     const newMembers = [...members, { user: responsible }];
     setMembers(newMembers);
 
-    const res = await removeResponsible(
+    const res = await removeResponsibleUnified(
       task?._id,
+      project?._id,
       responsible?._id,
-      project?._id
+      task?.isSubtask ? 'subtask' : 'task'
     );
 
     if (!res.success) {

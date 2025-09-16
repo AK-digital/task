@@ -39,7 +39,7 @@ sleep 3
 # Démarrage du client
 echo -e "${GREEN}🌐 Démarrage du client Next.js...${NC}"
 cd ../client
-HOSTNAME=0.0.0.0 PORT=3000 npm run dev &
+HOSTNAME=0.0.0.0 PORT=3000 FAST_REFRESH=false npm run dev &
 CLIENT_PID=$!
 echo "Client PID: $CLIENT_PID"
 

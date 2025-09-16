@@ -9,7 +9,7 @@ import {
   MoreVertical,
   Save,
   Settings2,
-  Trash2,
+  Trash2
 } from "lucide-react";
 import { useUserRole } from "../../../hooks/useUserRole";
 import { mutate } from "swr";
