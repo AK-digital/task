@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Task from "./Task";
 import SubtaskRow from "./SubtaskRow";
 import { createSubtask, getSubtasks, updateSubtask, deleteSubtask, reorderSubtasks } from "@/api/subtask";
 import socket from "@/utils/socket";
+import { AuthContext } from "@/context/auth";
 import {
   DndContext,
   closestCenter,
@@ -31,12 +32,38 @@ export default function TaskWithSubtasks({
   isDragging, 
   mutate 
 }) {
+  const { uid } = useContext(AuthContext);
   const [subtasks, setSubtasks] = useState([]);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
   const taskRef = useRef(null);
+
+  // Fonctions pour gérer la persistance de l'état dans localStorage
+  const getStorageKey = () => `subtask_expanded_${uid}_${task._id}`;
+  
+  const getExpandedStateFromStorage = () => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const stored = localStorage.getItem(getStorageKey());
+      return stored === 'true';
+    } catch (error) {
+      console.error('Erreur lors de la lecture du localStorage:', error);
+      return false;
+    }
+  };
+
+  const saveExpandedStateToStorage = (expanded) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(getStorageKey(), expanded.toString());
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde dans localStorage:', error);
+    }
+  };
+
+  // État isExpanded avec initialisation depuis localStorage
+  const [isExpanded, setIsExpanded] = useState(() => getExpandedStateFromStorage());
 
   // Drag & Drop sensors
   const sensors = useSensors(
@@ -46,6 +73,14 @@ export default function TaskWithSubtasks({
     })
   );
   
+
+  // Synchroniser l'état avec localStorage quand l'utilisateur ou la tâche change
+  useEffect(() => {
+    if (uid && task._id) {
+      const storedState = getExpandedStateFromStorage();
+      setIsExpanded(storedState);
+    }
+  }, [uid, task._id]);
 
   // Charger les sous-tâches quand on expand
   useEffect(() => {
@@ -89,7 +124,9 @@ export default function TaskWithSubtasks({
   };
 
   const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
+    const newExpandedState = !isExpanded;
+    setIsExpanded(newExpandedState);
+    saveExpandedStateToStorage(newExpandedState);
   };
 
   const handleCreateSubtask = async () => {
@@ -190,7 +227,9 @@ export default function TaskWithSubtasks({
               if (subtaskCount === 0) {
                 setShowAddForm(true);
               }
-              setIsExpanded(!isExpanded);
+              const newExpandedState = !isExpanded;
+              setIsExpanded(newExpandedState);
+              saveExpandedStateToStorage(newExpandedState);
             }}
           />
         </div>
