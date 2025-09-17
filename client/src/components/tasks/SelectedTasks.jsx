@@ -5,6 +5,7 @@ import {
   deleteTask,
   removeTaskFromArchive,
 } from "@/api/task";
+import { deleteSubtask } from "@/api/subtask";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
@@ -42,8 +43,11 @@ export default function SelectedTasks({
 
     if (!confirmed) return;
 
-    // Tasks is an array of task ids
-    await addTaskToArchive(selectedTasks, project?._id);
+    // Tasks is an array of task objects, extract IDs for tasks only
+    const taskIds = selectedTasks.filter(item => !item.isSubtask).map(item => item._id);
+    if (taskIds.length > 0) {
+      await addTaskToArchive(taskIds, project?._id);
+    }
 
     await mutate();
 
@@ -61,8 +65,11 @@ export default function SelectedTasks({
 
     if (!confirmed) return;
 
-    // Tasks is an array of task ids
-    await removeTaskFromArchive(selectedTasks, project?._id);
+    // Tasks is an array of task objects, extract IDs for tasks only
+    const taskIds = selectedTasks.filter(item => !item.isSubtask).map(item => item._id);
+    if (taskIds.length > 0) {
+      await removeTaskFromArchive(taskIds, project?._id);
+    }
 
     await mutate();
 
@@ -80,16 +87,47 @@ export default function SelectedTasks({
 
     if (!confirmed) return;
 
-    // Tasks is an array of task ids
-    const res = await deleteTask(selectedTasks, project?._id);
+    try {
+      // Séparer les tâches et les sous-tâches
+      const tasks = [];
+      const subtasks = [];
+      
+      selectedTasks.forEach(item => {
+        if (item.isSubtask) {
+          subtasks.push(item._id);
+        } else {
+          tasks.push(item._id);
+        }
+      });
 
-    if (!res.success) return;
+      // Supprimer les tâches normales
+      if (tasks.length > 0) {
+        const taskRes = await deleteTask(tasks, project?._id);
+        if (!taskRes?.success) {
+          console.error("Erreur lors de la suppression des tâches:", taskRes?.message);
+          return;
+        }
+      }
 
-    await mutate();
+      // Supprimer les sous-tâches une par une
+      if (subtasks.length > 0) {
+        const subtaskPromises = subtasks.map(subtaskId => deleteSubtask(subtaskId));
+        const subtaskResults = await Promise.all(subtaskPromises);
+        
+        // Vérifier que toutes les suppressions ont réussi
+        const failedDeletions = subtaskResults.filter(result => !result?.success);
+        if (failedDeletions.length > 0) {
+          console.error("Erreur lors de la suppression de certaines sous-tâches:", failedDeletions);
+          return;
+        }
+      }
 
-    socket.emit("update task", project?._id);
-
-    setSelectedTasks([]);
+      await mutate();
+      socket.emit("update task", project?._id);
+      setSelectedTasks([]);
+    } catch (error) {
+      console.error("Erreur lors de la suppression:", error);
+    }
   }
 
   return (

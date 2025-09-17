@@ -14,9 +14,14 @@ export default function TaskCheckbox({ task, setSelectedTasks }) {
   function handleSelectedTask(e) {
     setSelectedTasks((prev) => {
       if (e.target.checked) {
-        return [...prev, task?._id];
+        // Ajouter un objet avec l'ID et le type (tâche ou sous-tâche)
+        const taskItem = {
+          _id: task?._id,
+          isSubtask: task?.isSubtask || false
+        };
+        return [...prev, taskItem];
       } else {
-        return prev.filter((id) => id !== task?._id);
+        return prev.filter((item) => item._id !== task?._id);
       }
     });
   }
