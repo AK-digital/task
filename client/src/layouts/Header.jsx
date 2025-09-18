@@ -3,16 +3,24 @@
 import Notifications from "@/components/Notifications/Notifications";
 import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
-import { Bell } from "lucide-react";
+import { Bell, CheckSquare, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
+import { usePathname, useParams } from "next/navigation";
 import useSWR from "swr";
 import { getNotifications } from "@/api/notification";
+import { useViewContext } from "@/context/ViewContext";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
   const [notifOpen, setNotifOpen] = useState(false);
+  const pathname = usePathname();
+  const params = useParams();
+  const { currentView, setCurrentView } = useViewContext();
+
+  // Détecter si nous sommes sur une page de projet
+  const isProjectPage = pathname?.startsWith('/projects/') && params?.slug && params.slug[0];
 
   const { data, isLoading, mutate } = useSWR(
     `${process.env.API_URL}/notification`,
@@ -38,8 +46,40 @@ export default function Header() {
 
   return (
     <header className="w-full py-2 h-header-height">
-      <nav className="flex justify-end items-center h-full ml-30 mr-10">
-        <ul className="relative flex items-center gap-6 overflow-visible">
+      <nav className="flex justify-between items-center h-full ml-24 mr-10">
+        {/* View Switcher - Only show on project pages */}
+        {isProjectPage && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentView('tasks')}
+              className={`secondary-button  gap-2 px-3 py-1.5 rounded-[5px] text-sm font-medium transition-colors ${
+                currentView === 'tasks'
+                ? 'bg-secondary text-text-darker-color hover:bg-accent-color-light hover:text-white'
+                  : ''
+              }`}
+              title="Vue tâches"
+            >
+              <CheckSquare size={16} />
+              <span>Tâches</span>
+            </button>
+            <button
+              onClick={() => setCurrentView('time')}
+              className={`secondary-button gap-2 px-3 py-1.5  rounded-[5px] text-sm font-medium transition-colors ${
+                currentView === 'time'
+                ? 'bg-secondary text-text-darker-color hover:bg-accent-color-light hover:text-white'
+                  : ''
+              }`}
+              title="Temps du projet"
+            >
+              <Clock size={16} />
+              <span>Temps</span>
+            </button>
+          </div>
+        )}
+        
+        {/* Right side content */}
+        <div className="flex items-center">
+          <ul className="relative flex items-center gap-6 overflow-visible">
           <li className="relative flex justify-center items-center h-full overflow-visible">
             <button
               onClick={(e) => setNotifOpen(true)}
@@ -80,7 +120,8 @@ export default function Header() {
               />
             </Link>
           </li>
-        </ul>
+          </ul>
+        </div>
       </nav>
     </header>
   );

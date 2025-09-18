@@ -4,15 +4,18 @@ import { UserCog, Plus, FileText, Layers } from "lucide-react";
 import { useState } from "react";
 import GuestsModal from "@/components/Modals/GuestsModal";
 import TasksFilters from "@/components/tasks/TasksFilters";
+import TimeTrackingFilters from "@/components/TimeTrackings/TimeTrackingFilters";
 import { useProjectContext } from "@/context/ProjectContext";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
 import { useUserRole } from "../../hooks/useUserRole";
 import BoardsTemplateList from "@/components/Templates/BoardsTemplateList";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import { useViewContext } from "@/context/ViewContext";
 
-export default function ProjectHeader({ displayedFilters }) {
+export default function ProjectHeader({ displayedFilters, timeQueries, setTimeQueries }) {
   const { project, mutateProject } = useProjectContext();
+  const { currentView } = useViewContext();
   const [isOpen, setIsOpen] = useState(false);
   const members = project?.members || [];
   const [isAddingBoard, setIsAddingBoard] = useState(false);
@@ -77,59 +80,78 @@ export default function ProjectHeader({ displayedFilters }) {
       <header className="w-full pr-6">
         <nav className="flex items-center gap-5 pb-4">
           <ProjectTitle project={project} />
-          <TasksFilters displayedFilters={displayedFilters} />
-          {isAuthorized && (
-            <div 
-              className="relative"
-              onMouseEnter={() => !isAddingBoard && setShowBoardMenu(true)}
-              onMouseLeave={() => setShowBoardMenu(false)}
-            >
-              <div
-                className={`secondary-button ${isAddingBoard ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                title="Ajouter un tableau"
+          
+          {/* Filters - switch between tasks and time filters */}
+          {currentView === 'tasks' && <TasksFilters displayedFilters={displayedFilters} />}
+          {currentView === 'time' && timeQueries && setTimeQueries && (
+            <TimeTrackingFilters queries={timeQueries} setQueries={setTimeQueries} />
+          )}
+          
+          {/* Right side controls */}
+          <div className="flex items-center gap-4 ml-auto">
+            {/* Add board button - visible in tasks view */}
+            {isAuthorized && currentView === 'tasks' && (
+              <div 
+                className="relative"
+                onMouseEnter={() => !isAddingBoard && setShowBoardMenu(true)}
+                onMouseLeave={() => setShowBoardMenu(false)}
               >
-                <Plus size={20} />
-                <span className="text-sm font-medium whitespace-nowrap">
-                  {isAddingBoard ? 'Création...' : 'Ajouter un tableau'}
-                </span>
-              </div>
-              
-              {/* Menu déroulant */}
-              {showBoardMenu && !isAddingBoard && (
-                <div className="absolute top-full left-0 bg-secondary border border-gray-200 rounded-lg shadow-lg min-w-[250px]" style={{ zIndex: 9999 }}>
-                  <div className="py-2 flex flex-col gap-2">
-                    <div
-                      onClick={handleAddBoard}
-                      className="secondary-button mx-2 justify-start"
-                    >
-                      <FileText size={16} />
-                      <span className="text-sm font-medium">Ajouter un tableau vide</span>
-                    </div>
-                    <div
-                      onClick={handleAddTemplate}
-                      className="secondary-button mx-2 justify-start"
-                    >
-                      <Layers size={16} />
-                      <span className="text-sm font-medium">Ajouter depuis un modèle</span>
+                <div
+                  className={`secondary-button ${isAddingBoard ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                  title="Ajouter un tableau"
+                >
+                  <Plus size={20} />
+                  <span className="text-sm font-medium whitespace-nowrap">
+                    {isAddingBoard ? 'Création...' : 'Ajouter un tableau'}
+                  </span>
+                </div>
+                
+                {/* Menu déroulant */}
+                {showBoardMenu && !isAddingBoard && (
+                  <div className="absolute top-full left-0 bg-secondary border border-gray-200 rounded-lg shadow-lg min-w-[250px]" style={{ zIndex: 9999 }}>
+                    <div className="py-2 flex flex-col gap-2">
+                      <div
+                        onClick={handleAddBoard}
+                        className="secondary-button mx-2 justify-start"
+                      >
+                        <FileText size={16} />
+                        <span className="text-sm font-medium">Ajouter un tableau vide</span>
+                      </div>
+                      <div
+                        onClick={handleAddTemplate}
+                        className="secondary-button mx-2 justify-start"
+                      >
+                        <Layers size={16} />
+                        <span className="text-sm font-medium">Ajouter depuis un modèle</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
+            
+            {/* Members button - always visible */}
             <div
               className='secondary-button'
               onClick={(e) => setIsOpen(true)}
               title={`Gérer les ${members.length} membre${members.length > 1 ? 's' : ''} de l'équipe`}
-          >
-            <UserCog size={20} />
-            <span className="text-sm font-medium whitespace-nowrap">
-              Membres
-            </span>
-            <span className="text-xs bg-secondary text-gray-600 px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
-              {members.length}
-            </span>
+            >
+              <UserCog size={20} />
+              <span className="text-sm font-medium whitespace-nowrap">
+                Membres
+              </span>
+              <span className="text-xs bg-secondary text-gray-600 px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+                {members.length}
+              </span>
             </div>
+            
+            {/* Time tracking controls - visible in time view, after members button */}
+            {currentView === 'time' && (
+              <div id="time-tracking-controls" className="flex items-center gap-4">
+                {/* This will be populated by ProjectTimeTrackings */}
+              </div>
+            )}
+          </div>
            
         </nav>
       </header>
