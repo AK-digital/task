@@ -47,11 +47,11 @@ export default function TaskText({ task }) {
 
   return (
     <div
-      className="task-col-text task-content-col cursor-text"
+      className="task-col-text task-content-col"
       onClick={handleEdit}
     >
       {!isEdit && (
-        <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em] border border-transparent p-1 rounded-sm transition-all duration-200 hover:bg-third hover:border-gray-300">
+        <span className="block overflow-hidden whitespace-nowrap text-ellipsis text-normal tracking-[0.01em] border border-transparent p-1 rounded-sm transition-all duration-200 cursor-text hover:bg-third hover:border-gray-300">
           {value}
         </span>
       )}

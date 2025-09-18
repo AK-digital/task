@@ -160,13 +160,9 @@ export default function TaskContextMenu({
 
   const handleMenuClick = (action, type) => {
     if (type === 'delete') {
-      setIsOpen(false); // Fermer le menu contextuel d'abord
       setActionType('delete');
       setPendingAction(() => action);
-      // Délai pour laisser le temps au menu de se fermer avant d'ouvrir le modal
-      setTimeout(() => {
-        setConfirmOpen(true);
-      }, 100);
+      setConfirmOpen(true);
     } else {
       action();
     }
@@ -217,15 +213,27 @@ export default function TaskContextMenu({
 
   if (!isOpen) return null;
 
+  // Calculer la position du menu en fonction de l'espace disponible
+  const calculateMenuPosition = () => {
+    const menuHeight = 280; // Hauteur approximative du menu
+    const windowHeight = window.innerHeight;
+    const spaceBelow = windowHeight - position.y;
+    const shouldOpenUpward = spaceBelow < (menuHeight * 0.95);
+
+    return {
+      top: shouldOpenUpward ? `${position.y - menuHeight}px` : `${position.y}px`,
+      left: `${position.x}px`,
+    };
+  };
+
+  const menuPosition = calculateMenuPosition();
+
   return (
     <>
       <Portal>
         <div
-          className="task-context-menu fixed z-20001 bg-secondary rounded-lg w-max text-small py-2 px-4 shadow-xl text-text-dark-color select-none border border-[#e0e0e0]"
-          style={{
-            top: `${position.y}px`,
-            left: `${position.x}px`,
-          }}
+          className="task-context-menu fixed z-9998 bg-secondary rounded-lg w-max text-small py-2 px-4 shadow-xl text-text-dark-color select-none border border-[#e0e0e0]"
+          style={menuPosition}
         >
           <ul>
             <li
