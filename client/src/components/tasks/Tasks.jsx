@@ -2,7 +2,7 @@ import TaskWithSubtasks from "../Task/TaskWithSubtasks";
 import { isNotEmpty } from "@/utils/utils";
 import TasksHeader from "./TasksHeader";
 import TaskSkeletons from "../Task/TaskSkeletons";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import SelectedTasks from "./SelectedTasks";
 
 export default function Tasks({
@@ -17,6 +17,12 @@ export default function Tasks({
   setSelectedTasks,
   archive,
 }) {
+  // console.log('🟠 Tasks RENDER:', {
+  //   selectedTasksCount: selectedTasks?.length || 0,
+  //   selectedTasksIds: selectedTasks?.map(t => t._id) || [],
+  //   tasksCount: tasks?.length || 0
+  // });
+
   const [sortedTasks, setSortedTasks] = useState(tasks || []);
 
   useMemo(() => {
@@ -43,6 +49,7 @@ export default function Tasks({
                   task={task}
                   displayedElts={displayedElts}
                   setSelectedTasks={setSelectedTasks}
+                  selectedTasks={selectedTasks}
                   isDragging={task?._id === activeId}
                   mutate={mutateTasks}
                 />

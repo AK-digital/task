@@ -19,7 +19,7 @@ import TaskConversation from "./TaskConversation";
 import TaskCheckbox from "./TaskCheckbox";
 import TaskDrag from "./TaskDrag";
 
-export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts, parentTask, mutate, setSelectedTasks }) {
+export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts, parentTask, mutate, setSelectedTasks, selectedTasks }) {
   const { uid, user } = useContext(AuthContext);
   const { setOpenedTask } = useTaskContext();
   const [isEditing, setIsEditing] = useState(false);
@@ -212,7 +212,7 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
 
       {/* Checkbox */}
       {displayedElts.isCheckbox && (
-        <TaskCheckbox task={taskLikeSubtask} setSelectedTasks={setSelectedTasks} />
+        <TaskCheckbox task={taskLikeSubtask} setSelectedTasks={setSelectedTasks} selectedTasks={selectedTasks} />
       )}
 
       {/* Drag Handle */}

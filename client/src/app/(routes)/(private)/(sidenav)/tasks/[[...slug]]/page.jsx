@@ -56,7 +56,31 @@ export default function TasksPage() {
 }
 
 function TasksContent() {
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [selectedTasks, setSelectedTasksInternal] = useState([]);
+  
+  // Wrapper pour tracer tous les appels à setSelectedTasks
+  const setSelectedTasks = (newValue) => {
+    console.log('🔴 setSelectedTasks CALLED');
+    
+    if (typeof newValue === 'function') {
+      setSelectedTasksInternal((prev) => {
+        const result = newValue(prev);
+        console.log('🔴 Selection changed:', {
+          from: prev.length,
+          to: result.length
+        });
+        return result;
+      });
+    } else {
+      console.log('🔴 Selection set to:', newValue.length);
+      setSelectedTasksInternal(newValue);
+    }
+  };
+  
+  // console.log('🔵 TasksContent RENDER:', {
+  //   selectedTasksCount: selectedTasks.length,
+  //   selectedTasksIds: selectedTasks.map(t => t._id)
+  // });
 
   // Utilisez le contexte du projet pour récupérer les tâches
   const { tasks, tasksLoading, mutateTasks, statuses, setQueries } = useProjectContext();

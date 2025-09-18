@@ -24,6 +24,7 @@ export default function Task({
   task,
   displayedElts,
   setSelectedTasks,
+  selectedTasks,
   isDragging,
   mutate,
   // Props pour les sous-tâches (optionnelles)
@@ -129,7 +130,7 @@ export default function Task({
       >
       {/* Checkbox */}
       {isCheckbox && (
-        <TaskCheckbox task={task} setSelectedTasks={setSelectedTasks} />
+        <TaskCheckbox task={task} setSelectedTasks={setSelectedTasks} selectedTasks={selectedTasks} />
       )}
       {/* Drag */}
       {isDrag && (

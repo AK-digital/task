@@ -278,7 +278,7 @@
     content: "";
     left: 0;
     margin-left: -3px;
-    border-top-left-radius: 16px;
+    border-top-left-radius:10px;
     border-left: 3px solid var(--board-color, var(--color-color-border-color));
     width: 100%;
     height: 50%;
@@ -1012,13 +1012,61 @@
   
   /* Colonnes de base */
   .task-col-checkbox {
-    min-width: 15px;
-    width: 15px;
-    height: 15px;
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
+    padding: 2px;
+  }
+
+  /* Styles pour les checkboxes personnalisées */
+  .task-checkbox-custom {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-text-medium-color);
+    border-radius: 3px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .task-checkbox-custom:hover {
+    border-color: var(--color-accent-color);
+    background-color: var(--color-accent-color-transparent);
+  }
+
+  .task-checkbox-custom:checked {
+    background-color: var(--color-accent-color);
+    border-color: var(--color-accent-color);
+  }
+
+  .task-checkbox-custom:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  .task-checkbox-custom:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .task-checkbox-custom:disabled:hover {
+    border-color: var(--color-text-medium-color);
+    background-color: transparent;
   }
 
   .task-col-drag {
@@ -1323,6 +1371,7 @@
     height: 100%;
   }
 
+
   .task-content-col:not(:nth-child(1)):not(.task-col-text) {
     border-left: 1px solid var(--color-text-light-color);
   }
@@ -1590,7 +1639,10 @@
     color: white;
     font-size: 10px;
     font-weight: bold;
+    display: block;
+    z-index: 1;
   }
+
 
   :where(select:is([multiple], [size])) optgroup {
     font-weight: bolder;
