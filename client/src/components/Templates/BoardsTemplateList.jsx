@@ -44,16 +44,6 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate, inSid
   const bothNotEmpty =
     isNotEmpty(publicBoardTemplates) && isNotEmpty(privateBoardTemplates);
 
-  {
-    console.log("bothNotEmpty :", bothNotEmpty);
-  }
-  {
-    console.log("privateBoardTemplates :", privateBoardTemplates);
-  }
-  {
-    console.log("publicBoardTemplates :", publicBoardTemplates);
-  }
-
   // Version sidebar
   if (inSidebar) {
     return (

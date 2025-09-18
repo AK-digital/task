@@ -35,6 +35,13 @@ export default function TaskAdd({ boardId, projectId, onTaskCreated, shouldFocus
         socket.emit("update task", projectId);
         await mutate(`/task?projectId=${projectId}&archived=false`);
         onTaskCreated?.();
+        
+        // Remettre le focus dans l'input après la création
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        }, 100);
       }
     } catch (error) {
       console.error("Erreur lors de la création de la tâche:", error);

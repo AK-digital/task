@@ -14,12 +14,9 @@ export default function DropdownManageTemplate({
     setIsOpen((prev) => !prev);
   };
 
-  console.log(template.private);
 
   async function handleVisibility() {
     const response = await updateBoardTemplateVisibility(template?._id);
-
-    console.log(response);
 
     if (!response.success) {
       return;

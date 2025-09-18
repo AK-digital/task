@@ -11,10 +11,11 @@ import { AuthContext } from "@/context/auth";
 import socket from "@/utils/socket";
 import { checkRole } from "@/utils/utils";
 import { Archive, ArchiveRestore, Trash, Check } from "lucide-react";
-import { useContext, useCallback, useMemo, memo } from "react";
+import { useContext, useCallback, useMemo, memo, useState } from "react";
 import UserAssignFilter from "./UserAssignFilter";
 import BulkStatusFilter from "./BulkStatusFilter";
 import BulkPriorityFilter from "./BulkPriorityFilter";
+import ConfirmDialog from "../Modals/ConfirmDialog";
 
 const SelectedTasks = memo(function SelectedTasks({
   project,
@@ -24,6 +25,11 @@ const SelectedTasks = memo(function SelectedTasks({
   mutate,
 }) {
   const { uid } = useContext(AuthContext);
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    message: "",
+    onConfirm: null
+  });
 
   // Optimiser les calculs avec useMemo
   const { taskIds, subtaskIds, selectedCount } = useMemo(() => {
@@ -50,41 +56,45 @@ const SelectedTasks = memo(function SelectedTasks({
     setSelectedTasks([]);
   }, [setSelectedTasks]);
 
-  const handleAddToArchive = useCallback(async (e) => {
+  const handleAddToArchive = useCallback((e) => {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir archiver cette tâche ?"
-    );
+    setConfirmDialog({
+      isOpen: true,
+      message: selectedCount > 1 
+        ? `Êtes-vous sûr de vouloir archiver ces ${selectedCount} tâches ?`
+        : "Êtes-vous sûr de vouloir archiver cette tâche ?",
+      onConfirm: async () => {
+        if (taskIds.length > 0) {
+          await addTaskToArchive(taskIds, project?._id);
+        }
 
-    if (!confirmed) return;
+        await mutate();
+        socket.emit("update task", project?._id);
+        setSelectedTasks([]);
+      }
+    });
+  }, [taskIds, project?._id, mutate, setSelectedTasks, selectedCount]);
 
-    if (taskIds.length > 0) {
-      await addTaskToArchive(taskIds, project?._id);
-    }
-
-    await mutate();
-    socket.emit("update task", project?._id);
-    setSelectedTasks([]);
-  }, [taskIds, project?._id, mutate, setSelectedTasks]);
-
-  const handleRemoveFromArchive = useCallback(async (e) => {
+  const handleRemoveFromArchive = useCallback((e) => {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir restaurer cette tâche ?"
-    );
+    setConfirmDialog({
+      isOpen: true,
+      message: selectedCount > 1 
+        ? `Êtes-vous sûr de vouloir restaurer ces ${selectedCount} tâches ?`
+        : "Êtes-vous sûr de vouloir restaurer cette tâche ?",
+      onConfirm: async () => {
+        if (taskIds.length > 0) {
+          await removeTaskFromArchive(taskIds, project?._id);
+        }
 
-    if (!confirmed) return;
-
-    if (taskIds.length > 0) {
-      await removeTaskFromArchive(taskIds, project?._id);
-    }
-
-    await mutate();
-    socket.emit("update task", project?._id);
-    setSelectedTasks([]);
-  }, [taskIds, project?._id, mutate, setSelectedTasks]);
+        await mutate();
+        socket.emit("update task", project?._id);
+        setSelectedTasks([]);
+      }
+    });
+  }, [taskIds, project?._id, mutate, setSelectedTasks, selectedCount]);
 
   const handleAssignUsers = useCallback(async (userIds) => {
     if (!userIds || userIds.length === 0) return;
@@ -188,45 +198,47 @@ const SelectedTasks = memo(function SelectedTasks({
     }
   }, [taskIds, subtaskIds, project?._id, mutate]);
 
-  const handleDelete = useCallback(async (e) => {
+  const handleDelete = useCallback((e) => {
     e.preventDefault();
 
-    const confirmed = confirm(
-      " Êtes-vous sûr de vouloir supprimer cette tâche ?"
-    );
+    setConfirmDialog({
+      isOpen: true,
+      message: selectedCount > 1 
+        ? `Êtes-vous sûr de vouloir supprimer ces ${selectedCount} tâches ?`
+        : "Êtes-vous sûr de vouloir supprimer cette tâche ?",
+      onConfirm: async () => {
+        try {
+          // Supprimer les tâches normales
+          if (taskIds.length > 0) {
+            const taskRes = await deleteTask(taskIds, project?._id);
+            if (!taskRes?.success) {
+              console.error("Erreur lors de la suppression des tâches:", taskRes?.message);
+              return;
+            }
+          }
 
-    if (!confirmed) return;
+          // Supprimer les sous-tâches une par une
+          if (subtaskIds.length > 0) {
+            const subtaskPromises = subtaskIds.map(subtaskId => deleteSubtask(subtaskId));
+            const subtaskResults = await Promise.all(subtaskPromises);
+            
+            // Vérifier que toutes les suppressions ont réussi
+            const failedDeletions = subtaskResults.filter(result => !result?.success);
+            if (failedDeletions.length > 0) {
+              console.error("Erreur lors de la suppression de certaines sous-tâches:", failedDeletions);
+              return;
+            }
+          }
 
-    try {
-      // Supprimer les tâches normales
-      if (taskIds.length > 0) {
-        const taskRes = await deleteTask(taskIds, project?._id);
-        if (!taskRes?.success) {
-          console.error("Erreur lors de la suppression des tâches:", taskRes?.message);
-          return;
+          await mutate();
+          socket.emit("update task", project?._id);
+          setSelectedTasks([]);
+        } catch (error) {
+          console.error("Erreur lors de la suppression:", error);
         }
       }
-
-      // Supprimer les sous-tâches une par une
-      if (subtaskIds.length > 0) {
-        const subtaskPromises = subtaskIds.map(subtaskId => deleteSubtask(subtaskId));
-        const subtaskResults = await Promise.all(subtaskPromises);
-        
-        // Vérifier que toutes les suppressions ont réussi
-        const failedDeletions = subtaskResults.filter(result => !result?.success);
-        if (failedDeletions.length > 0) {
-          console.error("Erreur lors de la suppression de certaines sous-tâches:", failedDeletions);
-          return;
-        }
-      }
-
-      await mutate();
-      socket.emit("update task", project?._id);
-      setSelectedTasks([]);
-    } catch (error) {
-      console.error("Erreur lors de la suppression:", error);
-    }
-  }, [taskIds, subtaskIds, project?._id, mutate, setSelectedTasks]);
+    });
+  }, [taskIds, subtaskIds, project?._id, mutate, setSelectedTasks, selectedCount]);
 
   return (
     <div className="flex fixed z-2001 left-1/2 bottom-[6%] -translate-x-1/2 bg-secondary shadow-[0_0_15px_rgba(0,0,0,0.1)] rounded-lg text-black animate-[showAnim_0.2s_ease-out]">
@@ -242,6 +254,7 @@ const SelectedTasks = memo(function SelectedTasks({
               : "Tâche séléctionnée"}
           </span>
         </div>
+        
         {/* actions */}
         <div className="flex gap-3">
           {/* Attribution d'utilisateurs */}
@@ -302,6 +315,13 @@ const SelectedTasks = memo(function SelectedTasks({
           </button>
         </div>
       </div>
+      {/* Modal de confirmation */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={confirmDialog.onConfirm}
+        message={confirmDialog.message}
+      />
     </div>
   );
 });

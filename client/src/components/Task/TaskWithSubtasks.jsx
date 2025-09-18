@@ -85,14 +85,7 @@ export default function TaskWithSubtasks({
 
   // Charger les sous-tâches quand on expand
   useEffect(() => {
-    console.log('🟡 TaskWithSubtasks useEffect [isExpanded]:', {
-      taskId: task._id,
-      isExpanded,
-      subtasksLength: subtasks.length
-    });
-    
     if (isExpanded && subtasks.length === 0) {
-      console.log('🟡 TaskWithSubtasks - Loading subtasks');
       loadSubtasks();
     }
     // Toujours afficher le formulaire d'ajout quand on expand
@@ -103,16 +96,9 @@ export default function TaskWithSubtasks({
 
   // Écouter les mises à jour via Socket.IO
   useEffect(() => {
-    console.log('🟡 TaskWithSubtasks useEffect [Socket]:', {
-      taskId: task._id,
-      isExpanded
-    });
-    
     const handleTaskUpdate = () => {
-      console.log('🟡 TaskWithSubtasks - Socket update task received');
       // Recharger les sous-tâches si elles sont affichées (même si la liste est vide)
       if (isExpanded) {
-        console.log('🟡 TaskWithSubtasks - Reloading subtasks due to socket');
         loadSubtasks();
       }
     };
@@ -132,7 +118,6 @@ export default function TaskWithSubtasks({
     
     // Si des sous-tâches étaient sélectionnées et ne le sont plus (suppression en masse)
     if (isExpanded && prevSelectedSubtasks.length > 0 && currentSelectedSubtasks.length === 0) {
-      console.log('🟡 TaskWithSubtasks - Detected bulk subtask deletion, reloading...');
       // Recharger les sous-tâches après un court délai
       setTimeout(() => {
         loadSubtasks();
@@ -143,17 +128,14 @@ export default function TaskWithSubtasks({
   }, [selectedTasks, isExpanded]);
 
   const loadSubtasks = async () => {
-    console.log('🟡 TaskWithSubtasks - loadSubtasks called for task:', task._id);
     setLoading(true);
     try {
       const response = await getSubtasks(task._id);
-      console.log('🟡 TaskWithSubtasks - getSubtasks response:', response);
       if (response.success) {
         setSubtasks(response.data);
-        console.log('🟡 TaskWithSubtasks - Subtasks loaded:', response.data?.length || 0);
       }
     } catch (error) {
-      console.error("🔴 TaskWithSubtasks - Erreur lors du chargement des sous-tâches:", error);
+      console.error("Erreur lors du chargement des sous-tâches:", error);
     } finally {
       setLoading(false);
     }

@@ -17,11 +17,6 @@ export default function Tasks({
   setSelectedTasks,
   archive,
 }) {
-  // console.log('🟠 Tasks RENDER:', {
-  //   selectedTasksCount: selectedTasks?.length || 0,
-  //   selectedTasksIds: selectedTasks?.map(t => t._id) || [],
-  //   tasksCount: tasks?.length || 0
-  // });
 
   const [sortedTasks, setSortedTasks] = useState(tasks || []);
 

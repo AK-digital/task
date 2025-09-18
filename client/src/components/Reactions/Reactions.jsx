@@ -79,7 +79,6 @@ export default function Reactions({
           const emoji = reaction?.emoji;
           const total = reaction?.total;
           const users = reaction?.users;
-          console.log("element ", emoji);
           return (
             <div
               key={idx}

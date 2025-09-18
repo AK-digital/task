@@ -106,7 +106,6 @@ export default function Board({
         // Réinitialiser l'input
         if (inputRef.current) {
           inputRef.current.value = "";
-          inputRef.current.blur();
         }
 
         await mutateTasks();
@@ -114,6 +113,14 @@ export default function Board({
         socket.emit("update task", project?._id);
 
         setIsLoading(false);
+        
+        // Remettre le focus dans l'input après la création
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+            setIsInputFocused(true);
+          }
+        }, 100);
       }
     }
 

@@ -132,10 +132,6 @@ export default function Tiptap({
   );
   const [isTaggedUsers, setIsTaggedUsers] = useState(false);
 
-  // Debug: Log when isTaggedUsers changes
-  useEffect(() => {
-    console.log("🏷️ isTaggedUsers state changed to:", isTaggedUsers);
-  }, [isTaggedUsers]);
   const [taggedUsers, setTaggedUsers] = useState([]);
   const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
   const [value, setValue] = useState(
@@ -181,18 +177,11 @@ export default function Tiptap({
       from
     );
 
-    console.log("🔤 Mention detection:", {
-      textBeforeCursor: textBeforeCursor,
-      cursorPosition: from,
-      wasTaggedUsers: isTaggedUsers,
-    });
-
     // Vérifier si il y a un @ suivi de caractères avant le curseur
     const mentionRegex = /@(\w*)$/;
     const match = mentionRegex.exec(textBeforeCursor);
 
     if (match) {
-      console.log("📍 Mention detected, setting isTaggedUsers to TRUE");
       setIsTaggedUsers(true);
 
       // Récupérer la position du caret
@@ -208,7 +197,6 @@ export default function Tiptap({
         left: coords.left - editorRect.left,
       });
     } else {
-      console.log("🚫 No mention detected, setting isTaggedUsers to FALSE");
       setIsTaggedUsers(false);
     }
   };

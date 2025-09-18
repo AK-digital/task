@@ -300,7 +300,6 @@ export function ProjectInvitationsList({
 
   // Trouver le member correspondant à l'utilisateur actuel
   const currentMember = members?.find((member) => member?.user?._id === uid);
-  console.log(currentMember);
   useEffect(() => {
     if (state?.status === "success") {
       mutateProjectInvitation();

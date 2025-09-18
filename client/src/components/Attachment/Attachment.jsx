@@ -59,7 +59,6 @@ export default function Attachment({
 
   function handleAttachments(e) {
     const newFiles = Array.from(e.target.files);
-    console.log("newFiles", newFiles);
     const authorizedFiles = [];
     for (const file of newFiles) {
       if (file.size > 5 * 1024 * 1024) {

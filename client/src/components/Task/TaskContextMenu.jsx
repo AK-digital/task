@@ -160,9 +160,13 @@ export default function TaskContextMenu({
 
   const handleMenuClick = (action, type) => {
     if (type === 'delete') {
+      setIsOpen(false); // Fermer le menu contextuel d'abord
       setActionType('delete');
       setPendingAction(() => action);
-      setConfirmOpen(true);
+      // Délai pour laisser le temps au menu de se fermer avant d'ouvrir le modal
+      setTimeout(() => {
+        setConfirmOpen(true);
+      }, 100);
     } else {
       action();
     }
@@ -171,7 +175,6 @@ export default function TaskContextMenu({
   const handleConfirm = () => {
     pendingAction?.();
     setConfirmOpen(false);
-    setIsOpen(false);
   };
 
   const handleClickOutside = () => {

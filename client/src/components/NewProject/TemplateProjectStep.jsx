@@ -34,9 +34,6 @@ export default function TemplateProjectStep({ onComplete }) {
   const { privateTemplates, mutatePrivateTemplates } = usePrivateTemplate(true);
   const { publicTemplates, mutatePublicTemplates } = usePublicTemplate(false);
 
-  console.log(publicTemplates, "publicTemplates");
-  console.log(privateTemplates, "privateTemplates");
-
   // Sélectionner automatiquement le premier template selon l'onglet actuel
   const shouldShowFirstTemplate =
     !selectedTemplate &&

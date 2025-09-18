@@ -39,8 +39,6 @@ export default function TimeTrackingHeader({
       }
     });
 
-    console.log(newTrackers);
-
     setProjectSort(sort);
     setFilteredTrackers(newTrackers);
   };
