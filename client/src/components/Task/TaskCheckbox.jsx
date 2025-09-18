@@ -53,7 +53,7 @@ const TaskCheckbox = memo(function TaskCheckbox({ task, setSelectedTasks, select
         <label 
           htmlFor={`task-${task?._id}`}
           className={`
-            flex items-center justify-center w-4 h-4 border-2 rounded cursor-pointer transition-all duration-200
+            flex items-center justify-center w-4 h-4 border-1 rounded cursor-pointer 
             ${isChecked 
               ? 'bg-accent-color border-accent-color text-white' 
               : 'bg-transparent border-text-medium-color hover:border-accent-color'

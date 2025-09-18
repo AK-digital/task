@@ -232,21 +232,31 @@ export default function BoardHeader({
 
   const handleCheckBoard = (e) => {
     if (e.target.checked) {
-      setSelectedTasks((prev) => [...prev, ...tasks?.map((task) => task?._id)]);
+      // Ajouter toutes les tâches du board qui ne sont pas déjà sélectionnées
+      const currentSelectedIds = selectedTasks.map(item => item._id);
+      const tasksToAdd = tasks
+        ?.filter(task => !currentSelectedIds.includes(task._id))
+        .map(task => ({
+          _id: task._id,
+          isSubtask: false
+        })) || [];
+      
+      setSelectedTasks((prev) => [...prev, ...tasksToAdd]);
     } else {
-      setSelectedTasks((prev) => [
-        ...prev.filter(
-          (taskId) => !tasks?.map((task) => task?._id).includes(taskId)
-        ),
-      ]);
+      // Retirer toutes les tâches de ce board
+      const boardTaskIds = tasks?.map(task => task._id) || [];
+      setSelectedTasks((prev) => 
+        prev.filter(item => !boardTaskIds.includes(item._id))
+      );
     }
   };
 
   useEffect(() => {
     const inputs = document?.getElementsByName("task");
+    const selectedTaskIds = selectedTasks?.map(item => item._id) || [];
 
     for (const input of inputs) {
-      input.checked = selectedTasks?.includes(input?.value);
+      input.checked = selectedTaskIds.includes(input?.value);
     }
   }, [selectedTasks]);
 
