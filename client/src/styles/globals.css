@@ -137,8 +137,12 @@
     margin-left: 25px;
   }
 
-  .content_Tiptap ul {
-    list-style-type: inherit !important;
+  .content_Tiptap ul:not([data-type="taskList"]) {
+    list-style-type: disc !important;
+  }
+
+  .content_Tiptap ol {
+    list-style-type: decimal !important;
   }
 
   .content_Tiptap pre {
@@ -218,6 +222,32 @@
   }
 
   .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  /* Styles pour les checkboxes désactivées (messages envoyés) */
+  .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:disabled {
+    cursor: default;
+    opacity: 1; /* Garder l'opacité normale */
+  }
+
+  .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:disabled:hover {
+    border-color: #626366; /* Pas de changement au hover */
+  }
+
+  .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:disabled:checked {
+    background: #10b981;
+    border-color: #10b981;
+  }
+
+  .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:disabled:checked::after {
     content: '✓';
     position: absolute;
     top: 50%;
@@ -342,8 +372,86 @@
     margin-left: 25px;
   }
 
-  .text_Message ul {
+  .text_Message ul:not([data-type="taskList"]) {
     list-style-type: disc;
+  }
+
+  .text_Message ol {
+    list-style-type: decimal;
+  }
+
+  /* Styles pour les listes de tâches dans les messages affichés */
+ ul[data-type="taskList"] {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+ li[data-type="taskItem"] {
+    display: flex;
+    align-items: flex-start;
+    margin: 8px 0;
+    padding: 0;
+  }
+
+ .task-list-item-checkbox {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    cursor: default;
+    user-select: none;
+  }
+
+.task-list-item-checkbox input[type="checkbox"] {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    max-width: 22px;
+    max-height: 22px;
+    border: 2px solid #626366;
+    border-radius: 50%;
+    background: transparent;
+    cursor: default;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    display: block;
+    aspect-ratio: 1 / 1;
+  }
+
+.task-list-item-checkbox input[type="checkbox"]:checked {
+    background: #10b981;
+    border-color: #10b981;
+  }
+
+ .task-list-item-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+.task-list-item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+.task-list-item-content.checked {
+    text-decoration: line-through;
+    opacity: 0.6;
+    color: #6b7280;
+  }
+
+.task-list-item-content p {
+    margin: 0;
   }
 
   /* PopupMessage */
@@ -570,13 +678,17 @@
     margin: 12px 0;
   }
 
-  .content_TaskDescription ul {
+  .content_TaskDescription ul:not([data-type="taskList"]) {
     list-style-type: disc;
   }
 
   .content_TaskDescription ul,
   .content_TaskDescription ol {
     margin-left: 25px;
+  }
+
+  .content_TaskDescription ol {
+    list-style-type: decimal;
   }
 
   .content_TaskDescription strong {
@@ -602,6 +714,80 @@
   .content_TaskDescription span {
     color: var(--color-accent-color);
     font-weight: 500;
+  }
+
+  /* Styles pour les listes de tâches dans les descriptions */
+  .content_TaskDescription ul[data-type="taskList"] {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+  .content_TaskDescription li[data-type="taskItem"] {
+    display: flex;
+    align-items: flex-start;
+    margin: 8px 0;
+    padding: 0;
+  }
+
+  .content_TaskDescription .task-list-item-checkbox {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    cursor: default;
+    user-select: none;
+  }
+
+  .content_TaskDescription .task-list-item-checkbox input[type="checkbox"] {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    max-width: 22px;
+    max-height: 22px;
+    border: 2px solid #626366;
+    border-radius: 50%;
+    background: transparent;
+    cursor: default;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    display: block;
+    aspect-ratio: 1 / 1;
+  }
+
+  .content_TaskDescription .task-list-item-checkbox input[type="checkbox"]:checked {
+    background: #10b981;
+    border-color: #10b981;
+  }
+
+  .content_TaskDescription .task-list-item-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .content_TaskDescription .task-list-item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .content_TaskDescription .task-list-item-content.checked {
+    text-decoration: line-through;
+    opacity: 0.6;
+    color: #6b7280;
+  }
+
+  .content_TaskDescription .task-list-item-content p {
+    margin: 0;
   }
 
   /* TaskEstimate */
