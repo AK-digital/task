@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Calendar, Users } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
+import DisplayPicture from "../User/DisplayPicture";
 
 export default function TimeTrackingFilters({ queries, setQueries }) {
   const { project } = useProjectContext();
@@ -66,7 +67,7 @@ export default function TimeTrackingFilters({ queries, setQueries }) {
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent-color"
+            className="px-2 py-1 text-sm border border-gray-500 rounded focus:outline-none focus:ring-2 focus:ring-accent-color"
             placeholder="Date début"
           />
         </div>
@@ -75,7 +76,7 @@ export default function TimeTrackingFilters({ queries, setQueries }) {
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent-color"
+          className="px-2 py-1 text-sm border border-gray-500 rounded focus:outline-none focus:ring-2 focus:ring-accent-color"
           placeholder="Date fin"
         />
       </div>
@@ -84,10 +85,10 @@ export default function TimeTrackingFilters({ queries, setQueries }) {
       <div className="relative member-filter-dropdown">
         <button
           onClick={() => setShowMemberDropdown(!showMemberDropdown)}
-          className={`flex items-center gap-2 px-3 py-1 text-sm border rounded transition-colors ${
+          className={`secondary-button gap-2 px-3 py-1 text-sm transition-colors ${
             selectedMembers.length > 0
-              ? 'border-accent-color bg-accent-color-light text-accent-color'
-              : 'border-gray-300 hover:border-gray-400'
+              ? 'border-accent-color text-accent-color'
+              : ''
           }`}
         >
           <Users size={16} />
@@ -102,19 +103,24 @@ export default function TimeTrackingFilters({ queries, setQueries }) {
         {showMemberDropdown && (
           <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[200px] z-50">
             <div className="py-2">
-              {members.map((member) => (
+              {members.map((member, index) => (
                 <label
-                  key={member._id}
+                  key={member.user?._id || `member-${index}`}
                   className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 cursor-pointer"
                 >
                   <input
                     type="checkbox"
-                    checked={selectedMembers.includes(member._id)}
-                    onChange={() => handleMemberToggle(member._id)}
-                    className="rounded"
+                    checked={selectedMembers.includes(member.user?._id)}
+                    onChange={() => handleMemberToggle(member.user?._id)}
+                    className="rounded w-4 h-4 p-0"
+                  />
+                  <DisplayPicture
+                    user={member.user}
+                    style={{ width: "24px", height: "24px" }}
+                    className="rounded-full flex-shrink-0"
                   />
                   <span className="text-sm">
-                    {member.firstName} {member.lastName}
+                    {member.user?.firstName} {member.user?.lastName}
                   </span>
                 </label>
               ))}
@@ -127,7 +133,7 @@ export default function TimeTrackingFilters({ queries, setQueries }) {
       {hasActiveFilters && (
         <button
           onClick={clearFilters}
-          className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700 underline"
+          className="secondary-button text-sm px-3 py-1"
         >
           Effacer
         </button>

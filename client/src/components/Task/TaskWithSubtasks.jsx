@@ -263,7 +263,7 @@ export default function TaskWithSubtasks({
 
       {/* Sous-tâches expandables */}
       {isExpanded && (
-        <div className="ml-3">
+        <div className="ml-3 bg-[#f4f2e9]">
           {loading ? (
             <div className="py-2 px-4 text-sm text-gray-500">
               Chargement des sous-tâches...

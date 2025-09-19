@@ -1,6 +1,5 @@
 "use client";
 import { useParams, usePathname } from "next/navigation";
-import { useState } from "react";
 import {
   ArrowLeftFromLine,
   ArrowRightFromLine,
@@ -14,6 +13,7 @@ import Image from "next/image";
 import { useFavorites } from "../../hooks/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
+import { useSideNavContext } from "@/context/SideNavContext";
 
 export default function SideNav() {
   const pathname = usePathname();
@@ -23,7 +23,7 @@ export default function SideNav() {
   const projectId = id ?? "";
   const { favorites, favoritesLoading } = useFavorites();
   const projects = favorites?.map((favorite) => favorite.project);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isMenuOpen, setIsMenuOpen } = useSideNavContext();
 
   const isProjectsPage = pathname === "/projects";
   const isTasksPage = pathname === "/tasks";

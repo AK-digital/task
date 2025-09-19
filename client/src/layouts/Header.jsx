@@ -11,6 +11,7 @@ import { usePathname, useParams } from "next/navigation";
 import useSWR from "swr";
 import { getNotifications } from "@/api/notification";
 import { useViewContext } from "@/context/ViewContext";
+import { useSideNavContext } from "@/context/SideNavContext";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -18,6 +19,7 @@ export default function Header() {
   const pathname = usePathname();
   const params = useParams();
   const { currentView, setCurrentView } = useViewContext();
+  const { isMenuOpen } = useSideNavContext();
 
   // Détecter si nous sommes sur une page de projet
   const isProjectPage = pathname?.startsWith('/projects/') && params?.slug && params.slug[0];
@@ -45,7 +47,9 @@ export default function Header() {
   const unreadCount = unreadNotifications?.length;
 
   return (
-    <header className="w-full py-2 h-header-height">
+    <header className={`py-2 ml-auto h-header-height transition-all duration-150 ease-linear ${
+      isMenuOpen ? 'w-[calc(100%-145px)]' : 'w-full'
+    }`}>
       <nav className="flex justify-between items-center h-full ml-24 mr-10">
         {/* View Switcher - Only show on project pages */}
         {isProjectPage && (
