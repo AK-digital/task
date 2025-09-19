@@ -78,7 +78,7 @@ export default function Header() {
         )}
         
         {/* Right side content */}
-        <div className="flex items-center">
+        <div className="flex items-center ml-auto">
           <ul className="relative flex items-center gap-6 overflow-visible">
           <li className="relative flex justify-center items-center h-full overflow-visible">
             <button

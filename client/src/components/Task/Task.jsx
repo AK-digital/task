@@ -149,14 +149,12 @@ export default function Task({
             {subtaskCount > 0 ? (
                 <span
                 onClick={handleToggleExpand}
-                className={`subtask-toggle-button z-10 ${
-                  isExpanded ? '' : 'text-gray-300'
-                }`}
+                className="subtask-toggle-button z-10 text-gray-500 hover:text-accent-color"
               >
                 {isExpanded ? (
-                  <ChevronDown size={20} className="text-gray-500 hover:text-accent-color" />
+                  <ChevronDown size={20} />
                 ) : (
-                  <ChevronRight size={20} className="text-gray-400 hover:text-accent-color" />
+                  <ChevronRight size={20} />
                 )}
               </span>
             ) : (
