@@ -2,21 +2,22 @@ import { useProjectContext } from "@/context/ProjectContext";
 import { Undo } from "lucide-react";
 import DisplayPicture from "@/components/User/DisplayPicture";
 import { isNotEmpty } from "@/utils/utils";
+import { memo, useCallback, useMemo } from "react";
 
-export default function TasksAdminFilter({ queries, setQueries }) {
+const TasksAdminFilter = memo(function TasksAdminFilter({ queries, setQueries }) {
   const { project } = useProjectContext();
   const members = project?.members || [];
   const selectedMembers = queries?.responsiblesId || [];
   const hasMembers = queries?.responsiblesId?.length > 0;
 
-  function handleReset() {
+  const handleReset = useCallback(() => {
     setQueries((prev) => ({
       ...prev,
       responsiblesId: null,
     }));
-  }
+  }, [setQueries]);
 
-  function handleMemberClick(memberId) {
+  const handleMemberClick = useCallback((memberId) => {
     const isSelected = selectedMembers.includes(memberId);
     
     if (isSelected) {
@@ -33,7 +34,7 @@ export default function TasksAdminFilter({ queries, setQueries }) {
         responsiblesId: [...selectedMembers, memberId],
       }));
     }
-  }
+  }, [selectedMembers, setQueries]);
 
   return (
     <div className="flex items-center gap-2">
@@ -72,4 +73,6 @@ export default function TasksAdminFilter({ queries, setQueries }) {
       )}
     </div>
   );
-}
+});
+
+export default TasksAdminFilter;

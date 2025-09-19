@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, memo, useCallback, useMemo } from "react";
 import Task from "./Task";
 import SubtaskRow from "./SubtaskRow";
 import { createSubtask, getSubtasks, updateSubtask, deleteSubtask, reorderSubtasks } from "@/api/subtask";
 import socket from "@/utils/socket";
 import { AuthContext } from "@/context/auth";
+import { useOptimizedDebounce } from "../../hooks/useOptimizedDebounce";
 import {
   DndContext,
   closestCenter,
@@ -25,7 +26,7 @@ import {
 } from "@dnd-kit/modifiers";
 import { Plus } from "lucide-react";
 
-export default function TaskWithSubtasks({ 
+const TaskWithSubtasks = memo(function TaskWithSubtasks({ 
   task, 
   displayedElts, 
   setSelectedTasks, 
@@ -39,6 +40,9 @@ export default function TaskWithSubtasks({
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
   const taskRef = useRef(null);
+  
+  // État pour mémoriser si les sous-tâches étaient ouvertes avant le drag
+  const [wasExpandedBeforeDrag, setWasExpandedBeforeDrag] = useState(false);
 
   // Fonctions pour gérer la persistance de l'état dans localStorage
   const getStorageKey = () => `subtask_expanded_${uid}_${task._id}`;
@@ -65,6 +69,19 @@ export default function TaskWithSubtasks({
 
   // État isExpanded avec initialisation depuis localStorage
   const [isExpanded, setIsExpanded] = useState(() => getExpandedStateFromStorage());
+
+  // Gérer la fermeture/ouverture des sous-tâches pendant le drag
+  useEffect(() => {
+    if (isDragging && isExpanded) {
+      // Mémoriser que les sous-tâches étaient ouvertes et les fermer
+      setWasExpandedBeforeDrag(true);
+      setIsExpanded(false);
+    } else if (!isDragging && wasExpandedBeforeDrag) {
+      // Rouvrir les sous-tâches après le drop
+      setIsExpanded(true);
+      setWasExpandedBeforeDrag(false);
+    }
+  }, [isDragging, isExpanded, wasExpandedBeforeDrag]);
 
   // Drag & Drop sensors
   const sensors = useSensors(
@@ -309,7 +326,7 @@ export default function TaskWithSubtasks({
                       // Ne pas fermer le formulaire au blur, le garder toujours ouvert
                     }}
                     placeholder="Nouvelle sous-tâche..."
-                    className="task-col-text text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:border-accent-color"
+                    className="task-col-text text-sm border border-gray-300 rounded px-2 py-1 focus:bg-third focus:outline-none focus:border-accent-color"
                     autoFocus
                   />
                   <button
@@ -334,4 +351,6 @@ export default function TaskWithSubtasks({
 
     </>
   );
-}
+});
+
+export default TaskWithSubtasks;

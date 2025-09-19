@@ -1,7 +1,7 @@
 "use client";
 import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
 import Filters from "./Filters";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, memo, useCallback } from "react";
 import ExportPdfBtn from "./ExportPdfBtn";
 import { useTimeTrackings } from "../../../hooks/useTimeTrackings";
 import socket from "@/utils/socket";
@@ -10,8 +10,9 @@ import TimeTracking from "./TimeTracking";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import TimeTrackingHeader from "./TimeTrackingHeader";
 import TimeTrackingsSkeletons from "./TimeTrackingsSkeletons";
+import { useVirtualizedList } from "../../hooks/useVirtualizedList";
 
-export default function TimeTrackings({ searchParams }) {
+const TimeTrackings = memo(function TimeTrackings({ searchParams }) {
   const [queries, setQueries] = useState(searchParams);
   const { projects, projectsLoading } = useProjects();
   const { timeTrackings, timeTrackingsLoading, mutateTimeTrackings } =
@@ -29,6 +30,20 @@ export default function TimeTrackings({ searchParams }) {
       return acc + Math.floor(tracker?.duration / 1000) * 1000;
     }, 0);
   }, [timeTrackings]);
+
+  // Virtualisation pour les longues listes de time trackings
+  const shouldVirtualize = filteredTrackers.length > 50;
+  
+  const {
+    visibleItems: visibleTrackers,
+    containerProps,
+    innerProps,
+  } = useVirtualizedList({
+    items: filteredTrackers,
+    itemHeight: 42, // Hauteur d'un time tracking
+    containerHeight: 600,
+    overscan: 10,
+  });
 
   useEffect(() => {
     const handleTaskUpdated = () => {
@@ -65,9 +80,9 @@ export default function TimeTrackings({ searchParams }) {
     }
   }
 
-  function handleExport() {
+  const handleExport = useCallback(() => {
     exportTimeTracking(giveProjectsToExport(), timeTrackings);
-  }
+  }, [timeTrackings, queries]);
 
   return (
     <div className="h-full">
@@ -103,16 +118,32 @@ export default function TimeTrackings({ searchParams }) {
               setFilteredTrackers={setFilteredTrackers}
               setSelectedTrackers={setSelectedTrackers}
             />
-            {filteredTrackers.map((tracker) => {
-              return (
+            
+            {/* Rendu conditionnel : virtualisé ou normal */}
+            {shouldVirtualize ? (
+              <div {...containerProps}>
+                <div {...innerProps}>
+                  {visibleTrackers.map((tracker) => (
+                    <div key={tracker._id} style={tracker.style}>
+                      <TimeTracking
+                        tracker={tracker}
+                        setSelectedTrackers={setSelectedTrackers}
+                        mutateTimeTrackings={mutateTimeTrackings}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              filteredTrackers.map((tracker) => (
                 <TimeTracking
                   tracker={tracker}
                   setSelectedTrackers={setSelectedTrackers}
                   mutateTimeTrackings={mutateTimeTrackings}
-                  key={tracker?._id}
+                  key={tracker._id}
                 />
-              );
-            })}
+              ))
+            )}
           </>
         ) : (
           <div className="flex items-center justify-center h-full text-2xl">
@@ -131,4 +162,6 @@ export default function TimeTrackings({ searchParams }) {
       </div>
     </div>
   );
-}
+});
+
+export default TimeTrackings;

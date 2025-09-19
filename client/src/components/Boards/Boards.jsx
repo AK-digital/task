@@ -398,30 +398,6 @@ export default function Boards({ boards: initialBoards, tasksData }) {
               );
             })}
         </div>
-        <DragOverlay style={{ zIndex: 50000 }}>
-          {activeId && activeType === "task" ? (
-            <Task
-              id={activeId}
-              task={Object.values(tasks)
-                .flat()
-                .find((task) => task?._id === activeId)}
-              project={project}
-              displayedElts={displayedElts}
-              archive={archive}
-            />
-          ) : activeId && activeType === "board" ? (
-            <div className="relative translate-z-0 will-change-transform z-50000">
-              <Board
-                tasks={tasks[activeId] || []}
-                board={boards.find((board) => board._id === activeId)}
-                project={project}
-                archive={archive}
-                isOverlay={true}
-                displayedElts={displayedElts}
-              />
-            </div>
-          ) : null}
-        </DragOverlay>
       </DndContext>
       {!archive && canPost && (
         <div>

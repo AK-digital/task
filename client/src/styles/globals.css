@@ -49,6 +49,10 @@
       #2a4046 86%,
       #32484e 100%);
 
+  /* DRAG AND DROP */
+  --drag-cursor-offset-x: 0px;
+  --drag-cursor-offset-y: 0px;
+
   /* TEXT SIZES */
   --text-large: 1.2rem;
   --text-medium: 1rem;
@@ -58,6 +62,8 @@
   /* SPACING */
   --spacing-header-height: 54px;
   --spacing-aside-width: 66px;
+
+  --text-col-width: 640px;
 
   /* BOX SHADOW */
   --shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -1272,7 +1278,7 @@
     margin-left: 0.5rem; /* mx-2 */
     margin-right: 0.5rem;
     flex-grow: 1;
-    max-width: 700px;
+    max-width: var(--text-col-width);
     display: flex;
     align-items: center;
   }
@@ -1564,13 +1570,14 @@
 
   /* Force l'alignement exact pour la colonne de texte */
   .task-col-text.task-header-col,
-  .task-col-text.task-content-col {
+  .task-col-text.task-content-col
+   {
     box-sizing: border-box;
     width: 100%;
     min-width: 150px;
     margin-right: 0.5rem;
     flex-grow: 1;
-    max-width: 700px;
+    max-width: var(--text-col-width);
     display: flex;
     align-items: center;
   }
@@ -2004,13 +2011,14 @@
 
 /* Styles pour l'affichage inline des sous-tâches */
 .subtask-row {
-  padding-left: 14px;
+  padding-left: 21px;
   position: relative;
   border-bottom: 1px solid var(--color-text-light-color);
 }
 
 .subtask-row:first-child {
   border-top: 1px solid var(--color-text-light-color);
+      box-shadow: inset 0px 5px 5px 0 #0000000a;
 }
 
 .subtask-row:hover {
@@ -2041,9 +2049,44 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ===== DRAG AND DROP OPTIMIZATIONS ===== */
+
+/* Améliorer la performance du drag and drop */
+[data-dnd-context] {
+  will-change: transform;
+}
+
+/* Styles pour les éléments en cours de drag - éléments originaux */
+.sortable-item.is-dragging {
+  box-shadow: 0 3px 25px rgba(0, 0, 0, 0.1) !important;
+  background-color: var(--color-secondary) !important;
+  border-radius: 3px !important;
+  z-index: 50000 !important;
+  position: relative !important;
+  transition: none !important;
+  cursor: grabbing !important;
+}
+
+/* Zones de drop */
+.droppable-zone {
+  transition: background-color 150ms ease-in-out;
+}
+
+.droppable-zone.drag-over {
+  background-color: rgba(168, 126, 81, 0.1);
+  border: 2px dashed var(--color-accent-color);
+}
+
+/* Optimiser les transformations pendant le drag */
+.sortable-item {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Améliorer les performances sur mobile */
+@media (hover: none) and (pointer: coarse) {
+  .sortable-item {
+    touch-action: manipulation;
   }
-} */
+}

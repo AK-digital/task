@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo, useCallback, useMemo } from "react";
 import DisplayPicture from "../User/DisplayPicture";
 import { ChevronDownIcon, UserPlus, Undo } from "lucide-react";
 import Checkbox from "../UI/Checkbox";
 
-export default function UserAssignFilter({ project, onAssign }) {
+const UserAssignFilter = memo(function UserAssignFilter({ project, onAssign }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [members, setMembers] = useState([]);
@@ -17,37 +17,39 @@ export default function UserAssignFilter({ project, onAssign }) {
     }
   }, [project]);
 
-  function handleUserChange(e, member) {
+  const handleUserChange = useCallback((e, member) => {
     const isChecked = e.target.checked;
 
     if (isChecked) {
-      const newSelectedUsers = [...selectedUsers, member];
-      setSelectedUsers(newSelectedUsers);
+      setSelectedUsers(prev => [...prev, member]);
     } else {
-      const newSelectedUsers = selectedUsers.filter(
+      setSelectedUsers(prev => prev.filter(
         (u) => u?.user?._id !== member?.user?._id
-      );
-      setSelectedUsers(newSelectedUsers);
+      ));
     }
-  }
+  }, []);
 
-  function handleReset() {
+  const handleReset = useCallback(() => {
     setSelectedUsers([]);
-  }
+  }, []);
 
-  function handleAssign() {
+  const handleAssign = useCallback(() => {
     if (selectedUsers.length > 0) {
       const userIds = selectedUsers.map(u => u?.user?._id);
       onAssign(userIds);
       setSelectedUsers([]);
       setIsOpen(false);
     }
-  }
+  }, [selectedUsers, onAssign]);
+
+  const toggleOpen = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
   return (
     <div className="relative select-none">
       <div
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleOpen}
         className="secondary-button"
         data-open={isOpen}
       >
@@ -175,4 +177,6 @@ export default function UserAssignFilter({ project, onAssign }) {
       </>
     </div>
   );
-}
+});
+
+export default UserAssignFilter;

@@ -12,13 +12,13 @@ export default function TimeTrackingsSkeletons() {
             {/* Element selection */}
             <div className="flex justify-center items-center min-w-10 max-w-10 gap-1 w-full h-full cursor-default"></div>
             {/* Task text */}
-            <div className="flex items-center gap-4 w-full min-w-[200px] max-w-[700px] cursor-text">
+            <div className="flex items-center gap-4 w-full min-w-[200px] max-w-[var(--text-col-width)] cursor-text">
               <span className="overflow-hidden whitespace-nowrap text-ellipsis w-3.5 h-3.5 rounded-sm bg-primary"></span>
               <span className="block overflow-hidden whitespace-nowrap text-ellipsis w-1/2 h-3.5 rounded-sm bg-primary"></span>
             </div>
             <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-text-light-color px-4">
               <div className="rounded-full"></div>
-              <span className="block overflow-hidden whitespace-nowrap text-ellipsis w-full max-w-[700px] h-4.5 rounded-sm bg-primary"></span>
+              <span className="block overflow-hidden whitespace-nowrap text-ellipsis w-full max-w-[var(--text-col-width)] h-4.5 rounded-sm bg-primary"></span>
             </div>
             {/* user */}
             <div className="flex justify-center items-center gap-1 w-full h-full cursor-default min-w-[150px] max-w-[150px] border-l border-r border-text-light-color ">

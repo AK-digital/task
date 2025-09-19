@@ -5,10 +5,9 @@ import {
   usePrioritiesByProjects,
 } from "../../hooks/usePriorities";
 import { useProject } from "../../hooks/useProject";
-import { useProjectsStatus } from "../../hooks/useProjectsStatus";
 import { useStatuses, useStatusesByProjects } from "../../hooks/useStatus";
 import { useTasks } from "../../hooks/useTasks";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useMemo, useCallback } from "react";
 
 const ProjectContext = createContext(null);
 
@@ -42,25 +41,46 @@ export function ProjectProvider({
     ? usePriorities(initialProject?._id, initialPriorities)
     : usePrioritiesByProjects();
 
+  // Mémoriser les callbacks pour éviter les re-renders
+  const memoizedSetQueries = useCallback((newQueries) => {
+    setQueries(newQueries);
+  }, []);
+
+  // Mémoriser la valeur du contexte pour éviter les re-renders inutiles
+  const contextValue = useMemo(() => ({
+    project,
+    mutateProject,
+    boards,
+    mutateBoards,
+    tasks,
+    tasksLoading,
+    mutateTasks,
+    statuses,
+    mutateStatuses,
+    priorities,
+    mutatePriorities,
+    queries,
+    setQueries: memoizedSetQueries,
+    archive,
+  }), [
+    project,
+    mutateProject,
+    boards,
+    mutateBoards,
+    tasks,
+    tasksLoading,
+    mutateTasks,
+    statuses,
+    mutateStatuses,
+    priorities,
+    mutatePriorities,
+    queries,
+    memoizedSetQueries,
+    archive,
+  ]);
+
   return (
-    <ProjectContext.Provider
-      value={{
-        project,
-        mutateProject,
-        boards,
-        mutateBoards,
-        tasks,
-        tasksLoading,
-        mutateTasks,
-        statuses,
-        mutateStatuses,
-        priorities,
-        mutatePriorities,
-        queries,
-        setQueries,
-        archive,
-      }}
-    >
+    <ProjectContext.Provider value={contextValue}>
       {children}
     </ProjectContext.Provider>
   );

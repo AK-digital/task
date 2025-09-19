@@ -1,18 +1,21 @@
 import { Search } from "lucide-react";
-import { useDebouncedCallback } from "use-debounce";
+import { memo, useCallback } from "react";
+import { useOptimizedDebounce } from "../../hooks/useOptimizedDebounce";
 
-export default function TasksSearch({ setQueries }) {
-  function handleSearch(e) {
-    const value = e.target.value;
-    deboucedSearch(value);
-  }
-
-  const deboucedSearch = useDebouncedCallback((value) => {
+const TasksSearch = memo(function TasksSearch({ setQueries }) {
+  const updateSearch = useCallback((value) => {
     setQueries((prevQueries) => ({
       ...prevQueries,
-      search: value,
+      search: value || null,
     }));
-  }, 600);
+  }, [setQueries]);
+
+  const debouncedSearch = useOptimizedDebounce(updateSearch, 400);
+
+  const handleSearch = useCallback((e) => {
+    const value = e.target.value.trim();
+    debouncedSearch(value);
+  }, [debouncedSearch]);
 
   return (
     <div className="container_TasksSearch flex items-center gap-3 py-1 w-full max-w-[200px] transition-all duration-150 ease-in-out border-b border-color-border-color">
@@ -27,4 +30,6 @@ export default function TasksSearch({ setQueries }) {
       />
     </div>
   );
-}
+});
+
+export default TasksSearch;

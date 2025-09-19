@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo, useCallback, useMemo } from "react";
 import { ChevronDownIcon, Flag } from "lucide-react";
 import { getPriorityByProject } from "@/api/priority";
 
-export default function BulkPriorityFilter({ project, onPriorityChange }) {
+const BulkPriorityFilter = memo(function BulkPriorityFilter({ project, onPriorityChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [priorities, setPriorities] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,15 +26,19 @@ export default function BulkPriorityFilter({ project, onPriorityChange }) {
     loadPriorities();
   }, [project]);
 
-  const handlePrioritySelect = (priority) => {
+  const handlePrioritySelect = useCallback((priority) => {
     onPriorityChange(priority._id);
     setIsOpen(false);
-  };
+  }, [onPriorityChange]);
+
+  const toggleOpen = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
   return (
     <div className="relative select-none">
       <div
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleOpen}
         className="secondary-button"
         data-open={isOpen}
       >
@@ -93,4 +97,6 @@ export default function BulkPriorityFilter({ project, onPriorityChange }) {
       </>
     </div>
   );
-}
+});
+
+export default BulkPriorityFilter;

@@ -1,7 +1,7 @@
 import TaskBoard from "@/components/Task/TaskBoard";
 import TaskProject from "@/components/Task/TaskProject";
 import TaskText from "@/components/Task/TaskText";
-import { useContext, useState } from "react";
+import { useContext, useState, memo, useMemo, useCallback } from "react";
 import TaskResponsibles from "./TaskResponsibles";
 import TaskStatus from "./TaskStatus";
 import { AuthContext } from "@/context/auth";
@@ -20,7 +20,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Plus, ChevronDown, ChevronRight } from "lucide-react";
 
-export default function Task({
+const Task = memo(function Task({
   task,
   displayedElts,
   setSelectedTasks,
@@ -37,6 +37,8 @@ export default function Task({
 }) {
   const { uid, user } = useContext(AuthContext);
   const { openedTask } = useTaskContext();
+  
+  // Mémoriser la déstructuration des displayedElts
   const {
     isCheckbox,
     isDrag,
@@ -48,9 +50,11 @@ export default function Task({
     isDeadline,
     isEstimate,
     isTimer,
-  } = displayedElts;
+  } = useMemo(() => displayedElts, [displayedElts]);
+  
   const project = task?.projectId;
 
+  // Appeler les hooks au niveau supérieur
   const canDrag = useUserRole(project, ["owner", "manager", "team"]);
   const canContextMenu = useUserRole(project, [
     "owner",
@@ -62,7 +66,7 @@ export default function Task({
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
-  let { attributes, listeners, setNodeRef, transform, transition } =
+  let { attributes, listeners, setNodeRef, transform, transition, isDragging: sortableIsDragging } =
     useSortable({ id: task?._id });
 
   if (!canDrag) {
@@ -75,7 +79,10 @@ export default function Task({
     transition,
   };
 
-  const handleContextMenu = (e) => {
+  // Utiliser isDragging du prop ou du sortable
+  const isCurrentlyDragging = isDragging || sortableIsDragging;
+
+  const handleContextMenu = useCallback((e) => {
     if (!canContextMenu) return;
     
     // Ne pas ouvrir le menu contextuel si le clic provient du container_TaskMore
@@ -111,7 +118,7 @@ export default function Task({
       y: e.clientY,
     });
     setContextMenuOpen(true);
-  };
+  }, [canContextMenu]);
 
 
   return (
@@ -119,8 +126,8 @@ export default function Task({
       <div
         ref={setNodeRef}
         style={style}
-        className={`container_Task flex items-center border-t border-text-color h-[40px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] ${
-          isDragging ? "opacity-0" : ""
+        className={`container_Task sortable-item flex items-center border-t border-text-color h-[40px] cursor-pointer text-text-dark-color transition-all duration-[120ms] ease-in-out bg-secondary data-[openned=true]:bg-[#ebded1] data-[openned=true]:shadow-xl ${
+          isCurrentlyDragging ? "is-dragging" : ""
         }`}
         suppressHydrationWarning
         data-openned={openedTask === task?._id}
@@ -218,4 +225,6 @@ export default function Task({
       )}
     </>
   );
-}
+});
+
+export default Task;

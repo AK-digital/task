@@ -3,68 +3,61 @@ import { useFetch } from "@/utils/api";
 import { regex } from "@/utils/regex";
 import { signInSchema, signUpSchema } from "@/utils/zod";
 import { cookies } from "next/headers";
+import { 
+  withErrorHandling, 
+  optimizedValidation, 
+  optimizedApiCall,
+  createOptimizedAction 
+} from "@/utils/optimizedActions";
 
-export async function signUp(prevState, formData) {
-  try {
-    const rawFormData = {
-      lastName: formData.get("last-name"),
-      firstName: formData.get("first-name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
+const signUpAction = async (prevState, formData) => {
+  const rawFormData = {
+    lastName: formData.get("last-name"),
+    firstName: formData.get("first-name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
 
-    const validation = signUpSchema.safeParse(rawFormData);
+  // Validation optimisée avec cache
+  const cacheKey = `signUp_${rawFormData.email}`;
+  const validation = await optimizedValidation(signUpSchema, rawFormData, cacheKey);
 
-    if (!validation.success) {
-      const error = validation.error.flatten().fieldErrors;
-
-      return {
-        status: "failure",
-        payload: rawFormData,
-        message: "",
-        errors: error,
-      };
-    }
-
-    const options = {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(rawFormData),
-    };
-
-    const res = await useFetch("auth/sign-up", options);
-
-    const response = await res.json();
-
-    if (!response.success) {
-      throw new Error(response?.message);
-    }
-
-    return {
-      status: "success",
-      message: response?.message,
-    };
-  } catch (err) {
-    console.log(
-      err.message ||
-        "Une erreur est survenue lors de la création d'un nouvel utilisateur"
-    );
-    if (err.message.includes("E11000")) {
-      return {
-        status: "failure",
-        message: "Cette adresse e-mail est déjà utilisée",
-        errors: null,
-      };
-    }
+  if (!validation.success) {
+    const error = validation.error.flatten().fieldErrors;
     return {
       status: "failure",
-      message: err?.message,
-      errors: null,
+      payload: rawFormData,
+      message: "",
+      errors: error,
     };
   }
+
+  // Appel API optimisé avec retry
+  const res = await optimizedApiCall(
+    "auth/sign-up", 
+    "POST", 
+    "application/json", 
+    rawFormData,
+    { retries: 2, timeout: 8000 }
+  );
+
+  const response = await res.json();
+
+  if (!response.success) {
+    throw new Error(response?.message);
+  }
+
+  return {
+    status: "success",
+    message: response?.message,
+  };
+};
+
+export async function signUp(prevState, formData) {
+  return withErrorHandling(
+    () => signUpAction(prevState, formData),
+    'signUp'
+  );
 }
 
 export async function signIn(prevState, formData) {

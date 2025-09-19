@@ -1,9 +1,9 @@
 import { useUserRole } from "../../../hooks/useUserRole";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useState, memo, useCallback, useMemo } from "react";
 import { usePathname } from "next/navigation";
 
-export default function TasksHeader({
+const TasksHeader = memo(function TasksHeader({
   project,
   displayedElts,
   tasks,
@@ -41,7 +41,7 @@ export default function TasksHeader({
   ]);
   const canDrag = useUserRole(project, ["owner", "manager", "team"]);
 
-  function resetStates() {
+  const resetStates = useCallback(() => {
     setProjectSort(null);
     setBoardSort(null);
     setStatusSort(null);
@@ -49,13 +49,13 @@ export default function TasksHeader({
     setDeadlineSort(null);
     setEstimateSort(null);
     setTimerSort(null);
-  }
+  }, []);
 
-  function resetSort() {
+  const resetSort = useCallback(() => {
     setSortedTasks([...tasks]);
-  }
+  }, [tasks, setSortedTasks]);
 
-  function sortTasks(sort, elt, path) {
+  const sortTasks = useCallback((sort, elt, path) => {
     setSortedTasks((prev) => {
       const sortedTasks = [...prev]?.sort((a, b) => {
         const aValue = elt ? a[elt]?.[path] : a[path];
@@ -73,7 +73,7 @@ export default function TasksHeader({
       });
       return sortedTasks;
     });
-  }
+  }, [setSortedTasks]);
 
   function sortByProject(sort) {
     resetStates();
@@ -165,28 +165,6 @@ export default function TasksHeader({
     sortTasks(sort, null, "deadline");
   }
 
-  // function sortByEstimate(sort) {
-  //   resetStates();
-  //   if (sort === estimateSort) {
-  //     return resetSort();
-  //   }
-
-  //   setEstimateSort(sort);
-
-  //   sortTasks(sort, null, "estimation");
-  // }
-
-  // function sortByTimer(sort) {
-  //   resetStates();
-  //   if (sort === timerSort) {
-  //     return resetSort();
-  //   }
-
-  //   setTimerSort(sort);
-
-  //   sortTasks(sort, null, "timer");
-  // }
-
   return (
     <div
       className={`sticky z-1002 left-0 bg-secondary flex items-center w-full text-small text-text-color-muted ${
@@ -201,6 +179,11 @@ export default function TasksHeader({
       {(canDrag || isDrag) && (
         <div className="task-col-drag task-header-col"></div>
       )}
+     
+     {/* Text */}
+     <div className="w-[37px]">
+     </div>
+      
       {/* Tâche */}
       <div className="task-col-text task-header-col">
         <span className="text-center w-full block">Tâche</span>
@@ -350,4 +333,6 @@ export default function TasksHeader({
   
     </div>
   );
-}
+});
+
+export default TasksHeader;

@@ -155,7 +155,7 @@ export default function TimeTracking({
   return (
     <>
     <div
-      className="flex items-center bg-secondary border-b border-text-light-color text-normal h-[42px] last:border-b-0 last:rounded-bl-2xl w-full"
+      className="flex items-center bg-secondary border-b border-text-light-color text-normal h-[42px] w-full"
       data-tracker-id={tracker._id}
       onContextMenu={handleContextMenu}
     >

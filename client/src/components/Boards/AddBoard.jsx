@@ -3,14 +3,15 @@ import { Plus } from "lucide-react";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
 import { useUserRole } from "../../../hooks/useUserRole";
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
 import AddBoardIAModal from "../Modals/AddBoardIAModal";
+import Sidebar from "../Sidebar/Sidebar";
 import { bricolageGrostesque } from "@/utils/font";
 
-export default function AddBoard({ project, onBoardCreated }) {
+const AddBoard = memo(function AddBoard({ project, onBoardCreated }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [addBoardTemplate, setAddBoardTemplate] = useState(false);
+  const [showTemplateSidebar, setShowTemplateSidebar] = useState(false);
   const [showIAModal, setShowIAModal] = useState(false);
   const isAuthorized = useUserRole(project, [
     "owner",
@@ -19,7 +20,7 @@ export default function AddBoard({ project, onBoardCreated }) {
     "customer",
   ]);
 
-  async function handleAddBoard(projectId) {
+  const handleAddBoard = useCallback(async (projectId) => {
     setIsLoading(true);
     const response = await saveBoard(projectId);
 
@@ -36,7 +37,7 @@ export default function AddBoard({ project, onBoardCreated }) {
     if (onBoardCreated) {
       onBoardCreated();
     }
-  }
+  }, [onBoardCreated]);
 
   if (!isAuthorized) return null;
 
@@ -54,7 +55,7 @@ export default function AddBoard({ project, onBoardCreated }) {
       </button>
       <button
         type="button"
-        onClick={() => setAddBoardTemplate(true)}
+        onClick={() => setShowTemplateSidebar(true)}
         className="secondary-button"
       >
         <Plus size={18} />
@@ -68,18 +69,28 @@ export default function AddBoard({ project, onBoardCreated }) {
         <Plus size={18} />
         Ajout de tableau par IA
       </button> */}
-      {addBoardTemplate && (
-        <BoardsTemplateList
-          project={project}
-          setAddBoardTemplate={setAddBoardTemplate}
-        />
-      )}
       {showIAModal && (
         <AddBoardIAModal
           project={project}
           onClose={() => setShowIAModal(false)}
         />
       )}
+      
+      {/* Sidebar pour les modèles de tableaux */}
+      <Sidebar
+        isOpen={showTemplateSidebar}
+        onClose={() => setShowTemplateSidebar(false)}
+        title="Modèles de tableaux"
+        width="600px"
+      >
+        <BoardsTemplateList
+          project={project}
+          setAddBoardTemplate={() => setShowTemplateSidebar(false)}
+          inSidebar={true}
+        />
+      </Sidebar>
     </div>
   );
-}
+});
+
+export default AddBoard;

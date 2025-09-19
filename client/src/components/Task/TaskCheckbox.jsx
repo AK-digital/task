@@ -5,9 +5,10 @@ import { Check } from "lucide-react";
 const TaskCheckbox = memo(function TaskCheckbox({ task, setSelectedTasks, selectedTasks = [] }) {
   const project = task?.projectId;
 
+  // Appeler le hook au niveau supérieur
   const canEdit = useUserRole(project, [
     "owner",
-    "manager",
+    "manager", 
     "team",
     "customer",
   ]);
@@ -17,7 +18,9 @@ const TaskCheckbox = memo(function TaskCheckbox({ task, setSelectedTasks, select
     return new Set(selectedTasks.map(item => item._id));
   }, [selectedTasks]);
 
-  const isChecked = selectedTasksSet.has(task?._id);
+  const isChecked = useMemo(() => {
+    return selectedTasksSet.has(task?._id);
+  }, [selectedTasksSet, task?._id]);
 
   const handleSelectTask = useCallback((e) => {
     e.stopPropagation();

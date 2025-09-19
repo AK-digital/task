@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo, useCallback } from "react";
 import { ChevronDownIcon, CheckCircle } from "lucide-react";
 import { getStatusByProject } from "@/api/status";
 
-export default function BulkStatusFilter({ project, onStatusChange }) {
+const BulkStatusFilter = memo(function BulkStatusFilter({ project, onStatusChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,15 +26,19 @@ export default function BulkStatusFilter({ project, onStatusChange }) {
     loadStatuses();
   }, [project]);
 
-  const handleStatusSelect = (status) => {
+  const handleStatusSelect = useCallback((status) => {
     onStatusChange(status._id);
     setIsOpen(false);
-  };
+  }, [onStatusChange]);
+
+  const toggleOpen = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
   return (
     <div className="relative select-none">
       <div
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleOpen}
         className="secondary-button"
         data-open={isOpen}
       >
@@ -93,4 +97,6 @@ export default function BulkStatusFilter({ project, onStatusChange }) {
       </>
     </div>
   );
-}
+});
+
+export default BulkStatusFilter;

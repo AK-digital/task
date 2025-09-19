@@ -12,7 +12,7 @@ import {
   CopyPlus,
   Plus,
 } from "lucide-react";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef, memo, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
@@ -32,7 +32,7 @@ import { useTaskContext } from "@/context/TaskContext";
 import Portal from "../Portal/Portal";
 import Checkbox from "../UI/Checkbox";
 
-export default function BoardHeader({
+const BoardHeader = memo(function BoardHeader({
   board,
   open,
   setOpen,
@@ -120,7 +120,7 @@ export default function BoardHeader({
     setIsMoreOpen(false);
   }
 
-  const options = [
+  const options = useMemo(() => [
     {
       authorized: canArchive,
       function: handleDuplicateBoard,
@@ -141,7 +141,7 @@ export default function BoardHeader({
       remove: true,
       deletionName: board?.title,
     },
-  ];
+  ], [canArchive, isOwnerOrManager, handleDuplicateBoard, handleAddBoardTemplate, handleDeleteBoard, board?.title]);
 
   if (!archive) {
     options.splice(2, 0, {
@@ -423,4 +423,6 @@ export default function BoardHeader({
       )}
     </div>
   );
-}
+});
+
+export default BoardHeader;

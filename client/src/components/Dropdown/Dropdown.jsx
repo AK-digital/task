@@ -4,11 +4,11 @@ import { updateProjectRole } from "@/api/project";
 import { updateProjectInvitationRole } from "@/actions/projectInvitation";
 import socket from "@/utils/socket";
 import { memberRole } from "@/utils/utils";
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import { mutate } from "swr";
 import { ChevronDown } from "lucide-react";
 
-export function DropDown({
+const DropDown = memo(function DropDown({
   defaultValue,
   options,
   project,
@@ -18,11 +18,11 @@ export function DropDown({
   const [current, setCurrent] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleIsOpen = () => {
+  const handleIsOpen = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
-  async function handleChangeRole(e) {
+  const handleChangeRole = useCallback(async (e) => {
     const role = e?.currentTarget?.getAttribute("data-value");
     setCurrent(role);
     setIsOpen(false);
@@ -53,7 +53,7 @@ export function DropDown({
       mutate(`/project/${project?._id}`);
       socket.emit("update-project-role", memberId);
     }
-  }
+  }, [project, member, invitation, defaultValue]);
 
   return (
     <>
@@ -98,4 +98,6 @@ export function DropDown({
       </div>
     </>
   );
-}
+});
+
+export { DropDown };

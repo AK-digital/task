@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, memo, useCallback, useMemo } from "react";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,7 +19,7 @@ import UsersInfo from "../Popups/UsersInfo";
 import AttachmentsInfo from "../Popups/AttachmentsInfo";
 import Reactions from "../Reactions/Reactions";
 
-export default function Message({
+const Message = memo(function Message({
   task,
   message,
   project,
@@ -38,8 +38,12 @@ export default function Message({
 
   moment.locale("fr");
   const author = message?.author;
-  const date = moment(message?.createdAt);
-  const formattedDate = date.format("DD/MM/YYYY [à] HH:mm");
+  
+  // Mémoriser la date formatée pour éviter les recalculs
+  const formattedDate = useMemo(() => {
+    const date = moment(message?.createdAt);
+    return date.format("DD/MM/YYYY [à] HH:mm");
+  }, [message?.createdAt]);
 
   useEffect(() => {
     async function handleReadBy() {
@@ -58,7 +62,7 @@ export default function Message({
     handleReadBy();
   }, []);
 
-  async function handleDeleteMessage() {
+  const handleDeleteMessage = useCallback(async () => {
     setMore(false);
     setIsLoading(true);
     const response = await deleteMessage(message?.projectId, message?._id);
@@ -71,15 +75,15 @@ export default function Message({
     socket.emit("update task", project?._id);
 
     setIsLoading(false);
-  }
+  }, [message?.projectId, message?._id, mutateMessage, mutateTasks, project?._id]);
 
-  // Fonction pour nettoyer et gérer les images dans le HTML
-  const processMessageHTML = (htmlContent) => {
-    if (!htmlContent) return "";
+  // Mémoriser le HTML traité pour éviter les recalculs
+  const processedHTML = useMemo(() => {
+    if (!message?.message) return "";
 
     // Créer un élément temporaire pour traiter le HTML
     const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = htmlContent;
+    tempDiv.innerHTML = message.message;
 
     // Gérer toutes les images
     const images = tempDiv.querySelectorAll("img");
@@ -103,7 +107,7 @@ export default function Message({
     });
 
     return tempDiv.innerHTML;
-  };
+  }, [message?.message]);
 
   return (
     <>
@@ -183,7 +187,7 @@ export default function Message({
                 <div className="text_Message">
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: processMessageHTML(message?.message),
+                      __html: processedHTML,
                     }}
                   />
                   {/* Files */}
@@ -258,4 +262,6 @@ export default function Message({
       )}
     </>
   );
-}
+});
+
+export default Message;

@@ -12,7 +12,7 @@ export function TaskPending({ text }) {
         <GripVertical size={16} />
       </div>
 
-      <div className="p-1.5 w-full min-w-[200px] max-w-[700px]">
+      <div className="p-1.5 w-full min-w-[200px] max-w-[var(--text-col-width)]">
         <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{text}</span>
       </div>
 

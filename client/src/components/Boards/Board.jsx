@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useActionState, startTransition } from "react";
+import { useState, useEffect, useRef, useActionState, startTransition, memo, useCallback } from "react";
 import BoardHeader from "./BoardHeader";
 import { Plus } from "lucide-react";
 import { saveTask } from "@/actions/task";
@@ -18,7 +18,7 @@ const initialState = {
   errors: null,
 };
 
-export default function Board({
+const Board = memo(function Board({
   tasks,
   displayedElts,
   board,
@@ -29,7 +29,7 @@ export default function Board({
 }) {
   const { project, mutateTasks, archive } = useProjectContext();
 
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: board?._id,
   });
   const inputRef = useRef(null);
@@ -41,7 +41,7 @@ export default function Board({
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Fonction pour gérer le clic sur "Ajouter une tâche" depuis le header
-  const handleAddTaskClick = () => {
+  const handleAddTaskClick = useCallback(() => {
     if (inputRef.current) {
       // Forcer l'ouverture du tableau si fermé
       if (!open) {
@@ -67,7 +67,7 @@ export default function Board({
         }
       });
     }
-  };
+  }, [open]);
 
   const canPost = useUserRole(project, [
     "owner",
@@ -141,7 +141,7 @@ export default function Board({
       style={{ borderColor: `${optimisticColor}` }}
       className={` flex flex-col min-w-[1050px] rounded-[10px] shadow-small border-secondary bg-secondary border-l-[3px] ${
         isOverlay ? "relative translate-z-0 will-change-transform z-50000" : ""
-      }`}
+      } ${isOver && !isOverlay ? "droppable-zone drag-over" : ""}`}
     >
       {/* Board header - Utilisation de la classe sticky */}
       <BoardHeader
@@ -248,4 +248,6 @@ export default function Board({
       )}
     </div>
   );
-}
+});
+
+export default Board;

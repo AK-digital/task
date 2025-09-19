@@ -10,9 +10,11 @@ import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import TimeTrackingHeader from "./TimeTrackingHeader";
 import TimeTrackingsSkeletons from "./TimeTrackingsSkeletons";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useViewContext } from "@/context/ViewContext";
 
 export default function ProjectTimeTrackings({ timeQueries, setTimeQueries }) {
   const { project } = useProjectContext();
+  const { currentView } = useViewContext();
   const queries = timeQueries || { projects: [project?._id] };
   const setQueries = setTimeQueries || (() => {});
   
@@ -77,8 +79,8 @@ export default function ProjectTimeTrackings({ timeQueries, setTimeQueries }) {
 
   return (
     <div className="h-full">
-      {/* Inject controls into header */}
-      {typeof document !== 'undefined' && 
+      {/* Inject controls into header - seulement si on est dans la vue temps */}
+      {typeof document !== 'undefined' && currentView === 'time' && 
         createPortal(
           headerControls,
           document.getElementById('time-tracking-controls') || document.body

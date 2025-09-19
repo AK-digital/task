@@ -204,8 +204,8 @@ export default function SubtaskRow({ subtask, onUpdate, onDelete, displayedElts,
     <div
       ref={setNodeRef}
       style={style}
-      className={`subtask-row flex items-center border-t border-gray-100 h-[40px] transition-colors group cursor-pointer ${subtask.completed ? 'opacity-75' : ''
-        } ${isDragging ? 'opacity-50 z-50' : ''}`}
+      className={`subtask-row sortable-item flex items-center border-t border-gray-100 h-[40px] transition-colors group cursor-pointer ${subtask.completed ? 'opacity-75' : ''
+        } ${isDragging ? 'is-dragging' : ''}`}
       onContextMenu={handleContextMenu}
       onDoubleClick={handleDoubleClick}
     >

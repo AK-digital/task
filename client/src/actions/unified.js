@@ -1,24 +1,31 @@
 "use server";
 import { useAuthFetch } from "@/utils/api";
+import { 
+  withErrorHandling, 
+  optimizedApiCall,
+  getGlobalBatchProcessor 
+} from "@/utils/optimizedActions";
 
-// Fonction unifiée pour mettre à jour le statut (tâche ou sous-tâche)
+// Fonction unifiée optimisée pour mettre à jour le statut (tâche ou sous-tâche)
 export async function updateStatus(id, projectId, statusId, type = 'task') {
-  try {
+  return withErrorHandling(async () => {
     const endpoint = type === 'subtask' 
       ? `subtask/${id}/status` 
       : `task/${id}/status?projectId=${projectId}`;
     
-    const rawData = {
-      statusId: statusId,
-    };
+    const rawData = { statusId };
 
-    const res = await useAuthFetch(
+    // Utiliser le batch processor pour les mises à jour multiples
+    const batchProcessor = await getGlobalBatchProcessor();
+    const operation = () => optimizedApiCall(
       endpoint,
       "PATCH",
       "application/json",
-      rawData
+      rawData,
+      { retries: 2, timeout: 5000 }
     );
 
+    const res = await batchProcessor.add(operation);
     const response = await res.json();
 
     if (!response.success) {
@@ -26,17 +33,7 @@ export async function updateStatus(id, projectId, statusId, type = 'task') {
     }
 
     return response;
-  } catch (err) {
-    console.log(
-      err.message ||
-        `Une erreur est survenue lors de la mise à jour du statut de la ${type === 'subtask' ? 'sous-tâche' : 'tâche'}`
-    );
-
-    return {
-      success: false,
-      message: err?.message || "Une erreur est survenue",
-    };
-  }
+  }, `updateStatus_${type}`);
 }
 
 // Fonction unifiée pour mettre à jour la priorité (tâche ou sous-tâche)

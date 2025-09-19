@@ -5,8 +5,9 @@ import TasksAdminFilter from "./TasksAdminFilter";
 import TasksBoardFilter from "./TasksBoardFilter";
 import TasksProjectFilter from "./TasksProjectFilter";
 import { useProjectContext } from "@/context/ProjectContext";
+import { memo } from "react";
 
-export default function TasksFilters({ displayedFilters }) {
+const TasksFilters = memo(function TasksFilters({ displayedFilters }) {
   const { queries, setQueries } = useProjectContext();
   const { isSearch, isProject, isBoard, isAdmin, isStatus, isPriorities } =
     displayedFilters;
@@ -31,4 +32,6 @@ export default function TasksFilters({ displayedFilters }) {
       )}
     </div>
   );
-}
+});
+
+export default TasksFilters;

@@ -1,7 +1,7 @@
 "use client";
 import { isNotEmpty } from "@/utils/utils";
 import Message from "./Message";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, memo } from "react";
 import socket from "@/utils/socket";
 import { ClipboardCheck, MessagesSquareIcon } from "lucide-react";
 import Tiptap from "../RichTextEditor/Tiptap";
@@ -10,8 +10,9 @@ import { useMessages } from "../../../hooks/useMessages";
 import { useDrafts } from "../../../hooks/useDrafts";
 import MessagesSkeleton from "./MessagesSkeleton";
 import PendingMessage from "./PendingMessage";
+import { useVirtualizedList } from "../../hooks/useVirtualizedList";
 
-export default function Messages({
+const Messages = memo(function Messages({
   task,
   project,
   mutateTasks,
@@ -66,7 +67,21 @@ export default function Messages({
     if (!isAuthorized) return;
 
     setEdit(message?._id);
-  }, [project, message, edit]);
+  }, [project, message, edit, isAuthorized]);
+
+  // Virtualisation pour les longues listes de messages (plus de 20 messages)
+  const shouldVirtualize = messages?.length > 20;
+  
+  const {
+    visibleItems: visibleMessages,
+    containerProps,
+    innerProps,
+  } = useVirtualizedList({
+    items: messages || [],
+    itemHeight: 150, // Hauteur approximative d'un message
+    containerHeight: 600, // Hauteur du conteneur de messages
+    overscan: 3,
+  });
 
   return (
     <div className="flex flex-col gap-[15px]">
@@ -76,10 +91,30 @@ export default function Messages({
       {/* Loading */}
       {messageLoading && <MessagesSkeleton />}
       {/* Messages */}
-      {!messageLoading &&
-        isNotEmpty(messages) &&
-        messages?.map((message) => {
-          return (
+      {!messageLoading && isNotEmpty(messages) && (
+        shouldVirtualize ? (
+          <div {...containerProps}>
+            <div {...innerProps}>
+              {visibleMessages.map((message) => (
+                <Message
+                  task={task}
+                  message={message}
+                  setMessage={setMessage}
+                  mutateMessage={mutate}
+                  project={project}
+                  mutateTasks={mutateTasks}
+                  key={message?._id}
+                  mutateDraft={mutateDraft}
+                  showPreviewImageMessage={showPreviewImageMessage}
+                  setShowPreviewImageMessage={setShowPreviewImageMessage}
+                  edit={edit}
+                  setEdit={setEdit}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          messages?.map((message) => (
             <Message
               task={task}
               message={message}
@@ -94,8 +129,9 @@ export default function Messages({
               edit={edit}
               setEdit={setEdit}
             />
-          );
-        })}
+          ))
+        )
+      )}
       {isPending && <PendingMessage message={message} />}
       {edit === message?._id && (
         <Tiptap
@@ -135,4 +171,6 @@ export default function Messages({
       )}
     </div>
   );
-}
+});
+
+export default Messages;

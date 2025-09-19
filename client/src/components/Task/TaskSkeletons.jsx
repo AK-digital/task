@@ -11,7 +11,7 @@ export default function TaskSkeletons({ displayedElts }) {
           >
             {/* <div className="w-3.5 h-3.5 rounded-xs bg-primary"></div> */}
 
-            <div className="w-full max-w-[700px] h-4.5 ml-4 rounded-xs bg-primary"></div>
+            <div className="w-full max-w-[var(--text-col-width)] h-4.5 ml-4 rounded-xs bg-primary"></div>
 
             {isProject && (
               <div className="w-full max-w-[180px] h-4.5 rounded-xs bg-primary"></div>
