@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState, useRef, memo, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import socket from "@/utils/socket";
 import { isNotEmpty } from "@/utils/utils";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { MoreMenu } from "../Dropdown/MoreMenu";
 import {
   addBoardToArchive,

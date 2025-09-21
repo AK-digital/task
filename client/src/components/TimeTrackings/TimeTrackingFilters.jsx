@@ -112,7 +112,6 @@ export default function TimeTrackingFilters({ queries, setQueries }) {
                     type="checkbox"
                     checked={selectedMembers.includes(member.user?._id)}
                     onChange={() => handleMemberToggle(member.user?._id)}
-                    className="rounded w-4 h-4 p-0"
                   />
                   <DisplayPicture
                     user={member.user}

@@ -4,7 +4,7 @@ import TasksHeader from "./TasksHeader";
 import TaskSkeletons from "../Task/TaskSkeletons";
 import { useMemo, useState, useEffect, memo } from "react";
 import SelectedTasks from "./SelectedTasks";
-import { useVirtualizedList } from "../../hooks/useVirtualizedList";
+import { useVirtualizedList } from "@/hooks/useVirtualizedList";
 
 const Tasks = memo(function Tasks({
   project,

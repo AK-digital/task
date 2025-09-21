@@ -5,12 +5,12 @@ import { useCallback, useEffect, useState, memo } from "react";
 import socket from "@/utils/socket";
 import { ClipboardCheck, MessagesSquareIcon } from "lucide-react";
 import Tiptap from "../RichTextEditor/Tiptap";
-import { useUserRole } from "../../../hooks/useUserRole";
-import { useMessages } from "../../../hooks/useMessages";
-import { useDrafts } from "../../../hooks/useDrafts";
+import { useUserRole } from "@/hooks/api/useUserRole";
+import { useMessages } from "@/hooks/api/useMessages";
+import { useDrafts } from "@/hooks/api/useDrafts";
 import MessagesSkeleton from "./MessagesSkeleton";
 import PendingMessage from "./PendingMessage";
-import { useVirtualizedList } from "../../hooks/useVirtualizedList";
+import { useVirtualizedList } from "@/hooks/useVirtualizedList";
 
 const Messages = memo(function Messages({
   task,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Settings, X } from "lucide-react";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import GuestFormResend from "../Projects/GuestFormResend";
 import { leaveProject } from "@/api/project";
 import { useRouter } from "next/navigation";

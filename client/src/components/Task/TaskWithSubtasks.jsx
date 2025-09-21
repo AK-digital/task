@@ -5,7 +5,7 @@ import SubtaskRow from "./SubtaskRow";
 import { createSubtask, getSubtasks, updateSubtask, deleteSubtask, reorderSubtasks } from "@/api/subtask";
 import socket from "@/utils/socket";
 import { AuthContext } from "@/context/auth";
-import { useOptimizedDebounce } from "../../hooks/useOptimizedDebounce";
+import { useOptimizedDebounce } from "@/hooks/useOptimizedDebounce";
 import {
   DndContext,
   closestCenter,

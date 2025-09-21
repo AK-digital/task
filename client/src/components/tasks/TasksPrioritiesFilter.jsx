@@ -116,6 +116,7 @@ export default function TasksPrioritiesFilter({ queries, setQueries }) {
                           )
                         : false
                     }
+                    className="w-[18px] h-4 p-0"
                   />
                   <label
                     htmlFor={priority?._id}

@@ -2,26 +2,26 @@ import { updateTaskPriority } from "@/actions/task";
 import { updatePriority } from "@/actions/unified";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { Pen, Plus, Save } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useSidebarContext } from "@/context/SidebarContext";
 import TaskEditPriority from "./TaskEditPriority";
 import { savePriority } from "@/api/priority";
 import { priorityColors } from "@/utils/utils";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import FloatingMenu from "@/shared/components/FloatingMenu";
-import { usePriorities } from "../../../hooks/usePriorities";
-import Sidebar from "../Sidebar/Sidebar";
+import { usePriorities } from "@/hooks/api/usePriorities";
 
 export default function TaskPriority({ task }) {
   const { project, mutateTasks, priorities, mutatePriorities } =
     useProjectContext();
+  const { openPrioritySidebar } = useSidebarContext();
   const { priorities: prioritiesData, mutatePriorities: mutatePrioritiesData } =
     usePriorities(project?._id || task?.projectId?._id);
   const [currentPriority, setCurrentPriority] = useState(task?.priority);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const maxPriorities = priorities?.length === 12;
 
@@ -101,7 +101,7 @@ export default function TaskPriority({ task }) {
     if (!canEdit) return;
 
     setIsOpen(false);
-    setIsSidebarOpen(true);
+    openPrioritySidebar();
   }
 
   useMemo(() => {
@@ -185,40 +185,6 @@ export default function TaskPriority({ task }) {
           </div>
         </FloatingMenu>
       )}
-      
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        title="Modifier les priorités"
-        width="500px"
-      >
-        <div className="space-y-4">
-          <p className="text-text-color-muted text-sm">
-            Gérez les priorités de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouvelles priorités.
-          </p>
-          
-          <ul className="space-y-3 sidebar-edit-container">
-            {prioritiesData?.map((priority) => (
-              <TaskEditPriority
-                key={priority?._id}
-                priority={priority}
-                currentPriority={currentPriority}
-                setCurrentPriority={setCurrentPriority}
-              />
-            ))}
-            
-            {!maxPriorities && (
-              <li
-                className="secondary-button w-fit"
-                onClick={handleAddPriority}
-              >
-                <Plus size={16} />
-                Ajouter une nouvelle priorité
-              </li>
-            )}
-          </ul>
-        </div>
-      </Sidebar>
     </div>
   );
 }

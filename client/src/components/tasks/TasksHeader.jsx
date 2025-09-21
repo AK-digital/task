@@ -1,4 +1,4 @@
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState, memo, useCallback, useMemo } from "react";
 import { usePathname } from "next/navigation";

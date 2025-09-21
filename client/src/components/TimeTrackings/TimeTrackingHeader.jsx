@@ -151,8 +151,7 @@ export default function TimeTrackingHeader({
           id="trackers"
           name="trackers"
           onClick={handleSelectAllTrackers}
-          className="w-4 h-4 p-0 cursor-pointer"
-        />
+    />
       </div>
       {/* Task text - flex-1 min-w-0 */}
       <div className="flex-1 min-w-0 px-2">

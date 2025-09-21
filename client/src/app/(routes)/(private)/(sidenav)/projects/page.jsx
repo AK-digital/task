@@ -6,7 +6,7 @@ import ProjectCardSkeleton from "@/components/Projects/ProjectCardSkeleton";
 import ProjectsSearch from "@/components/Projects/ProjectsSearch";
 import ProjectsGrid from "@/components/Projects/ProjectsGrid";
 import ProjectListItem from "@/components/Projects/ProjectListItem";
-import { useProjects } from "../../../../../../hooks/useProjects";
+import { useProjects } from "@/hooks/api/useProjects";
 import { AuthContext } from "@/context/auth";
 import { useContext, useState, useEffect } from "react";
 import Link from "next/link";

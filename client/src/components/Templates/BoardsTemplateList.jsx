@@ -4,8 +4,8 @@ import {
   getPublicBoardsTemplates,
   useBoardTemplate,
 } from "@/api/boardTemplate";
-import { usePrivateBoardTemplate } from "@/app/hooks/usePrivateBoardTemplate";
-import { usePublicBoardTemplate } from "@/app/hooks/usePublicBoardTemplate";
+import { usePrivateBoardTemplate } from "@/hooks/templates/usePrivateBoardTemplate";
+import { usePublicBoardTemplate } from "@/hooks/templates/usePublicBoardTemplate";
 import { AuthContext } from "@/context/auth";
 import { isNotEmpty } from "@/utils/utils";
 import { useContext, useState } from "react";
@@ -92,7 +92,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate, inSid
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <button
                         type="button"
-                        className="secondary-button text-xs px-3 py-1"
+                        className="secondary-button text-sm px-3 py-1"
                         onClick={(e) =>
                           handleUseBoardTemplate(
                             e,
@@ -144,7 +144,7 @@ export default function BoardsTemplateList({ project, setAddBoardTemplate, inSid
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <button
                         type="button"
-                        className="secondary-button text-xs px-3 py-1"
+                        className="secondary-button text-sm px-3 py-1"
                         onClick={(e) =>
                           handleUseBoardTemplate(e, template?._id)
                         }

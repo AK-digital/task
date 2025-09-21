@@ -1,11 +1,12 @@
 import { deleteStatus, updateStatus } from "@/api/status";
 import { Palette, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDebouncedCallback } from "use-debounce";
-import ColorsPopup from "../Popups/ColorsPopup";
+import ColorsSidebar from "../Sidebar/ColorsSidebar";
 import { colors } from "@/utils/utils";
 import { useProjectContext } from "@/context/ProjectContext";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 
 export default function TaskEditStatus({
   status,
@@ -16,7 +17,7 @@ export default function TaskEditStatus({
     useProjectContext();
   const [isHover, setIsHover] = useState(false);
   const [name, setName] = useState(status?.name || "");
-  const [moreColor, setMoreColor] = useState(false);
+  const [showColorSidebar, setShowColorSidebar] = useState(false);
   const [color, setColor] = useState(status?.color || "");
   // La propriété todo peut être modifiée manuellement sauf pour les statuts de type "todo"
   const [isTodo, setIsTodo] = useState(status?.todo || status?.status === "todo");
@@ -151,18 +152,25 @@ export default function TaskEditStatus({
       <div
         className="flex justify-center items-center text-white h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
         style={{ backgroundColor: color }}
-        onClick={() => setMoreColor(true)}
+        onClick={() => setShowColorSidebar(true)}
       >
         <Palette size={16} />
-        {moreColor && (
-          <ColorsPopup
+      </div>
+      
+      {/* Sidebar pour les couleurs - rendue via portal */}
+      {typeof document !== 'undefined' && showColorSidebar && 
+        createPortal(
+          <ColorsSidebar
+            isOpen={showColorSidebar}
+            onClose={() => setShowColorSidebar(false)}
             colors={availableColors}
             setColor={setColor}
-            setMoreColor={setMoreColor}
             updateStatus={(newColor) => handleUpdateStatusColor(newColor)}
-          />
-        )}
-      </div>
+            title="Choisir une couleur de statut"
+          />,
+          document.body
+        )
+      }
       
       <div className="flex-1 flex items-center gap-3">
         <input
@@ -193,7 +201,7 @@ export default function TaskEditStatus({
               setIsTodo(newValue);
               handleUpdateTodo(newValue);
             }}
-            className={`p-0 w-4 h-4 bg-white border-2 border-gray-400 rounded-sm focus:ring-2 focus:ring-accent-color checked:bg-accent-color checked:border-accent-color checked:text-white appearance-none relative ${
+            className={`bg-white border-2 border-gray-400 rounded-sm focus:ring-2 focus:ring-accent-color checked:bg-accent-color checked:border-accent-color checked:text-white appearance-none relative ${
               status?.status === "todo" ? 'cursor-not-allowed opacity-75' : 'cursor-pointer'
             }`}
             style={{

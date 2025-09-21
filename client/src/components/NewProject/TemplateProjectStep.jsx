@@ -10,8 +10,8 @@ import {
   updateTemplateVisibility,
 } from "@/api/template";
 import { List, ListTodo, X, Plus } from "lucide-react";
-import { usePrivateTemplate } from "@/app/hooks/usePrivateTemplate";
-import { usePublicTemplate } from "@/app/hooks/usePublicTemplate";
+import { usePrivateTemplate } from "@/hooks/templates/usePrivateTemplate";
+import { usePublicTemplate } from "@/hooks/templates/usePublicTemplate";
 import { isNotEmpty } from "@/utils/utils";
 import { AuthContext } from "@/context/auth";
 

@@ -1,12 +1,12 @@
 "use client";
-import { useBoards } from "../../hooks/useBoards";
+import { useBoards } from "@/hooks/api/useBoards";
 import {
   usePriorities,
   usePrioritiesByProjects,
-} from "../../hooks/usePriorities";
-import { useProject } from "../../hooks/useProject";
-import { useStatuses, useStatusesByProjects } from "../../hooks/useStatus";
-import { useTasks } from "../../hooks/useTasks";
+} from "@/hooks/api/usePriorities";
+import { useProject } from "@/hooks/api/useProject";
+import { useStatuses, useStatusesByProjects } from "@/hooks/api/useStatus";
+import { useTasks } from "@/hooks/api/useTasks";
 import { createContext, useContext, useState, useMemo, useCallback } from "react";
 
 const ProjectContext = createContext(null);

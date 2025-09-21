@@ -1,7 +1,7 @@
 "use client";
 import { memo, useMemo, useCallback } from "react";
-import { useVirtualizedList } from "../../hooks/useVirtualizedList";
-import { useOptimizedDragDrop } from "../../hooks/useOptimizedDragDrop";
+import { useVirtualizedList } from "@/hooks/useVirtualizedList";
+import { useOptimizedDragDrop } from "@/hooks/useOptimizedDragDrop";
 
 /**
  * Composant de liste de tâches optimisé avec drag and drop et virtualisation

@@ -66,7 +66,6 @@ export default function AddTemplate({ project, setAddTemplate }) {
                 type="checkbox"
                 id="template-private"
                 name="template-private"
-                className="w-4 h-4"
                 defaultChecked={false}
               />
               <p>Partager ce modèle de projet avec les autres utilisateurs</p>

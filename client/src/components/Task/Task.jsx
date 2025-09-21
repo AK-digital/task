@@ -12,7 +12,7 @@ import TaskTimer from "./TaskTimer";
 import TaskConversation from "./TaskConversation";
 import TaskCheckbox from "./TaskCheckbox";
 import TaskDrag from "./TaskDrag";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { useTaskContext } from "@/context/TaskContext";
 import TaskMore from "./TaskMore";
 import TaskContextMenu from "./TaskContextMenu";

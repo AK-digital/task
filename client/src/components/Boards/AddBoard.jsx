@@ -2,8 +2,9 @@
 import { Plus } from "lucide-react";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { useState, memo, useCallback } from "react";
+import { createPortal } from "react-dom";
 import BoardsTemplateList from "../Templates/BoardsTemplateList";
 import AddBoardIAModal from "../Modals/AddBoardIAModal";
 import Sidebar from "../Sidebar/Sidebar";
@@ -42,54 +43,61 @@ const AddBoard = memo(function AddBoard({ project, onBoardCreated }) {
   if (!isAuthorized) return null;
 
   return (
-    <div className="flex gap-3">
-      <button
-        type="submit"
-        data-disabled={isLoading}
-        disabled={isLoading}
-        onClick={() => handleAddBoard(project?._id)}
-        className="secondary-button"
-      >
-        <Plus size={18} />
-        Tableau vide
-      </button>
-      <button
-        type="button"
-        onClick={() => setShowTemplateSidebar(true)}
-        className="secondary-button"
-      >
-        <Plus size={18} />
-        Modèle de tableau
-      </button>
-      {/* <button
-        type="button"
-        className="font-bricolage flex justify-center items-center gap-1.5"
-        onClick={() => setShowIAModal(true)}
-      >
-        <Plus size={18} />
-        Ajout de tableau par IA
-      </button> */}
-      {showIAModal && (
-        <AddBoardIAModal
-          project={project}
-          onClose={() => setShowIAModal(false)}
-        />
-      )}
+    <>
+      <div className="flex gap-3">
+        <button
+          type="submit"
+          data-disabled={isLoading}
+          disabled={isLoading}
+          onClick={() => handleAddBoard(project?._id)}
+          className="secondary-button"
+        >
+          <Plus size={18} />
+          Tableau vide
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowTemplateSidebar(true)}
+          className="secondary-button"
+        >
+          <Plus size={18} />
+          Modèle de tableau
+        </button>
+        {/* <button
+          type="button"
+          className="font-bricolage flex justify-center items-center gap-1.5"
+          onClick={() => setShowIAModal(true)}
+        >
+          <Plus size={18} />
+          Ajout de tableau par IA
+        </button> */}
+        {showIAModal && (
+          <AddBoardIAModal
+            project={project}
+            onClose={() => setShowIAModal(false)}
+          />
+        )}
+      </div>
       
-      {/* Sidebar pour les modèles de tableaux */}
-      <Sidebar
-        isOpen={showTemplateSidebar}
-        onClose={() => setShowTemplateSidebar(false)}
-        title="Modèles de tableaux"
-        width="600px"
-      >
-        <BoardsTemplateList
-          project={project}
-          setAddBoardTemplate={() => setShowTemplateSidebar(false)}
-          inSidebar={true}
-        />
-      </Sidebar>
-    </div>
+      {/* Sidebar pour les modèles de tableaux - rendue via portal */}
+      {typeof document !== 'undefined' && showTemplateSidebar && 
+        createPortal(
+          <Sidebar
+            isOpen={showTemplateSidebar}
+            onClose={() => setShowTemplateSidebar(false)}
+            title="Modèles de tableaux"
+            width="600px"
+          >
+            <BoardsTemplateList
+              project={project}
+              setAddBoardTemplate={() => setShowTemplateSidebar(false)}
+              inSidebar={true}
+            />
+          </Sidebar>,
+          document.body
+        )
+      }
+    </>
   );
 });
 

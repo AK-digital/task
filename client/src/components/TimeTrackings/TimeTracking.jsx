@@ -8,7 +8,7 @@ import socket from "@/utils/socket";
 import { useDebouncedCallback } from "use-debounce";
 import { BadgeEuro } from "lucide-react";
 import TimeTrackingContextMenu from "./TimeTrackingContextMenu";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { updateTaskText } from "@/api/task";
 import {
   updateTimeTrackingText,
@@ -167,7 +167,6 @@ export default function TimeTracking({
           id={`tracker-${tracker?._id}`}
           defaultValue={tracker?._id}
           onClick={handleSelectTracker}
-          className="w-4 h-4 p-0 cursor-pointer"
         />
       </div>
       {/* Task text */}

@@ -1,6 +1,6 @@
 "use client";
 import { memo, useMemo } from "react";
-import { useVirtualizedList } from "../../hooks/useVirtualizedList";
+import { useVirtualizedList } from "@/hooks/useVirtualizedList";
 
 /**
  * Composant de liste optimisé avec virtualisation automatique

@@ -17,7 +17,7 @@ import { deleteProject, updateProjectLogo } from "@/api/project";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/actions/project";
 import PopupMessage from "@/layouts/PopupMessage";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { mutate } from "swr";
 import { icons, isNotEmpty } from "@/utils/utils";
 import ConfirmationDelete from "../Popups/ConfirmationDelete";

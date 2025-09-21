@@ -1,10 +1,11 @@
 import { deletePriority, updatePriority } from "@/api/priority";
 import { Palette, Trash } from "lucide-react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useDebouncedCallback } from "use-debounce";
-import ColorsPopup from "../Popups/ColorsPopup";
+import ColorsSidebar from "../Sidebar/ColorsSidebar";
 import { useProjectContext } from "@/context/ProjectContext";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { priorityColors } from "@/utils/utils";
 
 export default function TaskEditPriority({
@@ -16,7 +17,7 @@ export default function TaskEditPriority({
     useProjectContext();
   const [isHover, setIsHover] = useState(false);
   const [name, setName] = useState(priority?.name || "");
-  const [moreColor, setMoreColor] = useState(false);
+  const [showColorSidebar, setShowColorSidebar] = useState(false);
   const [color, setColor] = useState(priority?.color || "");
   const prioritiesColors = priorities.map((p) => p.color);
   const availableColors = priorityColors.filter(
@@ -115,18 +116,25 @@ export default function TaskEditPriority({
       <div
         className="flex justify-center items-center text-white h-8 w-8 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
         style={{ backgroundColor: color }}
-        onClick={() => setMoreColor(true)}
+        onClick={() => setShowColorSidebar(true)}
       >
         <Palette size={16} />
-        {moreColor && (
-          <ColorsPopup
+      </div>
+      
+      {/* Sidebar pour les couleurs - rendue via portal */}
+      {typeof document !== 'undefined' && showColorSidebar && 
+        createPortal(
+          <ColorsSidebar
+            isOpen={showColorSidebar}
+            onClose={() => setShowColorSidebar(false)}
             colors={availableColors}
             setColor={setColor}
-            setMoreColor={setMoreColor}
             updateStatus={(newColor) => handleUpdatePriorityColor(newColor)}
-          />
-        )}
-      </div>
+            title="Choisir une couleur de priorité"
+          />,
+          document.body
+        )
+      }
       
       <input
         type="text"

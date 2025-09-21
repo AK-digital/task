@@ -3,7 +3,7 @@ import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import ExportPdfBtn from "./ExportPdfBtn";
-import { useTimeTrackings } from "../../../hooks/useTimeTrackings";
+import { useTimeTrackings } from "@/hooks/api/useTimeTrackings";
 import socket from "@/utils/socket";
 import TimeTracking from "./TimeTracking";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";

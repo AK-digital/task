@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import { memo, useCallback } from "react";
-import { useOptimizedDebounce } from "../../hooks/useOptimizedDebounce";
+import { useOptimizedDebounce } from "@/hooks/useOptimizedDebounce";
 
 const TasksSearch = memo(function TasksSearch({ setQueries }) {
   const updateSearch = useCallback((value) => {

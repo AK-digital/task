@@ -1,4 +1,4 @@
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { useMemo, memo, useCallback } from "react";
 import { Check } from "lucide-react";
 

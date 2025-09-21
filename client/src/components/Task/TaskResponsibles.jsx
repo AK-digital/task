@@ -1,7 +1,7 @@
 import { isNotEmpty, sendNotification } from "@/utils/utils";
 import { PlusCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { addResponsible, removeResponsible } from "@/api/task";
 import { addResponsible as addResponsibleUnified, removeResponsible as removeResponsibleUnified } from "@/actions/unified";
 import socket from "@/utils/socket";

@@ -11,7 +11,7 @@ import {
   Settings2,
   Trash2
 } from "lucide-react";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { mutate } from "swr";
 import { useRouter } from "next/navigation";
 import { deleteProject, exportProject } from "@/api/project";

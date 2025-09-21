@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useFavorites } from "../../hooks/useFavorites";
+import { useFavorites } from "@/hooks/api/useFavorites";
 import ProjectSideNav from "@/components/Projects/ProjectSideNav";
 import ProjectSideNavSkeleton from "@/components/Projects/ProjectSideNavSkeleton";
 import { useSideNavContext } from "@/context/SideNavContext";

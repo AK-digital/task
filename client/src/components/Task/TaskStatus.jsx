@@ -3,23 +3,23 @@ import { updateTaskStatus } from "@/actions/task";
 import { updateStatus } from "@/actions/unified";
 import { useCallback, useMemo, useState } from "react";
 import socket from "@/utils/socket";
-import { useUserRole } from "../../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import { Pen, Plus, Save } from "lucide-react";
 import { useProjectContext } from "@/context/ProjectContext";
+import { useSidebarContext } from "@/context/SidebarContext";
 import TaskEditStatus from "./TaskEditStatus";
 import { saveStatus } from "@/api/status";
 import { colors } from "@/utils/utils";
 import FloatingMenu from "@/shared/components/FloatingMenu";
-import Sidebar from "../Sidebar/Sidebar";
 
 export default function TaskStatus({ task, uid }) {
   const { project, mutateTasks, statuses, mutateStatuses } =
     useProjectContext();
+  const { openStatusSidebar } = useSidebarContext();
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const maxStatuses = statuses?.length === 12;
 
@@ -95,7 +95,7 @@ export default function TaskStatus({ task, uid }) {
     if (!canEdit) return;
 
     setIsOpen(false);
-    setIsSidebarOpen(true);
+    openStatusSidebar();
   }
 
   useMemo(() => {
@@ -178,40 +178,6 @@ export default function TaskStatus({ task, uid }) {
           </div>
         </FloatingMenu>
       )}
-      
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        title="Modifier les statuts"
-        width="500px"
-      >
-        <div className="space-y-4">
-          <p className="text-text-color-muted text-sm">
-            Gérez les statuts de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouveaux statuts.
-          </p>
-          
-          <ul className="space-y-3 sidebar-edit-container">
-            {statuses?.map((status) => (
-              <TaskEditStatus
-                key={status?._id}
-                status={status}
-                currentStatus={currentStatus}
-                setCurrentStatus={setCurrentStatus}
-              />
-            ))}
-            
-            {!maxStatuses && (
-              <li
-                className="secondary-button w-fit"
-                onClick={handleAddStatus}
-              >
-                <Plus size={16} />
-                Ajouter un nouveau statut
-              </li>
-            )}
-          </ul>
-        </div>
-      </Sidebar>
     </div>
   );
 }

@@ -8,14 +8,28 @@ import TimeTrackingFilters from "@/components/TimeTrackings/TimeTrackingFilters"
 import { useProjectContext } from "@/context/ProjectContext";
 import { saveBoard } from "@/api/board";
 import { mutate } from "swr";
-import { useUserRole } from "../../hooks/useUserRole";
+import { useUserRole } from "@/hooks/api/useUserRole";
 import BoardsTemplateList from "@/components/Templates/BoardsTemplateList";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { useViewContext } from "@/context/ViewContext";
+import { useSidebarContext } from "@/context/SidebarContext";
+import TaskEditStatus from "@/components/Task/TaskEditStatus";
+import TaskEditPriority from "@/components/Task/TaskEditPriority";
+import { saveStatus } from "@/api/status";
+import { savePriority } from "@/api/priority";
+import { colors, priorityColors } from "@/utils/utils";
+import { usePriorities } from "@/hooks/api/usePriorities";
 
 export default function ProjectHeader({ displayedFilters, timeQueries, setTimeQueries }) {
-  const { project, mutateProject } = useProjectContext();
+  const { project, mutateProject, statuses, mutateStatuses, priorities, mutatePriorities } = useProjectContext();
   const { currentView } = useViewContext();
+  const { 
+    showStatusSidebar, 
+    showPrioritySidebar, 
+    closeStatusSidebar, 
+    closePrioritySidebar 
+  } = useSidebarContext();
+  const { priorities: prioritiesData, mutatePriorities: mutatePrioritiesData } = usePriorities(project?._id);
   const [isOpen, setIsOpen] = useState(false);
   const members = project?.members || [];
   const [isAddingBoard, setIsAddingBoard] = useState(false);
@@ -72,6 +86,55 @@ export default function ProjectHeader({ displayedFilters, timeQueries, setTimeQu
   function handleAddTemplate() {
     setShowBoardMenu(false);
     setShowTemplateSidebar(true);
+  }
+
+  async function handleAddStatus() {
+    if (!isAuthorized) return;
+
+    // Get a random color for the new status and prevent duplicates colors from statuses
+    const existingColors = statuses.map((status) => status?.color);
+    const availableColors = colors.filter(
+      (color) => !existingColors.includes(color)
+    );
+    const randomColor =
+      availableColors[Math.floor(Math.random() * availableColors?.length)];
+
+    const response = await saveStatus(project?._id, {
+      name: "Nouveau statut",
+      color: randomColor,
+    });
+
+    if (!response?.success) {
+      console.error("Failed to save status:", response.message);
+      return;
+    }
+
+    mutateStatuses();
+  }
+
+  async function handleAddPriority() {
+    if (!isAuthorized) return;
+
+    // Get a random color for the new priority and prevent duplicates colors from priorities
+    const existingColors = priorities.map((priority) => priority?.color);
+    const availableColors = priorityColors.filter(
+      (color) => !existingColors.includes(color)
+    );
+    const randomColor =
+      availableColors[Math.floor(Math.random() * availableColors?.length)];
+
+    const response = await savePriority(project?._id, {
+      name: "Nouvelle priorité",
+      color: randomColor,
+    });
+
+    if (!response?.success) {
+      console.error("Failed to save priority:", response.message);
+      return;
+    }
+
+    mutatePriorities();
+    mutatePrioritiesData();
   }
   
 
@@ -175,6 +238,76 @@ export default function ProjectHeader({ displayedFilters, timeQueries, setTimeQu
           setAddBoardTemplate={() => setShowTemplateSidebar(false)}
           inSidebar={true}
         />
+      </Sidebar>
+
+      {/* Sidebar pour modifier les statuts */}
+      <Sidebar
+        isOpen={showStatusSidebar}
+        onClose={closeStatusSidebar}
+        title="Modifier les statuts"
+        width="500px"
+      >
+        <div className="space-y-4">
+          <p className="text-text-color-muted text-sm">
+            Gérez les statuts de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouveaux statuts.
+          </p>
+          
+          <ul className="space-y-3 sidebar-edit-container">
+            {statuses?.map((status) => (
+              <TaskEditStatus
+                key={status?._id}
+                status={status}
+                currentStatus={null}
+                setCurrentStatus={() => {}}
+              />
+            ))}
+            
+            {statuses?.length < 12 && (
+              <li
+                className="secondary-button w-fit"
+                onClick={handleAddStatus}
+              >
+                <Plus size={16} />
+                Ajouter un nouveau statut
+              </li>
+            )}
+          </ul>
+        </div>
+      </Sidebar>
+
+      {/* Sidebar pour modifier les priorités */}
+      <Sidebar
+        isOpen={showPrioritySidebar}
+        onClose={closePrioritySidebar}
+        title="Modifier les priorités"
+        width="500px"
+      >
+        <div className="space-y-4">
+          <p className="text-text-color-muted text-sm">
+            Gérez les priorités de votre projet. Vous pouvez modifier les noms, couleurs et ajouter de nouvelles priorités.
+          </p>
+          
+          <ul className="space-y-3 sidebar-edit-container">
+            {prioritiesData?.map((priority) => (
+              <TaskEditPriority
+                key={priority?._id}
+                priority={priority}
+                currentPriority={null}
+                setCurrentPriority={() => {}}
+              />
+            ))}
+            
+            {priorities?.length < 12 && (
+              <li
+                className="secondary-button w-fit"
+                onClick={handleAddPriority}
+              >
+                <Plus size={16} />
+                Ajouter une nouvelle priorité
+              </li>
+            )}
+          </ul>
+        </div>
       </Sidebar>
     </>
   );

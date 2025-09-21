@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap");
 @import "tailwindcss";
+
 @theme {
   --font-bricolage: "Bricolage Grotesque", sans-serif;
 
@@ -199,11 +200,11 @@
   .content_Tiptap .task-list-item-checkbox input[type="checkbox"] {
     appearance: none;
     width: 22px;
-    height:22px;
-    min-width:22px;
-    min-height:22px;
-    max-width:22px;
-    max-height:22px;
+    height: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    max-width: 22px;
+    max-height: 22px;
     border: 2px solid #626366;
     border-radius: 50%;
     background: transparent;
@@ -238,14 +239,27 @@
     font-weight: bold;
   }
 
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    border-radius: 3px;
+    padding: 0;
+  }
+
   /* Styles pour les checkboxes désactivées (messages envoyés) */
   .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:disabled {
     cursor: default;
-    opacity: 1; /* Garder l'opacité normale */
+    opacity: 1;
+    /* Garder l'opacité normale */
   }
 
   .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:disabled:hover {
-    border-color: #626366; /* Pas de changement au hover */
+    border-color: #626366;
+    /* Pas de changement au hover */
   }
 
   .content_Tiptap .task-list-item-checkbox input[type="checkbox"]:disabled:checked {
@@ -279,7 +293,8 @@
   .content_Tiptap .task-list-item-content p {
     margin: 0;
   }
-/* 
+
+  /* 
   .actions_Tiptap button {
     border: 1px solid var(--color-accent-color);
     transition: all 80ms linear;
@@ -314,7 +329,7 @@
     content: "";
     left: 0;
     margin-left: -3px;
-    border-top-left-radius:10px;
+    border-top-left-radius: 10px;
     border-left: 3px solid var(--board-color, var(--color-color-border-color));
     width: 100%;
     height: 50%;
@@ -387,20 +402,20 @@
   }
 
   /* Styles pour les listes de tâches dans les messages affichés */
- ul[data-type="taskList"] {
+  ul[data-type="taskList"] {
     list-style: none;
     padding: 0;
     margin: 16px 0;
   }
 
- li[data-type="taskItem"] {
+  li[data-type="taskItem"] {
     display: flex;
     align-items: flex-start;
     margin: 8px 0;
     padding: 0;
   }
 
- .task-list-item-checkbox {
+  .task-list-item-checkbox {
     display: flex;
     align-items: center;
     margin-right: 12px;
@@ -408,7 +423,7 @@
     user-select: none;
   }
 
-.task-list-item-checkbox input[type="checkbox"] {
+  .task-list-item-checkbox input[type="checkbox"] {
     appearance: none;
     width: 22px;
     height: 22px;
@@ -429,12 +444,12 @@
     aspect-ratio: 1 / 1;
   }
 
-.task-list-item-checkbox input[type="checkbox"]:checked {
+  .task-list-item-checkbox input[type="checkbox"]:checked {
     background: #10b981;
     border-color: #10b981;
   }
 
- .task-list-item-checkbox input[type="checkbox"]:checked::after {
+  .task-list-item-checkbox input[type="checkbox"]:checked::after {
     content: '✓';
     position: absolute;
     top: 50%;
@@ -445,18 +460,18 @@
     font-weight: bold;
   }
 
-.task-list-item-content {
+  .task-list-item-content {
     flex: 1;
     min-width: 0;
   }
 
-.task-list-item-content.checked {
+  .task-list-item-content.checked {
     text-decoration: line-through;
     opacity: 0.6;
     color: #6b7280;
   }
 
-.task-list-item-content p {
+  .task-list-item-content p {
     margin: 0;
   }
 
@@ -1090,42 +1105,42 @@
     transform-origin: bottom right;
   }
 
-   .filter_button:hover {
-     opacity: 0.8;
-   }
+  .filter_button:hover {
+    opacity: 0.8;
+  }
 
-   .secondary-button {
-     position: relative;
-     display: flex;
-     align-items: center;
-     gap: 0.5rem;
-     padding-top: 0.5rem;
-     padding-bottom: 0.5rem;
-     padding-left: 0.75rem;
-     padding-right: 0.75rem;
-     border: 1px solid var(--color-color-border-color);
-     border-radius: .25rem;
-     cursor: pointer;
-     transition-property: all;
-     transition-duration: 120ms;
-     transition-timing-function: ease-in-out;
-     font-size: 15px;
-     background-color: transparent;
-     color: var(--text-color);
-     user-select: none;
-   }
-   
+  .secondary-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border: 1px solid var(--color-color-border-color);
+    border-radius: .25rem;
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 120ms;
+    transition-timing-function: ease-in-out;
+    font-size: 15px;
+    background-color: transparent;
+    color: var(--text-color);
+    user-select: none;
+  }
+
   .secondary-button[data-open="true"] {
     background-color: var(--color-accent-color, #f59e0b);
     background-color: color-mix(in srgb, var(--color-accent-color, #f59e0b) 10%, transparent);
     border-color: color-mix(in srgb, var(--color-accent-color, #f59e0b) 30%, transparent);
     color: var(--color-accent-color, #f59e0b);
   }
-  
+
   .secondary-button:not([data-open="true"]) {
     border-color: var(--color-color-border-color);
   }
-  
+
   .secondary-button:not([data-open="true"]):hover {
     border-color: color-mix(in srgb, var(--color-accent-color, #f59e0b) 50%, transparent);
     background-color: color-mix(in srgb, var(--color-accent-color, #f59e0b) 5%, transparent);
@@ -1201,7 +1216,7 @@
   }
 
   /* Classes communes pour l'alignement des colonnes de tâches */
-  
+
   /* Colonnes de base */
   .task-col-checkbox {
     min-width: 20px;
@@ -1262,9 +1277,12 @@
   }
 
   .task-col-drag {
-    margin-left: 0.375rem; /* ml-1.5 */
-    min-width: 1rem; /* min-w-4 */
-    max-width: 1rem; /* max-w-4 */
+    margin-left: 0.375rem;
+    /* ml-1.5 */
+    min-width: 1rem;
+    /* min-w-4 */
+    max-width: 1rem;
+    /* max-w-4 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1275,7 +1293,8 @@
   .task-col-text {
     width: 100%;
     min-width: 150px;
-    margin-left: 0.5rem; /* mx-2 */
+    margin-left: 0.5rem;
+    /* mx-2 */
     margin-right: 0.5rem;
     flex-grow: 1;
     max-width: var(--text-col-width);
@@ -1300,17 +1319,21 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    width: 2.5rem; /* w-10 - largeur fixe pour l'alignement */
-    min-width: 2.5rem; /* min-w-10 */
+    width: 2.5rem;
+    /* w-10 - largeur fixe pour l'alignement */
+    min-width: 2.5rem;
+    /* min-w-10 */
   }
 
   .task-col-project {
     display: none;
     align-items: center;
     justify-content: center;
-    padding-left: 0.5rem; /* px-2 */
+    padding-left: 0.5rem;
+    /* px-2 */
     padding-right: 0.5rem;
-    width: 4rem; /* w-16 */
+    width: 4rem;
+    /* w-16 */
     flex-shrink: 0;
   }
 
@@ -1322,9 +1345,11 @@
 
   @media (min-width: 1024px) {
     .task-col-project {
-      padding-left: 1rem; /* lg:px-4 */
+      padding-left: 1rem;
+      /* lg:px-4 */
       padding-right: 1rem;
-      width: 5rem; /* lg:w-20 */
+      width: 5rem;
+      /* lg:w-20 */
     }
   }
 
@@ -1332,8 +1357,10 @@
     display: none;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem; /* gap-2 */
-    padding-left: 0.5rem; /* px-2 */
+    gap: 0.5rem;
+    /* gap-2 */
+    padding-left: 0.5rem;
+    /* px-2 */
     padding-right: 0.5rem;
     min-width: 100px;
     max-width: 150px;
@@ -1349,9 +1376,11 @@
 
   @media (min-width: 1280px) {
     .task-col-board {
-      padding-left: 1rem; /* xl:px-4 */
+      padding-left: 1rem;
+      /* xl:px-4 */
       padding-right: 1rem;
-      min-width: 120px; /* xl:min-w-[120px] */
+      min-width: 120px;
+      /* xl:min-w-[120px] */
     }
   }
 
@@ -1359,7 +1388,8 @@
     display: none;
     justify-content: center;
     align-items: center;
-    padding-left: 0.5rem; /* px-2 */
+    padding-left: 0.5rem;
+    /* px-2 */
     padding-right: 0.5rem;
     min-width: 60px;
     max-width: 100px;
@@ -1375,9 +1405,11 @@
 
   @media (min-width: 1024px) {
     .task-col-admin {
-      padding-left: 0.75rem; /* lg:px-3 */
+      padding-left: 0.75rem;
+      /* lg:px-3 */
       padding-right: 0.75rem;
-      min-width: 80px; /* lg:min-w-[80px] */
+      min-width: 80px;
+      /* lg:min-w-[80px] */
     }
   }
 
@@ -1393,13 +1425,15 @@
 
   @media (min-width: 640px) {
     .task-col-status {
-      min-width: 100px; /* sm:min-w-[100px] */
+      min-width: 100px;
+      /* sm:min-w-[100px] */
     }
   }
 
   @media (min-width: 1024px) {
     .task-col-status {
-      min-width: 120px; /* lg:min-w-[120px] */
+      min-width: 120px;
+      /* lg:min-w-[120px] */
     }
   }
 
@@ -1415,13 +1449,15 @@
 
   @media (min-width: 640px) {
     .task-col-priority {
-      min-width: 100px; /* sm:min-w-[100px] */
+      min-width: 100px;
+      /* sm:min-w-[100px] */
     }
   }
 
   @media (min-width: 1024px) {
     .task-col-priority {
-      min-width: 120px; /* lg:min-w-[120px] */
+      min-width: 120px;
+      /* lg:min-w-[120px] */
     }
   }
 
@@ -1429,9 +1465,11 @@
     display: none;
     align-items: center;
     justify-content: center;
-    padding-top: 0.25rem; /* py-1 */
+    padding-top: 0.25rem;
+    /* py-1 */
     padding-bottom: 0.25rem;
-    padding-left: 0.25rem; /* px-1 */
+    padding-left: 0.25rem;
+    /* px-1 */
     padding-right: 0.25rem;
     min-width: 90px;
     max-width: 130px;
@@ -1447,10 +1485,13 @@
 
   @media (min-width: 1024px) {
     .task-col-deadline {
-      padding-left: 0.5rem; /* lg:px-2 */
+      padding-left: 0.5rem;
+      /* lg:px-2 */
       padding-right: 0.5rem;
-      min-width: 110px; /* lg:min-w-[110px] */
-      max-width: 160px; /* lg:max-w-[160px] */
+      min-width: 110px;
+      /* lg:min-w-[110px] */
+      max-width: 160px;
+      /* lg:max-w-[160px] */
     }
   }
 
@@ -1458,9 +1499,11 @@
     display: none;
     align-items: center;
     justify-content: center;
-    padding-top: 0.25rem; /* py-1 */
+    padding-top: 0.25rem;
+    /* py-1 */
     padding-bottom: 0.25rem;
-    padding-left: 0.25rem; /* px-1 */
+    padding-left: 0.25rem;
+    /* px-1 */
     padding-right: 0.25rem;
     min-width: 90px;
     max-width: 130px;
@@ -1476,9 +1519,11 @@
 
   @media (min-width: 1280px) {
     .task-col-estimate {
-      padding-left: 0.5rem; /* xl:px-2 */
+      padding-left: 0.5rem;
+      /* xl:px-2 */
       padding-right: 0.5rem;
-      min-width: 110px; /* xl:min-w-[110px] */
+      min-width: 110px;
+      /* xl:min-w-[110px] */
     }
   }
 
@@ -1486,7 +1531,8 @@
     display: none;
     align-items: center;
     justify-content: center;
-    padding-left: 0.25rem; /* px-1 */
+    padding-left: 0.25rem;
+    /* px-1 */
     padding-right: 0.25rem;
     max-width: 100px;
     width: 100%;
@@ -1501,15 +1547,19 @@
 
   @media (min-width: 1280px) {
     .task-col-timer {
-      padding-left: 0.375rem; /* xl:px-1.5 */
+      padding-left: 0.375rem;
+      /* xl:px-1.5 */
       padding-right: 0.375rem;
-      max-width: 120px; /* xl:max-w-[120px] */
+      max-width: 120px;
+      /* xl:max-w-[120px] */
     }
   }
 
   .task-col-actions {
-    min-width: 2rem; /* min-w-8 */
-    width: 2.5rem; /* w-10 */
+    min-width: 2rem;
+    /* min-w-8 */
+    width: 2.5rem;
+    /* w-10 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1551,7 +1601,8 @@
   .task-header-chevron-down {
     cursor: pointer;
     position: relative;
-    top: -0.25rem; /* -top-1 */
+    top: -0.25rem;
+    /* -top-1 */
   }
 
   .task-header-chevron-down:hover {
@@ -1570,8 +1621,7 @@
 
   /* Force l'alignement exact pour la colonne de texte */
   .task-col-text.task-header-col,
-  .task-col-text.task-content-col
-   {
+  .task-col-text.task-content-col {
     box-sizing: border-box;
     width: 100%;
     min-width: 150px;
@@ -2018,11 +2068,12 @@
 
 .subtask-row:first-child {
   border-top: 1px solid var(--color-text-light-color);
-      box-shadow: inset 0px 5px 5px 0 #0000000a;
+  box-shadow: inset 0px 5px 5px 0 #0000000a;
 }
 
 .subtask-row:hover {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.01) 100%);}
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.01) 100%);
+}
 
 .subtask-row.dragging {
   opacity: 0.5;

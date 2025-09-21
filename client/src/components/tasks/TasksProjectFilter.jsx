@@ -1,4 +1,4 @@
-import { useProjects } from "../../../hooks/useProjects";
+import { useProjects } from "@/hooks/api/useProjects";
 import { isNotEmpty } from "@/utils/utils";
 import { ChevronDown, FolderOpenDot, Undo } from "lucide-react";
 import Image from "next/image";

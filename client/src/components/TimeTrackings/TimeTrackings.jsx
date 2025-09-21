@@ -3,14 +3,14 @@ import { exportTimeTracking, formatTime, isNotEmpty } from "@/utils/utils";
 import Filters from "./Filters";
 import { useEffect, useMemo, useState, memo, useCallback } from "react";
 import ExportPdfBtn from "./ExportPdfBtn";
-import { useTimeTrackings } from "../../../hooks/useTimeTrackings";
+import { useTimeTrackings } from "@/hooks/api/useTimeTrackings";
 import socket from "@/utils/socket";
-import { useProjects } from "../../../hooks/useProjects";
+import { useProjects } from "@/hooks/api/useProjects";
 import TimeTracking from "./TimeTracking";
 import SelectedTimeTrackings from "./SelectedTimeTrackings";
 import TimeTrackingHeader from "./TimeTrackingHeader";
 import TimeTrackingsSkeletons from "./TimeTrackingsSkeletons";
-import { useVirtualizedList } from "../../hooks/useVirtualizedList";
+import { useVirtualizedList } from "@/hooks/useVirtualizedList";
 
 const TimeTrackings = memo(function TimeTrackings({ searchParams }) {
   const [queries, setQueries] = useState(searchParams);
