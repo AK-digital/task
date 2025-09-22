@@ -42,10 +42,16 @@ const io = new Server(server, {
 });
 
 const corsOptions = {
-  origin: [process.env.CLIENT_URL, process.env.LANDING_URL],
-  methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: [
+    process.env.CLIENT_URL, 
+    process.env.LANDING_URL,
+    "http://localhost:3000", // Ajout explicite pour le développement local
+    "http://127.0.0.1:3000"
+  ].filter(Boolean), // Filtrer les valeurs undefined
+  methods: ["GET", "HEAD", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,
+  optionsSuccessStatus: 200 // Pour les anciens navigateurs
 };
 
 app.use(cors(corsOptions));

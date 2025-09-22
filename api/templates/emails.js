@@ -222,3 +222,30 @@ export function emailChangeValidation(user, newEmail, validationLink) {
 
   return templates;
 }
+
+export function emailAccountActivation(user, loginLink) {
+  const templates = {
+    subjet: "Votre compte a été activé !",
+    text: `
+      <div style="${emailStyles.container}">
+        <h1 style="${emailStyles.title}">Félicitations ! 🎉</h1>
+        <p style="${emailStyles.paragraph}">Bonjour ${user?.firstName},</p>
+        <p style="${emailStyles.content}">Excellente nouvelle ! Votre compte a été activé par notre équipe.</p>
+        <div style="background-color: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+          <p style="margin: 0; font-size: 18px; font-weight: 500; color: #28a745;">
+            ✅ Votre compte est maintenant actif !
+          </p>
+        </div>
+        <p style="${emailStyles.content}">Vous pouvez désormais vous connecter et profiter pleinement de toutes les fonctionnalités de la plateforme.</p>
+        <div style="margin: 30px 0;">
+          <a href="${loginLink}" style="${emailStyles.button}">
+            Se connecter maintenant
+          </a>
+        </div>
+        <p style="${emailStyles.content}">Bienvenue dans l'aventure ! 🚀</p>
+      </div>
+    `,
+  };
+
+  return templates;
+}

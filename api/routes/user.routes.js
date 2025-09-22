@@ -36,6 +36,19 @@ router.patch(
   upload.single("picture"),
   userControllers.updatePicture
 );
+// Routes pour la gestion des utilisateurs par les super admins
+router.get(
+  "/admin/all",
+  authMiddlewares.auth,
+  userControllers.getAllUsersForAdmin
+);
+
+router.patch(
+  "/admin/:userId/toggle-verification",
+  authMiddlewares.auth,
+  userControllers.toggleUserVerification
+);
+
 router.delete(
   "/:id",
   authMiddlewares.auth,

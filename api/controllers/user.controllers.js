@@ -3,7 +3,7 @@ import UserModel from "../models/User.model.js";
 import { destroyFile, uploadFileBuffer } from "../helpers/cloudinary.js";
 import EmailChangeModel from "../models/EmailChange.model.js";
 import { sendEmail } from "../helpers/nodemailer.js";
-import { emailChangeValidation } from "../templates/emails.js";
+import { emailChangeValidation, emailAccountActivation } from "../templates/emails.js";
 import crypto from "crypto";
 
 // Admin only
@@ -309,6 +309,107 @@ export async function validateEmailChange(req, res, next) {
     return res.status(200).send({
       success: true,
       message: "Adresse email mise à jour avec succès",
+      data: updatedUser,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+// Gestion des utilisateurs pour les super admins
+export async function getAllUsersForAdmin(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    
+    // Vérifier si l'utilisateur est un super admin
+    const superAdminEmails = ['aurelien@akdigital.fr', 'nicolas.tombal@akdigital.fr'];
+    
+    if (!superAdminEmails.includes(authUser.email)) {
+      return res.status(403).send({
+        success: false,
+        message: "Accès non autorisé",
+      });
+    }
+
+    const users = await UserModel.find()
+      .select("-password")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).send({
+      success: true,
+      message: "Liste des utilisateurs récupérée avec succès",
+      data: users,
+    });
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message || "Une erreur inattendue est survenue",
+    });
+  }
+}
+
+export async function toggleUserVerification(req, res, next) {
+  try {
+    const authUser = res.locals.user;
+    const { userId } = req.params;
+    const { verified } = req.body;
+    
+    // Vérifier si l'utilisateur est un super admin
+    const superAdminEmails = ['aurelien@akdigital.fr', 'nicolas.tombal@akdigital.fr'];
+    if (!superAdminEmails.includes(authUser.email)) {
+      return res.status(403).send({
+        success: false,
+        message: "Accès non autorisé",
+      });
+    }
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "Utilisateur introuvable",
+      });
+    }
+
+    // Empêcher la modification de son propre statut
+    if (user._id.toString() === authUser._id.toString()) {
+      return res.status(400).send({
+        success: false,
+        message: "Vous ne pouvez pas modifier votre propre statut",
+      });
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { $set: { verified: verified } },
+      { new: true }
+    ).select("-password");
+
+    // Envoyer un email de confirmation d'activation si l'utilisateur est activé
+    if (verified && updatedUser) {
+      try {
+        const loginLink = `${process.env.CLIENT_URL}/`;
+        const emailTemplate = emailAccountActivation(updatedUser, loginLink);
+        
+        await sendEmail(
+          updatedUser.email,
+          emailTemplate.subjet,
+          emailTemplate.text
+        );
+        
+        console.log(`Email d'activation envoyé à ${updatedUser.email}`);
+      } catch (emailError) {
+        console.error("Erreur lors de l'envoi de l'email d'activation:", emailError);
+        // On ne fait pas échouer la requête si l'email ne peut pas être envoyé
+      }
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: `Utilisateur ${verified ? 'activé' : 'désactivé'} avec succès`,
       data: updatedUser,
     });
   } catch (err) {
