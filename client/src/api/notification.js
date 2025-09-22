@@ -1,33 +1,10 @@
-"use client";
+"use server";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-// Fonction pour obtenir le token depuis les cookies
-function getCookieValue(name) {
-  if (typeof document === 'undefined') return null;
-  
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-  return null;
-}
+import { useAuthFetch } from "@/utils/api";
 
 export async function getNotifications() {
   try {
-    const token = getCookieValue('session');
-    
-    if (!token) {
-      throw new Error("Token d'authentification non trouvé");
-    }
-
-    const res = await fetch(`${API_URL}/notification`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      credentials: "include",
-    });
+    const res = await useAuthFetch("notification", "GET");
 
     const response = await res.json();
 
