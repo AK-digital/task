@@ -1,6 +1,6 @@
 "use client";
 import { lastDayOfTheMonth } from "@/utils/date";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Calendar } from "lucide-react";
 import DatePicker from "../Task/DatePicker";
 import moment from "moment";
@@ -9,6 +9,7 @@ import "moment/locale/fr";
 export default function EndDateFilter({ queries, setQueries }) {
   const [endDate, setEndDate] = useState(queries?.endingDate || "");
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef(null);
 
   // If no ending date, set it to the last day of the month
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function EndDateFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div 
+        ref={triggerRef}
         className="secondary-button cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -53,6 +55,7 @@ export default function EndDateFilter({ queries, setQueries }) {
         onChange={handleEndDateChange}
         onClose={() => setIsOpen(false)}
         isOpen={isOpen}
+        triggerRef={triggerRef}
       />
     </div>
   );

@@ -7,6 +7,7 @@ import { addResponsible as addResponsibleUnified, removeResponsible as removeRes
 import socket from "@/utils/socket";
 import { getFloating, usePreventScroll } from "@/utils/floating";
 import DisplayPicture from "@/components/User/DisplayPicture.jsx";
+import FloatingMenu from "@/shared/components/FloatingMenu";
 
 export default function TaskResponsibles({ task, uid, user }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -130,80 +131,74 @@ export default function TaskResponsibles({ task, uid, user }) {
       </div>
 
       {isMoreOpen && (
-        <>
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            className="absolute w-[300px] bg-secondary shadow-medium rounded-lg top-[50px] z-[2001] p-2"
-            data-task-responsibles-menu
-          >
-            {/* Responsibles */}
-            {isNotEmpty(responsibles) && (
-              <div className="flex flex-wrap gap-1 mb-2">
-                {responsibles?.map((responsible) => {
+        <FloatingMenu
+          refs={refs}
+          floatingStyles={floatingStyles}
+          setIsOpen={setIsMoreOpen}
+          className="w-[230px] p-2"
+        >
+          {/* Responsibles */}
+          {isNotEmpty(responsibles) && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {responsibles?.map((responsible) => {
+                return (
+                  <div
+                    className="flex items-center gap-1 bg-third p-1 rounded-lg text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-primary cursor-pointer"
+                    key={responsible?._id}
+                    onClick={() => handleRemoveResponsible(responsible)}
+                  >
+                    <DisplayPicture
+                      user={responsible}
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                      }}
+                      className="rounded-full"
+                      isPopup={false}
+                    />
+                    <span>
+                      {responsible.firstName + " " + responsible?.lastName}
+                    </span>
+                    <X size={16} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <span className="text-[14px] font-medium text-text-color-muted select-none">
+            Personnes à inviter
+          </span>
+          {/* Members */}
+          <div className="scrollable_TaskResponsibles max-h-[200px] overflow-y-auto">
+            {isNotEmpty(members) && (
+              <ul className="mt-1.5">
+                {members?.map((member) => {
                   return (
-                    <div
-                      className="flex items-center gap-1 bg-third p-1 rounded-lg text-small font-medium max-w-fit w-full transition-all duration-150 ease-in-out hover:bg-primary"
-                      key={responsible?._id}
-                      onClick={() => handleRemoveResponsible(responsible)}
+                    <li
+                      className="flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-third cursor-pointer"
+                      key={member?.user?._id}
+                      onClick={() => handleAddResponsible(member?.user)}
                     >
                       <DisplayPicture
-                        user={responsible}
+                        user={member?.user}
                         style={{
                           width: "24px",
                           height: "24px",
                         }}
                         className="rounded-full"
-                        isPopup={false}
                       />
-                      <span>
-                        {responsible.firstName + " " + responsible?.lastName}
+                      <span className="text-[14px]">
+                        {(member?.user?.firstName || member?.user?.lastName)
+                          ? `${member?.user?.firstName || ""} ${member?.user?.lastName || ""}`.trim()
+                          : member?.user?.email}
                       </span>
-                      <X size={16} />
-                    </div>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             )}
-            <span className="text-[14px] font-medium text-text-color-muted select-none">
-              Personnes à inviter
-            </span>
-            {/* Members */}
-            <div className="scrollable_TaskResponsibles max-h-[200px] overflow-y-auto">
-              {isNotEmpty(members) && (
-                <ul className="mt-1.5">
-                  {members?.map((member) => {
-                    return (
-                      <li
-                        className="flex items-center gap-1 p-2 rounded-lg hover:bg-third"
-                        key={member?.user?._id}
-                        onClick={() => handleAddResponsible(member?.user)}
-                      >
-                        <DisplayPicture
-                          user={member?.user}
-                          style={{
-                            width: "24px",
-                            height: "24px",
-                          }}
-                          className="rounded-full"
-                        />
-                        <span className="text-[14px]">
-                          {(member?.user?.firstName || member?.user?.lastName)
-                            ? `${member?.user?.firstName || ""} ${member?.user?.lastName || ""}`.trim()
-                            : member?.user?.email}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
           </div>
-          <div
-            className="modal-layout-opacity"
-            onClick={(e) => setIsMoreOpen(false)}
-          ></div>
-        </>
+        </FloatingMenu>
       )}
     </div>
   );

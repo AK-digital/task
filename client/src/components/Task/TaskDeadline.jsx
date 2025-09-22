@@ -11,6 +11,7 @@ import DatePicker from "./DatePicker";
 
 export default function TaskDeadline({ task, uid }) {
   const inputRef = useRef(null);
+  const triggerRef = useRef(null);
   const [progress, setProgress] = useState("0%");
   const [deadline, setDeadline] = useState(task?.deadline?.split("T")[0] || "");
   const [hover, setHover] = useState(false);
@@ -149,6 +150,7 @@ export default function TaskDeadline({ task, uid }) {
       onMouseLeave={() => setHover(false)}
     >
       <div
+        ref={triggerRef}
         className="wrapper_TaskDeadline relative bg-primary rounded-[5px] py-1 px-1 text-center cursor-pointer text-xs lg:text-small overflow-visible flex items-center justify-center gap-1 flex-1 min-w-0"
         onMouseEnter={handleHover}
         onClick={handleIsEditing}
@@ -190,6 +192,7 @@ export default function TaskDeadline({ task, uid }) {
         onChange={handleUpdateDate}
         onClose={handleCloseDatePicker}
         isOpen={showDatePicker}
+        triggerRef={triggerRef}
       />
     </div>
   );

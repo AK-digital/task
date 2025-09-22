@@ -3,13 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import moment from "moment";
 import "moment/locale/fr";
+import FloatingMenu from "@/shared/components/FloatingMenu";
+import { getFloating } from "@/utils/floating";
 
-export default function DatePicker({ value, onChange, onClose, isOpen }) {
+export default function DatePicker({ value, onChange, onClose, isOpen, triggerRef }) {
   const [currentDate, setCurrentDate] = useState(moment());
   const [selectedDate, setSelectedDate] = useState(value ? moment(value) : null);
-  const [showAbove, setShowAbove] = useState(false);
-  const pickerRef = useRef(null);
-  const triggerRef = useRef(null);
+  
+  const { refs, floatingStyles } = getFloating(isOpen, onClose);
 
   useEffect(() => {
     if (value) {
@@ -20,47 +21,11 @@ export default function DatePicker({ value, onChange, onClose, isOpen }) {
   }, [value]);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-        onClose();
-      }
+    if (triggerRef && triggerRef.current) {
+      refs.setReference(triggerRef.current);
     }
+  }, [triggerRef, refs]);
 
-    function calculatePosition() {
-      if (isOpen && pickerRef.current) {
-        // Utiliser un timeout pour s'assurer que le DOM est rendu
-        setTimeout(() => {
-          if (pickerRef.current && pickerRef.current.parentElement) {
-            const rect = pickerRef.current.parentElement.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            const pickerHeight = 350; // Hauteur approximative du datepicker
-            const spaceBelow = viewportHeight - rect.bottom - 10; // Marge de sécurité
-            const spaceAbove = rect.top - 10; // Marge de sécurité
-
-            // Si pas assez de place en bas mais assez en haut, afficher au-dessus
-            if (spaceBelow < pickerHeight && spaceAbove > pickerHeight) {
-              setShowAbove(true);
-            } else {
-              setShowAbove(false);
-            }
-          }
-        }, 0);
-      }
-    }
-
-    if (isOpen) {
-      calculatePosition();
-      document.addEventListener('mousedown', handleClickOutside);
-      window.addEventListener('scroll', calculatePosition);
-      window.addEventListener('resize', calculatePosition);
-      
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-        window.removeEventListener('scroll', calculatePosition);
-        window.removeEventListener('resize', calculatePosition);
-      };
-    }
-  }, [isOpen, onClose]);
 
   const getDaysInMonth = () => {
     const startOfMonth = currentDate.clone().startOf('month');
@@ -106,20 +71,17 @@ export default function DatePicker({ value, onChange, onClose, isOpen }) {
   const today = moment();
 
   return (
-    <div 
-      ref={pickerRef}
-      className={`datepicker-container absolute left-0 bg-secondary border border-gray-200 rounded-lg shadow-lg z-[9999] p-3 min-w-[280px] max-w-[320px] sm:min-w-[300px] ${
-        showAbove 
-          ? 'bottom-full mb-1' 
-          : 'top-full mt-1'
-      }`}
-      data-datepicker
+    <FloatingMenu
+      refs={refs}
+      floatingStyles={floatingStyles}
+      setIsOpen={onClose}
+      className="p-3 min-w-[280px] max-w-[320px] sm:min-w-[300px]"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <span
           onClick={handlePrevMonth}
-          className="p-1 border border-gray-200 hover:bg-gray-100 rounded"
+          className="p-1 border border-gray-200 hover:bg-gray-100 rounded cursor-pointer"
           type="button"
         >
           <ChevronLeft size={16} />
@@ -129,7 +91,7 @@ export default function DatePicker({ value, onChange, onClose, isOpen }) {
         </h3>
         <span
           onClick={handleNextMonth}
-          className="p-1 border border-gray-200 hover:bg-gray-100 rounded"
+          className="p-1 border border-gray-200 hover:bg-gray-100 rounded cursor-pointer"
           type="button"
         >
           <ChevronRight size={16} />
@@ -158,7 +120,7 @@ export default function DatePicker({ value, onChange, onClose, isOpen }) {
               key={index}
               onClick={() => handleDateClick(day)}
               className={`
-                text-xs p-1.5 select-none rounded border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors
+                text-xs p-1.5 select-none rounded border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer
                 ${!isCurrentMonth ? 'text-gray-300' : 'text-gray-700'}
                 ${isSelected ? 'bg-accent-color text-white hover:bg-accent-color' : ''}
                 ${isToday && !isSelected ? 'bg-blue-100' : ''}
@@ -176,19 +138,19 @@ export default function DatePicker({ value, onChange, onClose, isOpen }) {
       <div className="flex gap-2 pt-2 border-t justify-between border-gray-100">
         <span
           onClick={handleToday}
-          className="text-xs px-2 py-1 border border-accent-color text-accent-color hover:bg-accent-color hover:text-white rounded transition-colors"
+          className="text-xs px-2 py-1 border border-accent-color text-accent-color hover:bg-accent-color hover:text-white rounded transition-colors cursor-pointer"
           type="button"
         >
           Aujourd'hui
         </span>
         <span
           onClick={onClose}
-          className="text-xs px-2 py-1 border border-gray-400 text-gray-500 hover:bg-gray-500 hover:text-white rounded transition-colors"
+          className="text-xs px-2 py-1 border border-gray-400 text-gray-500 hover:bg-gray-500 hover:text-white rounded transition-colors cursor-pointer"
           type="button"
         >
           Annuler
         </span>
       </div>
-    </div>
+    </FloatingMenu>
   );
 }

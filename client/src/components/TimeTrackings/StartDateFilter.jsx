@@ -1,6 +1,6 @@
 "use client";
 import { firstDayOfTheMonth } from "@/utils/date";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Calendar } from "lucide-react";
 import DatePicker from "../Task/DatePicker";
 import moment from "moment";
@@ -9,6 +9,7 @@ import "moment/locale/fr";
 export default function StartDateFilter({ queries, setQueries }) {
   const [startDate, setStartDate] = useState(queries?.startingDate || "");
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef(null);
 
   // If no starting date, set it to the first day of the month
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function StartDateFilter({ queries, setQueries }) {
   return (
     <div className="relative">
       <div 
+        ref={triggerRef}
         className="secondary-button cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -54,6 +56,7 @@ export default function StartDateFilter({ queries, setQueries }) {
         onChange={handleStartDateChange}
         onClose={() => setIsOpen(false)}
         isOpen={isOpen}
+        triggerRef={triggerRef}
       />
     </div>
   );

@@ -7,7 +7,7 @@ export function getFloating(isOpen, setIsOpen) {
     open: isOpen,
     onOpenChange: setIsOpen,
     strategy: "absolute",
-    placement: "bottom-center",
+    placement: "bottom-start",
     middleware: [offset(10), flip(), shift({ padding: 8 })],
   });
 
