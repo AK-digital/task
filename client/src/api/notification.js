@@ -1,10 +1,33 @@
-"use server";
+"use client";
 
-import { useAuthFetch } from "@/utils/api";
+const API_URL = process.env.API_URL || "http://localhost:5001/api";
+
+// Fonction pour obtenir le token depuis les cookies
+function getCookieValue(name) {
+  if (typeof document === 'undefined') return null;
+  
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
 
 export async function getNotifications() {
   try {
-    const res = await useAuthFetch("notification", "GET");
+    const token = getCookieValue('session');
+    
+    if (!token) {
+      throw new Error("Token d'authentification non trouvé");
+    }
+
+    const res = await fetch(`${API_URL}/notification`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      credentials: "include",
+    });
 
     const response = await res.json();
 
@@ -29,10 +52,20 @@ export async function readNotification(notificationId) {
       throw new Error("Paramètre manquant");
     }
 
-    const res = await useAuthFetch(
-      `notification/read/${notificationId}`,
-      "PATCH"
-    );
+    const token = getCookieValue('session');
+    
+    if (!token) {
+      throw new Error("Token d'authentification non trouvé");
+    }
+
+    const res = await fetch(`${API_URL}/notification/read/${notificationId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      credentials: "include",
+    });
 
     const response = await res.json();
 
@@ -59,14 +92,23 @@ export async function readNotifications(notificationIds) {
       throw new Error("Paramètre manquants");
     }
 
-    const res = await useAuthFetch(
-      "notification/read-all",
-      "PATCH",
-      "application/json",
-      {
+    const token = getCookieValue('session');
+    
+    if (!token) {
+      throw new Error("Token d'authentification non trouvé");
+    }
+
+    const res = await fetch(`${API_URL}/notification/read-all`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      credentials: "include",
+      body: JSON.stringify({
         notificationIds,
-      }
-    );
+      }),
+    });
 
     const response = await res.json();
 
