@@ -325,7 +325,7 @@ export async function getAllUsersForAdmin(req, res, next) {
     const authUser = res.locals.user;
     
     // Vérifier si l'utilisateur est un super admin
-    const superAdminEmails = ['aurelien@akdigital.fr', 'nicolas.tombal@akdigital.fr'];
+    const superAdminEmails = process.env.SUPER_ADMIN_EMAILS ? process.env.SUPER_ADMIN_EMAILS.split(',').map(email => email.trim()) : [];
     
     if (!superAdminEmails.includes(authUser.email)) {
       return res.status(403).send({
@@ -358,7 +358,7 @@ export async function toggleUserVerification(req, res, next) {
     const { verified } = req.body;
     
     // Vérifier si l'utilisateur est un super admin
-    const superAdminEmails = ['aurelien@akdigital.fr', 'nicolas.tombal@akdigital.fr'];
+    const superAdminEmails = process.env.SUPER_ADMIN_EMAILS ? process.env.SUPER_ADMIN_EMAILS.split(',').map(email => email.trim()) : [];
     if (!superAdminEmails.includes(authUser.email)) {
       return res.status(403).send({
         success: false,

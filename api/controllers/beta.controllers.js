@@ -63,7 +63,6 @@ export async function sendBetaRequest(req, res) {
 
     await sendEmail(
       "notifications@clynt.io",
-      "aurelien@akdigital.fr",
       templateConfirmation.subject,
       templateConfirmation.text
     );

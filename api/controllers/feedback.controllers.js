@@ -29,7 +29,6 @@ export async function saveFeedback(req, res, next) {
 
     await sendEmail(
       "notifications@clynt.io",
-      "aurelien@akdigital.fr",
       templateFeedback.subject,
       templateFeedback.text
     );
