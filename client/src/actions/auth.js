@@ -113,18 +113,16 @@ export async function signIn(prevState, formData) {
 
     // Pour les deux fonctions, utilisez ce format :
     cookie.set("session", accessToken, {
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       httpOnly: true,
       sameSite: "lax",
-      domain: process.env.NODE_ENV === "production" ? ".clynt.io" : undefined,
       expires: new Date(Date.now() + 12 * 60 * 60 * 1000), // 12h en millisecondes
     });
 
     cookie.set("rtk", refreshToken, {
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       httpOnly: true,
       sameSite: "lax",
-      domain: process.env.NODE_ENV === "production" ? ".clynt.io" : undefined,
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 

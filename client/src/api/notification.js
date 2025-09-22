@@ -1,6 +1,6 @@
 "use client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Fonction pour obtenir le token depuis les cookies
 function getCookieValue(name) {
@@ -52,20 +52,10 @@ export async function readNotification(notificationId) {
       throw new Error("Paramètre manquant");
     }
 
-    const token = getCookieValue('session');
-    
-    if (!token) {
-      throw new Error("Token d'authentification non trouvé");
-    }
-
-    const res = await fetch(`${API_URL}/notification/read/${notificationId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      credentials: "include",
-    });
+    const res = await useAuthFetch(
+      `notification/read/${notificationId}`,
+      "PATCH"
+    );
 
     const response = await res.json();
 
@@ -92,23 +82,14 @@ export async function readNotifications(notificationIds) {
       throw new Error("Paramètre manquants");
     }
 
-    const token = getCookieValue('session');
-    
-    if (!token) {
-      throw new Error("Token d'authentification non trouvé");
-    }
-
-    const res = await fetch(`${API_URL}/notification/read-all`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      credentials: "include",
-      body: JSON.stringify({
+    const res = await useAuthFetch(
+      "notification/read-all",
+      "PATCH",
+      "application/json",
+      {
         notificationIds,
-      }),
-    });
+      }
+    );
 
     const response = await res.json();
 
