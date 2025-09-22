@@ -9,7 +9,6 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { usePathname, useParams } from "next/navigation";
 import useSWR from "swr";
-import { getNotifications } from "@/api/notification";
 import { useViewContext } from "@/context/ViewContext";
 import { useSideNavContext } from "@/context/SideNavContext";
 
@@ -24,9 +23,12 @@ export default function Header() {
   // Détecter si nous sommes sur une page de projet
   const isProjectPage = pathname?.startsWith('/projects/') && params?.slug && params.slug[0];
 
+  // Fetcher simple pour l'API route Next.js
+  const fetcher = (url) => fetch(url).then(res => res.json());
+
   const { data, isLoading, mutate } = useSWR(
-    "/notification",
-    getNotifications
+    "/api/notifications",
+    fetcher
   );
   const notificationsData = data?.data;
 
