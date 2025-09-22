@@ -8,9 +8,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { usePathname, useParams } from "next/navigation";
+import useSWR from "swr";
 import { useViewContext } from "@/context/ViewContext";
 import { useSideNavContext } from "@/context/SideNavContext";
-import { useNotifications } from "@/hooks/api/useNotifications";
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -23,16 +23,18 @@ export default function Header() {
   // Détecter si nous sommes sur une page de projet
   const isProjectPage = pathname?.startsWith('/projects/') && params?.slug && params.slug[0];
 
-  const {
-    notifications,
-    unreadNotifications,
-    unreadCount,
-    mutateNotifications
-  } = useNotifications();
+  // Fetcher simple pour l'API route Next.js
+  const fetcher = (url) => fetch(url).then(res => res.json());
+
+  const { data, isLoading, mutate } = useSWR(
+    "/api/notifications",
+    fetcher
+  );
+  const notificationsData = data?.data;
 
   useEffect(() => {
     const handleNewNotification = () => {
-      mutateNotifications();
+      mutate();
     };
 
     socket.on("new notification", handleNewNotification);
@@ -40,7 +42,11 @@ export default function Header() {
     return () => {
       socket.off("new notification", handleNewNotification);
     };
-  }, [mutateNotifications]);
+  }, [mutate]);
+
+  // Count the number of unread notifications
+  const unreadNotifications = notificationsData?.filter((notif) => !notif.read);
+  const unreadCount = unreadNotifications?.length;
 
   return (
     <header className={`py-2 ml-auto h-header-height transition-all duration-150 ease-linear ${
@@ -101,10 +107,10 @@ export default function Header() {
             {notifOpen && (
               <Notifications
                 setNotifOpen={setNotifOpen}
-                notifications={notifications}
+                notifications={notificationsData}
                 unreadNotifications={unreadNotifications}
                 unreadCount={unreadCount}
-                mutate={mutateNotifications}
+                mutate={mutate}
               />
             )}
           </li>
