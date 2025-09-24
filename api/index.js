@@ -86,11 +86,11 @@ app.use("/api/beta", betaRouter);
 // SOCKET LOGIC
 socketHandler(io);
 
-server.listen(process.env.PORT || 4000, (err) => {
+server.listen(process.env.PORT || 5000, (err) => {
   console.log(process.env.PORT);
   if (err) {
     console.log(err);
   } else {
-    console.log(`Server is listening on port ${process.env.PORT || 4000}`);
+    console.log(`Server is listening on port ${process.env.PORT || 5000}`);
   }
 });
