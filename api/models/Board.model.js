@@ -13,6 +13,11 @@ const boardSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Project",
     },
+    milestoneId: {
+      type: Schema.Types.ObjectId,
+      ref: "Milestone",
+      required: false, // Un board peut ne pas être assigné à un jalon
+    },
     title: {
       type: String,
       required: true,

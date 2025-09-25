@@ -3,8 +3,10 @@ import { getAccessToken } from "./getCookies";
 
 // Function to perform a fetch request without authentication
 export async function useFetch(endpoint, options = {}) {
-  // Build the API URL
-  const url = `${process.env.API_URL}/${endpoint}`;
+  // Build the API URL - nettoyer pour éviter les doubles barres obliques
+  const baseUrl = process.env.API_URL?.replace(/\/$/, '') || '';
+  const cleanEndpoint = endpoint.replace(/^\//, '');
+  const url = `${baseUrl}/${cleanEndpoint}`;
 
   // Perform the fetch request
   const res = await fetch(url, options);
@@ -24,7 +26,10 @@ export async function useAuthFetch(
   // Fonction interne pour effectuer la requête
   const accessToken = await getAccessToken();
 
-  const url = `${process.env.API_URL}/${endpoint}`;
+  // Build the API URL - nettoyer pour éviter les doubles barres obliques
+  const baseUrl = process.env.API_URL?.replace(/\/$/, '') || '';
+  const cleanEndpoint = endpoint.replace(/^\//, '');
+  const url = `${baseUrl}/${cleanEndpoint}`;
 
   const options = {
     method: method,
@@ -41,11 +46,16 @@ export async function useAuthFetch(
     options.body = JSON.stringify(body);
   }
 
-  const res = await fetch(
-    url,
-    options,
-    revalidatePath ? { next: { tags: [revalidatePath] } } : undefined
-  );
+  try {
+    const res = await fetch(
+      url,
+      options,
+      revalidatePath ? { next: { tags: [revalidatePath] } } : undefined
+    );
 
-  return res;
+    return res;
+  } catch (error) {
+    console.error("Erreur lors de la requête fetch:", error);
+    throw error;
+  }
 }

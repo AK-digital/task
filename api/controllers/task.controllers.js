@@ -150,6 +150,7 @@ export async function getTasks(req, res, next) {
         path: "description.reactions.userId",
         select: "lastName firstName picture",
       })
+      .lean()
       .exec();
 
     if (tasks.length <= 0) {

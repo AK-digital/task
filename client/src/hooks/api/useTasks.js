@@ -21,7 +21,7 @@ export function useTasks(queries, fallbackData = null) {
   );
 
   return {
-    tasks: data,
+    tasks: data || [], // Toujours retourner un tableau
     tasksValidating: isValidating,
     tasksLoading: isLoading,
     mutateTasks: mutate,

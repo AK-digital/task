@@ -11,6 +11,7 @@ import {
   Trash2,
   CopyPlus,
   Plus,
+  Target,
 } from "lucide-react";
 import { useCallback, useEffect, useState, useRef, memo, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -24,6 +25,8 @@ import {
   removeBoardFromArchive,
   duplicateBoard,
 } from "@/api/board";
+import { assignBoardToMilestone } from "@/api/milestone";
+import { useMilestones } from "@/hooks/api/useMilestones";
 import { mutate } from "swr";
 import AddBoardTemplate from "../Templates/AddBoardTemplate";
 import { useSortable } from "@dnd-kit/sortable";
@@ -60,6 +63,9 @@ const BoardHeader = memo(function BoardHeader({
   ]);
   const canArchive = useUserRole(project, ["owner", "manager", "team"]);
   const isOwnerOrManager = useUserRole(project, ["owner", "manager"]);
+  
+  // Récupérer les jalons pour le submenu
+  const { milestones } = useMilestones(project?._id);
 
   const {
     attributes,
@@ -120,12 +126,52 @@ const BoardHeader = memo(function BoardHeader({
     setIsMoreOpen(false);
   }
 
+  async function handleAssignToMilestone(milestoneId) {
+    try {
+      const response = await assignBoardToMilestone(
+        board?._id,
+        milestoneId,
+        project?._id
+      );
+
+      if (response?.success) {
+        // Revalider les données
+        await mutate(`/boards?projectId=${project?._id}&archived=${archive}`);
+        await mutate(`/milestones?projectId=${project?._id}`);
+        setIsMoreOpen(false);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'assignation au jalon:", error);
+    }
+  }
+
   const options = useMemo(() => [
     {
       authorized: canArchive,
       function: handleDuplicateBoard,
       icon: <CopyPlus size={16} />,
       name: "Dupliquer le tableau",
+    },
+    {
+      authorized: canArchive && milestones?.length > 0,
+      icon: <Target size={16} />,
+      name: "Attribuer un jalon",
+      submenu: [
+        // Option pour désassigner (assigner à null)
+        {
+          authorized: true,
+          function: () => handleAssignToMilestone(null),
+          icon: <Target size={16} />,
+          name: "Aucun jalon",
+        },
+        // Options pour chaque jalon
+        ...(milestones?.map(milestone => ({
+          authorized: true,
+          function: () => handleAssignToMilestone(milestone._id),
+          icon: <Target size={16} />,
+          name: milestone.name,
+        })) || [])
+      ],
     },
     {
       authorized: isOwnerOrManager,
@@ -141,7 +187,7 @@ const BoardHeader = memo(function BoardHeader({
       remove: true,
       deletionName: board?.title,
     },
-  ], [canArchive, isOwnerOrManager, handleDuplicateBoard, handleAddBoardTemplate, handleDeleteBoard, board?.title]);
+  ], [canArchive, isOwnerOrManager, handleDuplicateBoard, handleAddBoardTemplate, handleDeleteBoard, board?.title, milestones]);
 
   if (!archive) {
     options.splice(2, 0, {
@@ -267,7 +313,7 @@ const BoardHeader = memo(function BoardHeader({
 
   return (
     <div
-      className={`container_BoardHeader sticky top-0 flex items-center gap-6 font-medium select-none rounded-[10px] bg-secondary w-full flex-wrap p-3 ${
+      className={`container_BoardHeader sticky top-0 flex items-center gap-6 font-medium select-none rounded-[8px] bg-secondary w-full flex-wrap p-3 ${
         openedTask ? "z-1000" : "z-2000"
       }`}
       data-open={open}

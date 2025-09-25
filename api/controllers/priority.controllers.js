@@ -57,7 +57,7 @@ export async function getPriorityByProject(req, res) {
       projectId: req.params.id,
     }).sort({
       createdAt: 1,
-    });
+    }).lean();
 
     if (!priority.length === 0) {
       return res.status(404).send({

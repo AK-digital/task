@@ -116,10 +116,15 @@ export async function getUserProjects(req, res, next) {
       });
     }
 
+    // Sérialiser les projets pour éviter les problèmes avec Next.js
+    const serializedProjects = projects.map(project => 
+      JSON.parse(JSON.stringify(project))
+    );
+
     return res.status(200).send({
       success: true,
       message: "Projets trouvés",
-      data: projects,
+      data: serializedProjects,
     });
   } catch (err) {
     return res.status(500).send({
@@ -131,25 +136,43 @@ export async function getUserProjects(req, res, next) {
 
 export async function getProject(req, res, next) {
   try {
-    const project = await ProjectModel.aggregate([
-      {
-        $match: {
-          _id: mongoose.Types.ObjectId.createFromHexString(req.params.id),
-        },
-      },
-    ]);
+    const project = await ProjectModel.findById(req.params.id)
+      .populate("members.user", "name email picture")
+      .lean(); // Convertit en objet JavaScript plain
 
-    if (project.length === 0) {
+    if (!project) {
       return res.status(404).send({
         success: false,
         message: "Aucun projet n'a été trouvé dans la base de données",
       });
     }
 
+    // Créer un objet plain manuellement pour éviter les problèmes de sérialisation
+    const plainProject = {
+      _id: project._id.toString(),
+      name: project.name,
+      note: project.note,
+      urls: project.urls,
+      logo: project.logo,
+      archived: project.archived,
+      members: project.members?.map(member => ({
+        user: {
+          _id: member.user._id.toString(),
+          name: member.user.name,
+          email: member.user.email,
+          picture: member.user.picture
+        },
+        role: member.role,
+        _id: member._id.toString()
+      })) || [],
+      createdAt: project.createdAt ? new Date(project.createdAt).toISOString() : null,
+      updatedAt: project.updatedAt ? new Date(project.updatedAt).toISOString() : null,
+    };
+
     return res.status(200).send({
       success: true,
       message: "Projet trouvé",
-      data: project[0],
+      data: plainProject,
     });
   } catch (err) {
     return res.status(500).send({

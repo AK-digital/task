@@ -56,7 +56,7 @@ export async function getStatusByProject(req, res) {
   try {
     const status = await StatusModel.find({ projectId: req.params.id }).sort({
       createdAt: 1,
-    });
+    }).lean();
 
     if (!status.length === 0) {
       return res.status(404).send({

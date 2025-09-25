@@ -2,6 +2,7 @@
 import ProjectHeader from "@/layouts/ProjectHeader";
 import Boards from "@/components/Boards/Boards";
 import ProjectTimeTrackings from "@/components/TimeTrackings/ProjectTimeTrackings";
+import MilestoneTabs from "@/components/Milestones/MilestoneTabs";
 import { useEffect, useState } from "react";
 import socket from "@/utils/socket";
 import { useProjectContext } from "@/context/ProjectContext";
@@ -20,6 +21,7 @@ const displayedFilters = {
 export default function Project() {
   const { boards, tasks, mutateProject, project } = useProjectContext();
   const { currentView } = useViewContext();
+  const [activeMilestone, setActiveMilestone] = useState("all");
   const [timeQueries, setTimeQueries] = useState({
     projects: [project?._id], // Filtrer uniquement sur le projet actuel
   });
@@ -51,6 +53,19 @@ export default function Project() {
         setTimeQueries={setTimeQueries}
       />
       
+      {/* Milestone Tabs - only visible in tasks view */}
+      {currentView === 'tasks' && project?._id && (
+        <MilestoneTabs 
+          project={project}
+          activeMilestone={activeMilestone}
+          setActiveMilestone={setActiveMilestone}
+          onBoardDrop={(boardId, milestoneId) => {
+            // Callback pour revalider les données après assignation
+            mutateProject();
+          }}
+        />
+      )}
+      
       {/* Container with transition animation */}
       <div className="relative flex-1 overflow-hidden">
         <div
@@ -60,7 +75,7 @@ export default function Project() {
               : 'opacity-0 -translate-x-full pointer-events-none'
           }`}
         >
-          <Boards boards={boards} tasksData={tasks} />
+          <Boards boards={boards} tasksData={tasks || []} activeMilestone={activeMilestone} />
         </div>
         
         <div

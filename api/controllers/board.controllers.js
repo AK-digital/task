@@ -72,12 +72,12 @@ export async function getBoards(req, res, next) {
     if (archived === "true") {
       boards = await BoardModel.find({
         projectId: projectId,
-      });
+      }).lean();
     } else {
       boards = await BoardModel.find({
         projectId: projectId,
         archived: false,
-      }).sort({ order: "asc" });
+      }).sort({ order: "asc" }).lean();
     }
 
     if (!boards) {

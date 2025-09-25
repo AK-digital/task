@@ -41,7 +41,7 @@ const displayedElts = {
   isTimer: true,
 };
 
-export default function Boards({ boards: initialBoards, tasksData }) {
+export default function Boards({ boards: initialBoards, tasksData, activeMilestone }) {
   const { project, mutateTasks, archive } = useProjectContext();
   const router = useRouter();
   const [selectedTasks, setSelectedTasks] = useState([]);
@@ -49,6 +49,11 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   // Transformer les résultats en un objet avec les tâches par board
   const initialTasksData = useMemo(() => {
+    // Vérifier que tasksData existe et est un tableau
+    if (!tasksData || !Array.isArray(tasksData)) {
+      return {};
+    }
+    
     return tasksData.reduce((acc, task) => {
       const boardId = task.boardId?._id.toString();
       if (!acc[boardId]) acc[boardId] = [];
@@ -63,12 +68,12 @@ export default function Boards({ boards: initialBoards, tasksData }) {
 
   // Mettre à jour l'état local quand les données tasksData changent
   useEffect(() => {
-    if (tasksData?.length > 0) {
+    if (tasksData && Array.isArray(tasksData) && tasksData.length > 0) {
       // Mettre à jour l'état local avec les données provenant de SWR
       const updatedTasksByBoard = tasksData.reduce((acc, task) => {
-        const boardId = task.boardId.toString();
-        if (!acc[boardId]) acc[boardId] = [];
-        acc[boardId].push(task);
+        const boardId = task.boardId?.toString();
+        if (boardId && !acc[boardId]) acc[boardId] = [];
+        if (boardId) acc[boardId].push(task);
         return acc;
       }, {});
 
@@ -82,6 +87,14 @@ export default function Boards({ boards: initialBoards, tasksData }) {
       setBoards(initialBoards);
     }
   }, [initialBoards]);
+
+  // Filtrer les boards selon le jalon actif
+  const filteredBoards = useMemo(() => {
+    if (!activeMilestone || activeMilestone === "all") {
+      return boards;
+    }
+    return boards.filter(board => board.milestoneId === activeMilestone);
+  }, [boards, activeMilestone]);
 
   useEffect(() => {
     const handleTaskUpdate = async () => {
@@ -335,7 +348,7 @@ export default function Boards({ boards: initialBoards, tasksData }) {
   ]);
 
   // Calculer les IDs des boards pour SortableContext
-  const boardIds = useMemo(() => boards.map((board) => board._id), [boards]);
+  const boardIds = useMemo(() => filteredBoards.map((board) => board._id), [filteredBoards]);
 
   return (
     <div className="boards_Boards relative flex flex-col gap-11 h-full overflow-y-auto pr-2.5 pb-6 z-1000 border-r-[3px] border-transparent rounded-2xl">
@@ -365,8 +378,8 @@ export default function Boards({ boards: initialBoards, tasksData }) {
         onDragEnd={handleDragEnd}
         modifiers={[restrictToVerticalAxis]}
       >
-        <div className="flex flex-col gap-11 w-full">
-          {boards
+        <div className="flex flex-col gap-8 w-full">
+          {filteredBoards
             ?.filter((board) =>
               archive
                 ? tasks[board?._id] && tasks[board?._id]?.length > 0

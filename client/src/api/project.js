@@ -1,6 +1,4 @@
-"use server";
 import { useAuthFetch } from "@/utils/api";
-import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function getProject(id) {
   try {
@@ -87,8 +85,6 @@ export async function updateProjectLogo(projectId, logo) {
       );
     }
 
-    revalidateTag("projects");
-
     return {
       status: "success",
       message: "Le logo a été mis à jour avec succès",
@@ -172,8 +168,6 @@ export async function deleteProject(projectId) {
       throw new Error(response?.message);
     }
 
-    revalidateTag("projects");
-
     return response;
   } catch (err) {
     console.log(
@@ -245,6 +239,6 @@ export async function importProject(projectData) {
 }
 
 export async function revalidatePage() {
-  revalidatePath("/projects");
-  revalidatePath("/time-trackings");
+  // Cette fonction n'est plus nécessaire côté client
+  // La revalidation se fait maintenant via SWR
 }

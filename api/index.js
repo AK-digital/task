@@ -26,6 +26,7 @@ import betaRouter from "./routes/beta.routes.js";
 import socketHandler from "./utils/socket.js";
 import aiRouter from "./routes/ai.routes.js";
 import feedbackRouter from "./routes/feedback.routes.js";
+import milestoneRouter from "./routes/milestone.routes.js";
 
 const app = express();
 const server = createServer(app);
@@ -34,7 +35,12 @@ const io = new Server(server, {
   addTrailingSlash: false,
   transports: ["websocket", "polling"],
   cors: {
-    origin: [process.env.CLIENT_URL, process.env.LANDING_URL],
+    origin: [
+      process.env.CLIENT_URL, 
+      process.env.LANDING_URL,
+      "http://localhost:3000",
+      "http://127.0.0.1:3000"
+    ].filter(Boolean),
     methods: ["GET", "HEAD", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -82,6 +88,7 @@ app.use("/api/ai", aiRouter);
 app.use("/api/favorite", favoriteRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/beta", betaRouter);
+app.use("/api/milestone", milestoneRouter);
 
 // SOCKET LOGIC
 socketHandler(io);
